@@ -9,6 +9,7 @@ import {
 } from "./docs-viewer-index-panel.js";
 import {
   renderDocsViewerAppShellDocumentState,
+  renderDocsViewerAppShellInfoPanelState,
   renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
 import {
@@ -27,6 +28,7 @@ export function createDocsViewerPanelLayout(options) {
   var storage = settings.storage || null;
   var indexPanelRefs = settings.indexPanelRefs || {};
   var documentShellRefs = settings.documentShellRefs || {};
+  var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var storageScope = normalizeScope(settings.storageScope);
   var storageKey = buildIndexPanelStorageKey(storageScope);
@@ -37,6 +39,7 @@ export function createDocsViewerPanelLayout(options) {
     panels: settings.panels,
     routeId: settings.routeId
   });
+  var infoPanelProjection = {};
 
   function readStoredIndexPanelState() {
     return readIndexPanelState({
@@ -77,6 +80,7 @@ export function createDocsViewerPanelLayout(options) {
       refs: indexPanelRefs,
       projection: projection
     });
+    renderInfoPanelState();
     return projection;
   }
 
@@ -111,9 +115,39 @@ export function createDocsViewerPanelLayout(options) {
     });
   }
 
+  function viewerLayoutName(projection) {
+    if (projection.index.state === "expanded") return "index-expanded";
+    if (projection.info.visible) return "index-document-info";
+    return "index-document";
+  }
+
+  function renderInfoPanelState() {
+    var projected = projectViewState();
+    renderDocsViewerAppShellInfoPanelState({
+      root: root,
+      refs: infoPanelRefs,
+      projection: Object.assign({}, infoPanelProjection, {
+        activeViewId: projected.info.activeViewId,
+        layout: viewerLayoutName(projected),
+        visible: projected.info.visible
+      })
+    });
+    return projected.info;
+  }
+
+  function projectInfoPanel(projection) {
+    infoPanelProjection = Object.assign({}, infoPanelProjection, projection || {});
+    viewState = updateDocsViewerViewState(viewState, {
+      infoMounted: infoPanelProjection.visible === true,
+      infoViewId: infoPanelProjection.activeViewId
+    });
+    return renderInfoPanelState();
+  }
+
   return {
     expandIndexPanelState: expandIndexPanelState,
     indexPanelState: function () { return indexPanelState; },
+    projectInfoPanel: projectInfoPanel,
     projectDocumentShell: projectDocumentShell,
     projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,

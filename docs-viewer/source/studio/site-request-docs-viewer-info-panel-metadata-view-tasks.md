@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-info-panel-metadata-view-tasks
 title: Docs Viewer Info Panel Metadata View Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12120
 viewable: true
@@ -22,21 +22,58 @@ It should not implement source editing, editable metadata saves, semantic-refere
 
 ### just done
 
-- Completed [Docs Viewer App Shell Route Config And View Foundation Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-config-view-foundation-tasks).
-- Added `docs-viewer/runtime/js/docs-viewer-route-config.js` for route config resolution and route/scope projection.
-- Added `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection.
-- Added `docs-viewer/runtime/js/docs-viewer-view-state.js` and extended `docs-viewer/runtime/js/docs-viewer-panel-layout.js` so the current two-panel behavior projects from an index/document/info state skeleton.
-- Added `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, built-in compatibility records, lifecycle method shape, access checks, and graceful absence.
-- Preserved current public read-only and local manage-mode behavior while keeping route data attributes as migration compatibility.
+- Completed this first visible info-panel slice.
+- Added `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` as the app-shell-owned info-panel chrome renderer.
+- Added `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` as the focused hosted-view lifecycle owner for info panel open/update/close/dispose behavior.
+- Added `docs-viewer/runtime/js/docs-viewer-view-context.js` as the focused selected-document hosted-view context projector for metadata and planned future info views.
+- Added `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` as the public-safe read-only metadata hosted view.
+- Extended `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` so the info panel projects `data-info-panel-state` and `data-viewer-layout` while preserving index expanded behavior.
+- Registered `metadata-info` as an available public built-in hosted view in `docs-viewer/runtime/js/docs-viewer-hosted-views.js`.
+- Added a document metadata info button in `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`; existing sidebar/read-only metadata, status pills, bookmarks, search/recent, reports, and management edit flows remain separate.
+- Updated public and manage smoke coverage for the visible info panel, hosted-view lifecycle, selected-doc updates, graceful absence, desktop/mobile public layout, and manage-mode selected-doc context.
+- Created structured docs-log entry `change-2026-05-27-added-docs-viewer-info-panel-metadata-view`.
 
 ### steer for next task
 
-- Deliver a visible info panel that can open beside the document panel and show metadata for the selected document.
-- Keep the first info view read-only and public-safe; it should use data already available from generated docs index rows and loaded document payloads.
-- Use the existing route config, access projection, view-state skeleton, and hosted-view registry instead of adding another route-state path.
-- Add only the panel chrome needed for this slice: an info-panel region, stable title/label, a metadata hosted-view mount, and a hide/close control. Broader toolbar/view-selection design can stay minimal unless needed to switch registered views.
-- Preserve current index collapsed/normal/expanded behavior and document/search/recent/report behavior.
-- Do not move metadata edit modal internals, source editor behavior, report rendering, search/recent rendering, bookmark storage, or management writes in this pass.
+- This request slice is complete.
+- Follow-up work should keep source editing, editable metadata saves, semantic-reference views, activity views, panel toolbar generalization, third-party visualization modules, and plugin architecture out of the first metadata view boundary unless a new tracker explicitly takes one of those responsibilities.
+
+## Implementation Notes
+
+The first metadata info view renders only public-safe fields that already exist in generated index rows and loaded document payloads:
+
+- selected document title and `doc_id`
+- current viewer scope
+- summary, when present
+- parent path from the visible docs tree
+- added and updated dates
+- UI status label when configured
+- visibility as visible/hidden from `viewable` and `hidden`
+- canonical viewer route link built through the existing Docs Viewer URL helper
+
+Deferred fields and actions:
+
+- source paths and local filesystem actions
+- editable metadata controls and saves
+- semantic-reference and generated relationship data
+- activity history
+- source editor and management-only write endpoints
+
+Ownership boundary:
+
+- `docs-viewer-info-panel-renderer.js` owns info-panel DOM chrome and projection.
+- `docs-viewer-info-panel-host.js` owns hosted-view lifecycle and graceful absence.
+- `docs-viewer-view-context.js` owns selected-document hosted-view context projection.
+- `docs-viewer-metadata-info-view.js` owns read-only metadata rendering inside its assigned mount.
+- `docs-viewer.js` only passes explicit route/viewer inputs into the context helper and wires the info toggle, close action, and route/update orchestration.
+
+Verification completed:
+
+- `node --check` for changed Docs Viewer runtime modules.
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
 
 ### baseline verification set
 
@@ -82,24 +119,24 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current metadata sources and consumers: generated docs index rows, loaded document payload fields, `docs-viewer-sidebar.js` read-only metadata rendering, status-pill rendering, bookmark state, metadata modal refs, search/recent result rows, and report mount context. Deliverable: short implementation note in this tracker identifying which metadata fields the first info view can render from existing public-safe data and which fields are deferred. |
-| 2 | planned | Define the first info-panel product surface. Include selected document title, doc id, scope, summary, parent/path, updated/added date where available, UI status/viewable/hidden indicators where public-safe, and canonical route link/copy target if already available through existing helpers. Defer source path, local filesystem actions, edit controls, semantic references, activity, and generated relationship data. |
-| 3 | planned | Define the panel host ownership boundary. Decide whether to extend `docs-viewer-document-shell-renderer.js`, create a focused `docs-viewer-info-panel-renderer.js`, or create a small panel-host renderer module. Avoid adding DOM composition directly to `docs-viewer.js`. |
-| 4 | planned | Add an info-panel mount and chrome through the app shell: stable container, accessible label/title, close/hide control, and hosted-view body mount. Keep the panel hidden/unmounted by default until selected through view state. |
-| 5 | planned | Extend `docs-viewer-view-state.js` and `docs-viewer-panel-layout.js` only as needed to project visible/hidden info-panel state, active info view id, and layout attributes such as `data-info-panel-state` and `data-viewer-layout`. Preserve existing index expanded behavior that hides the document pane. |
-| 6 | planned | Wire a minimal info-panel action path: open metadata info for the current selected document, close/hide info, and update panel projection when selection, document load state, search mode, recent mode, or route popstate changes. Keep browser history behavior unchanged unless a clear URL-state requirement is documented. |
-| 7 | planned | Implement the first hosted view module for read-only metadata, using the existing hosted-view lifecycle shape: load, mount, update, unmount, and dispose. The module should render only inside its assigned info-panel container and tolerate missing document context. |
-| 8 | planned | Register the metadata info view as an available built-in compatibility view instead of the current disabled placeholder, gated as public access. Preserve graceful absence behavior if the module fails to load or is disabled by route config. |
-| 9 | planned | Define the metadata view context shape passed from Docs Viewer core to the hosted view: selected doc row, loaded payload metadata if available, viewer scope, route/access projection, URL helpers, and display text helpers. Avoid passing broad mutable `state` directly. |
-| 10 | planned | Preserve current read-only document metadata rendering in `docs-viewer-sidebar.js` and the existing document pane. The info panel should complement, not replace, current title/path/summary/status/bookmark display in this slice. |
-| 11 | planned | Preserve search/recent/report behavior. Opening the info panel must not clear search results, more-results state, recent mode, generated reports, hash scrolling, or selected document projection unless an explicit user action selects a new document. |
-| 12 | planned | Preserve public read-only behavior for `/library/` and `/analysis/`: route boot, document rendering, hash navigation, search/recent behavior, reports, bookmarks, and absence of management-only UI/JS. |
-| 13 | planned | Preserve local `/docs/` management behavior: manage-mode detection, management capability messages, status pills, bookmark toggle, metadata edit flow, report rendering, browser history behavior, and management action gating. |
-| 14 | planned | Add focused module smoke coverage for info-panel render/projection, metadata hosted-view lifecycle, selected-doc updates, missing/empty metadata, close/hide behavior, public availability, and graceful absence. |
-| 15 | planned | Add or update route-level browser smoke coverage for desktop and mobile layouts. Verify the info panel does not overlap controls or document content, can close reliably, and remains usable with long metadata values. |
-| 16 | planned | Run targeted verification for changed JS, app-shell modules, public read-only behavior, manage-mode behavior, Jekyll build, and any changed CSS/layout. Record skipped checks and why. |
-| 17 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request, the multi-panel request, Docs Viewer runtime docs, and Docs Viewer JavaScript inventory notes if ownership or risk materially changes. |
-| 18 | planned | Create a structured docs-log entry when the slice is complete and record the entry id in this tracker. |
+| 1 | done | Inventory current metadata sources and consumers: generated docs index rows, loaded document payload fields, `docs-viewer-sidebar.js` read-only metadata rendering, status-pill rendering, bookmark state, metadata modal refs, search/recent result rows, and report mount context. Deliverable: short implementation note in this tracker identifying which metadata fields the first info view can render from existing public-safe data and which fields are deferred. |
+| 2 | done | Define the first info-panel product surface. Include selected document title, doc id, scope, summary, parent/path, updated/added date where available, UI status/viewable/hidden indicators where public-safe, and canonical route link/copy target if already available through existing helpers. Defer source path, local filesystem actions, edit controls, semantic references, activity, and generated relationship data. |
+| 3 | done | Define the panel host ownership boundary. Decide whether to extend `docs-viewer-document-shell-renderer.js`, create a focused `docs-viewer-info-panel-renderer.js`, or create a small panel-host renderer module. Avoid adding DOM composition directly to `docs-viewer.js`. |
+| 4 | done | Add an info-panel mount and chrome through the app shell: stable container, accessible label/title, close/hide control, and hosted-view body mount. Keep the panel hidden/unmounted by default until selected through view state. |
+| 5 | done | Extend `docs-viewer-view-state.js` and `docs-viewer-panel-layout.js` only as needed to project visible/hidden info-panel state, active info view id, and layout attributes such as `data-info-panel-state` and `data-viewer-layout`. Preserve existing index expanded behavior that hides the document pane. |
+| 6 | done | Wire a minimal info-panel action path: open metadata info for the current selected document, close/hide info, and update panel projection when selection, document load state, search mode, recent mode, or route popstate changes. Keep browser history behavior unchanged unless a clear URL-state requirement is documented. |
+| 7 | done | Implement the first hosted view module for read-only metadata, using the existing hosted-view lifecycle shape: load, mount, update, unmount, and dispose. The module should render only inside its assigned info-panel container and tolerate missing document context. |
+| 8 | done | Register the metadata info view as an available built-in compatibility view instead of the current disabled placeholder, gated as public access. Preserve graceful absence behavior if the module fails to load or is disabled by route config. |
+| 9 | done | Define the metadata view context shape passed from Docs Viewer core to the hosted view: selected doc row, loaded payload metadata if available, viewer scope, route/access projection, URL helpers, and display text helpers. Avoid passing broad mutable `state` directly. |
+| 10 | done | Preserve current read-only document metadata rendering in `docs-viewer-sidebar.js` and the existing document pane. The info panel should complement, not replace, current title/path/summary/status/bookmark display in this slice. |
+| 11 | done | Preserve search/recent/report behavior. Opening the info panel must not clear search results, more-results state, recent mode, generated reports, hash scrolling, or selected document projection unless an explicit user action selects a new document. |
+| 12 | done | Preserve public read-only behavior for `/library/` and `/analysis/`: route boot, document rendering, hash navigation, search/recent behavior, reports, bookmarks, and absence of management-only UI/JS. |
+| 13 | done | Preserve local `/docs/` management behavior: manage-mode detection, management capability messages, status pills, bookmark toggle, metadata edit flow, report rendering, browser history behavior, and management action gating. |
+| 14 | done | Add focused module smoke coverage for info-panel render/projection, metadata hosted-view lifecycle, selected-doc updates, missing/empty metadata, close/hide behavior, public availability, and graceful absence. |
+| 15 | done | Add or update route-level browser smoke coverage for desktop and mobile layouts. Verify the info panel does not overlap controls or document content, can close reliably, and remains usable with long metadata values. |
+| 16 | done | Run targeted verification for changed JS, app-shell modules, public read-only behavior, manage-mode behavior, Jekyll build, and any changed CSS/layout. Record skipped checks and why. |
+| 17 | done | Update owning docs after implementation. At minimum update this tracker, the app-shell request, the multi-panel request, Docs Viewer runtime docs, and Docs Viewer JavaScript inventory notes if ownership or risk materially changes. |
+| 18 | done | Create a structured docs-log entry when the slice is complete and record the entry id in this tracker: `change-2026-05-27-added-docs-viewer-info-panel-metadata-view`. |
 
 The closeout for this slice should confirm:
 

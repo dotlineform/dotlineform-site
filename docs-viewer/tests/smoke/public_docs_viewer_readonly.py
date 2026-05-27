@@ -32,6 +32,71 @@ def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
 
 
+def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeout_ms: int, viewport: dict[str, int]) -> None:
+    page.set_viewport_size(viewport)
+    page.goto(route_url(base_url, route), wait_until="domcontentloaded")
+    page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
+    page.wait_for_function(
+        """docId => document.querySelector("#docsViewerContent h1")?.id === docId""",
+        arg=doc_id,
+        timeout=timeout_ms,
+    )
+    initial_url = page.url
+    page.locator("#docsViewerInfoToggle").click()
+    page.wait_for_selector("#docsViewerInfoPanel:not([hidden])", timeout=timeout_ms)
+    page.wait_for_function(
+        """docId => document.querySelector(".docsViewer__metadataInfoIdValue")?.textContent === docId""",
+        arg=doc_id,
+        timeout=timeout_ms,
+    )
+    state = page.locator("#docsViewerRoot").evaluate(
+        """root => ({
+            infoPanelState: root.dataset.infoPanelState || "",
+            layout: root.dataset.viewerLayout || "",
+            selectedHeading: document.querySelector("#docsViewerContent h1")?.id || "",
+            panelTitle: document.querySelector(".docsViewer__metadataInfoTitle")?.textContent || "",
+            docIdValue: document.querySelector(".docsViewer__metadataInfoIdValue")?.textContent || "",
+            routeHref: document.querySelector(".docsViewer__metadataInfoRow a")?.getAttribute("href") || "",
+            toggleExpanded: document.querySelector("#docsViewerInfoToggle")?.getAttribute("aria-expanded") || "",
+            managementActions: document.querySelectorAll(".docsViewer__manageActions, #docsViewerManageActionsButton").length
+        })"""
+    )
+    overlap = page.locator("#docsViewerRoot").evaluate(
+        """() => {
+            const main = document.querySelector(".docsViewer__main")?.getBoundingClientRect();
+            const panel = document.querySelector("#docsViewerInfoPanel")?.getBoundingClientRect();
+            if (!main || !panel) return true;
+            return !(panel.left >= main.right || main.left >= panel.right || panel.top >= main.bottom || main.top >= panel.bottom);
+        }"""
+    )
+    if page.url != initial_url:
+        raise AssertionError(f"{route} info panel changed URL: {initial_url!r} -> {page.url!r}")
+    if state["infoPanelState"] != "open" or state["toggleExpanded"] != "true":
+        raise AssertionError(f"{route} info panel did not open: {state!r}")
+    if state["selectedHeading"] != doc_id or state["docIdValue"] != doc_id:
+        raise AssertionError(f"{route} info panel lost selected document context: {state!r}")
+    if not state["panelTitle"] or not state["routeHref"]:
+        raise AssertionError(f"{route} info panel omitted metadata title/link: {state!r}")
+    if state["managementActions"]:
+        raise AssertionError(f"{route} info panel exposed management controls: {state!r}")
+    if overlap:
+        raise AssertionError(f"{route} info panel overlaps document panel at viewport {viewport!r}")
+    page.locator("#docsViewerInfoPanelClose").click()
+    page.wait_for_function(
+        """() => document.querySelector("#docsViewerInfoPanel")?.hidden === true""",
+        timeout=timeout_ms,
+    )
+    closed = page.locator("#docsViewerRoot").evaluate(
+        """root => ({
+            infoPanelState: root.dataset.infoPanelState || "",
+            toggleExpanded: document.querySelector("#docsViewerInfoToggle")?.getAttribute("aria-expanded") || "",
+            selectedHeading: document.querySelector("#docsViewerContent h1")?.id || ""
+        })"""
+    )
+    if closed != {"infoPanelState": "closed", "toggleExpanded": "false", "selectedHeading": doc_id}:
+        raise AssertionError(f"{route} info panel did not close cleanly: {closed!r}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", required=True, help="Built public site root to serve.")
@@ -93,6 +158,23 @@ def main() -> int:
                     raise AssertionError(f"{route} rendered management controls")
                 if management_js_urls:
                     raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
+
+                assert_info_panel_route(
+                    page,
+                    base_url,
+                    route,
+                    doc_id,
+                    args.timeout_ms,
+                    {"width": 1280, "height": 900},
+                )
+                assert_info_panel_route(
+                    page,
+                    base_url,
+                    route,
+                    doc_id,
+                    args.timeout_ms,
+                    {"width": 390, "height": 780},
+                )
 
             browser.close()
             if errors:

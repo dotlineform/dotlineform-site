@@ -265,6 +265,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <p id="docsViewerStatus"></p>
                   <div id="docsViewerBookmarkRow"></div>
                 </section>
@@ -307,6 +308,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                     searchInput: refs.headerControls.searchInput?.id || '',
                     nav: refs.indexPanel.nav?.id || '',
                     content: refs.documentShell.content?.id || '',
+                    infoBody: refs.infoPanel.body?.id || '',
                     status: refs.status?.id || '',
                     bookmarkRow: refs.bookmarkRow?.id || '',
                     managementRow: refs.managementActions.row?.id || ''
@@ -341,6 +343,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
             "searchInput": "docsViewerSearchInput",
             "nav": "docsViewerNav",
             "content": "docsViewerContent",
+            "infoBody": "docsViewerInfoPanelBody",
             "status": "docsViewerStatus",
             "bookmarkRow": "docsViewerBookmarkRow",
             "managementRow": "docsViewerManageRow",
@@ -587,6 +590,7 @@ def assert_document_shell_render(page: Page) -> None:
                 'docsViewerUpdated',
                 'docsViewerSummary',
                 'docsViewerStatusPills',
+                'docsViewerInfoToggle',
                 'docsViewerBookmarkToggle',
                 'docsViewerContent',
                 'docsViewerResultsStatus',
@@ -601,6 +605,8 @@ def assert_document_shell_render(page: Page) -> None:
                 mainLive: document.querySelector('.docsViewer__main')?.getAttribute('aria-live') || '',
                 bookmarkText: document.getElementById('docsViewerBookmarkToggle')?.textContent || '',
                 bookmarkPressed: document.getElementById('docsViewerBookmarkToggle')?.getAttribute('aria-pressed') || '',
+                infoToggleHidden: document.getElementById('docsViewerInfoToggle')?.hidden,
+                infoToggleExpanded: document.getElementById('docsViewerInfoToggle')?.getAttribute('aria-expanded') || '',
                 metaHidden: document.getElementById('docsViewerMeta')?.hidden,
                 resultsHidden: document.getElementById('docsViewerResults')?.hidden,
                 moreHidden: document.getElementById('docsViewerMore')?.hidden
@@ -615,6 +621,8 @@ def assert_document_shell_render(page: Page) -> None:
         "mainLive": "polite",
         "bookmarkText": "☆",
         "bookmarkPressed": "false",
+        "infoToggleHidden": True,
+        "infoToggleExpanded": "false",
         "metaHidden": True,
         "resultsHidden": True,
         "moreHidden": True,
@@ -637,6 +645,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
             return {
                 documentShellCount: document.querySelectorAll('.docsViewer__main').length,
                 statusPillsCount: document.querySelectorAll('#docsViewerStatusPills').length,
+                infoToggleCount: document.querySelectorAll('#docsViewerInfoToggle').length,
                 bookmarkToggleCount: document.querySelectorAll('#docsViewerBookmarkToggle').length,
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 editButtonCount: document.querySelectorAll('#docsViewerManageEditButton').length
@@ -646,6 +655,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
     if result != {
         "documentShellCount": 1,
         "statusPillsCount": 1,
+        "infoToggleCount": 1,
         "bookmarkToggleCount": 1,
         "manageRowCount": 1,
         "editButtonCount": 1,
@@ -675,7 +685,10 @@ def assert_document_shell_projection(page: Page) -> None:
                     resultsStatusHidden: false,
                     resultsStatusError: true,
                     resultsHidden: false,
-                    moreHidden: false
+                    moreHidden: false,
+                    infoToggleHidden: false,
+                    infoTogglePressed: true,
+                    infoToggleLabel: 'Hide document info'
                 }
             });
             const searchProjection = {
@@ -686,7 +699,10 @@ def assert_document_shell_projection(page: Page) -> None:
                 resultsStatusError: refs.resultsStatus.classList.contains('is-error'),
                 resultsHidden: refs.results.hidden,
                 moreHidden: refs.more.hidden,
-                moreHtml: refs.more.innerHTML
+                moreHtml: refs.more.innerHTML,
+                infoToggleHidden: refs.infoToggle.hidden,
+                infoToggleExpanded: refs.infoToggle.getAttribute('aria-expanded'),
+                infoToggleLabel: refs.infoToggle.getAttribute('aria-label')
             };
             module.renderDocsViewerAppShellDocumentState({
                 refs,
@@ -697,6 +713,9 @@ def assert_document_shell_projection(page: Page) -> None:
                     resultsStatusError: false,
                     resultsHidden: true,
                     moreHidden: true,
+                    infoToggleHidden: true,
+                    infoTogglePressed: false,
+                    infoToggleLabel: 'Show document info',
                     clearMore: true
                 }
             });
@@ -707,7 +726,10 @@ def assert_document_shell_projection(page: Page) -> None:
                 resultsStatusError: refs.resultsStatus.classList.contains('is-error'),
                 resultsHidden: refs.results.hidden,
                 moreHidden: refs.more.hidden,
-                moreHtml: refs.more.innerHTML
+                moreHtml: refs.more.innerHTML,
+                infoToggleHidden: refs.infoToggle.hidden,
+                infoToggleExpanded: refs.infoToggle.getAttribute('aria-expanded'),
+                infoToggleLabel: refs.infoToggle.getAttribute('aria-label')
             };
             return { searchProjection, documentProjection };
         }"""
@@ -721,6 +743,9 @@ def assert_document_shell_projection(page: Page) -> None:
         "resultsHidden": False,
         "moreHidden": False,
         "moreHtml": "<button>More</button>",
+        "infoToggleHidden": False,
+        "infoToggleExpanded": "true",
+        "infoToggleLabel": "Hide document info",
     }:
         raise AssertionError(f"search document projection failed: {result!r}")
     if result["documentProjection"] != {
@@ -731,8 +756,200 @@ def assert_document_shell_projection(page: Page) -> None:
         "resultsHidden": True,
         "moreHidden": True,
         "moreHtml": "",
+        "infoToggleHidden": True,
+        "infoToggleExpanded": "false",
+        "infoToggleLabel": "Show document info",
     }:
         raise AssertionError(f"document projection failed: {result!r}")
+
+
+def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const hostedViews = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
+            const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
+            const infoHost = await import('/docs-viewer/runtime/js/docs-viewer-info-panel-host.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await shell.initDocsViewerAppShell({ root, document });
+            const refs = shell.getDocsViewerAppShellInfoPanelRefs({ root, document });
+            const publicAccess = access.createDocsViewerAccessProjection({
+                routeConfig: { routeType: 'public', access: { allowManagement: false } },
+                search: ''
+            });
+            const registry = hostedViews.registerDocsViewerHostedViews(
+                hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
+                hostedViews.createDocsViewerCompatibilityHostedViews()
+            );
+            const host = infoHost.createDocsViewerInfoPanelHost({
+                refs,
+                registry,
+                project: (projection) => shell.renderDocsViewerAppShellInfoPanelState({ root, refs, projection })
+            });
+            const context = {
+                canonicalUrl: '/docs/?scope=studio&doc=example',
+                parentTrail: [{ doc_id: 'parent-doc', title: 'Parent Doc' }],
+                selectedDoc: {
+                    doc_id: 'example',
+                    title: 'Example Doc',
+                    summary: 'A compact metadata summary.',
+                    scope: 'studio',
+                    parent_id: 'parent-doc',
+                    added_date: '2026-05-01',
+                    last_updated: '2026-05-27',
+                    viewable: true,
+                    hidden: false,
+                    ui_status: 'done'
+                },
+                statusLabel: 'Done',
+                viewerScope: 'studio'
+            };
+            await host.open('metadata-info', context);
+            const openProjection = {
+                returnedPanelId: returned.infoPanel && returned.infoPanel.panel && returned.infoPanel.panel.id,
+                refPanelId: refs.panel && refs.panel.id,
+                panelHidden: refs.panel.hidden,
+                rootState: root.dataset.infoPanelState,
+                rootLayout: root.dataset.viewerLayout,
+                activeViewId: refs.panel.dataset.activeViewId,
+                title: refs.body.querySelector('.docsViewer__metadataInfoTitle')?.textContent || '',
+                routeText: Array.from(refs.body.querySelectorAll('.docsViewer__metadataInfoRow')).find((row) => row.querySelector('dt')?.textContent === 'Route')?.querySelector('a')?.textContent || '',
+                rowLabels: Array.from(refs.body.querySelectorAll('.docsViewer__metadataInfoTerm')).map((node) => node.textContent)
+            };
+            await host.update(Object.assign({}, context, {
+                selectedDoc: Object.assign({}, context.selectedDoc, { summary: '' }),
+                statusLabel: ''
+            }));
+            const missingSummary = Array.from(refs.body.querySelectorAll('.docsViewer__metadataInfoRow')).find((row) => row.querySelector('dt')?.textContent === 'Summary')?.querySelector('dd')?.textContent || '';
+            await host.close();
+            const closedProjection = {
+                panelHidden: refs.panel.hidden,
+                rootState: root.dataset.infoPanelState,
+                bodyChildCount: refs.body.children.length
+            };
+            await host.open('not-registered', context);
+            const missingProjection = {
+                panelHidden: refs.panel.hidden,
+                statusHidden: refs.status.hidden,
+                statusText: refs.status.textContent,
+                bodyChildCount: refs.body.children.length
+            };
+            await host.close();
+            await host.open('metadata-info', { selectedDoc: null, viewerScope: 'studio' });
+            const emptyText = refs.body.textContent.trim();
+            return { openProjection, missingSummary, closedProjection, missingProjection, emptyText };
+        }"""
+    )
+    if result["openProjection"] != {
+        "returnedPanelId": "docsViewerInfoPanel",
+        "refPanelId": "docsViewerInfoPanel",
+        "panelHidden": False,
+        "rootState": "open",
+        "rootLayout": "index-document-info",
+        "activeViewId": "metadata-info",
+        "title": "Example Doc",
+        "routeText": "/docs/?scope=studio&doc=example",
+        "rowLabels": ["Scope", "Summary", "Parent path", "Added", "Updated", "UI status", "Visibility", "Route"],
+    }:
+        raise AssertionError(f"info panel metadata open projection failed: {result!r}")
+    if result["missingSummary"] != "No summary":
+        raise AssertionError(f"metadata view did not tolerate missing summary: {result!r}")
+    if result["closedProjection"] != {
+        "panelHidden": True,
+        "rootState": "closed",
+        "bodyChildCount": 0,
+    }:
+        raise AssertionError(f"info panel close projection failed: {result!r}")
+    if result["missingProjection"] != {
+        "panelHidden": False,
+        "statusHidden": False,
+        "statusText": "This info view is unavailable.",
+        "bodyChildCount": 0,
+    }:
+        raise AssertionError(f"missing info view should be graceful: {result!r}")
+    if result["emptyText"] != "Select a document to see metadata.":
+        raise AssertionError(f"metadata empty-selection state failed: {result!r}")
+
+
+def assert_hosted_view_context_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-view-context.js');
+            const docsById = new Map([
+                ['child-doc', {
+                    doc_id: 'child-doc',
+                    title: 'Child Doc',
+                    parent_id: 'parent-doc',
+                    ui_status: 'done'
+                }]
+            ]);
+            const allDocsById = new Map(docsById);
+            const payloadCache = new Map([
+                ['child-doc', { doc_id: 'child-doc', content_html: '<h1>Child</h1>' }]
+            ]);
+            const uiStatusByValue = new Map([
+                ['done', { label: 'Done', emoji: '✓' }]
+            ]);
+            const built = context.createDocsViewerHostedViewContext({
+                allDocsById,
+                buildTrail: () => [
+                    { doc_id: 'parent-doc', title: 'Parent Doc' },
+                    { doc_id: 'child-doc', title: 'Child Doc' }
+                ],
+                docsById,
+                payloadCache,
+                routeAccess: {
+                    allowManagement: true,
+                    publicReadOnly: false,
+                    routeType: 'manage'
+                },
+                selectedDocId: 'child-doc',
+                uiStatusByValue,
+                viewerScope: 'studio',
+                viewerTargetDocId: (docId) => docId,
+                viewerUrl: (docId) => `/docs/?scope=studio&mode=manage&doc=${docId}`
+            });
+            const missing = context.createDocsViewerHostedViewContext({
+                docsById,
+                selectedDocId: 'missing-doc',
+                viewerScope: 'studio'
+            });
+            return {
+                selectedDocId: built.selectedDoc && built.selectedDoc.doc_id,
+                payloadDocId: built.payload && built.payload.doc_id,
+                parentTrail: built.parentTrail.map((doc) => doc.doc_id),
+                statusLabel: built.statusLabel,
+                canonicalUrl: built.canonicalUrl,
+                access: built.access,
+                viewerScope: built.viewerScope,
+                missingSelectedDoc: missing.selectedDoc,
+                missingPayload: missing.payload,
+                fallbackStatus: context.docsViewerStatusLabel('draft', new Map())
+            };
+        }"""
+    )
+    if result != {
+        "selectedDocId": "child-doc",
+        "payloadDocId": "child-doc",
+        "parentTrail": ["parent-doc"],
+        "statusLabel": "✓ Done",
+        "canonicalUrl": "/docs/?scope=studio&mode=manage&doc=child-doc",
+        "access": {
+            "allowManagement": True,
+            "publicReadOnly": False,
+            "routeType": "manage",
+        },
+        "viewerScope": "studio",
+        "missingSelectedDoc": None,
+        "missingPayload": None,
+        "fallbackStatus": "draft",
+    }:
+        raise AssertionError(f"hosted-view context contract failed: {result!r}")
 
 
 def assert_panel_layout_contract(page: Page) -> None:
@@ -744,6 +961,7 @@ def assert_panel_layout_contract(page: Page) -> None:
                 <section id="docsViewerRoot" data-allow-management="false">
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -764,6 +982,12 @@ def assert_panel_layout_contract(page: Page) -> None:
                 storageScope: 'studio',
                 indexPanelRefs: refs.indexPanel,
                 documentShellRefs: refs.documentShell,
+                infoPanelRefs: refs.infoPanel,
+                panels: {
+                    index: { enabled: true, defaultState: 'normal' },
+                    document: { enabled: true, defaultView: 'document-host' },
+                    info: { enabled: true, defaultView: 'metadata-info' }
+                },
                 indexPanelAvailable: () => available
             });
             const initialState = layout.indexPanelState();
@@ -802,6 +1026,24 @@ def assert_panel_layout_contract(page: Page) -> None:
                 moreHtml: refs.documentShell.more.innerHTML
             };
             layout.projectDocumentShell({ moreHidden: true, clearMore: true });
+            layout.projectInfoPanel({
+                activeViewId: 'metadata-info',
+                label: 'Document metadata',
+                title: 'Info',
+                visible: true
+            });
+            const openInfoProjection = {
+                panelHidden: refs.infoPanel.panel.hidden,
+                infoState: root.dataset.infoPanelState,
+                layout: root.dataset.viewerLayout,
+                activeViewId: refs.infoPanel.panel.dataset.activeViewId
+            };
+            layout.projectInfoPanel({ visible: false });
+            const closedInfoProjection = {
+                panelHidden: refs.infoPanel.panel.hidden,
+                infoState: root.dataset.infoPanelState,
+                layout: root.dataset.viewerLayout
+            };
             return {
                 initialState,
                 initialProjection,
@@ -812,7 +1054,9 @@ def assert_panel_layout_contract(page: Page) -> None:
                 unavailableToggleState,
                 unavailableProjectedState: root.dataset.indexPanelState,
                 recentProjection,
-                moreAfterClear: refs.documentShell.more.innerHTML
+                moreAfterClear: refs.documentShell.more.innerHTML,
+                openInfoProjection,
+                closedInfoProjection
             };
         }"""
     )
@@ -842,6 +1086,17 @@ def assert_panel_layout_contract(page: Page) -> None:
             "moreHtml": "<button>More</button>",
         },
         "moreAfterClear": "",
+        "openInfoProjection": {
+            "panelHidden": False,
+            "infoState": "open",
+            "layout": "index-document-info",
+            "activeViewId": "metadata-info",
+        },
+        "closedInfoProjection": {
+            "panelHidden": True,
+            "infoState": "closed",
+            "layout": "index-document",
+        },
     }:
         raise AssertionError(f"panel layout contract failed: {result!r}")
 
@@ -940,9 +1195,9 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"missing hosted view should be graceful: {result!r}")
     if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
         raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
-    if result["metadataInfo"]["reason"] != "disabled":
-        raise AssertionError(f"compat metadata info view should remain disabled: {result!r}")
-    if "metadata-info:disabled" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
+    if result["metadataInfo"]["available"] is not True or result["metadataInfo"]["registered"] is not True:
+        raise AssertionError(f"compat metadata info view should be public and available: {result!r}")
+    if "metadata-info:yes" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
         raise AssertionError(f"hosted view registry listing lost compatibility views: {result!r}")
 
 
@@ -959,6 +1214,7 @@ def assert_render_is_idempotent(page: Page) -> None:
                   ></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -978,7 +1234,10 @@ def assert_render_is_idempotent(page: Page) -> None:
                 indexMountChildCount: document.querySelector('[data-docs-viewer-index-panel-mount]').children.length,
                 documentShellCount: document.querySelectorAll('.docsViewer__main').length,
                 documentContentCount: document.querySelectorAll('#docsViewerContent').length,
-                documentMountChildCount: document.querySelector('[data-docs-viewer-document-shell-mount]').children.length
+                documentMountChildCount: document.querySelector('[data-docs-viewer-document-shell-mount]').children.length,
+                infoPanelCount: document.querySelectorAll('#docsViewerInfoPanel').length,
+                infoBodyCount: document.querySelectorAll('#docsViewerInfoPanelBody').length,
+                infoMountChildCount: document.querySelector('[data-docs-viewer-info-panel-mount]').children.length
             };
         }"""
     )
@@ -997,6 +1256,9 @@ def assert_render_is_idempotent(page: Page) -> None:
         "documentShellCount": 1,
         "documentContentCount": 1,
         "documentMountChildCount": 1,
+        "infoPanelCount": 1,
+        "infoBodyCount": 1,
+        "infoMountChildCount": 1,
     }:
         raise AssertionError(f"app shell render was not idempotent: {result!r}")
 
@@ -1027,6 +1289,8 @@ def main() -> int:
             assert_document_shell_render(page)
             assert_document_shell_management_shape(page)
             assert_document_shell_projection(page)
+            assert_info_panel_shell_and_metadata_lifecycle(page)
+            assert_hosted_view_context_contract(page)
             assert_panel_layout_contract(page)
             assert_view_state_and_hosted_view_contract(page)
             assert_render_is_idempotent(page)

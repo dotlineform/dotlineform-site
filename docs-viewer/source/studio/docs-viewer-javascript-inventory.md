@@ -77,6 +77,10 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 41 | new | `docs-viewer/runtime/js/docs-viewer-access.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned static public/manage/manage-local access projection and hosted-view access check. |
 | 42 | new | `docs-viewer/runtime/js/docs-viewer-view-state.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index/document/info view-state skeleton and projection helper. |
 | 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, built-in compatibility records, availability/access checks, and graceful absence. |
+| 44 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned info-panel chrome renderer and projection applier. |
+| 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
+| 46 | new | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` | 1 | 1 | 1 | 1 | 4 | Public-safe read-only metadata info hosted view. |
+| 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
 
 ## Follow-Up Notes
 
@@ -90,6 +94,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: document shell composition moved to `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved document/meta/search-result IDs. The entry module still orchestrates route boot and passes document-shell refs to focused controllers.
 - 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; compatibility panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
 - 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/document/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
+- 2026-05-27 owner note: info-panel chrome moved to `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, hosted-view lifecycle moved to `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, selected-document context projection moved to `docs-viewer/runtime/js/docs-viewer-view-context.js`, and metadata rendering moved to `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`. `docs-viewer.js` now passes explicit route/viewer inputs into the context helper and wires open/close events, but should not absorb panel DOM composition, lifecycle, context shaping, or metadata presentation.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, broader panel-layout ownership, or management lazy-boundary hardening.
 - Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
 - Preserve `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
@@ -99,6 +104,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the app-shell owner for management action-area coordination.
 - Current scope is intentionally narrow: render route-provided header controls through `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, render index panel chrome through `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, clear the management action mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered rows before existing management/theme binding continues.
 - It also renders the document shell through `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved IDs.
+- It also renders the info panel shell through `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`; lifecycle and metadata presentation stay in the focused info-panel host/view modules.
 - The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
 - Revisit the inventory table and score during the next full JavaScript inventory refresh; the expected target score for this focused renderer is 4 or lower while it stays limited to shell rendering.
 
@@ -132,7 +138,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
 
 - Added 2026-05-27 as the focused compatibility panel projection owner for the app shell.
-- Keep this module limited to index panel state storage/projection, current document/search/recent/results-status projection handoff, and delegation to the view-state skeleton.
+- Keep this module limited to index panel state storage/projection, current document/search/recent/results-status projection handoff, info-panel visibility/layout projection, and delegation to the view-state skeleton.
 - Do not add toolbar controls, hosted-view registration, document payload rendering, search result rendering, or management action behavior to it.
 
 ### `docs-viewer/runtime/js/docs-viewer-route-config.js`
@@ -156,8 +162,33 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
 
 - Added 2026-05-27 as the focused hosted-view registration shape for ordinary repo JavaScript modules.
-- Keep this module limited to records, lifecycle method names, built-in compatibility view records, access/availability checks, and graceful absence.
+- Keep this module limited to records, lifecycle method names, built-in compatibility view records, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
 - Do not turn it into a plugin system, dependency loader, panel toolbar renderer, or third-party visualization owner.
+
+### `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
+
+- Added 2026-05-27 as the focused renderer for info-panel shell chrome.
+- Keep this module limited to rendering the info-panel container, accessible title/label, close control, hosted-view mount, status node, and projection attributes.
+- Do not move hosted-view lifecycle, metadata rendering, source editing, panel toolbar selection, or management actions into it.
+
+### `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`
+
+- Added 2026-05-27 as the focused lifecycle owner for info-panel hosted views.
+- Keep this module limited to resolving a registered view, loading it, mounting/updating/unmounting it in the assigned info-panel body, closing the panel, and reporting graceful absence.
+- Do not add route-state mutation, URL history behavior, metadata field rendering, backend writes, or plugin discovery to it.
+
+### `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`
+
+- Added 2026-05-27 as the first public-safe read-only info hosted view.
+- Keep this module limited to rendering selected-document metadata from explicit context fields.
+- Do not read broad viewer state, expose source paths, add edit controls, or call management endpoints.
+
+### `docs-viewer/runtime/js/docs-viewer-view-context.js`
+
+- Added 2026-05-27 as the focused selected-document hosted-view context projector.
+- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, and display labels from explicit inputs.
+- Future info views should extend or consume this helper rather than adding context shaping directly to `docs-viewer.js`.
+- Do not add DOM rendering, hosted-view lifecycle, URL history mutation, or backend writes to it.
 
 ### Docs Import And Management
 

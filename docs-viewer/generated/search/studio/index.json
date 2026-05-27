@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4ed68331919d7786fa578df29adfb2e1",
-    "generated_at_utc": "2026-05-27T18:16:37Z",
-    "count": 202
+    "version": "blake2b-7265dfb8f460e0a60818cb051a4d15ce",
+    "generated_at_utc": "2026-05-27T18:57:48Z",
+    "count": 203
   },
   "entries": [
     {
@@ -4174,6 +4174,37 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-info-panel-metadata-view-tasks site request docs viewer info panel metadata view tasks docs viewer info panel metadata view tasks docs viewer javascript app shell request javascript app shell 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-route-config-handoff-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Route Config Handoff Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-route-config-handoff-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-route-config-handoff-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "route",
+        "config",
+        "handoff",
+        "tasks",
+        "docs viewer route config handoff tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "app",
+        "shell",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-route-config-handoff-tasks site request docs viewer route config handoff tasks docs viewer route config handoff tasks docs viewer javascript app shell request javascript app shell 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

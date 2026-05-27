@@ -45,8 +45,8 @@ function normalizePanelDefaults(rawPanels) {
       defaultView: cleanString(documentPanel.default_view || documentPanel.defaultView) || "document"
     },
     info: {
-      enabled: info.enabled === true,
-      defaultView: cleanString(info.default_view || info.defaultView) || ""
+      enabled: info.enabled !== false,
+      defaultView: cleanString(info.default_view || info.defaultView) || "metadata-info"
     }
   };
 }
@@ -103,7 +103,7 @@ function routeConfigFromDataset(root) {
     panels: {
       index: { enabled: true, default_state: "normal" },
       document: { enabled: true, default_view: "document" },
-      info: { enabled: false, default_view: "" }
+      info: { enabled: true, default_view: "metadata-info" }
     },
     hosted_views: {
       records: []

@@ -204,6 +204,26 @@ def main(argv: list[str] | None = None) -> int:
             management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
             docs_script_count = page.locator('script[src*="docs-viewer.js"]').count()
 
+            page.locator("#docsViewerInfoToggle").click()
+            page.wait_for_function(
+                """() => document.querySelector(".docsViewer__metadataInfoIdValue")?.textContent === "docs-viewer" """,
+                timeout=args.timeout_ms,
+            )
+            info_panel_state = page.locator("#docsViewerRoot").evaluate(
+                """root => ({
+                    infoPanelState: root.dataset.infoPanelState || "",
+                    layout: root.dataset.viewerLayout || "",
+                    docIdValue: document.querySelector(".docsViewer__metadataInfoIdValue")?.textContent || "",
+                    routeHref: document.querySelector(".docsViewer__metadataInfoRow a")?.getAttribute("href") || "",
+                    editButtonVisible: Boolean(document.querySelector("#docsViewerManageEditButton"))
+                })"""
+            )
+            page.locator("#docsViewerInfoPanelClose").click()
+            page.wait_for_function(
+                """() => document.querySelector("#docsViewerInfoPanel")?.hidden === true """,
+                timeout=args.timeout_ms,
+            )
+
             page.locator("#docsViewerManageActionsButton").click()
             page.locator("#docsViewerManageDeleteButton").click()
             page.wait_for_function(
@@ -247,6 +267,14 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected Docs Viewer root attrs: {root_attrs!r}")
         if query_value(tree_url, "doc") != "docs-viewer-overview" or query_value(tree_url, "mode") != "manage":
             raise AssertionError(f"expected tree click to keep docs-viewer-overview active in manage mode, got {tree_url}")
+        if info_panel_state != {
+            "infoPanelState": "open",
+            "layout": "index-document-info",
+            "docIdValue": "docs-viewer",
+            "routeHref": "/docs/?scope=studio&mode=manage&doc=docs-viewer",
+            "editButtonVisible": True,
+        }:
+            raise AssertionError(f"unexpected manage-mode info panel state: {info_panel_state!r}")
         if not any("/docs/generated/index" in url for url in generated_requests):
             raise AssertionError(f"expected generated index request through Docs Viewer service: {generated_requests!r}")
         if not any("/docs/generated/payload" in url for url in generated_requests):

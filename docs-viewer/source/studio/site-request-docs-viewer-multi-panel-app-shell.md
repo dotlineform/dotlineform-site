@@ -161,6 +161,11 @@ The view-state helper can represent index, document, and info slots, and the pan
 The hosted-view helper defines ordinary repo JavaScript view records, built-in compatibility view placeholders, access/availability checks, lifecycle method names, and graceful absence.
 It still does not implement visible info-panel content, panel toolbar UI, source editor, semantic-reference views, or third-party visualization modules.
 
+2026-05-27 implementation note: the info-panel metadata slice added the first visible `info` panel.
+`docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` owns the panel chrome and `data-info-panel-state` / `data-viewer-layout` projection, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns hosted-view load/mount/update/unmount/close behavior, and `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` renders the public-safe `metadata-info` view.
+The slice keeps the metadata view read-only and selected-document scoped.
+It does not add a generalized panel toolbar, source editor, editable metadata save path, semantic-reference view, activity view, third-party visualization module, or plugin architecture.
+
 ## Panel Toolbar Model
 
 Each panel should have small shared chrome:

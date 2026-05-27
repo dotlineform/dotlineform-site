@@ -44,6 +44,13 @@ import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
+  createDocsViewerInfoPanelHost
+} from "./docs-viewer-info-panel-host.js";
+import {
+  createDocsViewerHostedViewContext,
+  resolveDocsViewerSelectedDoc
+} from "./docs-viewer-view-context.js";
+import {
   createDocsViewerCompatibilityHostedViews,
   createDocsViewerHostedViewRegistry,
   registerDocsViewerHostedViews
@@ -88,12 +95,14 @@ import {
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
   var documentShellRefs = appShellRefs.documentShell;
+  var infoPanelRefs = appShellRefs.infoPanel;
   var status = appShellRefs.status;
   var meta = documentShellRefs.meta;
   var pathEl = documentShellRefs.pathEl;
   var updatedEl = documentShellRefs.updatedEl;
   var summaryEl = documentShellRefs.summaryEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
+  var infoToggle = documentShellRefs.infoToggle;
   var bookmarkToggle = documentShellRefs.bookmarkToggle;
   var statusPills = documentShellRefs.statusPills;
   var content = documentShellRefs.content;
@@ -146,7 +155,17 @@ import {
     routeId: routeContext.routeConfig.routeId,
     indexPanelRefs: indexPanelRefs,
     documentShellRefs: documentShellRefs,
+    infoPanelRefs: infoPanelRefs,
     indexPanelAvailable: sidebarCollapseAvailable
+  });
+  var infoPanelHost = createDocsViewerInfoPanelHost({
+    refs: infoPanelRefs,
+    registry: hostedViewRegistry,
+    project: function (projection) {
+      panelLayout.projectInfoPanel(projection || {});
+      state.viewState = panelLayout.projectViewState();
+      renderInfoToggleState();
+    }
   });
   var managementController = null;
   var managementControllerRequestPromise = null;
@@ -685,9 +704,71 @@ import {
   function renderBookmarkToggle() {
     if (bookmarkController) {
       bookmarkController.renderToggle();
+      renderInfoToggleState();
       return;
     }
     if (bookmarkToggle) bookmarkToggle.hidden = true;
+    renderInfoToggleState();
+  }
+
+  function currentSelectedDoc() {
+    return resolveDocsViewerSelectedDoc({
+      allDocsById: state.allDocsById,
+      docsById: state.docsById,
+      selectedDocId: state.selectedDocId
+    });
+  }
+
+  function infoPanelContext() {
+    return createDocsViewerHostedViewContext({
+      allDocsById: state.allDocsById,
+      buildTrail: buildTrail,
+      docsById: state.docsById,
+      payloadCache: state.payloadCache,
+      routeAccess: routeContext.access,
+      selectedDocId: state.selectedDocId,
+      uiStatusByValue: state.uiStatusByValue,
+      viewerScope: viewerScope,
+      viewerTargetDocId: viewerTargetDocId,
+      viewerUrl: viewerUrl
+    });
+  }
+
+  function metadataInfoAvailable() {
+    var resolved = hostedViewRegistry.resolve("metadata-info");
+    return Boolean(resolved.available && resolved.view);
+  }
+
+  function renderInfoToggleState() {
+    if (!infoToggle) return;
+    var canShow = Boolean(currentSelectedDoc() && metadataInfoAvailable());
+    var open = infoPanelHost.isOpen();
+    var label = open ? "Hide document info" : "Show document info";
+    projectDocumentShell({
+      infoToggleHidden: !canShow,
+      infoToggleLabel: label,
+      infoTogglePressed: open
+    });
+  }
+
+  function updateInfoPanel() {
+    renderInfoToggleState();
+    if (infoPanelHost.isOpen()) {
+      infoPanelHost.update(infoPanelContext());
+    }
+  }
+
+  function openMetadataInfoPanel() {
+    if (!currentSelectedDoc()) return;
+    infoPanelHost.open("metadata-info", infoPanelContext()).then(function () {
+      renderInfoToggleState();
+    });
+  }
+
+  function closeInfoPanel() {
+    infoPanelHost.close().then(function () {
+      renderInfoToggleState();
+    });
   }
 
   function renderStatusPills() {
@@ -956,6 +1037,7 @@ import {
 
   function hideDocPane() {
     documentController.hideDocPane();
+    updateInfoPanel();
   }
 
   function showDocPane() {
@@ -964,14 +1046,17 @@ import {
 
   function showSearchPane() {
     documentController.showSearchPane();
+    updateInfoPanel();
   }
 
   function showRecentPane() {
     documentController.showRecentPane();
+    updateInfoPanel();
   }
 
   function renderPayload(doc, payload, hash) {
     documentController.renderPayload(doc, payload, hash);
+    updateInfoPanel();
   }
 
   function setHistory(docId, hash, query, mode) {
@@ -998,10 +1083,12 @@ import {
 
   function handleMissingDoc() {
     documentController.handleMissingDoc();
+    updateInfoPanel();
   }
 
   function renderDocLoadingState(doc) {
     documentController.renderDocLoadingState(doc);
+    updateInfoPanel();
   }
 
   function fetchDocPayload(doc, docId) {
@@ -1016,6 +1103,7 @@ import {
 
   function handlePayloadError(error) {
     documentController.handlePayloadError(error);
+    updateInfoPanel();
   }
 
   function loadDoc(docId, options) {
@@ -1114,6 +1202,22 @@ import {
       });
     }
 
+    if (infoToggle) {
+      infoToggle.addEventListener("click", function () {
+        if (infoPanelHost.isOpen()) {
+          closeInfoPanel();
+        } else {
+          openMetadataInfoPanel();
+        }
+      });
+    }
+
+    if (infoPanelRefs.closeButton) {
+      infoPanelRefs.closeButton.addEventListener("click", function () {
+        closeInfoPanel();
+      });
+    }
+
     if (scopeSelect) {
       scopeSelect.addEventListener("change", function () {
         handleScopeChange();
@@ -1127,6 +1231,9 @@ import {
     document.addEventListener("keydown", function (event) {
       if (managementController && managementController.handleDocumentKeydown(event)) {
         return;
+      }
+      if (event.key === "Escape" && infoPanelHost.isOpen()) {
+        closeInfoPanel();
       }
     });
 
@@ -1167,7 +1274,7 @@ import {
   }
 
   function applyCurrentRoute(options) {
-    return applyViewerRoute({
+    var result = applyViewerRoute({
       applyDocVisibility: applyDocVisibility,
       currentDocId: getCurrentDocId,
       currentHash: getCurrentHash,
@@ -1199,6 +1306,8 @@ import {
       state: state,
       syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc
     });
+    updateInfoPanel();
+    return result;
   }
 
   function loadIndex() {

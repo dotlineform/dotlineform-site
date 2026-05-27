@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-27-added-docs-viewer-info-panel-metadata-view",
+  "date": "2026-05-27",
+  "title": "Added Docs Viewer Info Panel Metadata View",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Added the first visible Docs Viewer info panel with read-only public-safe metadata rendering, hosted-view lifecycle wiring, selected-document context projection, and focused public/manage smoke coverage.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-info-panel-metadata-view-tasks.md"
+  },
+  "subjects": [
+    "app-shell",
+    "info-panel",
+    "hosted-views",
+    "metadata"
+  ],
+  "related_docs": [
+    "site-request-docs-viewer-info-panel-metadata-view-tasks",
+    "site-request-docs-viewer-javascript-app-shell",
+    "site-request-docs-viewer-multi-panel-app-shell",
+    "docs-viewer",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js",
+    "docs-viewer/runtime/js/docs-viewer-info-panel-host.js",
+    "docs-viewer/runtime/js/docs-viewer-view-context.js",
+    "docs-viewer/runtime/js/docs-viewer-metadata-info-view.js",
+    "docs-viewer/runtime/js/docs-viewer.js",
+    "docs-viewer/static/css/docs-viewer.css",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py",
+    "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
+    "docs-viewer/tests/smoke/docs_viewer_service_manage.py"
+  ],
+  "effect": "The Docs Viewer app shell now has a real info-panel slot and a visible hosted view without exposing management-only source editing or broad mutable route state, giving future panel views a tested ownership boundary.",
+  "verification": [
+    "node --check targeted Docs Viewer runtime modules",
+    "docs_viewer_app_shell_modules.py --site-root .",
+    "jekyll build --destination /tmp/dlf-jekyll-build",
+    "public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build",
+    "docs_viewer_service_manage.py"
+  ]
+}

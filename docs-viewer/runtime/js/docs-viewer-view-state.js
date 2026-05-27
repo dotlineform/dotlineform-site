@@ -17,8 +17,8 @@ function normalizePanelDefaults(rawPanels) {
       defaultView: cleanString(documentPanel.defaultView || documentPanel.default_view) || "document"
     },
     info: {
-      enabled: info.enabled === true,
-      defaultView: cleanString(info.defaultView || info.default_view)
+      enabled: info.enabled !== false,
+      defaultView: cleanString(info.defaultView || info.default_view) || "metadata-info"
     }
   };
 }

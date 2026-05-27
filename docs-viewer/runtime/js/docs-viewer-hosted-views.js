@@ -129,7 +129,13 @@ export function createDocsViewerCompatibilityHostedViews() {
       label: "Metadata info",
       panel: "info",
       access: "public",
-      availability: "disabled"
+      availability: "available",
+      load: function () {
+        return import("./docs-viewer-metadata-info-view.js")
+          .then(function (module) {
+            return module.createDocsViewerMetadataInfoView();
+          });
+      }
     }
   ];
 }

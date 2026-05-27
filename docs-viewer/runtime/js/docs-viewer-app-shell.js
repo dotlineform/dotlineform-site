@@ -14,6 +14,12 @@ import {
   renderDocsViewerIndexPanelShell
 } from "./docs-viewer-index-panel-renderer.js";
 import {
+  applyDocsViewerInfoPanelProjection,
+  findDocsViewerInfoPanelRefs,
+  infoPanelMount,
+  renderDocsViewerInfoPanelShell
+} from "./docs-viewer-info-panel-renderer.js";
+import {
   createDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
 
@@ -59,11 +65,17 @@ export function initDocsViewerAppShell(options) {
     root: root,
     mount: settings.indexPanelMount || indexPanelMount(root)
   });
+  var infoPanel = renderDocsViewerInfoPanelShell({
+    document: documentRef,
+    root: root,
+    mount: settings.infoPanelMount || infoPanelMount(root)
+  });
   var mount = settings.managementActionsMount || settings.mount || managementActionsMount(root);
   if (!mount) {
     return Promise.resolve({
       headerControls: headerControls,
       documentShell: documentShell,
+      infoPanel: infoPanel,
       indexPanel: indexPanel,
       routeContext: routeContext,
       managementActions: null
@@ -75,6 +87,7 @@ export function initDocsViewerAppShell(options) {
     return Promise.resolve({
       headerControls: headerControls,
       documentShell: documentShell,
+      infoPanel: infoPanel,
       indexPanel: indexPanel,
       routeContext: routeContext,
       managementActions: null
@@ -90,6 +103,7 @@ export function initDocsViewerAppShell(options) {
       return {
         headerControls: headerControls,
         documentShell: documentShell,
+        infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
         managementActions: row
@@ -100,6 +114,7 @@ export function initDocsViewerAppShell(options) {
       return {
         headerControls: headerControls,
         documentShell: documentShell,
+        infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
         managementActions: null
@@ -123,6 +138,14 @@ export function getDocsViewerAppShellIndexPanelRefs(options) {
   });
 }
 
+export function getDocsViewerAppShellInfoPanelRefs(options) {
+  var settings = options || {};
+  return findDocsViewerInfoPanelRefs({
+    document: settings.document || document,
+    root: settings.root || null
+  });
+}
+
 export function getDocsViewerAppShellRefs(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
@@ -135,6 +158,7 @@ export function getDocsViewerAppShellRefs(options) {
     },
     indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
     documentShell: getDocsViewerAppShellDocumentRefs({ root: root, document: documentRef }),
+    infoPanel: getDocsViewerAppShellInfoPanelRefs({ root: root, document: documentRef }),
     status: documentRef.getElementById("docsViewerStatus"),
     bookmarkRow: documentRef.getElementById("docsViewerBookmarkRow"),
     managementActions: {
@@ -152,4 +176,8 @@ export function renderDocsViewerAppShellIndexPanelState(options) {
 
 export function renderDocsViewerAppShellDocumentState(options) {
   applyDocsViewerDocumentShellProjection(options || {});
+}
+
+export function renderDocsViewerAppShellInfoPanelState(options) {
+  applyDocsViewerInfoPanelProjection(options || {});
 }

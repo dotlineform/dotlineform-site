@@ -378,6 +378,10 @@ Optional first visible shell move:
   `docs-viewer/runtime/js/docs-viewer-view-state.js` defines the index/document/info panel state skeleton, and `docs-viewer/runtime/js/docs-viewer-panel-layout.js` now projects that skeleton through today's two-panel behavior.
   `docs-viewer/runtime/js/docs-viewer-hosted-views.js` defines the minimal hosted-view record and lifecycle shape plus graceful absence for missing, disabled, or access-blocked modules.
   The specific info panel, panel toolbar UI, source editor, semantic-reference views, and third-party visualization modules remain deferred.
+- added the first visible info-panel metadata view slice.
+  `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` renders the info panel shell and projection, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns hosted-view lifecycle and graceful absence, and `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` renders public-safe selected-document metadata.
+  `metadata-info` is now the built-in public info hosted view.
+  The source editor, editable metadata saves, semantic-reference views, activity views, panel-toolbar generalization, third-party visualization modules, and plugin architecture remain deferred.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -407,6 +411,7 @@ Recommended sequence:
 
 5. Later info metadata view.
    Implement the read-only metadata info view only after the route config, access, panel state, and hosted-view contracts are stable enough for the info panel to consume them.
+   Implemented 2026-05-27: the info-panel metadata slice added the real info panel shell, the hosted-view lifecycle host, selected-document metadata context projection, and the `metadata-info` public hosted view. The view is read-only and public-safe; it does not expose source paths, local filesystem actions, edit controls, semantic references, or activity history.
 
 The next task tracker is [Docs Viewer Info Panel Metadata View Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-info-panel-metadata-view-tasks).
 
