@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-27-added-docs-viewer-route-context-panel-layout",
+  "date": "2026-05-27",
+  "title": "Added Docs Viewer Route Context And Panel Layout Owners",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime",
+    "studio-ui"
+  ],
+  "subjects": [
+    "app-shell",
+    "route-context",
+    "panel-layout",
+    "public-readonly-routes",
+    "manage-mode"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-app-shell-route-context-panel-state-tasks",
+  "related_docs": [
+    "site-request-docs-viewer-app-shell-route-context-panel-state-tasks",
+    "site-request-docs-viewer-javascript-app-shell",
+    "site-request-docs-viewer-multi-panel-app-shell",
+    "docs-viewer",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-context.js",
+    "docs-viewer/runtime/js/docs-viewer-panel-layout.js",
+    "docs-viewer/runtime/js/docs-viewer-app-shell.js",
+    "docs-viewer/runtime/js/docs-viewer.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py"
+  ],
+  "summary": "Added focused Docs Viewer app-shell owners for route dataset normalization, public/manage access flags, shell ref collection, and the current compatibility panel projection for index and document/search/recent visibility.",
+  "effect": "The shared Docs Viewer entrypoint remains the route boot and controller orchestration layer while route context and panel projection now have small testable owners. This gives the next info-panel and hosted-view slices explicit context, access, ref, and projection surfaces without moving generated-data reads, payload rendering, search/recent rendering, bookmark storage, or management write workflows.",
+  "verification": [
+    "node syntax checks passed for docs-viewer.js, docs-viewer-app-shell.js, docs-viewer-app-context.js, and docs-viewer-panel-layout.js",
+    "Python py_compile passed for docs_viewer_app_shell_modules.py",
+    "focused app-shell module smoke passed with route-context, shell-ref, and panel-layout coverage",
+    "isolated Jekyll build to /tmp/dlf-jekyll-build passed",
+    "public Docs Viewer read-only smoke passed against /tmp/dlf-jekyll-build",
+    "standalone Docs Viewer service manage smoke passed",
+    "Docs Viewer management modal smoke passed on desktop and mobile viewports"
+  ],
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-app-shell-route-context-panel-state-tasks.md",
+    "archive": "change-request"
+  }
+}

@@ -240,6 +240,113 @@ def assert_management_actions_omitted(page: Page) -> None:
         raise AssertionError(f"public route management action omission failed: {result!r}")
 
 
+def assert_route_context_and_shell_refs(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            window.history.replaceState({}, '', '/docs/?scope=studio&doc=intro&mode=manage&import=1');
+            document.body.innerHTML = `
+                <section
+                  id="docsViewerRoot"
+                  data-allow-management="true"
+                  data-allow-scope-query="true"
+                  data-docs-viewer-config-url="/docs-viewer/config/defaults/docs-viewer-config.json"
+                  data-viewer-base-url="/docs/"
+                  data-viewer-scope="studio"
+                  data-index-url="/assets/data/docs/scopes/studio/index.json"
+                  data-search-index-url="/assets/data/search/studio/index.json"
+                  data-default-doc-id="dev-home"
+                  data-include-scope-param="true"
+                  data-ui-text-url="/docs-viewer/config/ui-text/ui-text.json"
+                  data-report-registry-url="/assets/data/docs/reports.json"
+                  data-management-base-url="http://127.0.0.1:8789/"
+                >
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <p id="docsViewerStatus"></p>
+                  <div id="docsViewerBookmarkRow"></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await shell.initDocsViewerAppShell({ root, document });
+            const route = context.createDocsViewerRouteContext({
+                root,
+                window,
+                assetVersion: 'smoke',
+                managementModeValue: 'manage'
+            });
+            const refs = shell.getDocsViewerAppShellRefs({ root, document });
+            const updated = context.updateDocsViewerRouteContext(route, {
+                viewerScope: 'library',
+                indexUrl: '/assets/data/docs/scopes/library/index.json?v=smoke',
+                searchIndexUrl: '/assets/data/search/library/index.json?v=smoke',
+                defaultRouteDocId: 'library-home',
+                viewerBaseUrl: '/library/',
+                includeScopeParam: false
+            }, { window });
+            return {
+                allowManagement: route.access.allowManagement,
+                allowScopeQuery: route.access.allowScopeQuery,
+                managementRequested: route.access.managementRequested,
+                importRequested: route.access.importRequested,
+                publicReadOnly: route.access.publicReadOnly,
+                indexUrl: route.indexUrl,
+                searchIndexUrl: route.searchIndexUrl,
+                managementBaseUrl: route.managementBaseUrl,
+                generatedBaseUrl: route.generatedBaseUrl,
+                bookmarkScope: route.bookmarkScope,
+                refs: {
+                    scopeSelect: refs.headerControls.scopeSelect?.id || '',
+                    recentButton: refs.headerControls.recentButton?.id || '',
+                    searchInput: refs.headerControls.searchInput?.id || '',
+                    nav: refs.indexPanel.nav?.id || '',
+                    content: refs.documentShell.content?.id || '',
+                    status: refs.status?.id || '',
+                    bookmarkRow: refs.bookmarkRow?.id || '',
+                    managementRow: refs.managementActions.row?.id || ''
+                },
+                updated: {
+                    viewerScope: updated.viewerScope,
+                    viewerPathname: updated.viewerPathname,
+                    bookmarkScope: updated.bookmarkScope,
+                    includeScopeParam: updated.includeScopeParam
+                }
+            };
+        }"""
+    )
+    if result != {
+        "allowManagement": True,
+        "allowScopeQuery": True,
+        "managementRequested": True,
+        "importRequested": True,
+        "publicReadOnly": False,
+        "indexUrl": "/assets/data/docs/scopes/studio/index.json?v=smoke",
+        "searchIndexUrl": "/assets/data/search/studio/index.json?v=smoke",
+        "managementBaseUrl": "http://127.0.0.1:8789",
+        "generatedBaseUrl": "http://127.0.0.1:8789",
+        "bookmarkScope": "studio",
+        "refs": {
+            "scopeSelect": "docsViewerScopeSelect",
+            "recentButton": "docsViewerRecentButton",
+            "searchInput": "docsViewerSearchInput",
+            "nav": "docsViewerNav",
+            "content": "docsViewerContent",
+            "status": "docsViewerStatus",
+            "bookmarkRow": "docsViewerBookmarkRow",
+            "managementRow": "docsViewerManageRow",
+        },
+        "updated": {
+            "viewerScope": "library",
+            "viewerPathname": "/library/",
+            "bookmarkScope": "library",
+            "includeScopeParam": False,
+        },
+    }:
+        raise AssertionError(f"route context or shell refs contract failed: {result!r}")
+
+
 def assert_index_panel_shell_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -526,6 +633,117 @@ def assert_document_shell_projection(page: Page) -> None:
         raise AssertionError(f"document projection failed: {result!r}")
 
 
+def assert_panel_layout_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const panels = await import('/docs-viewer/runtime/js/docs-viewer-panel-layout.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await shell.initDocsViewerAppShell({ root, document });
+            const refs = shell.getDocsViewerAppShellRefs({ root, document });
+            const values = {
+                'dotlineform-docs-viewer-sidebar:studio': 'collapsed',
+                'dotlineform-docs-viewer-index-panel:library': 'expanded'
+            };
+            const storage = {
+                getItem: (key) => Object.prototype.hasOwnProperty.call(values, key) ? values[key] : null,
+                setItem: (key, value) => { values[key] = value; }
+            };
+            let available = true;
+            const layout = panels.createDocsViewerPanelLayout({
+                root,
+                storage,
+                storageScope: 'studio',
+                indexPanelRefs: refs.indexPanel,
+                documentShellRefs: refs.documentShell,
+                indexPanelAvailable: () => available
+            });
+            const initialState = layout.indexPanelState();
+            layout.renderIndexPanelState();
+            const initialProjection = {
+                state: root.dataset.indexPanelState,
+                sidebar: root.dataset.sidebarState,
+                toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label')
+            };
+            const toggledState = layout.toggleIndexPanelState();
+            const storedStudio = values['dotlineform-docs-viewer-index-panel:studio'];
+            layout.setStorageScope('library');
+            layout.renderIndexPanelState();
+            const libraryProjection = {
+                state: root.dataset.indexPanelState,
+                sidebar: root.dataset.sidebarState,
+                expandHidden: refs.indexPanel.sidebarExpand.hidden
+            };
+            available = false;
+            const unavailableToggleState = layout.toggleIndexPanelState();
+            layout.renderIndexPanelState();
+            refs.documentShell.more.innerHTML = '<button>More</button>';
+            layout.projectDocumentShell({
+                contentHidden: true,
+                resultsStatusText: 'Recent docs',
+                resultsStatusHidden: false,
+                resultsHidden: false,
+                moreHidden: false
+            });
+            const recentProjection = {
+                contentHidden: refs.documentShell.content.hidden,
+                resultsStatusText: refs.documentShell.resultsStatus.textContent,
+                resultsStatusHidden: refs.documentShell.resultsStatus.hidden,
+                resultsHidden: refs.documentShell.results.hidden,
+                moreHidden: refs.documentShell.more.hidden,
+                moreHtml: refs.documentShell.more.innerHTML
+            };
+            layout.projectDocumentShell({ moreHidden: true, clearMore: true });
+            return {
+                initialState,
+                initialProjection,
+                toggledState,
+                storedStudio,
+                libraryState: layout.indexPanelState(),
+                libraryProjection,
+                unavailableToggleState,
+                unavailableProjectedState: root.dataset.indexPanelState,
+                recentProjection,
+                moreAfterClear: refs.documentShell.more.innerHTML
+            };
+        }"""
+    )
+    if result != {
+        "initialState": "collapsed",
+        "initialProjection": {
+            "state": "collapsed",
+            "sidebar": "collapsed",
+            "toggleLabel": "Restore index panel",
+        },
+        "toggledState": "normal",
+        "storedStudio": "normal",
+        "libraryState": "expanded",
+        "libraryProjection": {
+            "state": "expanded",
+            "sidebar": "expanded",
+            "expandHidden": True,
+        },
+        "unavailableToggleState": "expanded",
+        "unavailableProjectedState": "normal",
+        "recentProjection": {
+            "contentHidden": True,
+            "resultsStatusText": "Recent docs",
+            "resultsStatusHidden": False,
+            "resultsHidden": False,
+            "moreHidden": False,
+            "moreHtml": "<button>More</button>",
+        },
+        "moreAfterClear": "",
+    }:
+        raise AssertionError(f"panel layout contract failed: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -600,11 +818,13 @@ def main() -> int:
             assert_header_controls_management_render(page)
             assert_management_actions_render(page)
             assert_management_actions_omitted(page)
+            assert_route_context_and_shell_refs(page)
             assert_index_panel_shell_render(page)
             assert_index_panel_projection(page)
             assert_document_shell_render(page)
             assert_document_shell_management_shape(page)
             assert_document_shell_projection(page)
+            assert_panel_layout_contract(page)
             assert_render_is_idempotent(page)
 
             browser.close()

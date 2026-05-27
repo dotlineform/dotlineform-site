@@ -13,9 +13,12 @@ import {
   indexPanelMount,
   renderDocsViewerIndexPanelShell
 } from "./docs-viewer-index-panel-renderer.js";
+import {
+  createDocsViewerRouteContext
+} from "./docs-viewer-app-context.js";
 
 function managementAllowed(root) {
-  return Boolean(root && root.dataset.allowManagement === "true");
+  return createDocsViewerRouteContext({ root: root }).access.allowManagement;
 }
 
 function headerControlsMount(root) {
@@ -105,6 +108,29 @@ export function getDocsViewerAppShellIndexPanelRefs(options) {
     document: settings.document || document,
     root: settings.root || null
   });
+}
+
+export function getDocsViewerAppShellRefs(options) {
+  var settings = options || {};
+  var documentRef = settings.document || document;
+  var root = settings.root || null;
+  return {
+    headerControls: {
+      scopeSelect: documentRef.getElementById("docsViewerScopeSelect"),
+      recentButton: documentRef.getElementById("docsViewerRecentButton"),
+      searchInput: documentRef.getElementById("docsViewerSearchInput")
+    },
+    indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
+    documentShell: getDocsViewerAppShellDocumentRefs({ root: root, document: documentRef }),
+    status: documentRef.getElementById("docsViewerStatus"),
+    bookmarkRow: documentRef.getElementById("docsViewerBookmarkRow"),
+    managementActions: {
+      mount: documentRef.getElementById("docsViewerManageActionsMount"),
+      row: documentRef.getElementById("docsViewerManageRow"),
+      actionsButton: documentRef.getElementById("docsViewerManageActionsButton"),
+      actionsMenu: documentRef.getElementById("docsViewerManageActionsMenu")
+    }
+  };
 }
 
 export function renderDocsViewerAppShellIndexPanelState(options) {

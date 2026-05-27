@@ -13,7 +13,6 @@ import {
   initDocsViewerBookmarks
 } from "./docs-viewer-bookmarks.js";
 import {
-  appendAssetVersion,
   fetchIndexWithRetry,
   fetchPreferredGeneratedJson,
   managementReloadPath,
@@ -38,14 +37,12 @@ import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
 import {
-  buildIndexPanelStorageKey,
-  buildLegacySidebarStorageKey,
-  expandedIndexPanelState,
-  nextIndexPanelState,
-  persistIndexPanelState,
-  projectIndexPanelState,
-  readIndexPanelState
-} from "./docs-viewer-index-panel.js";
+  createDocsViewerRouteContext,
+  updateDocsViewerRouteContext
+} from "./docs-viewer-app-context.js";
+import {
+  createDocsViewerPanelLayout
+} from "./docs-viewer-panel-layout.js";
 import {
   applyViewerRoute,
   buildViewerUrl,
@@ -57,11 +54,8 @@ import {
   setViewerHistory
 } from "./docs-viewer-router.js";
 import {
-  getDocsViewerAppShellDocumentRefs,
-  getDocsViewerAppShellIndexPanelRefs,
+  getDocsViewerAppShellRefs,
   initDocsViewerAppShell,
-  renderDocsViewerAppShellDocumentState,
-  renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
 
 (function () {
@@ -72,49 +66,54 @@ import {
     document: document
   });
 
-  var indexPanelRefs = getDocsViewerAppShellIndexPanelRefs({
+  var appShellRefs = getDocsViewerAppShellRefs({
     root: root,
     document: document
   });
+  var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
-  var documentShellRefs = getDocsViewerAppShellDocumentRefs({
-    root: root,
-    document: document
-  });
-  var status = document.getElementById("docsViewerStatus");
+  var documentShellRefs = appShellRefs.documentShell;
+  var status = appShellRefs.status;
   var meta = documentShellRefs.meta;
   var pathEl = documentShellRefs.pathEl;
   var updatedEl = documentShellRefs.updatedEl;
   var summaryEl = documentShellRefs.summaryEl;
-  var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
+  var bookmarkRow = appShellRefs.bookmarkRow;
   var bookmarkToggle = documentShellRefs.bookmarkToggle;
   var statusPills = documentShellRefs.statusPills;
   var content = documentShellRefs.content;
-  var scopeSelect = document.getElementById("docsViewerScopeSelect");
-  var recentButton = document.getElementById("docsViewerRecentButton");
-  var searchInput = document.getElementById("docsViewerSearchInput");
+  var scopeSelect = appShellRefs.headerControls.scopeSelect;
+  var recentButton = appShellRefs.headerControls.recentButton;
+  var searchInput = appShellRefs.headerControls.searchInput;
   var resultsStatus = documentShellRefs.resultsStatus;
   var results = documentShellRefs.results;
   var more = documentShellRefs.more;
 
-  var allowManagement = root.dataset.allowManagement === "true";
-  var allowScopeQuery = root.dataset.allowScopeQuery === "true";
-  var docsViewerConfigUrl = String(root.dataset.docsViewerConfigUrl || "").trim();
-  var routeViewerBaseUrl = String(root.dataset.viewerBaseUrl || "").trim();
-  var indexUrl = appendAssetVersion(root.dataset.indexUrl);
-  var viewerBaseUrl = routeViewerBaseUrl || window.location.pathname;
-  var viewerScope = String(root.dataset.viewerScope || "").trim();
-  var includeScopeParam = root.dataset.includeScopeParam === "true";
-  var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
-  var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
-  var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
-  var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
-  var reportRegistryUrl = String(root.dataset.reportRegistryUrl || "").trim();
-  var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
-  var generatedBaseUrl = String(root.dataset.generatedBaseUrl || "").trim().replace(/\/+$/, "") || managementBaseUrl;
-  var openImportOnLoad = allowManagement && new URLSearchParams(window.location.search).get("import") === "1";
+  var assetVersion = readAssetVersion(document);
+  var routeContext = createDocsViewerRouteContext({
+    root: root,
+    window: window,
+    assetVersion: assetVersion,
+    managementModeValue: "manage"
+  });
+  var allowManagement = routeContext.access.allowManagement;
+  var allowScopeQuery = routeContext.access.allowScopeQuery;
+  var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
+  var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
+  var indexUrl = routeContext.indexUrl;
+  var viewerBaseUrl = routeContext.viewerBaseUrl;
+  var viewerScope = routeContext.viewerScope;
+  var includeScopeParam = routeContext.includeScopeParam;
+  var defaultRouteDocId = routeContext.defaultRouteDocId;
+  var viewerPathname = routeContext.viewerPathname;
+  var searchIndexUrl = routeContext.searchIndexUrl;
+  var uiTextUrl = routeContext.uiTextUrl;
+  var reportRegistryUrl = routeContext.reportRegistryUrl;
+  var managementBaseUrl = routeContext.managementBaseUrl;
+  var generatedBaseUrl = routeContext.generatedBaseUrl;
+  var openImportOnLoad = routeContext.openImportOnLoad;
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
   var DEFAULT_RECENT_LIMIT = 10;
@@ -128,10 +127,15 @@ import {
   var RELOAD_RETRY_DELAY_MS = 250;
   var UI_STATUS_EMOJI_MAX_LENGTH = 8;
   var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
-  var bookmarkScope = viewerScope || viewerPathname || "docs";
-  var indexPanelStorageKey = buildIndexPanelStorageKey(bookmarkScope);
-  var legacySidebarStorageKey = buildLegacySidebarStorageKey(bookmarkScope);
-  var assetVersion = readAssetVersion(document);
+  var bookmarkScope = routeContext.bookmarkScope;
+  var panelLayout = createDocsViewerPanelLayout({
+    root: root,
+    storage: window.localStorage,
+    storageScope: bookmarkScope,
+    indexPanelRefs: indexPanelRefs,
+    documentShellRefs: documentShellRefs,
+    indexPanelAvailable: sidebarCollapseAvailable
+  });
   var managementController = null;
   var managementControllerRequestPromise = null;
   var bookmarkController = null;
@@ -315,7 +319,7 @@ import {
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
     showUpdatedDate: true,
-    indexPanelState: readCurrentIndexPanelState()
+    indexPanelState: panelLayout.indexPanelState()
   };
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -569,17 +573,16 @@ import {
   }
 
   function applyRouteGlobals(values) {
-    viewerScope = values.viewerScope;
-    indexUrl = values.indexUrl;
-    searchIndexUrl = values.searchIndexUrl;
-    defaultRouteDocId = values.defaultRouteDocId;
-    viewerBaseUrl = values.viewerBaseUrl;
-    includeScopeParam = values.includeScopeParam;
-    viewerPathname = values.viewerPathname;
-    bookmarkScope = viewerScope || viewerPathname || "docs";
-    indexPanelStorageKey = buildIndexPanelStorageKey(bookmarkScope);
-    legacySidebarStorageKey = buildLegacySidebarStorageKey(bookmarkScope);
-    state.indexPanelState = readCurrentIndexPanelState();
+    routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
+    viewerScope = routeContext.viewerScope;
+    indexUrl = routeContext.indexUrl;
+    searchIndexUrl = routeContext.searchIndexUrl;
+    defaultRouteDocId = routeContext.defaultRouteDocId;
+    viewerBaseUrl = routeContext.viewerBaseUrl;
+    includeScopeParam = routeContext.includeScopeParam;
+    viewerPathname = routeContext.viewerPathname;
+    bookmarkScope = routeContext.bookmarkScope;
+    state.indexPanelState = panelLayout.setStorageScope(bookmarkScope);
   }
 
   function loadDocsViewerConfig() {
@@ -639,47 +642,18 @@ import {
     return window.matchMedia(SIDEBAR_COLLAPSE_MEDIA).matches;
   }
 
-  function readCurrentIndexPanelState() {
-    return readIndexPanelState({
-      storage: window.localStorage,
-      storageKey: indexPanelStorageKey,
-      legacyStorageKey: legacySidebarStorageKey
-    });
-  }
-
-  function persistCurrentIndexPanelState() {
-    persistIndexPanelState({
-      storage: window.localStorage,
-      storageKey: indexPanelStorageKey,
-      state: state.indexPanelState
-    });
-  }
-
   function renderIndexPanelState() {
-    var projection = projectIndexPanelState(state.indexPanelState, {
-      available: sidebarCollapseAvailable()
-    });
-    renderDocsViewerAppShellIndexPanelState({
-      root: root,
-      refs: indexPanelRefs,
-      projection: projection
-    });
+    panelLayout.renderIndexPanelState();
   }
 
   function toggleIndexPanelState() {
-    if (!sidebarCollapseAvailable()) return;
-    state.indexPanelState = nextIndexPanelState(state.indexPanelState);
-    persistCurrentIndexPanelState();
     hideContextMenu();
-    renderIndexPanelState();
+    state.indexPanelState = panelLayout.toggleIndexPanelState();
   }
 
   function expandIndexPanelState() {
-    if (!sidebarCollapseAvailable()) return;
-    state.indexPanelState = expandedIndexPanelState(state.indexPanelState);
-    persistCurrentIndexPanelState();
     hideContextMenu();
-    renderIndexPanelState();
+    state.indexPanelState = panelLayout.expandIndexPanelState();
   }
 
   function loadViewerConfig() {
@@ -907,10 +881,7 @@ import {
   }
 
   function projectDocumentShell(projection) {
-    renderDocsViewerAppShellDocumentState({
-      refs: documentShellRefs,
-      projection: projection || {}
-    });
+    panelLayout.projectDocumentShell(projection || {});
   }
 
   function syncBusyState() {

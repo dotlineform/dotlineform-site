@@ -149,6 +149,11 @@ It did not introduce the broader multi-panel state model above; `docs-viewer/run
 It introduced only a compatibility projection helper for the current document/search/recent visibility states and results-status state.
 It did not introduce the broader document/info panel state model, panel toolbar model, info panel, or hosted-view architecture.
 
+2026-05-27 implementation note: the route context and panel-state slice added `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-panel-layout.js`.
+The new context helper normalizes current route data and public/manage access flags.
+The panel layout helper centralizes the current compatibility projection for index collapsed/normal/expanded state and document/search/recent/results-status visibility.
+It still does not implement the broader `panels.index/document/info` state model, toolbar controls, info panel visibility, hosted-view registration, or module lifecycle described in this request.
+
 ## Panel Toolbar Model
 
 Each panel should have small shared chrome:

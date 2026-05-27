@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-route-context-panel-state-tasks
 title: Docs Viewer App Shell Route Context And Panel State Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12109
 viewable: true
@@ -22,12 +22,29 @@ The goal is to create the narrow state/context owner that later info-panel work 
 
 ### just done
 
+- Implemented this route context and panel state slice.
 - Completed [Docs Viewer App Shell Management Actions Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-actions-tasks).
 - Completed [Docs Viewer App Shell Header Controls Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-header-controls-tasks).
 - Completed [Docs Viewer App Shell Index Panel Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-index-panel-tasks).
 - Completed [Docs Viewer App Shell Document Mount And Metadata Shell Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-document-metadata-tasks).
 - Established `docs-viewer/runtime/js/docs-viewer-app-shell.js` as the app-shell coordinator while keeping `docs-viewer/runtime/js/docs-viewer.js` as the compatibility entrypoint.
 - Moved management actions, header controls, index panel chrome, document shell chrome, read-only metadata chrome, and document/search/recent result mounts out of `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`.
+- Added `docs-viewer/runtime/js/docs-viewer-app-context.js` for route dataset normalization and access flags.
+- Added `docs-viewer/runtime/js/docs-viewer-panel-layout.js` for the current compatibility index/document/search/recent projection handoff.
+
+### implementation note
+
+Moved the narrow state surface only:
+
+- route context: management intent, scope query allowance, viewer base URL, viewer scope, default doc id, generated/config URLs, report/UI text URLs, management/generated base URLs, import-on-load intent, viewer pathname, and bookmark storage scope
+- access flags: public read-only, allow management, allow scope query, requested mode, management requested, and import requested
+- shell refs: header controls, index panel refs, document shell refs, status/bookmark refs, and management action refs
+- panel projection: index collapsed/normal/expanded storage/projection and document/search/recent/results-status visibility projection
+
+Left in place:
+
+- document payload loading, Markdown rendering, generated report loading, search/recent result rendering, bookmark storage behavior, management writes, metadata/import modal internals, and route handling
+- broader info panel, panel toolbar, hosted-view registry, optional-module lifecycle, and full multi-panel model
 
 ### steer for next task
 
@@ -83,20 +100,43 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current route context and panel projection ownership in `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-index-panel.js`, `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, `docs-viewer/runtime/js/docs-viewer-document-controller.js`, config/controller modules, and management modules that consume mode/scope/access state. Deliverable: short implementation note in this tracker or closeout summary identifying the exact state and refs to move. |
-| 2 | planned | Define the focused app-shell context/panel surface. Decide whether to add `docs-viewer-app-context.js`, `docs-viewer-panel-layout.js`, or another focused child module. Deliverable: clear module ownership and no new broad state responsibility added to `docs-viewer.js`. |
-| 3 | planned | Normalize route context from `#docsViewerRoot` into a small object for existing boot values such as management intent, scope-query allowance, viewer base URL, viewer scope, default doc id, generated/config URLs, and management/generated base URLs. Preserve current data attributes and URL behavior. |
-| 4 | planned | Define public/manage access flags for app-shell decisions without loading management-only modules on public routes. Keep backend capability checks and write availability in the existing management/generation capability flow. |
-| 5 | planned | Define a compatibility shell refs object that groups header controls, index panel refs, document shell refs, status/bookmark refs, and management action refs as needed. Preserve existing ids and controller expectations. |
-| 6 | planned | Consolidate current panel projection handoffs into a narrow owner for index state plus document/search/recent/results-status visibility. Do not implement info-panel visibility, panel toolbar controls, or hosted-view registration in this pass. |
-| 7 | planned | Wire `docs-viewer.js` to consume the new route context, refs, and projection helpers while keeping route boot, config loading, controller wiring, and existing route handling readable. |
-| 8 | planned | Preserve current index panel behavior: collapsed/normal/expanded state, legacy sidebar state projection, local storage migration keys, desktop availability behavior, and tree rendering ownership. |
-| 9 | planned | Preserve current document/search/recent behavior: selected document projection, document pane visibility, results status, more-results mount clearing, hash scrolling, search route activation, recent mode activation, and generated report mounting. |
-| 10 | planned | Preserve public route behavior for `/library/` and `/analysis/`: read-only boot, document payload rendering, hash navigation, metadata visibility, search/recent behavior, report rendering, bookmarks, and absence of management-only imports. |
-| 11 | planned | Preserve local `/docs/` management behavior: manage-mode detection, status pills, bookmark toggle, metadata edit flow, report rendering, browser history behavior, management availability messages, and management action gating. |
-| 12 | planned | Add or update focused module smoke coverage for context normalization and panel projection. Cover public and management route context, id/ref preservation, idempotent shell initialization, management-only omission, index projection, document/search/recent projection, and compatibility with existing app-shell renderer refs where practical. |
-| 13 | planned | Run the targeted verification set for changed JS, app-shell/context/panel behavior, public read-only routes, and management routes. Record any checks skipped and why. |
-| 14 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request, the multi-panel request if the projection contract changes, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
+| 1 | done | Inventory current route context and panel projection ownership in `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-index-panel.js`, `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, `docs-viewer/runtime/js/docs-viewer-document-controller.js`, config/controller modules, and management modules that consume mode/scope/access state. Deliverable: short implementation note in this tracker or closeout summary identifying the exact state and refs to move. |
+| 2 | done | Define the focused app-shell context/panel surface. Decide whether to add `docs-viewer-app-context.js`, `docs-viewer-panel-layout.js`, or another focused child module. Deliverable: clear module ownership and no new broad state responsibility added to `docs-viewer.js`. |
+| 3 | done | Normalize route context from `#docsViewerRoot` into a small object for existing boot values such as management intent, scope-query allowance, viewer base URL, viewer scope, default doc id, generated/config URLs, and management/generated base URLs. Preserve current data attributes and URL behavior. |
+| 4 | done | Define public/manage access flags for app-shell decisions without loading management-only modules on public routes. Keep backend capability checks and write availability in the existing management/generation capability flow. |
+| 5 | done | Define a compatibility shell refs object that groups header controls, index panel refs, document shell refs, status/bookmark refs, and management action refs as needed. Preserve existing ids and controller expectations. |
+| 6 | done | Consolidate current panel projection handoffs into a narrow owner for index state plus document/search/recent/results-status visibility. Do not implement info-panel visibility, panel toolbar controls, or hosted-view registration in this pass. |
+| 7 | done | Wire `docs-viewer.js` to consume the new route context, refs, and projection helpers while keeping route boot, config loading, controller wiring, and existing route handling readable. |
+| 8 | done | Preserve current index panel behavior: collapsed/normal/expanded state, legacy sidebar state projection, local storage migration keys, desktop availability behavior, and tree rendering ownership. |
+| 9 | done | Preserve current document/search/recent behavior: selected document projection, document pane visibility, results status, more-results mount clearing, hash scrolling, search route activation, recent mode activation, and generated report mounting. |
+| 10 | done | Preserve public route behavior for `/library/` and `/analysis/`: read-only boot, document payload rendering, hash navigation, metadata visibility, search/recent behavior, report rendering, bookmarks, and absence of management-only imports. |
+| 11 | done | Preserve local `/docs/` management behavior: manage-mode detection, status pills, bookmark toggle, metadata edit flow, report rendering, browser history behavior, management availability messages, and management action gating. |
+| 12 | done | Add or update focused module smoke coverage for context normalization and panel projection. Cover public and management route context, id/ref preservation, idempotent shell initialization, management-only omission, index projection, document/search/recent projection, and compatibility with existing app-shell renderer refs where practical. |
+| 13 | done | Run the targeted verification set for changed JS, app-shell/context/panel behavior, public read-only routes, and management routes. Record any checks skipped and why. |
+| 14 | done | Update owning docs after implementation. At minimum update this tracker, the app-shell request, the multi-panel request if the projection contract changes, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
+
+## Verification
+
+Passed:
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-context.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-panel-layout.js`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .`
+
+Skipped/replaced:
+
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_routes.py --site-root .` and the same command against `/tmp/dlf-jekyll-build` could not exercise `/docs/` because `/docs/` is a local-service management route and is not present in the raw source tree or temporary public Jekyll build. Public route coverage came from `public_docs_viewer_readonly.py`; management route coverage came from `docs_viewer_service_manage.py`.
+
+Docs-log entry:
+
+- `change-2026-05-27-added-docs-viewer-route-context-panel-layout`
 
 The closeout for this fifth migration should confirm:
 
