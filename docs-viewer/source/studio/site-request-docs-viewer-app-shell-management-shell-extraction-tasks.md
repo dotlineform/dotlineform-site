@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-management-shell-extraction-tasks
 title: Docs Viewer App Shell Management Shell Extraction Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12140
 viewable: true
@@ -22,6 +22,12 @@ It should not include app boot ownership, route/document workflow extraction, so
 
 ### just done
 
+- Completed this management shell extraction slice.
+- Added `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` as the focused app-shell owner for management-only context-menu and modal shell markup.
+- Replaced duplicated management-only shell markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` with `#docsViewerManagementShellMount`.
+- Kept public routes gated: management shell rendering and the new renderer import happen only when `routeContext.access.canLoadManagementUi` allows management UI.
+- Extended `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` to cover management shell rendering, public omission, preserved refs, and idempotent rendering.
+- Created docs-log entry `change-2026-05-27-extracted-docs-viewer-management-shell-rendering`.
 - Completed [Docs Viewer Route Config Handoff Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-route-config-handoff-tasks).
 - Added `docs-viewer/config/routes/docs-viewer-routes.json` as the browser-safe route-config registry.
 - Thinned shared and standalone route shells to boot with `data-route-id` and `data-route-config-url`.
@@ -30,11 +36,11 @@ It should not include app boot ownership, route/document workflow extraction, so
 
 ### steer for next task
 
-- Move management-only shell/chrome ownership into JavaScript without changing management workflows.
+- Move app boot ownership out of `docs-viewer/runtime/js/docs-viewer.js` without changing route/document workflows.
 - Preserve all existing IDs and refs consumed by `docs-viewer/runtime/js/docs-viewer-management.js`, `docs-viewer/runtime/js/docs-viewer-management-modals.js`, `docs-viewer/runtime/js/docs-html-import.js`, and related management workflow modules.
 - Keep route config and access projection as the management UI gate; public routes must not render or import management-only shell/module code.
 - Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, and rebuild behavior in the existing management flow.
-- Do not start the app boot extraction in this slice; that is the next slice after management shell ownership is clear.
+- App boot extraction is the next slice after management shell ownership is clear.
 
 ### baseline verification set
 
@@ -81,18 +87,45 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory remaining management-only shell markup and refs in `_includes/docs_viewer_shell.html`, `docs-viewer/shell/docs-viewer-shell.html`, `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-management.js`, `docs-viewer/runtime/js/docs-viewer-management-modals.js`, `docs-viewer/runtime/js/docs-html-import.js`, and current smoke tests. Deliverable: short implementation note listing each shell host/ref to move and which module consumes it. |
-| 2 | planned | Define the focused owner surface for management shell rendering. Prefer a route-gated app-shell child module such as `docs-viewer-management-shell-renderer.js` or `docs-viewer-management-shell-host.js`; document whether it renders context menu, metadata modal, import modal, settings modal, and management modal hosts together or as smaller children. |
-| 3 | planned | Implement management shell rendering behind route/access projection. Render the existing context menu, metadata modal shell, import modal shell, settings modal shell, and required import root/status refs only when `routeContext.access.canLoadManagementUi` is true. |
-| 4 | planned | Preserve existing IDs, `data-*` hooks, form names, modal semantics, focus targets, and refs expected by management modules. Avoid rewriting metadata edit, import, settings, context action, or management modal workflow behavior. |
-| 5 | planned | Replace management-only markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` with JavaScript-rendered hosts or narrow mounts. Keep route shells at route id/config URL plus app mounts, CSS links, and entry script. |
-| 6 | planned | Ensure public routes do not render management shell markup and do not import management-only renderer modules. Keep management stylesheet loading gated by shell include settings or route/service context as currently appropriate. |
-| 7 | planned | Update app-shell refs so `docs-viewer.js` and management modules read the JavaScript-rendered management shell refs after app-shell initialization. Keep `docs-viewer.js` as orchestration only for this responsibility. |
-| 8 | planned | Extend focused app-shell smoke coverage for management shell rendering, public omission, ref preservation, and idempotent app-shell rendering. |
-| 9 | planned | Run management modal/service smoke checks to verify metadata edit flow, import modal boot, settings modal, context menu/action gating, management capability status, generated-data reads, report rendering, and info-panel behavior still work. |
-| 10 | planned | Run public read-only checks for `/library/` and `/analysis/` to verify route boot, document rendering, search/recent, info panel, report behavior where applicable, and absence of management-only shell/assets. |
-| 11 | planned | Update owning docs after implementation: this tracker, the app-shell request, Docs Viewer runtime boundary, Docs Viewer overview/config docs if shell ownership changes materially, portable setup/files docs if install copy set or shell expectations change, and Docs Viewer JavaScript inventory notes for new/changed owner modules. |
-| 12 | planned | Create or update the structured docs-log entry for this slice and record the entry id in this tracker. |
+| 1 | done | Inventory completed. Moved hosts/refs: `docsViewerContextMenu`; `docsViewerMetadataModal` and metadata form/input/popup/save refs; `docsViewerImportModal`, `docsHtmlImportRoot`, `docsHtmlImportBootStatus`, and the `docsHtmlImport*` import body refs; `docsViewerSettingsModal` and settings form/input/status/action refs. Consumers remain `docs-viewer-management.js`, `docs-viewer-management-modals.js`, `docs-viewer-management-interactions.js`, and `docs-html-import.js`. |
+| 2 | done | Added `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` as one focused child renderer for the shared management-only route boundary: context menu, metadata modal, import modal, settings modal, and import host refs render together. |
+| 3 | done | `docs-viewer/runtime/js/docs-viewer-app-shell.js` renders the management shell only when `routeContext.access.canLoadManagementUi` is true. |
+| 4 | done | Preserved existing IDs, `data-*` hooks, form names, modal roles/labels, focus targets, and refs expected by management modules; metadata edit, import, settings, context action, and management modal workflows were not rewritten. |
+| 5 | done | Replaced management-only markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` with `#docsViewerManagementShellMount`; route shells still carry CSS links, route id/config URL, app mounts, and the entry script. |
+| 6 | done | Public routes clear the management shell mount and do not dynamically import `docs-viewer-management-shell-renderer.js`; management stylesheet loading remains gated by management-enabled shell settings. |
+| 7 | done | Added management shell refs to `docs-viewer-app-shell.js`; `docs-viewer.js` passes those refs to the lazy management controller after app-shell initialization, and management modules keep direct lookup fallback compatibility. |
+| 8 | done | Extended focused app-shell smoke coverage for management shell rendering, public omission, ref preservation, and idempotent app-shell rendering. |
+| 9 | done | Ran management modal and service smoke checks for metadata edit flow, import modal boot, settings modal, context menu/action gating, management capability status, generated-data reads, report rendering, and info-panel behavior. |
+| 10 | done | Ran public read-only checks for `/library/` and `/analysis/` after a temporary Jekyll build; the public routes booted and omitted management shell/assets. |
+| 11 | done | Updated this tracker, the app-shell request, Docs Viewer runtime boundary, Docs Viewer overview, Docs Viewer portable files, and Docs Viewer JavaScript inventory notes. |
+| 12 | done | Created structured docs-log entry `change-2026-05-27-extracted-docs-viewer-management-shell-rendering`. |
+
+## Closeout
+
+Management shell rendering is now owned by `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
+The shared and standalone route shells no longer contain management-only context-menu or modal shell markup.
+
+Verification passed:
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-management.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `node --check docs-viewer/runtime/js/docs-html-import.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-management-interactions.js`
+- `git diff --check`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+
+Generated Docs Viewer payloads were updated by the local docs watcher after source docs changed.
+The docs-log generated indexes were rebuilt after the structured log entry was written.
+
+Remaining risk: `docs-viewer/runtime/js/docs-viewer.js` still owns app boot/controller orchestration.
+That remains the next planned slice; app boot ownership was deliberately not started here.
 
 The closeout for this slice should confirm:
 

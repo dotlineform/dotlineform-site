@@ -10,8 +10,9 @@ export function createDocsViewerManagementInteractionController(options) {
   var nav = options.nav;
   var state = options.state;
   var context = options.context;
+  var refs = options.refs || {};
   var callbacks = options.callbacks || {};
-  var contextMenu = document.getElementById("docsViewerContextMenu");
+  var contextMenu = refs.contextMenu || document.getElementById("docsViewerContextMenu");
   var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var contextMenuDocId = "";
   var dragDocId = "";

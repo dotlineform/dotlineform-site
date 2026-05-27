@@ -388,6 +388,9 @@ Optional first visible shell move:
   `docs-viewer/config/routes/docs-viewer-routes.json` owns the browser-safe route records, and `docs-viewer/runtime/js/docs-viewer-route-config.js` resolves that registry before the legacy inline/data-attribute fallback.
   `docs-viewer/runtime/js/docs-viewer-app-context.js` continues to expose the same route-context contract to downstream controllers.
   The local Docs Viewer service serves the same registry path with loopback management/generated-read URLs injected from service config.
+- added the management shell extraction slice.
+  Shared and standalone Docs Viewer shells now provide only `#docsViewerManagementShellMount` for the management-only context menu, metadata modal, import modal, settings modal, and import host refs.
+  `docs-viewer/runtime/js/docs-viewer-app-shell.js` dynamically imports `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only when `routeContext.access.canLoadManagementUi` allows management UI, and the existing management controller still owns write workflows, capability checks, and modal/action behavior.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -403,6 +406,7 @@ Recommended completion sequence:
    Target owner: a focused app-shell management shell renderer or modal-shell module, with the existing management controller still owning writes, capability checks, and workflow behavior.
    Acceptance: public routes still do not load management CSS/JS; local `/docs/?mode=manage` still renders metadata edit, import, settings, context actions, and management action gating; route shells keep only app mounts, route id/config URL, CSS links, and the entry script.
    Task tracker: [Docs Viewer App Shell Management Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-shell-extraction-tasks).
+   Implemented 2026-05-27: the route shells now provide the management shell mount only, and the app shell renders the preserved management refs through `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only for management-capable route access.
 
 2. App boot ownership.
    Extract the remaining boot/state/controller setup out of `docs-viewer.js` into a focused app boot owner while keeping `docs-viewer.js` as the stable compatibility entrypoint loaded by route shells.

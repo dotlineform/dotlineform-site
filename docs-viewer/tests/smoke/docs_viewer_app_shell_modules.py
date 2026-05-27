@@ -164,6 +164,7 @@ def assert_management_actions_render(page: Page) -> None:
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
                   <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -185,11 +186,39 @@ def assert_management_actions_render(page: Page) -> None:
                 'docsViewerManageViewableButton',
                 'docsViewerDraftToggle'
             ];
+            const shellIds = [
+                'docsViewerContextMenu',
+                'docsViewerMetadataModal',
+                'docsViewerMetadataForm',
+                'docsViewerMetadataTitleInput',
+                'docsViewerMetadataSummaryInput',
+                'docsViewerMetadataStatusInput',
+                'docsViewerMetadataHiddenInput',
+                'docsViewerMetadataParentInput',
+                'docsViewerMetadataParentPopup',
+                'docsViewerMetadataSortOrderInput',
+                'docsViewerMetadataCancelButton',
+                'docsViewerMetadataSaveButton',
+                'docsViewerImportModal',
+                'docsHtmlImportRoot',
+                'docsHtmlImportBootStatus',
+                'docsViewerSettingsModal',
+                'docsViewerSettingsForm',
+                'docsViewerSettingsUpdatedInput',
+                'docsViewerSettingsCancelButton',
+                'docsViewerSettingsSaveButton'
+            ];
             return {
                 returnedRowId: returned.managementActions && returned.managementActions.id,
+                returnedContextMenuId: returned.managementShell && returned.managementShell.contextMenu && returned.managementShell.contextMenu.id,
                 missingIds: ids.filter((id) => !document.getElementById(id)),
+                missingShellIds: shellIds.filter((id) => !document.getElementById(id)),
                 menuRole: document.getElementById('docsViewerManageActionsMenu')?.getAttribute('role') || '',
                 menuItemCount: document.querySelectorAll('#docsViewerManageActionsMenu [role="menuitem"]').length,
+                contextActionCount: document.querySelectorAll('#docsViewerContextMenu [data-context-action]').length,
+                metadataDialogLabel: document.querySelector('#docsViewerMetadataModal [role="dialog"]')?.getAttribute('aria-labelledby') || '',
+                importRouteReady: document.getElementById('docsHtmlImportRoot')?.dataset.studioReady || '',
+                settingsFieldName: document.getElementById('docsViewerSettingsUpdatedInput')?.getAttribute('name') || '',
                 hiddenScopedButtons: [
                     document.getElementById('docsViewerManageNewScopeButton')?.hidden,
                     document.getElementById('docsViewerManageDeleteScopeButton')?.hidden
@@ -202,10 +231,18 @@ def assert_management_actions_render(page: Page) -> None:
     )
     if result["returnedRowId"] != "docsViewerManageRow":
         raise AssertionError(f"app shell did not return the management row: {result!r}")
+    if result["returnedContextMenuId"] != "docsViewerContextMenu":
+        raise AssertionError(f"app shell did not return the management shell refs: {result!r}")
     if result["missingIds"]:
         raise AssertionError(f"app shell omitted expected management refs: {result!r}")
+    if result["missingShellIds"]:
+        raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
     if result["menuRole"] != "menu" or result["menuItemCount"] != 10:
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
+    if result["contextActionCount"] != 5 or result["metadataDialogLabel"] != "docsViewerMetadataHeading":
+        raise AssertionError(f"management context/metadata shell changed unexpectedly: {result!r}")
+    if result["importRouteReady"] != "false" or result["settingsFieldName"] != "show_updated_date":
+        raise AssertionError(f"management import/settings shell changed unexpectedly: {result!r}")
     if result["hiddenScopedButtons"] != [True, True]:
         raise AssertionError(f"scope lifecycle buttons should start hidden until capabilities load: {result!r}")
     if result["themeToggleCount"] != 1 or result["lightIconCount"] != 1 or result["darkIconHidden"] is not True:
@@ -219,23 +256,36 @@ def assert_management_actions_omitted(page: Page) -> None:
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
                   <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
             const returned = await module.initDocsViewerAppShell({ root, document });
             return {
                 returnedRow: Boolean(returned.managementActions),
+                returnedManagementShell: Boolean(returned.managementShell),
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 actionButtonCount: document.querySelectorAll('#docsViewerManageActionsButton').length,
-                mountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length
+                contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
+                metadataModalCount: document.querySelectorAll('#docsViewerMetadataModal').length,
+                importRootCount: document.querySelectorAll('#docsHtmlImportRoot').length,
+                settingsModalCount: document.querySelectorAll('#docsViewerSettingsModal').length,
+                actionsMountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                shellMountChildCount: document.querySelector('[data-docs-viewer-management-shell-mount]').children.length
             };
         }"""
     )
     if result != {
         "returnedRow": False,
+        "returnedManagementShell": False,
         "manageRowCount": 0,
         "actionButtonCount": 0,
-        "mountChildCount": 0,
+        "contextMenuCount": 0,
+        "metadataModalCount": 0,
+        "importRootCount": 0,
+        "settingsModalCount": 0,
+        "actionsMountChildCount": 0,
+        "shellMountChildCount": 0,
     }:
         raise AssertionError(f"public route management action omission failed: {result!r}")
 
@@ -264,6 +314,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 >
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <p id="docsViewerStatus"></p>
@@ -311,7 +362,11 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                     infoBody: refs.infoPanel.body?.id || '',
                     status: refs.status?.id || '',
                     bookmarkRow: refs.bookmarkRow?.id || '',
-                    managementRow: refs.managementActions.row?.id || ''
+                    managementRow: refs.managementActions.row?.id || '',
+                    contextMenu: refs.managementShell.contextMenu?.id || '',
+                    metadataModal: refs.managementShell.metadataModal?.id || '',
+                    importRoot: refs.managementShell.importRoot?.id || '',
+                    settingsModal: refs.managementShell.settingsModal?.id || ''
                 },
                 updated: {
                     viewerScope: updated.viewerScope,
@@ -347,6 +402,10 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
             "status": "docsViewerStatus",
             "bookmarkRow": "docsViewerBookmarkRow",
             "managementRow": "docsViewerManageRow",
+            "contextMenu": "docsViewerContextMenu",
+            "metadataModal": "docsViewerMetadataModal",
+            "importRoot": "docsHtmlImportRoot",
+            "settingsModal": "docsViewerSettingsModal",
         },
         "updated": {
             "viewerScope": "library",
@@ -1402,6 +1461,7 @@ def assert_render_is_idempotent(page: Page) -> None:
                     data-enable-search="true"
                   ></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
@@ -1417,6 +1477,11 @@ def assert_render_is_idempotent(page: Page) -> None:
                 rowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 actionButtonCount: document.querySelectorAll('#docsViewerManageActionsButton').length,
                 mountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
+                metadataModalCount: document.querySelectorAll('#docsViewerMetadataModal').length,
+                importRootCount: document.querySelectorAll('#docsHtmlImportRoot').length,
+                settingsModalCount: document.querySelectorAll('#docsViewerSettingsModal').length,
+                managementShellMountChildCount: document.querySelector('[data-docs-viewer-management-shell-mount]').children.length,
                 sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
                 toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
@@ -1438,6 +1503,11 @@ def assert_render_is_idempotent(page: Page) -> None:
         "rowCount": 1,
         "actionButtonCount": 1,
         "mountChildCount": 1,
+        "contextMenuCount": 1,
+        "metadataModalCount": 1,
+        "importRootCount": 1,
+        "settingsModalCount": 1,
+        "managementShellMountChildCount": 4,
         "sidebarCount": 1,
         "navCount": 1,
         "toggleCount": 1,

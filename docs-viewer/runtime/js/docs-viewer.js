@@ -70,6 +70,7 @@ import {
 } from "./docs-viewer-router.js";
 import {
   getDocsViewerAppShellRefs,
+  getDocsViewerAppShellManagementShellRefs,
   initDocsViewerAppShell,
 } from "./docs-viewer-app-shell.js";
 
@@ -573,6 +574,10 @@ import {
       loadDoc: loadDoc,
       loadIndex: loadIndex,
       managementBaseUrl: managementBaseUrl,
+      managementShellRefs: getDocsViewerAppShellManagementShellRefs({
+        root: root,
+        document: document
+      }),
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,

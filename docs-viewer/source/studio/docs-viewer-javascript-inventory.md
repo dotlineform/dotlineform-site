@@ -17,7 +17,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 40
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 48
 - Files above target score 4: 14
 - General risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
@@ -28,7 +28,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 6 |
 | 5 | 7 |
-| 4 | 26 |
+| 4 | 34 |
 
 ## Current Priorities
 
@@ -81,6 +81,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
 | 46 | new | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` | 1 | 1 | 1 | 1 | 4 | Public-safe read-only metadata info hosted view. |
 | 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
+| 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
 
 ## Follow-Up Notes
 
@@ -95,6 +96,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; compatibility panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
 - 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/document/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
 - 2026-05-27 owner note: info-panel chrome moved to `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, hosted-view lifecycle moved to `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, selected-document context projection moved to `docs-viewer/runtime/js/docs-viewer-view-context.js`, and metadata rendering moved to `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`. `docs-viewer.js` now passes explicit route/viewer inputs into the context helper and wires open/close events, but should not absorb panel DOM composition, lifecycle, context shaping, or metadata presentation.
+- 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. `docs-viewer.js` passes the rendered refs into the lazy management controller after app-shell initialization but still leaves management workflows and backend capability checks in the existing management modules.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, broader panel-layout ownership, or management lazy-boundary hardening.
 - Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
 - Preserve `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
@@ -105,6 +107,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current scope is intentionally narrow: render route-provided header controls through `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, render index panel chrome through `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, clear the management action mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered rows before existing management/theme binding continues.
 - It also renders the document shell through `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved IDs.
 - It also renders the info panel shell through `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`; lifecycle and metadata presentation stay in the focused info-panel host/view modules.
+- It also clears and renders the management shell mount through `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only when route access allows management UI.
 - The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
 - Revisit the inventory table and score during the next full JavaScript inventory refresh; the expected target score for this focused renderer is 4 or lower while it stays limited to shell rendering.
 
@@ -117,6 +120,12 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the focused renderer for management action markup.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
+
+### `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`
+
+- Added 2026-05-27 as the focused renderer for management-only context menu and modal shell markup.
+- Keep this module limited to preserving the existing `docsViewerContextMenu`, metadata modal, import modal, settings modal, and `docsHtmlImport*` host refs inside the management shell mount.
+- Do not move metadata save behavior, import workflow behavior, settings writes, context-menu actions, backend reachability checks, generated-data reads, or management capability projection into this renderer.
 
 ### `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`
 

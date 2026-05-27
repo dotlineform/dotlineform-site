@@ -37,6 +37,7 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, route config shape, migration data-attribute fallback, and route/scope projection imported by the entry and config controllers
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
+- `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` for management-only context menu, metadata modal, import modal, settings modal, and import host refs rendered only when route access allows management UI
 - `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for current compatibility panel projection and the index/document/info view-state skeleton
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, access/availability checks, built-in compatibility records, and graceful absence
 - `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` for app-shell-owned info-panel chrome and projection attributes
@@ -93,6 +94,7 @@ Current app-shell route handoff boundary:
 
 - route config is the preferred durable route/app shape for new app-shell work
 - the shared and standalone route shells expose only `data-route-id` and `data-route-config-url` as boot route context
+- the shared and standalone route shells provide app mounts for header controls, index panel, management shell, document shell, and info panel; management-only context-menu and modal markup is no longer authored in the route shell templates
 - `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry for `/docs/`, `/library/`, and `/analysis/`
 - `docs-viewer/runtime/js/docs-viewer-route-config.js` fetches that registry, resolves the current `docs_viewer_route_config_v1` record, and falls back to inline or legacy `#docsViewerRoot` data attributes only for migration/testing compatibility
 - the standalone Docs Viewer service serves the same route registry path with local `/docs/` management and generated-read base URLs injected from service config; static public builds keep those URLs blank

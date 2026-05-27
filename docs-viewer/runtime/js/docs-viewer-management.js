@@ -38,6 +38,10 @@ export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
   var state = context.state;
+  var shellRefs = context.managementShellRefs || {};
+  function shellRef(name, id) {
+    return shellRefs[name] || document.getElementById(id);
+  }
   var manageRow = document.getElementById("docsViewerManageRow");
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
@@ -56,33 +60,33 @@ export function initDocsViewerManagement(context) {
   var statusPills = document.getElementById("docsViewerStatusPills");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
-  var metadataModal = document.getElementById("docsViewerMetadataModal");
-  var metadataForm = document.getElementById("docsViewerMetadataForm");
-  var metadataDocId = document.getElementById("docsViewerMetadataDocId");
-  var metadataTitleInput = document.getElementById("docsViewerMetadataTitleInput");
-  var metadataSummaryInput = document.getElementById("docsViewerMetadataSummaryInput");
-  var metadataStatusLabel = document.getElementById("docsViewerMetadataStatusLabel");
-  var metadataStatusInput = document.getElementById("docsViewerMetadataStatusInput");
-  var metadataHiddenInput = document.getElementById("docsViewerMetadataHiddenInput");
-  var metadataHiddenLabel = document.getElementById("docsViewerMetadataHiddenLabel");
-  var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
-  var metadataParentPopup = document.getElementById("docsViewerMetadataParentPopup");
-  var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
-  var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
-  var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
-  var importModal = document.getElementById("docsViewerImportModal");
-  var importRoot = document.getElementById("docsHtmlImportRoot");
-  var importBootStatus = document.getElementById("docsHtmlImportBootStatus");
-  var settingsModal = document.getElementById("docsViewerSettingsModal");
-  var settingsForm = document.getElementById("docsViewerSettingsForm");
-  var settingsHeading = document.getElementById("docsViewerSettingsHeading");
-  var settingsScope = document.getElementById("docsViewerSettingsScope");
-  var settingsUpdatedInput = document.getElementById("docsViewerSettingsUpdatedInput");
-  var settingsUpdatedLabel = document.getElementById("docsViewerSettingsUpdatedLabel");
-  var settingsWarnings = document.getElementById("docsViewerSettingsWarnings");
-  var settingsStatus = document.getElementById("docsViewerSettingsStatus");
-  var settingsCancelButton = document.getElementById("docsViewerSettingsCancelButton");
-  var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
+  var metadataModal = shellRef("metadataModal", "docsViewerMetadataModal");
+  var metadataForm = shellRef("metadataForm", "docsViewerMetadataForm");
+  var metadataDocId = shellRef("metadataDocId", "docsViewerMetadataDocId");
+  var metadataTitleInput = shellRef("metadataTitleInput", "docsViewerMetadataTitleInput");
+  var metadataSummaryInput = shellRef("metadataSummaryInput", "docsViewerMetadataSummaryInput");
+  var metadataStatusLabel = shellRef("metadataStatusLabel", "docsViewerMetadataStatusLabel");
+  var metadataStatusInput = shellRef("metadataStatusInput", "docsViewerMetadataStatusInput");
+  var metadataHiddenInput = shellRef("metadataHiddenInput", "docsViewerMetadataHiddenInput");
+  var metadataHiddenLabel = shellRef("metadataHiddenLabel", "docsViewerMetadataHiddenLabel");
+  var metadataParentInput = shellRef("metadataParentInput", "docsViewerMetadataParentInput");
+  var metadataParentPopup = shellRef("metadataParentPopup", "docsViewerMetadataParentPopup");
+  var metadataSortOrderInput = shellRef("metadataSortOrderInput", "docsViewerMetadataSortOrderInput");
+  var metadataCancelButton = shellRef("metadataCancelButton", "docsViewerMetadataCancelButton");
+  var metadataSaveButton = shellRef("metadataSaveButton", "docsViewerMetadataSaveButton");
+  var importModal = shellRef("importModal", "docsViewerImportModal");
+  var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
+  var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
+  var settingsModal = shellRef("settingsModal", "docsViewerSettingsModal");
+  var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
+  var settingsHeading = shellRef("settingsHeading", "docsViewerSettingsHeading");
+  var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
+  var settingsUpdatedInput = shellRef("settingsUpdatedInput", "docsViewerSettingsUpdatedInput");
+  var settingsUpdatedLabel = shellRef("settingsUpdatedLabel", "docsViewerSettingsUpdatedLabel");
+  var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
+  var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
+  var settingsCancelButton = shellRef("settingsCancelButton", "docsViewerSettingsCancelButton");
+  var settingsSaveButton = shellRef("settingsSaveButton", "docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
   var scopeLifecycleRequestPromise = null;
@@ -805,6 +809,9 @@ export function initDocsViewerManagement(context) {
     nav: nav,
     state: state,
     context: context,
+    refs: {
+      contextMenu: shellRefs.contextMenu
+    },
     callbacks: {
       onContextAction: function (actionName) {
         if (!actionController) return;
