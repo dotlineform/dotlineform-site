@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-051c002e83cce6e5df56af807495c6da",
-    "generated_at_utc": "2026-05-27T19:46:56Z",
-    "count": 205
+    "version": "blake2b-753d82a25d97961d8f1bc4f093cfd721",
+    "generated_at_utc": "2026-05-27T20:10:51Z",
+    "count": 206
   },
   "entries": [
     {
@@ -4235,6 +4235,35 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-management-shell-extraction-tasks site request docs viewer app shell management extraction tasks docs viewer app shell management shell extraction tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-app-boot-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell App Boot Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-app-boot-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-app-boot-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "boot",
+        "tasks",
+        "docs viewer app shell app boot tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-app-boot-tasks site request docs viewer app shell boot tasks docs viewer app shell app boot tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

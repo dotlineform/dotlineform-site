@@ -412,6 +412,7 @@ Recommended completion sequence:
    Extract the remaining boot/state/controller setup out of `docs-viewer.js` into a focused app boot owner while keeping `docs-viewer.js` as the stable compatibility entrypoint loaded by route shells.
    Target owner: `docs-viewer/runtime/js/docs-viewer-app-boot.js` or an equivalent app-runtime module.
    Acceptance: route-config resolution, app-shell initialization, controller construction, initial config/index/payload load, and initial management import open are readable as one boot workflow outside the entrypoint; `docs-viewer.js` becomes a small import-and-start wrapper.
+   Task tracker: [Docs Viewer App Shell App Boot Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-app-boot-tasks).
 
 3. Route/document workflow ownership.
    Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.

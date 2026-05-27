@@ -911,6 +911,53 @@ def assert_document_shell_management_shape(page: Page) -> None:
         raise AssertionError(f"management document shell shape failed: {result!r}")
 
 
+def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            if (!document.querySelector('link[data-docs-viewer-css-smoke]')) {
+                await new Promise((resolve, reject) => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = '/docs-viewer/static/css/docs-viewer.css';
+                    link.dataset.docsViewerCssSmoke = 'true';
+                    link.onload = resolve;
+                    link.onerror = reject;
+                    document.head.appendChild(link);
+                });
+            }
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" class="docsViewer" data-allow-management="true">
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await module.initDocsViewerAppShell({ root, document });
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            const indexRect = document.querySelector('[data-docs-viewer-index-panel-mount]').getBoundingClientRect();
+            const documentRect = document.querySelector('[data-docs-viewer-document-shell-mount]').getBoundingClientRect();
+            const managementMount = document.querySelector('[data-docs-viewer-management-shell-mount]');
+            return {
+                managementMountDisplay: getComputedStyle(managementMount).display,
+                sameRow: Math.abs(indexRect.top - documentRect.top) < 2,
+                documentLeftAfterIndex: documentRect.left > indexRect.left,
+                contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
+                metadataModalCount: document.querySelectorAll('#docsViewerMetadataModal').length
+            };
+        }"""
+    )
+    if result != {
+        "managementMountDisplay": "contents",
+        "sameRow": True,
+        "documentLeftAfterIndex": True,
+        "contextMenuCount": 1,
+        "metadataModalCount": 1,
+    }:
+        raise AssertionError(f"management shell mount shifted document layout: {result!r}")
+
+
 def assert_document_shell_projection(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1549,6 +1596,7 @@ def main() -> int:
             assert_index_panel_projection(page)
             assert_document_shell_render(page)
             assert_document_shell_management_shape(page)
+            assert_management_shell_mount_does_not_shift_document(page)
             assert_document_shell_projection(page)
             assert_info_panel_shell_and_metadata_lifecycle(page)
             assert_hosted_view_context_contract(page)

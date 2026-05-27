@@ -56,6 +56,10 @@
   gap: 0.75rem;
 }
 
+[data-docs-viewer-management-shell-mount]{
+  display: contents;
+}
+
 .docsViewer__sidebar{
   min-width: 0;
 }
