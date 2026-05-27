@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T15:55:17Z",
+  "generated_at": "2026-05-27T16:01:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2522,6 +2522,22 @@
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
       "content_text_length": 7892
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-app-shell-management-actions-tasks",
+      "title": "Docs Viewer App Shell Management Actions Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "sort_order": 12105,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-app-shell-management-actions-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-actions-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-management-actions-tasks.json",
+      "content_text_length": 6535,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",

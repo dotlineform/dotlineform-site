@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-630e46f8cf073e161952e389a9b2c640",
-    "generated_at_utc": "2026-05-27T15:54:40Z",
-    "count": 195
+    "version": "blake2b-8c76523759010c2331d8394c07a498ff",
+    "generated_at_utc": "2026-05-27T16:01:15Z",
+    "count": 196
   },
   "entries": [
     {
@@ -3954,6 +3954,36 @@
         "25"
       ],
       "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-management-actions-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Management Actions Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-actions-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-management-actions-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "management",
+        "actions",
+        "tasks",
+        "docs viewer app shell management actions tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-management-actions-tasks site request docs viewer app shell management actions tasks docs viewer app shell management actions tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
