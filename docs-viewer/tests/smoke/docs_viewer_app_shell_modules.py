@@ -360,6 +360,172 @@ def assert_index_panel_projection(page: Page) -> None:
         raise AssertionError(f"unavailable index projection failed: {result!r}")
 
 
+def assert_document_shell_render(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await module.initDocsViewerAppShell({ root, document });
+            const refs = module.getDocsViewerAppShellDocumentRefs({ root, document });
+            const ids = [
+                'docsViewerMeta',
+                'docsViewerPath',
+                'docsViewerUpdated',
+                'docsViewerSummary',
+                'docsViewerStatusPills',
+                'docsViewerBookmarkToggle',
+                'docsViewerContent',
+                'docsViewerResultsStatus',
+                'docsViewerResults',
+                'docsViewerMore'
+            ];
+            return {
+                returnedContentId: returned.documentShell && returned.documentShell.content && returned.documentShell.content.id,
+                refContentId: refs.content && refs.content.id,
+                mainCount: document.querySelectorAll('.docsViewer__main').length,
+                missingIds: ids.filter((id) => !document.getElementById(id)),
+                mainLive: document.querySelector('.docsViewer__main')?.getAttribute('aria-live') || '',
+                bookmarkText: document.getElementById('docsViewerBookmarkToggle')?.textContent || '',
+                bookmarkPressed: document.getElementById('docsViewerBookmarkToggle')?.getAttribute('aria-pressed') || '',
+                metaHidden: document.getElementById('docsViewerMeta')?.hidden,
+                resultsHidden: document.getElementById('docsViewerResults')?.hidden,
+                moreHidden: document.getElementById('docsViewerMore')?.hidden
+            };
+        }"""
+    )
+    if result != {
+        "returnedContentId": "docsViewerContent",
+        "refContentId": "docsViewerContent",
+        "mainCount": 1,
+        "missingIds": [],
+        "mainLive": "polite",
+        "bookmarkText": "☆",
+        "bookmarkPressed": "false",
+        "metaHidden": True,
+        "resultsHidden": True,
+        "moreHidden": True,
+    }:
+        raise AssertionError(f"document shell render failed: {result!r}")
+
+
+def assert_document_shell_management_shape(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="true">
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await module.initDocsViewerAppShell({ root, document });
+            return {
+                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                statusPillsCount: document.querySelectorAll('#docsViewerStatusPills').length,
+                bookmarkToggleCount: document.querySelectorAll('#docsViewerBookmarkToggle').length,
+                manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
+                editButtonCount: document.querySelectorAll('#docsViewerManageEditButton').length
+            };
+        }"""
+    )
+    if result != {
+        "documentShellCount": 1,
+        "statusPillsCount": 1,
+        "bookmarkToggleCount": 1,
+        "manageRowCount": 1,
+        "editButtonCount": 1,
+    }:
+        raise AssertionError(f"management document shell shape failed: {result!r}")
+
+
+def assert_document_shell_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await module.initDocsViewerAppShell({ root, document });
+            const refs = module.getDocsViewerAppShellDocumentRefs({ root, document });
+            refs.more.innerHTML = '<button>More</button>';
+            module.renderDocsViewerAppShellDocumentState({
+                refs,
+                projection: {
+                    metaHidden: true,
+                    contentHidden: true,
+                    resultsStatusText: 'Searching...',
+                    resultsStatusHidden: false,
+                    resultsStatusError: true,
+                    resultsHidden: false,
+                    moreHidden: false
+                }
+            });
+            const searchProjection = {
+                metaHidden: refs.meta.hidden,
+                contentHidden: refs.content.hidden,
+                resultsStatusText: refs.resultsStatus.textContent,
+                resultsStatusHidden: refs.resultsStatus.hidden,
+                resultsStatusError: refs.resultsStatus.classList.contains('is-error'),
+                resultsHidden: refs.results.hidden,
+                moreHidden: refs.more.hidden,
+                moreHtml: refs.more.innerHTML
+            };
+            module.renderDocsViewerAppShellDocumentState({
+                refs,
+                projection: {
+                    contentHidden: false,
+                    resultsStatusText: '',
+                    resultsStatusHidden: true,
+                    resultsStatusError: false,
+                    resultsHidden: true,
+                    moreHidden: true,
+                    clearMore: true
+                }
+            });
+            const documentProjection = {
+                contentHidden: refs.content.hidden,
+                resultsStatusText: refs.resultsStatus.textContent,
+                resultsStatusHidden: refs.resultsStatus.hidden,
+                resultsStatusError: refs.resultsStatus.classList.contains('is-error'),
+                resultsHidden: refs.results.hidden,
+                moreHidden: refs.more.hidden,
+                moreHtml: refs.more.innerHTML
+            };
+            return { searchProjection, documentProjection };
+        }"""
+    )
+    if result["searchProjection"] != {
+        "metaHidden": True,
+        "contentHidden": True,
+        "resultsStatusText": "Searching...",
+        "resultsStatusHidden": False,
+        "resultsStatusError": True,
+        "resultsHidden": False,
+        "moreHidden": False,
+        "moreHtml": "<button>More</button>",
+    }:
+        raise AssertionError(f"search document projection failed: {result!r}")
+    if result["documentProjection"] != {
+        "contentHidden": False,
+        "resultsStatusText": "",
+        "resultsStatusHidden": True,
+        "resultsStatusError": False,
+        "resultsHidden": True,
+        "moreHidden": True,
+        "moreHtml": "",
+    }:
+        raise AssertionError(f"document projection failed: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -372,6 +538,7 @@ def assert_render_is_idempotent(page: Page) -> None:
                     data-enable-search="true"
                   ></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -388,7 +555,10 @@ def assert_render_is_idempotent(page: Page) -> None:
                 sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
                 toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
-                indexMountChildCount: document.querySelector('[data-docs-viewer-index-panel-mount]').children.length
+                indexMountChildCount: document.querySelector('[data-docs-viewer-index-panel-mount]').children.length,
+                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                documentContentCount: document.querySelectorAll('#docsViewerContent').length,
+                documentMountChildCount: document.querySelector('[data-docs-viewer-document-shell-mount]').children.length
             };
         }"""
     )
@@ -404,6 +574,9 @@ def assert_render_is_idempotent(page: Page) -> None:
         "navCount": 1,
         "toggleCount": 1,
         "indexMountChildCount": 1,
+        "documentShellCount": 1,
+        "documentContentCount": 1,
+        "documentMountChildCount": 1,
     }:
         raise AssertionError(f"app shell render was not idempotent: {result!r}")
 
@@ -429,6 +602,9 @@ def main() -> int:
             assert_management_actions_omitted(page)
             assert_index_panel_shell_render(page)
             assert_index_panel_projection(page)
+            assert_document_shell_render(page)
+            assert_document_shell_management_shape(page)
+            assert_document_shell_projection(page)
             assert_render_is_idempotent(page)
 
             browser.close()

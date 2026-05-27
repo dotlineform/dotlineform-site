@@ -340,6 +340,8 @@ Optional first visible shell move:
 - moved the header controls from the shared and standalone shell templates into `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
 - moved the index panel shell chrome from the shared and standalone shell templates into `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
   The templates now provide only `#docsViewerIndexPanelMount` for this area; `docs-viewer/runtime/js/docs-viewer-sidebar.js` remains the tree renderer inside the preserved `#docsViewerNav` body, and the existing index-panel state helper remains the storage/projection source.
+- moved the document mount and read-only metadata shell from the shared and standalone shell templates into `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
+  The templates now provide only `#docsViewerDocumentShellMount` for this area; the renderer preserves existing document, metadata, status-pill, bookmark, search/recent result, and more-result IDs. `docs-viewer/runtime/js/docs-viewer-sidebar.js` still renders breadcrumbs/read-only metadata, and `docs-viewer/runtime/js/docs-viewer-document-controller.js` still owns payload loading, Markdown/report mounting, search/recent pane switching, missing-doc, and error rendering.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -369,6 +371,7 @@ Recommended order:
 4. Document mount and metadata shell.
    Move document host, metadata host, results host, and document/status projection later, after app boot, route context, access gates, and panel ownership are proven.
    This has the highest public-reading blast radius and should not be the first proof of the app-shell migration.
+   Implemented 2026-05-27: the shared and standalone shell templates now provide `#docsViewerDocumentShellMount`; `docs-viewer/runtime/js/docs-viewer-app-shell.js` delegates to `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` to render the preserved document/meta/search-result IDs before existing runtime controllers read them. The slice adds only a narrow document/search/recent/results-status projection helper and deliberately defers info-panel or hosted-view architecture.
 
 This order does not imply that later responsibilities are less important.
 It only sequences the migration so each slice reduces shell ownership while preserving `/docs/`, `/library/`, and `/analysis/` behavior.

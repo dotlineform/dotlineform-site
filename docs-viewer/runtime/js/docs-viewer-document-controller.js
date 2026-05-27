@@ -158,8 +158,10 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function hideDocPane() {
-    if (meta) meta.hidden = true;
-    if (content) content.hidden = true;
+    projectDocumentShell({
+      metaHidden: true,
+      contentHidden: true
+    });
     context.renderBookmarkToggle();
     context.renderStatusPills();
   }
@@ -167,12 +169,12 @@ export function initDocsViewerDocumentController(context) {
   function showDocPane() {
     if (typeof context.clearResultsStatus === "function") context.clearResultsStatus();
     context.setRecentModeActive(false);
-    if (content) content.hidden = false;
-    if (results) results.hidden = true;
-    if (more) {
-      more.hidden = true;
-      more.innerHTML = "";
-    }
+    projectDocumentShell({
+      contentHidden: false,
+      resultsHidden: true,
+      moreHidden: true,
+      clearMore: true
+    });
   }
 
   function renderDocumentStatus(message, isError, options) {
@@ -190,13 +192,13 @@ export function initDocsViewerDocumentController(context) {
 
   function showSearchPane() {
     hideDocPane();
-    if (results) results.hidden = false;
+    projectDocumentShell({ resultsHidden: false });
   }
 
   function showRecentPane() {
     hideDocPane();
     context.setRecentModeActive(true);
-    if (results) results.hidden = false;
+    projectDocumentShell({ resultsHidden: false });
   }
 
   function renderPayload(doc, payload, hash) {
@@ -242,6 +244,28 @@ export function initDocsViewerDocumentController(context) {
 
   function handlePayloadError(error) {
     renderDocumentStatus(error.message || "Failed to load document.", true);
+  }
+
+  function projectDocumentShell(projection) {
+    if (typeof context.projectDocumentShell === "function") {
+      context.projectDocumentShell(projection || {});
+      return;
+    }
+    if (meta && Object.prototype.hasOwnProperty.call(projection || {}, "metaHidden")) {
+      meta.hidden = Boolean(projection.metaHidden);
+    }
+    if (content && Object.prototype.hasOwnProperty.call(projection || {}, "contentHidden")) {
+      content.hidden = Boolean(projection.contentHidden);
+    }
+    if (results && Object.prototype.hasOwnProperty.call(projection || {}, "resultsHidden")) {
+      results.hidden = Boolean(projection.resultsHidden);
+    }
+    if (more && Object.prototype.hasOwnProperty.call(projection || {}, "moreHidden")) {
+      more.hidden = Boolean(projection.moreHidden);
+    }
+    if (more && projection && projection.clearMore) {
+      more.innerHTML = "";
+    }
   }
 
   return {

@@ -217,27 +217,9 @@
   </div>
   {%- endif -%}
 
-  <article class="docsViewer__main" aria-live="polite">
-    <div class="docsViewer__meta" id="docsViewerMeta" hidden>
-      <div class="docsViewer__metaRow">
-        <div class="docsViewer__metaCopy">
-          <p class="docsViewer__path small" id="docsViewerPath"></p>
-          <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
-          <p class="docsViewer__summary muted small" id="docsViewerSummary"></p>
-        </div>
-        <div class="docsViewer__metaActions">
-          <div class="docsViewer__statusPills" id="docsViewerStatusPills" hidden></div>
-          <button class="docsViewer__bookmarkToggle" id="docsViewerBookmarkToggle" type="button" hidden aria-label="Add bookmark" aria-pressed="false" title="Add bookmark">☆</button>
-        </div>
-      </div>
-    </div>
-    <div class="docsViewer__content content" id="docsViewerContent">
-      <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
-    </div>
-    <p class="docsViewer__panelStatus muted small" id="docsViewerResultsStatus" hidden></p>
-    <ol class="docsViewer__results" id="docsViewerResults" hidden></ol>
-    <div class="docsViewer__more" id="docsViewerMore" hidden></div>
-  </article>
+  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount>
+    <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
+  </div>
 </section>
 
 <script type="module" src="{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

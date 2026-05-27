@@ -145,6 +145,10 @@ The important change is that document visibility should no longer be only a side
 2026-05-27 implementation note: the narrow index-panel app-shell slice moved sidebar chrome and DOM projection application into `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
 It did not introduce the broader multi-panel state model above; `docs-viewer/runtime/js/docs-viewer-index-panel.js` remains the compatibility state/projection helper for collapsed, normal, and expanded index states.
 
+2026-05-27 implementation note: the narrow document-shell app-shell slice moved `.docsViewer__main`, read-only metadata chrome, document content, results status, search/recent result list, and more-results mount into `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`.
+It introduced only a compatibility projection helper for the current document/search/recent visibility states and results-status state.
+It did not introduce the broader document/info panel state model, panel toolbar model, info panel, or hosted-view architecture.
+
 ## Panel Toolbar Model
 
 Each panel should have small shared chrome:

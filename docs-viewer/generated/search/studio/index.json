@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-799aa4dc0685e30ecb8bd9c2da4482bd",
-    "generated_at_utc": "2026-05-27T16:45:22Z",
-    "count": 198
+    "version": "blake2b-8d532c276993163c0c2ceb003109285a",
+    "generated_at_utc": "2026-05-27T17:02:43Z",
+    "count": 199
   },
   "entries": [
     {
@@ -4044,6 +4044,38 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-index-panel-tasks site request docs viewer app shell index panel tasks docs viewer app shell index panel tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-document-metadata-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Document Mount And Metadata Shell Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-document-metadata-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-document-metadata-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "document",
+        "metadata",
+        "tasks",
+        "docs viewer app shell document mount and metadata shell tasks",
+        "mount",
+        "and",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-document-metadata-tasks site request docs viewer app shell document metadata tasks docs viewer app shell document mount and metadata shell tasks mount and docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

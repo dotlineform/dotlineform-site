@@ -57,8 +57,10 @@ import {
   setViewerHistory
 } from "./docs-viewer-router.js";
 import {
+  getDocsViewerAppShellDocumentRefs,
   getDocsViewerAppShellIndexPanelRefs,
   initDocsViewerAppShell,
+  renderDocsViewerAppShellDocumentState,
   renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
 
@@ -77,21 +79,25 @@ import {
   var nav = indexPanelRefs.nav;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
+  var documentShellRefs = getDocsViewerAppShellDocumentRefs({
+    root: root,
+    document: document
+  });
   var status = document.getElementById("docsViewerStatus");
-  var meta = document.getElementById("docsViewerMeta");
-  var pathEl = document.getElementById("docsViewerPath");
-  var updatedEl = document.getElementById("docsViewerUpdated");
-  var summaryEl = document.getElementById("docsViewerSummary");
+  var meta = documentShellRefs.meta;
+  var pathEl = documentShellRefs.pathEl;
+  var updatedEl = documentShellRefs.updatedEl;
+  var summaryEl = documentShellRefs.summaryEl;
   var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
-  var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
-  var statusPills = document.getElementById("docsViewerStatusPills");
-  var content = document.getElementById("docsViewerContent");
+  var bookmarkToggle = documentShellRefs.bookmarkToggle;
+  var statusPills = documentShellRefs.statusPills;
+  var content = documentShellRefs.content;
   var scopeSelect = document.getElementById("docsViewerScopeSelect");
   var recentButton = document.getElementById("docsViewerRecentButton");
   var searchInput = document.getElementById("docsViewerSearchInput");
-  var resultsStatus = document.getElementById("docsViewerResultsStatus");
-  var results = document.getElementById("docsViewerResults");
-  var more = document.getElementById("docsViewerMore");
+  var resultsStatus = documentShellRefs.resultsStatus;
+  var results = documentShellRefs.results;
+  var more = documentShellRefs.more;
 
   var allowManagement = root.dataset.allowManagement === "true";
   var allowScopeQuery = root.dataset.allowScopeQuery === "true";
@@ -336,6 +342,7 @@ import {
     managementBaseUrl: function () { return managementBaseUrl; },
     meta: meta,
     more: more,
+    projectDocumentShell: projectDocumentShell,
     renderBookmarkToggle: renderBookmarkToggle,
     renderBookmarkUi: renderBookmarkUi,
     renderManagementUi: renderManagementUi,
@@ -892,10 +899,18 @@ import {
   }
 
   function clearResultsStatus() {
-    if (!resultsStatus) return;
-    resultsStatus.textContent = "";
-    resultsStatus.hidden = true;
-    resultsStatus.classList.remove("is-error");
+    projectDocumentShell({
+      resultsStatusText: "",
+      resultsStatusHidden: true,
+      resultsStatusError: false
+    });
+  }
+
+  function projectDocumentShell(projection) {
+    renderDocsViewerAppShellDocumentState({
+      refs: documentShellRefs,
+      projection: projection || {}
+    });
   }
 
   function syncBusyState() {

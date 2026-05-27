@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T16:56:42Z",
+  "generated_at": "2026-05-27T17:12:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1921,7 +1921,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 9826,
+      "content_text_length": 11212,
       "ui_status": "review"
     },
     {
@@ -2573,6 +2573,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-viewer-app-shell-document-metadata-tasks",
+      "title": "Docs Viewer App Shell Document Mount And Metadata Shell Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "sort_order": 12108,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-app-shell-document-metadata-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-document-metadata-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-document-metadata-tasks.json",
+      "content_text_length": 12984,
+      "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-docs-semantic-references-v2",
       "title": "Docs Semantic References v2 Request",
       "added_date": "2026-05-27",
@@ -2677,7 +2693,7 @@
       "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 21980,
+      "content_text_length": 22524,
       "ui_status": "draft"
     },
     {
@@ -2738,7 +2754,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 27289,
+      "content_text_length": 28475,
       "ui_status": "in-progress"
     },
     {
