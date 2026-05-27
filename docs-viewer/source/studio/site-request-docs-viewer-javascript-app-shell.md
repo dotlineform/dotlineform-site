@@ -337,6 +337,9 @@ Optional first visible shell move:
 
 - moved the management action area from `_includes/docs_viewer_shell.html` into `docs-viewer/runtime/js/docs-viewer-app-shell.js` and the focused `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
   `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` now provide only a management action mount for this area, while `docs-viewer/runtime/js/docs-viewer.js` remains the loaded compatibility entrypoint.
+- moved the header controls from the shared and standalone shell templates into `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
+- moved the index panel shell chrome from the shared and standalone shell templates into `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
+  The templates now provide only `#docsViewerIndexPanelMount` for this area; `docs-viewer/runtime/js/docs-viewer-sidebar.js` remains the tree renderer inside the preserved `#docsViewerNav` body, and the existing index-panel state helper remains the storage/projection source.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -361,6 +364,7 @@ Recommended order:
 3. Index panel shell.
    Move the sidebar/index panel container, toolbar, and panel-state projection into JavaScript after the first app-shell control slices are stable.
    This should align with the multi-panel work so index/document/info panel ownership does not split across Liquid and JavaScript.
+   Implemented 2026-05-27: the shared and standalone shell templates now provide `#docsViewerIndexPanelMount`; `docs-viewer/runtime/js/docs-viewer-app-shell.js` delegates to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` to render the preserved sidebar toggle, expand button, and nav IDs before the existing runtime controllers read them. The slice deliberately keeps tree row rendering in `docs-viewer/runtime/js/docs-viewer-sidebar.js` and keeps state transitions/storage in the current index-panel helper until a broader panel-layout owner is introduced.
 
 4. Document mount and metadata shell.
    Move document host, metadata host, results host, and document/status projection later, after app boot, route context, access gates, and panel ownership are proven.

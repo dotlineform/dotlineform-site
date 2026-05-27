@@ -36,35 +36,7 @@
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
   </div>
 
-  <aside class="docsViewer__sidebar" aria-label="Docs index">
-    <div class="docsViewer__sidebarInner">
-      <div class="docsViewer__sidebarHeader">
-        <button
-          class="docsViewer__sidebarToggle"
-          type="button"
-          id="docsViewerSidebarToggle"
-          aria-controls="docsViewerNav"
-          aria-expanded="true"
-          aria-label="Collapse docs index"
-          title="Collapse docs index"
-        >
-          <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">‹</span>
-        </button>
-        <button
-          class="docsViewer__sidebarToggle"
-          type="button"
-          id="docsViewerSidebarExpand"
-          aria-controls="docsViewerNav"
-          aria-expanded="true"
-          aria-label="Expand docs index"
-          title="Expand docs index"
-        >
-          <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">⤢</span>
-        </button>
-      </div>
-      <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
-    </div>
-  </aside>
+  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
   {%- if include.allow_management -%}
   <div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>
     <button class="docsViewer__contextAction" type="button" data-context-action="copy-link">Copy Link</button>

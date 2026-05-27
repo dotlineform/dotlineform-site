@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-index-panel-tasks
 title: Docs Viewer App Shell Index Panel Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12107
 viewable: true
@@ -25,16 +25,19 @@ This slice should align with [Docs Viewer Multi-Panel App Shell Request](/docs/?
 - Completed [Docs Viewer App Shell Header Controls Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-header-controls-tasks).
 - Established `docs-viewer/runtime/js/docs-viewer-app-shell.js` as the app-shell coordinator while keeping `docs-viewer/runtime/js/docs-viewer.js` as the compatibility entrypoint.
 - Moved header control composition out of `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`, leaving only route-provided mounts/context for that area.
+- Moved index panel chrome composition out of `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`, leaving `#docsViewerIndexPanelMount` as the route-provided mount for that area.
+- Added `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` as the focused app-shell child renderer for the sidebar container, collapse/restore button, expand button, nav mount, and projection application.
+- Preserved `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside `docsViewerNav`.
 
-### steer for next task
+### closeout
 
-- Implement the index panel shell as the next narrow app-shell-owned shell responsibility.
-- Keep the slice focused on the sidebar/index panel container, collapse/restore/expand controls, nav mount, and index panel state projection.
-- Preserve the current `docs-viewer/runtime/js/docs-viewer-index-panel.js` state contract unless a small, tested replacement is clearly needed.
-- Keep `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the index panel body.
-- Do not move document rendering, metadata/report rendering, search/recent result rendering, bookmark behavior, management command behavior, or info-panel views in this pass.
-- Preserve existing ids or provide a deliberate compatibility mapping for `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav`.
-- Keep public read-only behavior for `/library/` and `/analysis/` unchanged.
+- Exact shell markup moved: the duplicated `<aside class="docsViewer__sidebar">` shell, `.docsViewer__sidebarInner`, `.docsViewer__sidebarHeader`, `#docsViewerSidebarToggle`, `#docsViewerSidebarExpand`, and `#docsViewerNav`.
+- Exact refs preserved: `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav`.
+- `docs-viewer/runtime/js/docs-viewer-index-panel.js` remains the collapsed, normal, expanded state and storage helper. No broad multi-panel state contract was introduced in this slice.
+- `docs-viewer/runtime/js/docs-viewer.js` still owns state transitions, persistence calls, event wiring, route readiness, and orchestration, but receives app-shell-rendered refs before initializing the sidebar renderer and nav delegation.
+- Public `/library/` and `/analysis/` behavior was verified as read-only with no management CSS, controls, or management-only JS imports.
+- Standalone `/docs/` management behavior was verified through `docs-viewer/tests/smoke/docs_viewer_service_manage.py`, including index panel controls, tree click behavior, manage-mode URL preservation, and management action availability.
+- Codex did not rebuild generated docs payloads. Existing generated tracker payload changes in the worktree predated this implementation or may be watcher output; they were not reverted.
 
 ### baseline verification set
 
@@ -80,19 +83,19 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current index panel markup and ownership in `_includes/docs_viewer_shell.html`, `docs-viewer/shell/docs-viewer-shell.html`, `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-index-panel.js`, and `docs-viewer/runtime/js/docs-viewer-sidebar.js`. Deliverable: short implementation note in this tracker or closeout summary identifying the exact shell markup and refs to move. |
-| 2 | planned | Define the focused app-shell surface for the index panel. Decide whether to extend `docs-viewer/runtime/js/docs-viewer-app-shell.js` directly or add a child renderer such as `docs-viewer-index-panel-renderer.js`. Deliverable: clear module ownership and no new broad shell responsibility added to `docs-viewer.js`. |
-| 3 | planned | Decide the narrow relationship to the multi-panel request. If a small panel projection helper is needed, keep it limited to representing the existing index/document visibility states and defer info-panel or view-host architecture. |
-| 4 | planned | Replace Liquid-owned index panel shell markup with minimal mounts/context while preserving the existing sidebar/nav behavior. Deliverable: shell templates no longer own full index panel chrome composition for the moved area. |
-| 5 | planned | Render the index panel container, sidebar header, collapse/restore button, expand button, and nav mount from JavaScript. Preserve current ids: `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav`, unless a deliberate compatibility mapping is documented and tested. |
-| 6 | planned | Keep `docs-viewer-sidebar.js` as the tree renderer inside `docsViewerNav`. Do not move tree row rendering, drag/drop behavior, management context menus, or tree visibility filtering in this pass. |
-| 7 | planned | Keep current index panel state behavior working with minimal churn: collapsed, normal, expanded, per-scope storage, legacy sidebar storage migration, desktop-only controls, and mobile normalization. |
-| 8 | planned | If refs move behind app-shell rendering, make `docs-viewer.js` wait for or receive those refs before initializing sidebar rendering, index-panel state, nav event delegation, and route handling. |
-| 9 | planned | Preserve public route behavior for `/library/` and `/analysis/`: read-only boot, expected index controls, document pane visibility, search/recent behavior, and absence of management-only imports. |
-| 10 | planned | Preserve local `/docs/` management behavior: index panel controls, tree interactions, manage-mode context menus, drag/drop wiring, scope switching, and browser history behavior. |
-| 11 | planned | Add or update focused module smoke coverage for the index panel renderer/state. Cover public route rendering, management route rendering, id preservation, idempotent rendering, collapsed/normal/expanded projection, desktop/mobile availability, and storage migration where practical. |
-| 12 | planned | Run the targeted verification set for changed JS, shell templates, index panel behavior, public read-only routes, and management routes. Record any checks skipped and why. |
-| 13 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request if the implemented shape changes the plan, the multi-panel request if any projection contract is introduced, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
+| 1 | done | Inventory current index panel markup and ownership in `_includes/docs_viewer_shell.html`, `docs-viewer/shell/docs-viewer-shell.html`, `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-index-panel.js`, and `docs-viewer/runtime/js/docs-viewer-sidebar.js`. Deliverable: short implementation note in this tracker or closeout summary identifying the exact shell markup and refs to move. |
+| 2 | done | Define the focused app-shell surface for the index panel. Decide whether to extend `docs-viewer/runtime/js/docs-viewer-app-shell.js` directly or add a child renderer such as `docs-viewer-index-panel-renderer.js`. Deliverable: clear module ownership and no new broad shell responsibility added to `docs-viewer.js`. |
+| 3 | done | Decide the narrow relationship to the multi-panel request. If a small panel projection helper is needed, keep it limited to representing the existing index/document visibility states and defer info-panel or view-host architecture. |
+| 4 | done | Replace Liquid-owned index panel shell markup with minimal mounts/context while preserving the existing sidebar/nav behavior. Deliverable: shell templates no longer own full index panel chrome composition for the moved area. |
+| 5 | done | Render the index panel container, sidebar header, collapse/restore button, expand button, and nav mount from JavaScript. Preserve current ids: `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav`, unless a deliberate compatibility mapping is documented and tested. |
+| 6 | done | Keep `docs-viewer-sidebar.js` as the tree renderer inside `docsViewerNav`. Do not move tree row rendering, drag/drop behavior, management context menus, or tree visibility filtering in this pass. |
+| 7 | done | Keep current index panel state behavior working with minimal churn: collapsed, normal, expanded, per-scope storage, legacy sidebar storage migration, desktop-only controls, and mobile normalization. |
+| 8 | done | If refs move behind app-shell rendering, make `docs-viewer.js` wait for or receive those refs before initializing sidebar rendering, index-panel state, nav event delegation, and route handling. |
+| 9 | done | Preserve public route behavior for `/library/` and `/analysis/`: read-only boot, expected index controls, document pane visibility, search/recent behavior, and absence of management-only imports. |
+| 10 | done | Preserve local `/docs/` management behavior: index panel controls, tree interactions, manage-mode context menus, drag/drop wiring, scope switching, and browser history behavior. |
+| 11 | done | Add or update focused module smoke coverage for the index panel renderer/state. Cover public route rendering, management route rendering, id preservation, idempotent rendering, collapsed/normal/expanded projection, desktop/mobile availability, and storage migration where practical. |
+| 12 | done | Run the targeted verification set for changed JS, shell templates, index panel behavior, public read-only routes, and management routes. Record any checks skipped and why. |
+| 13 | done | Update owning docs after implementation. At minimum update this tracker, the app-shell request if the implemented shape changes the plan, the multi-panel request if any projection contract is introduced, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
 
 The closeout for this third migration should confirm:
 

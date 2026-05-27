@@ -57,7 +57,9 @@ import {
   setViewerHistory
 } from "./docs-viewer-router.js";
 import {
-  initDocsViewerAppShell
+  getDocsViewerAppShellIndexPanelRefs,
+  initDocsViewerAppShell,
+  renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
 
 (function () {
@@ -68,9 +70,13 @@ import {
     document: document
   });
 
-  var nav = document.getElementById("docsViewerNav");
-  var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
-  var sidebarExpand = document.getElementById("docsViewerSidebarExpand");
+  var indexPanelRefs = getDocsViewerAppShellIndexPanelRefs({
+    root: root,
+    document: document
+  });
+  var nav = indexPanelRefs.nav;
+  var sidebarToggle = indexPanelRefs.sidebarToggle;
+  var sidebarExpand = indexPanelRefs.sidebarExpand;
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
@@ -646,28 +652,11 @@ import {
     var projection = projectIndexPanelState(state.indexPanelState, {
       available: sidebarCollapseAvailable()
     });
-    root.dataset.indexPanelState = projection.activeState;
-    root.dataset.sidebarState = projection.legacySidebarState;
-    if (sidebarExpand) {
-      sidebarExpand.hidden = projection.expandHidden;
-      sidebarExpand.setAttribute("aria-expanded", projection.expandAriaExpanded);
-      sidebarExpand.setAttribute("aria-label", projection.expandLabel);
-      sidebarExpand.title = projection.expandLabel;
-      var expandIcon = sidebarExpand.querySelector(".docsViewer__sidebarToggleIcon");
-      if (expandIcon) {
-        expandIcon.textContent = projection.expandIcon;
-      }
-    }
-    if (sidebarToggle) {
-      sidebarToggle.hidden = projection.stepHidden;
-      sidebarToggle.setAttribute("aria-expanded", projection.stepAriaExpanded);
-      sidebarToggle.setAttribute("aria-label", projection.stepLabel);
-      sidebarToggle.title = projection.stepLabel;
-      var icon = sidebarToggle.querySelector(".docsViewer__sidebarToggleIcon");
-      if (icon) {
-        icon.textContent = projection.stepIcon;
-      }
-    }
+    renderDocsViewerAppShellIndexPanelState({
+      root: root,
+      refs: indexPanelRefs,
+      projection: projection
+    });
   }
 
   function toggleIndexPanelState() {

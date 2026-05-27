@@ -142,6 +142,9 @@ root data attributes:
 The current index state helper can either become a compatibility wrapper or be replaced by a broader panel-layout module.
 The important change is that document visibility should no longer be only a side effect of `indexPanelState`.
 
+2026-05-27 implementation note: the narrow index-panel app-shell slice moved sidebar chrome and DOM projection application into `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`.
+It did not introduce the broader multi-panel state model above; `docs-viewer/runtime/js/docs-viewer-index-panel.js` remains the compatibility state/projection helper for collapsed, normal, and expanded index states.
+
 ## Panel Toolbar Model
 
 Each panel should have small shared chrome:

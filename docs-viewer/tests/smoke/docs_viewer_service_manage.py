@@ -134,6 +134,59 @@ def main(argv: list[str] | None = None) -> int:
                 }""",
                 timeout=args.timeout_ms,
             )
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const nav = document.querySelector("#docsViewerNav");
+                    const step = document.querySelector("#docsViewerSidebarToggle");
+                    const expand = document.querySelector("#docsViewerSidebarExpand");
+                    return root?.dataset.indexPanelState === "normal" &&
+                        nav &&
+                        nav.querySelector('a[data-doc-id="docs-viewer-overview"]') &&
+                        step &&
+                        step.getAttribute("aria-controls") === "docsViewerNav" &&
+                        !step.hidden &&
+                        expand &&
+                        expand.getAttribute("aria-controls") === "docsViewerNav" &&
+                        !expand.hidden;
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerSidebarExpand").click()
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const main = document.querySelector(".docsViewer__main");
+                    return root?.dataset.indexPanelState === "expanded" &&
+                        main &&
+                        getComputedStyle(main).display === "none";
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator('#docsViewerNav a[data-doc-id="docs-viewer-overview"]').first.click()
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const heading = document.querySelector("#docsViewerContent h1");
+                    const activeLink = document.querySelector('#docsViewerNav a[data-doc-id="docs-viewer-overview"]');
+                    return root?.dataset.indexPanelState === "expanded" &&
+                        heading?.id === "docs-viewer-overview" &&
+                        activeLink?.classList.contains("is-active") &&
+                        activeLink?.getAttribute("aria-current") === "page";
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerSidebarToggle").click()
+            page.wait_for_function(
+                """() => document.querySelector("#docsViewerRoot")?.dataset.indexPanelState === "normal" """,
+                timeout=args.timeout_ms,
+            )
+            tree_url = page.url
+            page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
+            page.wait_for_function(
+                """() => document.querySelector("#docsViewerContent h1")?.id === "docs-viewer" """,
+                timeout=args.timeout_ms,
+            )
             root_attrs = page.locator("#docsViewerRoot").evaluate(
                 """root => ({
                     allowManagement: root.dataset.allowManagement,
@@ -192,6 +245,8 @@ def main(argv: list[str] | None = None) -> int:
         }
         if root_attrs != expected_attrs:
             raise AssertionError(f"unexpected Docs Viewer root attrs: {root_attrs!r}")
+        if query_value(tree_url, "doc") != "docs-viewer-overview" or query_value(tree_url, "mode") != "manage":
+            raise AssertionError(f"expected tree click to keep docs-viewer-overview active in manage mode, got {tree_url}")
         if not any("/docs/generated/index" in url for url in generated_requests):
             raise AssertionError(f"expected generated index request through Docs Viewer service: {generated_requests!r}")
         if not any("/docs/generated/payload" in url for url in generated_requests):

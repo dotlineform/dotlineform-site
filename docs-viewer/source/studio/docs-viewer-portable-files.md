@@ -36,7 +36,7 @@ Examples in this repo are:
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
-The standalone service renders the management action mount only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables it in `var/local/site.env`; the browser app shell renders the action controls into that mount.
+The standalone service renders route context and app-shell mounts only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables the management shell in `var/local/site.env`; the browser app shell renders the header controls, index panel chrome, and action controls into those mounts.
 The Jekyll management adapter remains a host integration artifact during the extraction and should not be treated as the durable service shell owner.
 
 ### Browser Runtime
@@ -45,12 +45,14 @@ Copy the shared viewer runtime files:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-config-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-data.js`
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-tree.js`
 - `docs-viewer/runtime/js/docs-viewer-sidebar.js`
 - `docs-viewer/runtime/js/docs-viewer-index-panel.js`
+- `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-search.js`
 - `docs-viewer/runtime/js/docs-viewer-search-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js`

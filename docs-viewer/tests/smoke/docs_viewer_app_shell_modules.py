@@ -240,6 +240,126 @@ def assert_management_actions_omitted(page: Page) -> None:
         raise AssertionError(f"public route management action omission failed: {result!r}")
 
 
+def assert_index_panel_shell_render(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await module.initDocsViewerAppShell({ root, document });
+            const refs = module.getDocsViewerAppShellIndexPanelRefs({ root, document });
+            return {
+                returnedNavId: returned.indexPanel && returned.indexPanel.nav && returned.indexPanel.nav.id,
+                refNavId: refs.nav && refs.nav.id,
+                sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
+                navCount: document.querySelectorAll('#docsViewerNav').length,
+                toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
+                expandCount: document.querySelectorAll('#docsViewerSidebarExpand').length,
+                toggleControls: document.getElementById('docsViewerSidebarToggle')?.getAttribute('aria-controls') || '',
+                expandControls: document.getElementById('docsViewerSidebarExpand')?.getAttribute('aria-controls') || '',
+                navLabel: document.getElementById('docsViewerNav')?.getAttribute('aria-label') || ''
+            };
+        }"""
+    )
+    expected = {
+        "returnedNavId": "docsViewerNav",
+        "refNavId": "docsViewerNav",
+        "sidebarCount": 1,
+        "navCount": 1,
+        "toggleCount": 1,
+        "expandCount": 1,
+        "toggleControls": "docsViewerNav",
+        "expandControls": "docsViewerNav",
+        "navLabel": "Docs tree",
+    }
+    if result != expected:
+        raise AssertionError(f"index panel shell render failed: {result!r}")
+
+
+def assert_index_panel_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const state = await import('/docs-viewer/runtime/js/docs-viewer-index-panel.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            await shell.initDocsViewerAppShell({ root, document });
+            const refs = shell.getDocsViewerAppShellIndexPanelRefs({ root, document });
+            shell.renderDocsViewerAppShellIndexPanelState({
+                root,
+                refs,
+                projection: state.projectIndexPanelState('collapsed', { available: true })
+            });
+            const collapsed = {
+                state: root.dataset.indexPanelState,
+                sidebarState: root.dataset.sidebarState,
+                toggleHidden: refs.sidebarToggle.hidden,
+                toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
+                toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
+                toggleIcon: refs.sidebarToggle.querySelector('.docsViewer__sidebarToggleIcon')?.textContent || '',
+                expandHidden: refs.sidebarExpand.hidden
+            };
+            shell.renderDocsViewerAppShellIndexPanelState({
+                root,
+                refs,
+                projection: state.projectIndexPanelState('expanded', { available: true })
+            });
+            const expanded = {
+                state: root.dataset.indexPanelState,
+                sidebarState: root.dataset.sidebarState,
+                toggleHidden: refs.sidebarToggle.hidden,
+                toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
+                toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
+                expandHidden: refs.sidebarExpand.hidden
+            };
+            shell.renderDocsViewerAppShellIndexPanelState({
+                root,
+                refs,
+                projection: state.projectIndexPanelState('normal', { available: false })
+            });
+            const unavailable = {
+                state: root.dataset.indexPanelState,
+                toggleHidden: refs.sidebarToggle.hidden,
+                expandHidden: refs.sidebarExpand.hidden
+            };
+            return { collapsed, expanded, unavailable };
+        }"""
+    )
+    if result["collapsed"] != {
+        "state": "collapsed",
+        "sidebarState": "collapsed",
+        "toggleHidden": False,
+        "toggleExpanded": "false",
+        "toggleLabel": "Restore index panel",
+        "toggleIcon": "›",
+        "expandHidden": True,
+    }:
+        raise AssertionError(f"collapsed index projection failed: {result!r}")
+    if result["expanded"] != {
+        "state": "expanded",
+        "sidebarState": "expanded",
+        "toggleHidden": False,
+        "toggleExpanded": "true",
+        "toggleLabel": "Restore index panel",
+        "expandHidden": True,
+    }:
+        raise AssertionError(f"expanded index projection failed: {result!r}")
+    if result["unavailable"] != {
+        "state": "normal",
+        "toggleHidden": True,
+        "expandHidden": True,
+    }:
+        raise AssertionError(f"unavailable index projection failed: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -251,6 +371,7 @@ def assert_render_is_idempotent(page: Page) -> None:
                     data-docs-viewer-header-controls-mount
                     data-enable-search="true"
                   ></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -263,7 +384,11 @@ def assert_render_is_idempotent(page: Page) -> None:
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 rowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 actionButtonCount: document.querySelectorAll('#docsViewerManageActionsButton').length,
-                mountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length
+                mountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
+                navCount: document.querySelectorAll('#docsViewerNav').length,
+                toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
+                indexMountChildCount: document.querySelector('[data-docs-viewer-index-panel-mount]').children.length
             };
         }"""
     )
@@ -275,6 +400,10 @@ def assert_render_is_idempotent(page: Page) -> None:
         "rowCount": 1,
         "actionButtonCount": 1,
         "mountChildCount": 1,
+        "sidebarCount": 1,
+        "navCount": 1,
+        "toggleCount": 1,
+        "indexMountChildCount": 1,
     }:
         raise AssertionError(f"app shell render was not idempotent: {result!r}")
 
@@ -298,6 +427,8 @@ def main() -> int:
             assert_header_controls_management_render(page)
             assert_management_actions_render(page)
             assert_management_actions_omitted(page)
+            assert_index_panel_shell_render(page)
+            assert_index_panel_projection(page)
             assert_render_is_idempotent(page)
 
             browser.close()
