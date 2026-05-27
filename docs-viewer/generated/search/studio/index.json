@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-15cec87795ea52224e70fb98bbb7d73c",
-    "generated_at_utc": "2026-05-27T20:35:40Z",
-    "count": 207
+    "version": "blake2b-f82081507d0e36df800f3acf4fcacace",
+    "generated_at_utc": "2026-05-27T20:58:01Z",
+    "count": 208
   },
   "entries": [
     {
@@ -4352,6 +4352,37 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-search-recent-bookmark-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Search Recent Bookmark Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-search-recent-bookmark-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-search-recent-bookmark-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "search",
+        "recent",
+        "bookmark",
+        "tasks",
+        "docs viewer app shell search recent bookmark tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-search-recent-bookmark-tasks site request docs viewer app shell search recent bookmark tasks docs viewer app shell search recent bookmark tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-viewer-workstream-priority-plan",

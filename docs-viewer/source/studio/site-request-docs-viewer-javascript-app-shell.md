@@ -431,6 +431,7 @@ Recommended completion sequence:
    Finish the extraction around search/recent and bookmark orchestration so the app boot owner wires controllers but does not own their UI state transitions.
    Target owners: the existing search controller and bookmark modules unless a small app-level coordination helper is needed.
    Acceptance: inline search, recent results, more-results behavior, bookmark toggle/list behavior, and route history behavior are covered by focused module or route smokes without broad entrypoint state assertions.
+   Task tracker: [Docs Viewer App Shell Search Recent Bookmark Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-search-recent-bookmark-tasks).
 
 5. Panel toolbar and hosted-view completion.
    Add the minimal panel toolbar/view-switching contract only after the boot and route workflow are no longer centered in `docs-viewer.js`.
