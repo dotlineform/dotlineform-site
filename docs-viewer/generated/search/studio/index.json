@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4c4a3523b4ecf96dc45a312f98fcd9e9",
-    "generated_at_utc": "2026-05-27T16:10:55Z",
-    "count": 196
+    "version": "blake2b-27782589a04c4df347242ebe04319cd9",
+    "generated_at_utc": "2026-05-27T16:26:02Z",
+    "count": 197
   },
   "entries": [
     {
@@ -3984,6 +3984,36 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-management-actions-tasks site request docs viewer app shell management actions tasks docs viewer app shell management actions tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-header-controls-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Header Controls Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-header-controls-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-header-controls-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "header",
+        "controls",
+        "tasks",
+        "docs viewer app shell header controls tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-header-controls-tasks site request docs viewer app shell header controls tasks docs viewer app shell header controls tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

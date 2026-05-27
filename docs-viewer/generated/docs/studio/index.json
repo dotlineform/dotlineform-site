@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T16:18:42Z",
+  "generated_at": "2026-05-27T16:26:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2537,7 +2537,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-actions-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-management-actions-tasks.json",
       "content_text_length": 8359,
-      "ui_status": "draft"
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-app-shell-header-controls-tasks",
+      "title": "Docs Viewer App Shell Header Controls Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "sort_order": 12106,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-app-shell-header-controls-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-header-controls-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-header-controls-tasks.json",
+      "content_text_length": 7645,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
