@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T17:33:45Z",
+  "generated_at": "2026-05-27T17:49:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2605,6 +2605,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-viewer-app-shell-route-config-view-foundation-tasks",
+      "title": "Docs Viewer App Shell Route Config And View Foundation Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "sort_order": 12110,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-app-shell-route-config-view-foundation-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-config-view-foundation-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-route-config-view-foundation-tasks.json",
+      "content_text_length": 10710,
+      "ui_status": "planned"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-docs-semantic-references-v2",
       "title": "Docs Semantic References v2 Request",
       "added_date": "2026-05-27",
@@ -2770,7 +2786,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 29895,
+      "content_text_length": 33188,
       "ui_status": "in-progress"
     },
     {

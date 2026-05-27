@@ -12,7 +12,33 @@ viewable: true
 
 Status:
 
-- active enabling request
+- in progress
+
+- **App-shell migration foundation:** ~70% there
+- **Full JavaScript App Shell Request goals:** ~45-55% there
+- **Ready to start first info-panel slice:** not yet; defer until the route config, access, panel/view state, and hosted-view foundations are firmer
+
+What is now in good shape:
+
+- `docs-viewer.js` is no longer absorbing every shell concern; it is mostly a compatibility boot/orchestration layer.
+- Shell rendering has moved into focused owners: management actions, header controls, index panel chrome, document shell chrome.
+- Route context/access flags are explicit in `docs-viewer/runtime/js/docs-viewer-app-context.js`.
+- Current panel projection has a focused compatibility owner in `docs-viewer/runtime/js/docs-viewer-panel-layout.js`.
+- Public read-only and manage-mode separation is tested and still working.
+- Management-only JS remains gated from public routes.
+
+What is still incomplete against the broader request:
+
+- Route config is not yet the durable long-term route/app handoff. We still normalize existing data attributes rather than resolving everything from generated route records.
+- The optional/hosted module model is still only documented direction. No registration, lifecycle, or graceful-absence contract exists yet.
+- Multi-panel architecture is not implemented: no real `index/document/info` state model, info panel, toolbar model, view registry, or panel module lifecycle.
+- Route shells are thinner, but not yet “mount plus route id/config” thin.
+- `docs-viewer.js` is improved but still owns a lot: route application, payload loading, search/recent handoff, bookmark orchestration, and management-controller loading.
+- Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
+
+The specific info panel should remain deferred until more of the broader JavaScript app-shell goals are complete.
+Adding it now would deepen the current mixed economy between route shell data attributes, `docs-viewer.js` orchestration, app-shell helpers, and existing controllers.
+The next implementation should be infrastructure-first: route config handoff, access/capability projection, panel/view state skeleton, and hosted-view/module registration shape.
 
 ## Summary
 
@@ -348,6 +374,30 @@ Optional first visible shell move:
   `docs-viewer/runtime/js/docs-viewer.js` still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and management controller loading.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
+
+## Next Infrastructure Slices
+
+The next work should defer the specific info panel and reduce the mixed ownership model first.
+
+Recommended sequence:
+
+1. Route config handoff.
+   Move from normalizing current `#docsViewerRoot` attributes toward resolving a generated route/config record as the app's durable route context.
+
+2. Access and capability projection.
+   Keep static route intent, public/manage gating, backend reachability, and future module access rules explicit and small.
+
+3. Panel/view state skeleton.
+   Introduce the real index/document/info state model and projection, but initially project the current two-panel behavior.
+   Do not implement a visible info panel in this slice.
+
+4. Hosted-view/module registration shape.
+   Add the minimal register/load/mount/update/unmount contract and graceful absence behavior before any specific view depends on it.
+
+5. Later info metadata view.
+   Implement the read-only metadata info view only after the route config, access, panel state, and hosted-view contracts are stable enough for the info panel to consume them.
+
+The next task tracker is [Docs Viewer App Shell Route Config And View Foundation Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-config-view-foundation-tasks).
 
 ## Shell Migration Sequence
 
