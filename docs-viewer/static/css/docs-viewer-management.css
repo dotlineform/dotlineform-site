@@ -354,7 +354,8 @@ html[data-theme="dark"] body.docs-viewer-service{
   box-shadow: none;
 }
 
-.docsViewer__navRow.is-drop-after::after{
+.docsViewer__navRow.is-drop-after::after,
+.docsViewer__navRow.is-drop-inside-start::after{
   content: "";
   position: absolute;
   left: 1.85rem;
@@ -365,6 +366,10 @@ html[data-theme="dark"] body.docs-viewer-service{
   background: var(--docs-viewer-border-strong, var(--border-strong, #aaa));
   box-shadow: 0 0 0 2px var(--docs-viewer-bg, var(--bg, #fff));
   pointer-events: none;
+}
+
+.docsViewer__navRow.is-drop-inside-start::after{
+  left: 2.8rem;
 }
 
 .docsViewer__navRow.is-drop-inside{

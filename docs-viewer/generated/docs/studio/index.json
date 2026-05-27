@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T14:11:13Z",
+  "generated_at": "2026-05-27T14:23:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2541,22 +2541,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
-      "title": "Docs Viewer Multi-Panel App Shell Request",
-      "added_date": "2026-05-27",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "sort_order": 12150,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 17858,
-      "ui_status": "draft"
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-request-docs-semantic-references-v2",
       "title": "Docs Semantic References v2 Request",
       "added_date": "2026-05-27",
@@ -2647,6 +2631,22 @@
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/servers.json",
       "content_text_length": 743
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
+      "title": "Docs Viewer Multi-Panel App Shell Request",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 13170,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
+      "content_text_length": 19244,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",

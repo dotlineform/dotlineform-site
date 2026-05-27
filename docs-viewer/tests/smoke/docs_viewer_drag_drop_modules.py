@@ -89,7 +89,10 @@ def assert_drag_drop_helpers(page: Page) -> None:
                 target: childList,
                 clientY: childRect.bottom + 8
             }, { targetDocId: 'root-a', position: 'after' }, options);
-            return { rootTerminal, childTerminal, aboveLastMidpoint, currentTarget };
+            const expandedParentPosition = module.rowDropPosition(rootB, {
+                clientY: rootRect.bottom - 2
+            }, options);
+            return { rootTerminal, childTerminal, aboveLastMidpoint, currentTarget, expandedParentPosition };
         }"""
     )
     if result["rootTerminal"] != {"targetDocId": "root-b", "position": "after"}:
@@ -100,6 +103,8 @@ def assert_drag_drop_helpers(page: Page) -> None:
         raise AssertionError(f"terminal target should not activate above the last-row midpoint: {result!r}")
     if result["currentTarget"] != {"targetDocId": "child-b", "position": "after"}:
         raise AssertionError(f"current drop target did not use terminal list target: {result!r}")
+    if result["expandedParentPosition"] != "inside-start":
+        raise AssertionError(f"expanded parent lower-half drop did not resolve to first child: {result!r}")
 
 
 def assert_management_interaction_terminal_drop(page: Page) -> None:
@@ -177,6 +182,83 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
         raise AssertionError(f"terminal drop did not request the expected move: {result!r}")
 
 
+def assert_management_interaction_first_child_drop(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-management-interactions.js');
+            document.body.innerHTML = `
+                <nav id="nav" style="padding: 0 0 32px 0;">
+                  <ul class="docsViewer__navList" style="display:block; padding:0; margin:0;">
+                    <li class="docsViewer__navItem">
+                      <div class="docsViewer__navRow" data-doc-row-id="moving" style="height:20px;">
+                        <a href="#" data-drag-doc-id="moving" draggable="true">Moving</a>
+                      </div>
+                    </li>
+                    <li class="docsViewer__navItem">
+                      <div class="docsViewer__navRow" data-doc-row-id="parent" style="height:20px;">Parent</div>
+                      <ul class="docsViewer__navList docsViewer__navList--child" style="display:block; padding:0; margin:0;">
+                        <li class="docsViewer__navItem">
+                          <div class="docsViewer__navRow" data-doc-row-id="child-a" style="height:20px;">Child A</div>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
+            `;
+            const nav = document.getElementById('nav');
+            const parent = nav.querySelector('[data-doc-row-id="parent"]');
+            const parentRect = parent.getBoundingClientRect();
+            const moveCalls = [];
+            const controller = module.createDocsViewerManagementInteractionController({
+                nav,
+                state: {
+                    managementMode: true,
+                    managementAvailable: true,
+                    managementBusy: false,
+                    searchRouteActive: false,
+                    selectedDocId: 'moving',
+                    docsById: new Map([
+                        ['moving', { doc_id: 'moving', title: 'Moving' }],
+                        ['parent', { doc_id: 'parent', title: 'Parent' }],
+                        ['child-a', { doc_id: 'child-a', title: 'Child A', parent_id: 'parent' }]
+                    ]),
+                    childrenByParent: new Map([
+                        ['parent', [{ doc_id: 'child-a', title: 'Child A', parent_id: 'parent' }]]
+                    ])
+                },
+                context: {
+                    cssEscape: (value) => CSS.escape(value)
+                },
+                callbacks: {
+                    onMoveDoc: (movingDocId, targetDocId, position) => moveCalls.push({ movingDocId, targetDocId, position })
+                }
+            });
+            controller.wireEvents();
+
+            nav.querySelector('[data-drag-doc-id="moving"]').dispatchEvent(new Event('dragstart', {
+                bubbles: true,
+                cancelable: true
+            }));
+            const dragover = new Event('dragover', { bubbles: true, cancelable: true });
+            Object.defineProperty(dragover, 'clientY', { value: parentRect.bottom - 2 });
+            parent.dispatchEvent(dragover);
+            const firstChildIndicator = parent.classList.contains('is-drop-inside-start');
+            const rootIndicator = parent.classList.contains('is-drop-after');
+            const drop = new Event('drop', { bubbles: true, cancelable: true });
+            Object.defineProperty(drop, 'clientY', { value: parentRect.bottom - 2 });
+            parent.dispatchEvent(drop);
+
+            return { dragoverPrevented: dragover.defaultPrevented, firstChildIndicator, rootIndicator, moveCalls };
+        }"""
+    )
+    if not result["dragoverPrevented"]:
+        raise AssertionError(f"first-child dragover was not accepted as droppable: {result!r}")
+    if not result["firstChildIndicator"] or result["rootIndicator"]:
+        raise AssertionError(f"first-child dragover did not project the indented indicator: {result!r}")
+    if result["moveCalls"] != [{"movingDocId": "moving", "targetDocId": "parent", "position": "inside-start"}]:
+        raise AssertionError(f"first-child drop did not request the expected move: {result!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", type=Path, default=Path.cwd())
@@ -191,6 +273,7 @@ def main(argv: list[str] | None = None) -> int:
             page.goto(base_url, wait_until="domcontentloaded", timeout=args.timeout_ms)
             assert_drag_drop_helpers(page)
             assert_management_interaction_terminal_drop(page)
+            assert_management_interaction_first_child_drop(page)
             browser.close()
         print("Docs Viewer drag/drop module helpers OK")
         return 0

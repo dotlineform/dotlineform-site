@@ -89,9 +89,15 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function updateNavDragState() {
+    function dropClassName(position) {
+      if (position === "inside") return "is-drop-inside";
+      if (position === "inside-start") return "is-drop-inside-start";
+      return "is-drop-after";
+    }
+
     if (!nav) return;
     nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
-      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside");
+      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside", "is-drop-inside-start");
     });
     if (dragDocId) {
       var dragRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dragDocId) + '"]');
@@ -102,7 +108,7 @@ export function createDocsViewerManagementInteractionController(options) {
     if (dropTargetDocId && dropPosition) {
       var dropRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dropTargetDocId) + '"]');
       if (dropRow) {
-        dropRow.classList.add(dropPosition === "inside" ? "is-drop-inside" : "is-drop-after");
+        dropRow.classList.add(dropClassName(dropPosition));
       }
     }
   }

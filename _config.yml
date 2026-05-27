@@ -123,4 +123,5 @@ exclude:
   - docs-viewer/services/
   - docs-viewer/shell/
   - docs-viewer/source/
+  - docs-viewer/tests/
   - studio/ui-catalogue/

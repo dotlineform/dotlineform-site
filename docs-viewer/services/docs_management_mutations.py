@@ -551,8 +551,8 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         raise ValueError("doc_id is required")
     if not target_doc_id:
         raise ValueError("target_doc_id is required")
-    if position not in {"after", "inside"}:
-        raise ValueError("position must be `after` or `inside`")
+    if position not in {"after", "inside", "inside-start"}:
+        raise ValueError("position must be `after`, `inside`, or `inside-start`")
 
     docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}

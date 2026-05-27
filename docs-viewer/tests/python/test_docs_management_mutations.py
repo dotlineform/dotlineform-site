@@ -270,6 +270,25 @@ def test_move_plan_keeps_search_target_for_reparent() -> None:
     assert plan.search_doc_ids == ["sibling"]
 
 
+def test_move_plan_supports_first_child_under_parent() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_move(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "sibling",
+                "target_doc_id": "parent",
+                "position": "inside-start",
+            },
+        )
+
+    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 5}
+    assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
+    assert plan.backup_operation is None
+    assert plan.search_doc_ids == ["sibling"]
+
+
 def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)

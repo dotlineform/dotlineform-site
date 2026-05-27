@@ -22,6 +22,7 @@ export function rowDropPosition(row, event, options) {
   var rect = row.getBoundingClientRect();
   var clientY = event && typeof event.clientY === "number" ? event.clientY : rect.top + (rect.height / 2);
   var afterThresholdY = rect.top + (rect.height * 0.5);
+  if (clientY >= afterThresholdY && rowHasVisibleChildList(row)) return "inside-start";
   return clientY >= afterThresholdY ? "after" : "inside";
 }
 
@@ -36,7 +37,15 @@ export function canDropOnDoc(docId, position, options) {
   if (!dragDoc || !targetDoc) return false;
   if (!canDragDoc(dragDoc, settings)) return false;
   if (dragDoc.doc_id === targetDoc.doc_id) return false;
-  return position === "inside" || position === "after";
+  return position === "inside" || position === "inside-start" || position === "after";
+}
+
+function rowHasVisibleChildList(row) {
+  var item = row && row.parentElement;
+  if (!item || !item.children) return false;
+  return Array.prototype.some.call(item.children, function (child) {
+    return child && child.matches && child.matches(".docsViewer__navList--child");
+  });
 }
 
 function directListRows(list) {

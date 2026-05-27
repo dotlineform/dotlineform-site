@@ -346,11 +346,14 @@ def normalized_move_placements(
     target_doc: ScopeDoc,
     position: str,
 ) -> list[tuple[ScopeDoc, str, int]]:
-    if position == "inside":
+    if position in {"inside", "inside-start"}:
         next_parent_id = target_doc.doc_id
         ordered_docs = sorted_siblings(docs, next_parent_id)
         ordered_docs = [doc for doc in ordered_docs if doc.doc_id != moving_doc.doc_id]
-        ordered_docs.append(moving_doc)
+        if position == "inside-start":
+            ordered_docs.insert(0, moving_doc)
+        else:
+            ordered_docs.append(moving_doc)
     else:
         next_parent_id = target_doc.parent_id
         ordered_docs = sorted_siblings(docs, next_parent_id)
@@ -373,11 +376,17 @@ def move_placements(
     target_doc: ScopeDoc,
     position: str,
 ) -> list[tuple[ScopeDoc, str, int]]:
-    if position == "inside":
+    if position in {"inside", "inside-start"}:
         next_parent_id = target_doc.doc_id
         ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
         if not ordered_docs:
             return [(moving_doc, next_parent_id, SORT_ORDER_GAP)]
+        if position == "inside-start":
+            next_order = ordered_docs[0].sort_order if isinstance(ordered_docs[0].sort_order, int) else None
+            next_sort_order_value = next_order // 2 if next_order and next_order > 1 else None
+            if next_sort_order_value is not None:
+                return [(moving_doc, next_parent_id, next_sort_order_value)]
+            return normalized_move_placements(docs, moving_doc, target_doc, position)
         previous_order = ordered_docs[-1].sort_order if isinstance(ordered_docs[-1].sort_order, int) else None
         next_sort_order_value = sparse_order_between(previous_order, None)
         if next_sort_order_value is not None:

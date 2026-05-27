@@ -174,6 +174,36 @@ def test_move_placement_uses_sparse_single_doc_orders_when_possible() -> None:
     ]
 
 
+def test_move_placement_supports_first_child_under_parent() -> None:
+    parent = make_doc("parent", title="Parent")
+    first = make_doc("first", title="First", parent_id="parent", sort_order=10)
+    second = make_doc("second", title="Second", parent_id="parent", sort_order=20)
+    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
+    docs = [parent, first, second, moving]
+
+    inside_start = source_model.move_placements(docs, moving, parent, "inside-start")
+
+    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside_start] == [
+        ("moving", "parent", 5),
+    ]
+
+
+def test_move_placement_normalizes_first_child_when_sparse_gap_is_exhausted() -> None:
+    parent = make_doc("parent", title="Parent")
+    first = make_doc("first", title="First", parent_id="parent", sort_order=1)
+    second = make_doc("second", title="Second", parent_id="parent", sort_order=2)
+    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
+    docs = [parent, first, second, moving]
+
+    inside_start = source_model.move_placements(docs, moving, parent, "inside-start")
+
+    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside_start] == [
+        ("moving", "parent", 1000),
+        ("first", "parent", 2000),
+        ("second", "parent", 3000),
+    ]
+
+
 def test_move_placement_normalizes_only_when_sparse_gap_is_exhausted() -> None:
     parent = make_doc("parent", title="Parent")
     target = make_doc("target", title="Target", parent_id="parent", sort_order=10)
