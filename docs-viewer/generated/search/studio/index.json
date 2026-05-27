@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-11edfd5687f6dcf15b8164d88c5ba998",
-    "generated_at_utc": "2026-05-27T18:09:20Z",
-    "count": 201
+    "version": "blake2b-4ed68331919d7786fa578df29adfb2e1",
+    "generated_at_utc": "2026-05-27T18:16:37Z",
+    "count": 202
   },
   "entries": [
     {
@@ -4142,6 +4142,38 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-route-config-view-foundation-tasks site request docs viewer app shell route config view foundation tasks docs viewer app shell route config and view foundation tasks and docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-info-panel-metadata-view-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Info Panel Metadata View Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-info-panel-metadata-view-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-info-panel-metadata-view-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "info",
+        "panel",
+        "metadata",
+        "view",
+        "tasks",
+        "docs viewer info panel metadata view tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "app",
+        "shell",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-info-panel-metadata-view-tasks site request docs viewer info panel metadata view tasks docs viewer info panel metadata view tasks docs viewer javascript app shell request javascript app shell 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

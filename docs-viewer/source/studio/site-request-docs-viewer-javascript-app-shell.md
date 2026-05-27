@@ -408,7 +408,7 @@ Recommended sequence:
 5. Later info metadata view.
    Implement the read-only metadata info view only after the route config, access, panel state, and hosted-view contracts are stable enough for the info panel to consume them.
 
-The next task tracker is [Docs Viewer App Shell Route Config And View Foundation Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-config-view-foundation-tasks).
+The next task tracker is [Docs Viewer Info Panel Metadata View Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-info-panel-metadata-view-tasks).
 
 ## Shell Migration Sequence
 
