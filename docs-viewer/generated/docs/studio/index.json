@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T14:23:28Z",
+  "generated_at": "2026-05-27T15:55:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -169,7 +169,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "change-requests",
       "sort_order": 1000,
       "hidden": false,
@@ -177,7 +177,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 28186,
+      "content_text_length": 30123,
       "ui_status": "paused"
     },
     {
@@ -2510,22 +2510,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-docs-viewer-javascript-app-shell",
-      "title": "Docs Viewer JavaScript App Shell Request",
-      "added_date": "2026-05-26",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "sort_order": 12100,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-viewer-javascript-app-shell.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 17460,
-      "ui_status": "in-progress"
-    },
-    {
-      "scope": "studio",
       "doc_id": "source-tree-ownership",
       "title": "Source Tree Ownership",
       "added_date": "2026-05-24",
@@ -2645,7 +2629,7 @@
       "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 19244,
+      "content_text_length": 21512,
       "ui_status": "draft"
     },
     {
@@ -2692,6 +2676,22 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-draft-publishing-spec.json",
       "content_text_length": 12968
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-javascript-app-shell",
+      "title": "Docs Viewer JavaScript App Shell Request",
+      "added_date": "2026-05-26",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 14170,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-javascript-app-shell.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
+      "content_text_length": 25080,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

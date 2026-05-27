@@ -172,9 +172,12 @@ The layout controller should validate and apply those intents.
 
 ## Panels As Module Hosts
 
-The long-term panel model should treat each panel body as a host for registered modules.
+Use a modular hosted-view architecture, not a plugin architecture.
+
+The panel model should treat each panel body as a host for named view modules.
 Some modules will be simple first-party Docs Viewer views, such as tree navigation or metadata.
 Other future modules may use external libraries for richer displays, such as data visualization, graph browsing, or relationship maps.
+That does not mean Docs Viewer is building a plugin system now.
 
 Potential future examples include:
 
@@ -185,15 +188,82 @@ Potential future examples include:
 - scope health or build-status views
 - custom downstream project modules in portable Docs Viewer installs
 
+### Current Repo First
+
+The current repo's needs should drive the design.
+Panels should facilitate data exchange between the hosted view, the Docs Viewer app, generated repo artifacts, repo-local helper code, and the local Docs Viewer backend where manage mode needs it.
+The integration can be manually glued together and tightly coupled where that is the pragmatic choice.
+
+Panel modules are ordinary repo JavaScript modules.
+They are not shells, sandboxes, independently installable plugins, or generic adapters.
+They are allowed to know about this repo's data shapes when they are repo-specific modules.
+
+For this repo now:
+
+- panels host named view modules
+- modules receive explicit app context, such as selected doc, scope, route mode, generated data readers, backend client when available, and view config
+- modules may call repo-local helper code directly where that is the pragmatic integration path
+- modules may manually import third-party libraries when this repo needs them
+- modules own their UI, data shaping, third-party imports, and tight integration logic
+- modules are not expected to run in arbitrary host projects
+
+### Third-Party Libraries
+
 The first implementation does not need to choose or integrate D3.js, Cytoscape.js, or any other visualization library.
-It should, however, avoid a panel design that assumes every panel view is static HTML or a small local renderer.
+It should, however, avoid a panel design that blocks such libraries later or assumes every panel view is static HTML or a small local renderer.
 Portable Docs Viewer should be able to support optional visualization modules conceptually, but it should not include third-party visualization dependencies or user-facing config for them until a host/module data contract exists.
 Host projects are responsible for data supplied to such modules unless Docs Viewer later defines a document-derived data class.
+Docs Viewer is not promising that these integrations will be easy.
+It should only preserve enough room for repo-specific modules to lazy-load a library, mount it in a stable panel body, exchange data with the app/repo, and clean it up.
 
-Panel modules do not need the tight adapter boundary used by Data Sharing.
-In v1, a module can simply be a clearly identifiable folder with a small registration surface.
-For example, the semantic Markdown editor can live in one source-editor module folder and be included only in this repo.
-Portable installs can omit that folder or leave the module unregistered; Docs Viewer core should then simply not present the source editor as a built-in feature.
+### Portability And Extraction
+
+The modular boundary should make future portable packaging easier without designing a plugin architecture now.
+
+For future portability:
+
+- keep modules in clear folders
+- keep registration explicit
+- control module availability through generated route/config data
+- make absence graceful: if a module folder or config entry is missing, omit the related view/action rather than failing route boot
+- avoid hardcoded dotlineform assumptions in the core panel host
+- keep dotlineform-only behavior in dotlineform-specific modules
+
+For example, the semantic Markdown editor can live in one source-editor module folder and be included only in this repo:
+
+```text
+docs-viewer/runtime/js/modules/source-editor/
+```
+
+Portable installs can omit that folder or leave the module unregistered.
+Docs Viewer core should then simply not present the source editor as a built-in feature.
+
+### Future Plugin Architecture
+
+Do not design a plugin architecture in this request.
+
+Avoid adding:
+
+- adapter layers
+- package manifests
+- sandbox protocols
+- marketplace assumptions
+- generic data APIs
+- automatic third-party asset bundling
+
+Also avoid choices that would make a plugin system difficult later, such as:
+
+- global DOM mutations
+- untracked lifecycle cleanup
+- hidden dependencies on one route
+- core code directly importing every optional module
+
+The practical contract is:
+
+- core Docs Viewer owns panel regions, view selection, lifecycle, access gating, and explicit module registration
+- repo-specific modules own their UI, data exchange, data shaping, third-party imports, and integration logic
+
+### Minimal Lifecycle
 
 Panel-hosted modules should still have a simple lifecycle:
 
@@ -201,7 +271,7 @@ Panel-hosted modules should still have a simple lifecycle:
 register -> mount -> update -> unmount -> dispose
 ```
 
-Candidate lightweight module contract:
+Candidate lightweight view-module shape:
 
 ```text
 id
@@ -220,8 +290,9 @@ The panel host should provide:
 - a stable container element
 - selected document and scope context
 - generated data access helpers
+- backend client when the current route/mode supports it
 - route/history helpers where appropriate
-- capability information
+- capability and route-mode information
 - cleanup calls when the active view changes
 
 External-library modules should be lazy-loaded only when their view is selected or otherwise needed.
@@ -407,10 +478,6 @@ Acceptance:
 - Should info panel visibility persist per scope, per route, or globally across Docs Viewer installs?
 - How much metadata should come from the index row versus the loaded document payload?
 - Should selecting a document while document panel is hidden load the payload in the background or wait until document panel is shown?
-- What module lifecycle contract is enough for future D3.js, Cytoscape.js, or downstream custom modules?
-- How should module-specific assets and styles be declared without increasing base viewer boot cost?
-- Should panel modules be registered only by Docs Viewer config, by JavaScript imports, or by a small registry that can support portable downstream extensions?
-- What promotion criteria should move a manage-only module into public presentation?
 
 ## Risks
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-40601e5cf19bd3bd3817c899a8ad8e5d",
-    "generated_at_utc": "2026-05-27T13:57:38Z",
-    "count": 194
+    "version": "blake2b-630e46f8cf073e161952e389a9b2c640",
+    "generated_at_utc": "2026-05-27T15:54:40Z",
+    "count": 195
   },
   "entries": [
     {
@@ -227,10 +227,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -242,12 +242,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-25",
+        "2026-05-27",
         "2026",
         "05",
-        "25"
+        "27"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "testing-pytest",
@@ -3933,35 +3933,6 @@
       "search_text": "site-request-studio-javascript-app-shell site request studio javascript app shell studio javascript app shell request change requests change requests 2026-05-26 2026 05 26"
     },
     {
-      "id": "site-request-docs-viewer-javascript-app-shell",
-      "kind": "doc",
-      "title": "Docs Viewer JavaScript App Shell Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-javascript-app-shell",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "javascript",
-        "app",
-        "shell",
-        "docs viewer javascript app shell request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-27",
-        "2026",
-        "05",
-        "27"
-      ],
-      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-27 2026 05 27"
-    },
-    {
       "id": "source-tree-ownership",
       "kind": "doc",
       "title": "Source Tree Ownership",
@@ -4109,6 +4080,36 @@
       "search_text": "servers 2026-05-06 20:58 2026 05 06 20 58"
     },
     {
+      "id": "site-request-docs-viewer-multi-panel-app-shell",
+      "kind": "doc",
+      "title": "Docs Viewer Multi-Panel App Shell Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-multi-panel-app-shell",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "multi",
+        "panel",
+        "app",
+        "shell",
+        "docs viewer multi-panel app shell request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-multi-panel-app-shell site request docs viewer multi panel app shell docs viewer multi-panel app shell request change requests change requests 2026-05-27 2026 05 27"
+    },
+    {
       "id": "config",
       "kind": "doc",
       "title": "Config",
@@ -4176,6 +4177,35 @@
         "20"
       ],
       "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-05-13 20:20 2026 05 13 20"
+    },
+    {
+      "id": "site-request-docs-viewer-javascript-app-shell",
+      "kind": "doc",
+      "title": "Docs Viewer JavaScript App Shell Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-javascript-app-shell",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "javascript",
+        "app",
+        "shell",
+        "docs viewer javascript app shell request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "scripts-docs-management-server",

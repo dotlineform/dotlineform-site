@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: 2026-05-25
+last_updated: 2026-05-27
 ui_status: paused
 parent_id: change-requests
 sort_order: 1000
@@ -39,6 +39,8 @@ Current clarification:
 - generated docs/search JSON consumed by public installs remains in the public Jekyll site output paths
 - public read-only scope routes such as `/library/` and `/analysis/` remain host/Jekyll-owned route adapters that consume Docs Viewer runtime/config/generated-data contracts
 - the remaining portable work should reduce host integration work and packaging friction from the current `docs-viewer/` boundary, not move files out of Studio
+- Docs Viewer is technically portable now, but it still requires too much manual setup and does not yet have a repeatable fixture proving the portable install contract outside dotlineform
+- the JavaScript app-shell boundary will improve the portability story, but it is not strictly required for Docs Viewer to be portable
 
 ## Product Boundary
 
@@ -470,24 +472,65 @@ Acceptance:
 - the implementation does not claim direct R2 upload is complete unless a separate Docs-domain R2 backend is implemented
 - the config options are documented in a new Docs Viewer Config document
 
-### 11. Build A Minimal Fixture Install
+### 11. Prove Portable Install Fixtures
 
 Status: proposed.
 
-The copy boundary should be tested outside dotlineform before it is treated as stable.
+Docs Viewer is technically portable already.
+The remaining gap is not whether it can run outside dotlineform in principle, but whether the install contract can be proven repeatably without relying on dotlineform's incidental setup.
 
-Tasks:
+Use two fixture proof levels.
 
-- create or designate a minimal Jekyll fixture repo/project
-- install the Docs Viewer file set into it
-- add one read-only docs corpus
-- add `/docs/` management for that corpus
-- verify search, import initialization, create/edit/move, and generated-data reads
+#### Portable Public Fixture
+
+This should be the first portability fixture.
+It proves the static/read-only Docs Viewer contract for a host project that is not dotlineform.
+
+Scope:
+
+- minimal Jekyll fixture project or generated test fixture
+- one public read-only route
+- one generated docs scope with a small parent/child tree
+- generated docs payloads
+- generated search payload if inline search remains part of the public portable contract
+- generated route config record
+- no Studio semantic references
+- no dotlineform-specific modules
+- no manage-mode-only features
+- no private/local install support
 
 Acceptance:
 
-- the fixture proves the install guide works without dotlineform-only routes or data
+- the fixture boots without dotlineform-only routes, data, semantic references, or modules
+- the app reads declared config and generated payloads rather than relying on hardcoded dotlineform route assumptions
+- public search, routing, index tree, and document rendering work in the fixture
+
+#### Portable Local Manage Fixture
+
+This is a later fixture once the local backend/write boundary is stable.
+It proves the local editing install contract, including private/local generated output expectations.
+
+Scope:
+
+- local source docs
+- local Docs Viewer backend reachable
+- source write and rebuild operation
+- generated output root
+- private/local generated output path
+- no public route requirement
+- no dotlineform Studio semantic-link editing requirement
+
+Acceptance:
+
+- the fixture can run a local manage workflow without dotlineform-specific Studio services
+- writes and rebuilds use the declared Docs Viewer source/output config
+- private/local generated outputs are supported without requiring public publication
+
+Acceptance:
+
+- fixture failures identify hidden setup assumptions in the portable contract
 - any remaining hidden assumptions are added back to this request as follow-up tasks
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) can be validated against at least the public fixture before the install contract is considered low-friction
 
 ## Verification Strategy
 

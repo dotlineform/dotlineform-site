@@ -5,7 +5,7 @@ added_date: 2026-05-26
 last_updated: 2026-05-27
 ui_status: in-progress
 parent_id: change-requests
-sort_order: 12100
+sort_order: 14170
 viewable: true
 ---
 # Docs Viewer JavaScript App Shell Request
@@ -339,16 +339,155 @@ Optional first visible shell move:
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
-## Open Questions
+## Shell Migration Sequence
 
-- Which shell responsibility is the safest first move: header actions, scope picker, index panel, document mount, or management action area?
-- Should the current `docs-viewer/runtime/js/docs-viewer.js` remain the app shell entrypoint, or should a new boot module coordinate shell rendering?
-- How should route shells pass route context to the app: data attributes, JSON script tag, config URL, or generated route config?
-- Should management capability be represented as route config, backend capability response, or both?
-- What fixture project is enough to prove portability after the app/backend boundary is clearer?
-- What panel/view module contract is enough for future third-party libraries such as D3.js or Cytoscape.js?
-- How should optional third-party module assets be declared without making route shells or public routes load them eagerly?
-- What criteria should promote a manage-only experimental module into public presentation?
+All current shell responsibilities should eventually move into the JavaScript app shell.
+The sequence matters because the first moves should prove the app-shell contract without taking unnecessary public-route risk.
+
+Recommended order:
+
+1. Management action area.
+   Move the manage-mode action row and related capability-gated controls out of `_includes/docs_viewer_shell.html` first.
+   This is the safest useful first move because it is manage-mode only, already depends on explicit capabilities, and currently has duplicated Liquid markup across search/scope branches.
+   It should prove that route shells can provide a mount/context while JavaScript renders access-gated controls.
+
+2. Scope picker and header controls.
+   Move scope selection, recent/search control composition, and related route-context controls after the management action area.
+   This proves config-driven route context and reduces route-shell assumptions without touching document rendering first.
+
+3. Index panel shell.
+   Move the sidebar/index panel container, toolbar, and panel-state projection into JavaScript after the first app-shell control slices are stable.
+   This should align with the multi-panel work so index/document/info panel ownership does not split across Liquid and JavaScript.
+
+4. Document mount and metadata shell.
+   Move document host, metadata host, results host, and document/status projection later, after app boot, route context, access gates, and panel ownership are proven.
+   This has the highest public-reading blast radius and should not be the first proof of the app-shell migration.
+
+This order does not imply that later responsibilities are less important.
+It only sequences the migration so each slice reduces shell ownership while preserving `/docs/`, `/library/`, and `/analysis/` behavior.
+
+## Boot Module Decision
+
+Create a new JavaScript app-shell module:
+
+```text
+docs-viewer/runtime/js/docs-viewer-app-shell.js
+```
+
+This module should coordinate shell rendering, route-context normalization, access/capability projection, and future panel/module ownership.
+
+Keep `docs-viewer/runtime/js/docs-viewer.js` as the stable script loaded by `_includes/docs_viewer_shell.html` during the migration.
+It should become a compatibility entrypoint that delegates to `docs-viewer-app-shell.js` and focused owner modules.
+New shell-rendering responsibilities should go into `docs-viewer-app-shell.js` or child modules, not into `docs-viewer.js`.
+
+This avoids a disruptive script/include change while stopping `docs-viewer.js` from becoming the long-term app-shell owner.
+Each implementation slice should either move responsibility out of `docs-viewer.js` or keep it as orchestration only.
+
+## Route Context Decision
+
+Use generated route config as the route/app handoff.
+Do not introduce JSON script tags as the new route-context model.
+Existing data attributes can remain as temporary migration compatibility, but they should not be the long-term app-shell route contract.
+
+Generated route config should provide one schema for route records across `/docs/`, `/library/`, `/analysis/`, and future Docs Viewer installs.
+The app shell should resolve the current route to a route config record, then use that record to determine:
+
+- route id and route type
+- default scope and default doc
+- whether scope query is allowed
+- viewer base URL and generated data paths
+- public, manage, and manage-local capability defaults
+- route-level feature flags
+- panel defaults
+- optional module availability
+- UI/config asset paths
+
+The route shell should move toward a minimal mount and script include.
+If path inference is not enough during migration, the shell may pass only a stable route id as bootstrap compatibility.
+
+This creates a durable route/app boundary before panel, editor, hosted-module, and portable-viewer features depend on it.
+It also keeps route behavior validateable as data instead of spreading route context through Liquid branches or page-local markup.
+
+## Capability Decision
+
+Use route config and backend capability responses narrowly.
+Neither should become a speculative permission framework.
+
+Route config should contain static route intent that the current repo actually needs, such as route type, default scope/doc, generated data paths, route-level feature flags, panel defaults, and optional module availability.
+Do not add route-config fields only because a hypothetical portable install might one day need them.
+
+The backend capability response should start with the smallest useful check:
+
+- local Docs Viewer backend reachable
+
+Additional backend capability fields should be added only when a current repo requirement proves they are needed.
+Each added field should answer a concrete runtime question that route config cannot answer safely.
+For example, do not add a separate import capability unless this repo intentionally supports a mode where the backend is reachable and the scope is manageable but import must be disabled.
+
+Client behavior should be:
+
+- use generated route config for static route/app decisions
+- check backend reachability when entering manage mode
+- cache the result in app state
+- do not perform per-click capability checks before ordinary UI decisions
+- let backend endpoints validate actual write/import/rebuild/archive/delete requests
+- add narrower capability fields only if repeated unexpected errors show that reachability plus endpoint validation is not enough
+
+Public or portable read-only installs may need no backend capability response at all.
+Portable manage-mode installs should not inherit repo-specific capability checks unless the portable implementation actually needs them.
+
+## Portability Fixture Relationship
+
+The app-shell boundary improves the portable Docs Viewer story, but it is not strictly required for portability.
+Docs Viewer is already technically portable with enough manual setup.
+The missing proof is a repeatable fixture that demonstrates the intended install contract without relying on dotlineform's incidental routes, data, or local setup.
+
+The fixture definition belongs in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
+That request should define two proof levels:
+
+- a portable public fixture for the read-only generated-data app
+- a later portable local manage fixture for local source writes, rebuilds, and private/local generated outputs
+
+App-shell work should consume those fixture expectations, not redefine portability as a prerequisite for the app-shell migration.
+
+## Hosted View Module Direction
+
+Use a modular hosted-view architecture, not a plugin architecture.
+
+The current repo comes first.
+Panels should host named view modules that can be tightly integrated with repo data, generated artifacts, local helper code, and the local Docs Viewer backend where manage mode needs it.
+Third-party data-visualization libraries such as D3.js or Cytoscape.js are conceptually in scope only because panel modules should not prevent them.
+Docs Viewer is not promising to make those libraries easy to integrate, and portable Docs Viewer should not distribute them by default.
+
+For this repo now:
+
+- panels host named view modules
+- view modules are ordinary repo JavaScript modules
+- modules receive explicit app context, such as selected doc, scope, route mode, generated data readers, backend client when available, and view config
+- modules may call repo-local helper code directly where that is the pragmatic integration path
+- modules may manually import third-party libraries when this repo needs them
+- modules own their UI, data shaping, third-party imports, and tight integration logic
+- modules are not sandboxed, independently installable, or expected to run in arbitrary host projects
+
+For future portability:
+
+- keep modules in clear folders
+- keep registration explicit
+- control module availability through generated route/config data
+- make absence graceful: if a module folder or config entry is missing, omit the related view/action rather than failing route boot
+- avoid hardcoded dotlineform assumptions in the core panel host
+- keep dotlineform-only behavior in dotlineform-specific modules
+
+For a possible future plugin architecture:
+
+- do not design it now
+- do not add adapter layers, package manifests, sandbox protocols, marketplace assumptions, or generic data APIs
+- avoid choices that would make a plugin system difficult later, such as global DOM mutations, untracked lifecycle cleanup, hidden dependencies on one route, or core code directly importing every optional module
+
+The practical contract is:
+
+- core Docs Viewer owns panel regions, view selection, lifecycle, access gating, and explicit module registration
+- repo-specific modules own their UI, data exchange, data shaping, third-party imports, and integration logic
 
 ## Verification
 
