@@ -23,7 +23,7 @@ The current implementation uses:
 - one shared shell include in `_includes/docs_viewer_shell.html`, with minimal public route adapters where read-only Jekyll routes need them
 - a standalone manage shell template in `docs-viewer/shell/docs-viewer-shell.html`, served by `docs-viewer/services/docs_viewer_service.py`
 - one shared runtime entry module in `docs-viewer/runtime/js/docs-viewer.js`
-- first app-shell-owned management action coordination in `docs-viewer/runtime/js/docs-viewer-app-shell.js`, with management-only action markup rendered by `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
+- app-shell-owned header and management action coordination in `docs-viewer/runtime/js/docs-viewer-app-shell.js`, with header controls rendered by `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js` and management-only action markup rendered by `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
 - document pane, payload rendering, and report mount handoff in `docs-viewer/runtime/js/docs-viewer-document-controller.js`
 - pure tree and visibility helpers in `docs-viewer/runtime/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `docs-viewer/runtime/js/docs-viewer-search.js`

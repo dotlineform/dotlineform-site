@@ -176,6 +176,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-shell.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-header-controls-renderer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions-renderer.js",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-base.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
@@ -202,12 +203,6 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
             continue
         if stripped == "{%- if include.allow_scope_query -%}":
             active_stack.append(active_stack[-1])
-            continue
-        if stripped == "{%- unless include.enable_search == false -%}":
-            active_stack.append(active_stack[-1])
-            continue
-        if stripped == "{%- if include.allow_scope_query and include.enable_search == false -%}":
-            active_stack.append(False)
             continue
         if stripped in {"{%- endif -%}", "{%- endunless -%}"}:
             if len(active_stack) > 1:
@@ -240,6 +235,7 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
         "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}": "/assets/data/docs/reports.json",
         "{{ docs_viewer_generated_base_url }}": generated_base_url,
         "{{ include.management_base_url | default: '' }}": management_base_url,
+        "{%- if include.enable_search == false -%}false{%- else -%}true{%- endif -%}": "true",
         "{{ include.search_aria_label | default: 'Search docs' }}": "Search docs",
         "{{ include.search_placeholder | default: 'search docs' }}": "search docs",
     }

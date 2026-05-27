@@ -25,41 +25,13 @@
   data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
   <div class="docsViewer__controls">
-    {%- unless include.enable_search == false -%}
-    <div class="docsViewer__searchRow">
-      {%- if include.allow_scope_query -%}
-      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
-        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
-      </label>
-      {%- endif -%}
-      <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
-      <div class="docsViewer__search">
-        <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
-        <input
-          class="docsViewer__searchInput"
-          id="docsViewerSearchInput"
-          type="search"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="{{ include.search_placeholder | default: 'search docs' }}"
-          aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
-        >
-      </div>
-      {%- if include.allow_management -%}
-      <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
-      {%- endif -%}
-    </div>
-    {%- endunless -%}
-    {%- if include.allow_scope_query and include.enable_search == false -%}
-    <div class="docsViewer__searchRow">
-      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
-        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
-      </label>
-      {%- if include.allow_management -%}
-      <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
-      {%- endif -%}
-    </div>
-    {%- endif -%}
+    <div
+      id="docsViewerHeaderControlsMount"
+      data-docs-viewer-header-controls-mount
+      data-enable-search="{%- if include.enable_search == false -%}false{%- else -%}true{%- endif -%}"
+      data-search-placeholder="{{ include.search_placeholder | default: 'search docs' }}"
+      data-search-aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
+    ></div>
     <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
   </div>

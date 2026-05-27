@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-header-controls-tasks
 title: Docs Viewer App Shell Header Controls Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12106
 viewable: true
@@ -58,6 +58,35 @@ For this slice, the expected verification set is:
 Codex sandbox note: local service, browser, and temporary localhost checks need elevated permissions even when product code is healthy.
 Use `PYTHONDONTWRITEBYTECODE=1` for Python smoke checks when practical so test runs do not create watched `__pycache__` files.
 
+### implementation note
+
+Implemented 2026-05-27.
+The header-control markup moved out of `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`.
+Both shells now provide `#docsViewerHeaderControlsMount` with route context for search enabled/disabled state, placeholder text, and aria label text.
+`docs-viewer/runtime/js/docs-viewer-app-shell.js` delegates header rendering to `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, then renders the management action row into the management mount only when the route allows management.
+
+The replaced Liquid-owned area was the duplicated `.docsViewer__searchRow` composition:
+scope select placement for `allow_scope_query`, the recently-added button, the search input label/placeholder/aria label, and the management action mount in the search-enabled and scope-only branches.
+The renderer preserves the existing runtime IDs: `docsViewerScopeSelect`, `docsViewerRecentButton`, `docsViewerSearchInput`, and `docsViewerManageActionsMount`.
+`docs-viewer.js` still reads those IDs synchronously after app-shell initialization, so config, route, search, bookmark, and management controllers did not need a broad rewrite.
+
+### verification
+
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer.js`
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
+- Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_viewer_service.py docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`
+- Passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- Passed: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- Passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- Passed: focused public Library header/search smoke against `/tmp/dlf-jekyll-build`
+- Passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- Passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
+- Not used for closeout: `docs_viewer_routes.py --site-root /tmp/dlf-jekyll-build`, because this repo's public Jekyll config excludes `/docs/` from the isolated public build. The moved header-control behavior was covered by focused app-shell module checks, the public Library route/search smoke, public read-only smoke, standalone `/docs/` management smoke, and management scope UI smoke.
+
+Codex did not run a Docs Viewer docs/search payload rebuild.
+The live docs watcher regenerated the affected Studio docs payloads after source-doc edits, and those generated changes were left in place.
+
 ### general steer
 
 - Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow), especially the JavaScript maintenance gate for high-risk shared runtime files.
@@ -76,16 +105,16 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current header control markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`, including search-enabled/search-disabled branches, scope select placement, recent button placement, search input labels/placeholders, control ids, and route/config/search module references. Deliverable: short implementation note in this tracker or closeout summary identifying the exact shell markup to replace. |
-| 2 | planned | Define the focused app-shell surface for header controls. Decide whether to extend `docs-viewer/runtime/js/docs-viewer-app-shell.js` directly or add a child renderer such as `docs-viewer-header-controls-renderer.js`. Deliverable: clear module ownership and no new broad shell responsibility added to `docs-viewer.js`. |
-| 3 | planned | Replace duplicated or app-shell-owned header-control Liquid markup with minimal mounts/context while preserving search-enabled and search-disabled route behavior. Deliverable: shell templates no longer own full header-control composition for the moved area. |
-| 4 | planned | Render the scope picker, recent button, and search input from JavaScript where route options require them. Preserve current ids: `docsViewerScopeSelect`, `docsViewerRecentButton`, and `docsViewerSearchInput`, unless a deliberate compatibility mapping is documented and tested. |
-| 5 | planned | Keep current config, route, and search modules working with minimal churn. If refs move behind an async app-shell render, make `docs-viewer.js` wait for the render before reading those refs or initializing dependent controllers. |
-| 6 | planned | Preserve route behavior for pages with search enabled and search disabled. Public `/library/` and `/analysis/` should keep their current read-only route boot, scope assumptions, recent/search behavior, and absence of management-only imports. |
-| 7 | planned | Preserve manage-mode scope switching behavior. The local `/docs/` management shell should still render the scope picker and keep scope changes, default docs, search index URLs, and browser history behavior intact. |
-| 8 | planned | Add or update focused module smoke coverage for the header-control renderer. Cover search-enabled rendering, search-disabled rendering with scope picker, public route rendering, management route rendering, id preservation, and idempotent rendering. |
-| 9 | planned | Run the targeted verification set for changed JS, shell templates, route/search behavior, management scope behavior, and public read-only routes. Record any checks skipped and why. |
-| 10 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request if the implemented shape changes the plan, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
+| 1 | done | Inventoried the duplicated header-control area in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`: both shells composed `.docsViewer__searchRow`, optional `docsViewerScopeSelect`, `docsViewerRecentButton`, `docsViewerSearchInput`, search labels/placeholders, and the management action mount across search-enabled and scope-only branches. |
+| 2 | done | Added focused header ownership in `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by `docs-viewer/runtime/js/docs-viewer-app-shell.js`. `docs-viewer.js` remains the compatibility entrypoint and controller orchestration file. |
+| 3 | done | Replaced the full Liquid header-control composition in both shell templates with `#docsViewerHeaderControlsMount` and route context data attributes for search enabled state and search copy. |
+| 4 | done | Rendered the scope picker, recent button, and search input from JavaScript where route options require them, preserving `docsViewerScopeSelect`, `docsViewerRecentButton`, and `docsViewerSearchInput`. |
+| 5 | done | Kept config, route, and search modules on the existing synchronous ID contract. Header controls render synchronously during app-shell initialization before `docs-viewer.js` reads refs. |
+| 6 | done | Preserved search-enabled and search-disabled rendering branches. Public `/library/` and `/analysis/` remain read-only and omit management-only UI/JS. |
+| 7 | done | Preserved manage-mode scope switching. The local `/docs/` management shell renders the scope picker through the app shell and the existing config controller still owns option loading and scope-change navigation. |
+| 8 | done | Extended `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` to cover public search-enabled rendering, search-disabled scope-only rendering, management rendering, preserved IDs/order, and idempotent rendering. |
+| 9 | done | Ran the targeted verification set recorded above. The broad `docs_viewer_routes.py` isolated-build check was not used for closeout because `/docs/` is excluded from the public Jekyll build. |
+| 10 | done | Updated this tracker, the app-shell request, Docs Viewer overview, and Docs Viewer JavaScript inventory notes. Added a structured docs-log entry for the completed slice. |
 
 The closeout for this second migration should confirm:
 

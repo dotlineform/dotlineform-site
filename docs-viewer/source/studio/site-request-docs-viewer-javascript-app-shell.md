@@ -356,6 +356,7 @@ Recommended order:
 2. Scope picker and header controls.
    Move scope selection, recent/search control composition, and related route-context controls after the management action area.
    This proves config-driven route context and reduces route-shell assumptions without touching document rendering first.
+   Implemented 2026-05-27: the shared and standalone shell templates now provide `#docsViewerHeaderControlsMount`; `docs-viewer/runtime/js/docs-viewer-app-shell.js` delegates to `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js` to render the preserved scope, recent, search, and management-action mount IDs before the existing runtime controllers read them.
 
 3. Index panel shell.
    Move the sidebar/index panel container, toolbar, and panel-state projection into JavaScript after the first app-shell control slices are stable.

@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-27-moved-docs-viewer-header-controls-into-the-app-shell",
+  "date": "2026-05-27",
+  "title": "Moved Docs Viewer Header Controls Into The App Shell",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime",
+    "studio-ui"
+  ],
+  "subjects": [
+    "app-shell",
+    "header-controls",
+    "public-readonly-routes",
+    "manage-mode"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-app-shell-header-controls-tasks",
+  "related_docs": [
+    "site-request-docs-viewer-app-shell-header-controls-tasks",
+    "site-request-docs-viewer-javascript-app-shell",
+    "docs-viewer",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "docs-viewer/shell/docs-viewer-shell.html",
+    "docs-viewer/runtime/js/docs-viewer-app-shell.js",
+    "docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py",
+    "docs-viewer/services/docs_viewer_service.py"
+  ],
+  "summary": "Moved Docs Viewer scope picker, recently-added button, search input, and management action mount composition out of the Liquid shell templates and into a focused JavaScript header-controls renderer coordinated by the app shell.",
+  "effect": "The shared Jekyll and standalone Docs Viewer shells now provide only a route-context mount for the header-control area while preserving the existing control IDs used by config, route, search, bookmark, and management controllers. Public read-only routes continue to omit management UI/JS, and the local manage shell keeps scope switching through the existing config controller.",
+  "verification": [
+    "node syntax checks passed for docs-viewer.js, docs-viewer-app-shell.js, and docs-viewer-header-controls-renderer.js",
+    "Python py_compile passed for docs_viewer_service.py and docs_viewer_app_shell_modules.py",
+    "focused app-shell module smoke passed",
+    "isolated Jekyll build to /tmp/dlf-jekyll-build passed",
+    "public Docs Viewer read-only smoke passed against /tmp/dlf-jekyll-build",
+    "focused public Library header/search smoke passed",
+    "standalone Docs Viewer service manage smoke passed",
+    "Docs Viewer management scope lifecycle UI smoke passed"
+  ],
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-app-shell-header-controls-tasks.md",
+    "archive": "change-request"
+  }
+}

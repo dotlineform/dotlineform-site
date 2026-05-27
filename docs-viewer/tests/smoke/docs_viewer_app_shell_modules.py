@@ -28,6 +28,135 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
+def assert_header_controls_render(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false" data-allow-scope-query="false">
+                  <div
+                    id="docsViewerHeaderControlsMount"
+                    data-docs-viewer-header-controls-mount
+                    data-enable-search="true"
+                    data-search-placeholder="search library"
+                    data-search-aria-label="Search library"
+                  ></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await module.initDocsViewerAppShell({ root, document });
+            const searchInput = document.getElementById('docsViewerSearchInput');
+            return {
+                returnedHeaderClass: returned.headerControls && returned.headerControls.className,
+                scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                recentButtonText: document.getElementById('docsViewerRecentButton')?.textContent || '',
+                recentButtonPressed: document.getElementById('docsViewerRecentButton')?.getAttribute('aria-pressed') || '',
+                searchPlaceholder: searchInput?.getAttribute('placeholder') || '',
+                searchAriaLabel: searchInput?.getAttribute('aria-label') || '',
+                visibleLabel: document.querySelector('label[for="docsViewerSearchInput"]')?.textContent || '',
+                managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
+                rowCount: document.querySelectorAll('.docsViewer__searchRow').length
+            };
+        }"""
+    )
+    expected = {
+        "returnedHeaderClass": "docsViewer__searchRow",
+        "scopeSelectCount": 0,
+        "recentButtonText": "recently added",
+        "recentButtonPressed": "false",
+        "searchPlaceholder": "search library",
+        "searchAriaLabel": "Search library",
+        "visibleLabel": "Search library",
+        "managementMountCount": 0,
+        "rowCount": 1,
+    }
+    if result != expected:
+        raise AssertionError(f"public header controls render failed: {result!r}")
+
+
+def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="false" data-allow-scope-query="true">
+                  <div
+                    id="docsViewerHeaderControlsMount"
+                    data-docs-viewer-header-controls-mount
+                    data-enable-search="false"
+                  ></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await module.initDocsViewerAppShell({ root, document });
+            return {
+                returnedHeaderClass: returned.headerControls && returned.headerControls.className,
+                scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                scopeLabelFor: document.querySelector('.docsViewer__scopeField')?.getAttribute('for') || '',
+                recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
+                searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
+                managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
+                rowCount: document.querySelectorAll('.docsViewer__searchRow').length
+            };
+        }"""
+    )
+    expected = {
+        "returnedHeaderClass": "docsViewer__searchRow",
+        "scopeSelectCount": 1,
+        "scopeLabelFor": "docsViewerScopeSelect",
+        "recentButtonCount": 0,
+        "searchInputCount": 0,
+        "managementMountCount": 0,
+        "rowCount": 1,
+    }
+    if result != expected:
+        raise AssertionError(f"search-disabled scope header render failed: {result!r}")
+
+
+def assert_header_controls_management_render(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot" data-allow-management="true" data-allow-scope-query="true">
+                  <div
+                    id="docsViewerHeaderControlsMount"
+                    data-docs-viewer-header-controls-mount
+                    data-enable-search="true"
+                    data-search-placeholder="search studio docs"
+                    data-search-aria-label="Search Studio docs"
+                  ></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const returned = await module.initDocsViewerAppShell({ root, document });
+            return {
+                returnedHeaderClass: returned.headerControls && returned.headerControls.className,
+                returnedRowId: returned.managementActions && returned.managementActions.id,
+                scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
+                searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
+                managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
+                manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
+                rowChildIds: Array.from(document.querySelector('.docsViewer__searchRow').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
+            };
+        }"""
+    )
+    if result["returnedHeaderClass"] != "docsViewer__searchRow" or result["returnedRowId"] != "docsViewerManageRow":
+        raise AssertionError(f"management header render did not return expected rows: {result!r}")
+    if result["scopeSelectCount"] != 1 or result["recentButtonCount"] != 1 or result["searchInputCount"] != 1:
+        raise AssertionError(f"management header render omitted expected controls: {result!r}")
+    if result["managementMountCount"] != 1 or result["manageRowCount"] != 1:
+        raise AssertionError(f"management header render omitted action mount/row: {result!r}")
+    if result["rowChildIds"] != [
+        "docsViewerScopeSelect",
+        "docsViewerRecentButton",
+        "docsViewerSearchInput",
+        "docsViewerManageActionsMount",
+    ]:
+        raise AssertionError(f"management header control order changed unexpectedly: {result!r}")
+
+
 def assert_management_actions_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -116,21 +245,37 @@ def assert_render_is_idempotent(page: Page) -> None:
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
-                <section id="docsViewerRoot" data-allow-management="true">
-                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                <section id="docsViewerRoot" data-allow-management="true" data-allow-scope-query="true">
+                  <div
+                    id="docsViewerHeaderControlsMount"
+                    data-docs-viewer-header-controls-mount
+                    data-enable-search="true"
+                  ></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
             await module.initDocsViewerAppShell({ root, document });
             await module.initDocsViewerAppShell({ root, document });
             return {
+                headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
+                scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
+                searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 rowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 actionButtonCount: document.querySelectorAll('#docsViewerManageActionsButton').length,
                 mountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length
             };
         }"""
     )
-    if result != {"rowCount": 1, "actionButtonCount": 1, "mountChildCount": 1}:
+    if result != {
+        "headerRowCount": 1,
+        "scopeSelectCount": 1,
+        "recentButtonCount": 1,
+        "searchInputCount": 1,
+        "rowCount": 1,
+        "actionButtonCount": 1,
+        "mountChildCount": 1,
+    }:
         raise AssertionError(f"app shell render was not idempotent: {result!r}")
 
 
@@ -148,6 +293,9 @@ def main() -> int:
             page.on("pageerror", lambda exc: errors.append(str(exc)))
             page.goto(base_url, wait_until="domcontentloaded")
 
+            assert_header_controls_render(page)
+            assert_header_controls_search_disabled_scope_only(page)
+            assert_header_controls_management_render(page)
             assert_management_actions_render(page)
             assert_management_actions_omitted(page)
             assert_render_is_idempotent(page)
