@@ -335,7 +335,8 @@ Required slice:
 
 Optional first visible shell move:
 
-- move one low-risk shell-owned element from `_includes/docs_viewer_shell.html` into JavaScript only if it helps prove the contract
+- moved the management action area from `_includes/docs_viewer_shell.html` into `docs-viewer/runtime/js/docs-viewer-app-shell.js` and the focused `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
+  `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` now provide only a management action mount for this area, while `docs-viewer/runtime/js/docs-viewer.js` remains the loaded compatibility entrypoint.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -350,6 +351,7 @@ Recommended order:
    Move the manage-mode action row and related capability-gated controls out of `_includes/docs_viewer_shell.html` first.
    This is the safest useful first move because it is manage-mode only, already depends on explicit capabilities, and currently has duplicated Liquid markup across search/scope branches.
    It should prove that route shells can provide a mount/context while JavaScript renders access-gated controls.
+   Implemented 2026-05-27: the app shell imports the management action renderer only when route intent allows management, renders the existing management action ids into a route-provided mount, and leaves backend reachability/capability updates with the existing lazy management controller.
 
 2. Scope picker and header controls.
    Move scope selection, recent/search control composition, and related route-context controls after the management action area.

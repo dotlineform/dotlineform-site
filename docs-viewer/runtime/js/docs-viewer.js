@@ -56,10 +56,17 @@ import {
   routeFromAnchorHref,
   setViewerHistory
 } from "./docs-viewer-router.js";
+import {
+  initDocsViewerAppShell
+} from "./docs-viewer-app-shell.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
   if (!root) return;
+  var appShellReady = initDocsViewerAppShell({
+    root: root,
+    document: document
+  });
 
   var nav = document.getElementById("docsViewerNav");
   var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
@@ -119,7 +126,9 @@ import {
   var documentController = null;
 
   if (allowManagement) {
-    import("./docs-viewer-theme.js").then(function (module) {
+    appShellReady.then(function () {
+      return import("./docs-viewer-theme.js");
+    }).then(function (module) {
       if (module && typeof module.initDocsViewerThemeToggle === "function") {
         module.initDocsViewerThemeToggle({
           root: root,
@@ -522,7 +531,10 @@ import {
     if (managementController) return Promise.resolve(managementController);
     if (managementControllerRequestPromise) return managementControllerRequestPromise;
 
-    managementControllerRequestPromise = import("./docs-viewer-management.js")
+    managementControllerRequestPromise = appShellReady
+      .then(function () {
+        return import("./docs-viewer-management.js");
+      })
       .then(function (module) {
         managementController = module.initDocsViewerManagement(managementContext());
         renderSidebar();

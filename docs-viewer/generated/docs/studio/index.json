@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T16:01:25Z",
+  "generated_at": "2026-05-27T16:18:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1066,7 +1066,7 @@
       "doc_id": "docs-viewer-portable-files",
       "title": "Docs Viewer Portable File Manifest",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-27",
       "parent_id": "docs-viewer-portable-setup",
       "sort_order": 3100,
       "hidden": false,
@@ -1074,7 +1074,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 9184
+      "content_text_length": 9375
     },
     {
       "scope": "studio",
@@ -1428,7 +1428,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "",
       "sort_order": 5000,
       "hidden": false,
@@ -1436,7 +1436,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 5931
+      "content_text_length": 6150
     },
     {
       "scope": "studio",
@@ -1913,7 +1913,7 @@
       "doc_id": "docs-viewer-javascript-inventory",
       "title": "Docs Viewer JavaScript Inventory",
       "added_date": "2026-05-20",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-27",
       "parent_id": "studio-javascript-payload-inventory",
       "sort_order": 7020,
       "hidden": false,
@@ -1921,7 +1921,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 6890,
+      "content_text_length": 8158,
       "ui_status": "review"
     },
     {
@@ -2536,7 +2536,7 @@
       "source_path": "site-request-docs-viewer-app-shell-management-actions-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-actions-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-management-actions-tasks.json",
-      "content_text_length": 6535,
+      "content_text_length": 8359,
       "ui_status": "draft"
     },
     {
@@ -2706,7 +2706,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 25080,
+      "content_text_length": 25673,
       "ui_status": "in-progress"
     },
     {

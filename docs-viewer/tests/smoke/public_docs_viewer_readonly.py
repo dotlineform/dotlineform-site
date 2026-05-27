@@ -68,6 +68,14 @@ def main() -> int:
                 studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
                 manage_actions_count = page.locator(".docsViewer__manageActions").count()
                 manage_button_count = page.locator("#docsViewerManageActionsButton").count()
+                resource_urls = page.evaluate(
+                    """() => performance.getEntriesByType('resource').map(entry => entry.name)"""
+                )
+                management_js_urls = [
+                    url
+                    for url in resource_urls
+                    if "/docs-viewer/runtime/js/docs-viewer-management" in url
+                ]
 
                 if root_attrs["allowManagement"] == "true":
                     raise AssertionError(f"{route} unexpectedly allows management: {root_attrs!r}")
@@ -83,6 +91,8 @@ def main() -> int:
                     raise AssertionError(f"{route} loaded Studio-only assets")
                 if manage_actions_count or manage_button_count:
                     raise AssertionError(f"{route} rendered management controls")
+                if management_js_urls:
+                    raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
 
             browser.close()
             if errors:

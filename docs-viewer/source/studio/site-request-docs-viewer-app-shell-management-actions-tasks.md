@@ -22,14 +22,16 @@ It should move the manage-mode action row and related capability-gated controls 
 - Created this task tracker.
 - Confirmed the first shell migration target is the management action area.
 - Recorded that `docs-viewer/runtime/js/docs-viewer-app-shell.js` is the preferred app-shell owner module and `docs-viewer/runtime/js/docs-viewer.js` remains the temporary loaded entrypoint.
+- Implemented the first app-shell-owned management action coordinator in `docs-viewer/runtime/js/docs-viewer-app-shell.js` and the focused renderer in `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
+- Replaced the duplicated management action markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` with a narrow mount.
+- Preserved the existing management control ids so `docs-viewer/runtime/js/docs-viewer-management.js` continues to own command wiring, backend reachability, and capability-gated updates.
+- Added focused app-shell module smoke coverage for management-allowed rendering, management-disallowed omission, id preservation, and idempotent rendering.
 
 ### steer for next task
 
-- Implement the management action area as the first app-shell-owned shell responsibility.
-- Keep the slice narrow: do not move document rendering, index panel layout, metadata modal markup, import modal internals, or search controls in the same pass.
-- Preserve existing control ids or provide a deliberate compatibility mapping so current management modules do not need a broad rewrite.
-- Keep capability handling narrow: route config supplies static route intent, and manage-mode boot checks only whether the local Docs Viewer backend is reachable.
-- Avoid adding new complete responsibilities to `docs-viewer.js`; it should delegate to `docs-viewer-app-shell.js` or a focused management-action renderer.
+- Continue the app-shell migration with the next narrow shell responsibility, likely scope picker/header controls.
+- Keep document rendering, index panel layout, metadata modal markup, import modal internals, and search behavior out of the next slice unless the request explicitly changes scope.
+- Keep `docs-viewer.js` as the compatibility entrypoint and orchestration layer; new shell rendering belongs in `docs-viewer-app-shell.js` or focused app-shell children.
 
 ### baseline verification set
 
@@ -69,16 +71,38 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current management action area markup in `_includes/docs_viewer_shell.html`, including duplicated search-enabled/search-disabled branches, theme toggle placement, control ids, and management module references. Deliverable: short implementation note in this tracker or closeout summary identifying the exact shell markup to replace. |
-| 2 | planned | Define the first `docs-viewer-app-shell.js` surface. It should expose an app-shell initializer or focused renderer that `docs-viewer.js` can call while `docs-viewer.js` remains the loaded script entrypoint. Deliverable: clear module ownership and no new broad shell responsibility added to `docs-viewer.js`. |
-| 3 | planned | Replace the management action row Liquid markup with a minimal app-shell mount/container. Preserve route behavior for pages with search enabled and pages with search disabled. Deliverable: `_includes/docs_viewer_shell.html` no longer duplicates full management action markup across branches. |
-| 4 | planned | Render the management action area from JavaScript. Include the Actions menu, rebuild, normalize order, settings, scope lifecycle entries, import, new/edit/archive/delete, show/hide viewability control, hidden toggle, and current manage-only theme toggle unless a separate route/header decision moves the theme toggle elsewhere. |
-| 5 | planned | Keep current management modules working with minimal churn. Prefer preserving existing element ids used by `docs-viewer-management.js`; if ids change, update refs deliberately in one focused pass with smoke coverage. |
-| 6 | planned | Apply static route/config and reachability gating narrowly. Show management controls only when route config or current boot compatibility says manage mode is allowed and the local Docs Viewer backend is reachable. Do not add per-click capability checks or speculative capability fields. |
-| 7 | planned | Verify public-route behavior. `/library/` and `/analysis/` should not render or lazy-load management-only controls; public read-only shell boot should remain unchanged except for the absence of now-retired Liquid management markup. |
-| 8 | planned | Add or update focused module smoke coverage for the management action renderer. Cover manage allowed/unavailable states, public route omission, and preservation of expected control refs. |
-| 9 | planned | Run the targeted verification set for changed JS, include markup, management boot, and public read-only routes. Record any checks skipped and why. |
-| 10 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request if the implemented shape changes the plan, and Docs Viewer runtime/inventory docs if `docs-viewer.js` ownership or risk materially changes. |
+| 1 | done | Inventoried the duplicated management action area in `_includes/docs_viewer_shell.html`: both search-enabled and search-disabled branches carried the full `docsViewerManageRow`, Actions menu, rebuild, normalize order, settings, scope lifecycle, import, new/edit/archive/delete, viewability, hidden toggle, and manage-only theme toggle markup. The same shell source was mirrored in `docs-viewer/shell/docs-viewer-shell.html`. |
+| 2 | done | Added `docs-viewer/runtime/js/docs-viewer-app-shell.js` with `initDocsViewerAppShell()`. It imports `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management. `docs-viewer.js` only initializes this owner before existing boot refs are read. |
+| 3 | done | Replaced the full management action row markup in both shell templates with `<div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>` in the existing management-only branches. |
+| 4 | done | The focused management action renderer now renders the full management action area, including the Actions menu, rebuild, normalize order, settings, scope lifecycle entries, import, new/edit/archive/delete, show/hide viewability control, hidden toggle, and current manage-only theme toggle. |
+| 5 | done | Preserved the existing management ids used by `docs-viewer-management.js`, so no broad management controller ref rewrite was needed. |
+| 6 | done | Kept gating narrow: the app-shell renderer only uses route intent from `data-allow-management`; the existing lazy management controller still checks mode/backend reachability and applies capability-gated visibility/disabled state. |
+| 7 | done | Verified public-route behavior with the read-only smoke: `/library/` and `/analysis/` do not render management actions, load management CSS, or import management-only JavaScript. |
+| 8 | done | Added `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` covering management-allowed rendering, management-disallowed omission, expected control refs, scope lifecycle hidden defaults, theme toggle refs, and idempotent render. |
+| 9 | done | Ran the targeted verification set recorded below. No expected checks were skipped. |
+| 10 | done | Updated this tracker, the app-shell request, Docs Viewer overview, Docs Viewer portable manifest, and Docs Viewer JavaScript inventory notes. |
+
+## Closeout 2026-05-27
+
+Management action area ownership moved from Liquid shell markup to `docs-viewer/runtime/js/docs-viewer-app-shell.js` and `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
+`_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` now keep only the necessary management action mount/context for this area.
+`docs-viewer/runtime/js/docs-viewer.js` remains the compatibility entrypoint and initializes the app shell without taking ownership of management action rendering.
+Public routes still omit management UI and do not import the management action renderer.
+
+Verification run:
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/tests/smoke/public_docs_viewer_readonly.py docs-viewer/services/docs_viewer_service.py`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+
+Source docs were updated in this slice.
+Codex did not manually rebuild docs payloads; the local docs watcher regenerated the matching `docs-viewer/generated/docs/studio/` and `docs-viewer/generated/search/studio/` payloads after source doc edits.
 
 The closeout for this first migration should confirm:
 

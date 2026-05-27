@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-26
+last_updated: 2026-05-27
 parent_id: docs-viewer-portable-setup
 sort_order: 3100
 ---
@@ -36,7 +36,7 @@ Examples in this repo are:
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
-The standalone service renders management markup only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables it in `var/local/site.env`.
+The standalone service renders the management action mount only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables it in `var/local/site.env`; the browser app shell renders the action controls into that mount.
 The Jekyll management adapter remains a host integration artifact during the extraction and should not be treated as the durable service shell owner.
 
 ### Browser Runtime
@@ -44,6 +44,7 @@ The Jekyll management adapter remains a host integration artifact during the ext
 Copy the shared viewer runtime files:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 - `docs-viewer/runtime/js/docs-viewer-config-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-data.js`
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js`
@@ -61,6 +62,7 @@ Copy the shared viewer runtime files:
 
 For management mode, also copy:
 
+- `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-management.js`
 - `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`
 - `docs-viewer/runtime/js/docs-viewer-management-actions.js`

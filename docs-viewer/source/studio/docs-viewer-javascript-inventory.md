@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-21
+last_updated: 2026-05-27
 ui_status: review
 parent_id: studio-javascript-payload-inventory
 sort_order: 7020
@@ -76,9 +76,22 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 8.
 - Track separately from the all-script target-score plan because it is the shared Docs Viewer entry runtime.
+- 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; `docs-viewer.js` only initializes that owner before existing route boot and waits for it before management/theme binding.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, index panel surface activation, or management lazy-boundary hardening.
 - Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
 - Preserve `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
+
+### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
+
+- Added 2026-05-27 as the app-shell owner for management action-area coordination.
+- Current scope is intentionally narrow: clear the route-provided management action mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered row before existing management/theme binding continues.
+- The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
+- Revisit the inventory table and score during the next full JavaScript inventory refresh; the expected target score for this focused renderer is 4 or lower while it stays limited to shell rendering.
+
+### `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
+
+- Added 2026-05-27 as the focused renderer for management action markup.
+- Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
 ### Docs Import And Management
 

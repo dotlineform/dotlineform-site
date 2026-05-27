@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8c76523759010c2331d8394c07a498ff",
-    "generated_at_utc": "2026-05-27T16:01:15Z",
+    "version": "blake2b-4c4a3523b4ecf96dc45a312f98fcd9e9",
+    "generated_at_utc": "2026-05-27T16:10:55Z",
     "count": 196
   },
   "entries": [
@@ -1639,10 +1639,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-27",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-26 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-27 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -1654,12 +1654,12 @@
         "manifest",
         "docs viewer portable setup",
         "setup",
-        "2026-05-26",
+        "2026-05-27",
         "2026",
         "05",
-        "26"
+        "27"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-26 2026 05 26"
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-27 2026 05 27"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -2230,19 +2230,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-25",
-      "display_meta": "2026-05-25",
+      "last_updated": "2026-05-27",
+      "display_meta": "2026-05-27",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-27",
         "2026",
         "05",
-        "25"
+        "27"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-27 2026 05 27"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -3003,10 +3003,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-27",
       "parent_id": "studio-javascript-payload-inventory",
       "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-21 • JavaScript Inventory Policy",
+      "display_meta": "2026-05-27 • JavaScript Inventory Policy",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3016,12 +3016,12 @@
         "docs viewer javascript inventory",
         "javascript inventory policy",
         "policy",
-        "2026-05-21",
+        "2026-05-27",
         "2026",
         "05",
-        "21"
+        "27"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory policy policy 2026-05-21 2026 05 21"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory policy policy 2026-05-27 2026 05 27"
     },
     {
       "id": "scripts-css-token-audit",

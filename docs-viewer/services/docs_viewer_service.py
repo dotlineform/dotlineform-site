@@ -175,6 +175,8 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-shell.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions-renderer.js",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-base.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
