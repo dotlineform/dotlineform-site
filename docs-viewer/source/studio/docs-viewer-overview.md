@@ -71,11 +71,13 @@ The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.
 The compatibility runtime wires state and focused controllers.
 Current helper modules:
 
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime wiring for app state, controller construction, config handoff, visibility rules, search/recent and bookmark handoff, panel/info updates, and lazy management loading
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime wiring for app state, controller construction, config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, panel/info updates, generated-data capability checks, and lazy management loading
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
+- `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, route callback consumption, and pane projection requests
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark loading, list/toggle rendering, selected-document bookmark UI projection, edit state, bookmark events, and route callback consumption
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
 - `docs-viewer/runtime/js/docs-viewer-reports.js` owns report lookup and access checks

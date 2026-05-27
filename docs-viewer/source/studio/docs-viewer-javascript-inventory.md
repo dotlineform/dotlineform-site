@@ -116,8 +116,9 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the compatibility owner for the existing shared route/document workflow after the entrypoint became a wrapper.
 - Current risk score: 6 after the route/document workflow extraction.
 - 2026-05-27 owner note: URL/query helpers, current-doc resolution, route application, index-load orchestration, payload-load orchestration, missing/error handoff, route-link handling, and popstate coordination moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`.
-- This module now remains the runtime wiring owner for app state, controller construction, config handoff, visibility rules, search/recent and bookmark controller handoff, generated-data capability checks, panel/info updates, and lazy management loading.
-- Next risk-reduction slices should focus on search/recent and bookmark orchestration boundaries or broader panel-layout ownership, not restore route/document workflow behavior here.
+- 2026-05-27 owner note: search/recent route callback bundling moved behind `createDocsViewerSearchRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-search-controller.js`; bookmark route callback bundling moved behind `createDocsViewerBookmarkRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-bookmarks.js`.
+- This module now remains the runtime wiring owner for app state, controller construction, config handoff, visibility rules, explicit focused-controller callback handoff, generated-data capability checks, panel/info updates, and lazy management loading.
+- Next risk-reduction slices should focus on broader panel-layout ownership, management lazy-boundary hardening, or generated-payload loading, not restore route/document/search/bookmark workflow behavior here.
 
 ### `docs-viewer/runtime/js/docs-viewer-route-workflow.js`
 
@@ -125,6 +126,20 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current risk score: 4.
 - Keep this module limited to URL/query helpers, current-doc resolution, route application, index and payload load orchestration, canonical URL correction, route-link handling, and popstate coordination.
 - It should continue to delegate low-level URL/history operations to `docs-viewer/runtime/js/docs-viewer-router.js`, final document pane rendering to `docs-viewer/runtime/js/docs-viewer-document-controller.js`, search/recent rendering to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, bookmark storage/rendering to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, and management writes/actions to the lazy management modules.
+
+### `docs-viewer/runtime/js/docs-viewer-search-controller.js`
+
+- Current risk score: 5.
+- 2026-05-27 owner note: search/recent route callback bundling moved into this focused owner through `createDocsViewerSearchRouteCallbacks(...)`. The controller now consumes explicit route callbacks for route application, history writes, current-doc resolution, default-doc fallback, result URL creation, and loadable-doc target resolution.
+- Keep this module focused on generated search-index loading, result/recent rendering, debounce handoff, search/recent route activation, more-results behavior, and pane projection requests.
+- Do not move low-level URL construction, browser history primitives, document payload rendering, config loading, management writes, or panel toolbar/view switching into it.
+
+### `docs-viewer/runtime/js/docs-viewer-bookmarks.js`
+
+- Current risk score: 6.
+- 2026-05-27 owner note: bookmark route callback bundling moved into this focused owner through `createDocsViewerBookmarkRouteCallbacks(...)`. The controller now consumes explicit route callbacks for search-debounce cancellation and document-load handoff when opening a bookmark.
+- Keep this module focused on bookmark loading, IndexedDB support fallback, list/toggle rendering, selected-document bookmark UI projection, edit state, pending focus, bookmark events, route callback consumption, and status-pill fallback callbacks.
+- Do not move low-level history construction, document payload rendering, info-panel lifecycle, management writes, or future bookmark grouping/sync/export features into the compatibility runtime.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 

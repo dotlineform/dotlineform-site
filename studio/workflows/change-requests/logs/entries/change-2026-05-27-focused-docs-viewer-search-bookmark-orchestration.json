@@ -1,0 +1,52 @@
+{
+  "id": "change-2026-05-27-focused-docs-viewer-search-bookmark-orchestration",
+  "date": "2026-05-27",
+  "title": "Focused Docs Viewer Search And Bookmark Orchestration",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime",
+    "search"
+  ],
+  "summary": "Moved Docs Viewer search/recent and bookmark route callback bundling into their focused controllers while keeping route/history primitives in the route workflow and document pane rendering in the document controller.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-app-shell-search-recent-bookmark-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "app-shell",
+    "search",
+    "recent-docs",
+    "bookmarks",
+    "runtime"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-app-shell-search-recent-bookmark-tasks",
+  "related_docs": [
+    "docs-viewer",
+    "docs-viewer-overview",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-javascript-inventory",
+    "site-request-docs-viewer-javascript-app-shell",
+    "site-request-docs-viewer-app-shell-search-recent-bookmark-tasks"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-search-controller.js",
+    "docs-viewer/runtime/js/docs-viewer-search.js",
+    "docs-viewer/runtime/js/docs-viewer-bookmarks.js",
+    "docs-viewer/runtime/js/docs-viewer-favourites.js",
+    "docs-viewer/runtime/js/docs-viewer-route-workflow.js",
+    "docs-viewer/runtime/js/docs-viewer-document-controller.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py"
+  ],
+  "effect": "The compatibility runtime now hands search/recent and bookmark controllers narrow controller-owned callback bundles instead of broad individual route primitives. Inline search, recently-added mode, bookmark opening, bookmark UI projection, public read-only routes, and local manage mode keep the same URL/history behavior with focused module-smoke coverage.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer.js docs-viewer/runtime/js/docs-viewer-app-boot.js docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-route-workflow.js docs-viewer/runtime/js/docs-viewer-search-controller.js docs-viewer/runtime/js/docs-viewer-search.js docs-viewer/runtime/js/docs-viewer-bookmarks.js docs-viewer/runtime/js/docs-viewer-favourites.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

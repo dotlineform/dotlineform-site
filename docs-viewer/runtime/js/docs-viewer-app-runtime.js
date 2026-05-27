@@ -9,6 +9,7 @@ import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
+  createDocsViewerBookmarkRouteCallbacks,
   initDocsViewerBookmarks
 } from "./docs-viewer-bookmarks.js";
 import {
@@ -21,6 +22,7 @@ import {
   initDocsViewerDocumentController
 } from "./docs-viewer-document-controller.js";
 import {
+  createDocsViewerSearchRouteCallbacks,
   initDocsViewerSearchController
 } from "./docs-viewer-search-controller.js";
 import {
@@ -400,33 +402,36 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; },
     window: window
   });
+  var searchRouteCallbacks = createDocsViewerSearchRouteCallbacks({
+    defaultDocId: defaultDocId,
+    routeWorkflow: routeWorkflow,
+    viewerTargetDocId: viewerTargetDocId
+  });
+  var searchPaneCallbacks = {
+    hideDocPane: hideDocPane,
+    showRecentPane: showRecentPane,
+    showSearchPane: showSearchPane
+  };
   var searchController = initDocsViewerSearchController({
-    applyCurrentRoute: applyCurrentRoute,
     cancelSearchDebounce: cancelSearchDebounce,
     dataRequestOptions: dataRequestOptions,
-    defaultDocId: defaultDocId,
     hideContextMenu: hideContextMenu,
-    hideDocPane: hideDocPane,
     hasActiveQuery: hasActiveQuery,
     more: more,
+    paneCallbacks: searchPaneCallbacks,
     recentButton: recentButton,
     resultsStatus: resultsStatus,
-    resolveDocId: resolveDocId,
     results: results,
+    routeCallbacks: searchRouteCallbacks,
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchDebounceMs: SEARCH_DEBOUNCE_MS,
     searchIndexUrl: function () { return searchIndexUrl; },
     searchInput: searchInput,
-    setHistory: setHistory,
     setRecentModeActive: setRecentModeActive,
     setStatus: setStatus,
-    showRecentPane: showRecentPane,
-    showSearchPane: showSearchPane,
     startBusy: startBusy,
     state: state,
-    viewerScope: function () { return viewerScope; },
-    viewerTargetDocId: viewerTargetDocId,
-    viewerUrl: viewerUrl
+    viewerScope: function () { return viewerScope; }
   });
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
@@ -1146,17 +1151,20 @@ export function startDocsViewerRuntime(options) {
     }
   });
 
+  var bookmarkRouteCallbacks = createDocsViewerBookmarkRouteCallbacks({
+    cancelSearchDebounce: cancelSearchDebounce,
+    routeWorkflow: routeWorkflow
+  });
   bookmarkController = initDocsViewerBookmarks({
     bookmarkRow: bookmarkRow,
     bookmarkScope: function () { return bookmarkScope; },
     bookmarkToggle: bookmarkToggle,
-    cancelSearchDebounce: cancelSearchDebounce,
     cssEscape: cssEscape,
     dbName: BOOKMARK_DB_NAME,
     dbVersion: BOOKMARK_DB_VERSION,
     hideContextMenu: hideContextMenu,
-    loadDoc: loadDoc,
     renderStatusPills: renderStatusPills,
+    routeCallbacks: bookmarkRouteCallbacks,
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchInput: searchInput,
     setStatus: setStatus,

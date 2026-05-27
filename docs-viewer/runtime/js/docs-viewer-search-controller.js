@@ -16,12 +16,39 @@ import {
   isDocViewable
 } from "./docs-viewer-tree.js";
 
+export function createDocsViewerSearchRouteCallbacks(context) {
+  var settings = context || {};
+  var routeWorkflow = settings.routeWorkflow;
+  return {
+    applyCurrentRoute: function (options) {
+      return routeWorkflow.applyCurrentRoute(options);
+    },
+    defaultDocId: function () {
+      return typeof settings.defaultDocId === "function" ? settings.defaultDocId() : "";
+    },
+    resolveDocId: function () {
+      return routeWorkflow.resolveDocId();
+    },
+    setHistory: function (docId, hash, query, mode) {
+      return routeWorkflow.setHistory(docId, hash, query, mode);
+    },
+    viewerTargetDocId: function (docId) {
+      return typeof settings.viewerTargetDocId === "function" ? settings.viewerTargetDocId(docId) : docId;
+    },
+    viewerUrl: function (docId, hash, query) {
+      return routeWorkflow.viewerUrl(docId, hash, query);
+    }
+  };
+}
+
 export function initDocsViewerSearchController(context) {
   var state = context.state;
   var resultsStatus = context.resultsStatus;
   var results = context.results;
   var more = context.more;
   var searchInput = context.searchInput;
+  var paneCallbacks = context.paneCallbacks || {};
+  var routeCallbacks = context.routeCallbacks || {};
 
   function currentSearchIndexUrl() {
     return typeof context.searchIndexUrl === "function" ? context.searchIndexUrl() : context.searchIndexUrl;
@@ -37,6 +64,52 @@ export function initDocsViewerSearchController(context) {
 
   function searchControlsAvailable() {
     return Boolean(searchInput && results && more);
+  }
+
+  function applyCurrentRoute(options) {
+    var callback = routeCallbacks.applyCurrentRoute || context.applyCurrentRoute;
+    if (typeof callback === "function") return callback(options);
+    return null;
+  }
+
+  function defaultDocId() {
+    var callback = routeCallbacks.defaultDocId || context.defaultDocId;
+    return typeof callback === "function" ? callback() : "";
+  }
+
+  function hideDocPane() {
+    var callback = paneCallbacks.hideDocPane || context.hideDocPane;
+    if (typeof callback === "function") callback();
+  }
+
+  function resolveDocId() {
+    var callback = routeCallbacks.resolveDocId || context.resolveDocId;
+    return typeof callback === "function" ? callback() : { docId: "" };
+  }
+
+  function setHistory(docId, hash, query, mode) {
+    var callback = routeCallbacks.setHistory || context.setHistory;
+    if (typeof callback === "function") callback(docId, hash, query, mode);
+  }
+
+  function showRecentPane() {
+    var callback = paneCallbacks.showRecentPane || context.showRecentPane;
+    if (typeof callback === "function") callback();
+  }
+
+  function showSearchPane() {
+    var callback = paneCallbacks.showSearchPane || context.showSearchPane;
+    if (typeof callback === "function") callback();
+  }
+
+  function viewerTargetDocId(docId) {
+    var callback = routeCallbacks.viewerTargetDocId || context.viewerTargetDocId;
+    return typeof callback === "function" ? callback(docId) : docId;
+  }
+
+  function viewerUrl(docId, hash, query) {
+    var callback = routeCallbacks.viewerUrl || context.viewerUrl;
+    return typeof callback === "function" ? callback(docId, hash, query) : "#";
   }
 
   function loadSearchEntries() {
@@ -103,16 +176,17 @@ export function initDocsViewerSearchController(context) {
   }
 
   function renderSearchResultEntry(entry) {
-    return renderSearchEntry(entry, context.viewerUrl(context.viewerTargetDocId(entry.id), "", ""));
+    return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
   }
 
   function renderRecentResultEntry(doc) {
-    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), context.viewerUrl(context.viewerTargetDocId(doc.doc_id), "", ""));
+    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), viewerUrl(viewerTargetDocId(doc.doc_id), "", ""));
   }
 
   function renderRecentMode() {
     if (!searchIsEnabled()) return;
-    context.showRecentPane();
+    context.setRecentModeActive(true);
+    showRecentPane();
     document.title = "Recently Added | dotlineform";
     var recentDocs = collectRecentDocs(state.docs.filter(isDocViewable), state.recentLimit);
     if (!recentDocs.length) {
@@ -132,7 +206,7 @@ export function initDocsViewerSearchController(context) {
   function renderSearchPendingState() {
     if (!searchIsEnabled() || !context.hasActiveQuery()) return;
     context.setRecentModeActive(false);
-    context.showSearchPane();
+    showSearchPane();
     clearResultsStatus();
     results.innerHTML = "";
     more.innerHTML = "";
@@ -143,14 +217,14 @@ export function initDocsViewerSearchController(context) {
   function renderSearchMode() {
     if (!searchIsEnabled()) {
       if (searchControlsAvailable()) {
-        context.showSearchPane();
+        showSearchPane();
         setResultsStatus("Search unavailable.", true);
         results.innerHTML = "";
         more.innerHTML = "";
         more.hidden = true;
       } else {
         context.setStatus("Search unavailable.", true);
-        context.hideDocPane();
+        hideDocPane();
         if (results) results.hidden = true;
         if (more) more.hidden = true;
       }
@@ -162,7 +236,7 @@ export function initDocsViewerSearchController(context) {
       return;
     }
 
-    context.showSearchPane();
+    showSearchPane();
     context.setRecentModeActive(false);
     document.title = "Search | dotlineform";
 
@@ -217,7 +291,7 @@ export function initDocsViewerSearchController(context) {
       context.recentButton.addEventListener("click", function () {
         context.hideContextMenu();
         context.cancelSearchDebounce();
-        var activeDocId = state.selectedDocId || context.resolveDocId().docId || context.defaultDocId();
+        var activeDocId = state.selectedDocId || resolveDocId().docId || defaultDocId();
         state.searchQuery = "";
         state.searchRouteActive = false;
         state.searchVisibleCount = context.searchBatchSize;
@@ -225,7 +299,7 @@ export function initDocsViewerSearchController(context) {
           searchInput.value = "";
         }
         if (activeDocId) {
-          context.setHistory(activeDocId, "", "", "push");
+          setHistory(activeDocId, "", "", "push");
         }
         renderRecentMode();
       });
@@ -244,7 +318,7 @@ export function initDocsViewerSearchController(context) {
       var nextQuery = String(searchInput.value || "").trim();
       var nextModeActive = Boolean(normalizeSearchText(nextQuery));
       var previousModeActive = state.searchRouteActive;
-      var activeDocId = state.selectedDocId || context.resolveDocId().docId || "";
+      var activeDocId = state.selectedDocId || resolveDocId().docId || "";
 
       context.cancelSearchDebounce();
       context.setRecentModeActive(false);
@@ -257,17 +331,17 @@ export function initDocsViewerSearchController(context) {
 
       if (!nextModeActive) {
         state.searchRouteActive = false;
-        context.setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
-        context.applyCurrentRoute({ historyMode: "none", hash: "" });
+        setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
+        applyCurrentRoute({ historyMode: "none", hash: "" });
         return;
       }
 
       state.searchRouteActive = true;
-      context.setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
+      setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
       renderSearchPendingState();
       state.searchDebounceId = window.setTimeout(function () {
         state.searchDebounceId = null;
-        context.applyCurrentRoute({ historyMode: "none", hash: "" });
+        applyCurrentRoute({ historyMode: "none", hash: "" });
       }, context.searchDebounceMs);
     });
   }

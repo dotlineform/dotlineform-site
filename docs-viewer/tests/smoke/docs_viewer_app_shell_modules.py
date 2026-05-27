@@ -1928,6 +1928,313 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
         raise AssertionError(f"route workflow did not hand off expected fetches: {result!r}")
 
 
+def assert_search_controller_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-search-controller.js');
+            document.body.innerHTML = `
+                <button id="recent" type="button"></button>
+                <input id="search" />
+                <p id="status"></p>
+                <ol id="results"></ol>
+                <div id="more"></div>
+            `;
+            const recentButton = document.getElementById('recent');
+            const searchInput = document.getElementById('search');
+            const resultsStatus = document.getElementById('status');
+            const results = document.getElementById('results');
+            const more = document.getElementById('more');
+            const calls = [];
+            const routeCalls = [];
+            const paneCalls = [];
+            const routeWorkflow = {
+                applyCurrentRoute: (options) => routeCalls.push(`apply:${options.historyMode}:${options.hash || ''}`),
+                resolveDocId: () => ({ docId: 'intro' }),
+                setHistory: (docId, hash, query, mode) => routeCalls.push(`history:${docId}:${hash || ''}:${query || ''}:${mode}`),
+                viewerUrl: (docId, hash, query) => `/docs/?doc=${docId}${query ? `&q=${encodeURIComponent(query)}` : ''}${hash ? `#${hash}` : ''}`
+            };
+            const state = {
+                docs: [
+                    { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true },
+                    { doc_id: 'second', title: 'Second Guide', parent_id: 'intro', added_date: '2026-05-26', viewable: true },
+                    { doc_id: 'hidden', title: 'Hidden Guide', parent_id: '', added_date: '2026-05-28', viewable: false }
+                ],
+                docsById: new Map([
+                    ['intro', { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true }],
+                    ['second', { doc_id: 'second', title: 'Second Guide', parent_id: 'intro', added_date: '2026-05-26', viewable: true }]
+                ]),
+                selectedDocId: 'intro',
+                searchEntries: [
+                    {
+                        kind: 'doc',
+                        id: 'intro',
+                        title: 'Intro Guide',
+                        displayMeta: '2026-05-27',
+                        parentTitle: '',
+                        lastUpdated: '2026-05-27',
+                        searchTerms: ['guide'],
+                        searchText: 'intro guide',
+                        titleNorm: 'intro guide',
+                        idNorm: 'intro',
+                        titleTokens: ['intro', 'guide'],
+                        parentTitleNorm: ''
+                    },
+                    {
+                        kind: 'doc',
+                        id: 'second',
+                        title: 'Second Guide',
+                        displayMeta: '2026-05-26 • Intro Guide',
+                        parentTitle: 'Intro Guide',
+                        lastUpdated: '2026-05-26',
+                        searchTerms: ['guide'],
+                        searchText: 'second guide intro',
+                        titleNorm: 'second guide',
+                        idNorm: 'second',
+                        titleTokens: ['second', 'guide'],
+                        parentTitleNorm: 'intro guide'
+                    }
+                ],
+                searchLoaded: true,
+                searchRequestPromise: null,
+                searchQuery: 'guide',
+                searchVisibleCount: 1,
+                searchRouteActive: false,
+                recentModeActive: false,
+                recentLimit: 2
+            };
+            const controller = module.initDocsViewerSearchController({
+                cancelSearchDebounce: () => calls.push('cancel-search'),
+                dataRequestOptions: () => ({}),
+                hasActiveQuery: (query) => Boolean(String(typeof query === 'string' ? query : state.searchQuery || '').trim()),
+                hideContextMenu: () => calls.push('hide-context'),
+                more,
+                paneCallbacks: {
+                    hideDocPane: () => paneCalls.push('hide-doc'),
+                    showRecentPane: () => paneCalls.push('recent-pane'),
+                    showSearchPane: () => paneCalls.push('search-pane')
+                },
+                recentButton,
+                results,
+                resultsStatus,
+                routeCallbacks: module.createDocsViewerSearchRouteCallbacks({
+                    defaultDocId: () => 'intro',
+                    routeWorkflow,
+                    viewerTargetDocId: (docId) => docId
+                }),
+                searchBatchSize: 1,
+                searchDebounceMs: 0,
+                searchIndexUrl: () => '/search.json',
+                searchInput,
+                setRecentModeActive: (active) => {
+                    state.recentModeActive = Boolean(active);
+                    calls.push(`recent:${Boolean(active)}`);
+                },
+                setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
+                startBusy: () => {
+                    calls.push('busy-start');
+                    return () => calls.push('busy-stop');
+                },
+                state,
+                viewerScope: () => 'studio'
+            });
+            controller.bind();
+            controller.renderSearchMode();
+            const firstSearch = {
+                status: resultsStatus.textContent,
+                resultCount: results.querySelectorAll('li').length,
+                moreHidden: more.hidden,
+                firstHref: results.querySelector('a')?.getAttribute('href') || ''
+            };
+            more.querySelector('button[data-role="more"]').click();
+            const afterMore = {
+                status: resultsStatus.textContent,
+                resultCount: results.querySelectorAll('li').length,
+                moreHidden: more.hidden
+            };
+            recentButton.click();
+            const afterRecent = {
+                status: resultsStatus.textContent,
+                resultCount: results.querySelectorAll('li').length,
+                recentModeActive: state.recentModeActive,
+                query: state.searchQuery,
+                input: searchInput.value
+            };
+            searchInput.value = 'guide';
+            searchInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            state.searchRouteActive = true;
+            searchInput.value = '';
+            searchInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+            return {
+                firstSearch,
+                afterMore,
+                afterRecent,
+                calls,
+                routeCalls,
+                paneCalls,
+                finalQuery: state.searchQuery,
+                finalRouteActive: state.searchRouteActive
+            };
+        }"""
+    )
+    if result["firstSearch"] != {
+        "status": "Showing 1 of 2 results",
+        "resultCount": 1,
+        "moreHidden": False,
+        "firstHref": "/docs/?doc=intro",
+    }:
+        raise AssertionError(f"search controller initial render changed: {result!r}")
+    if result["afterMore"] != {
+        "status": "2 results",
+        "resultCount": 2,
+        "moreHidden": True,
+    }:
+        raise AssertionError(f"search controller more-results behavior changed: {result!r}")
+    if result["afterRecent"] != {
+        "status": "2 recently added docs",
+        "resultCount": 2,
+        "recentModeActive": True,
+        "query": "",
+        "input": "",
+    }:
+        raise AssertionError(f"recent-mode controller behavior changed: {result!r}")
+    expected_route_calls = [
+        "history:intro:::push",
+        "history:intro::guide:push",
+        "apply:none:",
+        "history:intro:::replace",
+        "apply:none:",
+    ]
+    if result["routeCalls"] != expected_route_calls:
+        raise AssertionError(f"search controller route handoff changed: {result!r}")
+    if "search-pane" not in result["paneCalls"] or "recent-pane" not in result["paneCalls"]:
+        raise AssertionError(f"search controller pane handoff changed: {result!r}")
+    if result["finalQuery"] != "" or result["finalRouteActive"] is not False:
+        raise AssertionError(f"search controller clear-route state changed: {result!r}")
+
+
+def assert_bookmark_controller_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-bookmarks.js');
+            document.body.innerHTML = `
+                <div id="bookmarkRow"></div>
+                <button id="bookmarkToggle" type="button"></button>
+                <input id="search" value="guide" />
+            `;
+            const bookmarkRow = document.getElementById('bookmarkRow');
+            const bookmarkToggle = document.getElementById('bookmarkToggle');
+            const searchInput = document.getElementById('search');
+            const calls = [];
+            const state = {
+                bookmarks: [
+                    {
+                        key: 'library::intro',
+                        scope: 'library',
+                        doc_id: 'intro',
+                        label: 'Intro bookmark',
+                        default_title: 'Intro',
+                        created_at_utc: '2026-05-27T00:00:00.000Z',
+                        updated_at_utc: '2026-05-27T00:00:00.000Z',
+                        order: 1
+                    },
+                    {
+                        key: 'library::second',
+                        scope: 'library',
+                        doc_id: 'second',
+                        label: 'Second bookmark',
+                        default_title: 'Second',
+                        created_at_utc: '2026-05-27T00:00:01.000Z',
+                        updated_at_utc: '2026-05-27T00:00:01.000Z',
+                        order: 2
+                    }
+                ],
+                bookmarksLoaded: true,
+                bookmarkSupport: true,
+                docsById: new Map([
+                    ['intro', { doc_id: 'intro', title: 'Intro' }],
+                    ['second', { doc_id: 'second', title: 'Second' }]
+                ]),
+                editingBookmarkKey: '',
+                pendingBookmarkFocusKey: '',
+                searchQuery: 'guide',
+                searchVisibleCount: 10,
+                searchRouteActive: false,
+                selectedDocId: 'intro'
+            };
+            const routeWorkflow = {
+                loadDoc: (docId, options) => {
+                    calls.push(`load:${docId}:${options.historyMode}:${options.hash || ''}`);
+                    return Promise.resolve(null);
+                }
+            };
+            const controller = module.initDocsViewerBookmarks({
+                bookmarkRow,
+                bookmarkScope: () => 'library',
+                bookmarkToggle,
+                cssEscape: (value) => String(value).replace(/["\\\\]/g, '\\\\$&'),
+                dbName: 'smoke',
+                dbVersion: 1,
+                hideContextMenu: () => calls.push('hide-context'),
+                renderStatusPills: () => calls.push('status-pills'),
+                routeCallbacks: module.createDocsViewerBookmarkRouteCallbacks({
+                    cancelSearchDebounce: () => calls.push('cancel-search'),
+                    routeWorkflow
+                }),
+                searchBatchSize: 50,
+                searchInput,
+                setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
+                state,
+                storeName: 'favorites'
+            });
+            controller.bind();
+            controller.renderUi();
+            const initial = {
+                toggleHidden: bookmarkToggle.hidden,
+                toggleText: bookmarkToggle.textContent,
+                togglePressed: bookmarkToggle.getAttribute('aria-pressed'),
+                rowHidden: bookmarkRow.hidden,
+                rowCount: bookmarkRow.querySelectorAll('[data-bookmark-key]').length,
+                activeOpen: bookmarkRow.querySelector('[data-bookmark-open="intro"]')?.getAttribute('aria-current') || ''
+            };
+            bookmarkRow.querySelector('[data-bookmark-open="second"]').click();
+            const afterOpen = {
+                query: state.searchQuery,
+                visibleCount: state.searchVisibleCount,
+                input: searchInput.value
+            };
+            bookmarkRow.querySelector('[data-bookmark-open="second"]').dispatchEvent(
+                new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
+            );
+            const afterRenameStart = {
+                editingKey: state.editingBookmarkKey,
+                inputCount: bookmarkRow.querySelectorAll('[data-bookmark-input="library::second"]').length
+            };
+            return {
+                initial,
+                afterOpen,
+                afterRenameStart,
+                calls
+            };
+        }"""
+    )
+    if result["initial"] != {
+        "toggleHidden": False,
+        "toggleText": "★",
+        "togglePressed": "true",
+        "rowHidden": False,
+        "rowCount": 2,
+        "activeOpen": "page",
+    }:
+        raise AssertionError(f"bookmark controller render hooks changed: {result!r}")
+    if result["afterOpen"] != {"query": "", "visibleCount": 50, "input": ""}:
+        raise AssertionError(f"bookmark controller route handoff did not reset search state: {result!r}")
+    if result["afterRenameStart"] != {"editingKey": "library::second", "inputCount": 1}:
+        raise AssertionError(f"bookmark controller rename state changed: {result!r}")
+    if result["calls"][:3] != ["status-pills", "cancel-search", "load:second:push:"]:
+        raise AssertionError(f"bookmark controller callbacks changed: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2038,6 +2345,8 @@ def main() -> int:
             assert_panel_layout_contract(page)
             assert_view_state_and_hosted_view_contract(page)
             assert_route_workflow_contract(page, base_url)
+            assert_search_controller_contract(page)
+            assert_bookmark_controller_contract(page)
             assert_render_is_idempotent(page)
 
             browser.close()

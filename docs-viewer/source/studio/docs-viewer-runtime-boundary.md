@@ -35,7 +35,7 @@ Current shared implementation:
 
 - `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime wiring owner for app state, controller construction, initial config handoff, visibility rules, search/recent handoff, bookmark orchestration, generated-data capability checks, reports, panel/info updates, and lazy management loading
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime wiring owner for app state, controller construction, initial config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, generated-data capability checks, reports, panel/info updates, and lazy management loading
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, route config shape, migration data-attribute fallback, and route/scope projection imported by the entry and config controllers
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
@@ -52,8 +52,9 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-management-client.js` for Docs Viewer service transport helpers used by the management controller
 - `docs-viewer/runtime/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
 - `docs-viewer/runtime/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
-- `docs-viewer/runtime/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
-- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the search controller
+- `docs-viewer/runtime/js/docs-viewer-search-controller.js` for inline-search and recently-added controller ownership: search index loading, result rendering, recent rendering, search debounce behavior, route callback consumption, more-results behavior, and pane projection requests
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, bookmark events, selected-document bookmark UI projection, and explicit route callback consumption
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js` for document pane visibility, loading/missing/error states, final payload rendering, and report mount context imported by the entry controller
 - `docs-viewer/runtime/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers

@@ -11,10 +11,24 @@ import {
   renderBookmarkRowsMarkup
 } from "./docs-viewer-render.js";
 
+export function createDocsViewerBookmarkRouteCallbacks(context) {
+  var settings = context || {};
+  var routeWorkflow = settings.routeWorkflow;
+  return {
+    cancelSearchDebounce: function () {
+      if (typeof settings.cancelSearchDebounce === "function") settings.cancelSearchDebounce();
+    },
+    loadDoc: function (docId, options) {
+      return routeWorkflow.loadDoc(docId, options);
+    }
+  };
+}
+
 export function initDocsViewerBookmarks(context) {
   var state = context.state;
   var bookmarkRow = context.bookmarkRow;
   var bookmarkToggle = context.bookmarkToggle;
+  var routeCallbacks = context.routeCallbacks || {};
 
   function bookmarkScope() {
     return context.bookmarkScope();
@@ -274,13 +288,24 @@ export function initDocsViewerBookmarks(context) {
     finishRename(input.dataset.bookmarkInput, input.value, cancel);
   }
 
+  function cancelSearchDebounce() {
+    var callback = routeCallbacks.cancelSearchDebounce || context.cancelSearchDebounce;
+    if (typeof callback === "function") callback();
+  }
+
+  function loadDoc(docId, options) {
+    var callback = routeCallbacks.loadDoc || context.loadDoc;
+    if (typeof callback === "function") return callback(docId, options);
+    return null;
+  }
+
   function openBookmark(docId) {
     if (!docId) return;
-    context.cancelSearchDebounce();
+    cancelSearchDebounce();
     state.searchQuery = "";
     state.searchVisibleCount = context.searchBatchSize;
     if (context.searchInput) context.searchInput.value = "";
-    context.loadDoc(docId, { historyMode: "push", hash: "" });
+    loadDoc(docId, { historyMode: "push", hash: "" });
   }
 
   function bind() {

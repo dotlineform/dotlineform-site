@@ -14,9 +14,9 @@ Status:
 
 - in progress
 
-- **App-shell migration foundation:** ~95% there
-- **Full JavaScript App Shell Request goals:** ~70-75% there
-- **Current priority:** finish search/recent/bookmark orchestration cleanup and panel toolbar/view switching before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
+- **App-shell migration foundation:** ~96% there
+- **Full JavaScript App Shell Request goals:** ~75% there
+- **Current priority:** finish panel toolbar/view switching before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
 
 What is now in good shape:
 
@@ -28,6 +28,8 @@ What is now in good shape:
 - Minimal hosted-view registration exists in `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, including built-in compatibility view records and graceful absence for unavailable modules.
 - The first visible info panel exists. `metadata-info` is public-safe and uses the hosted-view lifecycle/context helpers.
 - Route/document workflow ownership has moved into `docs-viewer/runtime/js/docs-viewer-route-workflow.js`, with URL/query helpers, current-doc resolution, index/payload load orchestration, canonical route correction, route-link handling, and popstate coordination outside the compatibility runtime.
+- Search/recent route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, including explicit controller-owned callbacks for route application, history writes, current-doc resolution, result URLs, and default-doc fallback.
+- Bookmark route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, including explicit controller-owned callbacks for search-debounce cancellation and document-load handoff.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
@@ -35,8 +37,7 @@ What is still incomplete against the broader request:
 
 - Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, and hosted-view lifecycle exist, but there is no toolbar/view-switching model or broader panel-module UI lifecycle.
 - Route shells are route-context thin and no longer carry management modal/context-menu markup.
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns compatibility wiring for app state, controller construction, search/recent handoff, bookmark orchestration, visibility rules, panel/info handoff, and management-controller loading.
-- Search/recent and bookmark orchestration still need narrower cleanup around their controller handoffs.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns compatibility wiring for app state, controller construction, config handoff, visibility rules, panel/info handoff, generated-data capability checks, and management-controller loading.
 - Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
 
 The remaining migration should be treated as completion work, not as optional polish.
