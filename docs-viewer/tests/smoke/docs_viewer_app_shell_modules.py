@@ -700,6 +700,239 @@ def assert_route_config_registry_resolution(page: Page) -> None:
         raise AssertionError(f"registry route config resolution failed: {result!r}")
 
 
+def assert_app_boot_public_context_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const boot = await import('/docs-viewer/runtime/js/docs-viewer-app-boot.js');
+            window.history.replaceState({}, '', '/analysis/?doc=analysis');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot">
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
+                  <p id="docsViewerStatus"></p>
+                  <div id="docsViewerBookmarkRow"></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const routeConfig = {
+                schema_version: 'docs_viewer_route_config_v1',
+                route_id: 'analysis-public',
+                route_type: 'public',
+                default_scope_id: 'analysis',
+                default_doc_id: 'analysis',
+                viewer_base_url: '/analysis/',
+                docs_paths: {
+                    index_url: '/assets/data/docs/scopes/analysis/index.json',
+                    search_index_url: '/assets/data/search/analysis/index.json'
+                },
+                config_urls: {
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    report_registry: '/assets/data/docs/reports.json'
+                },
+                access: {
+                    allow_management: false,
+                    allow_scope_query: false,
+                    management_base_url: ''
+                }
+            };
+            const context = await boot.resolveDocsViewerAppBootContext({
+                root,
+                document,
+                window,
+                assetVersion: 'boot-smoke',
+                routeConfig
+            });
+            return {
+                rootId: context.root.id,
+                assetVersion: context.assetVersion,
+                routeId: context.routeContext.routeConfig.routeId,
+                routeSource: context.routeContext.routeConfig.source,
+                canLoadManagementUi: context.routeContext.access.canLoadManagementUi,
+                appShellReadyPromise: typeof context.appShellReady.then === 'function',
+                searchInputId: context.appShellRefs.headerControls.searchInput?.id || '',
+                navId: context.appShellRefs.indexPanel.nav?.id || '',
+                contentId: context.appShellRefs.documentShell.content?.id || '',
+                infoBodyId: context.appShellRefs.infoPanel.body?.id || '',
+                manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
+                contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
+                actionsMountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                shellMountChildCount: document.querySelector('[data-docs-viewer-management-shell-mount]').children.length
+            };
+        }"""
+    )
+    if result != {
+        "rootId": "docsViewerRoot",
+        "assetVersion": "boot-smoke",
+        "routeId": "analysis-public",
+        "routeSource": "explicit",
+        "canLoadManagementUi": False,
+        "appShellReadyPromise": True,
+        "searchInputId": "docsViewerSearchInput",
+        "navId": "docsViewerNav",
+        "contentId": "docsViewerContent",
+        "infoBodyId": "docsViewerInfoPanelBody",
+        "manageRowCount": 0,
+        "contextMenuCount": 0,
+        "actionsMountChildCount": 0,
+        "shellMountChildCount": 0,
+    }:
+        raise AssertionError(f"public app boot context contract failed: {result!r}")
+
+
+def assert_app_boot_management_context_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const boot = await import('/docs-viewer/runtime/js/docs-viewer-app-boot.js');
+            window.history.replaceState({}, '', '/docs/?scope=studio&doc=dev-home&mode=manage&import=1');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot">
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
+                  <p id="docsViewerStatus"></p>
+                  <div id="docsViewerBookmarkRow"></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const routeConfig = {
+                schema_version: 'docs_viewer_route_config_v1',
+                route_id: 'docs-manage',
+                route_type: 'manage',
+                default_scope_id: 'studio',
+                default_doc_id: 'dev-home',
+                include_scope_param: true,
+                allow_scope_query: true,
+                viewer_base_url: '/docs/',
+                generated_base_url: 'http://127.0.0.1:8789',
+                docs_paths: {
+                    index_url: '/assets/data/docs/scopes/studio/index.json',
+                    search_index_url: '/assets/data/search/studio/index.json'
+                },
+                config_urls: {
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    report_registry: '/assets/data/docs/reports.json'
+                },
+                access: {
+                    allow_management: true,
+                    allow_scope_query: true,
+                    management_base_url: 'http://127.0.0.1:8789',
+                    management_mode_value: 'manage'
+                }
+            };
+            const context = await boot.resolveDocsViewerAppBootContext({
+                root,
+                document,
+                window,
+                assetVersion: 'boot-smoke',
+                routeConfig
+            });
+            return {
+                routeId: context.routeContext.routeConfig.routeId,
+                allowManagement: context.routeContext.access.allowManagement,
+                canLoadManagementUi: context.routeContext.access.canLoadManagementUi,
+                managementRequested: context.routeContext.access.managementRequested,
+                importRequested: context.routeContext.openImportOnLoad,
+                managementBaseUrl: context.routeContext.managementBaseUrl,
+                manageRowId: context.appShellRefs.managementActions.row?.id || '',
+                contextMenuId: context.appShellRefs.managementShell.contextMenu?.id || '',
+                metadataModalId: context.appShellRefs.managementShell.metadataModal?.id || '',
+                importRootId: context.appShellRefs.managementShell.importRoot?.id || '',
+                settingsModalId: context.appShellRefs.managementShell.settingsModal?.id || '',
+                manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
+                contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length
+            };
+        }"""
+    )
+    if result != {
+        "routeId": "docs-manage",
+        "allowManagement": True,
+        "canLoadManagementUi": True,
+        "managementRequested": True,
+        "importRequested": True,
+        "managementBaseUrl": "http://127.0.0.1:8789",
+        "manageRowId": "docsViewerManageRow",
+        "contextMenuId": "docsViewerContextMenu",
+        "metadataModalId": "docsViewerMetadataModal",
+        "importRootId": "docsHtmlImportRoot",
+        "settingsModalId": "docsViewerSettingsModal",
+        "manageRowCount": 1,
+        "contextMenuCount": 1,
+    }:
+        raise AssertionError(f"management app boot context contract failed: {result!r}")
+
+
+def assert_app_boot_start_is_single_start(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const boot = await import('/docs-viewer/runtime/js/docs-viewer-app-boot.js');
+            window.history.replaceState({}, '', '/analysis/?doc=analysis');
+            document.body.innerHTML = `
+                <section id="docsViewerRoot">
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                  <p id="docsViewerStatus"></p>
+                  <div id="docsViewerBookmarkRow"></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const routeConfig = {
+                schema_version: 'docs_viewer_route_config_v1',
+                route_id: 'analysis-public',
+                route_type: 'public',
+                default_scope_id: 'analysis',
+                default_doc_id: 'analysis',
+                viewer_base_url: '/analysis/',
+                docs_paths: {
+                    index_url: '/assets/data/docs/scopes/analysis/index.json',
+                    search_index_url: '/assets/data/search/analysis/index.json'
+                },
+                config_urls: {
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    report_registry: '/assets/data/docs/reports.json'
+                },
+                access: {
+                    allow_management: false,
+                    allow_scope_query: false,
+                    management_base_url: ''
+                }
+            };
+            const first = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
+            const second = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
+            const app = await first;
+            if (app && app.initialLoadPromise) await app.initialLoadPromise;
+            return {
+                samePromise: first === second,
+                hasRuntimeState: Boolean(app && app.state),
+                routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
+                headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
+                navCount: document.querySelectorAll('#docsViewerNav').length,
+                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                selectedDocId: app && app.state ? app.state.selectedDocId : ''
+            };
+        }"""
+    )
+    if result["samePromise"] is not True:
+        raise AssertionError(f"app boot did not preserve a single start promise: {result!r}")
+    if result["hasRuntimeState"] is not True or result["routeId"] != "analysis-public":
+        raise AssertionError(f"app boot did not return the runtime contract: {result!r}")
+    if result["headerRowCount"] != 1 or result["navCount"] != 1 or result["documentShellCount"] != 1:
+        raise AssertionError(f"single-start boot duplicated shell markup: {result!r}")
+    if not result["selectedDocId"]:
+        raise AssertionError(f"single-start boot did not complete initial route load: {result!r}")
+
+
 def assert_index_panel_shell_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1592,6 +1825,9 @@ def main() -> int:
             assert_route_config_explicit_and_access_projection(page)
             assert_route_config_inline_and_malformed_fallback(page)
             assert_route_config_registry_resolution(page)
+            assert_app_boot_public_context_contract(page)
+            assert_app_boot_management_context_contract(page)
+            assert_app_boot_start_is_single_start(page)
             assert_index_panel_shell_render(page)
             assert_index_panel_projection(page)
             assert_document_shell_render(page)

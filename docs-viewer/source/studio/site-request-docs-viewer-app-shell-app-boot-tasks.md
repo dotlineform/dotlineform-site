@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-app-boot-tasks
 title: Docs Viewer App Shell App Boot Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12150
 viewable: true
@@ -21,6 +21,18 @@ It should not move route/document workflow ownership, URL/history behavior, sear
 
 ### just done
 
+- Added `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the focused app boot owner.
+- Kept `docs-viewer/runtime/js/docs-viewer.js` as the stable ES module entrypoint loaded by shared and standalone route shells; it now imports and starts the boot owner.
+- Added `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility owner for the existing route/document runtime workflow until the next extraction slice.
+- Moved route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, management-safe theme toggle loading, controller/runtime startup, and initial load handoff out of the entrypoint.
+- Preserved existing route/document workflow behavior in the compatibility runtime: `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL/history behavior, search/recent handoff, bookmark orchestration, generated-data reads, reports, and lazy management loading remain together for the next slice.
+- Kept public routes gated: public boot does not render management shell markup or dynamically import management-only shell modules because app boot still uses route access projection.
+- Extended `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` with app boot owner coverage for exported boot context, route-config handoff, shell initialization before ref reads, public management omission, management-capable boot, and single-start behavior.
+- Verification passed: JavaScript syntax checks, focused app-shell module smoke, management modal smoke, management service shell smoke, isolated Jekyll build, public read-only smoke, JSON validation, and `git diff --check`.
+- Structured docs-log entry: `change-2026-05-27-extracted-docs-viewer-app-boot`.
+
+### previous slice
+
 - Completed [Docs Viewer App Shell Management Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-shell-extraction-tasks).
 - Added `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` as the focused app-shell owner for management-only context-menu and modal shell markup.
 - Replaced duplicated management-only shell markup in `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html` with `#docsViewerManagementShellMount`.
@@ -30,13 +42,13 @@ It should not move route/document workflow ownership, URL/history behavior, sear
 
 ### steer for next task
 
-- Move app boot ownership out of `docs-viewer/runtime/js/docs-viewer.js` without changing route/document workflow behavior.
-- Prefer a focused module such as `docs-viewer/runtime/js/docs-viewer-app-boot.js` or an equivalent app-runtime owner.
-- Keep `docs-viewer/runtime/js/docs-viewer.js` as the compatibility entrypoint loaded by route shells; it should import and start the boot owner.
-- Preserve the existing controller boundaries: config, document, search, sidebar, panel layout, info-panel host, bookmarks, and lazy management loading should remain focused owners rather than being reimplemented in the boot module.
+- Move route/document workflow ownership out of `docs-viewer/runtime/js/docs-viewer-app-runtime.js` without changing URL/history behavior.
+- Prefer a focused route/document workflow owner that builds on `docs-viewer/runtime/js/docs-viewer-router.js` and `docs-viewer/runtime/js/docs-viewer-document-controller.js`.
+- Keep `docs-viewer/runtime/js/docs-viewer.js` as the compatibility entrypoint and `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the boot owner.
+- Preserve the existing controller boundaries: config, document, search, sidebar, panel layout, info-panel host, bookmarks, and lazy management loading should remain focused owners rather than being reimplemented in the route/document workflow module.
 - Preserve route config and access projection as the app-shell gate; public routes must still avoid management-only CSS, JavaScript, and shell markup.
 - Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data capability checks in the existing management/service flow.
-- Do not start route/document workflow extraction in this slice; that is the next slice after app boot ownership is clear.
+- Do not start source editor, semantic-reference view, activity view, panel toolbar generalization, third-party visualization, plugin architecture, or backend write behavior in the route/document extraction slice.
 
 ### baseline verification set
 
@@ -86,18 +98,31 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current app boot responsibilities in `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, controller initializers, route-start calls, initial config/index/payload load, lazy management loading, theme toggle loading, and import-open on load. Deliverable: short implementation note listing what moves, what stays in the entrypoint, and what remains deferred to later route/document workflow extraction. |
-| 2 | planned | Define the focused app boot owner surface. Prefer `docs-viewer/runtime/js/docs-viewer-app-boot.js` unless existing naming strongly suggests a better app-runtime module. Document exported functions, required inputs, return shape, and boundaries with existing controllers. |
-| 3 | planned | Move route-config resolution and initial route-context/app-shell initialization orchestration into the boot owner while keeping `docs-viewer.js` as the stable import-and-start entrypoint. |
-| 4 | planned | Move controller construction sequencing into the boot owner without changing controller APIs or broad shared state shape. Preserve current construction order for app shell refs, panel layout, info panel host, sidebar renderer, document controller, search controller, config controller, bookmarks, and lazy management controller. |
-| 5 | planned | Preserve initial config/index/payload load behavior, default route handling, generated-data capability checks, report registry reads, info-panel state, bookmark setup, and management import-open-on-load behavior. Avoid moving route/document workflow internals such as `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or history synchronization. |
-| 6 | planned | Keep public management omission intact: public routes must not dynamically import management-only modules, render management shell markup, or load management CSS because of the app boot extraction. |
-| 7 | planned | Keep local manage mode intact: backend capability checks, management busy/status projection, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data reads stay in the existing management/service modules. |
-| 8 | planned | Add or extend focused smoke coverage for the app boot owner. Cover exported boot contract, route-config handoff, app-shell initialization ordering before ref reads, public omission, management-capable boot, idempotent or single-start behavior, and graceful boot failure reporting where practical. |
-| 9 | planned | Run management modal/service smoke checks to verify metadata edit flow, import modal boot, settings modal, context menu/action gating, management capability status, generated-data reads, report rendering, bookmarks, info panel, search/recent, route history, and import-open-on-load behavior still work. |
-| 10 | planned | Run public read-only checks for `/library/` and `/analysis/` to verify route boot, document rendering, search/recent, info panel, report behavior where applicable, and absence of management-only shell/assets. |
-| 11 | planned | Update owning docs after implementation: this tracker, the app-shell request, Docs Viewer runtime boundary, Docs Viewer overview, portable files/setup if boot ownership changes the copy set or shell expectations, and Docs Viewer JavaScript inventory notes for new/changed owner modules. |
-| 12 | planned | Create or update the structured docs-log entry for this slice and record the entry id in this tracker. |
+| 1 | done | Inventory current app boot responsibilities in `docs-viewer/runtime/js/docs-viewer.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, controller initializers, route-start calls, initial config/index/payload load, lazy management loading, theme toggle loading, and import-open on load. Moved route-config/shell boot and runtime startup out of the entrypoint; left route/document workflows in `docs-viewer/runtime/js/docs-viewer-app-runtime.js` for the next extraction slice. |
+| 2 | done | Defined `docs-viewer/runtime/js/docs-viewer-app-boot.js` with `resolveDocsViewerAppBootContext()`, `initDocsViewerBootThemeToggle()`, and `startDocsViewerApp()`. The boot context requires root/document/window inputs or defaults, returns route context, app-shell refs, app-shell readiness, and asset version, and delegates route/document workflow to the compatibility runtime. |
+| 3 | done | Moved route-config resolution and initial route-context/app-shell initialization orchestration into `docs-viewer-app-boot.js`; `docs-viewer.js` is now a small import-and-start wrapper. |
+| 4 | done | Moved runtime startup sequencing out of the entrypoint while preserving controller APIs and construction order inside `docs-viewer-app-runtime.js`: panel layout, info panel host, sidebar renderer, document controller, search controller, config controller, bookmarks, and lazy management controller remain ordered as before. |
+| 5 | done | Preserved initial config/index/payload load behavior, default route handling, generated-data capability checks, report registry reads, info-panel state, bookmark setup, and management import-open-on-load behavior. Route/document workflow internals remain together in `docs-viewer-app-runtime.js` for the next slice. |
+| 6 | done | Kept public management omission intact: public app boot still uses route access projection before rendering management shell refs, importing management shell modules, or starting lazy management behavior. |
+| 7 | done | Kept local manage mode intact: backend capability checks, management busy/status projection, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data reads stay in the existing management/service modules. |
+| 8 | done | Extended `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` with focused app boot coverage for exported boot context, route-config handoff, app-shell initialization before ref reads, public omission, management-capable boot, and single-start behavior. |
+| 9 | done | Ran management modal/service smoke checks to verify metadata edit flow, import modal boot, settings modal, context menu/action gating, management capability status, generated-data reads, report rendering, bookmarks, info panel, search/recent, route history, and import-open-on-load behavior still work. |
+| 10 | done | Ran public read-only checks for `/library/` and `/analysis/` to verify route boot, document rendering, search/recent, info panel, report behavior where applicable, and absence of management-only shell/assets. |
+| 11 | done | Updated owning docs after implementation: this tracker, the app-shell request, Docs Viewer runtime boundary, Docs Viewer overview, portable files, and Docs Viewer JavaScript inventory notes for new/changed owner modules. |
+| 12 | done | Created structured docs-log entry `change-2026-05-27-extracted-docs-viewer-app-boot` and recorded the entry id in this tracker. |
+
+## Verification
+
+Passed on 2026-05-27:
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js docs-viewer/runtime/js/docs-viewer-app-boot.js docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-app-shell.js docs-viewer/runtime/js/docs-viewer-app-context.js docs-viewer/runtime/js/docs-viewer-route-config.js docs-viewer/runtime/js/docs-viewer-config-controller.js docs-viewer/runtime/js/docs-viewer-document-controller.js docs-viewer/runtime/js/docs-viewer-search-controller.js`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-27-extracted-docs-viewer-app-boot.json`
+- `git diff --check`
 
 The closeout for this slice should confirm:
 

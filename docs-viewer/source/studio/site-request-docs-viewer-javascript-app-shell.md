@@ -20,7 +20,7 @@ Status:
 
 What is now in good shape:
 
-- `docs-viewer.js` is no longer absorbing every shell concern; it is mostly a compatibility boot/orchestration layer.
+- `docs-viewer.js` is now the stable compatibility entrypoint and delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`.
 - Shell rendering has moved into focused owners: management actions, header controls, index panel chrome, document shell chrome.
 - Route context/access flags are explicit in `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, and `docs-viewer/runtime/js/docs-viewer-access.js`.
 - Route boot context has a stable source boundary: route shells carry `data-route-id` and `data-route-config-url`, while `docs-viewer/config/routes/docs-viewer-routes.json` owns browser-safe route records.
@@ -34,7 +34,7 @@ What is still incomplete against the broader request:
 
 - Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, and hosted-view lifecycle exist, but there is no toolbar/view-switching model or broader panel-module UI lifecycle.
 - Route shells are route-context thin, but the shared and standalone shell templates still carry management modal/context-menu markup.
-- `docs-viewer.js` is improved but still owns too much orchestration: route application, payload loading, search/recent handoff, bookmark orchestration, state setup, and management-controller loading.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns too much compatibility orchestration: route application, payload loading, search/recent handoff, bookmark orchestration, state setup, and management-controller loading.
 - Management modals, import bootstrapping, and settings/context-menu shells still need clear app-shell ownership.
 - Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
 
@@ -391,6 +391,11 @@ Optional first visible shell move:
 - added the management shell extraction slice.
   Shared and standalone Docs Viewer shells now provide only `#docsViewerManagementShellMount` for the management-only context menu, metadata modal, import modal, settings modal, and import host refs.
   `docs-viewer/runtime/js/docs-viewer-app-shell.js` dynamically imports `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only when `routeContext.access.canLoadManagementUi` allows management UI, and the existing management controller still owns write workflows, capability checks, and modal/action behavior.
+- added the app boot ownership slice.
+  `docs-viewer/runtime/js/docs-viewer.js` is now a stable import-and-start wrapper.
+  `docs-viewer/runtime/js/docs-viewer-app-boot.js` owns root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, app-shell ref handoff, theme-toggle loading, single-start guarding, and runtime startup.
+  `docs-viewer/runtime/js/docs-viewer-app-runtime.js` is the compatibility owner for the current route/document workflow until the next extraction slice.
+  Existing `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL/history behavior, search/recent handoff, bookmark orchestration, generated-data reads, reports, lazy management loading, and management import-open-on-load behavior remain preserved there.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -413,10 +418,11 @@ Recommended completion sequence:
    Target owner: `docs-viewer/runtime/js/docs-viewer-app-boot.js` or an equivalent app-runtime module.
    Acceptance: route-config resolution, app-shell initialization, controller construction, initial config/index/payload load, and initial management import open are readable as one boot workflow outside the entrypoint; `docs-viewer.js` becomes a small import-and-start wrapper.
    Task tracker: [Docs Viewer App Shell App Boot Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-app-boot-tasks).
+   Implemented 2026-05-27: `docs-viewer/runtime/js/docs-viewer-app-boot.js` owns the boot workflow and starts `docs-viewer/runtime/js/docs-viewer-app-runtime.js`; the entrypoint is now a small wrapper.
 
 3. Route/document workflow ownership.
-   Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.
-   Acceptance: `docs-viewer.js` no longer owns `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or route-driven document/search/recent switching; `/docs/`, `/library/`, and `/analysis/` URL behavior remains unchanged.
+   Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization out of the compatibility runtime into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.
+   Acceptance: `docs-viewer/runtime/js/docs-viewer-app-runtime.js` no longer owns `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or route-driven document/search/recent switching; `/docs/`, `/library/`, and `/analysis/` URL behavior remains unchanged.
 
 4. Search/recent/bookmark orchestration cleanup.
    Finish the extraction around search/recent and bookmark orchestration so the app boot owner wires controllers but does not own their UI state transitions.

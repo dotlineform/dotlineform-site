@@ -44,8 +44,20 @@ The Jekyll management adapter remains a host integration artifact during the ext
 Copy the shared viewer runtime files:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-app-boot.js`
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `docs-viewer/runtime/js/docs-viewer-app-context.js`
+- `docs-viewer/runtime/js/docs-viewer-route-config.js`
+- `docs-viewer/runtime/js/docs-viewer-access.js`
 - `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
+- `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
+- `docs-viewer/runtime/js/docs-viewer-view-state.js`
+- `docs-viewer/runtime/js/docs-viewer-view-context.js`
+- `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
+- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`
+- `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
+- `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`
 - `docs-viewer/runtime/js/docs-viewer-config-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-data.js`
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js`

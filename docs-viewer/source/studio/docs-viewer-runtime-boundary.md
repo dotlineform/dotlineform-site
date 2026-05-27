@@ -13,7 +13,7 @@ sort_order: 13000
 This document records the current boundary between:
 
 - scope-specific docs page shells such as `/docs/` and `/library/`
-- the shared docs viewer runtime in `docs-viewer/runtime/js/docs-viewer.js`
+- the shared Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer.js`
 
 It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
 
@@ -33,7 +33,9 @@ Current route-shell examples:
 
 Current shared implementation:
 
-- `docs-viewer/runtime/js/docs-viewer.js` as the shared entry controller
+- `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
+- `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime owner for the existing route/document workflow, controller construction, initial config/index/payload load, search/recent handoff, bookmark orchestration, generated-data reads, reports, and lazy management loading until those responsibilities move to narrower owners
 - `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, route config shape, migration data-attribute fallback, and route/scope projection imported by the entry and config controllers
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
@@ -60,9 +62,9 @@ Current shared implementation:
 - `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css` for reusable viewer styling
 - `docs-viewer/static/css/docs-viewer-management.css` for management-only shell and modal styling
 
-The shell loads the entry controller as an ES module.
-Extracted helper modules must not import the entry controller or mutate its shared state directly.
-The management controller receives a narrow context API from the entry controller so public read-only viewers do not download or execute management orchestration.
+The shell loads the entrypoint as an ES module.
+Extracted helper modules must not import the entrypoint or mutate compatibility runtime state directly.
+The management controller receives a narrow context API from the compatibility runtime so public read-only viewers do not download or execute management orchestration.
 
 Current CSS base boundary:
 

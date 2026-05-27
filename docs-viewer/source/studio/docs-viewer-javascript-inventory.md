@@ -17,7 +17,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 48
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 50
 - Files above target score 4: 14
 - General risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
@@ -28,13 +28,13 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 6 |
 | 5 | 7 |
-| 4 | 34 |
+| 4 | 36 |
 
 ## Current Priorities
 
 | Docs rank | Full rank | File | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 1 | `docs-viewer/runtime/js/docs-viewer.js` | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
+| 1 | 1 | `docs-viewer/runtime/js/docs-viewer-app-runtime.js` | 2 | 2 | 3 | 1 | 8 | Compatibility Docs Viewer runtime after app boot ownership extraction; route loading, payload composition, search/recent handoff, bookmarks, and lazy management loading remain. |
 | 2 | 9 | `docs-viewer/runtime/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 3 | 15 | `docs-viewer/runtime/js/docs-viewer-management.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 4 | 18 | `docs-viewer/runtime/js/docs-viewer-bookmarks.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
@@ -82,13 +82,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 46 | new | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` | 1 | 1 | 1 | 1 | 4 | Public-safe read-only metadata info hosted view. |
 | 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
 | 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
+| 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
+| 50 | new | `docs-viewer/runtime/js/docs-viewer.js` | 1 | 1 | 1 | 1 | 4 | Stable Docs Viewer entrypoint wrapper that imports and starts the app boot owner. |
 
 ## Follow-Up Notes
 
 ### `docs-viewer/runtime/js/docs-viewer.js`
 
-- Current risk score: 8.
-- Track separately from the all-script target-score plan because it is the shared Docs Viewer entry runtime.
+- Current risk score: 4.
+- This file is now the shared ES module entrypoint wrapper loaded by route shells.
 - 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; `docs-viewer.js` only initializes that owner before existing route boot and waits for it before management/theme binding.
 - 2026-05-27 owner note: header-control composition moved to `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved control IDs.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
@@ -96,10 +98,24 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; compatibility panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
 - 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/document/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
 - 2026-05-27 owner note: info-panel chrome moved to `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, hosted-view lifecycle moved to `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, selected-document context projection moved to `docs-viewer/runtime/js/docs-viewer-view-context.js`, and metadata rendering moved to `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`. `docs-viewer.js` now passes explicit route/viewer inputs into the context helper and wires open/close events, but should not absorb panel DOM composition, lifecycle, context shaping, or metadata presentation.
-- 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. `docs-viewer.js` passes the rendered refs into the lazy management controller after app-shell initialization but still leaves management workflows and backend capability checks in the existing management modules.
+- 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. The compatibility runtime passes the rendered refs into the lazy management controller after app-shell initialization but still leaves management workflows and backend capability checks in the existing management modules.
+- 2026-05-27 owner note: app boot ownership moved to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, and the existing route/document workflow moved as-is into `docs-viewer/runtime/js/docs-viewer-app-runtime.js`. `docs-viewer.js` should remain an import-and-start wrapper.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, broader panel-layout ownership, or management lazy-boundary hardening.
-- Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
+- Future route/document workflow work should reduce `docs-viewer-app-runtime.js`, not add responsibility back to the entrypoint.
 - Preserve `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
+
+### `docs-viewer/runtime/js/docs-viewer-app-boot.js`
+
+- Added 2026-05-27 as the focused app boot owner.
+- Keep this module limited to root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, boot failure status projection, and starting the compatibility runtime.
+- Do not move route application, generated docs/search reads, search/recent state transitions, bookmark storage, report rendering, backend writes, or management capability checks into it.
+
+### `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
+
+- Added 2026-05-27 as the compatibility owner for the existing shared route/document workflow after the entrypoint became a wrapper.
+- Current risk score: 8.
+- It deliberately preserves the previous controller construction order, initial config/index/payload load, route/history behavior, search/recent handoff, bookmark orchestration, generated-data reads, reports, and lazy management loading until narrower owners are extracted.
+- Next risk-reduction slice should move route application, current-doc resolution, payload loading, missing/error handling, and history synchronization into a focused route/document workflow owner instead of growing this compatibility module.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 
