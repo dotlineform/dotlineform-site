@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-753d82a25d97961d8f1bc4f093cfd721",
-    "generated_at_utc": "2026-05-27T20:10:51Z",
-    "count": 206
+    "version": "blake2b-15cec87795ea52224e70fb98bbb7d73c",
+    "generated_at_utc": "2026-05-27T20:35:40Z",
+    "count": 207
   },
   "entries": [
     {
@@ -4292,6 +4292,37 @@
         "27"
       ],
       "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-route-document-workflow-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Route Document Workflow Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-document-workflow-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-route-document-workflow-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "route",
+        "document",
+        "workflow",
+        "tasks",
+        "docs viewer app shell route document workflow tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-route-document-workflow-tasks site request docs viewer app shell route document workflow tasks docs viewer app shell route document workflow tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

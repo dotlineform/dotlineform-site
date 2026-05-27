@@ -423,6 +423,7 @@ Recommended completion sequence:
 3. Route/document workflow ownership.
    Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization out of the compatibility runtime into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.
    Acceptance: `docs-viewer/runtime/js/docs-viewer-app-runtime.js` no longer owns `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or route-driven document/search/recent switching; `/docs/`, `/library/`, and `/analysis/` URL behavior remains unchanged.
+   Task tracker: [Docs Viewer App Shell Route Document Workflow Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-document-workflow-tasks).
 
 4. Search/recent/bookmark orchestration cleanup.
    Finish the extraction around search/recent and bookmark orchestration so the app boot owner wires controllers but does not own their UI state transitions.
