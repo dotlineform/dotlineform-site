@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d7418b4685ccc28bcaaaab01aa84f06c",
-    "generated_at_utc": "2026-05-27T19:35:53Z",
-    "count": 204
+    "version": "blake2b-051c002e83cce6e5df56af807495c6da",
+    "generated_at_utc": "2026-05-27T19:46:56Z",
+    "count": 205
   },
   "entries": [
     {
@@ -4205,6 +4205,36 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-route-config-handoff-tasks site request docs viewer route config handoff tasks docs viewer route config handoff tasks docs viewer javascript app shell request javascript app shell 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-management-shell-extraction-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Management Shell Extraction Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-shell-extraction-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-management-shell-extraction-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "management",
+        "extraction",
+        "tasks",
+        "docs viewer app shell management shell extraction tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-management-shell-extraction-tasks site request docs viewer app shell management extraction tasks docs viewer app shell management shell extraction tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

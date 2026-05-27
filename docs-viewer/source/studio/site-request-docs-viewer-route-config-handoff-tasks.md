@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-route-config-handoff-tasks
 title: Docs Viewer Route Config Handoff Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12130
 viewable: true

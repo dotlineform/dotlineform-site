@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T19:35:52Z",
+  "generated_at": "2026-05-27T19:47:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2649,7 +2649,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-route-config-handoff-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-route-config-handoff-tasks.json",
       "content_text_length": 14895,
-      "ui_status": "in-progress"
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-app-shell-management-shell-extraction-tasks",
+      "title": "Docs Viewer App Shell Management Shell Extraction Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "sort_order": 12140,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-app-shell-management-shell-extraction-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-shell-extraction-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-management-shell-extraction-tasks.json",
+      "content_text_length": 9372,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
@@ -2818,7 +2834,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 37331,
+      "content_text_length": 38677,
       "ui_status": "in-progress"
     },
     {

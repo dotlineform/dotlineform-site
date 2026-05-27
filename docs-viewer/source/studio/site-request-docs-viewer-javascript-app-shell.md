@@ -14,31 +14,32 @@ Status:
 
 - in progress
 
-- **App-shell migration foundation:** ~80% there
-- **Full JavaScript App Shell Request goals:** ~55-60% there
-- **Ready to start first info-panel slice:** foundation is now in place, but keep the first visible info-panel slice narrow and consume the new route/access/view/hosted-view contracts rather than adding behavior to `docs-viewer.js`
+- **App-shell migration foundation:** ~90% there
+- **Full JavaScript App Shell Request goals:** ~65-70% there
+- **Current priority:** finish the remaining app-shell migration slices now, before adding source editor, semantic-reference views, activity views, panel toolbar generalization, third-party visualization modules, or plugin-style extension work.
 
 What is now in good shape:
 
 - `docs-viewer.js` is no longer absorbing every shell concern; it is mostly a compatibility boot/orchestration layer.
 - Shell rendering has moved into focused owners: management actions, header controls, index panel chrome, document shell chrome.
 - Route context/access flags are explicit in `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, and `docs-viewer/runtime/js/docs-viewer-access.js`.
+- Route boot context has a stable source boundary: route shells carry `data-route-id` and `data-route-config-url`, while `docs-viewer/config/routes/docs-viewer-routes.json` owns browser-safe route records.
 - Current panel projection has a focused compatibility owner in `docs-viewer/runtime/js/docs-viewer-panel-layout.js`, with the broader index/document/info state skeleton in `docs-viewer/runtime/js/docs-viewer-view-state.js`.
 - Minimal hosted-view registration exists in `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, including built-in compatibility view records and graceful absence for unavailable modules.
+- The first visible info panel exists. `metadata-info` is public-safe and uses the hosted-view lifecycle/context helpers.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
 What is still incomplete against the broader request:
 
-- Route config now has a stable source boundary: route shells carry `data-route-id` and `data-route-config-url`, while `docs-viewer/config/routes/docs-viewer-routes.json` owns browser-safe route records.
-- Multi-panel architecture is only partially implemented: `index/document/info` state and hosted-view registration exist as foundations, but there is no visible info panel, toolbar model, selected-document info projection, or panel module UI lifecycle yet.
-- Route shells are thinner, but not yet “mount plus route id/config” thin.
-- `docs-viewer.js` is improved but still owns a lot: route application, payload loading, search/recent handoff, bookmark orchestration, and management-controller loading.
+- Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, and hosted-view lifecycle exist, but there is no toolbar/view-switching model or broader panel-module UI lifecycle.
+- Route shells are route-context thin, but the shared and standalone shell templates still carry management modal/context-menu markup.
+- `docs-viewer.js` is improved but still owns too much orchestration: route application, payload loading, search/recent handoff, bookmark orchestration, state setup, and management-controller loading.
+- Management modals, import bootstrapping, and settings/context-menu shells still need clear app-shell ownership.
 - Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
 
-The specific info panel should remain deferred until more of the broader JavaScript app-shell goals are complete.
-Adding it now would deepen the current mixed economy between route shell data attributes, `docs-viewer.js` orchestration, app-shell helpers, and existing controllers.
-The next implementation can be a narrow visible slice, such as the read-only metadata info view, only if it consumes the route config, access projection, panel/view state skeleton, and hosted-view registration shape already added here.
+The remaining migration should be treated as completion work, not as optional polish.
+The next slices should reduce shell and entrypoint ownership while preserving the current `/docs/`, `/library/`, and `/analysis/` behavior.
 
 ## Summary
 
@@ -392,33 +393,40 @@ The slice is successful when the panel architecture and semantic editor can be i
 
 ## Next Infrastructure Slices
 
-The route config and view foundation work is complete.
-The next work can start a narrow visible view only if it preserves the current ownership boundaries.
+The route config, access projection, panel/view-state skeleton, hosted-view lifecycle, and first metadata info view are complete.
+The remaining work should finish the migration rather than start feature layers.
 
-Recommended sequence:
+Recommended completion sequence:
 
-1. Route config handoff.
-   Move from normalizing current `#docsViewerRoot` attributes toward resolving a generated route/config record as the app's durable route context.
-   Implemented 2026-05-27: `docs-viewer-route-config.js` defines the route record shape and route/scope projection API. The current repo resolves `docs-viewer/config/routes/docs-viewer-routes.json` before falling back to migration inline/data-attribute input, while scope-specific generated/search paths continue to come from browser-safe Docs Viewer config.
+1. Management shell extraction.
+   Move management context-menu, metadata modal, import modal, settings modal, and any remaining management-only shell markup out of `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`.
+   Target owner: a focused app-shell management shell renderer or modal-shell module, with the existing management controller still owning writes, capability checks, and workflow behavior.
+   Acceptance: public routes still do not load management CSS/JS; local `/docs/?mode=manage` still renders metadata edit, import, settings, context actions, and management action gating; route shells keep only app mounts, route id/config URL, CSS links, and the entry script.
+   Task tracker: [Docs Viewer App Shell Management Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-management-shell-extraction-tasks).
 
-2. Access and capability projection.
-   Keep static route intent, public/manage gating, backend reachability, and future module access rules explicit and small.
-   Implemented 2026-05-27: `docs-viewer-access.js` projects public/manage/manage-local access and hosted-view defaults. Backend capability and write availability remain with the existing management controller.
+2. App boot ownership.
+   Extract the remaining boot/state/controller setup out of `docs-viewer.js` into a focused app boot owner while keeping `docs-viewer.js` as the stable compatibility entrypoint loaded by route shells.
+   Target owner: `docs-viewer/runtime/js/docs-viewer-app-boot.js` or an equivalent app-runtime module.
+   Acceptance: route-config resolution, app-shell initialization, controller construction, initial config/index/payload load, and initial management import open are readable as one boot workflow outside the entrypoint; `docs-viewer.js` becomes a small import-and-start wrapper.
 
-3. Panel/view state skeleton.
-   Introduce the real index/document/info state model and projection, but initially project the current two-panel behavior.
-   Do not implement a visible info panel in this slice.
-   Implemented 2026-05-27: `docs-viewer-view-state.js` defines the skeleton and `docs-viewer-panel-layout.js` projects it through the current two-panel behavior with info disabled/unmounted.
+3. Route/document workflow ownership.
+   Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.
+   Acceptance: `docs-viewer.js` no longer owns `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or route-driven document/search/recent switching; `/docs/`, `/library/`, and `/analysis/` URL behavior remains unchanged.
 
-4. Hosted-view/module registration shape.
-   Add the minimal register/load/mount/update/unmount contract and graceful absence behavior before any specific view depends on it.
-   Implemented 2026-05-27: `docs-viewer-hosted-views.js` defines ordinary repo JavaScript hosted-view records, built-in compatibility records, access/availability checks, and graceful absence.
+4. Search/recent/bookmark orchestration cleanup.
+   Finish the extraction around search/recent and bookmark orchestration so the app boot owner wires controllers but does not own their UI state transitions.
+   Target owners: the existing search controller and bookmark modules unless a small app-level coordination helper is needed.
+   Acceptance: inline search, recent results, more-results behavior, bookmark toggle/list behavior, and route history behavior are covered by focused module or route smokes without broad entrypoint state assertions.
 
-5. Later info metadata view.
-   Implement the read-only metadata info view only after the route config, access, panel state, and hosted-view contracts are stable enough for the info panel to consume them.
-   Implemented 2026-05-27: the info-panel metadata slice added the real info panel shell, the hosted-view lifecycle host, selected-document metadata context projection, and the `metadata-info` public hosted view. The view is read-only and public-safe; it does not expose source paths, local filesystem actions, edit controls, semantic references, or activity history.
+5. Panel toolbar and hosted-view completion.
+   Add the minimal panel toolbar/view-switching contract only after the boot and route workflow are no longer centered in `docs-viewer.js`.
+   This slice should generalize from the existing `metadata-info` view without adding source editing, semantic references, activity views, third-party visualization modules, or plugin architecture.
+   Acceptance: hosted views can be switched, disabled, and access-gated through route config/view records; the metadata view remains public-safe; future source/editor views have a clear place to attach.
 
-The next task tracker is [Docs Viewer Info Panel Metadata View Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-info-panel-metadata-view-tasks).
+6. Portable fixture proof.
+   Add or update a repeatable public fixture that proves the route-config registry, shell mounts, runtime assets, generated docs/search payloads, UI text, and public read-only behavior can work outside dotlineform incidental routes.
+   A local manage fixture can follow, but the first proof should lock down the read-only app contract.
+   Acceptance: the fixture uses the same app/runtime/config shape as dotlineform and has a small smoke check for route boot, document selection, search/recent, info panel, and absence of management-only assets.
 
 ## Shell Migration Sequence
 
