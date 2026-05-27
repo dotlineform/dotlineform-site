@@ -39,6 +39,58 @@ export function canDropOnDoc(docId, position, options) {
   return position === "inside" || position === "after";
 }
 
+function directListRows(list) {
+  var rows = [];
+  if (!list || !list.children) return rows;
+  Array.prototype.forEach.call(list.children, function (item) {
+    if (!item || !item.children) return;
+    Array.prototype.some.call(item.children, function (child) {
+      if (child && child.matches && child.matches("[data-doc-row-id]")) {
+        rows.push(child);
+        return true;
+      }
+      return false;
+    });
+  });
+  return rows;
+}
+
+function rootNavList(nav) {
+  if (!nav || !nav.children) return null;
+  for (var index = 0; index < nav.children.length; index += 1) {
+    var child = nav.children[index];
+    if (child && child.matches && child.matches(".docsViewer__navList")) return child;
+  }
+  return null;
+}
+
+export function terminalListDropTargetFromEvent(event, options) {
+  var settings = options || {};
+  var target = event && event.target;
+  if (!target || !target.closest) return null;
+  if (target.closest("[data-doc-row-id]")) return null;
+
+  var nav = settings.nav || null;
+  var list = target.closest(".docsViewer__navList");
+  if (!list && nav && (target === nav || nav.contains(target))) {
+    list = rootNavList(nav);
+  }
+  if (!list || (nav && !nav.contains(list))) return null;
+
+  var rows = directListRows(list);
+  var lastRow = rows.length ? rows[rows.length - 1] : null;
+  if (!lastRow) return null;
+
+  var rect = lastRow.getBoundingClientRect();
+  var clientY = event && typeof event.clientY === "number" ? event.clientY : rect.bottom;
+  if (clientY < rect.top + (rect.height * 0.5)) return null;
+
+  return {
+    targetDocId: lastRow.dataset.docRowId || "",
+    position: "after"
+  };
+}
+
 export function currentDropTargetFromEvent(event, fallback, options) {
   var row = event && event.target ? event.target.closest("[data-doc-row-id]") : null;
   if (row) {
@@ -47,6 +99,8 @@ export function currentDropTargetFromEvent(event, fallback, options) {
       position: rowDropPosition(row, event, options)
     };
   }
+  var terminalTarget = terminalListDropTargetFromEvent(event, options);
+  if (terminalTarget) return terminalTarget;
   return {
     targetDocId: fallback && fallback.targetDocId || "",
     position: fallback && fallback.position || ""

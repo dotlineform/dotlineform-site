@@ -49,6 +49,8 @@ It can provide a safer local authoring workflow:
 - rebuild the document through the existing local management/rebuild boundary
 
 The goal is to reduce token authoring errors without hiding the underlying Markdown source model.
+This editor is specific to this repo's Studio/dotlineform semantic links.
+It is not a portable Docs Viewer authoring feature for arbitrary installs.
 
 ## Goals
 
@@ -74,6 +76,8 @@ The goal is to reduce token authoring errors without hiding the underlying Markd
 - no attempt to prevent all possible Markdown authoring mistakes
 - no public-route authoring UI
 - no broad rewrite of the existing semantic-reference builder pipeline
+- no portable Docs Viewer semantic-link authoring feature
+- no generic semantic-link engine for downstream installs
 
 Native textarea or browser-level undo behavior is acceptable if provided by the browser or editor component.
 The Docs Viewer should not build its own operation history for v1.
@@ -82,6 +86,7 @@ The Docs Viewer should not build its own operation history for v1.
 
 The v1 editor is a manage-mode authoring view.
 It is closer to editing the source file directly than to using a WYSIWYG editor.
+It exists because Studio owns the catalogue works, series, moments, and tags that make dotlineform semantic links meaningful.
 
 The user accepts the normal risks of source editing, including the possibility of malformed Markdown.
 The value added by Docs Viewer is focused semantic-reference insertion, rebuild orchestration, and source-contract validation.
@@ -149,6 +154,7 @@ Supported v1 target kinds should follow the current semantic-reference builder c
 - `moment`
 
 The insertion UI should leave room for future target kinds, such as `tag`, without changing the source-view model.
+Future kinds are still repo-specific Studio/dotlineform integrations unless a separate portable host-extension contract is defined later.
 
 The helper should avoid inserting tokens when:
 
@@ -158,6 +164,8 @@ The helper should avoid inserting tokens when:
 - the selected text spans an unsupported region if the source editor can detect that reliably
 
 The backend does not need to validate every body token before writing.
+Docs Viewer should validate allowed semantic types, not whether the submitted target id resolves to a real Studio object.
+For example, `work:00001` and `work:99999` are both valid work references syntactically; a missing object can produce the equivalent of a normal public 404 link.
 The targeted rebuild should surface builder warnings or errors after the write/rebuild step.
 
 ## Source And Backend Boundary
@@ -217,14 +225,15 @@ Frontend responsibilities:
 - maintain the local edited buffer
 - insert semantic-reference tokens into selected text
 - show dirty state
-- read semantic target registries, UI text, modal/options config, and other public-safe support data through modular client-side helpers where practical
+- read Studio-owned semantic support data, UI text, modal/options config, and other public-safe support data through modular client-side helpers where practical
 - send the source only when `Rebuild doc` is clicked
 - switch back to rendered view only after successful rebuild/payload reload
 - keep errors visible when save or rebuild fails
 
 Read-oriented support behavior should stay in browser modules wherever it can safely consume generated JSON or browser config.
-Examples include semantic target lookup, target picker option shaping, modal/view copy, view registration, and supported token-kind metadata.
+Examples include Studio semantic target lookup, target picker option shaping, modal/view copy, view registration, and supported token-kind metadata.
 The backend should not become a general read orchestrator for UI state when the same data can be supplied through generated artifacts or Docs Viewer config.
+Those reads are dotlineform-specific support reads, not part of the portable Docs Viewer core contract.
 
 ## Validation Policy
 
@@ -238,12 +247,13 @@ Validate:
 - front matter parseability
 - required front matter fields needed by Docs Viewer
 - `doc_id` consistency
+- semantic type allowlist where token helpers or builder parsing need to reject unsupported kinds
 
 Do not attempt in v1:
 
 - full Markdown validation
 - body token validation before write
-- semantic-reference target validation outside the existing builder pipeline
+- semantic-reference target existence validation
 - automated Markdown repair
 - custom undo/redo recovery
 
@@ -260,19 +270,24 @@ It should align with:
 - [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
 
-The source editor does not require the full multi-panel model to exist first.
-If implemented earlier, it should still use focused modules so it can later become a document-panel view without being rewired from scratch.
+The source editor does not need a tight adapter boundary.
+It should be grouped as an optional, clearly identifiable module so it can be included in this repo and left out of portable installs.
+If the module is absent or disabled, Docs Viewer core should simply omit the Markdown source view and semantic-token controls.
 
-Candidate modules:
+Candidate module folder:
 
-- `docs-viewer/runtime/js/docs-viewer-source-editor.js` for source-view orchestration
-- `docs-viewer/runtime/js/docs-viewer-semantic-token-editor.js` for token insertion helpers
-- `docs-viewer/runtime/js/docs-viewer-semantic-target-picker.js` for target selection
-- `docs-viewer/runtime/js/docs-viewer-semantic-targets.js` for client-side target registry reads and option normalization
+- `docs-viewer/runtime/js/modules/source-editor/`
+
+Candidate files inside that folder:
+
+- `source-editor.js` for source-view orchestration
+- `semantic-token-editor.js` for token insertion helpers
+- `semantic-target-picker.js` for target selection
+- `semantic-targets.js` for client-side Studio semantic support reads and option normalization
 - management service modules for source read/write/rebuild endpoints
 
 `docs-viewer/runtime/js/docs-viewer.js` should remain orchestration only.
-It should initialize the source editor and hand off selected document, scope, rendered-payload reload, and status callbacks.
+It should initialize or register the source-editor module when available and hand off selected document, scope, rendered-payload reload, and status callbacks.
 
 ## Proposed Implementation Steps
 
@@ -328,6 +343,7 @@ Acceptance:
 - no token insertion happens without selected text and selected target
 - inserted syntax matches the current builder grammar
 - target lookup and option rendering are owned by focused browser modules, not route-controller inline logic
+- target ids are treated as opaque host ids; Docs Viewer does not validate object existence
 
 ### 4. Focused Verification And Docs Follow-Through
 
@@ -345,10 +361,10 @@ Acceptance:
 ## Open Questions
 
 - Should the source editor use a plain textarea first, or a lightweight editor component with line numbers?
-- Where should the target picker read supported work/series/moment options from?
+- Where should the target picker read supported work/series/moment options from in this repo?
 - Should unsupported selected ranges be blocked in v1, or should token insertion operate only on textarea selection offsets?
 - Should `Rebuild doc` run only a targeted doc rebuild or also refresh related reference buckets as part of the existing targeted rebuild behavior?
-- How should warnings be displayed when rebuild succeeds but semantic references are unresolved?
+- How should unsupported semantic type warnings be displayed when rebuild succeeds?
 - Should the browser warn before leaving source view with unsaved local changes?
 
 ## Risks
@@ -360,6 +376,7 @@ Acceptance:
 - source editor behavior could grow into an accidental general Markdown editor
 - adding source editing directly to `docs-viewer.js` would increase runtime coupling
 - target lookup, modal copy, and config reads could drift into backend orchestration or inline route-controller logic
+- repo-specific semantic editing could be mistaken for portable Docs Viewer functionality
 
 Mitigations:
 
@@ -367,7 +384,8 @@ Mitigations:
 - validate front matter before write
 - keep writes behind management endpoints and source allowlists
 - keep token insertion helpers small and tested
-- keep semantic registry reads, target option shaping, modal/view config, and picker behavior in focused client-side modules where practical
+- keep Studio semantic support reads, target option shaping, modal/view config, and picker behavior in focused client-side modules where practical
+- document semantic editing as this repo's manage-mode integration, not portable Docs Viewer core
 - rely on builder diagnostics for semantic-reference warnings
 - avoid adding general Markdown formatting tools in v1
 - keep source editor code in focused modules

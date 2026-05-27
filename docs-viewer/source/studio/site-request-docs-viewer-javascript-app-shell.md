@@ -2,8 +2,8 @@
 doc_id: site-request-docs-viewer-javascript-app-shell
 title: Docs Viewer JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: 2026-05-26
-ui_status: draft
+last_updated: 2026-05-27
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 12100
 viewable: true
@@ -12,11 +12,14 @@ viewable: true
 
 Status:
 
-- proposed
+- active enabling request
 
 ## Summary
 
 Move Docs Viewer toward a JavaScript-owned app shell with a clear backend boundary for local editing workflows.
+
+This request is now the current enabling slice for the panel architecture, hosted modules, manage-mode Markdown source editor, semantic-reference v2 work, and portable Docs Viewer direction.
+It should be implemented before those feature requests add more runtime surface area.
 
 This request is related to [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer), but it focuses on explaining and implementing the runtime shape rather than moving files.
 
@@ -112,6 +115,41 @@ It should not expose management controls or write-capable backend endpoints.
 
 The public presentation context is not a separate product. It is the same viewer app running without local editing capabilities.
 
+## Current Implementation Posture
+
+This request should be treated as practical implementation work, not only as architectural background.
+
+The aim is not to rewrite Docs Viewer in one pass.
+The aim is to establish enough app-shell structure that new panel, editor, semantic-reference, and portable-viewer work can attach to a coherent browser-owned runtime instead of adding more behavior directly to existing route shells or `docs-viewer.js`.
+
+Current priority:
+
+- define the app/backend boundary as an implementation contract
+- establish where browser-owned view state, panel state, optional modules, and generated-data reads live
+- define public, manage, and manage-local access gates for views and modules
+- keep direct browser reads for browser-safe generated/static repo artifacts
+- reserve backend calls for source reads/writes, rebuilds, filesystem access, protected data, capability checks, and external/local workspace data
+- identify the first focused owner modules that `docs-viewer.js` can orchestrate without becoming larger
+
+This work should be completed far enough that the next feature slice can say exactly which app-shell state, config, module registration, and backend capabilities it uses.
+
+## Optional Module Model
+
+Docs Viewer modules should be pragmatic, not a heavy adapter framework.
+For v1, a module can be a clearly identifiable folder with a small registration surface.
+This is enough for repo-specific features such as the semantic Markdown source editor:
+
+```text
+docs-viewer/runtime/js/modules/source-editor/
+```
+
+Portable installs can omit that folder or disable the module in config.
+When a module is absent or disabled, Docs Viewer core should simply omit the related view, panel action, or toolbar item.
+The route should still boot normally.
+
+This model keeps optional features separable without introducing the tighter boundary style used by Data Sharing adapters.
+Use a more formal extension contract only if downstream portable installs actually need it.
+
 ## Target Architecture
 
 ```text
@@ -171,6 +209,9 @@ Libraries such as D3.js, Cytoscape.js, charting packages, graph viewers, or othe
 
 The app shell should support these libraries through panel or view modules rather than by adding them to the base route shell.
 Heavy or specialized dependencies should be lazy-loaded only when the user opens the view that needs them.
+This is a capability direction, not a current portable install promise.
+Portable Docs Viewer should not ship third-party visualization libraries or user-facing config for them until an integration contract exists.
+For portable installs, the host project should provide the module, data, and configuration unless Docs Viewer later defines a document-derived data class for these modules.
 
 Third-party frontend modules should:
 
@@ -185,7 +226,7 @@ Third-party frontend modules should:
 The backend or generator may provide data artifacts for these modules, such as:
 
 - graph JSON
-- semantic-reference indexes
+- host-specific relationship indexes
 - report datasets
 - validation or health-check results
 - local operational diagnostics for manage mode
@@ -197,6 +238,7 @@ It should continue to expose named Docs Viewer endpoints and generated artifacts
 
 Manage mode can be used to incubate new third-party or dependency-heavy modules before they are exposed in public presentation.
 A module should move to public routes only after its generated/public-safe data contract, performance cost, accessibility behavior, visual design, and portable-install expectations are clear.
+Dotlineform semantic-link modules are repo-specific Studio integrations and should not be treated as portable Docs Viewer core.
 
 ## Config Boundary
 
@@ -215,6 +257,7 @@ Candidate config responsibilities:
 - feature flags for import, scope lifecycle, source opening, reports, or bookmarks
 - feature flags and access metadata for optional panel/view modules
 - module asset or import metadata when a view depends on optional third-party browser libraries
+- enabled optional module ids where an install includes repo-specific or host-specific modules
 
 The viewer app should consume this config directly. Route shells should not hardcode scope lists, management capability rules, or generated payload paths where those can be represented as config.
 
@@ -252,38 +295,49 @@ Mitigations:
 
 ## Proposed Approach
 
-1. Document the app/backend contract.
-   Define which behavior belongs to the browser app, generated data/config, and backend service.
+1. Make the app/backend contract executable.
+   Define which behavior belongs to the browser app, generated data/config, and backend service, then apply that split to the first implementation slice.
 
-2. Make the route shell thinner.
+2. Introduce the minimum app-shell owner modules needed now.
+   Candidate first owners are route boot/config normalization, access capability projection, panel/view registration, optional module registration, and generated-data read helpers.
+
+3. Make the route shell thinner where a concrete slice needs it.
    Keep route pages responsible for mount/context only. Move viewer shell composition into JavaScript where practical.
 
-3. Make management capabilities explicit config plus backend capabilities.
+4. Make management capabilities explicit config plus backend capabilities.
    The browser can hide controls from config, but backend endpoints must still enforce write capability.
 
-4. Preserve generated docs/search JSON as the read contract.
+5. Preserve generated docs/search JSON as the read contract.
    Do not change payload shape just to move shell ownership.
 
-5. Prove the pattern on the management route and one public route.
+6. Prove the pattern on the management route and one public route.
    `/docs/?mode=manage` and one public route such as `/library/` should both boot from the same app-shell model.
 
-6. Update the portable setup docs after the runtime shape is proven.
+7. Update the portable setup docs after the runtime shape is proven.
    The install explanation should describe local editing and public presentation as two contexts of the same Docs Viewer app.
 
-## First Slice
+## Current Enabling Slice
 
-The first implementation slice should avoid a broad rewrite.
+The current implementation slice should avoid a broad rewrite while still doing enough to unblock future feature work.
 
-Suggested first slice:
+Required slice:
 
-- define a small Docs Viewer app boot module if the current entry module cannot cleanly own shell rendering
-- move one shell-owned element from `_includes/docs_viewer_shell.html` into JavaScript
+- define or identify a small Docs Viewer app boot/orchestration module
+- define a route context/config normalization shape used by both `/docs/?mode=manage` and public routes
+- define public, manage, and manage-local access flags for views, actions, and optional modules
+- define the minimal optional-module registration shape, including graceful absence when a repo-specific module is not present
+- inventory the read surfaces needed by near-term panel and editor work as browser-safe generated/static reads versus backend reads
+- identify the first focused `docs-viewer.js` responsibilities to hand to owner modules
 - keep the existing generated JSON paths and backend endpoints
 - keep `/docs/`, `/library/`, and `/analysis/` URLs unchanged
 - verify management controls still appear only when management is enabled
 - verify public routes do not load management-only modules
 
-The first slice is successful when one visible shell responsibility is owned by JavaScript without weakening the backend write boundary or changing the public read-only route contract.
+Optional first visible shell move:
+
+- move one low-risk shell-owned element from `_includes/docs_viewer_shell.html` into JavaScript only if it helps prove the contract
+
+The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
 ## Open Questions
 

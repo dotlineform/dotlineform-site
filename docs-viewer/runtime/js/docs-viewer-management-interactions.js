@@ -2,7 +2,8 @@ import {
   canDragDoc,
   canDropOnDoc,
   currentDropTargetFromEvent,
-  rowDropPosition
+  rowDropPosition,
+  terminalListDropTargetFromEvent
 } from "./docs-viewer-drag-drop.js";
 
 export function createDocsViewerManagementInteractionController(options) {
@@ -45,7 +46,8 @@ export function createDocsViewerManagementInteractionController(options) {
       dragDocId: dragDocId,
       dragEnabled: dragEnabled(),
       docsById: state.docsById,
-      hasChildren: docHasChildren
+      hasChildren: docHasChildren,
+      nav: nav
     };
   }
 
@@ -217,6 +219,19 @@ export function createDocsViewerManagementInteractionController(options) {
     nav.addEventListener("dragover", function (event) {
       var row = event.target.closest("[data-doc-row-id]");
       if (!row) {
+        var terminalTarget = terminalListDropTargetFromEvent(event, dragDropOptions());
+        if (terminalTarget && canDropOnDoc(terminalTarget.targetDocId, terminalTarget.position, dragDropOptions())) {
+          event.preventDefault();
+          if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = "move";
+          }
+          if (dropTargetDocId !== terminalTarget.targetDocId || dropPosition !== terminalTarget.position) {
+            dropTargetDocId = terminalTarget.targetDocId;
+            dropPosition = terminalTarget.position;
+            updateNavDragState();
+          }
+          return;
+        }
         if (dropTargetDocId || dropPosition) {
           dropTargetDocId = "";
           dropPosition = "";

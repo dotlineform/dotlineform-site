@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T09:51:44Z",
+  "generated_at": "2026-05-27T14:11:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -275,7 +275,7 @@
       "doc_id": "development-workflow",
       "title": "Development Workflow",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "dev-home",
       "sort_order": 1500,
       "hidden": false,
@@ -2513,7 +2513,7 @@
       "doc_id": "site-request-docs-viewer-javascript-app-shell",
       "title": "Docs Viewer JavaScript App Shell Request",
       "added_date": "2026-05-26",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-27",
       "parent_id": "change-requests",
       "sort_order": 12100,
       "hidden": false,
@@ -2521,8 +2521,8 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 13557,
-      "ui_status": "draft"
+      "content_text_length": 17460,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -2557,6 +2557,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-semantic-references-v2",
+      "title": "Docs Semantic References v2 Request",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 12155,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-semantic-references-v2.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
+      "content_text_length": 11018,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-docs-viewer-semantic-reference-editor",
       "title": "Docs Viewer Semantic Reference Editor Request",
       "added_date": "2026-05-27",
@@ -2584,7 +2600,7 @@
       "source_path": "site-request-docs-viewer-workstream-priority-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workstream-priority-plan.json",
-      "content_text_length": 12881,
+      "content_text_length": 19305,
       "ui_status": "draft"
     },
     {

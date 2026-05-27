@@ -45,7 +45,7 @@ Future workflows need a more general display model:
 - select a document in the index and show only info, without loading or showing the document body
 - collapse the index and work with document plus info panels
 - replace the index panel body with alternate index-oriented views
-- add public-safe info views such as metadata or references
+- add public-safe info views such as metadata, plus host-specific reference views when the host supplies that data
 - add manage-only local views and actions such as edit metadata, source opening, move/archive/delete, rebuild, or import status
 
 The panel system should become part of the JavaScript app shell rather than another set of hardcoded Liquid or route-specific controls.
@@ -98,7 +98,7 @@ Example info panel views:
 | View | Public | Manage mode | Notes |
 | --- | --- | --- | --- |
 | Metadata | Yes | Yes | Read-only in public; can share render helpers with editable metadata later. |
-| References | Yes | Yes | Reads generated semantic-reference payloads when available. |
+| References | Repo-specific | Yes | Reads host-provided relationship payloads when available; dotlineform semantic references are not portable Docs Viewer core. |
 | Activity | No by default | Yes | Requires generated or backend-provided local activity contract. |
 | Edit metadata | No | Yes | Calls management backend endpoints. |
 | Source | No | Yes, local only | Can expose open-source actions only when backend capabilities allow it. |
@@ -181,20 +181,27 @@ Potential future examples include:
 - D3.js-backed charts or relationship diagrams
 - Cytoscape.js-backed document/reference graphs
 - generated report tables or dashboards
-- semantic reference explorers
+- host-specific relationship or semantic-reference explorers
 - scope health or build-status views
 - custom downstream project modules in portable Docs Viewer installs
 
 The first implementation does not need to choose or integrate D3.js, Cytoscape.js, or any other visualization library.
 It should, however, avoid a panel design that assumes every panel view is static HTML or a small local renderer.
+Portable Docs Viewer should be able to support optional visualization modules conceptually, but it should not include third-party visualization dependencies or user-facing config for them until a host/module data contract exists.
+Host projects are responsible for data supplied to such modules unless Docs Viewer later defines a document-derived data class.
 
-Panel-hosted modules should have an explicit lifecycle:
+Panel modules do not need the tight adapter boundary used by Data Sharing.
+In v1, a module can simply be a clearly identifiable folder with a small registration surface.
+For example, the semantic Markdown editor can live in one source-editor module folder and be included only in this repo.
+Portable installs can omit that folder or leave the module unregistered; Docs Viewer core should then simply not present the source editor as a built-in feature.
+
+Panel-hosted modules should still have a simple lifecycle:
 
 ```text
 register -> mount -> update -> unmount -> dispose
 ```
 
-Candidate module contract:
+Candidate lightweight module contract:
 
 ```text
 id
@@ -243,7 +250,7 @@ Generated data and config should own:
 - docs index rows
 - per-document rendered payloads
 - search indexes
-- semantic-reference payloads
+- host-specific relationship payloads when a host integration supplies them
 - UI text
 - scope and feature configuration
 
@@ -283,6 +290,13 @@ Candidate new modules:
 - `docs-viewer/runtime/js/docs-viewer-panel-toolbar.js` for shared toolbar rendering and intent dispatch
 - `docs-viewer/runtime/js/docs-viewer-info-panel.js` for info panel orchestration
 - `docs-viewer/runtime/js/docs-viewer-info-metadata-view.js` for read-only selected-document metadata rendering
+
+Repo-specific optional modules can live under clearly named folders, for example:
+
+- `docs-viewer/runtime/js/modules/source-editor/`
+
+Docs Viewer core should discover or register only the modules available for the current install/config.
+If a module folder is absent or disabled, core should degrade by omitting its view/action rather than failing route boot.
 
 Existing modules should keep their current ownership where possible:
 

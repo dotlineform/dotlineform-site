@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-847d575c28d962941304a96cbcdbe0b5",
-    "generated_at_utc": "2026-05-26T22:14:01Z",
-    "count": 192
+    "version": "blake2b-40601e5cf19bd3bd3817c899a8ad8e5d",
+    "generated_at_utc": "2026-05-27T13:57:38Z",
+    "count": 194
   },
   "entries": [
     {
@@ -415,6 +415,35 @@
         "25"
       ],
       "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-docs-toolkit-extraction",
+      "kind": "doc",
+      "title": "Docs Toolkit Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
+      "last_updated": "2026-05-13 21:07",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-13 21:07 • Change Requests",
+      "search_terms": [
+        "site-request-docs-toolkit-extraction",
+        "site",
+        "request",
+        "docs",
+        "toolkit",
+        "extraction",
+        "docs toolkit extraction request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-13 21:07",
+        "2026",
+        "05",
+        "13",
+        "21",
+        "07"
+      ],
+      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
     },
     {
       "id": "library-documents",
@@ -3045,35 +3074,6 @@
       "search_text": "dimension-visualisation-projection dimension visualisation projection dimension visualisation projection table table analytics 2026-05-06 20:54 2026 05 06 20 54"
     },
     {
-      "id": "site-request-docs-toolkit-extraction",
-      "kind": "doc",
-      "title": "Docs Toolkit Extraction Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
-      "last_updated": "2026-05-13 21:07",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 21:07 • Change Requests",
-      "search_terms": [
-        "site-request-docs-toolkit-extraction",
-        "site",
-        "request",
-        "docs",
-        "toolkit",
-        "extraction",
-        "docs toolkit extraction request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-13 21:07",
-        "2026",
-        "05",
-        "13",
-        "21",
-        "07"
-      ],
-      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
-    },
-    {
       "id": "docs-viewer-reports",
       "kind": "doc",
       "title": "Docs Viewer Reports",
@@ -3937,10 +3937,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript App Shell Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-27",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-26 • Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-javascript-app-shell",
         "site",
@@ -3954,12 +3954,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-26",
+        "2026-05-27",
         "2026",
         "05",
-        "26"
+        "27"
       ],
-      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-26 2026 05 26"
+      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "source-tree-ownership",
@@ -3983,6 +3983,63 @@
         "25"
       ],
       "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-docs-semantic-references-v2",
+      "kind": "doc",
+      "title": "Docs Semantic References v2 Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-semantic-references-v2",
+        "site",
+        "request",
+        "docs",
+        "semantic",
+        "references",
+        "v2",
+        "docs semantic references v2 request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-workstream-priority-plan",
+      "kind": "doc",
+      "title": "Docs Viewer Workstream Priority Plan",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-workstream-priority-plan",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "workstream",
+        "priority",
+        "plan",
+        "docs viewer workstream priority plan",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-workstream-priority-plan site request docs viewer workstream priority plan docs viewer workstream priority plan change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "scripts-catalogue-lookup",

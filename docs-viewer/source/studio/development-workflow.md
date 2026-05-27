@@ -2,7 +2,7 @@
 doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
-last_updated: 2026-05-25
+last_updated: 2026-05-27
 parent_id: dev-home
 sort_order: 1500
 viewable: true
@@ -142,6 +142,8 @@ During implementation:
 - prefer structured parsers or config APIs over ad hoc string manipulation
 - keep unrelated refactors out of the change
 - avoid widening local write-service paths or CORS behavior
+- prefer direct browser reads for browser-safe repo/generated artifacts; do not add local server read endpoints merely to preserve a module boundary when the data is already safe and available as static JSON/config
+- reserve local service reads for source files, protected or local-only data, external workspace roots, capability checks, and data that cannot or should not be exposed as browser assets
 - use dry-run behavior for generators before write runs unless the task explicitly requires writing
 - keep user-specific paths, tokens, and local credentials out of tracked docs and source
 

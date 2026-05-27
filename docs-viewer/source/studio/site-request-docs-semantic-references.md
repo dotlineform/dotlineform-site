@@ -31,6 +31,10 @@ The immediate need is to write a normal inline link to a catalogue work while al
 
 The wider design should allow the same mechanism to later support tags, terms, docs, concepts, people, or other registries without turning ordinary prose search into the relationship model.
 
+Semantic links in this request are a dotlineform/Studio integration, not a generic portable Docs Viewer engine.
+The referenced objects, such as works, series, moments, and tags, are owned and maintained by Studio and the public dotlineform site.
+They are publicly surfaced only through this repo's Docs Viewer public installs, such as `/analysis/`, `/library/`, or future public routes in this repo that opt into the generated relationship data.
+
 ## Problem
 
 A normal Markdown link only records a browser destination:
@@ -47,7 +51,7 @@ The docs system needs a small authored marker that can mean:
 
 - render this as a usable link
 - identify the persisted object being referenced
-- validate that the target exists
+- validate that the semantic reference type and action are supported
 - emit a generated relationship index that can power reverse-reference views
 
 ## Goals
@@ -56,7 +60,7 @@ The docs system needs a small authored marker that can mean:
 - preserve normal link behavior and accessibility
 - avoid requiring raw HTML for common semantic links
 - support a generated relationship index separate from text search
-- validate references against the appropriate registry
+- validate semantic reference types and actions against an allowlist
 - design the token grammar so future registries such as tags can use the same pipeline
 - keep v1 narrow enough to implement safely in the existing docs builder
 
@@ -68,6 +72,8 @@ The docs system needs a small authored marker that can mean:
 - do not build tag popups, term pages, or reference dashboards in v1
 - do not introduce a generic database or runtime graph service
 - do not make public pages depend on local Studio write services
+- do not make Docs Viewer validate that a referenced Studio-owned object actually exists
+- do not make semantic links a portable Docs Viewer feature for arbitrary installs
 
 ## Authoring Syntax
 
@@ -86,10 +92,10 @@ The label may be omitted:
 Rules:
 
 - `ref` identifies the token family
-- `<kind>` identifies the target registry, such as `work`, `series`, `moment`, or `tag`
-- `<id>` is the stable registry id
+- `<kind>` identifies an allowed semantic type, such as `work`, `series`, `moment`, or `tag`
+- `<id>` is the stable host-owned id for that type
 - `<label>` is optional visible inline text
-- when `<label>` is omitted, v1 should resolve the current registry title and use that as the visible text
+- when `<label>` is omitted, v1 may use host lookup data for a title when available, otherwise it should fall back to a stable visible id label
 - an explicit `<label>` overrides the resolved title
 - the target id may contain additional colons; parse the first segment after `ref:` as the kind, then treat the remaining text before `|` as the id
 
@@ -298,7 +304,10 @@ The implementation should avoid rewriting unrelated target buckets.
 
 ## Registry Resolver Model
 
-Add a small resolver layer that maps `kind` to a registry-specific lookup.
+Add a small resolver layer that maps an allowed `kind` to host-specific URL and optional display-title behavior.
+The resolver validates supported semantic types; it does not make target existence a Docs Viewer validity rule.
+For example, `work:00001` and `work:99999` are both syntactically valid work references as far as Docs Viewer is concerned, even if only one exists in Studio-owned work data.
+Missing public targets can still behave like normal broken links, such as a URL that returns a 404.
 
 Initial registry kinds:
 
@@ -319,16 +328,15 @@ Each resolver should return:
 - normalized `target_kind`
 - normalized `target_id`
 - `target_key`
-- display title if available
+- display title if available from host data
 - canonical `href`
-- existence/status metadata
-- warnings when the id is missing, unpublished, or not linkable
 
 V1 rendering policy:
 
-- published catalogue records with allowed actions render as normal links
-- draft or unpublished catalogue records render as inert annotated text
-- unresolved references warn only and render as inert annotated text
+- allowed semantic types with allowed actions render as normal links using the type/id URL pattern
+- target ids are not checked for existence by Docs Viewer
+- missing target ids can therefore produce normal broken public links
+- unsupported semantic types warn or error and render as inert annotated text
 - unsupported actions warn only and render as inert annotated text
 - warning-only behavior keeps local docs readable while making diagnostics visible in build output and reports
 
@@ -358,14 +366,14 @@ Implement v1 resolvers for:
 - series ids
 - moment ids
 
-Resolvers should read existing catalogue source or generated lookup data, then return canonical public hrefs:
+Resolvers should use host-specific URL rules and optional lookup data, then return canonical public hrefs:
 
 - `/works/<work_id>/`
 - `/series/<series_id-or-slug>/` with the slug lookup required by the current route model
 - `/moments/<moment_id>/`
 
-Draft or unpublished catalogue records should not render as links in v1.
-They should render as inert annotated text, warn during build, and still produce relationship metadata that records target status when the id can be resolved.
+Docs Viewer does not validate that the target id exists in Studio-owned data.
+If a valid semantic type and id produce a public URL that has no matching object, the rendered link behaves like any other broken link.
 
 ### Task 3. Render Semantic Links
 
@@ -377,17 +385,17 @@ During docs build, replace each valid token with normal HTML:
 
 The emitted HTML should remain accessible and usable without Docs Viewer JavaScript.
 
-When a token is unresolved, unpublished, malformed, or uses an unsupported action, render inert annotated text instead of a link.
+When a token is malformed, uses an unsupported semantic type, or uses an unsupported action, render inert annotated text instead of a link.
 The exact HTML can be decided during implementation, but it should not navigate.
 For example:
 
 ```html
-<span data-ref-kind="work" data-ref-id="00638" data-ref-status="unpublished">3 symbols</span>
+<span data-ref-kind="work-detail" data-ref-id="00001-001" data-ref-status="unsupported-kind">detail</span>
 ```
 
 ### Task 4. Emit Incremental Reference Artifacts
 
-Collect all resolved references while building each scope and write the incremental reference artifacts under that scope's generated docs data output.
+Collect all parsed references for supported semantic types while building each scope and write the incremental reference artifacts under that scope's generated docs data output.
 
 The artifacts should include enough source metadata for reverse-reference UI:
 
@@ -414,7 +422,6 @@ The write plan should report:
 
 Add validation coverage for:
 
-- missing target ids
 - unsupported target kinds
 - malformed tokens
 - label escaping
@@ -513,18 +520,19 @@ Remaining follow-up:
 ### Reference-Aware Broken Link Audit
 
 Extend the broken-links audit to understand semantic references after v1 output exists.
-The audit can then report unresolved semantic refs separately from ordinary broken `href` links.
+The audit can then report broken semantic-reference hrefs or unsupported semantic tokens separately from ordinary broken `href` links.
 
 ## Decisions
 
-- v1 references to draft catalogue records render as inert annotated text, not links
-- unresolved semantic references warn only
-- omitted labels resolve the current registry title automatically
+- v1 validates supported semantic types and actions, not target existence
+- v1 links can therefore point to missing Studio/public objects and behave like ordinary broken links
+- omitted labels use the current host title when available and otherwise fall back to a stable id label
 - explicit labels override resolved titles
 - v1 includes `series` support, including slug lookup required by the current route model
 - `action` uses a closed allowlist from the start
 - actions outside the allowlist warn and render as inert annotated text
 - reverse-reference reports are Docs Viewer reports
+- semantic links are dotlineform/Studio-specific and are not part of portable Docs Viewer core
 
 ## Acceptance Criteria
 
@@ -534,8 +542,8 @@ The audit can then report unresolved semantic refs separately from ordinary brok
 - rendered link includes stable `data-ref-*` attributes
 - generated scope data includes a semantic reference record for `work:00638`
 - single-doc edits only rewrite changed per-doc/per-target reference artifacts
-- invalid ids warn, render as inert annotated text, and produce clear diagnostics
-- draft catalogue targets render as inert annotated text
+- syntactically valid ids for allowed semantic types render as links even when the target object does not exist
+- unsupported semantic types such as `work-detail` produce clear diagnostics
 - unsupported actions warn and render as inert annotated text
 - series semantic references resolve the current public series route
 - normal Markdown links continue to behave as plain links with no semantic relationship
