@@ -446,6 +446,7 @@ Recommended completion sequence:
    Add or update a repeatable public fixture that proves the route-config registry, shell mounts, runtime assets, generated docs/search payloads, UI text, and public read-only behavior can work outside dotlineform incidental routes.
    A local manage fixture can follow, but the first proof should lock down the read-only app contract.
    Acceptance: the fixture uses the same app/runtime/config shape as dotlineform and has a small smoke check for route boot, document selection, search/recent, info panel, and absence of management-only assets.
+   Task tracker: [Portable Docs Viewer Public Fixture Tasks](/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks).
 
 ## Shell Migration Sequence
 

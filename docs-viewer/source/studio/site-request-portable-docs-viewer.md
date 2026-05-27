@@ -486,6 +486,8 @@ Use two fixture proof levels.
 This should be the first portability fixture.
 It proves the static/read-only Docs Viewer contract for a host project that is not dotlineform.
 
+Task tracker: [Portable Docs Viewer Public Fixture Tasks](/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks).
+
 Scope:
 
 - minimal Jekyll fixture project or generated test fixture

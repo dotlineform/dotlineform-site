@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-deccf9c65c3a21bbabded2bb654120b5",
-    "generated_at_utc": "2026-05-27T21:18:16Z",
-    "count": 209
+    "version": "blake2b-1c12a24663fbc1e13f1ec5ab872a2dea",
+    "generated_at_utc": "2026-05-27T21:36:26Z",
+    "count": 210
   },
   "entries": [
     {
@@ -391,6 +391,34 @@
         "51"
       ],
       "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
+    },
+    {
+      "id": "site-request-portable-docs-viewer-public-fixture-tasks",
+      "kind": "doc",
+      "title": "Portable Docs Viewer Public Fixture Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-portable-docs-viewer",
+      "parent_title": "Portable Docs Viewer Request",
+      "display_meta": "2026-05-27 • Portable Docs Viewer Request",
+      "search_terms": [
+        "site-request-portable-docs-viewer-public-fixture-tasks",
+        "site",
+        "request",
+        "portable",
+        "docs",
+        "viewer",
+        "public",
+        "fixture",
+        "tasks",
+        "portable docs viewer public fixture tasks",
+        "portable docs viewer request",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-portable-docs-viewer-public-fixture-tasks site request portable docs viewer public fixture tasks portable docs viewer public fixture tasks portable docs viewer request 2026-05-27 2026 05 27"
     },
     {
       "id": "development-workflow",

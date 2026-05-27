@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T21:27:21Z",
+  "generated_at": "2026-05-27T21:36:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -177,7 +177,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 30123,
+      "content_text_length": 30181,
       "ui_status": "paused"
     },
     {
@@ -269,6 +269,22 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
       "content_text_length": 9257
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-portable-docs-viewer-public-fixture-tasks",
+      "title": "Portable Docs Viewer Public Fixture Tasks",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-portable-docs-viewer",
+      "sort_order": 1010,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-portable-docs-viewer-public-fixture-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
+      "content_text_length": 9607,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
@@ -2898,7 +2914,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 42422,
+      "content_text_length": 42480,
       "ui_status": "in-progress"
     },
     {
