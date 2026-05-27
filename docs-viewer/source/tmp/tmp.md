@@ -17,6 +17,20 @@ sort_order: 100
 semantic [work_id]-[detail_id] link
 need more
 
+
+
+we are working on site-request-docs-viewer-app-shell-search-recent-bookmark-tasks.md, 
+please proceed with the tasks.
+
+great. please create a sibling tracker doc for the next slice, Document mount and metadata shell, using tasks-template.md as the template.
+
+great, can you summarise those next slices in the doc and we can continue with the tasks-template.md doc approach which works well. please create a tasks doc for the next slice. combine slices if that makes more logical sense, we are not rigid in needing a slice on its own if it is too narrow.
+
+- we need to remove migration fallbacks and compatibility layers e.g. data attributes used for routing. also, the management controller reads the shell refs after the app shell promise resolves, with direct DOM lookups kept only as fallback compatibility.
+- retire docs-viewer.js?
+
+'I removed the shell JSON approach and adjusted the tests to exercise explicit route config records through the resolver API plus current data-attribute fallback.'
+
 ---
 
 markdown editor

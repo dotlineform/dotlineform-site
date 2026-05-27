@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1c12a24663fbc1e13f1ec5ab872a2dea",
-    "generated_at_utc": "2026-05-27T21:36:26Z",
-    "count": 210
+    "version": "blake2b-70234746e0467db4228f1df097c125d5",
+    "generated_at_utc": "2026-05-27T21:56:24Z",
+    "count": 211
   },
   "entries": [
     {
@@ -4472,6 +4472,36 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks site request docs viewer app shell panel toolbar view switching tasks docs viewer app shell panel toolbar view switching tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Compatibility Runtime Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "compatibility",
+        "runtime",
+        "tasks",
+        "docs viewer app shell compatibility runtime tasks",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-compatibility-runtime-tasks site request docs viewer app shell compatibility runtime tasks docs viewer app shell compatibility runtime tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "scripts-catalogue-lookup",

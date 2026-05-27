@@ -16,7 +16,7 @@ Status:
 
 - **App-shell migration foundation:** ~97% there
 - **Full JavaScript App Shell Request goals:** ~76-78% there
-- **Current priority:** prove the portable public fixture before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
+- **Current app-shell priority:** finish the pure migration/risk-reduction work around `docs-viewer/runtime/js/docs-viewer-app-runtime.js`; portable public fixture proof is tracked under the portable Docs Viewer request before feature-specific panels or editor modules are added.
 
 What is now in good shape:
 
@@ -31,15 +31,18 @@ What is now in good shape:
 - Search/recent route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, including explicit controller-owned callbacks for route application, history writes, current-doc resolution, result URLs, and default-doc fallback.
 - Bookmark route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, including explicit controller-owned callbacks for search-debounce cancellation and document-load handoff.
 - The info panel now has a minimal hosted-view toolbar and view-switching contract. `metadata-info` remains the default public-safe info view, and disabled/access-blocked/missing views are handled through explicit hosted-view states.
+- Route shells are route-context thin and no longer carry management modal/context-menu markup.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
-What is still incomplete against the broader request:
+What remains in this app-shell request:
 
-- Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, hosted-view lifecycle, and minimal info-panel toolbar switching exist, but there is no source/editor view, semantic-reference view, activity view, visualization module, or plugin lifecycle.
-- Route shells are route-context thin and no longer carry management modal/context-menu markup.
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns compatibility wiring for app state, controller construction, config handoff, visibility rules, panel/info handoff, generated-data capability checks, and management-controller loading.
-- Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
+- Pure migration/risk-reduction remains in `docs-viewer/runtime/js/docs-viewer-app-runtime.js`: it still owns compatibility wiring for app state, controller construction, config handoff, visibility rules, panel/info handoff, generated-data capability checks, and management-controller loading. Task tracker: [Docs Viewer App Shell Compatibility Runtime Tasks](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks).
+
+Separately tracked work:
+
+- Feature-specific panel surfaces remain separate request work. The app-shell foundation now has `index/document/info` state, metadata info, hosted-view lifecycle, and minimal info-panel toolbar switching; broader panel behavior belongs to [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), source/editor work belongs to [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor), and semantic-reference support data/view work belongs to [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2).
+- Portable setup docs and proof-fixture work are now tracked under [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer), with the immediate public fixture slice in [Portable Docs Viewer Public Fixture Tasks](/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks).
 
 The remaining migration should be treated as completion work, not as optional polish.
 The next slices should reduce shell and entrypoint ownership while preserving the current `/docs/`, `/library/`, and `/analysis/` behavior.
@@ -442,7 +445,13 @@ Recommended completion sequence:
    Task tracker: [Docs Viewer App Shell Panel Toolbar View Switching Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks).
    Implemented 2026-05-27: `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` renders the info toolbar, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` projects info hosted-view options, and `docs-viewer/runtime/js/docs-viewer-hosted-views.js` exposes panel-specific view listing with disabled/access-blocked states.
 
-6. Portable fixture proof.
+6. Compatibility runtime final migration.
+   Reduce `docs-viewer/runtime/js/docs-viewer-app-runtime.js` from broad compatibility owner to a smaller coordinator after the completed boot, route/document, search/recent, bookmark, management-shell, and panel-toolbar slices.
+   This is pure migration/risk-reduction work; it should not add source editor, semantic-reference, activity, visualization, plugin, portable fixture, or backend-write behavior.
+   Acceptance: any extracted responsibility has a focused owner with explicit inputs/outputs; the runtime remains the coordinator for existing owners; `/docs/`, `/library/`, and `/analysis/` behavior remains unchanged.
+   Task tracker: [Docs Viewer App Shell Compatibility Runtime Tasks](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks).
+
+7. Portable fixture proof.
    Add or update a repeatable public fixture that proves the route-config registry, shell mounts, runtime assets, generated docs/search payloads, UI text, and public read-only behavior can work outside dotlineform incidental routes.
    A local manage fixture can follow, but the first proof should lock down the read-only app contract.
    Acceptance: the fixture uses the same app/runtime/config shape as dotlineform and has a small smoke check for route boot, document selection, search/recent, info panel, and absence of management-only assets.
