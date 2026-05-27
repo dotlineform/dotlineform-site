@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8d532c276993163c0c2ceb003109285a",
-    "generated_at_utc": "2026-05-27T17:02:43Z",
-    "count": 199
+    "version": "blake2b-c2d1f0b82c02c39533d7847c29b230ec",
+    "generated_at_utc": "2026-05-27T17:20:00Z",
+    "count": 200
   },
   "entries": [
     {
@@ -4076,6 +4076,39 @@
         "27"
       ],
       "search_text": "site-request-docs-viewer-app-shell-document-metadata-tasks site request docs viewer app shell document metadata tasks docs viewer app shell document mount and metadata shell tasks mount and docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-app-shell-route-context-panel-state-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Shell Route Context And Panel State Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-context-panel-state-tasks",
+      "last_updated": "2026-05-27",
+      "parent_id": "site-request-docs-viewer-javascript-app-shell",
+      "parent_title": "Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-shell-route-context-panel-state-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "shell",
+        "route",
+        "context",
+        "panel",
+        "state",
+        "tasks",
+        "docs viewer app shell route context and panel state tasks",
+        "and",
+        "docs viewer javascript app shell request",
+        "javascript",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-app-shell-route-context-panel-state-tasks site request docs viewer app shell route context panel state tasks docs viewer app shell route context and panel state tasks and docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
