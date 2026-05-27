@@ -164,6 +164,40 @@ The browser should only call named Docs Viewer backend endpoints. It should not 
 
 The backend can remain Python. A future Node backend would still be a backend and would still need the same safety boundary. The important architecture decision is frontend/backend separation, not backend language.
 
+## Third-Party Frontend Module Boundary
+
+The JavaScript app-shell direction is compatible with third-party browser libraries.
+Libraries such as D3.js, Cytoscape.js, charting packages, graph viewers, or other visualization/runtime components belong on the browser app side when they render interactive UI.
+
+The app shell should support these libraries through panel or view modules rather than by adding them to the base route shell.
+Heavy or specialized dependencies should be lazy-loaded only when the user opens the view that needs them.
+
+Third-party frontend modules should:
+
+- mount inside an assigned app shell container, such as a panel body or document/report host
+- consume generated data, config, and backend responses through explicit app APIs
+- clean up DOM nodes, event listeners, timers, animation frames, observers, and library instances on unmount
+- keep CSS and DOM mutations scoped to the module host
+- avoid increasing the base viewer boot cost for routes that never use the module
+- declare whether they are public, manage-only, or local manage-only
+- be capability-gated in the same way as first-party views and actions
+
+The backend or generator may provide data artifacts for these modules, such as:
+
+- graph JSON
+- semantic-reference indexes
+- report datasets
+- validation or health-check results
+- local operational diagnostics for manage mode
+- precomputed metrics or layout hints
+
+The backend should not own browser rendering logic or library-specific DOM behavior.
+It should not accept arbitrary library commands, filesystem paths, or direct write instructions.
+It should continue to expose named Docs Viewer endpoints and generated artifacts with explicit schemas.
+
+Manage mode can be used to incubate new third-party or dependency-heavy modules before they are exposed in public presentation.
+A module should move to public routes only after its generated/public-safe data contract, performance cost, accessibility behavior, visual design, and portable-install expectations are clear.
+
 ## Config Boundary
 
 Config should describe installation-specific and mode-specific behavior.
@@ -179,6 +213,8 @@ Candidate config responsibilities:
 - UI text
 - backend base URL for local editing
 - feature flags for import, scope lifecycle, source opening, reports, or bookmarks
+- feature flags and access metadata for optional panel/view modules
+- module asset or import metadata when a view depends on optional third-party browser libraries
 
 The viewer app should consume this config directly. Route shells should not hardcode scope lists, management capability rules, or generated payload paths where those can be represented as config.
 
@@ -200,11 +236,16 @@ The viewer app should consume this config directly. Route shells should not hard
 - generated config shape could become too broad if it tries to model every local detail
 - route migration could temporarily duplicate Jekyll include logic and JS shell logic
 - public and management contexts could drift if they are tested separately but not as one app
+- third-party frontend libraries could add boot cost, CSS leakage, or lifecycle leaks if they bypass the app shell module boundary
+- experimental visualization modules could be promoted to public presentation before their data and dependency contracts are stable
 
 Mitigations:
 
 - keep public and management contexts in one runtime contract
 - lazy-load management-only modules only when management is enabled
+- lazy-load optional third-party frontend libraries only when their view is selected
+- require panel/view modules to mount, update, unmount, and dispose inside app-owned containers
+- incubate uncertain third-party or data-visualization modules in manage mode before promoting them to public routes
 - keep backend capability checks server-side as well as client-side
 - migrate one shell responsibility at a time
 - add smoke coverage for both `/docs/?mode=manage` and public read-only routes
@@ -251,6 +292,9 @@ The first slice is successful when one visible shell responsibility is owned by 
 - How should route shells pass route context to the app: data attributes, JSON script tag, config URL, or generated route config?
 - Should management capability be represented as route config, backend capability response, or both?
 - What fixture project is enough to prove portability after the app/backend boundary is clearer?
+- What panel/view module contract is enough for future third-party libraries such as D3.js or Cytoscape.js?
+- How should optional third-party module assets be declared without making route shells or public routes load them eagerly?
+- What criteria should promote a manage-only experimental module into public presentation?
 
 ## Verification
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T22:19:01Z",
+  "generated_at": "2026-05-27T09:51:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2521,7 +2521,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 10553,
+      "content_text_length": 13557,
       "ui_status": "draft"
     },
     {
@@ -2538,6 +2538,54 @@
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
       "content_text_length": 7892
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
+      "title": "Docs Viewer Multi-Panel App Shell Request",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 12150,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
+      "content_text_length": 17858,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-semantic-reference-editor",
+      "title": "Docs Viewer Semantic Reference Editor Request",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 12160,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-semantic-reference-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
+      "content_text_length": 13569,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-workstream-priority-plan",
+      "title": "Docs Viewer Workstream Priority Plan",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "sort_order": 12170,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-workstream-priority-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workstream-priority-plan.json",
+      "content_text_length": 12881,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",
