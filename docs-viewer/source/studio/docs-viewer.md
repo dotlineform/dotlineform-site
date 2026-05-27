@@ -22,6 +22,7 @@ The current implementation uses:
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`, with minimal public route adapters where read-only Jekyll routes need them
 - a standalone manage shell template in `docs-viewer/shell/docs-viewer-shell.html`, served by `docs-viewer/services/docs_viewer_service.py`
+- a browser-safe route-config registry in `docs-viewer/config/routes/docs-viewer-routes.json`, with route shells carrying only route id and route-config URL as boot context
 - one shared runtime entry module in `docs-viewer/runtime/js/docs-viewer.js`
 - app-shell-owned route config, access projection, shell refs, header, index panel shell, document shell, info panel shell, view-state skeleton, selected-document hosted-view context, compatibility panel projection, hosted-view registration, info-panel hosted-view lifecycle, and management action coordination in `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, `docs-viewer/runtime/js/docs-viewer-access.js`, `docs-viewer/runtime/js/docs-viewer-view-state.js`, `docs-viewer/runtime/js/docs-viewer-view-context.js`, `docs-viewer/runtime/js/docs-viewer-panel-layout.js`, `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, and `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, with header controls rendered by `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, index panel chrome rendered by `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, document shell chrome rendered by `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, info panel chrome rendered by `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, read-only metadata info rendered by `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`, and management-only action markup rendered by `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
 - document pane, payload rendering, and report mount handoff in `docs-viewer/runtime/js/docs-viewer-document-controller.js`
@@ -34,6 +35,7 @@ The current implementation uses:
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
 - browser-safe Docs Viewer settings in `docs-viewer/config/defaults/docs-viewer-config.json`, projected from `docs-viewer/config/scopes/docs_scopes.json`
 - public read-only Docs Viewer config source in `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- browser-safe Docs Viewer route records in `docs-viewer/config/routes/docs-viewer-routes.json`
 - Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
 - Docs Viewer base CSS in `docs-viewer/static/css/docs-viewer-base.css`
 - reusable Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css`

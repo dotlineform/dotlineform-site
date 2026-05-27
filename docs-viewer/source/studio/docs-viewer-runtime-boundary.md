@@ -92,7 +92,10 @@ Current route capability boundary:
 Current app-shell route handoff boundary:
 
 - route config is the preferred durable route/app shape for new app-shell work
-- the current repo still emits `#docsViewerRoot` data attributes as migration input at boot, because scope config is loaded asynchronously from existing browser-safe config assets
+- the shared and standalone route shells expose only `data-route-id` and `data-route-config-url` as boot route context
+- `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry for `/docs/`, `/library/`, and `/analysis/`
+- `docs-viewer/runtime/js/docs-viewer-route-config.js` fetches that registry, resolves the current `docs_viewer_route_config_v1` record, and falls back to inline or legacy `#docsViewerRoot` data attributes only for migration/testing compatibility
+- the standalone Docs Viewer service serves the same route registry path with local `/docs/` management and generated-read base URLs injected from service config; static public builds keep those URLs blank
 - scope-specific generated docs and search paths remain owned by `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow
 - the first info-panel hosted view is read-only and public-safe; source paths, local filesystem actions, editable metadata saves, semantic references, and activity history remain outside the info-panel metadata view contract

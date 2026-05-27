@@ -144,7 +144,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-route-config.js`
 
 - Added 2026-05-27 as the focused route config resolver and route/scope projection helper.
-- Keep this module limited to the durable route config shape, migration data-attribute fallback, and projection of scope config into route globals.
+- Keep this module limited to the durable route config shape, browser-safe route-config registry loading/resolution, migration inline/data-attribute fallback, and projection of scope config into route globals.
 - Do not add config fetching, URL history changes, payload loading, or backend capability checks to it.
 
 ### `docs-viewer/runtime/js/docs-viewer-access.js`

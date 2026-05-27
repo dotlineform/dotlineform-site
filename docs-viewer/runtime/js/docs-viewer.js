@@ -41,6 +41,9 @@ import {
   updateDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
 import {
+  resolveDocsViewerRouteConfigAsync
+} from "./docs-viewer-route-config.js";
+import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
@@ -74,11 +77,20 @@ import {
   var root = document.getElementById("docsViewerRoot");
   if (!root) return;
   var assetVersion = readAssetVersion(document);
+  resolveDocsViewerRouteConfigAsync({
+    root: root,
+    document: document,
+    window: window,
+    assetVersion: assetVersion
+  }).then(boot);
+
+  function boot(resolvedRouteConfig) {
   var routeContext = createDocsViewerRouteContext({
     root: root,
     window: window,
     assetVersion: assetVersion,
-    managementModeValue: "manage"
+    managementModeValue: "manage",
+    resolvedRouteConfig: resolvedRouteConfig
   });
   var appShellReady = initDocsViewerAppShell({
     root: root,
@@ -551,6 +563,7 @@ import {
       currentViewerConfig: function () { return state.viewerConfig || {}; },
       defaultDocId: defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
+      docsViewerConfigUrl: docsViewerConfigUrl,
       escapeHtml: escapeHtml,
       findAllDocById: findAllDocById,
       formatText: formatText,
@@ -570,6 +583,7 @@ import {
       setHistory: setHistory,
       setStatus: setStatus,
       state: state,
+      uiTextUrl: uiTextUrl,
       markdownDocLink: markdownDocLink,
       reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
       viewerScope: function () { return viewerScope; }
@@ -1421,5 +1435,6 @@ import {
       return window.CSS.escape(String(value || ""));
     }
     return String(value || "").replace(/["\\]/g, "\\$&");
+  }
   }
 })();

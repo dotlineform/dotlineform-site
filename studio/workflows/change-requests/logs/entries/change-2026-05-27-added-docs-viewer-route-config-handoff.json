@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-05-27-added-docs-viewer-route-config-handoff",
+  "date": "2026-05-27",
+  "title": "Added Docs Viewer Route Config Handoff",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "config"
+  ],
+  "summary": "Added a browser-safe Docs Viewer route-config registry, thinned shared and standalone route shells to route id plus route-config URL, made the route-config resolver load registry records before migration fallbacks, and covered registry boot, public read-only routes, and local manage-mode shell output.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-route-config-handoff-tasks.md"
+  },
+  "subjects": [
+    "app-shell",
+    "route-config",
+    "public-readonly",
+    "manage-mode"
+  ],
+  "related_docs": [
+    "site-request-docs-viewer-route-config-handoff-tasks",
+    "site-request-docs-viewer-javascript-app-shell",
+    "docs-viewer",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "_includes/docs_viewer_management_route.html",
+    "_includes/docs_viewer_readonly_route.html",
+    "_config.yml",
+    "docs-viewer/config/routes/docs-viewer-routes.json",
+    "docs-viewer/shell/docs-viewer-shell.html",
+    "docs-viewer/runtime/js/docs-viewer.js",
+    "docs-viewer/runtime/js/docs-viewer-route-config.js",
+    "docs-viewer/runtime/js/docs-viewer-app-context.js",
+    "docs-viewer/runtime/js/docs-viewer-app-shell.js",
+    "docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js",
+    "docs-viewer/runtime/js/docs-viewer-management.js",
+    "docs-viewer/services/docs_viewer_service.py",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py",
+    "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
+    "docs-viewer/tests/smoke/docs_viewer_service_manage.py"
+  ],
+  "effect": "Docs Viewer route boot now has a durable config-first handoff that describes public and local route intent without giving browser config write authority. Normal route shells no longer carry broad boot-time route, access, generated-data, or config URL attributes; local write/read availability still comes from the service capability flow.",
+  "verification": [
+    "node --check targeted Docs Viewer runtime modules",
+    "json.tool docs-viewer/config/routes/docs-viewer-routes.json",
+    "python py_compile for service and smoke scripts",
+    "docs_viewer_app_shell_modules.py --site-root .",
+    "jekyll build --destination /tmp/dlf-jekyll-build",
+    "public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build",
+    "docs_viewer_service_manage.py",
+    "bundle exec ruby docs-viewer/build/build_docs.rb --scope studio"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-route-config-handoff-tasks"
+}

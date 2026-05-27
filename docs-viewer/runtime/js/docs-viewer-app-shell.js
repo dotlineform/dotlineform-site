@@ -26,6 +26,7 @@ import {
 function routeContextFor(settings) {
   return settings.routeContext || createDocsViewerRouteContext({
     root: settings.root,
+    document: settings.document,
     routeConfig: settings.routeConfig,
     window: settings.window
   });
@@ -53,7 +54,8 @@ export function initDocsViewerAppShell(options) {
   var headerControls = renderDocsViewerHeaderControls({
     document: documentRef,
     root: root,
-    mount: settings.headerControlsMount || headerControlsMount(root)
+    mount: settings.headerControlsMount || headerControlsMount(root),
+    routeContext: routeContext
   });
   var documentShell = renderDocsViewerDocumentShell({
     document: documentRef,

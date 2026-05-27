@@ -1,0 +1,110 @@
+{
+  "schema_version": "docs_viewer_route_config_registry_v1",
+  "routes": [
+    {
+      "schema_version": "docs_viewer_route_config_v1",
+      "route_id": "docs-manage",
+      "route_path": "/docs/",
+      "route_type": "manage",
+      "default_scope_id": "studio",
+      "default_doc_id": "dev-home",
+      "include_scope_param": true,
+      "allow_scope_query": true,
+      "viewer_base_url": "/docs/",
+      "generated_base_url": "",
+      "access": {
+        "allow_management": true,
+        "allow_scope_query": true,
+        "management_base_url": "",
+        "management_mode_value": "manage"
+      },
+      "docs_paths": {
+        "index_url": "/docs-viewer/generated/docs/studio/index.json",
+        "search_index_url": "/docs-viewer/generated/search/studio/index.json"
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
+        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "report_registry": "/assets/data/docs/reports.json"
+      },
+      "panels": {
+        "index": { "enabled": true, "default_state": "normal" },
+        "document": { "enabled": true, "default_view": "document" },
+        "info": { "enabled": true, "default_view": "metadata-info" }
+      },
+      "hosted_views": {
+        "records": []
+      }
+    },
+    {
+      "schema_version": "docs_viewer_route_config_v1",
+      "route_id": "library",
+      "route_path": "/library/",
+      "route_type": "public",
+      "default_scope_id": "library",
+      "default_doc_id": "library",
+      "include_scope_param": false,
+      "allow_scope_query": false,
+      "viewer_base_url": "/library/",
+      "generated_base_url": "",
+      "access": {
+        "allow_management": false,
+        "allow_scope_query": false,
+        "management_base_url": "",
+        "management_mode_value": "manage"
+      },
+      "docs_paths": {
+        "index_url": "/assets/data/docs/scopes/library/index.json",
+        "search_index_url": "/assets/data/search/library/index.json"
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "report_registry": "/assets/data/docs/reports.json"
+      },
+      "panels": {
+        "index": { "enabled": true, "default_state": "normal" },
+        "document": { "enabled": true, "default_view": "document" },
+        "info": { "enabled": true, "default_view": "metadata-info" }
+      },
+      "hosted_views": {
+        "records": []
+      }
+    },
+    {
+      "schema_version": "docs_viewer_route_config_v1",
+      "route_id": "analysis",
+      "route_path": "/analysis/",
+      "route_type": "public",
+      "default_scope_id": "analysis",
+      "default_doc_id": "analysis",
+      "include_scope_param": false,
+      "allow_scope_query": false,
+      "viewer_base_url": "/analysis/",
+      "generated_base_url": "",
+      "access": {
+        "allow_management": false,
+        "allow_scope_query": false,
+        "management_base_url": "",
+        "management_mode_value": "manage"
+      },
+      "docs_paths": {
+        "index_url": "/assets/data/docs/scopes/analysis/index.json",
+        "search_index_url": "/assets/data/search/analysis/index.json"
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "report_registry": "/assets/data/docs/reports.json"
+      },
+      "panels": {
+        "index": { "enabled": true, "default_state": "normal" },
+        "document": { "enabled": true, "default_view": "document" },
+        "info": { "enabled": true, "default_view": "metadata-info" }
+      },
+      "hosted_views": {
+        "records": []
+      }
+    }
+  ]
+}

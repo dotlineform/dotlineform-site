@@ -16,6 +16,7 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - the Studio/search config loader in `assets/studio/js/studio-config.js`
 - Docs Viewer source scope config in `docs-viewer/config/scopes/docs_scopes.json`
 - Docs Viewer browser config defaults in `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- Docs Viewer route-config registry in `docs-viewer/config/routes/docs-viewer-routes.json`
 - Docs Viewer service defaults/schema in `docs-viewer/config/defaults/docs-viewer-service.json` and `docs-viewer/config/schema/docs-viewer-service.schema.json`
 - Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
 - dedicated `/catalogue/search/` runtime policy in `assets/data/search/policy.json`

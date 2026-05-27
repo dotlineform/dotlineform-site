@@ -238,8 +238,8 @@ export function initDocsViewerManagement(context) {
           root: importRoot,
           bootStatus: importBootStatus,
           initialScope: scope || viewerScope(),
-          docsViewerConfigUrl: root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
-          uiTextUrl: root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json",
+          docsViewerConfigUrl: context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
+          uiTextUrl: context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json",
           managementBaseUrl: context.managementBaseUrl,
           routePath: "/docs/",
           hideIntro: true

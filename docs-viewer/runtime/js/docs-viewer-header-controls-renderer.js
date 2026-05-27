@@ -1,8 +1,10 @@
-function routeAllowsScopeQuery(root) {
+function routeAllowsScopeQuery(root, routeContext) {
+  if (routeContext && routeContext.access) return Boolean(routeContext.access.allowScopeQuery);
   return Boolean(root && root.dataset.allowScopeQuery === "true");
 }
 
-function routeAllowsManagement(root) {
+function routeAllowsManagement(root, routeContext) {
+  if (routeContext && routeContext.access) return Boolean(routeContext.access.canLoadManagementUi);
   return Boolean(root && root.dataset.allowManagement === "true");
 }
 
@@ -71,12 +73,13 @@ export function renderDocsViewerHeaderControls(options) {
   var documentRef = settings.document || document;
   var root = settings.root;
   var mount = settings.mount;
+  var routeContext = settings.routeContext || null;
   if (!mount) return null;
 
   mount.replaceChildren();
 
   var enableSearch = routeEnablesSearch(mount);
-  var allowScopeQuery = routeAllowsScopeQuery(root);
+  var allowScopeQuery = routeAllowsScopeQuery(root, routeContext);
   if (!enableSearch && !allowScopeQuery) return null;
 
   var row = documentRef.createElement("div");
@@ -89,7 +92,7 @@ export function renderDocsViewerHeaderControls(options) {
     appendRecentButton(documentRef, row);
     appendSearchInput(documentRef, row, mount);
   }
-  if (routeAllowsManagement(root)) {
+  if (routeAllowsManagement(root, routeContext)) {
     appendManagementMount(documentRef, row);
   }
 

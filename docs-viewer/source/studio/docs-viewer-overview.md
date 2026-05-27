@@ -201,7 +201,7 @@ Scope-owned:
 - generated docs indexes and per-doc payloads
 - scope-level viewer options in generated docs indexes
 - route/page shell copy
-- route configuration values passed into the shell include
+- route ids on route shells and browser-safe route records in `docs-viewer/config/routes/docs-viewer-routes.json`
 
 Shared:
 

@@ -188,6 +188,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-management.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
+        repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "ui-text.json",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
@@ -227,19 +228,35 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
         "{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-management.css",
         "{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}": "/docs-viewer/runtime/js/docs-viewer.js",
         "{{ site.time | date: '%s' }}": escaped_version,
+        "{{ include.route_id | default: '' }}": "docs-manage",
+        "{{ include.route_id | default: '' | jsonify }}": '"docs-manage"',
+        "{{ docs_viewer_route_config_url | relative_url }}": "/docs-viewer/config/routes/docs-viewer-routes.json",
         "{{ include.index_url }}": "",
+        "{{ include.index_url | default: '' | jsonify }}": '""',
         "{{ include.viewer_base_url }}": MANAGE_ROUTE,
+        "{{ include.viewer_base_url | jsonify }}": f'"{MANAGE_ROUTE}"',
         "{{ include.viewer_scope | default: '' }}": "",
+        "{{ include.viewer_scope | default: '' | jsonify }}": '""',
         "{{ include.include_scope_param | default: false }}": "true",
+        "{{ include.include_scope_param | default: false | jsonify }}": "true",
         "{{ include.allow_management | default: false }}": "true" if config.management_enabled else "false",
+        "{{ include.allow_management | default: false | jsonify }}": "true" if config.management_enabled else "false",
         "{{ include.allow_scope_query | default: false }}": "true",
+        "{{ include.allow_scope_query | default: false | jsonify }}": "true",
         "{{ include.default_doc_id | default: '' }}": "",
+        "{{ include.default_doc_id | default: '' | jsonify }}": '""',
         "{{ include.search_index_url | default: '' }}": "",
+        "{{ include.search_index_url | default: '' | jsonify }}": '""',
         "{{ docs_viewer_config_url | relative_url }}": "/docs-viewer/config/defaults/docs-viewer-config.json",
+        "{{ docs_viewer_config_url | relative_url | jsonify }}": '"/docs-viewer/config/defaults/docs-viewer-config.json"',
         "{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}": "/docs-viewer/config/ui-text/ui-text.json",
+        "{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url | jsonify }}": '"/docs-viewer/config/ui-text/ui-text.json"',
         "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}": "/assets/data/docs/reports.json",
+        "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url | jsonify }}": '"/assets/data/docs/reports.json"',
         "{{ docs_viewer_generated_base_url }}": generated_base_url,
+        "{{ docs_viewer_generated_base_url | jsonify }}": f'"{generated_base_url}"',
         "{{ include.management_base_url | default: '' }}": management_base_url,
+        "{{ include.management_base_url | default: '' | jsonify }}": f'"{management_base_url}"',
         "{%- if include.enable_search == false -%}false{%- else -%}true{%- endif -%}": "true",
         "{{ include.search_aria_label | default: 'Search docs' }}": "Search docs",
         "{{ include.search_placeholder | default: 'search docs' }}": "search docs",
@@ -247,6 +264,23 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
     for token, value in replacements.items():
         shell = shell.replace(token, value)
     return shell
+
+
+def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfig) -> dict[str, object]:
+    payload = json.loads((repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json").read_text(encoding="utf-8"))
+    routes_payload = payload.get("routes")
+    routes_list = routes_payload if isinstance(routes_payload, list) else []
+    for route in routes_list:
+        if not isinstance(route, dict) or route.get("route_id") != "docs-manage":
+            continue
+        route["generated_base_url"] = config.base_url if config.generated_reads_enabled else ""
+        access = route.get("access")
+        if not isinstance(access, dict):
+            access = {}
+            route["access"] = access
+        access["allow_management"] = bool(config.management_enabled)
+        access["management_base_url"] = config.base_url if config.management_enabled else ""
+    return payload
 
 
 def render_manage_page(repo_root: Path, config: DocsViewerServiceConfig, version: str) -> str:
@@ -332,6 +366,9 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
 
         if path in {"/docs", MANAGE_ROUTE}:
             self.send_html(render_manage_page(self.repo_root, self.config, self.version))
+            return
+        if path == "/docs-viewer/config/routes/docs-viewer-routes.json":
+            self.send_json(render_route_config_registry(self.repo_root, self.config))
             return
         if path == routes.HEALTH_PATH:
             self.send_json(

@@ -452,6 +452,195 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
         raise AssertionError(f"explicit route config/access projection failed: {result!r}")
 
 
+def assert_route_config_inline_and_malformed_fallback(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
+            const routeConfig = await import('/docs-viewer/runtime/js/docs-viewer-route-config.js');
+            window.history.replaceState({}, '', '/analysis/?doc=analysis');
+            document.body.innerHTML = `
+                <section
+                  id="docsViewerRoot"
+                  data-route-id="legacy-library"
+                  data-route-config-script-id="docsViewerRouteConfig"
+                  data-allow-management="false"
+                  data-allow-scope-query="false"
+                  data-viewer-base-url="/legacy/"
+                  data-viewer-scope="legacy"
+                  data-index-url="/legacy/index.json"
+                  data-search-index-url="/legacy/search.json"
+                  data-default-doc-id="legacy-home"
+                >
+                  <script type="application/json" id="docsViewerRouteConfig" data-docs-viewer-route-config>{
+                    "schema_version": "docs_viewer_route_config_v1",
+                    "route_id": "analysis-public",
+                    "default_scope_id": "analysis",
+                    "default_doc_id": "analysis",
+                    "include_scope_param": false,
+                    "allow_scope_query": false,
+                    "viewer_base_url": "/analysis/",
+                    "generated_base_url": "",
+                    "docs_paths": {
+                      "index_url": "/assets/data/docs/scopes/analysis/index.json",
+                      "search_index_url": "/assets/data/search/analysis/index.json"
+                    },
+                    "config_urls": {
+                      "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+                      "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+                      "report_registry": "/assets/data/docs/reports.json"
+                    },
+                    "access": {
+                      "allow_management": false,
+                      "allow_scope_query": false,
+                      "management_base_url": ""
+                    },
+                    "panels": {
+                      "index": { "enabled": true, "default_state": "normal" },
+                      "document": { "enabled": true, "default_view": "document" },
+                      "info": { "enabled": true, "default_view": "metadata-info" }
+                    },
+                    "hosted_views": {
+                      "records": [
+                        { "id": "analysis-extra", "label": "Analysis extra", "panel": "info", "access": "public" }
+                      ]
+                    }
+                  }</script>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const inline = routeConfig.resolveDocsViewerRouteConfig({ root, document });
+            const route = context.createDocsViewerRouteContext({ root, document, window, assetVersion: 'smoke' });
+            document.body.innerHTML = `
+                <section
+                  id="docsViewerRoot"
+                  data-route-id="legacy-library"
+                  data-route-config-script-id="docsViewerRouteConfig"
+                  data-allow-management="false"
+                  data-allow-scope-query="false"
+                  data-viewer-base-url="/library/"
+                  data-viewer-scope="library"
+                  data-index-url="/assets/data/docs/scopes/library/index.json"
+                  data-search-index-url="/assets/data/search/library/index.json"
+                  data-default-doc-id="library"
+                  data-docs-viewer-config-url="/docs-viewer/config/defaults/docs-viewer-public-config.json"
+                >
+                  <script type="application/json" id="docsViewerRouteConfig" data-docs-viewer-route-config>{malformed</script>
+                </section>
+            `;
+            const fallbackRoot = document.getElementById('docsViewerRoot');
+            const fallback = routeConfig.resolveDocsViewerRouteConfig({ root: fallbackRoot, document });
+            return {
+                inline: {
+                    source: inline.source,
+                    routeId: inline.routeId,
+                    defaultScopeId: inline.defaultScopeId,
+                    viewerBaseUrl: inline.viewerBaseUrl,
+                    indexUrl: inline.indexUrl,
+                    hostedViews: inline.hostedViews.records.map((record) => record.id),
+                    routeViewerBaseUrl: route.routeViewerBaseUrl,
+                    routeIndexUrl: route.indexUrl
+                },
+                fallback: {
+                    source: fallback.source,
+                    routeId: fallback.routeId,
+                    defaultScopeId: fallback.defaultScopeId,
+                    viewerBaseUrl: fallback.viewerBaseUrl,
+                    indexUrl: fallback.indexUrl,
+                    docsViewerConfigUrl: fallback.docsViewerConfigUrl
+                }
+            };
+        }"""
+    )
+    if result != {
+        "inline": {
+            "source": "inline",
+            "routeId": "analysis-public",
+            "defaultScopeId": "analysis",
+            "viewerBaseUrl": "/analysis/",
+            "indexUrl": "/assets/data/docs/scopes/analysis/index.json",
+            "hostedViews": ["analysis-extra"],
+            "routeViewerBaseUrl": "/analysis/",
+            "routeIndexUrl": "/assets/data/docs/scopes/analysis/index.json?v=smoke",
+        },
+        "fallback": {
+            "source": "dataset",
+            "routeId": "legacy-library",
+            "defaultScopeId": "library",
+            "viewerBaseUrl": "/library/",
+            "indexUrl": "/assets/data/docs/scopes/library/index.json",
+            "docsViewerConfigUrl": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        },
+    }:
+        raise AssertionError(f"inline route config/fallback behavior failed: {result!r}")
+
+
+def assert_route_config_registry_resolution(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
+            const routeConfig = await import('/docs-viewer/runtime/js/docs-viewer-route-config.js');
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            window.history.replaceState({}, '', '/analysis/?doc=analysis');
+            document.body.innerHTML = `
+                <section
+                  id="docsViewerRoot"
+                  data-route-id="analysis"
+                  data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"
+                >
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                  <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                </section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const resolved = await routeConfig.resolveDocsViewerRouteConfigAsync({
+                root,
+                document,
+                window,
+                assetVersion: 'smoke'
+            });
+            const route = context.createDocsViewerRouteContext({
+                root,
+                document,
+                window,
+                assetVersion: 'smoke',
+                resolvedRouteConfig: resolved
+            });
+            await shell.initDocsViewerAppShell({ root, document, routeContext: route });
+            return {
+                source: resolved.source,
+                routeId: resolved.routeId,
+                routeType: resolved.routeType,
+                defaultScopeId: route.viewerScope,
+                indexUrl: route.indexUrl,
+                searchIndexUrl: route.searchIndexUrl,
+                docsViewerConfigUrl: route.docsViewerConfigUrl,
+                allowManagement: route.access.allowManagement,
+                allowScopeQuery: route.access.allowScopeQuery,
+                scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
+                managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length
+            };
+        }"""
+    )
+    if result != {
+        "source": "registry",
+        "routeId": "analysis",
+        "routeType": "public",
+        "defaultScopeId": "analysis",
+        "indexUrl": "/assets/data/docs/scopes/analysis/index.json?v=smoke",
+        "searchIndexUrl": "/assets/data/search/analysis/index.json?v=smoke",
+        "docsViewerConfigUrl": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "allowManagement": False,
+        "allowScopeQuery": False,
+        "scopeSelectCount": 0,
+        "recentButtonCount": 1,
+        "managementMountCount": 0,
+    }:
+        raise AssertionError(f"registry route config resolution failed: {result!r}")
+
+
 def assert_index_panel_shell_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1284,6 +1473,8 @@ def main() -> int:
             assert_management_actions_omitted(page)
             assert_route_context_and_shell_refs(page)
             assert_route_config_explicit_and_access_projection(page)
+            assert_route_config_inline_and_malformed_fallback(page)
+            assert_route_config_registry_resolution(page)
             assert_index_panel_shell_render(page)
             assert_index_panel_projection(page)
             assert_document_shell_render(page)

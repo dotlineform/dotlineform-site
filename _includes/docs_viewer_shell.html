@@ -4,25 +4,13 @@
 {%- if include.allow_management -%}
 <link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 {%- endif -%}
-{%- assign docs_viewer_generated_base_url = include.generated_base_url | default: site.docs_viewer_generated_base_url | default: '' -%}
-{%- assign docs_viewer_config_url = include.docs_viewer_config_url | default: site.docs_viewer_config_url | default: '/docs-viewer/config/defaults/docs-viewer-public-config.json' -%}
+{%- assign docs_viewer_route_config_url = include.route_config_url | default: site.docs_viewer_route_config_url | default: '/docs-viewer/config/routes/docs-viewer-routes.json' -%}
 
 <section
   class="docsViewer"
   id="docsViewerRoot"
-  data-index-url="{{ include.index_url }}"
-  data-viewer-base-url="{{ include.viewer_base_url }}"
-  data-viewer-scope="{{ include.viewer_scope | default: '' }}"
-  data-include-scope-param="{{ include.include_scope_param | default: false }}"
-  data-allow-management="{{ include.allow_management | default: false }}"
-  data-allow-scope-query="{{ include.allow_scope_query | default: false }}"
-  data-default-doc-id="{{ include.default_doc_id | default: '' }}"
-  data-search-index-url="{{ include.search_index_url | default: '' }}"
-  data-docs-viewer-config-url="{{ docs_viewer_config_url | relative_url }}"
-  data-ui-text-url="{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}"
-  data-report-registry-url="{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}"
-  data-generated-base-url="{{ docs_viewer_generated_base_url }}"
-  data-management-base-url="{{ include.management_base_url | default: '' }}"
+  data-route-id="{{ include.route_id | default: '' }}"
+  data-route-config-url="{{ docs_viewer_route_config_url | relative_url }}"
 >
   <div class="docsViewer__controls">
     <div

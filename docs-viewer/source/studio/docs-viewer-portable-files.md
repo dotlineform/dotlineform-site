@@ -106,8 +106,13 @@ Copy:
 - `docs-viewer/config/defaults/docs-viewer-config.json`
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
+- `docs-viewer/config/routes/docs-viewer-routes.json`
 - `docs-viewer/config/ui-text/ui-text.json`
 - `assets/data/docs/reports.json`
+
+`docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
+Route shells should point at it with `data-route-config-url` and identify themselves with `data-route-id`.
+For standalone local manage mode, the Docs Viewer service serves this registry path with local loopback management/generated-read base URLs injected at request time.
 
 `docs-viewer/config/defaults/docs-viewer-config.json` is projected from `docs-viewer/config/scopes/docs_scopes.json`.
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.

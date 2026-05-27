@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7265dfb8f460e0a60818cb051a4d15ce",
-    "generated_at_utc": "2026-05-27T18:57:48Z",
-    "count": 203
+    "version": "blake2b-d7418b4685ccc28bcaaaab01aa84f06c",
+    "generated_at_utc": "2026-05-27T19:35:53Z",
+    "count": 204
   },
   "entries": [
     {
@@ -397,10 +397,10 @@
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=development-workflow",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-25 • Dev Home",
+      "display_meta": "2026-05-27 • Dev Home",
       "search_terms": [
         "development-workflow",
         "development",
@@ -409,12 +409,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-25",
+        "2026-05-27",
         "2026",
         "05",
-        "25"
+        "27"
       ],
-      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-25 2026 05 25"
+      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-toolkit-extraction",
@@ -4233,6 +4233,35 @@
         "27"
       ],
       "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-docs-viewer-semantic-reference-editor",
+      "kind": "doc",
+      "title": "Docs Viewer Semantic Reference Editor Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-semantic-reference-editor",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "semantic",
+        "reference",
+        "editor",
+        "docs viewer semantic reference editor request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-docs-viewer-workstream-priority-plan",

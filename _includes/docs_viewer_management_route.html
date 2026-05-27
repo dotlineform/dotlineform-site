@@ -1,24 +1,15 @@
-{%- assign docs_viewer_route_base_url = include.viewer_base_url | default: page.permalink | default: page.url | relative_url -%}
+{%- assign docs_viewer_route_scope = include.viewer_scope | default: site.docs_viewer_default_scope | default: 'studio' -%}
 {%- if site.docs_viewer_management_enabled == true -%}
-  {%- assign docs_management_base_url = include.management_base_url | default: site.docs_viewer_management_base_url | default: '' -%}
-
   {% include docs_viewer_shell.html
-    viewer_base_url=docs_viewer_route_base_url
-    viewer_scope=include.viewer_scope
-    default_doc_id=include.default_doc_id
-    include_scope_param=true
-    allow_scope_query=true
+    route_id='docs-manage'
     allow_management=true
-    management_base_url=docs_management_base_url
     enable_search=include.enable_search
     search_placeholder=include.search_placeholder
     search_aria_label=include.search_aria_label
   %}
 {%- else -%}
   {% include docs_viewer_readonly_route.html
-    viewer_base_url=docs_viewer_route_base_url
-    viewer_scope=include.viewer_scope
-    default_doc_id=include.default_doc_id
+    viewer_scope=docs_viewer_route_scope
     enable_search=include.enable_search
     search_placeholder=include.search_placeholder
     search_aria_label=include.search_aria_label

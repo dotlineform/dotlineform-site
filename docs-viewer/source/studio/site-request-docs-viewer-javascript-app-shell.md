@@ -30,7 +30,7 @@ What is now in good shape:
 
 What is still incomplete against the broader request:
 
-- Route config is still transitional at the source boundary: current route data attributes remain the boot-time migration input until a generated/browser-safe route config projection exists.
+- Route config now has a stable source boundary: route shells carry `data-route-id` and `data-route-config-url`, while `docs-viewer/config/routes/docs-viewer-routes.json` owns browser-safe route records.
 - Multi-panel architecture is only partially implemented: `index/document/info` state and hosted-view registration exist as foundations, but there is no visible info panel, toolbar model, selected-document info projection, or panel module UI lifecycle yet.
 - Route shells are thinner, but not yet “mount plus route id/config” thin.
 - `docs-viewer.js` is improved but still owns a lot: route application, payload loading, search/recent handoff, bookmark orchestration, and management-controller loading.
@@ -382,6 +382,11 @@ Optional first visible shell move:
   `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` renders the info panel shell and projection, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns hosted-view lifecycle and graceful absence, and `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` renders public-safe selected-document metadata.
   `metadata-info` is now the built-in public info hosted view.
   The source editor, editable metadata saves, semantic-reference views, activity views, panel-toolbar generalization, third-party visualization modules, and plugin architecture remain deferred.
+- added the route config handoff slice.
+  Shared and standalone Docs Viewer shells now carry only `data-route-id` and `data-route-config-url` for boot route context.
+  `docs-viewer/config/routes/docs-viewer-routes.json` owns the browser-safe route records, and `docs-viewer/runtime/js/docs-viewer-route-config.js` resolves that registry before the legacy inline/data-attribute fallback.
+  `docs-viewer/runtime/js/docs-viewer-app-context.js` continues to expose the same route-context contract to downstream controllers.
+  The local Docs Viewer service serves the same registry path with loopback management/generated-read URLs injected from service config.
 
 The slice is successful when the panel architecture and semantic editor can be implemented against named app-shell owners, access gates, module registration, read contracts, and backend capabilities without adding unrelated responsibility to `docs-viewer.js`.
 
@@ -394,7 +399,7 @@ Recommended sequence:
 
 1. Route config handoff.
    Move from normalizing current `#docsViewerRoot` attributes toward resolving a generated route/config record as the app's durable route context.
-   Implemented 2026-05-27: `docs-viewer-route-config.js` defines the route record shape and route/scope projection API. The current repo still uses shell data attributes as migration input at boot, while scope-specific generated/search paths continue to come from browser-safe Docs Viewer config.
+   Implemented 2026-05-27: `docs-viewer-route-config.js` defines the route record shape and route/scope projection API. The current repo resolves `docs-viewer/config/routes/docs-viewer-routes.json` before falling back to migration inline/data-attribute input, while scope-specific generated/search paths continue to come from browser-safe Docs Viewer config.
 
 2. Access and capability projection.
    Keep static route intent, public/manage gating, backend reachability, and future module access rules explicit and small.
@@ -470,11 +475,11 @@ Each implementation slice should either move responsibility out of `docs-viewer.
 
 ## Route Context Decision
 
-Use generated route config as the route/app handoff.
-Do not introduce JSON script tags as the new route-context model.
-Existing data attributes can remain as temporary migration compatibility, but they should not be the long-term app-shell route contract.
+Use a browser-safe route config record as the route/app handoff.
+The current route shells carry only a route id and route-config URL for boot route context.
+Inline route records and legacy data attributes remain only as resolver fallback compatibility, not as the normal shell contract.
 
-Generated route config should provide one schema for route records across `/docs/`, `/library/`, `/analysis/`, and future Docs Viewer installs.
+The `docs_viewer_route_config_v1` schema is stored in `docs-viewer/config/routes/docs-viewer-routes.json` for `/docs/`, `/library/`, `/analysis/`, and future Docs Viewer installs.
 The app shell should resolve the current route to a route config record, then use that record to determine:
 
 - route id and route type
@@ -511,7 +516,7 @@ For example, do not add a separate import capability unless this repo intentiona
 
 Client behavior should be:
 
-- use generated route config for static route/app decisions
+- use the browser-safe route config record for static route/app decisions
 - check backend reachability when entering manage mode
 - cache the result in app state
 - do not perform per-click capability checks before ordinary UI decisions

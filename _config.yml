@@ -5,6 +5,7 @@ baseurl: ""  # custom domain: leave empty
 live_url: "https://www.dotlineform.com"
 docs_viewer_management_enabled: false
 docs_viewer_config_url: "/docs-viewer/config/defaults/docs-viewer-public-config.json"
+docs_viewer_route_config_url: "/docs-viewer/config/routes/docs-viewer-routes.json"
 docs_viewer_links_enabled: true
 docs_viewer_link_fallback: "host_route"
 docs_viewer_service_required_for_public_routes: false

@@ -188,15 +188,23 @@ def main(argv: list[str] | None = None) -> int:
                 timeout=args.timeout_ms,
             )
             root_attrs = page.locator("#docsViewerRoot").evaluate(
-                """root => ({
-                    allowManagement: root.dataset.allowManagement,
-                    allowScopeQuery: root.dataset.allowScopeQuery,
-                    includeScopeParam: root.dataset.includeScopeParam,
-                    viewerBaseUrl: root.dataset.viewerBaseUrl,
-                    configUrl: root.dataset.docsViewerConfigUrl,
-                    generatedBaseUrl: root.dataset.generatedBaseUrl,
-                    managementBaseUrl: root.dataset.managementBaseUrl
-                })"""
+                """async root => {
+                    const routeConfigUrl = root.dataset.routeConfigUrl || "";
+                    const payload = await fetch(routeConfigUrl).then(response => response.json());
+                    const routeConfig = payload.routes.find(record => record.route_id === root.dataset.routeId) || {};
+                    return {
+                        allowManagement: root.dataset.allowManagement || "",
+                        allowScopeQuery: root.dataset.allowScopeQuery || "",
+                        includeScopeParam: root.dataset.includeScopeParam || "",
+                        viewerBaseUrl: root.dataset.viewerBaseUrl || "",
+                        routeId: root.dataset.routeId || "",
+                        routeConfigUrl,
+                        routeConfig,
+                        configUrl: root.dataset.docsViewerConfigUrl || "",
+                        generatedBaseUrl: root.dataset.generatedBaseUrl || "",
+                        managementBaseUrl: root.dataset.managementBaseUrl || ""
+                    };
+                }"""
             )
             studio_css_count = page.locator('link[href*="/studio/app/assets/css/studio.css"]').count()
             main_css_count = page.locator('link[href*="/assets/css/main.css"]').count()
@@ -255,13 +263,48 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_attrs = {
-            "allowManagement": "true",
-            "allowScopeQuery": "true",
+            "allowManagement": "",
+            "allowScopeQuery": "",
             "includeScopeParam": "true",
             "viewerBaseUrl": "/docs/",
-            "configUrl": "/docs-viewer/config/defaults/docs-viewer-config.json",
-            "generatedBaseUrl": base_url,
-            "managementBaseUrl": base_url,
+            "routeId": "docs-manage",
+            "routeConfigUrl": "/docs-viewer/config/routes/docs-viewer-routes.json",
+            "routeConfig": {
+                "schema_version": "docs_viewer_route_config_v1",
+                "route_id": "docs-manage",
+                "route_path": "/docs/",
+                "route_type": "manage",
+                "default_scope_id": "studio",
+                "default_doc_id": "dev-home",
+                "include_scope_param": True,
+                "allow_scope_query": True,
+                "viewer_base_url": "/docs/",
+                "generated_base_url": base_url,
+                "access": {
+                    "allow_management": True,
+                    "allow_scope_query": True,
+                    "management_base_url": base_url,
+                    "management_mode_value": "manage",
+                },
+                "docs_paths": {
+                    "index_url": "/docs-viewer/generated/docs/studio/index.json",
+                    "search_index_url": "/docs-viewer/generated/search/studio/index.json",
+                },
+                "config_urls": {
+                    "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
+                    "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+                    "report_registry": "/assets/data/docs/reports.json",
+                },
+                "panels": {
+                    "index": {"enabled": True, "default_state": "normal"},
+                    "document": {"enabled": True, "default_view": "document"},
+                    "info": {"enabled": True, "default_view": "metadata-info"},
+                },
+                "hosted_views": {"records": []},
+            },
+            "configUrl": "",
+            "generatedBaseUrl": "",
+            "managementBaseUrl": "",
         }
         if root_attrs != expected_attrs:
             raise AssertionError(f"unexpected Docs Viewer root attrs: {root_attrs!r}")

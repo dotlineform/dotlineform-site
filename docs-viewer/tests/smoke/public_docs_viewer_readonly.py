@@ -120,12 +120,20 @@ def main() -> int:
                     timeout=args.timeout_ms,
                 )
                 root_attrs = page.locator("#docsViewerRoot").evaluate(
-                    """root => ({
-                        allowManagement: root.dataset.allowManagement || "",
-                        managementBaseUrl: root.dataset.managementBaseUrl || "",
-                        includeScopeParam: root.dataset.includeScopeParam || "",
-                        viewerBaseUrl: root.dataset.viewerBaseUrl || ""
-                    })"""
+                    """async root => {
+                        const routeConfigUrl = root.dataset.routeConfigUrl || "";
+                        const payload = await fetch(routeConfigUrl).then(response => response.json());
+                        const routeConfig = payload.routes.find(record => record.route_id === root.dataset.routeId) || {};
+                        return {
+                            allowManagement: root.dataset.allowManagement || "",
+                            managementBaseUrl: root.dataset.managementBaseUrl || "",
+                            includeScopeParam: root.dataset.includeScopeParam || "",
+                            viewerBaseUrl: root.dataset.viewerBaseUrl || "",
+                            routeId: root.dataset.routeId || "",
+                            routeConfigUrl,
+                            routeConfig
+                        };
+                    }"""
                 )
                 base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
                 management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
@@ -146,8 +154,16 @@ def main() -> int:
                     raise AssertionError(f"{route} unexpectedly allows management: {root_attrs!r}")
                 if root_attrs["managementBaseUrl"]:
                     raise AssertionError(f"{route} unexpectedly exposes management base URL: {root_attrs!r}")
-                if root_attrs["viewerBaseUrl"] not in {"/library/", "/analysis/"}:
-                    raise AssertionError(f"{route} has unexpected viewer base URL: {root_attrs!r}")
+                if root_attrs["routeId"] not in {"library", "analysis"}:
+                    raise AssertionError(f"{route} has unexpected route id: {root_attrs!r}")
+                if root_attrs["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-routes.json":
+                    raise AssertionError(f"{route} has unexpected route config URL: {root_attrs!r}")
+                if root_attrs["routeConfig"].get("default_scope_id") != root_attrs["routeId"]:
+                    raise AssertionError(f"{route} route config does not match route scope: {root_attrs!r}")
+                if root_attrs["routeConfig"].get("access", {}).get("allow_management") is not False:
+                    raise AssertionError(f"{route} route config unexpectedly allows management: {root_attrs!r}")
+                if root_attrs["routeConfig"].get("viewer_base_url") not in {"/library/", "/analysis/"}:
+                    raise AssertionError(f"{route} route config has unexpected viewer base URL: {root_attrs!r}")
                 if base_css_count != 1:
                     raise AssertionError(f"{route} expected one Docs Viewer base stylesheet, got {base_css_count}")
                 if management_css_count:

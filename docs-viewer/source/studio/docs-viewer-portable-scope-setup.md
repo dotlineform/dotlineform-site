@@ -122,13 +122,14 @@ Read-only canonical URL behavior:
 The current management shell is served by `docs-viewer/services/docs_viewer_service.py` at the configured Docs Viewer service base URL.
 It renders `/docs/` with:
 
-- `allow_management=true`
-- `allow_scope_query=true`
-- `management_base_url=<DOCS_VIEWER_BASE_URL>` in the standalone Docs Viewer service shell
+- `data-route-id="docs-manage"`
+- `data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"`
 
 Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores `mode=manage` without loading management CSS or localhost server configuration.
 Local Studio points Docs links, generated reads, and management actions at the configured Docs Viewer service rather than hosting the shell itself.
 
+The standalone Docs Viewer service injects `DOCS_VIEWER_BASE_URL` into the served route-config registry for local management and generated-read URLs.
+The checked-in static route-config asset keeps those URLs blank so public builds do not expose localhost state.
 The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `docs-viewer/runtime/js/docs-viewer.js`.
 If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
@@ -136,10 +137,8 @@ If the new scope uses a new availability type, add or update its `docs_viewer.sc
 
 Management route adapter inputs:
 
-- `viewer_base_url`: optional override; defaults to the page permalink or URL
-- `viewer_scope`: optional fixed initial scope hint
-- `default_doc_id`: optional route-local fallback
-- `management_base_url`: optional local management API base URL; defaults to the site `docs_viewer_management_base_url` setting when configured, otherwise blank
+- `route_id`: defaults to `docs-manage` through the management adapter
+- `route_config_url`: optional override for the browser-safe route-config registry
 - `enable_search`: optional `false` to hide search controls
 - `search_placeholder`: optional search input placeholder
 - `search_aria_label`: optional search input label

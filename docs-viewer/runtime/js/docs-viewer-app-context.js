@@ -45,9 +45,11 @@ export function createDocsViewerRouteContext(options) {
   var root = settings.root || null;
   var windowRef = settings.window || defaultWindowRef();
   var assetVersion = cleanString(settings.assetVersion);
-  var routeConfig = resolveDocsViewerRouteConfig({
+  var routeConfig = settings.resolvedRouteConfig || resolveDocsViewerRouteConfig({
     root: root,
-    routeConfig: settings.routeConfig
+    document: settings.document,
+    routeConfig: settings.routeConfig,
+    routeConfigSource: settings.routeConfigSource
   });
   var routeViewerBaseUrl = routeConfig.viewerBaseUrl;
   var viewerBaseUrl = routeViewerBaseUrl || locationPathname(windowRef);
