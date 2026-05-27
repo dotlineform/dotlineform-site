@@ -3,8 +3,7 @@ import {
   hasHiddenAncestor,
   compareDocs,
   isDocHidden,
-  isDocViewable,
-  normalizeDocIdSet
+  isDocViewable
 } from "./docs-viewer-tree.js";
 import {
   normalizeSearchText
@@ -12,11 +11,6 @@ import {
 import {
   initDocsViewerBookmarks
 } from "./docs-viewer-bookmarks.js";
-import {
-  fetchIndexWithRetry,
-  fetchPreferredGeneratedJson,
-  managementReloadPath
-} from "./docs-viewer-data.js";
 import {
   formatText,
   getConfigText,
@@ -29,6 +23,9 @@ import {
 import {
   initDocsViewerSearchController
 } from "./docs-viewer-search-controller.js";
+import {
+  initDocsViewerRouteWorkflow
+} from "./docs-viewer-route-workflow.js";
 import {
   escapeHtml
 } from "./docs-viewer-render.js";
@@ -53,17 +50,6 @@ import {
   createDocsViewerHostedViewRegistry,
   registerDocsViewerHostedViews
 } from "./docs-viewer-hosted-views.js";
-import {
-  applyViewerRoute,
-  buildViewerUrl,
-  buildViewerUrlForScope,
-  handleViewerPopstate,
-  loadViewerDoc,
-  resolveViewerRouteDocId,
-  routeFromAnchorHref,
-  setViewerHistory
-} from "./docs-viewer-router.js";
-
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
   var root = settings.root;
@@ -156,6 +142,7 @@ export function startDocsViewerRuntime(options) {
   var managementControllerRequestPromise = null;
   var bookmarkController = null;
   var documentController = null;
+  var routeWorkflow = null;
 
   var state = {
     allDocs: [],
@@ -364,6 +351,54 @@ export function startDocsViewerRuntime(options) {
     state: state,
     viewerScope: function () { return viewerScope; },
     viewerUrlForScope: viewerUrlForScope
+  });
+  routeWorkflow = initDocsViewerRouteWorkflow({
+    allowManagement: function () { return allowManagement; },
+    allowScopeQuery: function () { return allowScopeQuery; },
+    applyDocVisibility: applyDocVisibility,
+    cancelSearchDebounce: cancelSearchDebounce,
+    clearManagementMessageForDocChange: clearManagementMessageForDocChange,
+    content: content,
+    dataRequestOptions: dataRequestOptions,
+    defaultDocId: defaultDocId,
+    defaultRouteDocId: function () { return defaultRouteDocId; },
+    expandTrail: expandTrail,
+    handleManagementRootClick: function (event) {
+      return Boolean(managementController && managementController.handleRootClick(event));
+    },
+    handleMissingDoc: handleMissingDoc,
+    handlePayloadError: handlePayloadError,
+    hasActiveQuery: hasActiveQuery,
+    hideContextMenu: hideContextMenu,
+    hideDocPane: hideDocPane,
+    includeScopeParam: function () { return includeScopeParam; },
+    indexUrl: function () { return indexUrl; },
+    managementModeValue: MANAGEMENT_MODE,
+    more: more,
+    renderBookmarkUi: renderBookmarkUi,
+    renderDocLoadingState: renderDocLoadingState,
+    renderManagementUi: renderManagementUi,
+    renderPayload: renderPayload,
+    renderSearchMode: renderSearchMode,
+    renderSidebar: renderSidebar,
+    resolveLoadableDocId: resolveLoadableDocId,
+    results: results,
+    root: root,
+    routeScopeFromUrl: routeScopeFromUrl,
+    routeViewerBaseUrl: function () { return routeViewerBaseUrl; },
+    scopeConfigsById: function () { return state.scopeConfigsById; },
+    searchBatchSize: SEARCH_BATCH_SIZE,
+    searchInput: searchInput,
+    setRecentModeActive: setRecentModeActive,
+    setStatus: setStatus,
+    startBusy: startBusy,
+    state: state,
+    syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc,
+    updateInfoPanel: updateInfoPanel,
+    viewerBaseUrl: function () { return viewerBaseUrl; },
+    viewerPathname: function () { return viewerPathname; },
+    viewerScope: function () { return viewerScope; },
+    window: window
   });
   var searchController = initDocsViewerSearchController({
     applyCurrentRoute: applyCurrentRoute,
@@ -599,33 +634,15 @@ export function startDocsViewerRuntime(options) {
   }
 
   function getCurrentDocId() {
-    return new URLSearchParams(window.location.search).get("doc") || "";
+    return routeWorkflow.currentDocId();
   }
 
   function getCurrentHash() {
-    return window.location.hash ? window.location.hash.slice(1) : "";
-  }
-
-  function getCurrentQuery() {
-    return (new URLSearchParams(window.location.search).get("q") || "").trim();
+    return routeWorkflow.currentHash();
   }
 
   function getCurrentMode() {
-    if (!allowManagement) return "";
-    return new URLSearchParams(window.location.search).get("mode") || "";
-  }
-
-  function hasCanonicalScopeInUrl() {
-    if (!includeScopeParam || !viewerScope) return true;
-    return new URLSearchParams(window.location.search).get("scope") === viewerScope;
-  }
-
-  function hasDisallowedModeInUrl() {
-    return !allowManagement && new URLSearchParams(window.location.search).has("mode");
-  }
-
-  function hasDisallowedScopeInUrl() {
-    return !allowScopeQuery && new URLSearchParams(window.location.search).has("scope");
+    return routeWorkflow.currentMode();
   }
 
   function hasActiveQuery(query) {
@@ -759,32 +776,11 @@ export function startDocsViewerRuntime(options) {
   }
 
   function viewerUrl(docId, hash, query) {
-    return buildViewerUrl({
-      docId: docId,
-      hash: hash,
-      includeScopeParam: includeScopeParam,
-      managementMode: state.managementMode,
-      managementModeValue: MANAGEMENT_MODE,
-      origin: window.location.origin,
-      query: query,
-      viewerBaseUrl: viewerBaseUrl,
-      viewerScope: viewerScope
-    });
+    return routeWorkflow.viewerUrl(docId, hash, query);
   }
 
   function viewerUrlForScope(scope, docId, options) {
-    return buildViewerUrlForScope({
-      allowManagement: allowManagement,
-      docId: docId,
-      managementModeValue: MANAGEMENT_MODE,
-      manage: Boolean(options && options.manage),
-      origin: window.location.origin,
-      routeViewerBaseUrl: routeViewerBaseUrl,
-      scope: scope,
-      scopeConfigsById: state.scopeConfigsById,
-      viewerBaseUrl: viewerBaseUrl,
-      viewerScope: viewerScope
-    });
+    return routeWorkflow.viewerUrlForScope(scope, docId, options);
   }
 
   function escapeMarkdownLinkText(value) {
@@ -1032,19 +1028,7 @@ export function startDocsViewerRuntime(options) {
   }
 
   function setHistory(docId, hash, query, mode) {
-    setViewerHistory({
-      docId: docId,
-      hash: hash,
-      history: window.history,
-      includeScopeParam: includeScopeParam,
-      managementMode: state.managementMode,
-      managementModeValue: MANAGEMENT_MODE,
-      mode: mode,
-      origin: window.location.origin,
-      query: query,
-      viewerBaseUrl: viewerBaseUrl,
-      viewerScope: viewerScope
-    });
+    routeWorkflow.setHistory(docId, hash, query, mode);
   }
 
   function cancelSearchDebounce() {
@@ -1063,104 +1047,17 @@ export function startDocsViewerRuntime(options) {
     updateInfoPanel();
   }
 
-  function fetchDocPayload(doc, docId) {
-    var stopBusy = startBusy();
-    return fetchPreferredGeneratedJson(
-      doc.content_url,
-      "Failed to load " + doc.content_url,
-      managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
-      dataRequestOptions({ useSearchCapability: false })
-    ).finally(stopBusy);
-  }
-
   function handlePayloadError(error) {
     documentController.handlePayloadError(error);
     updateInfoPanel();
   }
 
   function loadDoc(docId, options) {
-    clearManagementMessageForDocChange(docId);
-    return loadViewerDoc({
-      docId: docId,
-      expandTrailForDoc: expandTrail,
-      expandTrail: !options || options.expandTrail !== false,
-      fetchPayload: fetchDocPayload,
-      handleMissingDoc: handleMissingDoc,
-      handlePayloadError: handlePayloadError,
-      hash: options && options.hash ? options.hash : "",
-      historyMode: options && options.historyMode ? options.historyMode : "push",
-      renderBookmarkUi: renderBookmarkUi,
-      renderLoadingState: renderDocLoadingState,
-      renderPayload: renderPayload,
-      resolveLoadableDocId: resolveLoadableDocId,
-      setHistory: setHistory,
-      setRecentModeActive: setRecentModeActive,
-      state: state
-    });
-  }
-
-  function routeFromAnchor(anchor) {
-    return routeFromAnchorHref(anchor.href, {
-      allowManagement: allowManagement,
-      allowScopeQuery: allowScopeQuery,
-      currentHref: window.location.href,
-      currentMode: getCurrentMode(),
-      includeScopeParam: includeScopeParam,
-      managementModeValue: MANAGEMENT_MODE,
-      origin: window.location.origin,
-      viewerPathname: viewerPathname,
-      viewerScope: viewerScope
-    });
-  }
-
-  function shouldUseNativeNavigation(event, anchor) {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-      return true;
-    }
-    var target = anchor.getAttribute("target");
-    return Boolean((target && target !== "_self") || anchor.hasAttribute("download"));
+    return routeWorkflow.loadDoc(docId, options);
   }
 
   function bindLinkInterception() {
-    root.addEventListener("click", function (event) {
-      if (managementController && managementController.handleRootClick(event)) {
-        return;
-      }
-      var toggle = event.target.closest("[data-toggle-doc-id]");
-      if (toggle) {
-        var toggleDocId = toggle.dataset.toggleDocId;
-        if (state.expandedDocIds.has(toggleDocId)) {
-          state.expandedDocIds.delete(toggleDocId);
-        } else {
-          state.expandedDocIds.add(toggleDocId);
-        }
-        renderSidebar();
-        return;
-      }
-
-      var anchor = event.target.closest("a[href]");
-      if (!anchor) return;
-      if (shouldUseNativeNavigation(event, anchor)) return;
-
-      var route = routeFromAnchor(anchor);
-      if (!route) return;
-
-      event.preventDefault();
-      if (route.navigateUrl) {
-        window.location.assign(route.navigateUrl);
-        return;
-      }
-      cancelSearchDebounce();
-      state.searchQuery = "";
-      state.searchVisibleCount = SEARCH_BATCH_SIZE;
-      if (searchInput) {
-        searchInput.value = "";
-      }
-      loadDoc(route.docId, {
-        historyMode: "push",
-        hash: route.hash
-      });
-    });
+    routeWorkflow.bindRouteLinks();
 
     if (sidebarToggle) {
       sidebarToggle.addEventListener("click", function () {
@@ -1213,94 +1110,15 @@ export function startDocsViewerRuntime(options) {
   }
 
   function resolveDocId() {
-    return resolveViewerRouteDocId({
-      requestedDocId: getCurrentDocId(),
-      docsById: state.docsById,
-      defaultRouteDocId: defaultRouteDocId,
-      resolveLoadableDocId: resolveLoadableDocId,
-      defaultDocId: defaultDocId
-    });
-  }
-
-  function initializeIndex(payload) {
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
-      ? payload.viewer_options
-      : {};
-    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
-    state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
-    state.showUpdatedDate = viewerOptions.show_updated_date !== false;
-    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    syncHiddenVisibilityForRequestedDoc();
-    applyDocVisibility();
-
-    renderSidebar();
-    renderBookmarkUi();
-
-    if (state.docs.length === 0) {
-      setStatus("No docs available.", true);
-      return;
-    }
-
-    applyCurrentRoute({ historyMode: "replace", hash: getCurrentHash() });
+    return routeWorkflow.resolveDocId();
   }
 
   function applyCurrentRoute(options) {
-    var result = applyViewerRoute({
-      applyDocVisibility: applyDocVisibility,
-      currentDocId: getCurrentDocId,
-      currentHash: getCurrentHash,
-      currentQuery: getCurrentQuery,
-      defaultDocId: defaultDocId,
-      defaultRouteDocId: defaultRouteDocId,
-      docHasParent: function (docId) {
-        var doc = state.docsById.get(docId);
-        return Boolean(doc && doc.parent_id);
-      },
-      expandTrail: expandTrail,
-      hasActiveQuery: hasActiveQuery,
-      hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
-      hasDisallowedModeInUrl: hasDisallowedModeInUrl,
-      hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
-      hash: options && options.hash ? options.hash : "",
-      historyMode: options && options.historyMode ? options.historyMode : "push",
-      loadDoc: loadDoc,
-      managementModeActive: function () { return getCurrentMode() === MANAGEMENT_MODE; },
-      renderBookmarkUi: renderBookmarkUi,
-      renderManagementUi: renderManagementUi,
-      renderSearchMode: renderSearchMode,
-      renderSidebar: renderSidebar,
-      resolveLoadableDocId: resolveLoadableDocId,
-      searchInput: searchInput,
-      setHistory: setHistory,
-      setRecentModeActive: setRecentModeActive,
-      setStatus: setStatus,
-      state: state,
-      syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc
-    });
-    updateInfoPanel();
-    return result;
+    return routeWorkflow.applyCurrentRoute(options);
   }
 
   function loadIndex() {
-    var stopBusy = startBusy();
-    return fetchIndexWithRetry(dataRequestOptions({
-      indexUrl: indexUrl,
-      viewerScope: viewerScope
-    }))
-      .then(function (payload) {
-        initializeIndex(payload);
-      })
-      .catch(function (error) {
-        state.reloadExpectedDocId = "";
-        setStatus(error.message || "Failed to load docs index.", true);
-        hideDocPane();
-        content.textContent = "";
-        throw error;
-      })
-      .finally(function () {
-        stopBusy();
-      });
+    return routeWorkflow.loadIndex();
   }
 
   function renderRecentMode() {
@@ -1315,20 +1133,7 @@ export function startDocsViewerRuntime(options) {
     searchController.renderSearchMode();
   }
 
-  window.addEventListener("popstate", function () {
-    handleViewerPopstate({
-      allowScopeQuery: allowScopeQuery,
-      applyCurrentRoute: applyCurrentRoute,
-      cancelSearchDebounce: cancelSearchDebounce,
-      currentHash: getCurrentHash,
-      docsAvailable: function () { return state.docs.length > 0; },
-      hideContextMenu: hideContextMenu,
-      reloadWindow: function () { window.location.reload(); },
-      routeScopeFromUrl: routeScopeFromUrl,
-      setStatus: setStatus,
-      viewerScope: viewerScope
-    });
-  });
+  routeWorkflow.bindPopstate();
 
   window.addEventListener("scroll", hideContextMenu, { passive: true });
   window.addEventListener("resize", function () {

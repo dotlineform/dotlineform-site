@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T20:35:46Z",
+  "generated_at": "2026-05-27T20:52:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -162,7 +162,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 9994
+      "content_text_length": 10826
     },
     {
       "scope": "studio",
@@ -1436,7 +1436,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 7995
+      "content_text_length": 8393
     },
     {
       "scope": "studio",
@@ -1921,7 +1921,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 22079,
+      "content_text_length": 23415,
       "ui_status": "review"
     },
     {
@@ -2712,8 +2712,8 @@
       "source_path": "site-request-docs-viewer-app-shell-route-document-workflow-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-document-workflow-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-route-document-workflow-tasks.json",
-      "content_text_length": 12263,
-      "ui_status": "planned"
+      "content_text_length": 14441,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2775,7 +2775,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 12112
+      "content_text_length": 12452
     },
     {
       "scope": "studio",
@@ -2866,7 +2866,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 40686,
+      "content_text_length": 41341,
       "ui_status": "in-progress"
     },
     {

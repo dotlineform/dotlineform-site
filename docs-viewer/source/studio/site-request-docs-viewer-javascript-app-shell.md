@@ -14,9 +14,9 @@ Status:
 
 - in progress
 
-- **App-shell migration foundation:** ~90% there
-- **Full JavaScript App Shell Request goals:** ~65-70% there
-- **Current priority:** finish the remaining app-shell migration slices now, before adding source editor, semantic-reference views, activity views, panel toolbar generalization, third-party visualization modules, or plugin-style extension work.
+- **App-shell migration foundation:** ~95% there
+- **Full JavaScript App Shell Request goals:** ~70-75% there
+- **Current priority:** finish search/recent/bookmark orchestration cleanup and panel toolbar/view switching before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
 
 What is now in good shape:
 
@@ -27,15 +27,16 @@ What is now in good shape:
 - Current panel projection has a focused compatibility owner in `docs-viewer/runtime/js/docs-viewer-panel-layout.js`, with the broader index/document/info state skeleton in `docs-viewer/runtime/js/docs-viewer-view-state.js`.
 - Minimal hosted-view registration exists in `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, including built-in compatibility view records and graceful absence for unavailable modules.
 - The first visible info panel exists. `metadata-info` is public-safe and uses the hosted-view lifecycle/context helpers.
+- Route/document workflow ownership has moved into `docs-viewer/runtime/js/docs-viewer-route-workflow.js`, with URL/query helpers, current-doc resolution, index/payload load orchestration, canonical route correction, route-link handling, and popstate coordination outside the compatibility runtime.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
 What is still incomplete against the broader request:
 
 - Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, and hosted-view lifecycle exist, but there is no toolbar/view-switching model or broader panel-module UI lifecycle.
-- Route shells are route-context thin, but the shared and standalone shell templates still carry management modal/context-menu markup.
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns too much compatibility orchestration: route application, payload loading, search/recent handoff, bookmark orchestration, state setup, and management-controller loading.
-- Management modals, import bootstrapping, and settings/context-menu shells still need clear app-shell ownership.
+- Route shells are route-context thin and no longer carry management modal/context-menu markup.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns compatibility wiring for app state, controller construction, search/recent handoff, bookmark orchestration, visibility rules, panel/info handoff, and management-controller loading.
+- Search/recent and bookmark orchestration still need narrower cleanup around their controller handoffs.
 - Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
 
 The remaining migration should be treated as completion work, not as optional polish.
@@ -424,6 +425,7 @@ Recommended completion sequence:
    Move route application, current-doc resolution, document payload loading, missing-doc/error behavior, and history synchronization out of the compatibility runtime into a focused route/document workflow owner that builds on `docs-viewer-router.js` and `docs-viewer-document-controller.js`.
    Acceptance: `docs-viewer/runtime/js/docs-viewer-app-runtime.js` no longer owns `applyCurrentRoute`, `loadIndex`, `loadDoc`, URL canonicalization, or route-driven document/search/recent switching; `/docs/`, `/library/`, and `/analysis/` URL behavior remains unchanged.
    Task tracker: [Docs Viewer App Shell Route Document Workflow Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-document-workflow-tasks).
+   Implemented 2026-05-27: `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns URL/query helpers, current-doc resolution, route application, index and payload loading, missing/error handoff, route-link handling, and popstate coordination. The compatibility runtime now wires explicit callbacks to search/recent, bookmarks, document rendering, management delegation, and panel/info updates.
 
 4. Search/recent/bookmark orchestration cleanup.
    Finish the extraction around search/recent and bookmark orchestration so the app boot owner wires controllers but does not own their UI state transitions.

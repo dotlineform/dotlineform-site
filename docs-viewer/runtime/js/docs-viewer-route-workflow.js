@@ -1,0 +1,382 @@
+import {
+  fetchIndexWithRetry,
+  fetchPreferredGeneratedJson,
+  managementReloadPath
+} from "./docs-viewer-data.js";
+import {
+  compareDocs,
+  normalizeDocIdSet
+} from "./docs-viewer-tree.js";
+import {
+  applyViewerRoute,
+  buildViewerUrl,
+  buildViewerUrlForScope,
+  handleViewerPopstate,
+  loadViewerDoc,
+  resolveViewerRouteDocId,
+  routeFromAnchorHref,
+  setViewerHistory
+} from "./docs-viewer-router.js";
+
+function currentValue(value) {
+  return typeof value === "function" ? value() : value;
+}
+
+export function initDocsViewerRouteWorkflow(context) {
+  var state = context.state;
+  var window = context.window;
+  var root = context.root;
+  var content = context.content;
+  var results = context.results;
+  var more = context.more;
+  var searchInput = context.searchInput;
+  var managementModeValue = context.managementModeValue || "manage";
+
+  function viewerScope() {
+    return currentValue(context.viewerScope);
+  }
+
+  function viewerBaseUrl() {
+    return currentValue(context.viewerBaseUrl);
+  }
+
+  function routeViewerBaseUrl() {
+    return currentValue(context.routeViewerBaseUrl);
+  }
+
+  function viewerPathname() {
+    return currentValue(context.viewerPathname);
+  }
+
+  function includeScopeParam() {
+    return Boolean(currentValue(context.includeScopeParam));
+  }
+
+  function defaultRouteDocId() {
+    return currentValue(context.defaultRouteDocId) || "";
+  }
+
+  function allowManagement() {
+    return Boolean(currentValue(context.allowManagement));
+  }
+
+  function allowScopeQuery() {
+    return Boolean(currentValue(context.allowScopeQuery));
+  }
+
+  function indexUrl() {
+    return currentValue(context.indexUrl);
+  }
+
+  function scopeConfigsById() {
+    return currentValue(context.scopeConfigsById);
+  }
+
+  function currentDocId() {
+    return new URLSearchParams(window.location.search).get("doc") || "";
+  }
+
+  function currentHash() {
+    return window.location.hash ? window.location.hash.slice(1) : "";
+  }
+
+  function currentQuery() {
+    return (new URLSearchParams(window.location.search).get("q") || "").trim();
+  }
+
+  function currentMode() {
+    if (!allowManagement()) return "";
+    return new URLSearchParams(window.location.search).get("mode") || "";
+  }
+
+  function hasCanonicalScopeInUrl() {
+    if (!includeScopeParam() || !viewerScope()) return true;
+    return new URLSearchParams(window.location.search).get("scope") === viewerScope();
+  }
+
+  function hasDisallowedModeInUrl() {
+    return !allowManagement() && new URLSearchParams(window.location.search).has("mode");
+  }
+
+  function hasDisallowedScopeInUrl() {
+    return !allowScopeQuery() && new URLSearchParams(window.location.search).has("scope");
+  }
+
+  function viewerUrl(docId, hash, query) {
+    return buildViewerUrl({
+      docId: docId,
+      hash: hash,
+      includeScopeParam: includeScopeParam(),
+      managementMode: state.managementMode,
+      managementModeValue: managementModeValue,
+      origin: window.location.origin,
+      query: query,
+      viewerBaseUrl: viewerBaseUrl(),
+      viewerScope: viewerScope()
+    });
+  }
+
+  function viewerUrlForScope(scope, docId, options) {
+    return buildViewerUrlForScope({
+      allowManagement: allowManagement(),
+      docId: docId,
+      managementModeValue: managementModeValue,
+      manage: Boolean(options && options.manage),
+      origin: window.location.origin,
+      routeViewerBaseUrl: routeViewerBaseUrl(),
+      scope: scope,
+      scopeConfigsById: scopeConfigsById(),
+      viewerBaseUrl: viewerBaseUrl(),
+      viewerScope: viewerScope()
+    });
+  }
+
+  function setHistory(docId, hash, query, mode) {
+    setViewerHistory({
+      docId: docId,
+      hash: hash,
+      history: window.history,
+      includeScopeParam: includeScopeParam(),
+      managementMode: state.managementMode,
+      managementModeValue: managementModeValue,
+      mode: mode,
+      origin: window.location.origin,
+      query: query,
+      viewerBaseUrl: viewerBaseUrl(),
+      viewerScope: viewerScope()
+    });
+  }
+
+  function resolveDocId() {
+    return resolveViewerRouteDocId({
+      requestedDocId: currentDocId(),
+      docsById: state.docsById,
+      defaultRouteDocId: defaultRouteDocId(),
+      resolveLoadableDocId: context.resolveLoadableDocId,
+      defaultDocId: context.defaultDocId
+    });
+  }
+
+  function clearManagementMessageForDocChange(docId) {
+    if (typeof context.clearManagementMessageForDocChange === "function") {
+      context.clearManagementMessageForDocChange(docId);
+    }
+  }
+
+  function fetchDocPayload(doc, docId) {
+    var stopBusy = context.startBusy();
+    return fetchPreferredGeneratedJson(
+      doc.content_url,
+      "Failed to load " + doc.content_url,
+      managementReloadPath("/docs/generated/payload", { scope: viewerScope(), doc_id: docId }),
+      context.dataRequestOptions({ useSearchCapability: false })
+    ).finally(stopBusy);
+  }
+
+  function loadDoc(docId, options) {
+    clearManagementMessageForDocChange(docId);
+    return loadViewerDoc({
+      docId: docId,
+      expandTrailForDoc: context.expandTrail,
+      expandTrail: !options || options.expandTrail !== false,
+      fetchPayload: fetchDocPayload,
+      handleMissingDoc: context.handleMissingDoc,
+      handlePayloadError: context.handlePayloadError,
+      hash: options && options.hash ? options.hash : "",
+      historyMode: options && options.historyMode ? options.historyMode : "push",
+      renderBookmarkUi: context.renderBookmarkUi,
+      renderLoadingState: context.renderDocLoadingState,
+      renderPayload: context.renderPayload,
+      resolveLoadableDocId: context.resolveLoadableDocId,
+      setHistory: setHistory,
+      setRecentModeActive: context.setRecentModeActive,
+      state: state
+    });
+  }
+
+  function applyCurrentRoute(options) {
+    var result = applyViewerRoute({
+      applyDocVisibility: context.applyDocVisibility,
+      currentDocId: currentDocId,
+      currentHash: currentHash,
+      currentQuery: currentQuery,
+      defaultDocId: context.defaultDocId,
+      defaultRouteDocId: defaultRouteDocId(),
+      docHasParent: function (docId) {
+        var doc = state.docsById.get(docId);
+        return Boolean(doc && doc.parent_id);
+      },
+      expandTrail: context.expandTrail,
+      hasActiveQuery: context.hasActiveQuery,
+      hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
+      hasDisallowedModeInUrl: hasDisallowedModeInUrl,
+      hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
+      hash: options && options.hash ? options.hash : "",
+      historyMode: options && options.historyMode ? options.historyMode : "push",
+      loadDoc: loadDoc,
+      managementModeActive: function () { return currentMode() === managementModeValue; },
+      renderBookmarkUi: context.renderBookmarkUi,
+      renderManagementUi: context.renderManagementUi,
+      renderSearchMode: context.renderSearchMode,
+      renderSidebar: context.renderSidebar,
+      resolveLoadableDocId: context.resolveLoadableDocId,
+      searchInput: searchInput,
+      setHistory: setHistory,
+      setRecentModeActive: context.setRecentModeActive,
+      setStatus: context.setStatus,
+      state: state,
+      syncHiddenVisibilityForRequestedDoc: context.syncHiddenVisibilityForRequestedDoc
+    });
+    if (typeof context.updateInfoPanel === "function") {
+      context.updateInfoPanel();
+    }
+    return result;
+  }
+
+  function initializeIndex(payload) {
+    state.managementMode = currentMode() === managementModeValue;
+    var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
+      ? payload.viewer_options
+      : {};
+    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
+    state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
+    state.showUpdatedDate = viewerOptions.show_updated_date !== false;
+    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
+    context.syncHiddenVisibilityForRequestedDoc();
+    context.applyDocVisibility();
+
+    context.renderSidebar();
+    context.renderBookmarkUi();
+
+    if (state.docs.length === 0) {
+      context.setStatus("No docs available.", true);
+      return;
+    }
+
+    applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
+  }
+
+  function loadIndex() {
+    var stopBusy = context.startBusy();
+    return fetchIndexWithRetry(context.dataRequestOptions({
+      indexUrl: indexUrl(),
+      viewerScope: viewerScope()
+    }))
+      .then(function (payload) {
+        initializeIndex(payload);
+      })
+      .catch(function (error) {
+        state.reloadExpectedDocId = "";
+        context.setStatus(error.message || "Failed to load docs index.", true);
+        context.hideDocPane();
+        if (content) content.textContent = "";
+        throw error;
+      })
+      .finally(function () {
+        stopBusy();
+      });
+  }
+
+  function routeFromAnchor(anchor) {
+    return routeFromAnchorHref(anchor.href, {
+      allowManagement: allowManagement(),
+      allowScopeQuery: allowScopeQuery(),
+      currentHref: window.location.href,
+      currentMode: currentMode(),
+      includeScopeParam: includeScopeParam(),
+      managementModeValue: managementModeValue,
+      origin: window.location.origin,
+      viewerPathname: viewerPathname(),
+      viewerScope: viewerScope()
+    });
+  }
+
+  function shouldUseNativeNavigation(event, anchor) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return true;
+    }
+    var target = anchor.getAttribute("target");
+    return Boolean((target && target !== "_self") || anchor.hasAttribute("download"));
+  }
+
+  function bindRouteLinks() {
+    root.addEventListener("click", function (event) {
+      if (typeof context.handleManagementRootClick === "function" && context.handleManagementRootClick(event)) {
+        return;
+      }
+      var toggle = event.target.closest("[data-toggle-doc-id]");
+      if (toggle) {
+        var toggleDocId = toggle.dataset.toggleDocId;
+        if (state.expandedDocIds.has(toggleDocId)) {
+          state.expandedDocIds.delete(toggleDocId);
+        } else {
+          state.expandedDocIds.add(toggleDocId);
+        }
+        context.renderSidebar();
+        return;
+      }
+
+      var anchor = event.target.closest("a[href]");
+      if (!anchor) return;
+      if (shouldUseNativeNavigation(event, anchor)) return;
+
+      var route = routeFromAnchor(anchor);
+      if (!route) return;
+
+      event.preventDefault();
+      if (route.navigateUrl) {
+        window.location.assign(route.navigateUrl);
+        return;
+      }
+      context.cancelSearchDebounce();
+      state.searchQuery = "";
+      state.searchVisibleCount = context.searchBatchSize;
+      if (searchInput) {
+        searchInput.value = "";
+      }
+      loadDoc(route.docId, {
+        historyMode: "push",
+        hash: route.hash
+      });
+    });
+  }
+
+  function bindPopstate() {
+    window.addEventListener("popstate", function () {
+      handleViewerPopstate({
+        allowScopeQuery: allowScopeQuery(),
+        applyCurrentRoute: applyCurrentRoute,
+        cancelSearchDebounce: context.cancelSearchDebounce,
+        currentHash: currentHash,
+        docsAvailable: function () { return state.docs.length > 0; },
+        hideContextMenu: context.hideContextMenu,
+        reloadWindow: function () { window.location.reload(); },
+        routeScopeFromUrl: context.routeScopeFromUrl,
+        setStatus: context.setStatus,
+        viewerScope: viewerScope()
+      });
+    });
+  }
+
+  return {
+    applyCurrentRoute: applyCurrentRoute,
+    bindPopstate: bindPopstate,
+    bindRouteLinks: bindRouteLinks,
+    currentDocId: currentDocId,
+    currentHash: currentHash,
+    currentMode: currentMode,
+    currentQuery: currentQuery,
+    hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
+    hasDisallowedModeInUrl: hasDisallowedModeInUrl,
+    hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
+    initializeIndex: initializeIndex,
+    loadDoc: loadDoc,
+    loadIndex: loadIndex,
+    resolveDocId: resolveDocId,
+    routeFromAnchor: routeFromAnchor,
+    setHistory: setHistory,
+    shouldUseNativeNavigation: shouldUseNativeNavigation,
+    viewerUrl: viewerUrl,
+    viewerUrlForScope: viewerUrlForScope
+  };
+}

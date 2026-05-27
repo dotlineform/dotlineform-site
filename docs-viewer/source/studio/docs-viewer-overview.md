@@ -63,13 +63,17 @@ It also passes the current scope configuration into the DOM through `data-*` att
 
 ### 3. Shared runtime
 
-The viewer behavior is coordinated by:
+The viewer behavior starts from:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
 
-The entry module imports focused helper modules as responsibilities are extracted.
+The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the compatibility runtime.
+The compatibility runtime wires state and focused controllers.
 Current helper modules:
 
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime wiring for app state, controller construction, config handoff, visibility rules, search/recent and bookmark handoff, panel/info updates, and lazy management loading
+- `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
+- `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers

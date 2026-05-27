@@ -1729,6 +1729,205 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"hosted view registry listing lost compatibility views: {result!r}")
 
 
+def assert_route_workflow_contract(page: Page, base_url: str) -> None:
+    result = page.evaluate(
+        """async ({ baseUrl }) => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-route-workflow.js');
+            const root = document.createElement('section');
+            document.body.innerHTML = '';
+            document.body.appendChild(root);
+            const searchInput = document.createElement('input');
+            root.appendChild(searchInput);
+            const calls = [];
+            const fetchCalls = [];
+            const state = {
+                allDocs: [],
+                allDocsById: new Map(),
+                docs: [],
+                docsById: new Map(),
+                childrenByParent: new Map(),
+                payloadCache: new Map(),
+                selectedDocId: '',
+                expandedDocIds: new Set(),
+                requestId: 0,
+                searchQuery: '',
+                searchVisibleCount: 50,
+                searchRouteActive: false,
+                recentModeActive: false,
+                managementMode: false,
+                nonLoadableDocIds: new Set(),
+                manageOnlyTreeRootIds: new Set(),
+                showUpdatedDate: true,
+                reloadExpectedDocId: ''
+            };
+            const payloads = {
+                '/index.json': {
+                    viewer_options: {
+                        non_loadable_doc_ids: ['folder'],
+                        manage_only_tree_root_ids: ['private'],
+                        show_updated_date: false
+                    },
+                    docs: [
+                        { doc_id: 'folder', title: 'Folder', parent_id: '', sort_order: 1, content_url: '/folder.json', viewable: true },
+                        { doc_id: 'child', title: 'Child', parent_id: 'folder', sort_order: 1, content_url: '/child.json', viewable: true },
+                        { doc_id: 'intro', title: 'Intro', parent_id: '', sort_order: 2, content_url: '/intro.json', viewable: true }
+                    ]
+                },
+                '/child.json': { content_html: '<h1>Child</h1>' },
+                '/intro.json': { content_html: '<h1>Intro</h1>' }
+            };
+            function applyDocVisibility() {
+                state.allDocsById = new Map(state.allDocs.map((doc) => [doc.doc_id, doc]));
+                state.docs = state.allDocs.slice();
+                state.docsById = new Map(state.docs.map((doc) => [doc.doc_id, doc]));
+                const children = new Map([['', []]]);
+                state.docs.forEach((doc) => {
+                    const parent = doc.parent_id || '';
+                    if (!children.has(parent)) children.set(parent, []);
+                    children.get(parent).push(doc);
+                });
+                state.childrenByParent = children;
+            }
+            function resolveLoadableDocId(docId) {
+                return docId === 'folder' ? 'child' : state.docsById.has(docId) ? docId : '';
+            }
+            function defaultDocId() {
+                return 'intro';
+            }
+            function responseFor(url) {
+                const path = new URL(url, window.location.origin).pathname;
+                fetchCalls.push(path);
+                const payload = payloads[path];
+                if (!payload) return Promise.resolve({ ok: false, status: 404, json: async () => ({}) });
+                return Promise.resolve({ ok: true, status: 200, json: async () => payload });
+            }
+            const workflow = module.initDocsViewerRouteWorkflow({
+                allowManagement: () => false,
+                allowScopeQuery: () => false,
+                applyDocVisibility,
+                cancelSearchDebounce: () => calls.push('cancel-search'),
+                clearManagementMessageForDocChange: (docId) => calls.push(`clear:${docId}`),
+                content: document.createElement('div'),
+                dataRequestOptions: (overrides) => Object.assign({
+                    fetch: responseFor,
+                    checkGeneratedDataReadCapability: () => Promise.resolve(false)
+                }, overrides || {}),
+                defaultDocId,
+                defaultRouteDocId: () => 'folder',
+                expandTrail: (docId) => calls.push(`expand:${docId}`),
+                handleManagementRootClick: () => false,
+                handleMissingDoc: () => calls.push('missing'),
+                handlePayloadError: (error) => calls.push(`payload-error:${error.message}`),
+                hasActiveQuery: (query) => {
+                    const value = typeof query === 'string' ? query : state.searchQuery;
+                    return Boolean(String(value || '').trim());
+                },
+                hideContextMenu: () => calls.push('hide-context'),
+                hideDocPane: () => calls.push('hide-doc-pane'),
+                includeScopeParam: () => false,
+                indexUrl: () => '/index.json',
+                managementModeValue: 'manage',
+                renderBookmarkUi: () => calls.push('bookmarks'),
+                renderDocLoadingState: (doc) => calls.push(`loading:${doc.doc_id}`),
+                renderManagementUi: () => calls.push('management-ui'),
+                renderPayload: (doc, payload, hash) => calls.push(`payload:${doc.doc_id}:${hash}:${payload.content_html}`),
+                renderSearchMode: () => calls.push(`search:${state.searchQuery}`),
+                renderSidebar: () => calls.push('sidebar'),
+                resolveLoadableDocId,
+                root,
+                routeScopeFromUrl: () => 'library',
+                routeViewerBaseUrl: () => '/docs/',
+                scopeConfigsById: () => new Map(),
+                searchBatchSize: 50,
+                searchInput,
+                setRecentModeActive: (active) => { state.recentModeActive = Boolean(active); calls.push(`recent:${active}`); },
+                setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
+                startBusy: () => {
+                    calls.push('busy-start');
+                    return () => calls.push('busy-stop');
+                },
+                state,
+                syncHiddenVisibilityForRequestedDoc: () => calls.push('sync-hidden'),
+                updateInfoPanel: () => calls.push('info'),
+                viewerBaseUrl: () => '/library/',
+                viewerPathname: () => '/library/',
+                viewerScope: () => 'library',
+                window
+            });
+
+            history.replaceState(null, '', `${baseUrl}/library/?doc=folder&q=find&mode=manage#part`);
+            await workflow.loadIndex();
+            const afterIndexUrl = location.pathname + location.search + location.hash;
+            const afterIndex = {
+                selectedDocId: state.selectedDocId,
+                searchQuery: state.searchQuery,
+                searchInput: searchInput.value,
+                managementMode: state.managementMode,
+                nonLoadable: Array.from(state.nonLoadableDocIds),
+                manageOnly: Array.from(state.manageOnlyTreeRootIds),
+                showUpdatedDate: state.showUpdatedDate
+            };
+
+            history.replaceState(null, '', `${baseUrl}/library/?doc=missing`);
+            workflow.applyCurrentRoute({ historyMode: 'replace', hash: '' });
+            const afterMissingUrl = location.pathname + location.search + location.hash;
+
+            await workflow.loadDoc('child', { historyMode: 'push', hash: 'payload-hash' });
+            const afterPayloadUrl = location.pathname + location.search + location.hash;
+            const cachedChild = state.payloadCache.get('child')?.content_html || '';
+
+            root.innerHTML = '<a id="introLink" href="/library/?doc=intro#intro-hash">Intro</a>';
+            workflow.bindRouteLinks();
+            document.getElementById('introLink').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+            await Promise.resolve();
+            await Promise.resolve();
+            const afterLinkUrl = location.pathname + location.search + location.hash;
+
+            workflow.bindPopstate();
+            history.replaceState(null, '', `${baseUrl}/library/?doc=child#back-hash`);
+            window.dispatchEvent(new PopStateEvent('popstate', { state: { docId: 'child' } }));
+            await Promise.resolve();
+            await Promise.resolve();
+            const afterPopstateUrl = location.pathname + location.search + location.hash;
+
+            return {
+                afterIndex,
+                afterIndexUrl,
+                afterMissingUrl,
+                afterPayloadUrl,
+                afterLinkUrl,
+                afterPopstateUrl,
+                cachedChild,
+                calls,
+                fetchCalls
+            };
+        }""",
+        {"baseUrl": base_url},
+    )
+    if result["afterIndexUrl"] != "/library/?doc=child&q=find#part":
+        raise AssertionError(f"route workflow did not canonicalize public search URL: {result!r}")
+    if result["afterIndex"] != {
+        "selectedDocId": "child",
+        "searchQuery": "find",
+        "searchInput": "find",
+        "managementMode": False,
+        "nonLoadable": ["folder"],
+        "manageOnly": ["private"],
+        "showUpdatedDate": False,
+    }:
+        raise AssertionError(f"route workflow index/current-doc state changed unexpectedly: {result!r}")
+    if result["afterMissingUrl"] != "/library/?doc=missing" or "missing" not in result["calls"]:
+        raise AssertionError(f"route workflow missing-doc handling failed: {result!r}")
+    if result["afterPayloadUrl"] != "/library/?doc=child#payload-hash" or result["cachedChild"] != "<h1>Child</h1>":
+        raise AssertionError(f"route workflow payload load/history failed: {result!r}")
+    if result["afterLinkUrl"] != "/library/?doc=intro#intro-hash":
+        raise AssertionError(f"route workflow link interception failed: {result!r}")
+    if result["afterPopstateUrl"] != "/library/?doc=child#back-hash":
+        raise AssertionError(f"route workflow popstate handling changed URL unexpectedly: {result!r}")
+    if "/index.json" not in result["fetchCalls"] or "/child.json" not in result["fetchCalls"] or "/intro.json" not in result["fetchCalls"]:
+        raise AssertionError(f"route workflow did not hand off expected fetches: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1838,6 +2037,7 @@ def main() -> int:
             assert_hosted_view_context_contract(page)
             assert_panel_layout_contract(page)
             assert_view_state_and_hosted_view_contract(page)
+            assert_route_workflow_contract(page, base_url)
             assert_render_is_idempotent(page)
 
             browser.close()
