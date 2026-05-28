@@ -76,6 +76,23 @@ Each finding should be classified as one of:
 
 For rewrite, consolidate, retire, or defer items, record the reason, the owner and the follow-up slice.
 
+## First-Pass Review Result
+
+The first-pass inventory is recorded in [Testing Framework Inventory](/docs/?scope=studio&doc=site-request-testing-framework-inventory).
+
+Summary:
+
+- Current tests already mostly follow the newer Docs Viewer and Studio ownership boundaries.
+- The most important Docs Viewer app-handle lesson is now covered by an intentional architecture guard: the app boot smoke asserts the runtime handle does not expose broad `state`, composition, session, management, or route-workflow bridges.
+- Retained compatibility tests are narrow and should be treated as explicit migration or retired-behavior guards, not permanent architecture surfaces.
+- The clearest consolidation candidate is smoke-profile overlap: both `docs-viewer-smoke` and `studio-smoke` run public Docs Viewer read-only and Docs HTML import module checks.
+- The clearest rewrite candidate is the broad Docs Viewer route smoke, which mixes route/history/search/index-panel/missing-doc/hash concerns.
+- The runner output is already concise enough for Codex-oriented debugging: command progress and log paths go to console, detailed output goes to `var/test-runs/`.
+- Cache and bytecode side effects are ignored by git; temp repos are generally created under `tempfile.TemporaryDirectory()`.
+- Deferred rewrites have named owners and reasons in the inventory.
+
+No test code, smoke helper, runner behavior, or durable testing policy changed in this first pass.
+
 ## Baseline Verification
 
 This request is mostly documentation and test-inventory work.
@@ -99,23 +116,23 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current testing entrypoints, check profiles, Docs Viewer smokes, Studio smokes, Python tests, fixtures, and generated-output assumptions. Deliverable: concise map in a sibling inventory doc. |
-| 2 | planned | Classify test coverage by purpose: product regression, architecture guard, migration compatibility, generated-data contract, local-service contract, public read-only behavior, management write authority, environment smoke, or docs-only validation. |
-| 3 | planned | Audit for stale compatibility assertions that preserve old runtime, route, state, service, or shell shapes. Include the explicit Docs Viewer app-handle lesson: tests should not keep broad state or runtime bridges alive unless they are intentional app contracts. |
-| 4 | planned | Audit for tests coupled to broad route/controller state where focused owner APIs or DOM/user-visible behavior would better express the contract. |
-| 5 | planned | Audit smoke tests for excessive responsibility mixing, duplicated coverage, fragile localhost/browser setup, generated-payload assumptions, and watcher side effects. |
-| 6 | planned | Identify quick wins that can be safely rewritten, consolidated, renamed, or retired without reducing meaningful regression coverage. |
-| 7 | planned | Identify deferred rewrites that need a product or architecture slice before they can be changed safely. |
-| 8 | planned | Review `run_checks.py` profiles for stale grouping, unclear names, slow checks in common paths, missing focused checks, and profile docs drift. |
-| 9 | planned | Review pytest and runner noise: default verbosity, repeated warnings, failure trace length, `.pytest_cache`, `__pycache__`, temporary files, generated logs, watcher side effects, and whether profile output should be summarized more aggressively for Codex. |
-| 10 | planned | Update Testing, Run Checks, Studio Smoke Testing, and any affected owner docs if testing policy, profile purpose, output expectations, cache handling, or smoke conventions change. |
-| 11 | planned | Run the smallest verification set warranted by any changed tests or runners and record pass/fail plus remaining risks. |
-| 12 | planned | Create a structured docs-log entry if the review changes durable testing policy, retires significant old coverage, or changes check profile behavior. |
+| 1 | done | Inventory current testing entrypoints, check profiles, Docs Viewer smokes, Studio smokes, Python tests, fixtures, and generated-output assumptions. Deliverable: [Testing Framework Inventory](/docs/?scope=studio&doc=site-request-testing-framework-inventory). |
+| 2 | done | Classified test coverage by purpose in the inventory: product regression, architecture guard, migration compatibility, generated-data contract, local-service contract, public read-only behavior, management write authority, environment smoke, and docs-only validation. |
+| 3 | done | Audited stale compatibility assertions. The Docs Viewer app-handle lesson is recorded as an intentional architecture guard: tests should reject broad state or runtime bridges unless they are named current app contracts. |
+| 4 | done | Audited broad route/controller state coupling. Main rewrite candidate is `docs-viewer/tests/smoke/docs_viewer_routes.py`; deferred route-shell smokes need owner-specific slices. |
+| 5 | done | Audited smoke tests for mixed responsibilities, duplicated coverage, localhost/browser setup, generated-payload assumptions, and watcher side effects. |
+| 6 | done | Identified quick wins in the inventory: smoke role map, one temp-dir cleanup, Docs Viewer route smoke split, duplicate smoke coverage note, and `full` profile docs clarity. |
+| 7 | done | Identified deferred rewrites with owners and reasons: legacy hidden input handling, catalogue media-section migration, docs-log migration, unprofiled Studio route smokes, and smoke-profile merging. |
+| 8 | done | Reviewed `run_checks.py` profiles. Current grouping still supports the lightweight opt-in model; the main docs drift risk is that `full` omits `docs-viewer-smoke`. |
+| 9 | done | Reviewed pytest and runner noise. Runner output is concise; logs are written under ignored `var/test-runs/`; `.pytest_cache` and `__pycache__` are ignored; temp files are mostly contained. |
+| 10 | done | No durable testing policy, profile behavior, cache handling, or smoke convention changed in this pass, so Testing, Run Checks, and Studio Smoke Testing did not need policy edits beyond this request/inventory record. |
+| 11 | done | Ran the smallest warranted verification for docs-only review: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --list`, `git diff --check`, and a focused changed-doc sanitization scan. |
+| 12 | deferred | No structured docs-log entry was created because this first pass did not change durable testing policy, retire significant coverage, or change check profile behavior. |
 
 The closeout for this request should confirm:
 
 - old migration/compatibility baggage has been inventoried
-- retained compatibility tests have intentional and documented purpose to expose comnpatibility layers
+- retained compatibility tests have intentional and documented purpose to expose compatibility layers
 - broad state and runtime-handle assertions are not preserving retired architecture
 - Docs Viewer and Studio smoke responsibilities are clear enough for future migrations
 - check profiles still match the repo's lightweight opt-in testing model

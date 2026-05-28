@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T19:20:51Z",
+  "generated_at": "2026-05-28T19:25:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3269,8 +3269,24 @@
       "source_path": "site-request-testing-framework-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-testing-framework-review",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-testing-framework-review.json",
-      "content_text_length": 7246,
+      "content_text_length": 8750,
       "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-testing-framework-inventory",
+      "title": "Testing Framework Inventory",
+      "added_date": "2026-05-28",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-testing-framework-review",
+      "sort_order": 16010,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-testing-framework-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-testing-framework-inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-testing-framework-inventory.json",
+      "content_text_length": 12782,
+      "ui_status": "done"
     },
     {
       "scope": "studio",

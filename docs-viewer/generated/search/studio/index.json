@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4d21e6bc81ccebaf6884cec806f7df89",
-    "generated_at_utc": "2026-05-28T18:09:19Z",
-    "count": 220
+    "version": "blake2b-ca264daf8c2de34788496bea6e34ea7f",
+    "generated_at_utc": "2026-05-28T19:24:59Z",
+    "count": 221
   },
   "entries": [
     {
@@ -5311,6 +5311,32 @@
         "28"
       ],
       "search_text": "site-request-testing-framework-review site request testing framework review testing framework review request change requests change requests 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-testing-framework-inventory",
+      "kind": "doc",
+      "title": "Testing Framework Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-testing-framework-inventory",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-testing-framework-review",
+      "parent_title": "Testing Framework Review Request",
+      "display_meta": "2026-05-28 • Testing Framework Review Request",
+      "search_terms": [
+        "site-request-testing-framework-inventory",
+        "site",
+        "request",
+        "testing",
+        "framework",
+        "inventory",
+        "testing framework inventory",
+        "testing framework review request",
+        "review",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-testing-framework-inventory site request testing framework inventory testing framework inventory testing framework review request review 2026-05-28 2026 05 28"
     },
     {
       "id": "data-models-catalogue-indexes",
