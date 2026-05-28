@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-97985eb867c38cac7cf72f188a5284ac",
-    "generated_at_utc": "2026-05-28T11:19:16Z",
-    "count": 215
+    "version": "blake2b-8007140a000ed9627ec7258973b17b84",
+    "generated_at_utc": "2026-05-28T11:42:12Z",
+    "count": 216
   },
   "entries": [
     {
@@ -4825,6 +4825,38 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-app-composition-startup-phases-tasks site request docs viewer app composition startup phases tasks docs viewer app composition and startup phases tasks and docs viewer front-end app architecture request front end architecture 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-runtime-api-shrink-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime API Shrink Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-runtime-api-shrink-tasks",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "parent_title": "Docs Viewer Front-End App Architecture Request",
+      "display_meta": "2026-05-28 • Docs Viewer Front-End App Architecture Request",
+      "search_terms": [
+        "site-request-docs-viewer-runtime-api-shrink-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "runtime",
+        "api",
+        "shrink",
+        "tasks",
+        "docs viewer runtime api shrink tasks",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "app",
+        "architecture",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-runtime-api-shrink-tasks site request docs viewer runtime api shrink tasks docs viewer runtime api shrink tasks docs viewer front-end app architecture request front end app architecture 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

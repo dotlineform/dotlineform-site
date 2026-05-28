@@ -350,6 +350,8 @@ Implemented third slice 2026-05-28:
 
 ### 4. Runtime API Shrink
 
+Task tracker: [Docs Viewer Runtime API Shrink Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-runtime-api-shrink-tasks).
+
 Retire the legacy returned runtime API where possible.
 
 Current bridge API includes:
