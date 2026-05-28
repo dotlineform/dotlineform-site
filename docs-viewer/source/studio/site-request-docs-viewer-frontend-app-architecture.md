@@ -428,6 +428,14 @@ Backend/service handling:
 - manage-only views must not infer write authority from being visible; backend endpoints still enforce writes
 - local diagnostic or source-related views should stay local/manage-only until their data contract is safe and documented
 
+Implemented sixth slice 2026-05-28:
+
+- [Docs Viewer Controller And View Lifecycle Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-controller-view-lifecycle-tasks) inventoried the current controller and hosted-view lifecycle owners and found no runtime behavior change was warranted.
+- The durable lifecycle contract now defines controller `create`, `initialize`, `bind`, `update`/`project`, and optional `dispose`, plus hosted-view `load`, `mount`, `update`, `unmount`, `close`, and `dispose`.
+- Public-safe hosted-view limits and manage-only hosted-view limits are now documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) and summarized in [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview).
+- Existing focused smoke coverage already pins startup order, session domains, public/manage access separation, hosted-view context shape, hosted-view registry access states, info-panel lifecycle behavior, and lazy management adapter contracts.
+- No top-level binding, generated-data flow, route/config behavior, public hosted-view behavior, or management write authority changed in this slice.
+
 ### 7. Architecture Documentation And Inventory Refresh
 
 After the structural slices land, update the durable docs so future work has one current architecture story.

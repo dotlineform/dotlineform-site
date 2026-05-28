@@ -93,6 +93,51 @@ Current scope-owned data:
 - `assets/data/docs/scopes/library/`
 - `assets/data/docs/scopes/analysis/`
 
+## Controller And Hosted-View Lifecycle Contract
+
+Docs Viewer controllers and hosted views use a practical lifecycle, not a framework-level plugin system.
+
+Controller terms:
+
+- `create`: assemble a controller with explicit refs, callbacks, state-domain inputs, services, and config values.
+- `initialize`: run startup work that should not happen at construction time, such as bookmark storage loading or management capability checks.
+- `bind`: attach DOM/window event listeners for the controller's owned surface. Bind is a startup phase and should be called once.
+- `update` or `project`: render or project current state after selected document, route state, panel state, or capability state changes.
+- `dispose`: optional cleanup for controllers that gain a shorter lifetime than the route or own external subscriptions, timers, workers, observers, or hosted resources.
+
+Hosted-view terms:
+
+- `load`: optional lazy module load or factory step.
+- `mount`: render into an explicit mount element from an explicit hosted-view context.
+- `update`: refresh an already-mounted view from a new explicit context.
+- `unmount`: clear the active mounted view when switching views or closing a panel.
+- `close`: host action that marks the panel closed and unmounts the active view.
+- `dispose`: final cleanup for the active view if the host itself is discarded.
+
+Current owner map:
+
+- `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns startup phase sequencing and startup authority records.
+- `docs-viewer/runtime/js/docs-viewer-app-session.js` owns named state-domain facades plus the temporary broad-state compatibility bridge.
+- `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route-link and popstate binding, URL/history helpers, route application, and index/payload workflow handoff.
+- `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns search/recent binding, generated search reads, debounce, result/recent rendering, and route callback consumption.
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark storage initialization, bookmark binding, rendering, and document-load route callback consumption.
+- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns info toggle/toolbar binding, selected-document hosted-view context projection, host open/close/update handoff, and toggle projection.
+- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view resolution, load, mount, update, unmount, close, dispose, option projection, and graceful absence.
+- `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns the minimal hosted-view record shape, lifecycle method defaults, panel-specific listing, access/availability checks, and compatibility records.
+- `docs-viewer/runtime/js/docs-viewer-view-context.js` owns public-safe selected-document hosted-view context projection.
+- `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` owns the first public-safe read-only metadata hosted view.
+- `docs-viewer/runtime/js/docs-viewer-management.js` and its child modules own manage-mode capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, status pills, and write orchestration behind the lazy management boundary.
+
+Lifecycle owner rules:
+
+- Use lifecycle methods only where they reduce coupling or clarify phase ownership.
+- Keep stateless render/project helpers stateless.
+- Public-safe hosted views must mount without management services, backend probes, local generated-read service base URLs, write-capable service handles, or management CSS/JS.
+- Manage-only hosted views may receive explicit management service or capability inputs, but visibility and registration do not imply write authority.
+- Backend writes remain behind named management endpoints with server-side validation.
+- Future feature views should attach through panel/controller contracts and explicit context or service inputs, not by modifying route shell markup or reading broad runtime state.
+- Do not turn hosted-view records into a plugin platform, third-party loader, source editor, semantic-reference editor, or visualization extension point without a separate request.
+
 Current route capability boundary:
 
 - `/docs/` is the only route that enables `?mode=manage`; it is served by the standalone Docs Viewer service

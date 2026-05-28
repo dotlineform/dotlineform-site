@@ -134,6 +134,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: route workflow, search controller, and document controller now consume named generated-data read methods instead of assembling fetch/reload/capability bundles locally.
 - 2026-05-28 owner note: runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing moved to `docs-viewer/runtime/js/docs-viewer-app-composition.js`.
 - 2026-05-28 owner note: the returned app handle was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`. Broad `state`, app-composition internals, app-session internals, the management lazy loader, and route workflow bridges are no longer returned; management reload/startup flows still receive private callbacks inside the runtime.
+- 2026-05-28 lifecycle note: this file remains the compatibility coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle. Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
 - This module now remains the runtime coordinator for focused controller construction, config handoff, focused-controller callback handoff, event handler definitions, private management/startup callback handoff, and the small returned app handle.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
 
@@ -141,6 +142,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the app-composition and startup phase owner.
 - Current risk score: 4.
+- 2026-05-28 lifecycle note: this module owns startup phase sequencing and authority records, including the public/manage split between browser route/config context, browser-safe config assets, generated reads, browser storage, management capability checks, and management write endpoints.
 - Keep this module limited to runtime defaults, foundational owner creation, startup phase records, startup authority records, public/manage startup gating, and initial startup sequence orchestration.
 - Do not move rendering, validation, generated-read internals, config normalization, bookmark storage, management writes, report behavior, or controller-specific UI behavior into it.
 - The compatibility runtime still constructs focused controllers until a later slice narrows controller families away from function-scoped bridge callbacks.
@@ -280,6 +282,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the focused hosted-view registration shape for ordinary repo JavaScript modules.
 - 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
+- 2026-05-28 lifecycle note: hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
 - Keep this module limited to records, lifecycle method names, built-in compatibility view records, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
 - Do not turn it into a plugin system, dependency loader, panel toolbar renderer, or third-party visualization owner.
 
@@ -294,6 +297,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the focused lifecycle owner for info-panel hosted views.
 - 2026-05-27 owner note: info hosted-view option projection moved here. The host now exposes `viewOptions()` and includes info view options in panel projection so the renderer can show available, disabled, unavailable, and access-blocked states.
+- 2026-05-28 lifecycle note: this host is the concrete Docs Viewer hosted-view lifecycle model: resolve/list, load, mount, update, unmount, close, dispose, and graceful absence. It should not become a general plugin platform.
 - Keep this module limited to resolving/listing registered info views, loading them, mounting/updating/unmounting them in the assigned info-panel body, closing the panel, and reporting graceful absence.
 - Do not add route-state mutation, URL history behavior, metadata field rendering, backend writes, or plugin discovery to it.
 
@@ -306,6 +310,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-view-context.js`
 
 - Added 2026-05-27 as the focused selected-document hosted-view context projector.
+- 2026-05-28 lifecycle note: public-safe hosted views should receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
 - Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, and display labels from explicit inputs.
 - Future info views should extend or consume this helper rather than adding context shaping directly to `docs-viewer.js`.
 - Do not add DOM rendering, hosted-view lifecycle, URL history mutation, or backend writes to it.
@@ -315,6 +320,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Keep import result rendering in `docs-viewer/runtime/js/docs-html-import-render.js`.
 - Keep preview/write orchestration in `docs-viewer/runtime/js/docs-html-import-workflow.js`.
 - Keep management-only workflows behind the lazy management boundary.
+- 2026-05-28 lifecycle note: management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, status pills, and write orchestration remain behind `docs-viewer/runtime/js/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
 - Keep normalize-order choice shaping and make-viewable target resolution in `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `docs-viewer/runtime/js/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 

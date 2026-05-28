@@ -102,6 +102,29 @@ Public/static builds leave `data-generated-base-url` blank, and the service cont
 The returned app handle is not a feature-module escape hatch: it does not expose broad app/session state, composition/session internals, management service handles, backend capability probes, the management lazy loader, or route workflow bridge methods.
 Management reload and selected-document refresh still use private callbacks inside the compatibility runtime and management controller context.
 
+## Controller And View Lifecycle
+
+The Docs Viewer lifecycle is intentionally small:
+
+- app composition creates foundational owners, records startup authority, and sequences startup phases
+- route-lifetime controllers use `initialize` only for startup work such as bookmark loading or management capability checks
+- route-lifetime controllers use `bind` to attach event listeners for their owned DOM/window surface
+- controller `update` or `project` methods refresh visible state after route, selected-document, panel, search, bookmark, or capability changes
+- hosted info views use `load`, `mount`, `update`, `unmount`, `close`, and optional `dispose` through `docs-viewer-info-panel-host.js`
+
+Public-safe hosted views receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from `docs-viewer-view-context.js`.
+They must mount without management services, backend probes, local generated-read service base URLs, write-capable handles, or management assets.
+Manage-only hosted views may receive explicit management service or capability inputs, but registration and visibility do not imply write authority.
+Writes remain behind the management backend endpoints and server-side validation.
+
+Current event binding is owned by focused controllers where practical:
+
+- `docs-viewer-route-workflow.js` binds route links and popstate
+- `docs-viewer-search-controller.js` binds search/recent controls
+- `docs-viewer-bookmarks.js` binds bookmark controls
+- `docs-viewer-info-panel-controller.js` binds info-panel controls
+- `docs-viewer-management.js` and child modules bind management-only controls after lazy loading
+
 ## Current URL And State Contract
 
 The current viewer URL model is query-based rather than path-segment based.
