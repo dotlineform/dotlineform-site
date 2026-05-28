@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- In progress
+- needs rewriting following the app refactor of Docs Viewer.
 
 ## Summary
 

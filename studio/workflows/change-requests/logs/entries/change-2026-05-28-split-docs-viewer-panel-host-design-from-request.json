@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-28-split-docs-viewer-panel-host-design-from-request",
+  "date": "2026-05-28",
+  "title": "Split Docs Viewer Panel Host Design From Request",
+  "status": "completed",
+  "type": "documentation",
+  "domains": [
+    "docs-viewer",
+    "documentation",
+    "javascript"
+  ],
+  "summary": "Moved completed multi-panel app-shell design and implemented panel-host ownership into a durable Docs Viewer Panel Hosts doc and reduced the original request to unresolved future work.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-multi-panel-app-shell.md"
+  },
+  "subjects": [
+    "panel-hosts",
+    "app-shell",
+    "closeout"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-multi-panel-app-shell",
+  "related_docs": [
+    "docs-viewer",
+    "docs-viewer-panel-hosts",
+    "site-request-docs-viewer-multi-panel-app-shell"
+  ],
+  "effect": "The request can now be reviewed for concrete follow-up requests without carrying completed architecture notes while current panel-host guidance remains under Docs Viewer.",
+  "verification": [
+    "Reviewed updated source docs",
+    "Ran git diff --check"
+  ],
+  "affected": {
+    "files": [
+      "docs-viewer/source/studio/docs-viewer-panel-hosts.md",
+      "docs-viewer/source/studio/docs-viewer.md",
+      "docs-viewer/source/studio/site-request-docs-viewer-multi-panel-app-shell.md"
+    ],
+    "docs": [
+      "docs-viewer-panel-hosts",
+      "site-request-docs-viewer-multi-panel-app-shell"
+    ]
+  }
+}

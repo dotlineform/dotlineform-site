@@ -5,7 +5,7 @@ added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: draft
 parent_id: change-requests
-sort_order: 12155
+sort_order: 10000
 viewable: true
 ---
 # Docs Semantic References v2 Request
@@ -13,10 +13,13 @@ viewable: true
 Status:
 
 - proposed
+- this needs to happen **before** [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
 
 ## Summary
 
-Revisit and extend Docs semantic references using the clarified Docs Viewer app/backend and module architecture.
+Revisit and extend [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references) using the clarified Docs Viewer app/backend and module architecture.
+
+The v1 implementation also needs clear durable documentation under [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) that can be reviewed.
 
 V1 implemented authored `[[ref:...]]` tokens, builder parsing, rendered semantic links, and generated relationship artifacts.
 Since then, the broader Docs Viewer direction has become clearer:

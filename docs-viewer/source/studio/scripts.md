@@ -109,8 +109,6 @@ Catalogue/runtime maintenance:
   - parses staged Library returned-package JSON/JSONL files under `var/studio/data-sharing/library/import-staging/` and returns a structured review report
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `studio/data/canonical/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
-- `$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py`
-  - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `studio/data/generated/catalogue-lookup/`
 - `bash scripts/make_srcset_images.sh`

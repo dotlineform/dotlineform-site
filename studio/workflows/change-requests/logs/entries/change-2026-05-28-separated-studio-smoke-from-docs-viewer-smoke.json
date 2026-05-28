@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-28-separated-studio-smoke-from-docs-viewer-smoke",
+  "date": "2026-05-28",
+  "title": "Separated Studio Smoke From Docs Viewer Smoke",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "scripts",
+    "studio-ui"
+  ],
+  "summary": "Removed Docs Viewer-owned smoke commands from the studio-smoke profile so Studio smoke coverage now stays focused on Studio-owned browser shell, Data Sharing, Catalogue, and Tag Registry contracts.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "testing",
+    "smoke-profiles"
+  ],
+  "change_request_doc_id": "site-request-testing-framework-review",
+  "related_docs": [
+    "site-request-testing-framework-review",
+    "site-request-testing-framework-inventory",
+    "scripts-run-checks",
+    "testing"
+  ],
+  "related_files": [
+    "studio/commands/run_checks.py",
+    "docs-viewer/source/studio/scripts-run-checks.md",
+    "docs-viewer/source/studio/testing.md",
+    "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "docs-viewer/source/studio/site-request-testing-framework-inventory.md"
+  ]
+}

@@ -136,6 +136,10 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/services/catalogue/catalogue_source_mutation.py",
                 "studio/services/catalogue/catalogue_transactions.py",
                 "studio/app/server/studio/audit_runner.py",
+                "docs-viewer/tests/smoke/docs_viewer_route_index_panel.py",
+                "docs-viewer/tests/smoke/docs_viewer_route_navigation.py",
+                "docs-viewer/tests/smoke/docs_viewer_route_search_missing_hash.py",
+                "docs-viewer/tests/smoke/docs_viewer_route_smoke_helpers.py",
                 "docs-viewer/tests/smoke/docs_viewer_routes.py",
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
@@ -370,26 +374,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
-            "public-docs-viewer-readonly-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-            ),
-            "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
-        ),
-        CheckCommand(
-            "docs-html-import-module-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_html_import_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
-        ),
-        CheckCommand(
             "ui-catalogue-modal-demo-smoke",
             (
                 sys.executable,
@@ -468,6 +452,13 @@ def command_text(argv: Iterable[str]) -> str:
     return " ".join(shlex.quote(str(part)) for part in argv)
 
 
+def clean_jekyll_destination() -> bool:
+    if not JEKYLL_DESTINATION.exists():
+        return False
+    shutil.rmtree(JEKYLL_DESTINATION)
+    return True
+
+
 def copy_generated_public_payloads(destination: Path) -> list[str]:
     copied: list[str] = []
     for rel_path in GENERATED_PUBLIC_PAYLOADS:
@@ -518,6 +509,7 @@ def expand_profiles(profile_names: Iterable[str]) -> list[CheckCommand]:
 def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     started = time.monotonic()
     started_at = dt.datetime.now(dt.timezone.utc).isoformat()
+    setup_lines: list[str] = []
     header = [
         f"name: {command.name}",
         f"description: {command.description}",
@@ -528,6 +520,8 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     ]
 
     try:
+        if command.name == "jekyll-temp-build" and clean_jekyll_destination():
+            setup_lines.append(f"Removed existing temporary Jekyll destination: {JEKYLL_DESTINATION}")
         result = subprocess.run(
             command.argv,
             cwd=REPO_ROOT,
@@ -555,7 +549,10 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         f"exit_code: {exit_code}",
         f"duration_seconds: {duration:.2f}",
     ]
-    log_path.write_text("\n".join(header) + output + "\n".join(footer) + "\n", encoding="utf-8")
+    setup_output = "\n".join(setup_lines)
+    if setup_output:
+        setup_output = f"{setup_output}\n"
+    log_path.write_text("\n".join(header) + setup_output + output + "\n".join(footer) + "\n", encoding="utf-8")
 
     return {
         "name": command.name,
@@ -605,6 +602,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--run-id", help="Optional local run id for var/test-runs/.")
     parser.add_argument("--list", action="store_true", help="List available profiles and exit.")
+    parser.add_argument(
+        "--keep-temp-build",
+        action="store_true",
+        help=f"Keep the temporary Jekyll build at {JEKYLL_DESTINATION} after smoke profiles finish.",
+    )
     return parser.parse_args()
 
 
@@ -634,6 +636,12 @@ def main() -> int:
         print(f"  {status}: {result['log']}")
 
     write_summaries(run_dir, profiles, results)
+    used_jekyll_temp_build = any(result["name"] == "jekyll-temp-build" for result in results)
+    if used_jekyll_temp_build and not args.keep_temp_build:
+        if clean_jekyll_destination():
+            print(f"removed temp build: {JEKYLL_DESTINATION}")
+    elif used_jekyll_temp_build:
+        print(f"kept temp build: {JEKYLL_DESTINATION}")
     failed = [result for result in results if result["exit_code"] != 0]
     print(f"summary: {run_dir.relative_to(REPO_ROOT) / 'summary.md'}")
     return 1 if failed else 0

@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-28-implemented-testing-framework-quick-wins",
+  "date": "2026-05-28",
+  "title": "Implemented Testing Framework Quick Wins",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "docs-viewer",
+    "scripts"
+  ],
+  "summary": "Added a Docs Viewer smoke role map, split the broad route smoke into focused route entrypoints, kept the aggregate wrapper for existing references, documented that full omits docs-viewer-smoke, and converted Data Sharing adapter tests to context-managed temp repos.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "testing",
+    "smoke-profiles",
+    "filesystem-noise"
+  ],
+  "change_request_doc_id": "site-request-testing-framework-review",
+  "related_docs": [
+    "site-request-testing-framework-review",
+    "site-request-testing-framework-inventory",
+    "scripts-run-checks",
+    "testing"
+  ],
+  "related_files": [
+    "docs-viewer/tests/README.md",
+    "docs-viewer/tests/smoke/docs_viewer_routes.py",
+    "docs-viewer/tests/smoke/docs_viewer_route_navigation.py",
+    "docs-viewer/tests/smoke/docs_viewer_route_index_panel.py",
+    "docs-viewer/tests/smoke/docs_viewer_route_search_missing_hash.py",
+    "docs-viewer/tests/smoke/docs_viewer_route_smoke_helpers.py",
+    "studio/tests/python/test_data_sharing_adapters.py",
+    "studio/commands/run_checks.py"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-28-retired-catalogue-media-section-migration-runner",
+  "date": "2026-05-28",
+  "title": "Retired Catalogue Media Section Migration Runner",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "testing"
+  ],
+  "summary": "Removed the old one-time catalogue media-section migration runner because current catalogue media behavior is the Studio-surfaced target schema.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "line": 89
+  },
+  "subjects": [
+    "legacy-cleanup",
+    "media-sections"
+  ],
+  "change_request_doc_id": "site-request-testing-framework-review",
+  "related_docs": [
+    "site-request-testing-framework-review",
+    "scripts-catalogue-source"
+  ],
+  "related_files": [
+    "studio/services/catalogue/migrate_catalogue_media_sections.py"
+  ],
+  "effect": "Current maintenance now routes through target schema validation and Studio-owned catalogue flows instead of preserving an obsolete migration entrypoint.",
+  "verification": [
+    "Removed active script references; retained target media-section schema checks as the current behavior coverage."
+  ],
+  "affected": {
+    "files": [
+      "studio/services/catalogue/migrate_catalogue_media_sections.py",
+      "docs-viewer/source/studio/scripts-catalogue-source.md",
+      "docs-viewer/source/studio/scripts.md"
+    ]
+  }
+}

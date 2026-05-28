@@ -5,7 +5,7 @@ added_date: "2026-05-18 18:07"
 last_updated: "2026-05-18 18:07"
 parent_id: ""
 sort_order: 1010
-hidden: true
+viewable: false
 ---
 # 3 symbols
 

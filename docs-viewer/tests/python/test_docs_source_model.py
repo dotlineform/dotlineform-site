@@ -230,7 +230,7 @@ def test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order() -> No
 
         doc.front_matter["viewable"] = True
 
-        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "hidden": True, "viewable": None})
+        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "viewable": False})
         placement_text = source_model.rewrite_doc_placement_source(doc, "", None)
     finally:
         source_model.current_doc_timestamp = original_timestamp
@@ -238,8 +238,8 @@ def test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order() -> No
     assert "added_date: 2026-01-01" in metadata_text
     assert 'last_updated: "2026-01-02 09:00"' in metadata_text
     assert "title: Updated" in metadata_text
-    assert "hidden: true" in metadata_text
-    assert "viewable:" not in metadata_text
+    assert "viewable: false" in metadata_text
+    assert "hidden:" not in metadata_text
     assert "parent_id: \"\"" in placement_text
     assert 'last_updated: "2026-01-02 09:00"' in placement_text
     assert "sort_order:" not in placement_text

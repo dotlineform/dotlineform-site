@@ -3,7 +3,7 @@ doc_id: site-request-portable-docs-viewer-public-fixture-tasks
 title: Portable Docs Viewer Public Fixture Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: urgent
 parent_id: site-request-portable-docs-viewer
 sort_order: 1010
 viewable: true
@@ -18,18 +18,7 @@ It should create or update an ignored local fixture, likely under `var/`, then s
 This slice should prove route config, shell mounts, runtime assets, viewer CSS, UI text, generated docs payloads, generated search payloads, search/recent behavior, document routing, metadata info, and absence of management-only assets.
 It should not implement local manage mode, backend writes, source editing, semantic-reference views, activity views, third-party visualization modules, plugin architecture, or a package-manager distribution story.
 
-## Status
-
-### just done
-
-- Completed [Docs Viewer App Shell Panel Toolbar View Switching Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks).
-- Kept `docs-viewer/runtime/js/docs-viewer.js` as the stable ES module entrypoint loaded by shared and standalone route shells.
-- Kept `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner.
-- Kept `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the route/document workflow owner.
-- Kept search/recent, bookmarks, document rendering, info hosted-view lifecycle, and info-panel toolbar switching in focused owners.
-- Preserved public `/library/` and `/analysis/` behavior plus local `/docs/?mode=manage` behavior through focused module, management, public read-only, and isolated build checks.
-
-### steer for this task
+### steer (to be reviewed)
 
 - Prefer an ignored fixture under `var/portable-docs-viewer-public/` unless inventory shows a better ignored local fixture home.
 - Keep the fixture minimal: one public read-only route, one docs scope, a small parent/child docs tree, generated docs payloads, generated search payload, route config, UI text, runtime assets, and CSS.
@@ -38,6 +27,14 @@ It should not implement local manage mode, backend writes, source editing, seman
 - Use the same app/runtime/config shape as dotlineform public routes where possible, rather than creating a second fixture-only boot path.
 - Keep management and write behavior out of this slice. A portable local manage fixture should be a later child tracker after the read-only contract is proven.
 - Update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) only if the verified fixture changes the current copy/setup instructions.
+- Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow), especially the JavaScript maintenance gate for shared runtime files.
+- This slice is fixture/proof work, not a feature layer.
+- Keep public read-only portability first-class: one outside-project fixture should prove the viewer can boot and navigate without dotlineform incidental routes.
+- Keep `docs-viewer/runtime/js/docs-viewer.js` as the stable public entrypoint.
+- Keep route config and access projection as the app-shell gate; the fixture must avoid management-only CSS, JavaScript, shell markup, and service URLs.
+- Keep generated docs/search payloads static and fixture-local.
+- Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data capability checks out of the fixture.
+- Keep local manage fixture work separate.
 
 ### baseline verification set
 
@@ -71,17 +68,6 @@ For this slice, the expected verification set is:
 
 Codex sandbox note: local service, browser, and temporary localhost checks need elevated permissions even when product code is healthy.
 Use `PYTHONDONTWRITEBYTECODE=1` for Python smoke checks when practical so test runs do not create watched `__pycache__` files.
-
-### general steer
-
-- Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow), especially the JavaScript maintenance gate for shared runtime files.
-- This slice is fixture/proof work, not a feature layer.
-- Keep public read-only portability first-class: one outside-project fixture should prove the viewer can boot and navigate without dotlineform incidental routes.
-- Keep `docs-viewer/runtime/js/docs-viewer.js` as the stable public entrypoint.
-- Keep route config and access projection as the app-shell gate; the fixture must avoid management-only CSS, JavaScript, shell markup, and service URLs.
-- Keep generated docs/search payloads static and fixture-local.
-- Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data capability checks out of the fixture.
-- Keep local manage fixture work separate.
 
 ## Implementation Tasks
 

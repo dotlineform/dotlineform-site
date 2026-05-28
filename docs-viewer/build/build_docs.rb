@@ -308,8 +308,6 @@ class DocsDataBuilder
   end
 
   def hidden_front_matter_value(front_matter)
-    return boolean_front_matter_value(front_matter, "hidden", false) if front_matter.key?("hidden")
-
     !boolean_front_matter_value(front_matter, "viewable", true)
   end
 

@@ -1,0 +1,32 @@
+{
+  "id": "change-2026-05-28-retired-legacy-docs-log-migration-tests",
+  "date": "2026-05-28",
+  "title": "Retired Legacy Docs Log Migration Tests",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "scripts"
+  ],
+  "summary": "Removed the legacy Docs Viewer Markdown changelog migration test because the old change-log docs are gone and current docs-log coverage now belongs to the structured per-entry JSON indexes.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "testing",
+    "docs-logs",
+    "legacy-cleanup"
+  ],
+  "change_request_doc_id": "site-request-testing-framework-review",
+  "related_docs": [
+    "site-request-testing-framework-review",
+    "site-request-testing-framework-inventory"
+  ],
+  "related_files": [
+    "studio/tests/python/test_docs_logs_migration.py",
+    "studio/tests/python/test_docs_logs_indexes.py",
+    "docs-viewer/source/studio/site-request-testing-framework-review.md",
+    "docs-viewer/source/studio/site-request-testing-framework-inventory.md"
+  ]
+}

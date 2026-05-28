@@ -118,7 +118,6 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "ui_status",
         "parent_id",
         "sort_order",
-        "hidden",
         "viewable",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
@@ -152,8 +151,6 @@ def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
 
 
 def doc_is_hidden(front_matter: Dict[str, Any]) -> bool:
-    if "hidden" in front_matter:
-        return front_matter_boolean(front_matter, "hidden", False)
     return not front_matter_boolean(front_matter, "viewable", True)
 
 

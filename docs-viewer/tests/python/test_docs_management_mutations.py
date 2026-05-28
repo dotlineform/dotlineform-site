@@ -185,7 +185,7 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
-def test_metadata_hidden_plan_writes_viewable_and_removes_legacy_hidden() -> None:
+def test_metadata_viewable_plan_writes_current_viewability() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_update_metadata(
@@ -196,7 +196,7 @@ def test_metadata_hidden_plan_writes_viewable_and_removes_legacy_hidden() -> Non
                 "title": "Target",
                 "parent_id": "",
                 "sort_order": 20,
-                "hidden": True,
+                "viewable": False,
             },
         )
 
@@ -416,7 +416,7 @@ def main() -> None:
         test_create_plan_selects_unique_source_path_backup_metadata_and_search_target,
         test_metadata_plan_keeps_child_search_target_for_title_changes,
         test_metadata_status_only_plan_suppresses_search_target,
-        test_metadata_hidden_plan_writes_viewable_and_removes_legacy_hidden,
+        test_metadata_viewable_plan_writes_current_viewability,
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
         test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder,
         test_move_plan_keeps_search_target_for_reparent,

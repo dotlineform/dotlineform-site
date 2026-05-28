@@ -42,30 +42,6 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source
 
 The target check requires detail `section_id` and `section_title`, accepts `details_subfolder`, validates `sort_order`, and rejects legacy detail `project_subfolder`.
 
-## Media Section Migration
-
-```bash
-$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py
-```
-
-This previews the work-detail source migration from legacy `project_subfolder` to separated source-folder and public-section metadata:
-
-- `details_subfolder`
-- `section_id`
-- `section_title`
-
-The command is dry-run by default. It reports changed record counts, generated section ids, persisted source-folder metadata, and any blocking validation errors.
-
-Apply the migration only when the preview is accepted:
-
-```bash
-$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py --write
-```
-
-Write mode creates a backup under `var/studio/catalogue/backups/` before updating `assets/studio/data/catalogue/work_details.json`. After the migration has been applied, dry-run output should report `Legacy records: 0`, `Already migrated records: 2681`, and `Result: no changes`.
-
-The migration does not move external source image files. Public runtime artifacts under `assets/works/index/` must be regenerated separately by the catalogue build/generator path.
-
 ## Project State Report
 
 ```bash

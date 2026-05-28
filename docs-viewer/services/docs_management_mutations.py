@@ -217,20 +217,13 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     current_ui_status = source_model.normalize_ui_status(target.front_matter.get("ui_status"))
     ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
-    hidden_was_provided = "hidden" in body
     viewable_was_provided = "viewable" in body
-    hidden_or_viewable_was_provided = hidden_was_provided or viewable_was_provided
     current_hidden = target.hidden
     current_viewable = target.viewable
-    if hidden_was_provided:
-        hidden = source_model.front_matter_boolean(body, "hidden", False)
-    elif viewable_was_provided:
-        hidden = not source_model.front_matter_boolean(body, "viewable", True)
-    else:
-        hidden = current_hidden
-    viewable = not hidden
-    hidden_changed = hidden_or_viewable_was_provided and hidden != current_hidden
-    viewable_changed = hidden_changed
+    viewable = source_model.front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
+    hidden = not viewable
+    viewable_changed = viewable_was_provided and viewable != current_viewable
+    hidden_changed = viewable_changed
     changes = {
         "title_changed": title_changed,
         "parent_changed": parent_changed,
@@ -279,9 +272,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["ui_status"] = ui_status
         else:
             updated_front_matter.pop("ui_status", None)
-    if hidden_or_viewable_was_provided:
+    if viewable_was_provided:
         updated_front_matter["viewable"] = viewable
-        updated_front_matter.pop("hidden", None)
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)
@@ -357,11 +349,9 @@ def ordered_unique_doc_ids(raw_doc_ids: Any) -> list[str]:
 
 
 def next_viewable_from_body(body: Dict[str, Any]) -> bool:
-    if "hidden" in body:
-        return not source_model.front_matter_boolean(body, "hidden", False)
     if "viewable" in body:
         return source_model.front_matter_boolean(body, "viewable", True)
-    raise ValueError("hidden or viewable is required")
+    raise ValueError("viewable is required")
 
 
 def expand_viewability_targets(
@@ -452,7 +442,6 @@ def plan_viewability_update(
                     target,
                     {
                         "viewable": False if not next_viewable else None,
-                        "hidden": None,
                     },
                 ),
             )

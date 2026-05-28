@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+from contextlib import contextmanager
 import importlib.util
 import json
 import sys
@@ -173,10 +175,12 @@ def registry_payload() -> dict[str, object]:
     }
 
 
-def write_registry(payload: dict[str, object]) -> Path:
-    repo_root = Path(tempfile.mkdtemp())
-    write_json(repo_root / adapters.REGISTRY_REL_PATH, payload)
-    return repo_root
+@contextmanager
+def registry_repo(payload: dict[str, object]) -> Iterator[Path]:
+    with tempfile.TemporaryDirectory() as temp:
+        repo_root = Path(temp)
+        write_json(repo_root / adapters.REGISTRY_REL_PATH, payload)
+        yield repo_root
 
 
 def expect_value_error(callback, expected: str) -> None:
@@ -190,36 +194,33 @@ def expect_value_error(callback, expected: str) -> None:
 
 
 def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
-    repo_root = write_registry(registry_payload())
+    with registry_repo(registry_payload()) as repo_root:
+        resolution = adapters.resolve_adapter(repo_root, data_domain="library", operation="prepare")
 
-    resolution = adapters.resolve_adapter(repo_root, data_domain="library", operation="prepare")
-
-    assert resolution.adapter_id == "documents"
-    assert resolution.scope == "library"
-    assert resolution.path("outbound_package_root").as_posix() == "var/studio/data-sharing/library/exports"
-    assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
-    assert resolution.capability["selection_model"] == "documents"
-    assert resolution.capability["output_formats"] == ["json"]
+        assert resolution.adapter_id == "documents"
+        assert resolution.scope == "library"
+        assert resolution.path("outbound_package_root").as_posix() == "var/studio/data-sharing/library/exports"
+        assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
+        assert resolution.capability["selection_model"] == "documents"
+        assert resolution.capability["output_formats"] == ["json"]
 
 
 def test_tags_adapter_definition_resolves_for_inspection() -> None:
-    repo_root = write_registry(registry_payload())
+    with registry_repo(registry_payload()) as repo_root:
+        resolution = adapters.resolve_adapter(repo_root, data_domain="tags", operation="review", require_active=False)
 
-    resolution = adapters.resolve_adapter(repo_root, data_domain="tags", operation="review", require_active=False)
-
-    assert resolution.adapter_id == "analytics-tags"
-    assert resolution.adapter["module"] == "analytics.tags"
-    assert resolution.domain["source_write_targets"]["tag_registry"] == "studio/data/canonical/analytics/tag-registry.json"
-    assert resolution.capability["status"] == "planned"
+        assert resolution.adapter_id == "analytics-tags"
+        assert resolution.adapter["module"] == "analytics.tags"
+        assert resolution.domain["source_write_targets"]["tag_registry"] == "studio/data/canonical/analytics/tag-registry.json"
+        assert resolution.capability["status"] == "planned"
 
 
 def test_stub_tags_adapter_fails_closed_for_service_resolution() -> None:
-    repo_root = write_registry(registry_payload())
-
-    expect_value_error(
-        lambda: adapters.resolve_adapter(repo_root, data_domain="tags", operation="review"),
-        "adapter 'analytics-tags' is stub",
-    )
+    with registry_repo(registry_payload()) as repo_root:
+        expect_value_error(
+            lambda: adapters.resolve_adapter(repo_root, data_domain="tags", operation="review"),
+            "adapter 'analytics-tags' is stub",
+        )
 
 
 def test_registry_rejects_duplicate_domain_operation_dispatch() -> None:
@@ -228,23 +229,21 @@ def test_registry_rejects_duplicate_domain_operation_dispatch() -> None:
         {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
         {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
     ]
-    repo_root = write_registry(payload)
-
-    expect_value_error(
-        lambda: adapters.load_registry(repo_root),
-        "multiple Data Sharing adapters configured for library/prepare",
-    )
+    with registry_repo(payload) as repo_root:
+        expect_value_error(
+            lambda: adapters.load_registry(repo_root),
+            "multiple Data Sharing adapters configured for library/prepare",
+        )
 
 
 def test_registry_rejects_unsafe_paths() -> None:
     payload = registry_payload()
     payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../docs-viewer/source/library"
-    repo_root = write_registry(payload)
-
-    expect_value_error(
-        lambda: adapters.load_registry(repo_root),
-        "must be a safe relative path",
-    )
+    with registry_repo(payload) as repo_root:
+        expect_value_error(
+            lambda: adapters.load_registry(repo_root),
+            "must be a safe relative path",
+        )
 
 
 def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
@@ -252,12 +251,11 @@ def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
     payload["adapters"][0]["data_domains"]["library"]["paths"]["returned_package_staging_root"] = (
         "var/studio/export-import/library/import-staging"
     )
-    repo_root = write_registry(payload)
-
-    expect_value_error(
-        lambda: adapters.load_registry(repo_root),
-        "must be var/studio/data-sharing/library/import-staging",
-    )
+    with registry_repo(payload) as repo_root:
+        expect_value_error(
+            lambda: adapters.load_registry(repo_root),
+            "must be var/studio/data-sharing/library/import-staging",
+        )
 
 
 def test_registry_distinguishes_non_active_capability_statuses() -> None:
@@ -265,23 +263,21 @@ def test_registry_distinguishes_non_active_capability_statuses() -> None:
         payload = registry_payload()
         payload["dispatch"] = [{"data_domain": "library", "operation": "review", "adapter_id": "documents"}]
         payload["adapters"][0]["capabilities"] = [capability("review", status=status)]
-        repo_root = write_registry(payload)
-
-        expect_value_error(
-            lambda: adapters.resolve_adapter(repo_root, data_domain="library", operation="review"),
-            f"capability 'review' is {status}",
-        )
+        with registry_repo(payload) as repo_root:
+            expect_value_error(
+                lambda: adapters.resolve_adapter(repo_root, data_domain="library", operation="review"),
+                f"capability 'review' is {status}",
+            )
 
 
 def test_registry_rejects_legacy_operation_names() -> None:
     payload = registry_payload()
     payload["dispatch"] = [{"data_domain": "library", "operation": "export", "adapter_id": "documents"}]
-    repo_root = write_registry(payload)
-
-    expect_value_error(
-        lambda: adapters.load_registry(repo_root),
-        "operation 'export' is not canonical",
-    )
+    with registry_repo(payload) as repo_root:
+        expect_value_error(
+            lambda: adapters.load_registry(repo_root),
+            "operation 'export' is not canonical",
+        )
 
 
 def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
@@ -307,6 +303,7 @@ def main() -> None:
         test_stub_tags_adapter_fails_closed_for_service_resolution,
         test_registry_rejects_duplicate_domain_operation_dispatch,
         test_registry_rejects_unsafe_paths,
+        test_registry_rejects_non_standard_runtime_artifact_roots,
         test_registry_distinguishes_non_active_capability_statuses,
         test_registry_rejects_legacy_operation_names,
         test_repo_registry_loads_and_resolves_documents_and_tags,

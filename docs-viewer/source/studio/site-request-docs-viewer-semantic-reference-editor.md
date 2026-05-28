@@ -13,6 +13,7 @@ viewable: true
 Status:
 
 - proposed
+- this can only happen **after** [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
 
 ## Summary
 

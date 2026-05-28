@@ -25,7 +25,6 @@ from docs_scope_config import DOCS_SCOPE_CONFIGS
 from docs_source_model import (
     ScopeDoc,
     current_doc_timestamp,
-    default_hidden_for_scope,
     default_viewable_for_scope,
     format_source,
     load_scope_docs,
@@ -104,7 +103,6 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     front_matter["last_updated"] = timestamp
     front_matter["parent_id"] = target.parent_id
     front_matter.pop("viewable", None)
-    front_matter.pop("hidden", None)
     if not target.viewable:
         front_matter["viewable"] = False
     if target.sort_order is None:
@@ -567,7 +565,6 @@ def handle_import_source(
             "title": preview["title"],
             "parent_id": "",
             "sort_order": next_sort_order(docs, ""),
-            "hidden": default_hidden_for_scope(scope),
             "viewable": default_viewable_for_scope(scope),
         },
         "collision": collision,

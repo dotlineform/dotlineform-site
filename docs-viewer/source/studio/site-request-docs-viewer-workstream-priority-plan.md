@@ -5,14 +5,17 @@ added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: draft
 parent_id: change-requests
-sort_order: 12170
+sort_order: 14170
 viewable: true
 ---
 # Docs Viewer Workstream Priority Plan
 
 Status:
 
-- proposed
+- needs rewriting following the app refactor of Docs Viewer
+- remove completed work
+- existing change requests need to be linked to, with minimal description here.
+- new change requests need creating where policy and proposals go
 
 ## Summary
 

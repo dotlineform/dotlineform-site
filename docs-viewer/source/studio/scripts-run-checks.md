@@ -38,6 +38,12 @@ Run the broad profile:
 $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 ```
 
+Keep the temporary Jekyll smoke-test build for debugging:
+
+```bash
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke --keep-temp-build
+```
+
 ## Profiles
 
 - `quick`
@@ -49,9 +55,9 @@ $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 - `docs-viewer-smoke`
   Builds the site to a temporary Jekyll destination and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/` for the standalone service, public read-only installs, browser modules, and management UI behavior.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including public Docs Viewer read-only coverage, the UI Catalogue modal demo, Studio data import route checks with docs-service unavailable, and a mocked Library import preview flow.
+  Builds the site to a temporary Jekyll destination and runs retained Studio-owned browser smoke checks, including the UI Catalogue modal demo, Studio data import route checks with docs-service unavailable, and a mocked Library import preview flow. Docs Viewer smoke checks live only in `docs-viewer-smoke`.
 - `full`
-  Runs `quick`, `catalogue`, `docs`, and `studio-smoke`.
+  Runs `quick`, `catalogue`, `docs`, and `studio-smoke`. It does not run `docs-viewer-smoke`; run that profile explicitly when Docs Viewer browser behavior is in scope.
 
 ## Outputs
 
@@ -62,6 +68,8 @@ Each run creates:
 - one `.log` file per command
 
 The summary file is the path Codex should report in close-out.
+Smoke profiles use `/tmp/dlf-jekyll-build` as a temporary Jekyll destination.
+The runner removes any existing temp build before `jekyll-temp-build` and removes the temp build again after the profile finishes, unless `--keep-temp-build` is passed.
 
 ## Related References
 
