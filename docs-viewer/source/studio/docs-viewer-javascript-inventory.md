@@ -130,6 +130,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
 - 2026-05-28 owner note: document payload rendering and sidebar tree rendering now consume explicit state-domain inputs. `docs-viewer-document-controller.js` receives route-session, scope-config, selected-document, generated-data, and status commands; `docs-viewer-sidebar.js` receives document-index, selected-document, and scope-config projections instead of the broad runtime state.
 - 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`; the controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of the broad runtime state.
+- 2026-05-28 owner note: config/scope setup now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs through `docs-viewer/runtime/js/docs-viewer-config-controller.js` instead of broad runtime state.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
 - 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
 - 2026-05-28 owner note: service-context projection moved to `docs-viewer/runtime/js/docs-viewer-service-context.js`; public contexts strip management base URLs and local generated-read service base URLs before controllers are assembled.
@@ -200,6 +201,13 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: route workflow now exposes a private command contract for route application, index loading, document loading, history writes, route resolution, and route URL creation. The contract is backed by route-session, scope-config, document-index, selected-document, search/recent, and status inputs rather than a broad runtime state handoff.
 - Keep this module limited to URL/query helpers, current-doc resolution, route application, index and payload load orchestration, canonical URL correction, route-link handling, and popstate coordination.
 - It should continue to delegate low-level URL/history operations to `docs-viewer/runtime/js/docs-viewer-router.js`, final document pane rendering to `docs-viewer/runtime/js/docs-viewer-document-controller.js`, search/recent rendering to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, bookmark storage/rendering to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, and management writes/actions to the lazy management modules.
+
+### `docs-viewer/runtime/js/docs-viewer-config-controller.js`
+
+- Current risk score: 5.
+- 2026-05-28 owner note: this controller now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs instead of broad `state`.
+- Keep this module focused on browser-safe Docs Viewer config loading, route-scope resolution, scope-picker projection, route-global/root-dataset projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates.
+- Do not move document index loading, payload rendering, URL history primitives, generated-read capability checks, backend writes, management actions, or route shell boot into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-search-controller.js`
 

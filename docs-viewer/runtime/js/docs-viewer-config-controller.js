@@ -40,10 +40,32 @@ export function formatText(template, tokens) {
 }
 
 export function initDocsViewerConfigController(context) {
-  var state = context.state;
+  var scopeConfig = context.scopeConfig || {};
+  var documentIndex = context.documentIndex || {};
+  var searchRecent = context.searchRecent || {};
+  var routeSession = context.routeSession || {};
+  var configService = context.configService || {};
+  var routeCommands = context.routeCommands || {};
   var root = context.root;
   var scopeSelect = context.scopeSelect;
   var recentButton = context.recentButton;
+  if (!Array.isArray(scopeConfig.scopeConfigs)) scopeConfig.scopeConfigs = [];
+  if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
+  if (!scopeConfig.managementText) scopeConfig.managementText = {};
+  if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
+
+  function docsViewerConfigUrl() {
+    return configService.docsViewerConfigUrl || context.docsViewerConfigUrl;
+  }
+
+  function uiTextUrl() {
+    return configService.uiTextUrl || context.uiTextUrl;
+  }
+
+  function dataRequestOptions(options) {
+    if (typeof configService.dataRequestOptions === "function") return configService.dataRequestOptions(options);
+    return typeof context.dataRequestOptions === "function" ? context.dataRequestOptions(options) : {};
+  }
 
   function normalizeBrowserScopeConfig(rawScope) {
     if (!rawScope || typeof rawScope !== "object") return null;
@@ -122,22 +144,22 @@ export function initDocsViewerConfigController(context) {
     var requestedScope = String(new URLSearchParams(window.location.search).get("scope") || "").trim().toLowerCase();
     var viewerScope = context.viewerScope();
     if (context.allowScopeQuery && requestedScope) {
-      if (!state.scopeConfigsById.has(requestedScope)) {
+      if (!scopeConfig.scopeConfigsById.has(requestedScope)) {
         throw new Error("Unknown docs scope: " + requestedScope);
       }
       return requestedScope;
     }
     if (!context.allowScopeQuery) {
-      var pathScope = scopeFromCurrentPath(state);
+      var pathScope = scopeFromCurrentPath(scopeConfig);
       if (pathScope) return pathScope;
-      if (viewerScope && state.scopeConfigsById.has(viewerScope)) return viewerScope;
+      if (viewerScope && scopeConfig.scopeConfigsById.has(viewerScope)) return viewerScope;
     }
-    if (viewerScope && state.scopeConfigsById.has(viewerScope)) return viewerScope;
-    return state.defaultScopeId;
+    if (viewerScope && scopeConfig.scopeConfigsById.has(viewerScope)) return viewerScope;
+    return scopeConfig.defaultScopeId;
   }
 
   function scopeOptionLabel(config) {
-    var badges = getConfigValue(state.docsViewerConfig, "docsViewerSettings.scope_type_badges");
+    var badges = getConfigValue(scopeConfig.docsViewerConfig, "docsViewerSettings.scope_type_badges");
     var badge = badges && typeof badges === "object" ? badges[config.scopeType] : null;
     var emoji = badge && typeof badge === "object" ? String(badge.emoji || "").trim() : "";
     return (emoji ? emoji + " " : "") + config.scopeId;
@@ -145,14 +167,14 @@ export function initDocsViewerConfigController(context) {
 
   function renderScopeOptions() {
     if (!scopeSelect) return;
-    scopeSelect.innerHTML = state.scopeConfigs.map(function (config) {
+    scopeSelect.innerHTML = scopeConfig.scopeConfigs.map(function (config) {
       return '<option value="' + escapeHtml(config.scopeId) + '">' + escapeHtml(scopeOptionLabel(config)) + '</option>';
     }).join("");
     scopeSelect.value = context.viewerScope();
   }
 
   function applyRouteScopeConfig(scope) {
-    var config = state.scopeConfigsById.get(scope);
+    var config = scopeConfig.scopeConfigsById.get(scope);
     if (!config) {
       throw new Error("Unknown docs scope: " + scope);
     }
@@ -161,7 +183,11 @@ export function initDocsViewerConfigController(context) {
       routeViewerBaseUrl: context.routeViewerBaseUrl,
       window: window
     });
-    context.applyRouteGlobals(routeProjection);
+    if (typeof routeCommands.applyRouteGlobals === "function") {
+      routeCommands.applyRouteGlobals(routeProjection);
+    } else if (typeof context.applyRouteGlobals === "function") {
+      context.applyRouteGlobals(routeProjection);
+    }
     root.dataset.viewerScope = scope;
     root.dataset.indexUrl = config.indexUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
@@ -174,42 +200,42 @@ export function initDocsViewerConfigController(context) {
   function loadDocsViewerConfig(options) {
     var settings = options || {};
     if (settings.force) {
-      state.docsViewerConfigLoaded = false;
-      state.docsViewerConfigRequestPromise = null;
+      scopeConfig.docsViewerConfigLoaded = false;
+      scopeConfig.docsViewerConfigRequestPromise = null;
     }
-    if (state.docsViewerConfigLoaded) return Promise.resolve(state.docsViewerConfig);
-    if (state.docsViewerConfigRequestPromise) return state.docsViewerConfigRequestPromise;
-    if (!context.docsViewerConfigUrl) {
+    if (scopeConfig.docsViewerConfigLoaded) return Promise.resolve(scopeConfig.docsViewerConfig);
+    if (scopeConfig.docsViewerConfigRequestPromise) return scopeConfig.docsViewerConfigRequestPromise;
+    if (!docsViewerConfigUrl()) {
       return Promise.reject(new Error("Docs Viewer config URL is not configured."));
     }
 
-    state.docsViewerConfigRequestPromise = fetchJsonWithRetry(
-      context.docsViewerConfigUrl,
+    scopeConfig.docsViewerConfigRequestPromise = fetchJsonWithRetry(
+      docsViewerConfigUrl(),
       "Failed to load Docs Viewer config",
       "",
-      context.dataRequestOptions(settings.reloadNonce ? { reloadNonce: settings.reloadNonce } : {})
+      dataRequestOptions(settings.reloadNonce ? { reloadNonce: settings.reloadNonce } : {})
     )
       .then(function (payload) {
         var config = normalizeBrowserConfig(payload);
-        state.docsViewerConfig = config;
-        state.scopeConfigs = config.scopes;
-        state.scopeConfigsById = config.scopesById;
-        state.defaultScopeId = config.defaultScopeId;
-        state.docsViewerConfigLoaded = true;
+        scopeConfig.docsViewerConfig = config;
+        scopeConfig.scopeConfigs = config.scopes;
+        scopeConfig.scopeConfigsById = config.scopesById;
+        scopeConfig.defaultScopeId = config.defaultScopeId;
+        scopeConfig.docsViewerConfigLoaded = true;
         applyRouteScopeConfig(routeScopeFromUrl());
         return config;
       })
       .finally(function () {
-        state.docsViewerConfigRequestPromise = null;
+        scopeConfig.docsViewerConfigRequestPromise = null;
       });
 
-    return state.docsViewerConfigRequestPromise;
+    return scopeConfig.docsViewerConfigRequestPromise;
   }
 
   function handleScopeChange() {
     if (!context.allowScopeQuery || !scopeSelect) return;
     var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
-    var config = state.scopeConfigsById.get(nextScope);
+    var config = scopeConfig.scopeConfigsById.get(nextScope);
     if (!config) {
       scopeSelect.value = context.viewerScope();
       return;
@@ -217,7 +243,7 @@ export function initDocsViewerConfigController(context) {
 
     var url = new URL(context.routeViewerBaseUrl || context.viewerBaseUrl(), window.location.origin);
     url.searchParams.set("scope", nextScope);
-    if (state.managementMode || context.getCurrentMode() === context.managementMode) {
+    if (routeSession.managementMode || context.getCurrentMode() === context.managementMode) {
       url.searchParams.set("mode", context.managementMode);
     }
     if (config.defaultDocId) {
@@ -251,11 +277,12 @@ export function initDocsViewerConfigController(context) {
   }
 
   function applyViewerConfig(config) {
-    state.viewerConfig = config || {};
-    state.viewerConfigLoaded = true;
-    state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), context.defaultRecentLimit);
-    state.uiStatuses = normalizeUiStatuses(config, context.viewerScope());
-    state.uiStatusByValue = new Map(state.uiStatuses.map(function (status) {
+    scopeConfig.viewerConfig = config || {};
+    scopeConfig.viewerConfigLoaded = true;
+    scopeConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), context.defaultRecentLimit);
+    searchRecent.recentLimit = scopeConfig.recentLimit;
+    scopeConfig.uiStatuses = normalizeUiStatuses(config, context.viewerScope());
+    scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
     var hiddenColor = String(getConfigValue(config, "docs_viewer.hidden_nav_color") || getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
@@ -268,21 +295,21 @@ export function initDocsViewerConfigController(context) {
       recentButton.setAttribute("aria-label", label);
       recentButton.title = label;
     }
-    state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
-    state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
-    state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
-    state.managementText.statusMenuLabel = getConfigText(config, "docs_viewer.status_menu_label", state.managementText.statusMenuLabel);
-    state.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
-    state.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
-    state.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
+    scopeConfig.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", scopeConfig.managementText.statusPillSetLabel);
+    scopeConfig.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", scopeConfig.managementText.statusPillClearLabel);
+    scopeConfig.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", scopeConfig.managementText.statusPillReadonlyLabel);
+    scopeConfig.managementText.statusMenuLabel = getConfigText(config, "docs_viewer.status_menu_label", scopeConfig.managementText.statusMenuLabel);
+    scopeConfig.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", scopeConfig.managementText.statusPillSaving);
+    scopeConfig.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", scopeConfig.managementText.statusPillSaved);
+    scopeConfig.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", scopeConfig.managementText.statusPillFailed);
     if (context.managementController()) {
       context.managementController().applyConfig(config);
     }
-    if (state.docs.length) {
+    if (documentIndex.docs.length) {
       context.renderSidebar();
       context.renderStatusPills();
     }
-    if (state.recentModeActive) {
+    if (searchRecent.recentModeActive) {
       context.renderRecentMode();
     }
   }
@@ -290,17 +317,17 @@ export function initDocsViewerConfigController(context) {
   function loadViewerConfig(options) {
     var settings = options || {};
     if (settings.force) {
-      state.viewerConfigLoaded = false;
-      state.viewerConfigRequestPromise = null;
+      scopeConfig.viewerConfigLoaded = false;
+      scopeConfig.viewerConfigRequestPromise = null;
     }
-    if (state.viewerConfigLoaded) return Promise.resolve(null);
-    if (state.viewerConfigRequestPromise) return state.viewerConfigRequestPromise;
-    if (!context.docsViewerConfigUrl) {
+    if (scopeConfig.viewerConfigLoaded) return Promise.resolve(null);
+    if (scopeConfig.viewerConfigRequestPromise) return scopeConfig.viewerConfigRequestPromise;
+    if (!docsViewerConfigUrl()) {
       applyViewerConfig({});
       return Promise.resolve(null);
     }
 
-    state.viewerConfigRequestPromise = Promise.all([
+    scopeConfig.viewerConfigRequestPromise = Promise.all([
       loadDocsViewerConfig(settings),
       loadDocsViewerText()
     ])
@@ -318,9 +345,9 @@ export function initDocsViewerConfigController(context) {
         return null;
       })
       .finally(function () {
-        state.viewerConfigRequestPromise = null;
+        scopeConfig.viewerConfigRequestPromise = null;
       });
-    return state.viewerConfigRequestPromise;
+    return scopeConfig.viewerConfigRequestPromise;
   }
 
   function reloadDocsViewerConfig() {
@@ -331,8 +358,8 @@ export function initDocsViewerConfigController(context) {
   }
 
   function loadDocsViewerText() {
-    if (!context.uiTextUrl) return Promise.resolve(null);
-    return fetchJsonWithRetry(appendAssetVersion(context.uiTextUrl), "Failed to load Docs Viewer UI text", "", context.dataRequestOptions())
+    if (!uiTextUrl()) return Promise.resolve(null);
+    return fetchJsonWithRetry(appendAssetVersion(uiTextUrl()), "Failed to load Docs Viewer UI text", "", dataRequestOptions())
       .catch(function (error) {
         console.warn("docs_viewer: scoped UI text unavailable; using fallback copy", error);
         return null;

@@ -2985,6 +2985,182 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
         raise AssertionError(f"generated-data runtime contract changed unexpectedly: {result!r}")
 
 
+def assert_config_controller_contract(page: Page, base_url: str) -> None:
+    result = page.evaluate(
+        """async ({ baseUrl }) => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-config-controller.js');
+            document.body.innerHTML = `
+                <section id="root"></section>
+                <select id="scopeSelect"></select>
+                <button id="recentButton"></button>
+            `;
+            history.replaceState(null, '', `${baseUrl}/docs/?scope=library`);
+            const calls = [];
+            const fetchUrls = [];
+            const root = document.getElementById('root');
+            const scopeSelect = document.getElementById('scopeSelect');
+            const recentButton = document.getElementById('recentButton');
+            const scopeConfig = {
+                docsViewerConfigLoaded: false,
+                docsViewerConfigRequestPromise: null,
+                scopeConfigs: [],
+                scopeConfigsById: new Map(),
+                defaultScopeId: '',
+                viewerConfigLoaded: false,
+                viewerConfigRequestPromise: null,
+                uiStatuses: [],
+                uiStatusByValue: new Map(),
+                recentLimit: 10,
+                managementText: {
+                    statusPillSetLabel: 'Set status: {label}',
+                    statusPillClearLabel: 'Clear status: {label}',
+                    statusPillReadonlyLabel: 'Status: {label}',
+                    statusMenuLabel: 'Document status',
+                    statusPillSaving: 'Saving...',
+                    statusPillSaved: 'Saved.',
+                    statusPillFailed: 'Failed.'
+                }
+            };
+            const documentIndex = {
+                docs: [{ doc_id: 'intro' }]
+            };
+            const searchRecent = {
+                recentLimit: 10,
+                recentModeActive: true
+            };
+            const routeSession = {
+                managementMode: true
+            };
+            const configPayload = {
+                schema_version: 'docs_viewer_config_v1',
+                default_scope_id: 'studio',
+                docs_viewer: {
+                    recently_added_limit: 3,
+                    scope_type_badges: {
+                        public: { emoji: 'P' }
+                    },
+                    ui_statuses_by_scope: {
+                        library: [
+                            { ui_status: 'review', label: 'Review', emoji: 'R' }
+                        ]
+                    }
+                },
+                scopes: [
+                    {
+                        scope_id: 'studio',
+                        scope_type: 'local',
+                        viewer_base_url: '/docs/',
+                        include_scope_param: true,
+                        default_doc_id: 'studio-home',
+                        index_url: '/studio/index.json',
+                        search_index_url: '/studio/search.json'
+                    },
+                    {
+                        scope_id: 'library',
+                        scope_type: 'public',
+                        viewer_base_url: '/library/',
+                        include_scope_param: false,
+                        default_doc_id: 'library-home',
+                        index_url: '/library/index.json',
+                        search_index_url: '/library/search.json'
+                    }
+                ]
+            };
+            const textPayload = {
+                recently_added_button: 'Latest docs',
+                status_pill_set_label: 'Set {label}',
+                status_pill_saved: 'Saved status.'
+            };
+            const originalFetch = window.fetch;
+            window.fetch = (url) => {
+                fetchUrls.push(String(url));
+                const payload = String(url).includes('ui-text') ? textPayload : configPayload;
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    json: () => Promise.resolve(payload)
+                });
+            };
+            try {
+                const controller = module.initDocsViewerConfigController({
+                    allowScopeQuery: true,
+                    configService: {
+                        docsViewerConfigUrl: '/config.json',
+                        uiTextUrl: '/ui-text.json',
+                        dataRequestOptions: (options) => ({ marker: options && options.reloadNonce || 'none' })
+                    },
+                    defaultRecentLimit: 10,
+                    documentIndex,
+                    getCurrentMode: () => 'manage',
+                    managementController: () => ({ applyConfig: () => calls.push('apply-management-config') }),
+                    managementMode: 'manage',
+                    recentButton,
+                    renderRecentMode: () => calls.push('render-recent'),
+                    renderSidebar: () => calls.push('render-sidebar'),
+                    renderStatusPills: () => calls.push('render-status-pills'),
+                    root,
+                    routeCommands: {
+                        applyRouteGlobals: (projection) => calls.push(`route:${projection.viewerScope}:${projection.defaultRouteDocId}:${projection.includeScopeParam}`)
+                    },
+                    routeSession,
+                    routeViewerBaseUrl: '/docs/',
+                    scopeConfig,
+                    scopeSelect,
+                    searchRecent,
+                    uiStatusEmojiMaxLength: 4,
+                    viewerBaseUrl: () => '/docs/',
+                    viewerScope: () => 'library'
+                });
+                const loadedScope = await controller.loadDocsViewerConfig();
+                await controller.loadViewerConfig();
+                return {
+                    fetchUrls,
+                    loadedDefault: loadedScope.defaultScopeId,
+                    scopeIds: scopeConfig.scopeConfigs.map((config) => config.scopeId),
+                    selectedScope: scopeSelect.value,
+                    optionText: Array.from(scopeSelect.options).map((option) => option.textContent),
+                    rootDataset: {
+                        viewerScope: root.dataset.viewerScope,
+                        indexUrl: root.dataset.indexUrl,
+                        searchIndexUrl: root.dataset.searchIndexUrl,
+                        defaultDocId: root.dataset.defaultDocId,
+                        viewerBaseUrl: root.dataset.viewerBaseUrl,
+                        includeScopeParam: root.dataset.includeScopeParam
+                    },
+                    recentLimit: searchRecent.recentLimit,
+                    statusLabel: scopeConfig.uiStatusByValue.get('review')?.label || '',
+                    recentButtonText: recentButton.textContent,
+                    managementText: scopeConfig.managementText,
+                    calls
+                };
+            } finally {
+                window.fetch = originalFetch;
+            }
+        }""",
+        {"baseUrl": base_url},
+    )
+    if result["loadedDefault"] != "studio" or result["scopeIds"] != ["library", "studio"]:
+        raise AssertionError(f"config controller scope normalization changed: {result!r}")
+    if result["selectedScope"] != "library" or result["optionText"] != ["P library", "studio"]:
+        raise AssertionError(f"config controller scope picker projection changed: {result!r}")
+    if result["rootDataset"] != {
+        "viewerScope": "library",
+        "indexUrl": "/library/index.json",
+        "searchIndexUrl": "/library/search.json",
+        "defaultDocId": "library-home",
+        "viewerBaseUrl": "/docs/",
+        "includeScopeParam": "true",
+    }:
+        raise AssertionError(f"config controller route-global projection changed: {result!r}")
+    if result["recentLimit"] != 3 or result["statusLabel"] != "Review" or result["recentButtonText"] != "Latest docs":
+        raise AssertionError(f"config controller UI config projection changed: {result!r}")
+    if result["managementText"]["statusPillSetLabel"] != "Set {label}" or result["managementText"]["statusPillSaved"] != "Saved status.":
+        raise AssertionError(f"config controller management text projection changed: {result!r}")
+    for expected in ["route:library:library-home:true", "apply-management-config", "render-sidebar", "render-status-pills", "render-recent"]:
+        if expected not in result["calls"]:
+            raise AssertionError(f"config controller callback contract changed: {result!r}")
+
+
 def assert_service_context_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -3378,6 +3554,7 @@ def main() -> int:
             assert_bookmark_controller_contract(page)
             assert_document_and_sidebar_controller_contract(page)
             assert_generated_data_runtime_contract(page)
+            assert_config_controller_contract(page, base_url)
             assert_service_context_contract(page)
             assert_document_index_state_contract(page)
             assert_info_panel_controller_contract(page)

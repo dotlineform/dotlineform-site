@@ -283,10 +283,13 @@ export function startDocsViewerRuntime(options) {
   });
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
-    applyRouteGlobals: applyRouteGlobals,
-    dataRequestOptions: dataRequestOptions,
+    configService: {
+      dataRequestOptions: dataRequestOptions,
+      docsViewerConfigUrl: docsViewerConfigUrl,
+      uiTextUrl: uiTextUrl
+    },
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
-    docsViewerConfigUrl: docsViewerConfigUrl,
+    documentIndex: appSession.domains.documentIndex,
     getCurrentMode: getCurrentMode,
     managementController: function () {
       return managementRuntime ? managementRuntime.controller() : null;
@@ -297,11 +300,15 @@ export function startDocsViewerRuntime(options) {
     renderSidebar: renderSidebar,
     renderStatusPills: renderStatusPills,
     root: root,
+    routeCommands: {
+      applyRouteGlobals: applyRouteGlobals
+    },
     routeViewerBaseUrl: routeViewerBaseUrl,
+    routeSession: appSession.domains.routeSession,
     scopeSelect: scopeSelect,
-    state: state,
+    scopeConfig: appSession.domains.scopeConfig,
+    searchRecent: appSession.domains.searchRecent,
     uiStatusEmojiMaxLength: UI_STATUS_EMOJI_MAX_LENGTH,
-    uiTextUrl: uiTextUrl,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerScope: function () { return viewerScope; }
   });
