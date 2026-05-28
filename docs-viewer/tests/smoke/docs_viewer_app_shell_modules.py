@@ -443,7 +443,7 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 include_scope_param: false,
                 allow_scope_query: false,
                 viewer_base_url: '/library/',
-                generated_base_url: '',
+                generated_base_url: 'http://127.0.0.1:8789',
                 docs_paths: {
                     index_url: '/assets/data/docs/scopes/library/index.json',
                     search_index_url: '/assets/data/search/library/index.json'
@@ -456,7 +456,7 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 access: {
                     allow_management: false,
                     allow_scope_query: false,
-                    management_base_url: '',
+                    management_base_url: 'http://127.0.0.1:8789',
                     management_mode_value: 'manage'
                 },
                 panels: {
@@ -483,8 +483,12 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 defaultScopeId: resolved.defaultScopeId,
                 legacyIgnored: route.viewerBaseUrl,
                 indexUrl: route.indexUrl,
+                routeGeneratedBaseUrl: route.generatedBaseUrl,
+                routeManagementBaseUrl: route.managementBaseUrl,
                 allowManagement: projected.allowManagement,
                 canLoadManagementUi: projected.canLoadManagementUi,
+                backendReachability: projected.backendReachability,
+                writeAvailability: projected.writeAvailability,
                 publicReadOnly: projected.publicReadOnly,
                 requestedMode: projected.requestedMode,
                 managementRequested: projected.managementRequested,
@@ -500,8 +504,12 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
         "defaultScopeId": "library",
         "legacyIgnored": "/library/",
         "indexUrl": "/assets/data/docs/scopes/library/index.json?v=smoke",
+        "routeGeneratedBaseUrl": "",
+        "routeManagementBaseUrl": "",
         "allowManagement": False,
         "canLoadManagementUi": False,
+        "backendReachability": "unavailable",
+        "writeAvailability": "unavailable",
         "publicReadOnly": True,
         "requestedMode": "",
         "managementRequested": False,

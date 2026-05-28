@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-28-clarified-docs-viewer-public-and-manage-app-contexts",
+  "date": "2026-05-28",
+  "title": "Clarified Docs Viewer Public And Manage App Contexts",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Clarified public and manage Docs Viewer app-context boundaries by stripping local generated-read URLs from public route contexts, pinning the public/manage separation in focused smoke coverage, and documenting the route, service, session, generated-data, and management authority split.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-public-manage-app-contexts-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "public-manage-context",
+    "app-context",
+    "generated-read"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-public-manage-app-contexts-tasks",
+  "related_docs": [
+    "site-request-docs-viewer-frontend-app-architecture",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-overview",
+    "docs-viewer-javascript-inventory",
+    "site-request-docs-viewer-public-manage-app-contexts-tasks"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-context.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py",
+    "docs-viewer/source/studio/site-request-docs-viewer-public-manage-app-contexts-tasks.md"
+  ],
+  "effect": "Public read-only route context now enforces the same backend-free generated-read boundary that service context already enforced, so stale or locally injected public route config cannot leak a local generated-read base URL into public app context.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer-app-context.js docs-viewer/runtime/js/docs-viewer-access.js docs-viewer/runtime/js/docs-viewer-route-config.js docs-viewer/runtime/js/docs-viewer-service-context.js docs-viewer/runtime/js/docs-viewer-app-composition.js docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build",
+    "git diff --check"
+  ]
+}

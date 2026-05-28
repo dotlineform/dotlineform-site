@@ -60,7 +60,7 @@ export function createDocsViewerRouteContext(options) {
   });
   var allowManagement = access.allowManagement;
   var managementBaseUrl = allowManagement ? cleanBaseUrl(routeConfig.access.managementBaseUrl) : "";
-  var generatedBaseUrl = cleanBaseUrl(routeConfig.generatedBaseUrl) || managementBaseUrl;
+  var generatedBaseUrl = allowManagement ? (cleanBaseUrl(routeConfig.generatedBaseUrl) || managementBaseUrl) : "";
   var context = {
     root: root,
     routeConfig: routeConfig,

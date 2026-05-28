@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-manage-app-contexts-tasks
 title: Docs Viewer Public And Manage App Contexts Tasks
 added_date: 2026-05-28
 last_updated: 2026-05-28
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-frontend-app-architecture
 sort_order: 14185
 viewable: true
@@ -83,6 +83,63 @@ Use the inventory to validate or revise these candidate changes:
 - keep public read-only startup free of management-only JavaScript, CSS, shell markup, backend probes, and management service handles
 - keep manage startup and writes behind the existing management controller/client/service flow
 
+### implementation context map
+
+2026-05-28 inventory result:
+
+- Route config (`docs-viewer/runtime/js/docs-viewer-route-config.js`) normalizes browser-safe route facts, docs/search/config/report asset URLs, public/manage route type, and route-declared access flags. It may contain local management/generated-read URL fields from standalone/local service injection, but those are route configuration inputs, not backend capability truth.
+- Route context (`docs-viewer/runtime/js/docs-viewer-app-context.js`) assembles the app-facing route context from route config, current URL query state, and static access projection. Public contexts now strip both `managementBaseUrl` and `generatedBaseUrl`; manage contexts keep those URLs only when route access allows management.
+- Access projection (`docs-viewer/runtime/js/docs-viewer-access.js`) owns static route/app-context booleans: `allowManagement`, `allowScopeQuery`, `publicReadOnly`, `managementRequested`, `importRequested`, and `canLoadManagementUi`. Its `backendReachability` and `writeAvailability` values are descriptive startup placeholders, not authority for writes.
+- Service context (`docs-viewer/runtime/js/docs-viewer-service-context.js`) projects route context into generated-read, config, report, and management service surfaces. Public service contexts keep static asset reads and browser-safe config/report URLs only; manage service contexts can expose local generated-read and management backend base URLs.
+- App composition (`docs-viewer/runtime/js/docs-viewer-app-composition.js`) consumes route/service context, records startup phases and authority sources, creates app session/state domains, creates the generated-data runtime, and gates management initialization/import-open-on-load by manage route access plus current mode.
+- App session (`docs-viewer/runtime/js/docs-viewer-app-session.js`) owns browser/session state domains. The `routeSession` domain mirrors route context/access projection, while management capability/write state stays in the management domain and generated-read capability state stays in the generated-data domain.
+- Generated-data runtime (`docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`) owns generated-read capability checks and named generated-data reads. It receives the service-context generated-read base URL, so public routes have no generated-read backend probe.
+- Lazy management loading (`docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`) is gated by `allowManagement`; public app handles do not expose the loader after the runtime API shrink slice.
+- Management modules (`docs-viewer/runtime/js/docs-viewer-management.js` and related files) remain the owners of capability checks, writes, imports, rebuilds, settings, scope lifecycle, status projection, and post-write reload behavior.
+
+### app-context authority table
+
+| Context field or surface | Owner | Source of authority | Public context | Manage context |
+| --- | --- | --- | --- | --- |
+| `routeId`, `routeType`, `viewerBaseUrl`, `viewerScope`, `defaultRouteDocId`, `includeScopeParam`, docs/search/config/report asset URLs | route config and route context | browser route/config context plus generated static asset URLs | allowed | allowed |
+| `allowManagement`, `allowScopeQuery`, `publicReadOnly`, `managementRequested`, `importRequested`, `canLoadManagementUi` | access projection | browser route/config context and current URL query | public-normalized; manage query ignored | allowed route intent only |
+| `managementBaseUrl` | route context and service context | local manage route/service projection | stripped | allowed only when route access allows management |
+| `generatedBaseUrl` / `generatedRead.baseUrl` | route context and service context | local generated-read service projection | stripped | allowed only when route access allows management |
+| `docsViewerConfigUrl`, `uiTextUrl`, `reportRegistryUrl` | route context and service context | browser-safe config/report assets | allowed | allowed |
+| bookmarks and recent browser state | app session domains | browser storage and browser-only state | allowed | allowed |
+| generated-data read capability cache | generated-data runtime/domain | local generated-read service capability endpoint | unavailable/no probe | backend/service-gated when local generated-read URL exists |
+| management capability state and write availability | management domain/modules | management backend capability and write endpoints | unavailable | backend-gated through existing management flow |
+| management shell/controller/import/settings/rebuild/scope lifecycle | app shell, lazy controller, management modules | management route access plus backend capability/write endpoints | omitted | allowed through existing management flow |
+
+### target app-context shape
+
+The target shape stays intentionally small:
+
+- Static public route facts: route id/type, viewer base/scope/default doc, static docs/search/config/report asset URLs, hosted-view and panel defaults, public read-only access projection, bookmark storage scope, and browser-storage availability.
+- Static manage route facts: the same route facts plus management route access, manage/import URL intent, and local management/generated-read base URLs exposed only through route context and service context.
+- Service-context facts: generated-read authority/base URL, config/report asset authority, and nullable management service surface. This context names read/write surfaces but does not decide backend capability truth.
+- App-session browser state: route-session projection, scope config, document index, selected document, search/recent, bookmarks, panel view, busy status, generated-data read cache, and management state domains.
+- Backend capability facts: management availability, generated-read availability, scope capability records, and write support stay in the generated-data runtime and management modules.
+
+### cleanup note
+
+This slice narrowed one stale compatibility surface: public route contexts no longer retain `generatedBaseUrl` when a stale or locally injected public route config includes a local generated-read URL.
+No broad context bridge was removed.
+The route/app context still keeps compatibility fields (`allowManagement`, `allowScopeQuery`, `managementBaseUrl`, and `generatedBaseUrl`) for existing controllers, but public values are now empty before service-context projection.
+No new permissions framework, endpoint call path, backend write behavior, route shell markup, panel feature, editor feature, semantic-reference flow, visualization feature, plugin architecture, or generated payload schema was added.
+
+### implementation verification
+
+Completed 2026-05-28.
+
+- JavaScript syntax checks passed for `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-access.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, `docs-viewer/runtime/js/docs-viewer-service-context.js`, `docs-viewer/runtime/js/docs-viewer-app-composition.js`, `docs-viewer/runtime/js/docs-viewer-app-runtime.js`, `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`, and `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`.
+- Focused app-shell/module smoke passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`.
+- Public read-only build passed: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
+- Public read-only smoke passed: `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`.
+- Management modal/service smokes were not run because this slice did not change management context, lazy management loading, generated-data read behavior for manage mode, route state, status projection, import-open-on-load, post-write reload behavior, backend capability semantics, or write endpoints.
+- Docs watcher updated generated studio docs payloads for this tracker after the source doc changed; those generated payload changes were left intact.
+- Structured docs-log entry: `change-2026-05-28-clarified-docs-viewer-public-and-manage-app-contexts`.
+
 ### baseline verification set
 
 Run only the checks warranted by touched files.
@@ -118,21 +175,21 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory current public/manage app-context fields and callers across route context, access projection, route config, service context, app composition, app session route domain, generated-data runtime, lazy management loading, management modules, smoke tests, and docs. Deliverable: short context map in this tracker. |
-| 2 | planned | Classify each context field by source of authority: browser route/config context, generated static asset, local generated-read service, browser storage, management backend capability endpoint, or management backend write endpoint. Deliverable: app-context authority table in this tracker. |
-| 3 | planned | Decide target app-context shape. Name which facts are static public route facts, static manage route facts, service-context facts, app-session browser state, and backend capability facts. |
-| 4 | planned | Define public context limits. Public `/library/` and `/analysis/` contexts must not expose management base URLs, local generated-read service base URLs, backend capability probes, management-only JavaScript/CSS/shell markup, or write-capable service handles. |
-| 5 | planned | Define manage context limits. Manage `/docs/` context may expose local generated-read and management backend URLs only through explicit manage route/service projection, while write availability remains controlled by backend capability and service validation. |
-| 6 | planned | Update focused smoke coverage before behavior changes where practical. Tests should assert public/manage context separation, route-config versus backend-capability separation, and public management omission without relying on broad runtime internals. |
-| 7 | planned | Add or refine a focused app-context projection only if the inventory shows scattered checks that would become clearer. Do not create a speculative permissions framework. |
-| 8 | planned | Remove or narrow any stale context bridges, fallback fields, or duplicated public/manage checks only after caller inventory proves they are unused or replaced by focused owner contracts. |
-| 9 | planned | Verify public startup remains backend-free and management-free: no management controller import, no management shell rendering, no management CSS requirement, no backend capability probes, no local generated-read service base URL, and no management service handle exposure. |
-| 10 | planned | Verify manage startup and writes continue through existing management/service flow: generated-data reads, capability checks, import-open-on-load, metadata edit flow, settings, context menu, rebuilds, imports, scope lifecycle, status pills, and backend write authority. |
-| 11 | planned | Run management modal/service smoke checks if management context, lazy management loading, generated reads, route state, status projection, import-open-on-load, or post-write reload behavior changes. |
-| 12 | planned | Run public read-only checks if public app context, public startup context, generated reads, route normalization, document visibility, search/recent, bookmarks, reports, info panel, or public management omission changes. |
-| 13 | planned | Review touched runtime files for new compatibility scaffolding. Deliverable: short cleanup note listing context fields kept, fields removed, replacement owner contracts, and any follow-up removal tasks. |
-| 14 | planned | Update owning docs after implementation: this tracker, Docs Viewer Front-End App Architecture Request, Docs Viewer runtime boundary, Docs Viewer overview, Docs Viewer JavaScript inventory, service/config docs if contracts change, and portable files only if runtime copy sets change. |
-| 15 | planned | Create or update a structured docs-log entry when the implementation lands and record the entry id in this tracker. |
+| 1 | done | Inventory current public/manage app-context fields and callers across route context, access projection, route config, service context, app composition, app session route domain, generated-data runtime, lazy management loading, management modules, smoke tests, and docs. Deliverable: short context map in this tracker. |
+| 2 | done | Classify each context field by source of authority: browser route/config context, generated static asset, local generated-read service, browser storage, management backend capability endpoint, or management backend write endpoint. Deliverable: app-context authority table in this tracker. |
+| 3 | done | Decide target app-context shape. Name which facts are static public route facts, static manage route facts, service-context facts, app-session browser state, and backend capability facts. |
+| 4 | done | Define public context limits. Public `/library/` and `/analysis/` contexts must not expose management base URLs, local generated-read service base URLs, backend capability probes, management-only JavaScript/CSS/shell markup, or write-capable service handles. |
+| 5 | done | Define manage context limits. Manage `/docs/` context may expose local generated-read and management backend URLs only through explicit manage route/service projection, while write availability remains controlled by backend capability and service validation. |
+| 6 | done | Update focused smoke coverage before behavior changes where practical. Tests assert public/manage context separation, route-config versus backend-capability separation, and public management omission without relying on broad runtime internals. |
+| 7 | done | Refined the focused route-context projection by stripping `generatedBaseUrl` from public app contexts. No speculative permissions framework was added. |
+| 8 | done | Narrowed the stale public generated-read URL surface after caller inventory confirmed service context and generated-data runtime consume the projected context. No broad bridge removal was needed. |
+| 9 | done | Verified public startup remains backend-free and management-free with focused app-shell and public read-only smokes: no management controller import, no management shell rendering, no management CSS requirement, no backend capability probes, no local generated-read service base URL, and no management service handle exposure. |
+| 10 | done | Verified manage startup contracts through focused app composition/app-shell smoke coverage. The existing management/service flow remains the owner for generated-data reads, capability checks, import-open-on-load, metadata edit flow, settings, context menu, rebuilds, imports, scope lifecycle, status pills, and backend write authority. |
+| 11 | deferred | Management modal/service smoke checks were not required because this slice did not change management context, lazy management loading, generated reads for manage mode, route state, status projection, import-open-on-load, post-write reload behavior, backend authority, or writes. |
+| 12 | done | Ran public read-only checks because public app context changed. |
+| 13 | done | Reviewed touched runtime files for compatibility scaffolding. Cleanup note is recorded above. |
+| 14 | done | Updated this tracker. Existing Docs Viewer architecture, runtime boundary, overview, and JavaScript inventory docs already described the public/manage service-context boundary; no additional contract docs or portable file updates were needed. |
+| 15 | done | Created structured docs-log entry `change-2026-05-28-clarified-docs-viewer-public-and-manage-app-contexts`. |
 
 The closeout for this slice should confirm:
 
