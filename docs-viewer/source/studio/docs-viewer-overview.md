@@ -79,6 +79,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
+- `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config, generated docs-log, and broken-links audit reports in management-capable contexts
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the compatibility runtime uses it to keep the management controller import gated behind management route access
@@ -88,7 +89,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, explicit route command consumption, and pane command requests from search/recent state-domain inputs
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark storage, bookmark row/toggle rendering, selected-document bookmark projection, explicit document-load route command consumption, and search-reset command consumption when opening a bookmark
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, generated-data report reads, report-service handoff, and report mount context
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns hosted-view registration, access/availability checks, panel-specific listing, and graceful missing/disabled/access-blocked states
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
 - `docs-viewer/runtime/js/docs-viewer-reports.js` owns report lookup and access checks
@@ -208,6 +209,7 @@ Current report behavior:
 - `viewer_report_scope` selects the generated docs scope the report reads; if omitted, the current viewer scope is used
 - `viewer_report_access` gates reports to public, manage, or local-only contexts
 - report-backed docs remain normal docs in the index, so `parent_id`, `sort_order`, visibility, bookmarks, and management moves still work normally
+- public/read-only reports consume generated-data callbacks; local/manage reports consume `docs-viewer-report-service.js` for local source-config, generated docs-log, and broken-links audit endpoint access
 - the first report is `docs_index_table`, a scope-aware generated-docs table with filter buttons, sortable columns, and Docs Viewer row links
 - the Library Documents review now uses `viewer_report: docs_index_table` with `viewer_report_scope: library`
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T17:48:53Z",
+  "generated_at": "2026-05-28T17:58:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -162,7 +162,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 16263
+      "content_text_length": 16706
     },
     {
       "scope": "studio",
@@ -1937,7 +1937,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 41495,
+      "content_text_length": 42714,
       "ui_status": "review"
     },
     {
@@ -2839,7 +2839,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 23021
+      "content_text_length": 23538
     },
     {
       "scope": "studio",
@@ -3058,7 +3058,7 @@
       "source_path": "site-request-docs-viewer-architecture-review-cleanup-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-review-cleanup-tasks.json",
-      "content_text_length": 46548,
+      "content_text_length": 46950,
       "ui_status": "planned"
     },
     {

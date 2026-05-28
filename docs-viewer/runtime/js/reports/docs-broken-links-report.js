@@ -38,42 +38,32 @@ function persistSelectedScope(scopeId) {
   window.history.replaceState({}, "", url.pathname + url.search + url.hash);
 }
 
-function managementUrl(context, path) {
-  const baseUrl = cleanString(context.managementBaseUrl).replace(/\/+$/, "");
-  if (!baseUrl) throw new Error("Local docs-management API is not configured.");
-  return baseUrl + path;
+function reportService(context) {
+  return context && context.reportService && typeof context.reportService.runBrokenLinksAudit === "function"
+    ? context.reportService
+    : null;
+}
+
+function reportActivityContext(scope) {
+  return {
+    page_id: "docs-broken-links",
+    action_id: "run-broken-links-audit",
+    route: "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
+    control_id: "docsBrokenLinksReportRun",
+    control_selector: "#docsBrokenLinksReportRun",
+    correlation_id: "broken-links:" + scope + ":" + Date.now(),
+    scope
+  };
 }
 
 function postBrokenLinks(context, scope, includeActivity) {
-  const body = { scope };
-  if (includeActivity) {
-    body.activity_context = {
-      page_id: "docs-broken-links",
-      action_id: "run-broken-links-audit",
-      route: "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
-      control_id: "docsBrokenLinksReportRun",
-      control_selector: "#docsBrokenLinksReportRun",
-      correlation_id: "broken-links:" + scope + ":" + Date.now(),
-      scope
-    };
+  const service = reportService(context);
+  if (!service) {
+    return Promise.reject(new Error("Local docs-management server is not configured."));
   }
-  return window.fetch(managementUrl(context, "/docs/broken-links"), {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    cache: "no-store",
-    body: JSON.stringify(body)
-  }).then((response) => {
-    return response.json().catch(() => {
-      throw new Error("HTTP " + response.status);
-    }).then((payload) => {
-      if (!response.ok || !payload || !payload.ok) {
-        throw new Error(payload && payload.error ? payload.error : "HTTP " + response.status);
-      }
-      return payload;
-    });
+  return service.runBrokenLinksAudit({
+    scope,
+    activityContext: includeActivity ? reportActivityContext(scope) : null
   });
 }
 

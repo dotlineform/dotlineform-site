@@ -3218,6 +3218,100 @@ def assert_service_context_contract(page: Page) -> None:
         raise AssertionError(f"Docs Viewer service context contract changed unexpectedly: {result!r}")
 
 
+def assert_report_service_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-report-service.js');
+            const requests = [];
+            const response = (ok, status, payload) => ({
+                ok,
+                status,
+                json: async () => payload
+            });
+            const fetchImpl = async (url, options) => {
+                requests.push({
+                    url,
+                    method: options.method,
+                    cache: options.cache,
+                    accept: options.headers.Accept,
+                    contentType: options.headers['Content-Type'] || '',
+                    body: options.body ? JSON.parse(options.body) : null
+                });
+                if (url.endsWith('/docs/source-config')) {
+                    return response(true, 200, { ok: true, scopes: [] });
+                }
+                if (url.includes('/docs/generated/docs-log?')) {
+                    return response(true, 200, { entries: [{ id: 'change-1' }] });
+                }
+                if (url.endsWith('/docs/broken-links')) {
+                    return response(true, 200, { ok: true, entries: [{ problem: 'missing' }] });
+                }
+                return response(false, 404, { error: 'not found' });
+            };
+            const service = module.createDocsViewerReportService({
+                baseUrl: 'http://127.0.0.1:8789/',
+                fetch: fetchImpl
+            });
+            const sourceConfig = await service.readSourceConfig();
+            const changeHistory = await service.readChangeHistory({ scope: 'Studio' });
+            const brokenLinks = await service.runBrokenLinksAudit({
+                scope: 'Studio',
+                activityContext: { control_id: 'docsBrokenLinksReportRun' }
+            });
+            let missingBaseMessage = '';
+            try {
+                await module.createDocsViewerReportService({ fetch: fetchImpl }).readSourceConfig();
+            } catch (error) {
+                missingBaseMessage = error && error.message ? error.message : '';
+            }
+            return {
+                baseUrl: service.baseUrl,
+                sourceScopes: sourceConfig.scopes.length,
+                changeIds: changeHistory.entries.map((entry) => entry.id),
+                brokenProblems: brokenLinks.entries.map((entry) => entry.problem),
+                requests,
+                missingBaseMessage
+            };
+        }"""
+    )
+    if result["baseUrl"] != "http://127.0.0.1:8789":
+        raise AssertionError(f"report service base URL normalization changed: {result!r}")
+    if result["sourceScopes"] != 0 or result["changeIds"] != ["change-1"] or result["brokenProblems"] != ["missing"]:
+        raise AssertionError(f"report service response contract changed: {result!r}")
+    if result["requests"] != [
+        {
+            "url": "http://127.0.0.1:8789/docs/source-config",
+            "method": "GET",
+            "cache": "no-store",
+            "accept": "application/json",
+            "contentType": "",
+            "body": None,
+        },
+        {
+            "url": "http://127.0.0.1:8789/docs/generated/docs-log?projection=search-index&scope=studio",
+            "method": "GET",
+            "cache": "no-store",
+            "accept": "application/json",
+            "contentType": "",
+            "body": None,
+        },
+        {
+            "url": "http://127.0.0.1:8789/docs/broken-links",
+            "method": "POST",
+            "cache": "no-store",
+            "accept": "application/json",
+            "contentType": "application/json",
+            "body": {
+                "scope": "studio",
+                "activity_context": {"control_id": "docsBrokenLinksReportRun"},
+            },
+        },
+    ]:
+        raise AssertionError(f"report service endpoint ownership changed: {result!r}")
+    if result["missingBaseMessage"] != "Local docs-management server is not configured.":
+        raise AssertionError(f"report service missing-base error changed: {result!r}")
+
+
 def assert_document_index_state_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -3575,6 +3669,7 @@ def main() -> int:
             assert_generated_data_runtime_contract(page)
             assert_config_controller_contract(page, base_url)
             assert_service_context_contract(page)
+            assert_report_service_contract(page)
             assert_document_index_state_contract(page)
             assert_info_panel_controller_contract(page)
             assert_management_runtime_adapter_contract(page)

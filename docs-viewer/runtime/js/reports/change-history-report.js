@@ -74,27 +74,19 @@ function persistReportRoute(state) {
   }
 }
 
+function reportService(context) {
+  return context && context.reportService && typeof context.reportService.readChangeHistory === "function"
+    ? context.reportService
+    : null;
+}
+
 function fetchChangeHistory(context) {
-  const baseUrl = cleanString(context.managementBaseUrl).replace(/\/+$/, "");
-  if (!baseUrl) {
+  const service = reportService(context);
+  if (!service) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
   const scope = cleanString(context.reportMeta && context.reportMeta.scope) || cleanString(context.viewerScope);
-  const params = new URLSearchParams({ projection: "search-index" });
-  if (scope) params.set("scope", scope);
-  return window.fetch(baseUrl + "/docs/generated/docs-log?" + params.toString(), {
-    headers: { Accept: "application/json" },
-    cache: "no-store"
-  }).then((response) => {
-    return response.json().catch(() => {
-      throw new Error("HTTP " + response.status);
-    }).then((payload) => {
-      if (!response.ok) {
-        throw new Error(payload && payload.error ? payload.error : "HTTP " + response.status);
-      }
-      return payload;
-    });
-  });
+  return service.readChangeHistory({ scope });
 }
 
 function entrySearchText(entry) {

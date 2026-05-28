@@ -17,7 +17,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 53
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 54
 - Files above target score 4: 14
 - General risk themes: compatibility runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the compatibility runtime.
 
@@ -28,7 +28,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 7 |
 | 5 | 7 |
-| 4 | 39 |
+| 4 | 40 |
 
 ## Current Priorities
 
@@ -51,6 +51,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | new | new | `docs-viewer/runtime/js/docs-viewer-route-workflow.js` | 1 | 1 | 1 | 1 | 4 | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-service-context.js` | 1 | 1 | 1 | 1 | 4 | Focused public/manage service-context projection owner; public contexts omit management and local generated-read backend surfaces. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-report-service.js` | 1 | 1 | 1 | 1 | 4 | Focused local report endpoint adapter for source-config, generated docs-log, and broken-links audit reports. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` | 1 | 1 | 1 | 1 | 4 | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` | 1 | 1 | 1 | 1 | 4 | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes. |
@@ -174,6 +175,13 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Keep this module limited to projecting static route context into generated-read, config, report, and management service surfaces.
 - Public contexts must continue to omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters. Do not move capability truth or write authority into this module.
 
+### `docs-viewer/runtime/js/docs-viewer-report-service.js`
+
+- Added 2026-05-28 as the focused local report endpoint adapter.
+- Current risk score: 4.
+- Keep this module limited to local report endpoint paths, request options, local-server missing-base errors, and response-envelope handling for source-config, generated docs-log, and broken-links audit reports.
+- Do not move report DOM rendering, table sorting/filtering, activity UI labels, generated-data runtime reads, management writes outside report actions, or management capability truth into it.
+
 ### `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
 
 - Added 2026-05-28 as the focused document-index projection owner.
@@ -236,7 +244,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 5.
 - 2026-05-28 owner note: this controller now consumes explicit route-session, scope-config, selected-document, generated-data, and status command inputs instead of `context.state`.
-- Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, and generated-data-backed report read handoff.
+- 2026-05-28 owner note: local report endpoint access moved to `docs-viewer/runtime/js/docs-viewer-report-service.js`; this controller now passes a report-service adapter through report context instead of `managementBaseUrl`.
+- Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, generated-data-backed report read handoff, and report-service handoff.
 - Do not move URL/history primitives, tree visibility projection, sidebar DOM rendering, search/recent rendering, local report endpoint ownership, backend writes, or management action behavior into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-sidebar.js`
@@ -364,6 +373,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### Reports, Search, And Bookmarks
 
 - Keep reports self-contained and loaded through the report allowlist.
+- Keep local source-config, generated docs-log, and broken-links endpoint access behind `docs-viewer/runtime/js/docs-viewer-report-service.js`; report modules should consume `context.reportService` rather than `managementBaseUrl` or direct `window.fetch(...)`.
 - Extract shared report table or pager helpers only after at least two reports need the same behavior.
 - Keep search and bookmark storage/controller behavior focused; revisit if grouping, sync, export, or cross-scope behavior is added.
 

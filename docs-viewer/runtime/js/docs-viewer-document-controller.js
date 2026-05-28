@@ -1,3 +1,5 @@
+import { createDocsViewerReportService } from "./docs-viewer-report-service.js";
+
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
   var scopeConfigState = context.scopeConfig;
@@ -109,6 +111,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function reportContext(doc, payload) {
+    var reportManagementBaseUrl = currentManagementBaseUrl();
     return {
       allowManagement: context.allowManagement,
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
@@ -117,10 +120,12 @@ export function initDocsViewerDocumentController(context) {
       fetchDocsReferenceTarget: fetchDocsReferenceTargetForScope,
       fetchDocsReferencesIndex: fetchDocsReferencesIndexForScope,
       fetchDocsIndex: fetchDocsIndexForScope,
-      managementBaseUrl: currentManagementBaseUrl(),
       managementMode: managementModeActive(),
       payload: payload,
       reportRegistryUrl: currentReportRegistryUrl(),
+      reportService: reportManagementBaseUrl
+        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
+        : null,
       setStatus: setStatus,
       scopeConfigs: currentScopeConfigs().slice(),
       viewerScope: currentViewerScope(),

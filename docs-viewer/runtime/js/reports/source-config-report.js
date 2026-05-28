@@ -36,24 +36,18 @@ function persistSelectedScope(scopeId) {
   }
 }
 
+function reportService(context) {
+  return context && context.reportService && typeof context.reportService.readSourceConfig === "function"
+    ? context.reportService
+    : null;
+}
+
 function fetchSourceConfig(context) {
-  const baseUrl = cleanString(context.managementBaseUrl).replace(/\/+$/, "");
-  if (!baseUrl) {
+  const service = reportService(context);
+  if (!service) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
-  return window.fetch(baseUrl + "/docs/source-config", {
-    headers: { Accept: "application/json" },
-    cache: "no-store"
-  }).then((response) => {
-    return response.json().catch(() => {
-      throw new Error("HTTP " + response.status);
-    }).then((payload) => {
-      if (!response.ok || !payload || !payload.ok) {
-        throw new Error(payload && payload.error ? payload.error : "HTTP " + response.status);
-      }
-      return payload;
-    });
-  });
+  return service.readSourceConfig();
 }
 
 function appendKeyValue(parent, label, value) {
