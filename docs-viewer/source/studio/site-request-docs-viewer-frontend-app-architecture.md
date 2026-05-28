@@ -166,11 +166,50 @@ It does require explicit ownership and contracts.
 - Move complete concepts, not stray helpers.
 - Prefer state-domain facades over passing the full broad `state` object to every owner.
 - Keep service adapters separate from rendering and controller event logic.
+- Treat backend/service contracts as first-class architecture, not as consequences of browser refactors.
 - Keep route/document workflow, search/recent, bookmarks, document rendering, management workflows, and hosted-view lifecycle in their current focused owners unless a slice defines a better complete owner.
 - Preserve public read-only routes as first-class app contexts.
 - Preserve manage mode as a first-class local editing app context with backend-enforced write authority.
 - Keep route shells thin: mounts, route id/config URL, CSS links, and entry script.
 - Avoid generic architecture where a concrete Docs Viewer concept is enough.
+
+## Backend Co-Evolution Policy
+
+The next phase should not focus on frontend architecture while quietly building backend debt or permanent compatibility layers.
+Frontend app concepts and backend/service contracts need to move together.
+
+Each child task must explicitly answer:
+
+- What frontend app concept is being introduced or clarified?
+- What backend capability, generated-data contract, service endpoint, or local-only read/write boundary does it consume?
+- Is that backend/service contract already clean enough?
+- If not, will the child task clean it in the same slice or create a paired backend/service task?
+- What compatibility path is temporary, how is it named, and what later slice removes it?
+
+The desired relationship is:
+
+```text
+frontend app context, view model, and service needs
+  use an explicit contract with
+backend capability, generated data, local service, and write authority
+```
+
+The anti-pattern is:
+
+```text
+frontend service adapter hides unclear backend ownership indefinitely
+```
+
+Frontend service adapters are useful only when they make a contract clearer.
+They should not become a polished wrapper around ambiguous backend behavior.
+When a frontend slice exposes backend ambiguity, the slice should either clean the backend contract immediately or create a concrete child task for that backend work with an explicit temporary compatibility limit.
+
+Backend authority stays firm:
+
+- source writes, imports, deletes, archives, moves, settings saves, scope lifecycle, rebuilds, source opening, filesystem access, and local-only protected data remain backend/service responsibilities
+- browser app code may request those actions only through named endpoints or generated/static read contracts
+- public routes must keep working without backend services
+- manage mode must keep backend capability checks and endpoint enforcement independent from client visibility
 
 ## Structural Slices
 
@@ -205,6 +244,12 @@ Acceptance:
 - no behavior changes in `/docs/`, `/library/`, or `/analysis/`
 - focused smoke coverage pins the app-session contract
 
+Backend/service handling:
+
+- inventory which state domains are browser-only, generated-data-backed, local-service-backed, or backend-write-backed
+- do not move backend-derived management capability state into a generic browser state domain without preserving backend authority
+- if management state is reshaped, verify the existing management service capability flow is still the source of write availability truth
+
 ### 2. Service Adapter Boundary
 
 Define service adapters for generated/config/backend reads so controllers do not need ad hoc `fetch`, retry, capability, or URL option bundles.
@@ -221,6 +266,12 @@ Acceptance:
 - public/static reads do not require backend services
 - management writes remain behind existing management/backend modules
 - public routes still avoid management-only JS and management base URLs
+
+Backend/service handling:
+
+- review every adapter against the actual source of authority: generated static asset, local generated-read service, browser storage, or management backend endpoint
+- do not introduce an adapter that normalizes over unclear backend endpoint responsibilities without documenting whether the endpoint should be changed
+- if an endpoint shape is awkward only because of old compatibility needs, create or pair a backend cleanup task instead of baking that shape into the app contract
 
 ### 3. App Composition And Startup Phases
 
@@ -247,6 +298,13 @@ Acceptance:
 - controller construction order is explicit and testable
 - initial load sequencing is covered without relying on a giant runtime integration assertion
 
+Backend/service handling:
+
+- separate public startup phases from manage-only backend startup phases
+- keep backend reachability and capability checks out of public route boot
+- make import-open-on-load and management initialization depend on explicit manage app context, not incidental URL flags alone
+- if startup currently relies on backend timing or retry behavior that is not a clean contract, document and task that backend/service behavior
+
 ### 4. Runtime API Shrink
 
 Retire the legacy returned runtime API where possible.
@@ -265,6 +323,12 @@ Acceptance:
 - any remaining public app handle is intentional and documented
 - no feature module reaches into broad runtime internals when a service/session/controller contract exists
 
+Backend/service handling:
+
+- ensure tests that move away from broad runtime internals still cover backend/service contracts through focused service or management smokes
+- do not remove a runtime API by replacing it with direct endpoint calls from feature modules
+- if a caller needs backend behavior, route it through the appropriate service adapter or management controller contract
+
 ### 5. Public And Manage App Contexts
 
 Make public read-only and local manage mode explicit app contexts.
@@ -282,6 +346,13 @@ Acceptance:
 - backend capability checks stay in the management/service flow
 - public read-only smoke stays part of every context-boundary slice
 
+Backend/service handling:
+
+- define which context facts are static route-config facts and which are backend capability facts
+- do not let browser route config imply write authority
+- keep public app context free of management base URLs, management-only assets, and backend capability probes
+- if manage context needs finer capability fields, add them only with matching backend endpoint semantics and tests
+
 ### 6. Controller And View Lifecycle
 
 Define a practical lifecycle for controllers and hosted views.
@@ -294,6 +365,13 @@ Acceptance:
 - hosted views receive explicit context and service inputs
 - top-level event binding is not scattered across unrelated modules
 - future feature views can attach without modifying route shells or broad runtime state
+
+Backend/service handling:
+
+- hosted views that need backend data must declare the service adapter or capability they consume
+- public-safe views should be able to mount without backend services
+- manage-only views must not infer write authority from being visible; backend endpoints still enforce writes
+- local diagnostic or source-related views should stay local/manage-only until their data contract is safe and documented
 
 ### 7. Architecture Documentation And Inventory Refresh
 
@@ -312,6 +390,12 @@ Acceptance:
 - `docs-viewer-app-runtime.js` is no longer described as compatibility coordination unless it truly still bridges legacy contracts
 - the app/session/service/controller/view model is documented in one place
 - JavaScript inventory scores and owner notes match the new boundaries
+
+Backend/service handling:
+
+- update backend/service docs when a frontend slice changes service contracts, capability semantics, generated-read behavior, or write-boundary assumptions
+- record temporary compatibility layers and their removal task rather than leaving them implicit
+- keep portable docs clear about which pieces are public static app contract and which require local management services
 
 ## Verification Expectations
 
