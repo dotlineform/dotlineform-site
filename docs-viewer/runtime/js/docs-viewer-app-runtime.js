@@ -146,14 +146,17 @@ export function startDocsViewerRuntime(options) {
   });
   infoPanelController = createDocsViewerInfoPanelController({
     buildTrail: buildTrail,
+    documentIndex: appSession.domains.documentIndex,
     infoToggle: infoToggle,
+    panelView: appSession.domains.panelView,
     projectDocumentShell: projectDocumentShell,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: infoPanelRefs,
     registry: hostedViewRegistry,
     routeAccess: function () { return routeContext.access; },
-    state: state,
+    scopeConfig: appSession.domains.scopeConfig,
+    selectedDocument: appSession.domains.selectedDocument,
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl

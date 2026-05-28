@@ -9,13 +9,18 @@ import {
 export function createDocsViewerInfoPanelController(options) {
   var settings = options || {};
   var refs = settings.refs || {};
-  var state = settings.state;
+  var documentIndex = settings.documentIndex || {};
+  var selectedDocument = settings.selectedDocument || {};
+  var scopeConfig = settings.scopeConfig || {};
+  var panelView = settings.panelView || null;
   var host = createDocsViewerInfoPanelHost({
     refs: refs,
     registry: settings.registry,
     project: function (projection) {
       settings.projectInfoPanel(projection || {});
-      state.viewState = settings.projectViewState();
+      if (panelView && typeof settings.projectViewState === "function") {
+        panelView.viewState = settings.projectViewState();
+      }
       renderToggleState();
     }
   });
@@ -30,21 +35,21 @@ export function createDocsViewerInfoPanelController(options) {
 
   function currentSelectedDoc() {
     return resolveDocsViewerSelectedDoc({
-      allDocsById: state.allDocsById,
-      docsById: state.docsById,
-      selectedDocId: state.selectedDocId
+      allDocsById: documentIndex.allDocsById,
+      docsById: documentIndex.docsById,
+      selectedDocId: selectedDocument.selectedDocId
     });
   }
 
   function context() {
     return createDocsViewerHostedViewContext({
-      allDocsById: state.allDocsById,
+      allDocsById: documentIndex.allDocsById,
       buildTrail: settings.buildTrail,
-      docsById: state.docsById,
-      payloadCache: state.payloadCache,
+      docsById: documentIndex.docsById,
+      payloadCache: selectedDocument.payloadCache,
       routeAccess: routeAccess(),
-      selectedDocId: state.selectedDocId,
-      uiStatusByValue: state.uiStatusByValue,
+      selectedDocId: selectedDocument.selectedDocId,
+      uiStatusByValue: scopeConfig.uiStatusByValue,
       viewerScope: viewerScope(),
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl

@@ -3138,17 +3138,25 @@ def assert_info_panel_controller_contract(page: Page) -> None:
             });
             const projections = [];
             const shellProjections = [];
-            const state = {
+            const documentIndex = {
                 allDocsById: new Map([['doc-1', { doc_id: 'doc-1', title: 'Doc one' }]]),
-                docsById: new Map([['doc-1', { doc_id: 'doc-1', title: 'Doc one' }]]),
+                docsById: new Map([['doc-1', { doc_id: 'doc-1', title: 'Doc one' }]])
+            };
+            const selectedDocument = {
                 payloadCache: new Map(),
-                selectedDocId: 'doc-1',
-                uiStatusByValue: new Map(),
+                selectedDocId: 'doc-1'
+            };
+            const scopeConfig = {
+                uiStatusByValue: new Map()
+            };
+            const panelView = {
                 viewState: {}
             };
             const controller = info.createDocsViewerInfoPanelController({
                 buildTrail: () => [],
+                documentIndex,
                 infoToggle: document.getElementById('infoToggle'),
+                panelView,
                 projectDocumentShell: (projection) => shellProjections.push(projection),
                 projectInfoPanel: (projection) => projections.push(projection),
                 projectViewState: () => ({ info: 'open' }),
@@ -3159,7 +3167,8 @@ def assert_info_panel_controller_contract(page: Page) -> None:
                 },
                 registry,
                 routeAccess: { allowManagement: false, publicReadOnly: true },
-                state,
+                scopeConfig,
+                selectedDocument,
                 viewerScope: () => 'studio',
                 viewerTargetDocId: (docId) => docId,
                 viewerUrl: (docId) => `/docs/?doc=${docId}`
@@ -3179,7 +3188,7 @@ def assert_info_panel_controller_contract(page: Page) -> None:
                 bodyText: document.getElementById('body').textContent,
                 shellProjections,
                 panelVisibility: projections.map((projection) => projection.visible),
-                viewState: state.viewState,
+                viewState: panelView.viewState,
                 openAfterClose: controller.isOpen()
             };
         }"""

@@ -129,7 +129,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: generated-data request shaping and generated-read capability caching moved to `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`.
 - 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
 - 2026-05-28 owner note: document payload rendering and sidebar tree rendering now consume explicit state-domain inputs. `docs-viewer-document-controller.js` receives route-session, scope-config, selected-document, generated-data, and status commands; `docs-viewer-sidebar.js` receives document-index, selected-document, and scope-config projections instead of the broad runtime state.
-- 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
+- 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`; the controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of the broad runtime state.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
 - 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
 - 2026-05-28 owner note: service-context projection moved to `docs-viewer/runtime/js/docs-viewer-service-context.js`; public contexts strip management base URLs and local generated-read service base URLs before controllers are assembled.
@@ -182,7 +182,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused info-panel coordination owner.
 - Current risk score: 4.
-- Keep this module limited to selected-document hosted-view context, metadata-info default open behavior, toggle projection, toolbar click handoff, update-on-document-change, close behavior, and public-safe availability.
+- 2026-05-28 owner note: this controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of broad `state`.
+- Keep this module limited to selected-document hosted-view context, metadata-info default open behavior, toggle projection, toolbar click handoff, update-on-document-change, close behavior, view-state projection sync, and public-safe availability.
 - Do not move info-panel chrome rendering, hosted-view registration, metadata presentation, document payload rendering, URL history, or management writes into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`
