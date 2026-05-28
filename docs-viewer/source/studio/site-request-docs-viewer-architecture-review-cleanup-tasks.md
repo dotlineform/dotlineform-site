@@ -49,15 +49,17 @@ The controller/view lifecycle slice identified these unresolved compatibility pa
 No compatibility fields or lifecycle methods were removed in that slice because it was a documentation and lifecycle-inventory pass. It was not a complete cleanup review. That does not make the remaining paths acceptable as a long-term shape. This review must either:
 
 - remove them,
-- create specific cleanup tasks in this document for their removal, or
+- create specific cleanup tasks for their removal, or
 - rename the pattern as current architecture with a clear owner contract because it is not actually compatibility.
+
+**Additional tasks created as part of this cleanup review should be tracked in the 'Implementation tasks' table below.**
 
 Follow-up decisions to review and expand upon here:
 
 - When a future feature needs an info-panel view, first decide whether it is public metadata, manage metadata, local diagnostics, semantic/reference info, or another separately-shaped view contract.
 - When a future controller change touches broad state, narrow one complete controller family to explicit state-domain and service inputs rather than adding another route-runtime callback.
 
-### documentation
+### durable documentation
 
 Record any architecture/ownership changes in the durable owning reference doc, not only in this cleanup tracker.
 
@@ -84,7 +86,7 @@ Run only the checks warranted by touched files. Expected cleanup verification ca
 
 Codex sandbox note: local service, browser, and temporary localhost checks need elevated permissions even when product code is healthy.
 
-## Implementation Tasks
+## Review Tasks
 
 Work through the table by ID order.
 A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
@@ -106,6 +108,14 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 12 | planned | Update owning docs after review: this tracker, the parent request, Docs Viewer Runtime Boundary, Docs Viewer Overview, Docs Viewer JavaScript Inventory, and Docs Viewer Portable File Manifest if runtime copy sets changed. |
 | 13 | planned | Run the verification set warranted by touched files and record results, generated payload status, remaining risks, and created follow-up tasks. |
 | 14 | planned | Create or update structured docs-log entries for meaningful cleanup or final request closure, then record entry ids here. |
+
+## Implementation Tasks
+
+| ID | status | action |
+| --- | --- | --- |
+| 1 |  |  |
+
+## closeout
 
 The closeout for this review should confirm:
 
