@@ -1661,7 +1661,7 @@ def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
             });
             const registry = hostedViews.registerDocsViewerHostedViews(
                 hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
-                hostedViews.createDocsViewerCompatibilityHostedViews().concat([
+                hostedViews.createDocsViewerBuiltInHostedViews().concat([
                     {
                         id: 'details-info',
                         label: 'Details',
@@ -2054,7 +2054,7 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             });
             const registry = hostedViews.registerDocsViewerHostedViews(
                 hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
-                hostedViews.createDocsViewerCompatibilityHostedViews().concat([
+                hostedViews.createDocsViewerBuiltInHostedViews().concat([
                     { id: 'manage-source', label: 'Source', panel: 'document', access: 'manage', availability: 'available' },
                     { id: 'disabled-info', label: 'Info', panel: 'info', access: 'public', availability: 'disabled' }
                 ])
@@ -2132,9 +2132,9 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
     if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
         raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
     if result["metadataInfo"]["available"] is not True or result["metadataInfo"]["registered"] is not True:
-        raise AssertionError(f"compat metadata info view should be public and available: {result!r}")
+        raise AssertionError(f"built-in metadata info view should be public and available: {result!r}")
     if "metadata-info:yes" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
-        raise AssertionError(f"hosted view registry listing lost compatibility views: {result!r}")
+        raise AssertionError(f"hosted view registry listing lost built-in views: {result!r}")
     if result["infoViewIds"] != ["disabled-info:disabled", "metadata-info:yes"]:
         raise AssertionError(f"hosted view panel listing changed: {result!r}")
     if "document-host" not in result["documentViewIds"] or "search-results" not in result["documentViewIds"]:
@@ -3396,7 +3396,17 @@ def assert_management_runtime_adapter_contract(page: Page) -> None:
                 allowManagement: true,
                 appShellReady: Promise.resolve(),
                 constants: { MANAGEMENT_MODE: 'manage' },
-                context: { root: { id: 'root' }, state: { selectedDocId: 'doc-1' } },
+                context: {
+                    root: { id: 'root' },
+                    managementState: {
+                        domains: {
+                            selectedDocument: { selectedDocId: 'doc-1' }
+                        }
+                    },
+                    serviceClient: {
+                        managementBaseUrl: 'http://127.0.0.1:8789'
+                    }
+                },
                 importManagement: async () => {
                     importCount += 1;
                     return {
@@ -3404,7 +3414,8 @@ def assert_management_runtime_adapter_contract(page: Page) -> None:
                             return {
                                 contextMode: context.MANAGEMENT_MODE,
                                 rootId: context.root.id,
-                                selectedDocId: context.state.selectedDocId
+                                selectedDocId: context.managementState.domains.selectedDocument.selectedDocId,
+                                managementBaseUrl: context.serviceClient.managementBaseUrl
                             };
                         }
                     };
@@ -3433,6 +3444,7 @@ def assert_management_runtime_adapter_contract(page: Page) -> None:
             "contextMode": "manage",
             "rootId": "root",
             "selectedDocId": "doc-1",
+            "managementBaseUrl": "http://127.0.0.1:8789",
         },
     }:
         raise AssertionError(f"management runtime adapter contract changed unexpectedly: {result!r}")

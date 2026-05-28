@@ -107,7 +107,7 @@ export function listDocsViewerHostedViewsForPanel(registry, panel) {
   return [];
 }
 
-export function createDocsViewerCompatibilityHostedViews() {
+export function createDocsViewerBuiltInHostedViews() {
   return [
     {
       id: "index-tree",
@@ -158,6 +158,10 @@ export function createDocsViewerCompatibilityHostedViews() {
       }
     }
   ];
+}
+
+export function createDocsViewerCompatibilityHostedViews() {
+  return createDocsViewerBuiltInHostedViews();
 }
 
 export function registerDocsViewerHostedViews(registry, records) {

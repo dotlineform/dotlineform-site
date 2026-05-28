@@ -326,7 +326,7 @@ export function startDocsViewerRuntime(options) {
       applyDocVisibility: documentIndex.applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,
-      currentViewerConfig: function () { return state.viewerConfig || {}; },
+      currentViewerConfig: function () { return appSession.domains.scopeConfig.viewerConfig || {}; },
       defaultDocId: documentIndex.defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
@@ -336,7 +336,22 @@ export function startDocsViewerRuntime(options) {
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
       getCurrentMode: getCurrentMode,
-      managementBaseUrl: managementBaseUrl,
+      serviceClient: {
+        docsViewerConfigUrl: docsViewerConfigUrl,
+        managementBaseUrl: managementBaseUrl,
+        uiTextUrl: uiTextUrl
+      },
+      managementState: {
+        domains: {
+          documentIndex: appSession.domains.documentIndex,
+          generatedData: appSession.domains.generatedData,
+          management: appSession.domains.management,
+          routeSession: appSession.domains.routeSession,
+          scopeConfig: appSession.domains.scopeConfig,
+          searchRecent: appSession.domains.searchRecent,
+          selectedDocument: appSession.domains.selectedDocument
+        }
+      },
       managementShellRefs: appShellRefs.managementShell || {},
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
@@ -344,13 +359,13 @@ export function startDocsViewerRuntime(options) {
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
       root: root,
-      routeCommands: routeWorkflowCommands,
+      routeReload: {
+        reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
+        routeCommands: routeWorkflowCommands
+      },
       searchInput: searchInput,
       setStatus: setStatus,
-      state: state,
-      uiTextUrl: uiTextUrl,
       markdownDocLink: markdownDocLink,
-      reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
       viewerScope: function () { return viewerScope; }
     },
     logger: window.console || console,

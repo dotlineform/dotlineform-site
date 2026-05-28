@@ -2,7 +2,7 @@ import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
-  createDocsViewerCompatibilityHostedViews,
+  createDocsViewerBuiltInHostedViews,
   createDocsViewerHostedViewRegistry,
   registerDocsViewerHostedViews
 } from "./docs-viewer-hosted-views.js";
@@ -152,7 +152,7 @@ export function createDocsViewerAppComposition(options) {
 
   var hostedViewRegistry = registerDocsViewerHostedViews(
     createDocsViewerHostedViewRegistry({ accessProjection: access }),
-    createDocsViewerCompatibilityHostedViews().concat(routeHostedViews)
+    createDocsViewerBuiltInHostedViews().concat(routeHostedViews)
   );
   var serviceContext = createDocsViewerServiceContext({
     routeContext: routeContext

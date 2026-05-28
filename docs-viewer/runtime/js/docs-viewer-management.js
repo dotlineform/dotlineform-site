@@ -34,10 +34,73 @@ import {
   collectDescendantDocIds
 } from "./docs-viewer-management-action-workflow.js";
 
+function createDocsViewerManagementStateFacade(domains) {
+  var sources = domains || {};
+  var fieldSources = {
+    allDocs: sources.documentIndex,
+    childrenByParent: sources.documentIndex,
+    docsById: sources.documentIndex,
+    generatedDataReadAvailable: sources.generatedData,
+    generatedDataReadChecked: sources.generatedData,
+    managementAvailable: sources.management,
+    managementBusy: sources.management,
+    managementCapabilities: sources.management,
+    managementCapabilityCheckId: sources.management,
+    managementChecked: sources.management,
+    managementMessage: sources.management,
+    managementMessageIsError: sources.management,
+    managementMode: sources.routeSession || sources.management,
+    managementStatusOwnsViewerStatus: sources.management,
+    managementText: sources.scopeConfig || sources.management,
+    metadataEditingDocId: sources.management,
+    metadataRestoreFocusId: sources.management,
+    payloadCache: sources.selectedDocument,
+    recentModeActive: sources.searchRecent,
+    reloadExpectedDocId: sources.selectedDocument || sources.generatedData,
+    reloadNonce: sources.selectedDocument || sources.generatedData,
+    searchEntries: sources.searchRecent,
+    searchLoaded: sources.searchRecent,
+    searchQuery: sources.searchRecent,
+    searchRequestPromise: sources.searchRecent,
+    searchRouteActive: sources.searchRecent,
+    searchVisibleCount: sources.searchRecent,
+    selectedDocId: sources.selectedDocument,
+    showHidden: sources.documentIndex,
+    statusMenuOpen: sources.management,
+    uiStatusByValue: sources.scopeConfig,
+    uiStatuses: sources.scopeConfig
+  };
+  var facade = {};
+  Object.keys(fieldSources).forEach(function (fieldName) {
+    Object.defineProperty(facade, fieldName, {
+      enumerable: true,
+      get: function () {
+        var source = fieldSources[fieldName] || {};
+        return source[fieldName];
+      },
+      set: function (value) {
+        var source = fieldSources[fieldName] || {};
+        source[fieldName] = value;
+      }
+    });
+  });
+  return facade;
+}
+
 export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
-  var state = context.state;
+  var managementState = context.managementState || {};
+  var state = createDocsViewerManagementStateFacade(managementState.domains || {});
+  var serviceClient = context.serviceClient || {};
+  var routeReload = context.routeReload || {};
+  context = Object.assign({}, context, {
+    docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
+    managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
+    reloadDocsViewerConfig: routeReload.reloadDocsViewerConfig || context.reloadDocsViewerConfig,
+    routeCommands: routeReload.routeCommands || context.routeCommands,
+    uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl
+  });
   var shellRefs = context.managementShellRefs || {};
   function shellRef(name, id) {
     return shellRefs[name] || document.getElementById(id);
@@ -101,7 +164,7 @@ export function initDocsViewerManagement(context) {
 
   function managementClientOptions() {
     return {
-      baseUrl: context.managementBaseUrl,
+      baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
       scope: viewerScope(),
       serverNotConfiguredError: state.managementText.serverNotConfiguredError,
       fetch: function (url, options) {
@@ -242,9 +305,9 @@ export function initDocsViewerManagement(context) {
           root: importRoot,
           bootStatus: importBootStatus,
           initialScope: scope || viewerScope(),
-          docsViewerConfigUrl: context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
-          uiTextUrl: context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json",
-          managementBaseUrl: context.managementBaseUrl,
+          docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
+          uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json",
+          managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
           routePath: "/docs/",
           hideIntro: true
         });
@@ -455,7 +518,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function routeCommand(name) {
-    var routeCommands = context.routeCommands || {};
+    var routeCommands = routeReload.routeCommands || context.routeCommands || {};
     return typeof routeCommands[name] === "function" ? routeCommands[name] : null;
   }
 
@@ -554,8 +617,10 @@ export function initDocsViewerManagement(context) {
   function scopeLifecycleCallbacks() {
     return {
       onApplied: function () {
-        var reloadConfig = typeof context.reloadDocsViewerConfig === "function"
-          ? context.reloadDocsViewerConfig()
+        var reloadConfig = typeof routeReload.reloadDocsViewerConfig === "function"
+          ? routeReload.reloadDocsViewerConfig()
+          : typeof context.reloadDocsViewerConfig === "function"
+            ? context.reloadDocsViewerConfig()
           : Promise.resolve(null);
         refreshManagementCapabilities();
         Promise.resolve(reloadConfig)
