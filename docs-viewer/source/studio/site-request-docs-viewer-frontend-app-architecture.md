@@ -342,6 +342,12 @@ Backend/service handling:
 - make import-open-on-load and management initialization depend on explicit manage app context, not incidental URL flags alone
 - if startup currently relies on backend timing or retry behavior that is not a clean contract, document and task that backend/service behavior
 
+Implemented third slice 2026-05-28:
+
+- `docs-viewer/runtime/js/docs-viewer-app-composition.js` now owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` remains the compatibility coordinator for focused controller construction and callback handoff because existing controllers still depend on function-scoped bridge callbacks. It now delegates foundational app composition and startup phase sequencing to the composition owner.
+- Public startup records omit management initialization, management backend surfaces, local generated-read service base URLs, and import-open-on-load. Manage startup records keep management initialization and import-open-on-load gated by management route access plus the current `mode=manage` route state.
+
 ### 4. Runtime API Shrink
 
 Retire the legacy returned runtime API where possible.

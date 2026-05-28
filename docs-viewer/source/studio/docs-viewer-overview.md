@@ -69,11 +69,12 @@ The viewer behavior starts from:
 - `docs-viewer/runtime/js/docs-viewer.js`
 
 The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the compatibility runtime.
-The compatibility runtime creates the app session, then wires focused controllers through the current compatibility state bridge.
+The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through the current compatibility state bridge.
 Current helper modules:
 
+- `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index and generated-data runtime creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for app-session creation, controller construction, config handoff, event binding, initial load sequencing, and the returned runtime API
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON

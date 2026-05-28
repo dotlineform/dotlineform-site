@@ -879,6 +879,233 @@ def assert_app_session_contract(page: Page) -> None:
         raise AssertionError(f"app session document index domain fields changed: {result!r}")
 
 
+def assert_app_composition_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
+            const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const compositionModule = await import('/docs-viewer/runtime/js/docs-viewer-app-composition.js');
+            function baseRouteConfig(overrides = {}) {
+                return Object.assign({
+                    schema_version: 'docs_viewer_route_config_v1',
+                    route_id: 'analysis-public',
+                    route_type: 'public',
+                    default_scope_id: 'analysis',
+                    default_doc_id: 'analysis',
+                    include_scope_param: false,
+                    allow_scope_query: false,
+                    viewer_base_url: '/analysis/',
+                    generated_base_url: '',
+                    docs_paths: {
+                        index_url: '/assets/data/docs/scopes/analysis/index.json',
+                        search_index_url: '/assets/data/search/analysis/index.json'
+                    },
+                    config_urls: {
+                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                        ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                        report_registry: '/assets/data/docs/reports.json'
+                    },
+                    access: {
+                        allow_management: false,
+                        allow_scope_query: false,
+                        management_base_url: ''
+                    },
+                    panels: {
+                        index: { enabled: true, default_state: 'normal' },
+                        document: { enabled: true, default_view: 'document' },
+                        info: { enabled: true, default_view: 'metadata-info' }
+                    },
+                    hosted_views: { records: [] }
+                }, overrides);
+            }
+            async function createComposition(routeConfig, url) {
+                window.history.replaceState({}, '', url);
+                document.body.innerHTML = `
+                    <section id="docsViewerRoot">
+                      <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
+                      <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+                      <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                      <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+                      <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                      <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
+                      <p id="docsViewerStatus"></p>
+                      <div id="docsViewerBookmarkRow"></div>
+                    </section>
+                `;
+                const root = document.getElementById('docsViewerRoot');
+                const routeContext = context.createDocsViewerRouteContext({
+                    root,
+                    document,
+                    window,
+                    assetVersion: 'composition-smoke',
+                    routeConfig
+                });
+                await shell.initDocsViewerAppShell({ root, document, routeContext });
+                const appShellRefs = shell.getDocsViewerAppShellRefs({ root, document });
+                const composition = compositionModule.createDocsViewerAppComposition({
+                    root,
+                    window,
+                    routeContext,
+                    appShellRefs,
+                    assetVersion: 'composition-smoke',
+                    viewerScope: () => routeContext.viewerScope,
+                    indexPanelAvailable: () => true
+                });
+                return { routeContext, composition };
+            }
+            const publicCreated = await createComposition(
+                baseRouteConfig({
+                    generated_base_url: 'http://127.0.0.1:9999',
+                    access: {
+                        allow_management: false,
+                        allow_scope_query: false,
+                        management_base_url: 'http://127.0.0.1:8789'
+                    }
+                }),
+                '/analysis/?doc=analysis&mode=manage&import=1'
+            );
+            const manageCreated = await createComposition(
+                baseRouteConfig({
+                    route_id: 'docs-manage',
+                    route_type: 'manage',
+                    default_scope_id: 'studio',
+                    default_doc_id: 'dev-home',
+                    include_scope_param: true,
+                    allow_scope_query: true,
+                    viewer_base_url: '/docs/',
+                    generated_base_url: 'http://127.0.0.1:8789/',
+                    docs_paths: {
+                        index_url: '/assets/data/docs/scopes/studio/index.json',
+                        search_index_url: '/assets/data/search/studio/index.json'
+                    },
+                    config_urls: {
+                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                        ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                        report_registry: '/assets/data/docs/reports.json'
+                    },
+                    access: {
+                        allow_management: true,
+                        allow_scope_query: true,
+                        management_base_url: 'http://127.0.0.1:8789/'
+                    }
+                }),
+                '/docs/?scope=studio&doc=dev-home&mode=manage&import=1'
+            );
+            const startupOrder = [];
+            await compositionModule.startDocsViewerStartupPhases({
+                composition: {
+                    shouldOpenImportOnLoad: (getCurrentMode) => getCurrentMode() === 'manage'
+                },
+                bindEvents: () => startupOrder.push('bind'),
+                startBusy: () => {
+                    startupOrder.push('busy-start');
+                    return () => startupOrder.push('busy-stop');
+                },
+                loadDocsViewerConfig: () => startupOrder.push('docs-config'),
+                renderIndexPanelState: () => startupOrder.push('index-panel'),
+                loadViewerConfig: () => startupOrder.push('viewer-config'),
+                initializeBookmarks: () => startupOrder.push('bookmarks'),
+                initializeManagement: () => startupOrder.push('management'),
+                loadIndex: () => startupOrder.push('index'),
+                openImportOnLoad: () => startupOrder.push('import'),
+                getCurrentMode: () => 'manage'
+            });
+            return {
+                public: {
+                    phases: publicCreated.composition.startupPhases.map((phase) => phase.id),
+                    generatedAuthority: publicCreated.composition.serviceContext.generatedRead.authority,
+                    generatedBaseUrl: publicCreated.composition.generatedBaseUrl,
+                    managementContext: publicCreated.composition.serviceContext.management,
+                    managementBaseUrl: publicCreated.composition.managementBaseUrl,
+                    shouldOpenImport: publicCreated.composition.shouldOpenImportOnLoad(() => 'manage'),
+                    recentLimit: publicCreated.composition.state.recentLimit,
+                    sameState: publicCreated.composition.appSession.state === publicCreated.composition.state,
+                    authorityPhases: publicCreated.composition.startupAuthorities.map((record) => record.phase)
+                },
+                manage: {
+                    phases: manageCreated.composition.startupPhases.map((phase) => phase.id),
+                    generatedAuthority: manageCreated.composition.serviceContext.generatedRead.authority,
+                    generatedBaseUrl: manageCreated.composition.generatedBaseUrl,
+                    managementAuthority: manageCreated.composition.serviceContext.management.authority,
+                    managementBaseUrl: manageCreated.composition.managementBaseUrl,
+                    shouldInitialize: manageCreated.composition.shouldInitializeManagement(() => 'manage'),
+                    shouldInitializePublicMode: manageCreated.composition.shouldInitializeManagement(() => ''),
+                    shouldOpenImport: manageCreated.composition.shouldOpenImportOnLoad(() => 'manage'),
+                    authorityPhases: manageCreated.composition.startupAuthorities.map((record) => record.phase)
+                },
+                startupOrder
+            };
+        }"""
+    )
+    if result["public"] != {
+        "phases": [
+            "bind-events",
+            "load-docs-viewer-config",
+            "load-viewer-config-ui-text",
+            "initialize-bookmarks",
+            "load-initial-index-route",
+        ],
+        "generatedAuthority": "generated static asset",
+        "generatedBaseUrl": "",
+        "managementContext": None,
+        "managementBaseUrl": "",
+        "shouldOpenImport": False,
+        "recentLimit": 10,
+        "sameState": True,
+        "authorityPhases": [
+            "root/app-shell input validation",
+            "app session creation",
+            "service-context creation",
+            "config and UI text load",
+            "generated data reads",
+            "bookmark initialization",
+        ],
+    }:
+        raise AssertionError(f"public app composition contract failed: {result!r}")
+    if result["manage"] != {
+        "phases": [
+            "bind-events",
+            "load-docs-viewer-config",
+            "load-viewer-config-ui-text",
+            "initialize-bookmarks",
+            "initialize-management",
+            "load-initial-index-route",
+            "open-import-on-load",
+        ],
+        "generatedAuthority": "local generated-read service",
+        "generatedBaseUrl": "http://127.0.0.1:8789",
+        "managementAuthority": "management backend capability/write endpoint",
+        "managementBaseUrl": "http://127.0.0.1:8789",
+        "shouldInitialize": True,
+        "shouldInitializePublicMode": False,
+        "shouldOpenImport": True,
+        "authorityPhases": [
+            "root/app-shell input validation",
+            "app session creation",
+            "service-context creation",
+            "config and UI text load",
+            "generated data reads",
+            "bookmark initialization",
+            "management initialization",
+            "import-open-on-load",
+        ],
+    }:
+        raise AssertionError(f"manage app composition contract failed: {result!r}")
+    if result["startupOrder"] != [
+        "bind",
+        "busy-start",
+        "docs-config",
+        "index-panel",
+        "viewer-config",
+        "bookmarks",
+        "management",
+        "index",
+        "import",
+        "busy-stop",
+    ]:
+        raise AssertionError(f"app startup phase order changed: {result!r}")
+
+
 def assert_app_boot_management_context_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2901,6 +3128,7 @@ def main() -> int:
             assert_route_config_inline_and_malformed_fallback(page)
             assert_route_config_registry_resolution(page)
             assert_app_session_contract(page)
+            assert_app_composition_contract(page)
             assert_app_boot_public_context_contract(page)
             assert_app_boot_management_context_contract(page)
             assert_app_boot_start_is_single_start(page)

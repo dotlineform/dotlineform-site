@@ -45,6 +45,7 @@ Copy the shared viewer runtime files:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js`
+- `docs-viewer/runtime/js/docs-viewer-app-composition.js`
 - `docs-viewer/runtime/js/docs-viewer-app-session.js`
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js`

@@ -31,31 +31,16 @@ import {
   updateDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
 import {
-  createDocsViewerPanelLayout
-} from "./docs-viewer-panel-layout.js";
-import {
   createDocsViewerInfoPanelController
 } from "./docs-viewer-info-panel-controller.js";
-import {
-  createDocsViewerCompatibilityHostedViews,
-  createDocsViewerHostedViewRegistry,
-  registerDocsViewerHostedViews
-} from "./docs-viewer-hosted-views.js";
-import {
-  createDocsViewerGeneratedDataRuntime
-} from "./docs-viewer-generated-data-runtime.js";
-import {
-  createDocsViewerServiceContext
-} from "./docs-viewer-service-context.js";
-import {
-  createDocsViewerDocumentIndexState
-} from "./docs-viewer-document-index-state.js";
 import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
-  createDocsViewerAppSession
-} from "./docs-viewer-app-session.js";
+  DOCS_VIEWER_RUNTIME_DEFAULTS,
+  createDocsViewerAppComposition,
+  startDocsViewerStartupPhases
+} from "./docs-viewer-app-composition.js";
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
   var root = settings.root;
@@ -104,42 +89,31 @@ export function startDocsViewerRuntime(options) {
   var uiTextUrl = routeContext.uiTextUrl;
   var reportRegistryUrl = routeContext.reportRegistryUrl;
   var managementBaseUrl = routeContext.managementBaseUrl;
-  var generatedBaseUrl = routeContext.generatedBaseUrl;
-  var openImportOnLoad = routeContext.openImportOnLoad;
-  var SEARCH_BATCH_SIZE = 50;
-  var SEARCH_DEBOUNCE_MS = 140;
-  var DEFAULT_RECENT_LIMIT = 10;
-  var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
-  var BOOKMARK_DB_VERSION = 1;
-  var BOOKMARK_STORE_NAME = "favorites";
-  var MANAGEMENT_MODE = "manage";
-  var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = 60;
-  var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = 500;
-  var RELOAD_RETRY_ATTEMPTS = 12;
-  var RELOAD_RETRY_DELAY_MS = 250;
-  var UI_STATUS_EMOJI_MAX_LENGTH = 8;
-  var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
+  var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
+  var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
+  var SEARCH_DEBOUNCE_MS = runtimeDefaults.searchDebounceMs;
+  var DEFAULT_RECENT_LIMIT = runtimeDefaults.defaultRecentLimit;
+  var BOOKMARK_DB_NAME = runtimeDefaults.bookmarkDbName;
+  var BOOKMARK_DB_VERSION = runtimeDefaults.bookmarkDbVersion;
+  var BOOKMARK_STORE_NAME = runtimeDefaults.bookmarkStoreName;
+  var MANAGEMENT_MODE = runtimeDefaults.managementMode;
+  var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
+  var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
+  var UI_STATUS_EMOJI_MAX_LENGTH = runtimeDefaults.uiStatusEmojiMaxLength;
+  var SIDEBAR_COLLAPSE_MEDIA = runtimeDefaults.sidebarCollapseMedia;
   var bookmarkScope = routeContext.bookmarkScope;
-  var hostedViewRegistry = registerDocsViewerHostedViews(
-    createDocsViewerHostedViewRegistry({ accessProjection: routeContext.access }),
-    createDocsViewerCompatibilityHostedViews().concat(routeContext.routeConfig.hostedViews.records)
-  );
-  var serviceContext = createDocsViewerServiceContext({
-    routeContext: routeContext
-  });
-  managementBaseUrl = serviceContext.management ? serviceContext.management.baseUrl : "";
-  generatedBaseUrl = serviceContext.generatedRead.baseUrl;
-  var panelLayout = createDocsViewerPanelLayout({
+  var composition = createDocsViewerAppComposition({
     root: root,
-    storage: window.localStorage,
-    storageScope: bookmarkScope,
-    panels: routeContext.routeConfig.panels,
-    routeId: routeContext.routeConfig.routeId,
-    indexPanelRefs: indexPanelRefs,
-    documentShellRefs: documentShellRefs,
-    infoPanelRefs: infoPanelRefs,
+    window: window,
+    routeContext: routeContext,
+    appShellRefs: appShellRefs,
+    assetVersion: assetVersion,
+    viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable
   });
+  var hostedViewRegistry = composition.hostedViewRegistry;
+  managementBaseUrl = composition.managementBaseUrl;
+  var panelLayout = composition.panelLayout;
   var managementRuntime = null;
   var bookmarkController = null;
   var documentController = null;
@@ -147,27 +121,10 @@ export function startDocsViewerRuntime(options) {
   var documentIndex = null;
   var infoPanelController = null;
 
-  var appSession = createDocsViewerAppSession({
-    defaultRecentLimit: DEFAULT_RECENT_LIMIT,
-    hostedViewRegistry: hostedViewRegistry,
-    panelLayout: panelLayout,
-    routeContext: routeContext,
-    searchBatchSize: SEARCH_BATCH_SIZE,
-    window: window
-  });
+  var appSession = composition.appSession;
   var state = appSession.state;
-  documentIndex = createDocsViewerDocumentIndexState({
-    state: state
-  });
-  var generatedDataRuntime = createDocsViewerGeneratedDataRuntime({
-    assetVersion: assetVersion,
-    generatedBaseUrl: generatedBaseUrl,
-    reloadRetryAttempts: RELOAD_RETRY_ATTEMPTS,
-    reloadRetryDelayMs: RELOAD_RETRY_DELAY_MS,
-    state: state,
-    viewerScope: function () { return viewerScope; },
-    window: window
-  });
+  documentIndex = composition.documentIndex;
+  var generatedDataRuntime = composition.generatedDataRuntime;
   var dataRequestOptions = generatedDataRuntime.dataRequestOptions;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
   var sidebarRenderer = initDocsViewerSidebarRenderer({
@@ -764,35 +721,28 @@ export function startDocsViewerRuntime(options) {
     state: state,
     storeName: BOOKMARK_STORE_NAME
   });
-  bindLinkInterception();
-  var stopInitialBusy = startBusy();
-  var initialLoadPromise = loadDocsViewerConfig()
-    .then(function () {
-      renderIndexPanelState();
-      return loadViewerConfig();
-    })
-    .then(function () {
-      initializeBookmarks();
-      initializeManagement();
-      return loadIndex();
-    })
-    .then(function () {
-      if (openImportOnLoad && getCurrentMode() === MANAGEMENT_MODE) {
-        loadManagementController().then(function (controller) {
-          if (controller) controller.openImportModal();
-        });
-      }
-    })
-    .catch(function (error) {
-      setStatus(error.message || "Failed to initialize Docs Viewer.", true);
-      hideDocPane();
-      content.textContent = "";
-      if (results) results.hidden = true;
-      if (more) more.hidden = true;
-    })
-    .finally(function () {
-      stopInitialBusy();
-    });
+  var initialLoadPromise = startDocsViewerStartupPhases({
+    composition: composition,
+    bindEvents: bindLinkInterception,
+    startBusy: startBusy,
+    loadDocsViewerConfig: loadDocsViewerConfig,
+    renderIndexPanelState: renderIndexPanelState,
+    loadViewerConfig: loadViewerConfig,
+    initializeBookmarks: initializeBookmarks,
+    initializeManagement: initializeManagement,
+    loadIndex: loadIndex,
+    openImportOnLoad: function () {
+      loadManagementController().then(function (controller) {
+        if (controller) controller.openImportModal();
+      });
+    },
+    getCurrentMode: getCurrentMode,
+    setStatus: setStatus,
+    hideDocPane: hideDocPane,
+    content: content,
+    results: results,
+    more: more
+  });
 
   function cssEscape(value) {
     if (window.CSS && typeof window.CSS.escape === "function") {
@@ -805,6 +755,7 @@ export function startDocsViewerRuntime(options) {
     root: root,
     routeContext: function () { return routeContext; },
     appShellRefs: appShellRefs,
+    appComposition: composition,
     appSession: appSession,
     state: state,
     initialLoadPromise: initialLoadPromise,

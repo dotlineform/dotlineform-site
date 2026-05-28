@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T11:19:22Z",
+  "generated_at": "2026-05-28T11:39:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -162,7 +162,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 13369
+      "content_text_length": 13790
     },
     {
       "scope": "studio",
@@ -1090,7 +1090,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11026
+      "content_text_length": 11080
     },
     {
       "scope": "studio",
@@ -1937,7 +1937,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 32461,
+      "content_text_length": 33750,
       "ui_status": "review"
     },
     {
@@ -2839,7 +2839,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 14673
+      "content_text_length": 15052
     },
     {
       "scope": "studio",
@@ -2946,7 +2946,7 @@
       "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
-      "content_text_length": 21211,
+      "content_text_length": 22227,
       "ui_status": "in-progress"
     },
     {
@@ -2994,8 +2994,8 @@
       "source_path": "site-request-docs-viewer-app-composition-startup-phases-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-composition-startup-phases-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-composition-startup-phases-tasks.json",
-      "content_text_length": 10897,
-      "ui_status": "planned"
+      "content_text_length": 15442,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
