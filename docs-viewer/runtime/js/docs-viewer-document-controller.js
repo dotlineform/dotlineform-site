@@ -1,10 +1,3 @@
-import {
-  appendAssetVersion,
-  fetchIndexWithRetry,
-  fetchPreferredGeneratedJson,
-  managementReloadPath
-} from "./docs-viewer-data.js";
-
 export function initDocsViewerDocumentController(context) {
   var state = context.state;
   var content = context.content;
@@ -39,12 +32,12 @@ export function initDocsViewerDocumentController(context) {
     if (!targetConfig || !targetConfig.indexUrl) {
       return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
     }
-    return fetchIndexWithRetry(context.dataRequestOptions({
-      indexUrl: appendAssetVersion(targetConfig.indexUrl),
+    return context.generatedData.readScopeIndex({
+      scopeConfig: targetConfig,
       viewerScope: targetScope,
       reloadNonce: "",
       reloadExpectedDocId: ""
-    }));
+    });
   }
 
   function docsScopeDataBaseUrl(scope) {
@@ -73,16 +66,10 @@ export function initDocsViewerDocumentController(context) {
     if (!baseUrl) {
       return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
     }
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(baseUrl + "/references/index.json"),
-      "Failed to load docs references",
-      managementReloadPath("/docs/generated/references", { scope: targetScope }),
-      context.dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
+    return context.generatedData.readReferencesIndex({
+      baseUrl: baseUrl,
+      viewerScope: targetScope
+    });
   }
 
   function fetchDocsReferenceTargetForScope(scope, target) {
@@ -94,20 +81,12 @@ export function initDocsViewerDocumentController(context) {
       var baseUrl = docsScopeDataBaseUrl(targetScope);
       staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + targetSlug + ".json";
     }
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(staticUrl),
-      "Failed to load docs reference target",
-      managementReloadPath("/docs/generated/reference-target", {
-        scope: targetScope,
-        target_kind: targetKind,
-        target_slug: targetSlug
-      }),
-      context.dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
+    return context.generatedData.readReferenceTarget({
+      staticUrl: staticUrl,
+      targetKind: targetKind,
+      targetSlug: targetSlug,
+      viewerScope: targetScope
+    });
   }
 
   function reportContext(doc, payload) {

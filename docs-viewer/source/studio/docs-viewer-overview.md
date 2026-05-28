@@ -75,7 +75,8 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for app-session creation, controller construction, config handoff, event binding, initial load sequencing, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
-- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, and generated-search read capability checks
+- `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the compatibility runtime uses it to keep the management controller import gated behind management route access
@@ -94,9 +95,9 @@ Current helper modules:
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
 
-When a route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server.
+When a management-capable route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, docs-search index, and generated reference JSON through that server.
 Local Studio uses this path because generated docs/search reads are served by the Python app rather than by Jekyll.
-Public/static builds leave `data-generated-base-url` blank and use the generated JSON asset URLs directly.
+Public/static builds leave `data-generated-base-url` blank, and the service context also strips any local generated-read service base URL from public read-only contexts, so `/library/` and `/analysis/` use generated JSON asset URLs directly without backend probes.
 
 ## Current URL And State Contract
 

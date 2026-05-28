@@ -45,6 +45,9 @@ import {
   createDocsViewerGeneratedDataRuntime
 } from "./docs-viewer-generated-data-runtime.js";
 import {
+  createDocsViewerServiceContext
+} from "./docs-viewer-service-context.js";
+import {
   createDocsViewerDocumentIndexState
 } from "./docs-viewer-document-index-state.js";
 import {
@@ -121,6 +124,11 @@ export function startDocsViewerRuntime(options) {
     createDocsViewerHostedViewRegistry({ accessProjection: routeContext.access }),
     createDocsViewerCompatibilityHostedViews().concat(routeContext.routeConfig.hostedViews.records)
   );
+  var serviceContext = createDocsViewerServiceContext({
+    routeContext: routeContext
+  });
+  managementBaseUrl = serviceContext.management ? serviceContext.management.baseUrl : "";
+  generatedBaseUrl = serviceContext.generatedRead.baseUrl;
   var panelLayout = createDocsViewerPanelLayout({
     root: root,
     storage: window.localStorage,
@@ -196,7 +204,7 @@ export function startDocsViewerRuntime(options) {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     clearResultsStatus: clearResultsStatus,
     content: content,
-    dataRequestOptions: dataRequestOptions,
+    generatedData: generatedDataRuntime,
     hasActiveQuery: hasActiveQuery,
     managementBaseUrl: function () { return managementBaseUrl; },
     meta: meta,
@@ -225,7 +233,6 @@ export function startDocsViewerRuntime(options) {
     cancelSearchDebounce: cancelSearchDebounce,
     clearManagementMessageForDocChange: clearManagementMessageForDocChange,
     content: content,
-    dataRequestOptions: dataRequestOptions,
     defaultDocId: documentIndex.defaultDocId,
     defaultRouteDocId: function () { return defaultRouteDocId; },
     expandTrail: expandTrail,
@@ -238,6 +245,7 @@ export function startDocsViewerRuntime(options) {
     hasActiveQuery: hasActiveQuery,
     hideContextMenu: hideContextMenu,
     hideDocPane: hideDocPane,
+    generatedData: generatedDataRuntime,
     includeScopeParam: function () { return includeScopeParam; },
     indexUrl: function () { return indexUrl; },
     managementModeValue: MANAGEMENT_MODE,
@@ -281,7 +289,7 @@ export function startDocsViewerRuntime(options) {
   };
   var searchController = initDocsViewerSearchController({
     cancelSearchDebounce: cancelSearchDebounce,
-    dataRequestOptions: dataRequestOptions,
+    generatedData: generatedDataRuntime,
     hideContextMenu: hideContextMenu,
     hasActiveQuery: hasActiveQuery,
     more: more,

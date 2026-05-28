@@ -1966,16 +1966,16 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 cancelSearchDebounce: () => calls.push('cancel-search'),
                 clearManagementMessageForDocChange: (docId) => calls.push(`clear:${docId}`),
                 content: document.createElement('div'),
-                dataRequestOptions: (overrides) => Object.assign({
-                    fetch: responseFor,
-                    checkGeneratedDataReadCapability: () => Promise.resolve(false)
-                }, overrides || {}),
                 defaultDocId,
                 defaultRouteDocId: () => 'folder',
                 expandTrail: (docId) => calls.push(`expand:${docId}`),
                 handleManagementRootClick: () => false,
                 handleMissingDoc: () => calls.push('missing'),
                 handlePayloadError: (error) => calls.push(`payload-error:${error.message}`),
+                generatedData: {
+                    readDocsIndex: ({ indexUrl }) => responseFor(indexUrl).then((response) => response.json()),
+                    readDocumentPayload: (doc) => responseFor(doc.content_url).then((response) => response.json())
+                },
                 hasActiveQuery: (query) => {
                     const value = typeof query === 'string' ? query : state.searchQuery;
                     return Boolean(String(value || '').trim());
@@ -2162,7 +2162,9 @@ def assert_search_controller_contract(page: Page) -> None:
             };
             const controller = module.initDocsViewerSearchController({
                 cancelSearchDebounce: () => calls.push('cancel-search'),
-                dataRequestOptions: () => ({}),
+                generatedData: {
+                    readSearchIndex: () => Promise.resolve({ entries: [] })
+                },
                 hasActiveQuery: (query) => Boolean(String(typeof query === 'string' ? query : state.searchQuery || '').trim()),
                 hideContextMenu: () => calls.push('hide-context'),
                 more,
@@ -2398,6 +2400,7 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js');
             let fetchCount = 0;
+            const requestUrls = [];
             const state = {
                 reloadNonce: 'nonce-1',
                 reloadExpectedDocId: 'doc-2',
@@ -2415,8 +2418,17 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                 state,
                 viewerScope: () => 'studio',
                 window: {
-                    fetch: async () => {
+                    fetch: async (url) => {
+                        requestUrls.push(String(url));
                         fetchCount += 1;
+                        if (String(url).includes('/docs/generated/search')) {
+                            return {
+                                ok: true,
+                                async json() {
+                                    return { entries: [{ id: 'doc-1', title: 'Doc one' }] };
+                                }
+                            };
+                        }
                         return {
                             ok: true,
                             async json() {
@@ -2440,6 +2452,41 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
             const libraryAllowed = await requestOptions.checkGeneratedDataReadCapability();
             const searchAllowed = requestOptions.scopeSupportsGeneratedSearchReads();
             const cachedStudioAllowed = await runtime.checkGeneratedDataReadCapability('studio');
+            const searchPayload = await runtime.readSearchIndex({
+                searchIndexUrl: '/assets/search/studio/index.json',
+                viewerScope: 'studio'
+            });
+            const staticRequests = [];
+            const publicRuntime = module.createDocsViewerGeneratedDataRuntime({
+                assetVersion: 'asset-2',
+                generatedBaseUrl: '',
+                state: {
+                    reloadNonce: '',
+                    reloadExpectedDocId: '',
+                    managementAvailable: false,
+                    managementCapabilities: null,
+                    generatedDataReadChecked: false,
+                    generatedDataReadAvailable: false,
+                    generatedDataReadRequestPromise: null
+                },
+                viewerScope: () => 'library',
+                window: {
+                    fetch: async (url) => {
+                        staticRequests.push(String(url));
+                        return {
+                            ok: true,
+                            async json() {
+                                return { entries: [] };
+                            }
+                        };
+                    },
+                    setTimeout: (resolve) => resolve()
+                }
+            });
+            await publicRuntime.readSearchIndex({
+                searchIndexUrl: '/assets/search/library/index.json',
+                viewerScope: 'library'
+            });
             return {
                 requestShape: {
                     assetVersion: requestOptions.assetVersion,
@@ -2455,6 +2502,9 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                 libraryAllowed,
                 searchAllowed,
                 cachedStudioAllowed,
+                searchEntryCount: searchPayload.entries.length,
+                searchRequestPath: new URL(requestUrls[1]).pathname,
+                staticSearchRequest: staticRequests[0],
                 fetchCount,
                 checked: state.generatedDataReadChecked,
                 available: state.generatedDataReadAvailable
@@ -2476,11 +2526,65 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
         "libraryAllowed": False,
         "searchAllowed": False,
         "cachedStudioAllowed": True,
-        "fetchCount": 1,
+        "searchEntryCount": 1,
+        "searchRequestPath": "/docs/generated/search",
+        "staticSearchRequest": "/assets/search/library/index.json?v=asset-2",
+        "fetchCount": 2,
         "checked": True,
         "available": True,
     }:
         raise AssertionError(f"generated-data runtime contract changed unexpectedly: {result!r}")
+
+
+def assert_service_context_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-service-context.js');
+            const publicContext = module.createDocsViewerServiceContext({
+                routeContext: {
+                    access: { allowManagement: false },
+                    docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                    generatedBaseUrl: 'http://127.0.0.1:8789',
+                    managementBaseUrl: 'http://127.0.0.1:8789',
+                    reportRegistryUrl: '/assets/data/docs/reports.json',
+                    uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json'
+                }
+            });
+            const manageContext = module.createDocsViewerServiceContext({
+                routeContext: {
+                    access: { allowManagement: true },
+                    docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                    generatedBaseUrl: 'http://127.0.0.1:8789/',
+                    managementBaseUrl: 'http://127.0.0.1:8789/',
+                    reportRegistryUrl: '/assets/data/docs/reports.json',
+                    uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json'
+                }
+            });
+            return {
+                publicReadOnly: publicContext.access.publicReadOnly,
+                publicGeneratedBase: publicContext.generatedRead.baseUrl,
+                publicManagement: publicContext.management,
+                publicConfigAuthority: publicContext.config.authority,
+                publicReportAuthority: publicContext.reports.authority,
+                manageReadOnly: manageContext.access.publicReadOnly,
+                manageGeneratedBase: manageContext.generatedRead.baseUrl,
+                manageManagementBase: manageContext.management && manageContext.management.baseUrl,
+                manageManagementAuthority: manageContext.management && manageContext.management.authority
+            };
+        }"""
+    )
+    if result != {
+        "publicReadOnly": True,
+        "publicGeneratedBase": "",
+        "publicManagement": None,
+        "publicConfigAuthority": "browser-safe config asset",
+        "publicReportAuthority": "browser-safe config asset",
+        "manageReadOnly": False,
+        "manageGeneratedBase": "http://127.0.0.1:8789",
+        "manageManagementBase": "http://127.0.0.1:8789",
+        "manageManagementAuthority": "management backend capability/write endpoint",
+    }:
+        raise AssertionError(f"Docs Viewer service context contract changed unexpectedly: {result!r}")
 
 
 def assert_document_index_state_contract(page: Page) -> None:
@@ -2814,6 +2918,7 @@ def main() -> int:
             assert_search_controller_contract(page)
             assert_bookmark_controller_contract(page)
             assert_generated_data_runtime_contract(page)
+            assert_service_context_contract(page)
             assert_document_index_state_contract(page)
             assert_info_panel_controller_contract(page)
             assert_management_runtime_adapter_contract(page)

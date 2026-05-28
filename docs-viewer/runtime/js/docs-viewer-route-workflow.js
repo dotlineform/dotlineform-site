@@ -1,9 +1,4 @@
 import {
-  fetchIndexWithRetry,
-  fetchPreferredGeneratedJson,
-  managementReloadPath
-} from "./docs-viewer-data.js";
-import {
   compareDocs,
   normalizeDocIdSet
 } from "./docs-viewer-tree.js";
@@ -165,12 +160,10 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function fetchDocPayload(doc, docId) {
     var stopBusy = context.startBusy();
-    return fetchPreferredGeneratedJson(
-      doc.content_url,
-      "Failed to load " + doc.content_url,
-      managementReloadPath("/docs/generated/payload", { scope: viewerScope(), doc_id: docId }),
-      context.dataRequestOptions({ useSearchCapability: false })
-    ).finally(stopBusy);
+    return context.generatedData.readDocumentPayload(doc, {
+      docId: docId,
+      viewerScope: viewerScope()
+    }).finally(stopBusy);
   }
 
   function loadDoc(docId, options) {
@@ -258,10 +251,10 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function loadIndex() {
     var stopBusy = context.startBusy();
-    return fetchIndexWithRetry(context.dataRequestOptions({
+    return context.generatedData.readDocsIndex({
       indexUrl: indexUrl(),
       viewerScope: viewerScope()
-    }))
+    })
       .then(function (payload) {
         initializeIndex(payload);
       })

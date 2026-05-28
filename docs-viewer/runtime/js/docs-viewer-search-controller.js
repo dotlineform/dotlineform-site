@@ -1,8 +1,4 @@
 import {
-  fetchPreferredGeneratedJson,
-  managementReloadPath
-} from "./docs-viewer-data.js";
-import {
   renderRecentEntry,
   renderSearchEntry
 } from "./docs-viewer-render.js";
@@ -125,12 +121,10 @@ export function initDocsViewerSearchController(context) {
 
     var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
 
-    state.searchRequestPromise = fetchPreferredGeneratedJson(
-      currentSearchIndexUrl(),
-      "Failed to load search data",
-      managementReloadPath("/docs/generated/search", { scope: currentViewerScope() }),
-      context.dataRequestOptions({ useSearchCapability: true })
-    )
+    state.searchRequestPromise = context.generatedData.readSearchIndex({
+      searchIndexUrl: currentSearchIndexUrl(),
+      viewerScope: currentViewerScope()
+    })
       .then(function (payload) {
         state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
         state.searchLoaded = true;

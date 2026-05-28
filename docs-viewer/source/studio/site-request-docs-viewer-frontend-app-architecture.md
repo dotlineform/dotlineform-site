@@ -289,6 +289,12 @@ Candidate owners:
 - introduce a viewer config service only if it removes real config handoff coupling
 - introduce a management service adapter only if it narrows the management context shape
 
+Implemented second slice 2026-05-28:
+
+- `docs-viewer/runtime/js/docs-viewer-service-context.js` defines the explicit public/manage service context. Public contexts keep static generated/config/report assets and omit management base URLs, generated-read service base URLs, backend probes, and management service adapters. Manage contexts keep local generated-read and management backend base URLs separate from backend capability truth.
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` now owns named read methods for docs index, document payload, generated search, cross-scope docs index, references index, and reference-target buckets. Route workflow, search, and document/report handoff code consume those methods instead of assembling generated-read fetch/reload/capability options locally.
+- Config reads remain with `docs-viewer-config-controller.js`, report registry reads remain with `docs-viewer-reports.js`, and management writes remain with `docs-viewer-management-client.js` plus the management action controllers because those owners already match the source of authority.
+
 Acceptance:
 
 - generated docs, payload, search, report registry, config, and management backend reads have explicit adapters

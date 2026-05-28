@@ -38,7 +38,8 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` as the app-session owner for state default creation, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge used by existing controllers
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for app-session creation, controller construction, initial config handoff, event binding, initial load sequencing, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, and popstate coordination
-- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, and generated-search read capability checks
+- `docs-viewer/runtime/js/docs-viewer-service-context.js` for explicit public/manage service context projection; public contexts keep static generated/config/report assets and omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, generated-search read capability checks, and named read methods for docs index, document payload, search index, cross-scope docs index, references index, and reference-target JSON
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` for document visibility/loadability projection, hidden/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` for selected-document info-panel coordination, default metadata-info open/close behavior, toolbar click handoff, toggle projection, and update-on-document-change behavior
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` for neutral lazy-controller loading, currently used by the compatibility runtime to assemble the explicit management context and import the management controller only when management is allowed
@@ -94,7 +95,7 @@ Current route capability boundary:
 - `/docs/` is the only route that enables `?mode=manage`; it is served by the standalone Docs Viewer service
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS
-- public read-only viewer routes also avoid loading the management controller module
+- public read-only viewer routes also avoid loading the management controller module, management base URLs, local generated-read service base URLs, and backend capability probes
 - local `bin/local-studio` links to the configured Docs Viewer service but does not serve Docs Viewer management, generated reads, or Docs Viewer assets
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 - canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode

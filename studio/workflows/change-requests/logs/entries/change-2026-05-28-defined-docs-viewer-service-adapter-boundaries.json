@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-28-defined-docs-viewer-service-adapter-boundaries",
+  "date": "2026-05-28",
+  "title": "Defined Docs Viewer Service Adapter Boundaries",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Added an explicit Docs Viewer service-context owner and extended the generated-data runtime with named read methods so route, search, and document controllers no longer assemble generated-read fetch, retry, reload, and capability bundles directly.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-service-adapter-boundary-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "service-adapters",
+    "generated-data",
+    "public-manage-context"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-service-adapter-boundary-tasks",
+  "related_docs": [
+    "site-request-docs-viewer-service-adapter-boundary-tasks",
+    "site-request-docs-viewer-frontend-app-architecture",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-overview",
+    "docs-viewer-javascript-inventory",
+    "docs-viewer-portable-files"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-service-context.js",
+    "docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-route-workflow.js",
+    "docs-viewer/runtime/js/docs-viewer-search-controller.js",
+    "docs-viewer/runtime/js/docs-viewer-document-controller.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py"
+  ],
+  "effect": "Public read-only Docs Viewer contexts now have a documented service projection that omits management and local generated-read backend surfaces, while manage mode still gets backend capability and write authority from the existing service flow.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer.js docs-viewer/runtime/js/docs-viewer-app-boot.js docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-app-session.js docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js docs-viewer/runtime/js/docs-viewer-service-context.js docs-viewer/runtime/js/docs-viewer-route-workflow.js docs-viewer/runtime/js/docs-viewer-search-controller.js docs-viewer/runtime/js/docs-viewer-document-controller.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

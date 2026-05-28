@@ -1,3 +1,10 @@
+import {
+  appendAssetVersion,
+  fetchIndexWithRetry,
+  fetchPreferredGeneratedJson,
+  managementReloadPath
+} from "./docs-viewer-data.js";
+
 export function createDocsViewerGeneratedDataRuntime(options) {
   var settings = options || {};
   var state = settings.state;
@@ -108,9 +115,108 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     }, requestSettings);
   }
 
+  function readDocsIndex(options) {
+    var requestSettings = options || {};
+    return fetchIndexWithRetry(dataRequestOptions({
+      indexUrl: requestSettings.indexUrl,
+      viewerScope: requestSettings.viewerScope || currentViewerScope()
+    }));
+  }
+
+  function readDocumentPayload(doc, options) {
+    var requestSettings = options || {};
+    var docId = String(requestSettings.docId || doc && doc.doc_id || "").trim();
+    var viewerScope = requestSettings.viewerScope || currentViewerScope();
+    var contentUrl = String(requestSettings.contentUrl || doc && doc.content_url || "").trim();
+    return fetchPreferredGeneratedJson(
+      contentUrl,
+      "Failed to load " + contentUrl,
+      managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
+      dataRequestOptions(Object.assign({}, requestSettings, {
+        useSearchCapability: false,
+        viewerScope: viewerScope
+      }))
+    );
+  }
+
+  function readSearchIndex(options) {
+    var requestSettings = options || {};
+    var viewerScope = requestSettings.viewerScope || currentViewerScope();
+    return fetchPreferredGeneratedJson(
+      requestSettings.searchIndexUrl,
+      "Failed to load search data",
+      managementReloadPath("/docs/generated/search", { scope: viewerScope }),
+      dataRequestOptions(Object.assign({}, requestSettings, {
+        useSearchCapability: true,
+        viewerScope: viewerScope
+      }))
+    );
+  }
+
+  function readScopeIndex(options) {
+    var requestSettings = options || {};
+    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
+    var targetConfig = requestSettings.scopeConfig || null;
+    if (!targetConfig || !targetConfig.indexUrl) {
+      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
+    }
+    return fetchIndexWithRetry(dataRequestOptions({
+      indexUrl: appendAssetVersion(targetConfig.indexUrl),
+      viewerScope: targetScope,
+      reloadNonce: "",
+      reloadExpectedDocId: ""
+    }));
+  }
+
+  function readReferencesIndex(options) {
+    var requestSettings = options || {};
+    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
+    var baseUrl = String(requestSettings.baseUrl || "").trim();
+    if (!baseUrl) {
+      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
+    }
+    return fetchPreferredGeneratedJson(
+      appendAssetVersion(baseUrl + "/references/index.json"),
+      "Failed to load docs references",
+      managementReloadPath("/docs/generated/references", { scope: targetScope }),
+      dataRequestOptions({
+        viewerScope: targetScope,
+        reloadNonce: "",
+        reloadExpectedDocId: ""
+      })
+    );
+  }
+
+  function readReferenceTarget(options) {
+    var requestSettings = options || {};
+    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
+    var targetKind = String(requestSettings.targetKind || "").trim();
+    var targetSlug = String(requestSettings.targetSlug || "").trim();
+    return fetchPreferredGeneratedJson(
+      appendAssetVersion(requestSettings.staticUrl),
+      "Failed to load docs reference target",
+      managementReloadPath("/docs/generated/reference-target", {
+        scope: targetScope,
+        target_kind: targetKind,
+        target_slug: targetSlug
+      }),
+      dataRequestOptions({
+        viewerScope: targetScope,
+        reloadNonce: "",
+        reloadExpectedDocId: ""
+      })
+    );
+  }
+
   return {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     dataRequestOptions: dataRequestOptions,
+    readDocsIndex: readDocsIndex,
+    readDocumentPayload: readDocumentPayload,
+    readReferenceTarget: readReferenceTarget,
+    readReferencesIndex: readReferencesIndex,
+    readScopeIndex: readScopeIndex,
+    readSearchIndex: readSearchIndex,
     scopeGeneratedCapability: scopeGeneratedCapability
   };
 }

@@ -49,7 +49,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 13 | 25 | `docs-viewer/runtime/js/reports/docs-broken-links-report.js` | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired. |
 | 14 | 56 | `docs-viewer/runtime/js/docs-viewer-router.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-route-workflow.js` | 1 | 1 | 1 | 1 | 4 | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination. |
-| new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, and generated-search read capability projection. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-service-context.js` | 1 | 1 | 1 | 1 | 4 | Focused public/manage service-context projection owner; public contexts omit management and local generated-read backend surfaces. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` | 1 | 1 | 1 | 1 | 4 | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` | 1 | 1 | 1 | 1 | 4 | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes. |
@@ -128,6 +129,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
 - 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
+- 2026-05-28 owner note: service-context projection moved to `docs-viewer/runtime/js/docs-viewer-service-context.js`; public contexts strip management base URLs and local generated-read service base URLs before controllers are assembled.
+- 2026-05-28 owner note: route workflow, search controller, and document controller now consume named generated-data read methods instead of assembling fetch/reload/capability bundles locally.
 - This module now remains the runtime coordinator for app-session creation, controller construction, config handoff, focused-controller callback handoff, event binding, initial load sequencing, and the returned compatibility API.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
 
@@ -143,8 +146,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused generated-data request owner.
 - Current risk score: 4.
-- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, and generated-search read capability checks.
+- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, and named generated JSON read methods for docs indexes, payloads, search indexes, references indexes, and reference-target buckets.
 - Do not move config loading, payload rendering, backend write authority, or management capability UI projection into it.
+
+### `docs-viewer/runtime/js/docs-viewer-service-context.js`
+
+- Added 2026-05-28 as the focused public/manage service-context projection owner.
+- Current risk score: 4.
+- Keep this module limited to projecting static route context into generated-read, config, report, and management service surfaces.
+- Public contexts must continue to omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters. Do not move capability truth or write authority into this module.
 
 ### `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
 
