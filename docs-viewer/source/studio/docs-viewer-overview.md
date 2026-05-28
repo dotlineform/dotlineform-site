@@ -70,11 +70,11 @@ The viewer behavior starts from:
 - `docs-viewer/runtime/js/docs-viewer.js`
 
 The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the compatibility runtime.
-The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the temporary compatibility state bridge for controller families that have not yet been narrowed.
+The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
 Current helper modules:
 
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index and generated-data runtime creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
-- `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge
+- `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs

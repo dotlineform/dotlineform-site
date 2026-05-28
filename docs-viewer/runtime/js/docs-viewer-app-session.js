@@ -345,11 +345,6 @@ export function createDocsViewerAppSession(options) {
 
   return {
     state: state,
-    domains: domains,
-    compatibilityBridge: {
-      name: "runtime-state-compatibility",
-      state: state,
-      reason: "Existing controllers still consume the broad state object while domains are adopted slice by slice."
-    }
+    domains: domains
   };
 }

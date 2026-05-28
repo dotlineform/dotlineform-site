@@ -834,25 +834,23 @@ def assert_app_session_contract(page: Page) -> None:
             });
             const unknownSet = session.domains.bookmarks.set('searchQuery', 'leak');
             return {
-                compatibilitySameState: session.compatibilityBridge.state === session.state,
-                bridgeName: session.compatibilityBridge.name,
                 domainNames: Object.keys(session.domains).sort(),
                 searchAuthority: session.domains.searchRecent.authority,
                 managementAuthority: session.domains.management.authority,
-                searchQuery: session.state.searchQuery,
-                bookmarksLoaded: session.state.bookmarksLoaded,
+                searchQuery: session.domains.searchRecent.searchQuery,
+                bookmarksLoaded: session.domains.bookmarks.bookmarksLoaded,
                 unknownSet,
-                leakedSearchQuery: session.state.searchQuery,
+                leakedSearchQuery: session.domains.searchRecent.searchQuery,
                 routePublicReadOnly: session.domains.routeSession.publicReadOnly,
                 routeCanLoadManagementUi: session.domains.routeSession.canLoadManagementUi,
-                searchVisibleCount: session.state.searchVisibleCount,
-                recentLimit: session.state.recentLimit,
-                bookmarkSupport: session.state.bookmarkSupport,
-                hostedViewsSameRef: session.state.hostedViews.registry === true,
-                indexPanelSource: session.state.indexPanelState.source,
-                viewStateInfoOpen: session.state.viewState.info.open,
-                defaultManagementText: session.state.managementText.copyLinkLabel,
-                docHiddenEmoji: session.state.managementText.docHiddenEmoji,
+                searchVisibleCount: session.domains.searchRecent.searchVisibleCount,
+                recentLimit: session.domains.searchRecent.recentLimit,
+                bookmarkSupport: session.domains.bookmarks.bookmarkSupport,
+                hostedViewsSameRef: session.domains.panelView.hostedViews.registry === true,
+                indexPanelSource: session.domains.panelView.indexPanelState.source,
+                viewStateInfoOpen: session.domains.panelView.viewState.info.open,
+                defaultManagementText: session.domains.management.managementText.copyLinkLabel,
+                docHiddenEmoji: session.domains.management.managementText.docHiddenEmoji,
                 documentIndexFields: session.domains.documentIndex.fields.slice(0, 3)
             };
         }"""
@@ -869,8 +867,6 @@ def assert_app_session_contract(page: Page) -> None:
         "searchRecent",
         "selectedDocument",
     ]
-    if result["compatibilitySameState"] is not True or result["bridgeName"] != "runtime-state-compatibility":
-        raise AssertionError(f"app session compatibility bridge failed: {result!r}")
     if result["domainNames"] != expected_domain_names:
         raise AssertionError(f"app session domain names changed unexpectedly: {result!r}")
     if result["searchAuthority"] != "generated static data or local generated-read service plus browser-only query state":
@@ -878,7 +874,7 @@ def assert_app_session_contract(page: Page) -> None:
     if result["managementAuthority"] != "management backend capability and write flow":
         raise AssertionError(f"app session management authority changed: {result!r}")
     if result["searchQuery"] != "metadata" or result["bookmarksLoaded"] is not True:
-        raise AssertionError(f"app session domain facade did not mutate shared state: {result!r}")
+        raise AssertionError(f"app session domain facade did not project expected state: {result!r}")
     if result["unknownSet"] is not False or result["leakedSearchQuery"] != "metadata":
         raise AssertionError(f"app session domain facade allowed cross-domain mutation: {result!r}")
     if result["routePublicReadOnly"] is not False or result["routeCanLoadManagementUi"] is not True:
@@ -1034,8 +1030,8 @@ def assert_app_composition_contract(page: Page) -> None:
                     managementContext: publicCreated.composition.serviceContext.management,
                     managementBaseUrl: publicCreated.composition.managementBaseUrl,
                     shouldOpenImport: publicCreated.composition.shouldOpenImportOnLoad(() => 'manage'),
-                    recentLimit: publicCreated.composition.state.recentLimit,
-                    sameState: publicCreated.composition.appSession.state === publicCreated.composition.state,
+                    recentLimit: publicCreated.composition.appSession.domains.searchRecent.recentLimit,
+                    hasCompositionState: Object.prototype.hasOwnProperty.call(publicCreated.composition, 'state'),
                     authorityPhases: publicCreated.composition.startupAuthorities.map((record) => record.phase)
                 },
                 manage: {
@@ -1067,7 +1063,7 @@ def assert_app_composition_contract(page: Page) -> None:
         "managementBaseUrl": "",
         "shouldOpenImport": False,
         "recentLimit": 10,
-        "sameState": True,
+        "hasCompositionState": False,
         "authorityPhases": [
             "root/app-shell input validation",
             "app session creation",

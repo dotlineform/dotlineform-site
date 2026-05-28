@@ -90,7 +90,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
 | 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
 | 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
-| 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge. |
+| 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection. |
 | 51 | new | `docs-viewer/runtime/js/docs-viewer.js` | 1 | 1 | 1 | 1 | 4 | Stable Docs Viewer entrypoint wrapper that imports and starts the app boot owner. |
 
 ## Follow-Up Notes
@@ -133,11 +133,12 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`; the controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of the broad runtime state.
 - 2026-05-28 owner note: config/scope setup now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs through `docs-viewer/runtime/js/docs-viewer-config-controller.js` instead of broad runtime state.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
-- 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
+- 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, uses named domains for narrowed controllers, keeps the broad state object only for runtime-internal controller handoffs that still need it, and updates the route-session domain during route-global changes.
 - 2026-05-28 owner note: service-context projection moved to `docs-viewer/runtime/js/docs-viewer-service-context.js`; public contexts strip management base URLs and local generated-read service base URLs before controllers are assembled.
 - 2026-05-28 owner note: route workflow, search controller, and document controller now consume named generated-data read methods instead of assembling fetch/reload/capability bundles locally.
 - 2026-05-28 owner note: runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing moved to `docs-viewer/runtime/js/docs-viewer-app-composition.js`.
 - 2026-05-28 owner note: the returned app handle was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`. Broad `state`, app-composition internals, app-session internals, the management lazy loader, and route workflow bridges are no longer returned; search/recent, bookmarks, startup index loading, and management reloads now consume the private route workflow command contract instead of one-off runtime wrappers.
+- 2026-05-28 owner note: `compatibilityBridge` was removed from app-session, and `composition.state` was removed from app-composition. Focused tests now assert named state-domain and composition owner contracts rather than temporary compatibility aliases.
 - 2026-05-28 lifecycle note: this file remains the compatibility coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle. Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
 - This module now remains the runtime coordinator for focused controller construction, config handoff, focused-controller callback handoff, event handler definitions, private management/startup callback handoff, and the small returned app handle.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
@@ -155,7 +156,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the app-session and state-domain owner.
 - Current risk score: 4.
-- Keep this module limited to app-session creation, state defaults, named domain facades, route-session projection, and the explicit temporary compatibility state bridge.
+- Keep this module limited to app-session creation, state defaults, named domain facades, route-session projection, and the runtime-internal state object needed by remaining controller handoffs.
 - Do not move controller construction, event binding, generated reads, URL history, document rendering, bookmark persistence, or management writes into it.
 - Future slices should narrow complete controller families to the relevant domain facade and remove their broad-state dependency from runtime handoff.
 

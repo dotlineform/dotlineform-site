@@ -204,7 +204,6 @@ export function createDocsViewerAppComposition(options) {
     hostedViewRegistry: hostedViewRegistry,
     panelLayout: panelLayout,
     appSession: appSession,
-    state: state,
     documentIndex: documentIndex,
     generatedDataRuntime: generatedDataRuntime,
     managementBaseUrl: serviceContext.management ? serviceContext.management.baseUrl : "",
