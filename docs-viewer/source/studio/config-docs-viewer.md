@@ -111,6 +111,7 @@ Future remote upload support should read credentials from environment variables 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
 It is checked in and read by `docs-viewer/runtime/js/docs-viewer-route-config.js` before the app shell builds route context.
 Shared and standalone route shells should carry only `data-route-id` and `data-route-config-url` for boot route context.
+Inline route-config scripts and legacy route data attributes such as `data-index-url`, `data-viewer-scope`, and `data-management-base-url` are not route-config inputs.
 
 Each route record owns:
 

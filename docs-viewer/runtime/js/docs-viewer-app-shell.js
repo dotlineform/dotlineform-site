@@ -24,7 +24,9 @@ import {
 } from "./docs-viewer-app-context.js";
 
 function routeContextFor(settings) {
-  return settings.routeContext || createDocsViewerRouteContext({
+  if (settings.routeContext) return settings.routeContext;
+  if (!settings.routeConfig) return null;
+  return createDocsViewerRouteContext({
     root: settings.root,
     document: settings.document,
     routeConfig: settings.routeConfig,

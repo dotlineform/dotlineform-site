@@ -32,7 +32,8 @@ The current implementation is split into three layers.
 
 ### 1. Scope-owned route shells
 
-The route pages define scope-specific values such as:
+The route pages identify the active Docs Viewer route through `data-route-id` and locate the browser-safe route-config registry through `data-route-config-url`.
+The registry defines scope-specific values such as:
 
 - the docs index URL
 - the search index URL
@@ -60,7 +61,7 @@ This include renders:
 - the optional inline search input
 - status, path, and updated metadata areas
 
-It also passes the current scope configuration into the DOM through `data-*` attributes.
+It also provides the stable mount points that the app shell fills before the runtime binds route behavior.
 
 ### 3. Shared runtime
 

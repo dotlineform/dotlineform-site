@@ -13,10 +13,6 @@ function cleanBaseUrl(value) {
   return cleanString(value).replace(/\/+$/, "");
 }
 
-function datasetFlag(root, name) {
-  return Boolean(root && root.dataset && root.dataset[name] === "true");
-}
-
 function firstPresent() {
   for (var i = 0; i < arguments.length; i += 1) {
     if (arguments[i] !== undefined && arguments[i] !== null) return arguments[i];
@@ -85,94 +81,14 @@ function normalizeHostedViews(rawHostedViews) {
   };
 }
 
-function documentForRoot(root, documentRef) {
-  return documentRef || (root && root.ownerDocument) || (typeof document !== "undefined" ? document : null);
-}
-
-function routeConfigScriptFromRoot(root, documentRef) {
-  if (!root) return null;
-  var doc = documentForRoot(root, documentRef);
-  var scriptId = root.dataset ? cleanString(root.dataset.routeConfigScriptId) : "";
-  if (scriptId && doc && typeof doc.getElementById === "function") {
-    return doc.getElementById(scriptId);
-  }
-  if (typeof root.querySelector === "function") {
-    return root.querySelector('script[type="application/json"][data-docs-viewer-route-config]');
-  }
-  return null;
-}
-
-function routeConfigFromInlineScript(root, documentRef) {
-  var script = routeConfigScriptFromRoot(root, documentRef);
-  if (!script) return null;
-  try {
-    var parsed = JSON.parse(script.textContent || "{}");
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
-    return parsed;
-  } catch (error) {
-    if (typeof console !== "undefined" && console.warn) {
-      console.warn("docs_viewer: route config script is malformed; using legacy dataset fallback", error);
-    }
-    return null;
-  }
-}
-
-function routeConfigFromDataset(root) {
-  var dataset = root && root.dataset ? root.dataset : {};
-  return {
-    schema_version: DOCS_VIEWER_ROUTE_CONFIG_SCHEMA,
-    route_id: cleanString(dataset.routeId),
-    route_type: "",
-    default_scope_id: cleanString(dataset.viewerScope),
-    default_doc_id: cleanString(dataset.defaultDocId),
-    include_scope_param: datasetFlag(root, "includeScopeParam"),
-    allow_scope_query: datasetFlag(root, "allowScopeQuery"),
-    viewer_base_url: cleanString(dataset.viewerBaseUrl),
-    generated_base_url: cleanString(dataset.generatedBaseUrl),
-    access: {
-      allow_management: datasetFlag(root, "allowManagement"),
-      allow_scope_query: datasetFlag(root, "allowScopeQuery"),
-      management_base_url: cleanString(dataset.managementBaseUrl),
-      management_mode_value: "manage"
-    },
-    docs_paths: {
-      index_url: cleanString(dataset.indexUrl),
-      search_index_url: cleanString(dataset.searchIndexUrl)
-    },
-    config_urls: {
-      docs_viewer: cleanString(dataset.docsViewerConfigUrl),
-      ui_text: cleanString(dataset.uiTextUrl),
-      report_registry: cleanString(dataset.reportRegistryUrl)
-    },
-    panels: {
-      index: { enabled: true, default_state: "normal" },
-      document: { enabled: true, default_view: "document" },
-      info: { enabled: true, default_view: "metadata-info" }
-    },
-    hosted_views: {
-      records: []
-    }
-  };
-}
-
-function routeConfigSource(settings, root) {
+function routeConfigSource(settings) {
   if (settings.routeConfig) {
     return {
       source: cleanString(settings.routeConfigSource) || "explicit",
       config: settings.routeConfig
     };
   }
-  var inlineConfig = routeConfigFromInlineScript(root, settings.document);
-  if (inlineConfig) {
-    return {
-      source: "inline",
-      config: inlineConfig
-    };
-  }
-  return {
-    source: "dataset",
-    config: routeConfigFromDataset(root)
-  };
+  throw new Error("Docs Viewer route config requires an explicit config record or route-config registry.");
 }
 
 function routeConfigUrlFromDataset(root) {
@@ -260,8 +176,7 @@ function fetchRouteConfigRegistry(url, options) {
 
 export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
-  var root = settings.root || null;
-  var resolvedSource = routeConfigSource(settings, root);
+  var resolvedSource = routeConfigSource(settings);
   var rawConfig = resolvedSource.config || {};
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
   var allowManagement = normalizeBoolean(firstPresent(
@@ -310,7 +225,11 @@ export function resolveDocsViewerRouteConfigAsync(options) {
   var root = settings.root || null;
   var routeConfigUrl = cleanString(settings.routeConfigUrl) || routeConfigUrlFromDataset(root);
   if (settings.routeConfig || !routeConfigUrl) {
-    return Promise.resolve(resolveDocsViewerRouteConfig(settings));
+    try {
+      return Promise.resolve(resolveDocsViewerRouteConfig(settings));
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
   return fetchRouteConfigRegistry(routeConfigUrl, settings)
     .then(function (payload) {
@@ -319,12 +238,6 @@ export function resolveDocsViewerRouteConfigAsync(options) {
         routeConfig: rawRouteConfig,
         routeConfigSource: "registry"
       }));
-    })
-    .catch(function (error) {
-      if (typeof console !== "undefined" && console.warn) {
-        console.warn("docs_viewer: route config registry unavailable; using shell fallback", error);
-      }
-      return resolveDocsViewerRouteConfig(settings);
     });
 }
 

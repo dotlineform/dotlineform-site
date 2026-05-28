@@ -44,7 +44,8 @@ def assert_header_controls_render(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const returned = await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: false } };
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             const searchInput = document.getElementById('docsViewerSearchInput');
             return {
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
@@ -88,7 +89,8 @@ def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const returned = await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: true, canLoadManagementUi: false } };
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
@@ -129,7 +131,8 @@ def assert_header_controls_management_render(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const returned = await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: true, canLoadManagementUi: true } };
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
                 returnedRowId: returned.managementActions && returned.managementActions.id,
@@ -168,7 +171,8 @@ def assert_management_actions_render(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const returned = await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             const ids = [
                 'docsViewerManageRow',
                 'docsViewerManageActionsButton',
@@ -260,7 +264,8 @@ def assert_management_actions_omitted(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const returned = await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: false } };
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
                 returnedRow: Boolean(returned.managementActions),
                 returnedManagementShell: Boolean(returned.managementShell),
@@ -322,13 +327,40 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            await shell.initDocsViewerAppShell({ root, document });
+            const routeConfig = {
+                schema_version: 'docs_viewer_route_config_v1',
+                route_id: 'docs-manage',
+                route_type: 'manage',
+                default_scope_id: 'studio',
+                default_doc_id: 'dev-home',
+                include_scope_param: true,
+                allow_scope_query: true,
+                viewer_base_url: '/docs/',
+                generated_base_url: 'http://127.0.0.1:8789/',
+                docs_paths: {
+                    index_url: '/assets/data/docs/scopes/studio/index.json',
+                    search_index_url: '/assets/data/search/studio/index.json'
+                },
+                config_urls: {
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    report_registry: '/assets/data/docs/reports.json'
+                },
+                access: {
+                    allow_management: true,
+                    allow_scope_query: true,
+                    management_base_url: 'http://127.0.0.1:8789/',
+                    management_mode_value: 'manage'
+                }
+            };
             const route = context.createDocsViewerRouteContext({
                 root,
                 window,
                 assetVersion: 'smoke',
-                managementModeValue: 'manage'
+                managementModeValue: 'manage',
+                routeConfig
             });
+            await shell.initDocsViewerAppShell({ root, document, routeContext: route });
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
             const updated = context.updateDocsViewerRouteContext(route, {
                 viewerScope: 'library',
@@ -378,7 +410,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
         }"""
     )
     if result != {
-        "routeConfigSource": "dataset",
+        "routeConfigSource": "explicit",
         "routeType": "manage",
         "allowManagement": True,
         "canLoadManagementUi": True,
@@ -519,10 +551,9 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
         raise AssertionError(f"explicit route config/access projection failed: {result!r}")
 
 
-def assert_route_config_inline_and_malformed_fallback(page: Page) -> None:
+def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
             const routeConfig = await import('/docs-viewer/runtime/js/docs-viewer-route-config.js');
             window.history.replaceState({}, '', '/analysis/?doc=analysis');
             document.body.innerHTML = `
@@ -575,8 +606,12 @@ def assert_route_config_inline_and_malformed_fallback(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            const inline = routeConfig.resolveDocsViewerRouteConfig({ root, document });
-            const route = context.createDocsViewerRouteContext({ root, document, window, assetVersion: 'smoke' });
+            let inlineMessage = '';
+            try {
+                routeConfig.resolveDocsViewerRouteConfig({ root, document });
+            } catch (error) {
+                inlineMessage = error && error.message ? error.message : String(error);
+            }
             document.body.innerHTML = `
                 <section
                   id="docsViewerRoot"
@@ -595,50 +630,23 @@ def assert_route_config_inline_and_malformed_fallback(page: Page) -> None:
                 </section>
             `;
             const fallbackRoot = document.getElementById('docsViewerRoot');
-            const fallback = routeConfig.resolveDocsViewerRouteConfig({ root: fallbackRoot, document });
+            let fallbackMessage = '';
+            try {
+                routeConfig.resolveDocsViewerRouteConfig({ root: fallbackRoot, document });
+            } catch (error) {
+                fallbackMessage = error && error.message ? error.message : String(error);
+            }
             return {
-                inline: {
-                    source: inline.source,
-                    routeId: inline.routeId,
-                    defaultScopeId: inline.defaultScopeId,
-                    viewerBaseUrl: inline.viewerBaseUrl,
-                    indexUrl: inline.indexUrl,
-                    hostedViews: inline.hostedViews.records.map((record) => record.id),
-                    routeViewerBaseUrl: route.routeViewerBaseUrl,
-                    routeIndexUrl: route.indexUrl
-                },
-                fallback: {
-                    source: fallback.source,
-                    routeId: fallback.routeId,
-                    defaultScopeId: fallback.defaultScopeId,
-                    viewerBaseUrl: fallback.viewerBaseUrl,
-                    indexUrl: fallback.indexUrl,
-                    docsViewerConfigUrl: fallback.docsViewerConfigUrl
-                }
+                inlineMessage,
+                fallbackMessage
             };
         }"""
     )
     if result != {
-        "inline": {
-            "source": "inline",
-            "routeId": "analysis-public",
-            "defaultScopeId": "analysis",
-            "viewerBaseUrl": "/analysis/",
-            "indexUrl": "/assets/data/docs/scopes/analysis/index.json",
-            "hostedViews": ["analysis-extra"],
-            "routeViewerBaseUrl": "/analysis/",
-            "routeIndexUrl": "/assets/data/docs/scopes/analysis/index.json?v=smoke",
-        },
-        "fallback": {
-            "source": "dataset",
-            "routeId": "legacy-library",
-            "defaultScopeId": "library",
-            "viewerBaseUrl": "/library/",
-            "indexUrl": "/assets/data/docs/scopes/library/index.json",
-            "docsViewerConfigUrl": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        },
+        "inlineMessage": "Docs Viewer route config requires an explicit config record or route-config registry.",
+        "fallbackMessage": "Docs Viewer route config requires an explicit config record or route-config registry.",
     }:
-        raise AssertionError(f"inline route config/fallback behavior failed: {result!r}")
+        raise AssertionError(f"route config fallback removal contract failed: {result!r}")
 
 
 def assert_route_config_registry_resolution(page: Page) -> None:
@@ -1471,7 +1479,8 @@ def assert_document_shell_management_shape(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
+            await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
                 documentShellCount: document.querySelectorAll('.docsViewer__main').length,
                 statusPillsCount: document.querySelectorAll('#docsViewerStatusPills').length,
@@ -1516,7 +1525,8 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
+            await module.initDocsViewerAppShell({ root, document, routeContext });
             await new Promise((resolve) => requestAnimationFrame(resolve));
             const indexRect = document.querySelector('[data-docs-viewer-index-panel-mount]').getBoundingClientRect();
             const documentRect = document.querySelector('[data-docs-viewer-document-shell-mount]').getBoundingClientRect();
@@ -3468,8 +3478,9 @@ def assert_render_is_idempotent(page: Page) -> None:
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            await module.initDocsViewerAppShell({ root, document });
-            await module.initDocsViewerAppShell({ root, document });
+            const routeContext = { access: { allowScopeQuery: true, canLoadManagementUi: true } };
+            await module.initDocsViewerAppShell({ root, document, routeContext });
+            await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
                 headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
@@ -3544,7 +3555,7 @@ def main() -> int:
             assert_management_actions_omitted(page)
             assert_route_context_and_shell_refs(page)
             assert_route_config_explicit_and_access_projection(page)
-            assert_route_config_inline_and_malformed_fallback(page)
+            assert_route_config_requires_explicit_or_registry_config(page)
             assert_route_config_registry_resolution(page)
             assert_app_session_contract(page)
             assert_app_composition_contract(page)
