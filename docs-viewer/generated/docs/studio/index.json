@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T09:30:15Z",
+  "generated_at": "2026-05-28T09:50:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2946,7 +2946,7 @@
       "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
-      "content_text_length": 10111,
+      "content_text_length": 13140,
       "ui_status": "planned"
     },
     {

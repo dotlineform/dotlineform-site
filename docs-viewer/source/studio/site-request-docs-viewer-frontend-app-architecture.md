@@ -14,7 +14,8 @@ Status:
 
 - planned
 
-This request succeeds the closed [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell).
+This request is the parent policy and benefits analysis for the next Docs Viewer frontend-app architecture work.
+Implementation should happen in child task documents, following the pattern used by the closed [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell).
 
 The previous request moved Docs Viewer away from Liquid-owned shell markup and a monolithic entrypoint.
 That work produced focused owners for boot, route config, access projection, route/document workflow, search/recent callbacks, bookmarks, document rendering, generated-data reads, document-index projection, info-panel coordination, hosted views, and lazy management loading.
@@ -37,6 +38,59 @@ The current runtime is materially better, but the architecture is still transiti
 
 More small helper splits would reduce line count but would not necessarily make the system more app-like.
 The next work should create explicit frontend-app concepts: app session, state domains, service adapters, lifecycle phases, controller/view ownership, and public/manage app contexts.
+
+## Why This Matters
+
+The current model often works by letting a module inspect raw flags or state values and then decide what to do locally.
+That is manageable while behavior is simple, but the public/manage boundary can blur quickly.
+
+The info panel is the clearest example.
+The original requirement sounded like one feature: add an info panel.
+Once it exists, a natural follow-up is that the panel should show different fields in public read-only routes and local manage mode.
+That single feature can become several different contracts:
+
+- public metadata info: presentation-oriented and public-safe
+- manage metadata info: operational fields and source/config clues
+- local diagnostics: service status, generated-read state, rebuild context, or local-only paths
+- future semantic/reference info: derived data that may be manage-only before it is public-safe
+
+If this is handled by one view with scattered `if managementMode` or `if allowManagement` checks, it becomes hard to tell which fields are public-safe, which fields require backend capability, and which fields are only local operational details.
+The same pattern can happen with reports, side panels, document actions, search result affordances, bookmarks, diagnostics, and future editor surfaces.
+
+The architecture direction is to move from:
+
+```text
+read raw flags and broad state -> decide behavior locally
+```
+
+to:
+
+```text
+receive an explicit app context or view model -> render/act according to that contract
+```
+
+For the info panel, that might mean the same panel slot hosts separate or separately-shaped views:
+
+- `metadata-public-info`
+- `metadata-manage-info`
+- `source-diagnostics`
+- `semantic-references`
+
+Those views may share render helpers, but they should not pretend to be one implementation if their safety, data, and purpose differ.
+Route/app context should decide which views are available.
+Each view should receive a clear data shape, such as a public-safe metadata view model or a manage-mode metadata view model, rather than reaching into broad runtime state to rediscover what mode means.
+
+This is the policy reason for app context, state-domain facades, service adapters, and view models.
+They make public vs manage behavior visible in data structures and contracts instead of hidden in scattered conditionals.
+
+## Benefits
+
+- public and manage behavior can diverge intentionally without becoming accidental forks
+- public-safe fields and manage-only fields are easier to audit
+- future views can be added to a named panel slot without expanding one overloaded implementation
+- tests can assert view-model contracts instead of clicking through every local flag combination
+- optional or local-only capabilities can be omitted cleanly from public installs
+- implementation decisions become easier to document because the app context and view model carry the policy
 
 ## Goal
 
@@ -120,8 +174,9 @@ It does require explicit ownership and contracts.
 
 ## Structural Slices
 
-Work through these as separate implementation requests or child task trackers.
+Work through these as child task trackers under this parent request.
 Each slice should define the app concept being introduced and the old bridge behavior it removes.
+Keep this parent request focused on policy, architecture direction, benefits, and slice framing.
 
 ### 1. App Session And State Domains
 
