@@ -2995,6 +2995,7 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
     result = page.evaluate(
         """async ({ baseUrl }) => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-config-controller.js');
+            const serviceModule = await import('/docs-viewer/runtime/js/docs-viewer-config-service.js');
             document.body.innerHTML = `
                 <section id="root"></section>
                 <select id="scopeSelect"></select>
@@ -3087,14 +3088,15 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                     json: () => Promise.resolve(payload)
                 });
             };
+            const configService = serviceModule.createDocsViewerConfigService({
+                docsViewerConfigUrl: '/config.json',
+                uiTextUrl: '/ui-text.json',
+                dataRequestOptions: (options) => ({ marker: options && options.reloadNonce || 'none' })
+            });
             try {
                 const controller = module.initDocsViewerConfigController({
                     allowScopeQuery: true,
-                    configService: {
-                        docsViewerConfigUrl: '/config.json',
-                        uiTextUrl: '/ui-text.json',
-                        dataRequestOptions: (options) => ({ marker: options && options.reloadNonce || 'none' })
-                    },
+                    configService,
                     defaultRecentLimit: 10,
                     documentIndex,
                     getCurrentMode: () => 'manage',
@@ -3165,6 +3167,26 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
     for expected in ["route:library:library-home:true", "apply-management-config", "render-sidebar", "render-status-pills", "render-recent"]:
         if expected not in result["calls"]:
             raise AssertionError(f"config controller callback contract changed: {result!r}")
+
+
+def assert_generated_data_helper_import_boundaries(site_root: Path) -> None:
+    runtime_root = site_root / "docs-viewer" / "runtime" / "js"
+    allowed_data_importers = {
+        "docs-viewer-config-service.js",
+        "docs-viewer-generated-data-runtime.js",
+    }
+    offenders: list[str] = []
+    for path in runtime_root.rglob("*.js"):
+        if path.name == "docs-viewer-data.js":
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "docs-viewer-data.js" not in text:
+            continue
+        rel_path = path.relative_to(runtime_root).as_posix()
+        if rel_path not in allowed_data_importers:
+            offenders.append(rel_path)
+    if offenders:
+        raise AssertionError(f"low-level generated-data helper imports escaped owner modules: {offenders!r}")
 
 
 def assert_service_context_contract(page: Page) -> None:
@@ -3668,6 +3690,7 @@ def main() -> int:
             assert_document_and_sidebar_controller_contract(page)
             assert_generated_data_runtime_contract(page)
             assert_config_controller_contract(page, base_url)
+            assert_generated_data_helper_import_boundaries(Path(args.site_root))
             assert_service_context_contract(page)
             assert_report_service_contract(page)
             assert_document_index_state_contract(page)

@@ -50,9 +50,11 @@ Copy the shared viewer runtime files:
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 - `docs-viewer/runtime/js/docs-viewer-app-context.js`
+- `docs-viewer/runtime/js/docs-viewer-asset-url.js`
 - `docs-viewer/runtime/js/docs-viewer-route-config.js`
 - `docs-viewer/runtime/js/docs-viewer-access.js`
 - `docs-viewer/runtime/js/docs-viewer-service-context.js`
+- `docs-viewer/runtime/js/docs-viewer-config-service.js`
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
 - `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
@@ -77,6 +79,7 @@ Copy the shared viewer runtime files:
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js`
 - `docs-viewer/runtime/js/docs-viewer-favourites.js`
 - `docs-viewer/runtime/js/docs-viewer-render.js`
+- `docs-viewer/runtime/js/docs-viewer-report-service.js`
 - `docs-viewer/runtime/js/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/docs-viewer-router.js`
 - `docs-viewer/runtime/js/reports/`

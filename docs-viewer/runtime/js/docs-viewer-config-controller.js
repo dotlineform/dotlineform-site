@@ -1,8 +1,4 @@
 import {
-  appendAssetVersion,
-  fetchJsonWithRetry
-} from "./docs-viewer-data.js";
-import {
   routeConfigScopeProjection
 } from "./docs-viewer-route-config.js";
 import {
@@ -53,19 +49,6 @@ export function initDocsViewerConfigController(context) {
   if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
   if (!scopeConfig.managementText) scopeConfig.managementText = {};
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
-
-  function docsViewerConfigUrl() {
-    return configService.docsViewerConfigUrl || context.docsViewerConfigUrl;
-  }
-
-  function uiTextUrl() {
-    return configService.uiTextUrl || context.uiTextUrl;
-  }
-
-  function dataRequestOptions(options) {
-    if (typeof configService.dataRequestOptions === "function") return configService.dataRequestOptions(options);
-    return typeof context.dataRequestOptions === "function" ? context.dataRequestOptions(options) : {};
-  }
 
   function normalizeBrowserScopeConfig(rawScope) {
     if (!rawScope || typeof rawScope !== "object") return null;
@@ -205,16 +188,11 @@ export function initDocsViewerConfigController(context) {
     }
     if (scopeConfig.docsViewerConfigLoaded) return Promise.resolve(scopeConfig.docsViewerConfig);
     if (scopeConfig.docsViewerConfigRequestPromise) return scopeConfig.docsViewerConfigRequestPromise;
-    if (!docsViewerConfigUrl()) {
-      return Promise.reject(new Error("Docs Viewer config URL is not configured."));
+    if (typeof configService.fetchDocsViewerConfig !== "function") {
+      return Promise.reject(new Error("Docs Viewer config service is not configured."));
     }
 
-    scopeConfig.docsViewerConfigRequestPromise = fetchJsonWithRetry(
-      docsViewerConfigUrl(),
-      "Failed to load Docs Viewer config",
-      "",
-      dataRequestOptions(settings.reloadNonce ? { reloadNonce: settings.reloadNonce } : {})
-    )
+    scopeConfig.docsViewerConfigRequestPromise = configService.fetchDocsViewerConfig(settings)
       .then(function (payload) {
         var config = normalizeBrowserConfig(payload);
         scopeConfig.docsViewerConfig = config;
@@ -322,7 +300,7 @@ export function initDocsViewerConfigController(context) {
     }
     if (scopeConfig.viewerConfigLoaded) return Promise.resolve(null);
     if (scopeConfig.viewerConfigRequestPromise) return scopeConfig.viewerConfigRequestPromise;
-    if (!docsViewerConfigUrl()) {
+    if (typeof configService.fetchDocsViewerConfig !== "function") {
       applyViewerConfig({});
       return Promise.resolve(null);
     }
@@ -358,8 +336,8 @@ export function initDocsViewerConfigController(context) {
   }
 
   function loadDocsViewerText() {
-    if (!uiTextUrl()) return Promise.resolve(null);
-    return fetchJsonWithRetry(appendAssetVersion(uiTextUrl()), "Failed to load Docs Viewer UI text", "", dataRequestOptions())
+    if (typeof configService.fetchDocsViewerText !== "function") return Promise.resolve(null);
+    return configService.fetchDocsViewerText()
       .catch(function (error) {
         console.warn("docs_viewer: scoped UI text unavailable; using fallback copy", error);
         return null;

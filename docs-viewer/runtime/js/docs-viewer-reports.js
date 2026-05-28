@@ -1,6 +1,6 @@
 import {
   appendAssetVersion
-} from "./docs-viewer-data.js";
+} from "./docs-viewer-asset-url.js";
 
 const REPORT_REGISTRY_URL = "/assets/data/docs/reports.json";
 

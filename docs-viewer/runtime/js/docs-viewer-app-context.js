@@ -1,6 +1,6 @@
 import {
   appendAssetVersion
-} from "./docs-viewer-data.js";
+} from "./docs-viewer-asset-url.js";
 import {
   createDocsViewerAccessProjection
 } from "./docs-viewer-access.js";

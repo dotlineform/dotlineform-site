@@ -1,6 +1,6 @@
 import {
   appendAssetVersion
-} from "./docs-viewer-data.js";
+} from "./docs-viewer-asset-url.js";
 
 export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v1";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";

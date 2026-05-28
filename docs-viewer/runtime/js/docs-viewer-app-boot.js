@@ -1,6 +1,6 @@
 import {
   readAssetVersion
-} from "./docs-viewer-data.js";
+} from "./docs-viewer-asset-url.js";
 import {
   createDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";

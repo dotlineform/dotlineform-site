@@ -35,18 +35,21 @@ Current shared implementation:
 
 - `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
-- `docs-viewer/runtime/js/docs-viewer-app-composition.js` as the app-composition owner for runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase descriptions, startup authority notes, and initial startup phase sequencing
+- `docs-viewer/runtime/js/docs-viewer-app-composition.js` as the app-composition owner for runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, config-service creation, document-index state creation, public/manage startup phase descriptions, startup authority notes, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` as the app-session owner for state default creation, named state-domain facades, and public/manage route-session projection. It still returns the broad state object for runtime-internal controller handoff while controller families finish moving to explicit domains, but it no longer exposes a separate compatibility bridge.
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for focused controller construction, callback handoff, config/controller bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, popstate coordination, and the private route command contract consumed by focused controllers and management reloads
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` for explicit public/manage service context projection; public contexts keep static generated/config/report assets and omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, generated-search read capability checks, and named read methods for docs index, document payload, search index, cross-scope docs index, references index, and reference-target JSON
+- `docs-viewer/runtime/js/docs-viewer-config-service.js` for browser-safe Docs Viewer config and UI-text asset reads using the generated-data runtime request projection
+- `docs-viewer/runtime/js/docs-viewer-asset-url.js` for asset-version URL projection shared by boot, route config, route context, report registry, config-service, and generated-data runtime owners
+- `docs-viewer/runtime/js/docs-viewer-data.js` for low-level JSON fetch/retry and generated-read reload path primitives; direct imports are reserved for `docs-viewer-generated-data-runtime.js` and `docs-viewer-config-service.js`
 - `docs-viewer/runtime/js/docs-viewer-report-service.js` for local report endpoint access in management-capable contexts, including source-config reads, generated docs-log reads, and broken-links audit requests
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` for document visibility/loadability projection, hidden/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` for selected-document info-panel coordination, default metadata-info open/close behavior, toolbar click handoff, toggle projection, update-on-document-change behavior, and public-safe hosted-view context handoff from explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` for neutral lazy-controller loading, currently used by the compatibility runtime to pass named management state-domain, service-client, and route-reload contracts and import the management controller only when management is allowed
 - `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, explicit route config shape, browser-safe route-config registry resolution, and route/scope projection imported by the entry and config controllers
-- `docs-viewer/runtime/js/docs-viewer-config-controller.js` for browser-safe Docs Viewer config loading, scope route projection, scope picker projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates from explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs
+- `docs-viewer/runtime/js/docs-viewer-config-controller.js` for config-service-backed Docs Viewer config loading, scope route projection, scope picker projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates from explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
 - `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` for management-only context menu, metadata modal, import modal, settings modal, and import host refs rendered only when route access allows management UI
@@ -130,6 +133,9 @@ Current owner map:
 - `docs-viewer/runtime/js/docs-viewer-sidebar.js` owns sidebar tree and document metadata rendering from explicit document-index, selected-document, and scope-config inputs.
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns info toggle/toolbar binding, selected-document hosted-view context projection, host open/close/update handoff, view-state projection sync, and toggle projection from explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs.
 - `docs-viewer/runtime/js/docs-viewer-config-controller.js` owns browser-safe Docs Viewer config loading, route-scope resolution, scope-picker projection, route-global/root-dataset projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates from explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs.
+- `docs-viewer/runtime/js/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior. Config controllers consume this service instead of importing low-level data helpers.
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns all feature-facing generated-data reads. Feature controllers and reports consume named generated-data methods through route/search/document report contexts rather than importing low-level fetch/reload helpers.
+- `docs-viewer/runtime/js/docs-viewer-asset-url.js` owns asset-version URL projection. It is not a generated-data read owner and should stay free of service capability or reload behavior.
 - `docs-viewer/runtime/js/docs-viewer-management.js` owns the management-local facade and orchestration over management action, modal, capability, interaction, scope-lifecycle, service-client, and route-reload contracts. It receives named management state-domain, service-client, and route-reload inputs from the lazy runtime boundary rather than the broad runtime state object.
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view resolution, load, mount, update, unmount, close, dispose, option projection, and graceful absence.
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns the minimal hosted-view record shape, lifecycle method defaults, panel-specific listing, access/availability checks, built-in hosted-view records, and the temporary compatibility alias for the old built-in factory name.
@@ -146,6 +152,20 @@ Lifecycle owner rules:
 - Backend writes remain behind named management endpoints with server-side validation.
 - Future feature views should attach through panel/controller contracts and explicit context or service inputs, not by modifying route shell markup or reading broad runtime state.
 - Do not turn hosted-view records into a plugin platform, third-party loader, source editor, semantic-reference editor, or visualization extension point without a separate request.
+
+Generated-data helper boundary:
+
+- Feature-facing controllers must consume `docs-viewer-generated-data-runtime.js` named read methods through explicit controller or report-context inputs.
+- Config loading must consume `docs-viewer-config-service.js`; the config controller must not import `docs-viewer-data.js` directly.
+- Low-level fetch/retry helpers in `docs-viewer-data.js` are current architecture only as primitives behind `docs-viewer-generated-data-runtime.js` and `docs-viewer-config-service.js`.
+- Static asset URL projection belongs in `docs-viewer-asset-url.js`; callers should not import `docs-viewer-data.js` only to add asset versions.
+
+Docs Import boundary:
+
+- The user-facing Docs Import surface is the Docs Viewer management modal mounted by `docs-viewer-management-shell-renderer.js` and initialized lazily by `docs-viewer-management.js`.
+- `docs-html-import.js` owns the modal app state, scope/file selection, route-ready dataset projection, service availability display, and event binding for the import surface.
+- `docs-html-import-workflow.js` owns preview/write orchestration and overwrite/replacement prompts for the import flow.
+- Import writes stay behind `docs-viewer-management-client.js` calls to management endpoints such as `/docs/import-source`; future import behavior should extend the import workflow or management service contracts rather than duplicating route-readiness or service probing patterns.
 
 Current route capability boundary:
 

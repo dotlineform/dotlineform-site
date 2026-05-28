@@ -2,7 +2,7 @@
 doc_id: studio-python-ruby-script-inventory
 title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-28
 ui_status: urgent
 parent_id: audit
 sort_order: 4000
@@ -148,6 +148,7 @@ As Library and Studio docs grow, the diagnostics added to rebuild responses and 
 Current guardrails and watch points:
 
 - source config, generated reads, mutations, import/export adapters, and rebuild orchestration already have current Python owners; avoid moving that behavior back into the HTTP service layer
+- Docs management transport and endpoint dispatch remain current architecture in `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, and `docs-viewer/services/docs_management_routes.py`; endpoint behavior should stay in focused read, capability, mutation, import, source, rebuild, or audit service modules before being wired through the dispatcher
 - the `build_docs.rb --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
 - rebuild diagnostics already expose source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time in rebuild responses or logs
 - resolver-data changes outside docs source, such as catalogue title or route changes, remain full-scope until a future change defines explicit affected-id rules for them

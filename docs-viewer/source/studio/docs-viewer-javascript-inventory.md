@@ -17,7 +17,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 54
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 56
 - Files above target score 4: 14
 - General risk themes: compatibility runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the compatibility runtime.
 
@@ -28,7 +28,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 7 |
 | 5 | 7 |
-| 4 | 40 |
+| 4 | 42 |
 
 ## Current Priorities
 
@@ -51,6 +51,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | new | new | `docs-viewer/runtime/js/docs-viewer-route-workflow.js` | 1 | 1 | 1 | 1 | 4 | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-service-context.js` | 1 | 1 | 1 | 1 | 4 | Focused public/manage service-context projection owner; public contexts omit management and local generated-read backend surfaces. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-config-service.js` | 1 | 1 | 1 | 1 | 4 | Focused browser-safe Docs Viewer config and UI-text fetch/retry owner consumed by the config controller. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-asset-url.js` | 1 | 1 | 1 | 1 | 4 | Focused asset-version URL projection helper for static browser assets. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-report-service.js` | 1 | 1 | 1 | 1 | 4 | Focused local report endpoint adapter for source-config, generated docs-log, and broken-links audit reports. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` | 1 | 1 | 1 | 1 | 4 | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability. |
@@ -166,7 +168,29 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-28 as the focused generated-data request owner.
 - Current risk score: 4.
 - Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, and named generated JSON read methods for docs indexes, payloads, search indexes, references indexes, and reference-target buckets.
+- Low-level generated-data fetch/retry helpers in `docs-viewer/runtime/js/docs-viewer-data.js` are allowed here because this module is the feature-facing generated-data owner.
 - Do not move config loading, payload rendering, backend write authority, or management capability UI projection into it.
+
+### `docs-viewer/runtime/js/docs-viewer-config-service.js`
+
+- Added 2026-05-28 as the focused browser-safe config asset read owner.
+- Current risk score: 4.
+- Keep this module limited to Docs Viewer config and UI-text fetch/retry behavior using generated-data runtime request projection.
+- Do not move config normalization, scope route projection, UI rendering, generated JSON read methods, backend writes, or management capability UI projection into it.
+
+### `docs-viewer/runtime/js/docs-viewer-asset-url.js`
+
+- Added 2026-05-28 as the focused asset-version URL projection helper.
+- Current risk score: 4.
+- Keep this module limited to reading the asset-version meta value and appending asset/reload query parameters for browser asset requests.
+- Do not move fetch/retry behavior, generated-read capability checks, service base URLs, config normalization, or backend write behavior into it.
+
+### `docs-viewer/runtime/js/docs-viewer-data.js`
+
+- Current risk score: 4.
+- 2026-05-28 owner note: static asset-version helpers moved to `docs-viewer/runtime/js/docs-viewer-asset-url.js`; config asset fetches moved behind `docs-viewer/runtime/js/docs-viewer-config-service.js`.
+- Keep this module limited to low-level JSON fetch/retry helpers, generated-read retry helpers, and management reload path construction behind the generated-data runtime and config service.
+- Direct imports should stay limited to `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` and `docs-viewer/runtime/js/docs-viewer-config-service.js`; feature controllers, reports, route config, app boot, and route context should consume their named owner contracts instead.
 
 ### `docs-viewer/runtime/js/docs-viewer-service-context.js`
 
@@ -363,8 +387,11 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 ### Docs Import And Management
 
+- Current boundary: Docs Import is a Docs Viewer management-modal app, not a standalone route surface. `docs-viewer/runtime/js/docs-viewer-management.js` lazily initializes `docs-viewer/runtime/js/docs-html-import.js` only from the management modal host.
+- Keep modal app state, scope/file selection, service availability display, and `studio:ready` route-ready dataset projection in `docs-viewer/runtime/js/docs-html-import.js`.
 - Keep import result rendering in `docs-viewer/runtime/js/docs-html-import-render.js`.
 - Keep preview/write orchestration in `docs-viewer/runtime/js/docs-html-import-workflow.js`.
+- Keep import writes behind `docs-viewer/runtime/js/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
 - 2026-05-28 lifecycle note: management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, status pills, and write orchestration remain behind `docs-viewer/runtime/js/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
 - Keep normalize-order choice shaping and make-viewable target resolution in `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`.

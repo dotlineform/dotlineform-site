@@ -10,6 +10,9 @@ import {
   createDocsViewerGeneratedDataRuntime
 } from "./docs-viewer-generated-data-runtime.js";
 import {
+  createDocsViewerConfigService
+} from "./docs-viewer-config-service.js";
+import {
   createDocsViewerServiceContext
 } from "./docs-viewer-service-context.js";
 import {
@@ -189,6 +192,11 @@ export function createDocsViewerAppComposition(options) {
     viewerScope: settings.viewerScope,
     window: window
   });
+  var configService = createDocsViewerConfigService({
+    dataRequestOptions: generatedDataRuntime.dataRequestOptions,
+    docsViewerConfigUrl: serviceContext.config.docsViewerConfigUrl,
+    uiTextUrl: serviceContext.config.uiTextUrl
+  });
 
   function shouldInitializeManagement(getCurrentMode) {
     return Boolean(access.allowManagement && typeof getCurrentMode === "function" && getCurrentMode() === constants.managementMode);
@@ -205,6 +213,7 @@ export function createDocsViewerAppComposition(options) {
     panelLayout: panelLayout,
     appSession: appSession,
     documentIndex: documentIndex,
+    configService: configService,
     generatedDataRuntime: generatedDataRuntime,
     managementBaseUrl: serviceContext.management ? serviceContext.management.baseUrl : "",
     generatedBaseUrl: serviceContext.generatedRead.baseUrl,

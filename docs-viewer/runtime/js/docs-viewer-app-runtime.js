@@ -125,7 +125,6 @@ export function startDocsViewerRuntime(options) {
   var state = appSession.state;
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
-  var dataRequestOptions = generatedDataRuntime.dataRequestOptions;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -283,11 +282,7 @@ export function startDocsViewerRuntime(options) {
   });
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
-    configService: {
-      dataRequestOptions: dataRequestOptions,
-      docsViewerConfigUrl: docsViewerConfigUrl,
-      uiTextUrl: uiTextUrl
-    },
+    configService: composition.configService,
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
     documentIndex: appSession.domains.documentIndex,
     getCurrentMode: getCurrentMode,

@@ -1,9 +1,11 @@
 import {
-  appendAssetVersion,
   fetchIndexWithRetry,
   fetchPreferredGeneratedJson,
   managementReloadPath
 } from "./docs-viewer-data.js";
+import {
+  appendAssetVersion
+} from "./docs-viewer-asset-url.js";
 
 export function createDocsViewerGeneratedDataRuntime(options) {
   var settings = options || {};

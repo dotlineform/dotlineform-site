@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-170c3fd0a283ac7b91b5f96de599148c",
-    "generated_at_utc": "2026-05-28T15:05:48Z",
+    "version": "blake2b-4d21e6bc81ccebaf6884cec806f7df89",
+    "generated_at_utc": "2026-05-28T18:09:19Z",
     "count": 220
   },
   "entries": [
@@ -1990,10 +1990,10 @@
       "kind": "doc",
       "title": "Studio Python And Ruby Script Inventory",
       "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-28",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-19 • Audit",
+      "display_meta": "2026-05-28 • Audit",
       "search_terms": [
         "studio-python-ruby-script-inventory",
         "studio",
@@ -2004,12 +2004,12 @@
         "studio python and ruby script inventory",
         "and",
         "audit",
-        "2026-05-19",
+        "2026-05-28",
         "2026",
         "05",
-        "19"
+        "28"
       ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-19 2026 05 19"
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-28 2026 05 28"
     },
     {
       "id": "studio-ready-state",
