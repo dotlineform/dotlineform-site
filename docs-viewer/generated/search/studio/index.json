@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-05da25fcb7057f91afe0219d428dd4a9",
-    "generated_at_utc": "2026-05-28T14:23:49Z",
-    "count": 219
+    "version": "blake2b-170c3fd0a283ac7b91b5f96de599148c",
+    "generated_at_utc": "2026-05-28T15:05:48Z",
+    "count": 220
   },
   "entries": [
     {
@@ -4923,6 +4923,38 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-controller-view-lifecycle-tasks site request docs viewer controller view lifecycle tasks docs viewer controller and view lifecycle tasks and docs viewer front-end app architecture request front end app architecture 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-architecture-review-cleanup-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Architecture Review And Cleanup Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "parent_title": "Docs Viewer Front-End App Architecture Request",
+      "display_meta": "2026-05-28 • Docs Viewer Front-End App Architecture Request",
+      "search_terms": [
+        "site-request-docs-viewer-architecture-review-cleanup-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "architecture",
+        "review",
+        "cleanup",
+        "tasks",
+        "docs viewer architecture review and cleanup tasks",
+        "and",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "app",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-architecture-review-cleanup-tasks site request docs viewer architecture review cleanup tasks docs viewer architecture review and cleanup tasks and docs viewer front-end app architecture request front end app 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

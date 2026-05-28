@@ -22,6 +22,7 @@
   "related_docs": [
     "site-request-docs-viewer-frontend-app-architecture",
     "site-request-docs-viewer-controller-view-lifecycle-tasks",
+    "site-request-docs-viewer-architecture-review-cleanup-tasks",
     "docs-viewer-runtime-boundary",
     "docs-viewer-overview",
     "docs-viewer-javascript-inventory"

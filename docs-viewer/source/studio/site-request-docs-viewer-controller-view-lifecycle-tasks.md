@@ -200,13 +200,18 @@ Owner rules:
 
 ## Cleanup Note
 
-Compatibility scaffolding kept:
+Follow-up review and cleanup is owned by [Docs Viewer Architecture Review And Cleanup Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks).
+That tracker treats compatibility paths, broad callbacks, broad state dependencies, and legacy JS/server structuring patterns as migration debt until they are removed or converted into named cleanup tasks.
+If a reviewed pattern is actually current architecture, the cleanup task should stop calling it compatibility and document its named owner contract.
+
+Compatibility paths identified by this slice:
 
 - `docs-viewer-app-runtime.js` remains the compatibility coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the intentionally small returned app handle.
 - `docs-viewer-app-session.js` keeps `compatibilityBridge.state` because existing controllers still consume the broad state object.
 - Route workflow callbacks, search/bookmark route callback bundles, and management runtime adapter callbacks remain private handoffs until a later slice narrows complete controller families to domain and service inputs.
 
 No compatibility fields or lifecycle methods were removed in this slice because no runtime behavior changed.
+That does not make the remaining paths acceptable as a long-term shape.
 No new compatibility scaffold was added.
 
 Follow-up:
@@ -256,7 +261,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 15 | done | Preserved management behavior and backend write authority; no runtime code changed. |
 | 16 | done | Management modal/service smokes were not required because management lifecycle/runtime behavior did not change. |
 | 17 | done | Public read-only smokes were not required because public startup/runtime behavior did not change. |
-| 18 | done | Cleanup note recorded. No new compatibility scaffolding was added; existing compatibility bridge and private callback handoffs remain explicit follow-up targets. |
+| 18 | done | Cleanup note recorded and handed to [Docs Viewer Architecture Review And Cleanup Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks). No new compatibility scaffolding was added; existing compatibility bridge and private callback handoffs are now explicit migration-debt review targets. |
 | 19 | done | Updated this tracker, parent request, Docs Viewer Runtime Boundary, Docs Viewer Overview, and Docs Viewer JavaScript Inventory. No service/config or portable copy-set docs changed because no contracts or copy sets changed. |
 | 20 | done | Created structured docs-log entry `change-2026-05-28-documented-docs-viewer-controller-and-hosted-view-lifecycle`. |
 

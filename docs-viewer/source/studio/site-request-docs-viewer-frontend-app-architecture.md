@@ -436,9 +436,16 @@ Implemented sixth slice 2026-05-28:
 - Existing focused smoke coverage already pins startup order, session domains, public/manage access separation, hosted-view context shape, hosted-view registry access states, info-panel lifecycle behavior, and lazy management adapter contracts.
 - No top-level binding, generated-data flow, route/config behavior, public hosted-view behavior, or management write authority changed in this slice.
 
-### 7. Architecture Documentation And Inventory Refresh
+### 7. Architecture Review And Cleanup
+
+Task tracker: [Docs Viewer Architecture Review And Cleanup Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks).
 
 After the structural slices land, update the durable docs so future work has one current architecture story.
+This task also owns compatibility cleanup notes carried forward from the structural slices.
+Compatibility paths, broad callbacks, broad state dependencies, and legacy JS/server structuring patterns should be treated as migration debt during this review.
+The review should remove them where the owner contract is clear, or create named follow-up tasks immediately.
+If a reviewed pattern is actually current architecture, the cleanup task should stop describing it as compatibility and document the named owner contract instead.
+They should not remain as vague future-development warnings that can surprise later feature work.
 
 Required docs:
 
@@ -450,10 +457,11 @@ Required docs:
 
 Acceptance:
 
-- `docs-viewer-app-runtime.js` is no longer described as compatibility coordination unless it truly still bridges legacy contracts
+- `docs-viewer-app-runtime.js` is no longer described as compatibility coordination unless a specific cleanup task or current owner contract explains why that bridge remains
 - the app/session/service/controller/view model is documented in one place
 - JavaScript inventory scores and owner notes match the new boundaries
 - final cleanup audits tests against the target architecture, not just historical compatibility behavior
+- legacy JavaScript and server-side patterns that could encourage code to be added in the wrong module are identified and either removed, renamed as current architecture with a named owner contract, or converted into named cleanup tasks
 
 Explicit final cleanup audit points:
 
@@ -461,6 +469,7 @@ Explicit final cleanup audit points:
 - docs describing compatibility fields as current public API
 - runtime fields kept only for tests rather than runtime callers or intentional app contracts
 - feature modules using app/runtime handles instead of owner-specific callbacks or service/controller contracts
+- local service endpoints, management write helpers, generated-read helpers, or broad server modules whose shape hides the intended app/service ownership
 
 Backend/service handling:
 
