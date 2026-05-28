@@ -310,6 +310,8 @@ Backend/service handling:
 
 ### 3. App Composition And Startup Phases
 
+Task tracker: [Docs Viewer App Composition And Startup Phases Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-composition-startup-phases-tasks).
+
 Replace broad inline controller construction with a composition owner that wires session domains, services, controllers, and lifecycle phases.
 
 Candidate owner:
