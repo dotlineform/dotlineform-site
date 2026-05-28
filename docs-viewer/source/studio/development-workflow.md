@@ -2,7 +2,7 @@
 doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 parent_id: dev-home
 sort_order: 1500
 viewable: true
@@ -38,6 +38,7 @@ Use the smallest owning area that explains the change:
 - Generated/runtime data contracts: [Data Models](/docs/?scope=studio&doc=data-models)
 - Checked-in config: [Config](/docs/?scope=studio&doc=config)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
+- Docs Viewer frontend-app architecture work: [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
 - Scripts, local services, and command behavior: [Scripts](/docs/?scope=studio&doc=scripts)
 - Source tree ownership or source/public boundary behavior: [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
@@ -79,6 +80,8 @@ For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
 For browser JavaScript maintenance-risk work, use [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
+For Docs Viewer frontend-app architecture work, start with [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture) and create child task trackers for implementation slices.
+Those slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
 ### JavaScript Maintenance Gate
 
@@ -131,6 +134,29 @@ Useful checks and follow-through:
 - Run `$HOME/miniconda3/bin/python3 studio/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
 - Use focused browser module smokes where practical: serve the site root through a temporary local static server, import browser modules directly in Playwright, stub config/data/service/DOM inputs, assert helper contracts without full route boot, and import affected route shells to catch syntax and dependency regressions.
 - After material JavaScript risk-reduction work, update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), and update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when Docs Viewer-specific rows or follow-up tasks changed.
+
+### Docs Viewer App Architecture Gate
+
+Use this gate before changing Docs Viewer runtime/app architecture, especially work related to app session, state domains, service adapters, app composition, public/manage context, controller lifecycle, panels, hosted views, or management/backend contracts.
+
+Before editing, answer:
+
+- What frontend app concept is being introduced or clarified?
+- Which app context, state domain, service adapter, controller, or view owns it after the change?
+- What backend capability, generated-data contract, service endpoint, browser storage contract, or local-only read/write boundary does it consume?
+- Is the backend/service contract already clean enough, or does the child task need paired backend/service cleanup?
+- What compatibility path is temporary, how is it named, and what later slice removes it?
+- How does the slice preserve public read-only behavior without management assets or backend capability probes?
+- How does the slice preserve manage-mode backend authority for writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data?
+
+Default rules:
+
+- Do not introduce frontend service adapters that merely hide unclear backend ownership.
+- Do not move browser code closer to write authority; writes remain behind named backend endpoints with server-side validation.
+- Do not let route config imply backend write capability. Static route/app context and backend capability truth are separate.
+- Prefer explicit app context and view-model structures over repeated local checks against broad state flags.
+- If one UI slot has public-safe and manage-only meanings, model those as separate or separately-shaped view contracts rather than one implementation with scattered mode checks.
+- Keep implementation details in child task documents; keep parent requests as policy, benefits, and slice-framing records.
 
 ## 4. Implement In A Focused Slice
 
