@@ -33,38 +33,29 @@ The cleanup pass should find them now, while the architecture request is active,
 
 ### handoff note
 
-2026-05-28 continuation 2:
+Current state for the next Codex session:
 
-- `IT-9` is complete. Static asset-version helpers moved to `docs-viewer/runtime/js/docs-viewer-asset-url.js`, browser-safe config/UI-text reads moved behind `docs-viewer/runtime/js/docs-viewer-config-service.js`, and `docs-viewer-config-controller.js` now consumes that config service instead of importing low-level generated-data helpers. Direct `docs-viewer-data.js` imports are now limited to `docs-viewer-generated-data-runtime.js` and `docs-viewer-config-service.js`, with focused smoke coverage asserting that import boundary.
-- `IT-10` is complete as an ownership-boundary documentation slice. Durable docs now state that Docs Import is a Docs Viewer management-modal app: `docs-html-import.js` owns modal app state and route-ready projection, `docs-html-import-workflow.js` owns preview/write orchestration, and writes stay behind management endpoints through `docs-viewer-management-client.js`.
-- `IT-11` is complete for the implementation-task classifications. Durable Docs Viewer docs now describe the generated-data helper boundary, browser-safe config-service owner, asset URL owner, report-service owner, public/manage generated-read constraints, Docs Import management-modal boundary, and management service transport/dispatcher ownership. `docs-viewer-portable-files.md` was updated for the new runtime files.
-- Verification for this continuation: targeted JavaScript syntax checks passed, `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` passed, `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .` passed, and `git diff --check` passed.
+- The implementation table is complete: `IT-1` through `IT-14` are done.
+- Remaining work is final review closeout, not another implementation slice unless the review finds a real remaining compatibility path.
+- The most recent checks passed: targeted `node --check` runs for touched runtime modules, `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`, `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`, and `git diff --check`.
+- Docs watcher regenerated the affected `docs-viewer/generated/docs/studio/...` and `docs-viewer/generated/search/studio/index.json` payloads after source-doc edits. Leave those generated updates in place unless a later source edit intentionally changes them again.
 
-2026-05-28 continuation:
+Recommended next sequence:
 
-- `IT-1` is complete. `docs-viewer-search-controller.js` now consumes explicit `searchRecent`, `documentIndex`, `selectedDocument`, `routeCommands`, and `paneCommands` inputs. The old direct `context.*` route/pane callback fallbacks and `context.state` dependency were removed, and focused app-shell smoke coverage was retargeted to the current owner contract.
-- `IT-2` is complete. `docs-viewer-bookmarks.js` now consumes explicit bookmark, document-index, selected-document, and search/recent inputs plus route and search-reset commands. The old direct route callback fallbacks and broad `context.state` dependency were removed, and focused bookmark smoke coverage was retargeted.
-- `IT-3` is complete. `docs-viewer-route-workflow.js` now exposes a private route command contract backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs. Search/recent, bookmarks, startup index loading, and management reloads consume that contract directly, and the old one-off runtime wrappers for `loadDoc`, `loadIndex`, `applyCurrentRoute`, `setHistory`, and `resolveDocId` were removed.
-- `IT-4` is complete. The lazy management controller context now receives named `managementState`, `serviceClient`, and `routeReload` contracts instead of the broad runtime `state` object. `docs-viewer-management.js` builds its internal management facade from explicit route-session, scope-config, document-index, selected-document, search/recent, generated-data, and management domains, and service/reload behavior is routed through named management service and route-reload contracts.
-- `IT-5` is complete. Built-in hosted-view records are now named current architecture through `createDocsViewerBuiltInHostedViews()`. App composition and focused smokes use the built-in factory; `createDocsViewerCompatibilityHostedViews()` remains as a temporary alias only.
-- `IT-12` is complete. `docs-viewer-document-controller.js` now consumes explicit route-session, scope-config, selected-document, generated-data, and status command inputs. `docs-viewer-sidebar.js` now consumes explicit document-index, selected-document, and scope-config projections. The broad `context.state` dependency was removed from both modules, and focused app-shell smoke coverage was added for the document/sidebar contract.
-- `IT-13` is complete. `docs-viewer-info-panel-controller.js` now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, and hosted-view inputs. The broad `state` dependency was removed while preserving public-safe hosted-view context projection without management services, local generated-read base URLs, or write-capable handles.
-- `IT-14` is complete. `docs-viewer-config-controller.js` now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs. The broad `state` dependency was removed while preserving docs-config loading, scope route projection, UI-text projection, recent-limit updates, and status/management copy updates.
-- `IT-6` is complete. `docs-viewer-route-config.js` no longer resolves inline route-config scripts or legacy `#docsViewerRoot` route data attributes, and registry failures no longer fall back to shell data. App-shell rendering now receives route context explicitly for scope/management controls instead of recreating route context from legacy shell attributes, and focused smoke coverage was retargeted to explicit route config, route context, or the browser-safe registry.
-- `IT-7` is complete. `docs-viewer-app-session.js` no longer exposes `compatibilityBridge`, and `docs-viewer-app-composition.js` no longer returns `composition.state`. Focused app-shell smoke coverage now asserts named state-domain projections, public/manage composition contracts, and the small returned app handle instead of temporary compatibility aliases.
-- `IT-8` is complete. Local report endpoint access moved behind `docs-viewer-report-service.js`; `source-config`, `change-history`, and `docs-broken-links` reports now consume `context.reportService` instead of `managementBaseUrl` or direct `window.fetch(...)` calls. The adapter owns the local source-config, generated docs-log, and broken-links audit endpoint paths while reports keep presentation and report-specific UI activity context.
-- Verification for this continuation through `IT-8`: `git diff --check` passed, the document/sidebar/info-panel/config broad-state scans returned no matches, focused lazy management, built-in hosted-view, route-config fallback-removal, app-session/composition alias, and report-service smokes were retargeted to current contracts, `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .` passed, and `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py` passed.
+1. Complete Review Task 8 by scanning the current durable docs for compatibility wording that is now stale. Keep wording that names a real current private coordinator or a tracked temporary alias; update vague compatibility phrasing that no longer has a purpose.
+2. Complete Review Task 9 by checking whether any compatibility path can still be removed now. The likely remaining candidate is the temporary hosted-view alias `createDocsViewerCompatibilityHostedViews()`. Remove it only if active code and focused smokes no longer need it; otherwise leave a named follow-up with removal criteria.
+3. Complete Review Task 10 with a public-safe hosted-view check. Verify public hosted-view context still omits management services, backend probes, local generated-read service base URLs, write-capable handles, and management assets.
+4. Complete Review Task 11 with a manage-only/write-authority check. Verify manage UI visibility still does not imply write authority, and writes/imports/settings/scope lifecycle/source-open actions still go through `docs-viewer-management-client.js` and server-side management endpoints.
+5. Complete Review Tasks 12 and 13 by updating this tracker and any durable docs touched by the closeout, then running only the warranted checks. At minimum use focused scans, `git diff --check`, and the app-shell module smoke if runtime/module contracts changed.
+6. Complete Review Task 14 by creating or updating the structured docs-log entry for the meaningful cleanup/final closure, then record the entry id here.
 
-Tasks 1 through 5 completed the architecture cleanup review and converted the remaining compatibility and broad-state findings into concrete implementation tasks.
-The next phase should work through the `IT-*` table before treating the remaining review tasks as final closure.
+Steer:
 
-Recommended sequence:
-
-- Continue with final review tasks for stale compatibility wording, public/manage boundary verification, manage-only/write authority verification, final verification records, and docs-log entries now that the implementation slices (`IT-1` through `IT-14`) are complete.
-- Include the focused test retargeting required by each implementation slice, so tests assert current owner contracts instead of historical compatibility surfaces.
-- Do not preserve a compatibility path because a helper or smoke fixture still uses it. Retarget the helper or fixture to the owner contract, then remove or narrow the path.
-- After the implementation slices, complete the remaining review tasks for stale compatibility test assumptions, runtime fields kept only for tests, durable docs wording, public/manage boundary verification, final verification records, and docs-log entries.
-- Keep new behavior out of `docs-viewer-app-runtime.js`; use the replacement owner contracts named in the implementation table.
+- Do not add behavior to `docs-viewer-app-runtime.js`; keep it as the private coordinator for focused controller construction, event wiring, route-global updates, and small app-handle return.
+- Do not preserve a compatibility path because a helper or smoke fixture still uses it. Retarget the helper or fixture to the current owner contract first.
+- Keep feature-facing generated reads behind `docs-viewer-generated-data-runtime.js`; direct `docs-viewer-data.js` imports should remain limited to `docs-viewer-generated-data-runtime.js` and `docs-viewer-config-service.js`.
+- Keep Docs Import as a management-modal app: `docs-html-import.js` owns modal state/readiness, `docs-html-import-workflow.js` owns preview/write orchestration, and writes stay behind management endpoints.
+- Treat detailed completed-work history as living in the task tables below, not in this handoff note.
 
 ### durable documentation
 
