@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9adb4d6e1ab8ad1a098b53970637b8e3",
-    "generated_at_utc": "2026-05-28T12:02:46Z",
-    "count": 217
+    "version": "blake2b-33a04b147b1c75df89cc153f3b804ff6",
+    "generated_at_utc": "2026-05-28T12:12:44Z",
+    "count": 218
   },
   "entries": [
     {
@@ -4857,6 +4857,39 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-runtime-api-shrink-tasks site request docs viewer runtime api shrink tasks docs viewer runtime api shrink tasks docs viewer front-end app architecture request front end app architecture 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-public-manage-app-contexts-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Public And Manage App Contexts Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-app-contexts-tasks",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "parent_title": "Docs Viewer Front-End App Architecture Request",
+      "display_meta": "2026-05-28 • Docs Viewer Front-End App Architecture Request",
+      "search_terms": [
+        "site-request-docs-viewer-public-manage-app-contexts-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "manage",
+        "app",
+        "contexts",
+        "tasks",
+        "docs viewer public and manage app contexts tasks",
+        "and",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "architecture",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-public-manage-app-contexts-tasks site request docs viewer public manage app contexts tasks docs viewer public and manage app contexts tasks and docs viewer front-end app architecture request front end architecture 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

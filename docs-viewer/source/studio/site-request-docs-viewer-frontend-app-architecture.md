@@ -382,6 +382,8 @@ Backend/service handling:
 
 ### 5. Public And Manage App Contexts
 
+Task tracker: [Docs Viewer Public And Manage App Contexts Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-app-contexts-tasks).
+
 Make public read-only and local manage mode explicit app contexts.
 
 This should not become a speculative permissions framework.
