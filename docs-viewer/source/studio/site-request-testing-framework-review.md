@@ -10,7 +10,7 @@ viewable: true
 ---
 # Testing Framework Review Request
 
-This request tracks a lightweight review of the repo's testing framework after recent Docs Viewer and Studio migrations.
+This request tracks a review of the repo's testing framework after recent Docs Viewer and Studio migrations.
 
 - The goal is to identify old baggage, stale compatibility assertions, duplicated smoke coverage, and tests that now constrain retired architecture.
 - It is not a request to rewrite the full test suite by default. But it should provide meaningful recommendations for improvement, which may point to a wider rewrite.
