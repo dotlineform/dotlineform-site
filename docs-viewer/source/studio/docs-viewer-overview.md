@@ -74,7 +74,7 @@ Current helper modules:
 
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index and generated-data runtime creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, and the returned runtime API
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
@@ -99,6 +99,8 @@ It reads the shell configuration, loads the generated JSON for the active scope,
 When a management-capable route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, docs-search index, and generated reference JSON through that server.
 Local Studio uses this path because generated docs/search reads are served by the Python app rather than by Jekyll.
 Public/static builds leave `data-generated-base-url` blank, and the service context also strips any local generated-read service base URL from public read-only contexts, so `/library/` and `/analysis/` use generated JSON asset URLs directly without backend probes.
+The returned app handle is not a feature-module escape hatch: it does not expose broad app/session state, composition/session internals, management service handles, backend capability probes, the management lazy loader, or route workflow bridge methods.
+Management reload and selected-document refresh still use private callbacks inside the compatibility runtime and management controller context.
 
 ## Current URL And State Contract
 

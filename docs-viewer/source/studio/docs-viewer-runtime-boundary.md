@@ -37,7 +37,7 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` as the app-composition owner for runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase descriptions, startup authority notes, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` as the app-session owner for state default creation, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge used by existing controllers
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for focused controller construction, callback handoff, config/controller bridges, event handler definitions, and the returned runtime API
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for focused controller construction, callback handoff, config/controller bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` for explicit public/manage service context projection; public contexts keep static generated/config/report assets and omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, generated-search read capability checks, and named read methods for docs index, document payload, search index, cross-scope docs index, references index, and reference-target JSON
@@ -74,6 +74,8 @@ Current shared implementation:
 The shell loads the entrypoint as an ES module.
 Extracted helper modules must not import the entrypoint or mutate compatibility runtime state directly.
 The management controller receives a narrow context API through the neutral lazy-controller adapter so public read-only viewers do not download or execute management-only orchestration.
+Route workflow bridges such as `applyCurrentRoute`, `loadIndex`, and `loadDoc` remain private runtime callbacks and are not returned on the public app handle.
+The returned app handle also does not expose broad app/session state, app-composition internals, app-session internals, management service handles, backend capability probes, or the management lazy loader.
 
 Current CSS base boundary:
 

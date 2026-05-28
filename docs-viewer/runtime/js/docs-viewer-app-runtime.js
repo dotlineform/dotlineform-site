@@ -755,13 +755,6 @@ export function startDocsViewerRuntime(options) {
     root: root,
     routeContext: function () { return routeContext; },
     appShellRefs: appShellRefs,
-    appComposition: composition,
-    appSession: appSession,
-    state: state,
-    initialLoadPromise: initialLoadPromise,
-    loadManagementController: loadManagementController,
-    applyCurrentRoute: applyCurrentRoute,
-    loadIndex: loadIndex,
-    loadDoc: loadDoc
+    initialLoadPromise: initialLoadPromise
   };
 }

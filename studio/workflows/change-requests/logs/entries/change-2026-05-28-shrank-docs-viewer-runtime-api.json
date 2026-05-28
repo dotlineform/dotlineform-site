@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-28-shrank-docs-viewer-runtime-api",
+  "date": "2026-05-28",
+  "title": "Shrank Docs Viewer Runtime API",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Narrowed the returned Docs Viewer app handle to root identity, route context, app-shell refs, and the initial-load promise while removing broad state, app-composition internals, app-session internals, the management lazy loader, and route workflow bridge methods from the returned handle.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-runtime-api-shrink-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "runtime-api",
+    "app-handle",
+    "public-manage-context"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-runtime-api-shrink-tasks",
+  "related_docs": [
+    "site-request-docs-viewer-runtime-api-shrink-tasks",
+    "site-request-docs-viewer-frontend-app-architecture",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-overview",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py",
+    "docs-viewer/source/studio/site-request-docs-viewer-runtime-api-shrink-tasks.md",
+    "docs-viewer/source/studio/site-request-docs-viewer-frontend-app-architecture.md",
+    "docs-viewer/source/studio/docs-viewer-runtime-boundary.md",
+    "docs-viewer/source/studio/docs-viewer-overview.md",
+    "docs-viewer/source/studio/docs-viewer-javascript-inventory.md"
+  ],
+  "effect": "The app handle is no longer a broad runtime escape hatch. Public read-only routes do not expose management loaders or route workflow bridges, while manage-mode reload and selected-doc refresh behavior continue through the private management controller context and service flow.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-app-boot.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-app-composition.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

@@ -3,12 +3,49 @@ doc_id: site-request-docs-viewer-runtime-api-shrink-tasks
 title: Docs Viewer Runtime API Shrink Tasks
 added_date: 2026-05-28
 last_updated: 2026-05-28
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-frontend-app-architecture
 sort_order: 14184
 viewable: true
 ---
 # Docs Viewer Runtime API Shrink Tasks
+
+## Implementation Note - 2026-05-28
+
+Implemented the runtime API shrink slice.
+`startDocsViewerRuntime(...)` and `startDocsViewerApp(...)` remain stable entrypoints, but the returned app handle is now intentionally limited to:
+
+- `root`
+- `routeContext()`
+- `appShellRefs`
+- `initialLoadPromise`
+
+Removed returned-handle fields:
+
+- `appComposition`
+- `appSession`
+- `state`
+- `loadManagementController`
+- `applyCurrentRoute`
+- `loadIndex`
+- `loadDoc`
+
+No replacement broad state alias was added.
+Management reload behavior still uses the internal lazy-management context assembled inside `docs-viewer-app-runtime.js`, where `loadIndex` and `loadDoc` remain private runtime callbacks for the management controller.
+Public `/library/` and `/analysis/` handles no longer expose management lazy loaders or route workflow bridges.
+
+Verification run:
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-boot.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-composition.js`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+
+Management modal/service smokes were not run because the slice did not change management initialization, capability checks, generated-read routing, import-open-on-load, status projection, or post-write reload internals.
+The only management-facing contract touched was removal of the unused returned-handle `loadManagementController` field; the private management context still receives its existing callbacks.
 
 This is the fourth child task tracker for [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture).
 
@@ -50,27 +87,65 @@ If a test currently reaches into broad `state` only to verify route or backend b
 
 ### current returned handle inventory
 
-Current `startDocsViewerRuntime(...)` return shape:
+Implemented `startDocsViewerRuntime(...)` return shape:
 
 - `root`: browser app root. Mostly diagnostic/test handle.
 - `routeContext()`: browser route/config context. Useful for route-context assertions but should not imply backend write capability.
 - `appShellRefs`: shell refs grouped by app shell. Mostly diagnostic/test handle.
-- `appComposition`: temporary composition contract handle introduced for focused tests and future slices.
-- `appSession`: app-session/domain owner. Useful if tests verify state-domain contracts through the app handle, but broad controller callers should prefer focused domain inputs.
-- `state`: broad compatibility state bridge. This is the largest remaining API shrink target.
 - `initialLoadPromise`: useful public boot completion contract for tests and callers.
-- `loadManagementController`: manage-only lazy management bridge. Keep gated and avoid exposing it to public contexts.
-- `applyCurrentRoute`: route workflow bridge.
-- `loadIndex`: route workflow bridge.
-- `loadDoc`: route workflow bridge.
 
-Current known callers and reasons:
+Removed from the returned handle:
 
-- `docs-viewer/runtime/js/docs-viewer-app-boot.js` returns the runtime handle from `startDocsViewerApp(...)`.
-- `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` uses `initialLoadPromise`, `state`, and `routeContext()` in the boot single-start contract.
-- `docs-viewer/runtime/js/docs-viewer-management.js` receives `loadIndex` and `loadDoc` through the lazy management context for post-write reload and selected-doc refresh behavior.
-- Route workflow, search, and bookmark module tests already exercise focused owner APIs directly and should not need the broad runtime handle.
-- Management writes, imports, rebuilds, settings, scope lifecycle, and capability checks already live behind management modules and service endpoints; this slice must not bypass those owners.
+- `appComposition`: covered through direct app-composition module tests instead of through the app handle.
+- `appSession`: covered through direct app-session/domain tests instead of through the app handle.
+- `state`: removed broad compatibility state bridge from the public app handle.
+- `loadManagementController`: remains a private manage-only lazy runtime bridge inside `docs-viewer-app-runtime.js`.
+- `applyCurrentRoute`: remains owned by `docs-viewer-route-workflow.js` and covered through focused route workflow tests.
+- `loadIndex`: remains owned by `docs-viewer-route-workflow.js` and stays available only as a private callback for startup and management reload.
+- `loadDoc`: remains owned by `docs-viewer-route-workflow.js` and stays available only as a private callback for route and management refresh flows.
+
+Implemented caller map:
+
+- `docs-viewer/runtime/js/docs-viewer-app-boot.js` returns the runtime handle from `startDocsViewerApp(...)`; it does not require broad state, composition/session internals, management loaders, or route workflow bridge fields.
+- `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` now asserts the intentionally small app handle shape, single-start behavior, `routeContext()` access, `initialLoadPromise`, public/manage separation, and route completion through rendered navigation rather than `app.state`.
+- `docs-viewer/runtime/js/docs-viewer-management.js` still receives `loadIndex` and `loadDoc` through the private lazy-management context for post-write reload and selected-doc refresh behavior. It does not consume those functions from the returned app handle.
+- Route workflow, search, bookmark, app-composition, and app-session module tests exercise focused owner APIs directly rather than using returned runtime internals.
+- Management writes, imports, rebuilds, settings, scope lifecycle, and capability checks remain behind management modules and service endpoints.
+
+### implemented runtime API authority table
+
+| Field | status | source of authority | contract class | caller / replacement |
+| --- | --- | --- | --- | --- |
+| `root` | kept | browser route/config context | diagnostic/test app handle | Used as app-root identity only. No backend authority. |
+| `routeContext()` | kept | browser route/config context | public app contract / diagnostic test bridge | Used for route-context assertions. Does not expose backend write capability. |
+| `appShellRefs` | kept | browser app shell DOM | diagnostic/test app handle | Used for shell-ref contract assertions. No backend authority. |
+| `initialLoadPromise` | kept | app composition/startup sequencing | public boot completion contract | Smallest stable signal that initial startup phases completed. |
+| `appComposition` | removed | app composition owner | former test-only bridge | Replaced by direct `docs-viewer-app-composition.js` tests. |
+| `appSession` | removed | app/session browser state | former test-only bridge | Replaced by direct `docs-viewer-app-session.js` tests. |
+| `state` | removed | app/session browser state, generated static assets, browser storage, management state | compatibility leftover | Boot smoke now asserts route completion through DOM projection; feature modules use focused owner/context contracts. |
+| `loadManagementController` | removed from returned handle; kept private | management backend capability/write endpoints via management controller | manage-only private bridge | Management startup and import-open-on-load still call the private lazy loader inside runtime. Public app handles do not expose it. |
+| `applyCurrentRoute` | removed from returned handle; kept private | route workflow owner | private route workflow bridge | Route workflow tests cover the focused owner; search/bookmark receive explicit route callbacks. |
+| `loadIndex` | removed from returned handle; kept private | generated static asset or local generated-read service | private route workflow bridge | Startup and management reload use private runtime callback handoff. |
+| `loadDoc` | removed from returned handle; kept private | generated static asset or local generated-read service | private route workflow bridge | Route links, bookmarks, and management refresh flows use private/focused callbacks. |
+
+### implemented compatibility limits
+
+Intentional returned app handle fields:
+
+- `root`: kept as a low-risk diagnostic/test root identity while route boot remains DOM-root based.
+- `routeContext()`: kept for route-context assertions and future app-context verification; it remains browser route/config context only.
+- `appShellRefs`: kept as a shell-ref diagnostic contract while the JavaScript app shell is still being hardened.
+- `initialLoadPromise`: kept as the stable boot completion signal for callers and smokes.
+
+Fields deliberately not returned:
+
+- broad app/session state
+- app-composition internals
+- app-session internals
+- management lazy loader
+- route workflow bridge methods
+
+Later slices can consider removing `root`, `routeContext()`, or `appShellRefs` if tests move fully to route-context and shell-owner module contracts.
 
 ### likely shrink targets
 
@@ -117,22 +192,22 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory actual returned runtime API callers in runtime code, smoke tests, docs, and any route bootstrap code. Deliverable: short caller map in this tracker. |
-| 2 | planned | Classify each returned handle field by source of authority and by whether it is public app contract, manage-only bridge, test-only bridge, or compatibility leftover. Deliverable: runtime API authority table in this tracker. |
-| 3 | planned | Decide target app handle shape. Preserve `initialLoadPromise` if it remains the cleanest boot completion signal; remove or narrow broad `state`, route workflow bridges, and composition/session handles only where callers have focused replacements. |
-| 4 | planned | Define temporary compatibility limits. Name each field intentionally kept on the returned handle, why it remains, which later slice should remove it, and what focused tests guard it. |
-| 5 | planned | Update focused smoke coverage before removals where practical. Tests should assert the intended app handle shape, public/manage separation, and focused owner replacements without relying on broad runtime internals. |
-| 6 | planned | Remove or narrow runtime handle fields only after the caller inventory proves they are unused or replaced. Do not remove fields that management reload/write flows still consume through the lazy management context. |
-| 7 | planned | If `state` is removed from the returned handle, replace boot smoke assertions with focused app-session/domain or user-visible state assertions. Do not expose a new broad state alias under another name. |
-| 8 | planned | If `appComposition` remains returned, document why it is an intentional app contract or test bridge. If it is removed, ensure app-composition contracts remain covered through direct module tests. |
-| 9 | planned | If route workflow bridges are removed from the returned handle, verify route workflow module tests and any management reload paths still cover `applyCurrentRoute`, `loadIndex`, and `loadDoc` through focused contracts. |
-| 10 | planned | Preserve public read-only behavior: `/library/` and `/analysis/` must stay backend-free, management-free, and free of management-only JavaScript/CSS/shell markup. Public app handles must not expose management service handles or backend capability probes. |
-| 11 | planned | Preserve manage-mode behavior: generated-data reads, capability checks, import-open-on-load, metadata edit flow, settings, context menu, rebuilds, imports, scope lifecycle, status pills, and backend write authority must continue through the existing management/service flow. |
-| 12 | planned | Run management modal/service smoke checks if management initialization, lazy management loading, generated reads, route state, status projection, import-open-on-load, or post-write reload behavior changes. |
-| 13 | planned | Run public read-only checks if public app handle shape, public startup context, generated reads, route normalization, document visibility, search/recent, bookmarks, reports, info panel, or public management omission changes. |
-| 14 | planned | Review touched runtime files for new compatibility scaffolding. Deliverable: short cleanup note listing runtime API fields kept, fields removed, replacement owner contracts, and any follow-up removal tasks. |
-| 15 | planned | Update owning docs after implementation: this tracker, Docs Viewer Front-End App Architecture Request, Docs Viewer runtime boundary, Docs Viewer overview, Docs Viewer JavaScript inventory, and portable files only if runtime copy sets change. |
-| 16 | planned | Create or update a structured docs-log entry when the implementation lands and record the entry id in this tracker. |
+| 1 | done | Inventory actual returned runtime API callers in runtime code, smoke tests, docs, and any route bootstrap code. Deliverable: implemented caller map above. |
+| 2 | done | Classify each returned handle field by source of authority and by whether it is public app contract, manage-only bridge, test-only bridge, or compatibility leftover. Deliverable: runtime API authority table above. |
+| 3 | done | Target app handle shape is `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`; broad `state`, route workflow bridges, composition/session handles, and management lazy loader were removed from the returned handle. |
+| 4 | done | Temporary compatibility limits are documented above for each intentionally kept returned-handle field. |
+| 5 | done | Updated `docs_viewer_app_shell_modules.py` to assert the intended app handle shape, public/manage separation, and route completion without relying on broad runtime internals. |
+| 6 | done | Removed returned-handle fields only after caller inventory showed they were unused externally or had focused/private replacements. Management reload/write flows still consume private lazy-management context callbacks. |
+| 7 | done | Removed `state` from the returned handle and replaced boot smoke state assertions with rendered navigation route projection assertions. No new broad state alias was exposed. |
+| 8 | done | Removed `appComposition` from the returned handle; app-composition contracts remain covered through direct module tests. |
+| 9 | done | Removed route workflow bridges from the returned handle while keeping `applyCurrentRoute`, `loadIndex`, and `loadDoc` covered by focused route workflow tests and private management/startup callback handoff. |
+| 10 | done | Preserved public read-only behavior; public app handles no longer expose management lazy loaders, route workflow bridges, backend capability probes, or management service handles. |
+| 11 | done | Preserved manage-mode behavior by leaving generated-data reads, capability checks, import-open-on-load, metadata edit flow, settings, context menu, rebuilds, imports, scope lifecycle, status pills, and backend write authority in the existing management/service flow. |
+| 12 | done | Management modal/service smokes were not required because management initialization, lazy management loading internals, generated reads, route state, status projection, import-open-on-load, and post-write reload behavior were not changed. |
+| 13 | done | Public read-only checks were run because public app handle shape changed. |
+| 14 | done | Runtime cleanup note: kept `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`; removed broad state, composition/session internals, management loader, and route workflow bridges; replacements are focused owner tests plus private management/startup callback handoff. |
+| 15 | done | Updated owning docs after implementation: this tracker, Docs Viewer Front-End App Architecture Request, Docs Viewer runtime boundary, Docs Viewer overview, and Docs Viewer JavaScript inventory. Portable files were not updated because runtime copy sets did not change. |
+| 16 | done | Created structured docs-log entry `change-2026-05-28-shrank-docs-viewer-runtime-api`. |
 
 The closeout for this slice should confirm:
 

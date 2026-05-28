@@ -354,13 +354,19 @@ Task tracker: [Docs Viewer Runtime API Shrink Tasks](/docs/?scope=studio&doc=sit
 
 Retire the legacy returned runtime API where possible.
 
-Current bridge API includes:
+Current returned app handle includes:
 
-- `loadManagementController`
-- `applyCurrentRoute`
-- `loadIndex`
-- `loadDoc`
-- broad `state`
+- `root`
+- `routeContext()`
+- `appShellRefs`
+- `initialLoadPromise`
+
+Implemented fourth slice 2026-05-28:
+
+- The returned runtime/app handle from `startDocsViewerRuntime(...)` and `startDocsViewerApp(...)` was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
+- Broad `state`, app-composition internals, app-session internals, `loadManagementController`, `applyCurrentRoute`, `loadIndex`, and `loadDoc` were removed from the returned handle.
+- Management reload and selected-doc refresh behavior still receive `loadIndex` and `loadDoc` through the private lazy-management context assembled inside `docs-viewer-app-runtime.js`.
+- Public `/library/` and `/analysis/` app handles do not expose management service handles, backend capability probes, management lazy loaders, or route workflow bridges.
 
 Acceptance:
 

@@ -1234,24 +1234,43 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
             const second = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
             const app = await first;
             if (app && app.initialLoadPromise) await app.initialLoadPromise;
+            const handleKeys = Object.keys(app || {}).sort();
+            const activeLink = document.querySelector('#docsViewerNav a[aria-current="page"]');
             return {
                 samePromise: first === second,
-                hasRuntimeState: Boolean(app && app.state),
+                handleKeys,
+                hasBroadRuntimeState: Boolean(app && app.state),
+                hasCompositionBridge: Boolean(app && app.appComposition),
+                hasSessionBridge: Boolean(app && app.appSession),
+                hasManagementBridge: Boolean(app && app.loadManagementController),
+                hasRouteWorkflowBridge: Boolean(app && (app.applyCurrentRoute || app.loadIndex || app.loadDoc)),
+                hasInitialLoadPromise: Boolean(app && app.initialLoadPromise && typeof app.initialLoadPromise.then === 'function'),
                 routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
                 headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
                 documentShellCount: document.querySelectorAll('.docsViewer__main').length,
-                selectedDocId: app && app.state ? app.state.selectedDocId : ''
+                activeDocId: activeLink?.dataset.docId || '',
+                activeDocText: activeLink?.textContent.trim() || ''
             };
         }"""
     )
     if result["samePromise"] is not True:
         raise AssertionError(f"app boot did not preserve a single start promise: {result!r}")
-    if result["hasRuntimeState"] is not True or result["routeId"] != "analysis-public":
-        raise AssertionError(f"app boot did not return the runtime contract: {result!r}")
+    if result["handleKeys"] != ["appShellRefs", "initialLoadPromise", "root", "routeContext"]:
+        raise AssertionError(f"app boot returned unexpected runtime handle keys: {result!r}")
+    if (
+        result["hasBroadRuntimeState"] is not False
+        or result["hasCompositionBridge"] is not False
+        or result["hasSessionBridge"] is not False
+        or result["hasManagementBridge"] is not False
+        or result["hasRouteWorkflowBridge"] is not False
+    ):
+        raise AssertionError(f"app boot exposed retired runtime internals: {result!r}")
+    if result["hasInitialLoadPromise"] is not True or result["routeId"] != "analysis-public":
+        raise AssertionError(f"app boot did not return the intended runtime contract: {result!r}")
     if result["headerRowCount"] != 1 or result["navCount"] != 1 or result["documentShellCount"] != 1:
         raise AssertionError(f"single-start boot duplicated shell markup: {result!r}")
-    if not result["selectedDocId"]:
+    if result["activeDocId"] != "analysis" or result["activeDocText"] != "Analysis":
         raise AssertionError(f"single-start boot did not complete initial route load: {result!r}")
 
 
