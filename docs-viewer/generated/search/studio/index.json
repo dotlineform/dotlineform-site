@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-aa7e23ccff226a76b711a7fb17bd4f25",
-    "generated_at_utc": "2026-05-28T10:03:35Z",
-    "count": 212
+    "version": "blake2b-9c9d0d8bc1330a448fd87d3d0cfe391b",
+    "generated_at_utc": "2026-05-28T10:25:21Z",
+    "count": 213
   },
   "entries": [
     {
@@ -4728,6 +4728,38 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-frontend-app-architecture site request docs viewer frontend app architecture docs viewer front-end app architecture request front end change requests change requests 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-app-session-state-domains-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer App Session State Domains Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-session-state-domains-tasks",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "parent_title": "Docs Viewer Front-End App Architecture Request",
+      "display_meta": "2026-05-28 • Docs Viewer Front-End App Architecture Request",
+      "search_terms": [
+        "site-request-docs-viewer-app-session-state-domains-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "app",
+        "session",
+        "state",
+        "domains",
+        "tasks",
+        "docs viewer app session state domains tasks",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "architecture",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-app-session-state-domains-tasks site request docs viewer app session state domains tasks docs viewer app session state domains tasks docs viewer front-end app architecture request front end architecture 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-frontend-app-architecture
 title: Docs Viewer Front-End App Architecture Request
 added_date: 2026-05-28
 last_updated: 2026-05-28
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 14180
 viewable: true
@@ -237,6 +237,8 @@ This keeps new product behavior aligned with the app architecture instead of for
 - Keep this parent request focused on policy, architecture direction, benefits, and slice framing.
 
 ### 1. App Session And State Domains
+
+Task tracker: [Docs Viewer App Session State Domains Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-session-state-domains-tasks).
 
 Define a focused app-session owner that creates named state domains instead of one broad runtime state bag.
 
