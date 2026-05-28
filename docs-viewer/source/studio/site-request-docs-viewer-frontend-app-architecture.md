@@ -211,6 +211,25 @@ Backend authority stays firm:
 - public routes must keep working without backend services
 - manage mode must keep backend capability checks and endpoint enforcement independent from client visibility
 
+## Feature Freeze Policy
+
+New Docs Viewer feature requests should be on hold by default while this architecture work is active.
+The purpose is to avoid adding more behavior that depends on transitional runtime state, broad compatibility APIs, unclear public/manage boundaries, or backend endpoints that are about to be reshaped.
+
+Exceptions are allowed only when the work is urgent or clearly low-risk.
+An exception should state:
+
+- why the feature cannot wait for the relevant architecture slice
+- which app context, state domain, service adapter, controller, or view owns the new behavior
+- which backend/generated-data/service contract it consumes
+- why it does not add a new long-lived compatibility layer
+- how it preserves public read-only and manage-mode boundaries
+- what follow-up is required, if any, after the architecture slice lands
+
+When practical, feature requests should instead become requirements or acceptance checks for the relevant child architecture task.
+For example, a new info-panel field request should first clarify whether it belongs to a public metadata view model, a manage metadata view model, a local diagnostics view, or a separate hosted view.
+This keeps new product behavior aligned with the app architecture instead of forcing the architecture to preserve another interim path.
+
 ## Structural Slices
 
 Work through these as child task trackers under this parent request.

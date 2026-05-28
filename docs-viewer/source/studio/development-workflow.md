@@ -11,17 +11,17 @@ viewable: true
 
 This document is the repo-specific lifecycle guide for major new features, behavior changes, refactors, and meaningful documentation changes.
 
-Use it to decide what to read, what to update, and how to close work out.
-It is intentionally a router to focused docs rather than a replacement for them.
-Detailed implementation rules that are too specific for this lifecycle guide live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
+- Use it to decide what to read, what to update, and how to close work out.
+- It is intentionally a router to focused docs rather than a replacement for them.
+- Detailed implementation rules that are too specific for this lifecycle guide live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
 
 ## Fast Path
 
 For any non-trivial change:
 
-1. Classify the work: feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change.
-2. Read the owning section docs before editing.
-3. Decide whether the work needs a change request.
+1. Classify the work: feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change. Read the owning section docs before editing.
+2. Decide whether the work needs a change request. Change requests are documented under [Change Requests](/docs/?scope=studio&doc=change-requests).
+3. Use [Tasks Template](/docs/?scope=studio&doc=tasks-template) as the template for tracking tasks. This becomes a child documemnt of the owning change request document.
 4. Keep implementation scoped to the owning runtime, script, data model, or UI primitive.
 5. Run targeted verification proportional to the blast radius.
 6. Update owning docs and generated payloads when source docs or generated contracts change.
