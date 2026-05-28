@@ -10,16 +10,19 @@ viewable: true
 ---
 # Docs Viewer Architecture Review And Cleanup Tasks
 
-This is the review and cleanup child task tracker for [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture).
+This is the review and cleanup child task tracker for [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture). It follows the structural slices that introduced or clarified app session, service boundaries, app composition, runtime API shape, public/manage contexts, and controller/hosted-view lifecycle.
 
-It follows the structural slices that introduced or clarified app session, service boundaries, app composition, runtime API shape, public/manage contexts, and controller/hosted-view lifecycle.
+This tracker exists so cleanup notes from those slices have an explicit owner:
+- Compatibility paths, broad callbacks, and legacy-style handoffs are red flags until they are removed or converted into named follow-up tasks.
+- If a reviewed pattern is actually current architecture, stop describing it as compatibility and document the named owner contract instead.
 
-This tracker exists so cleanup notes from those slices have an explicit owner.
-Compatibility paths, broad callbacks, and legacy-style handoffs are red flags until they are removed or converted into named follow-up tasks.
-If a reviewed pattern is actually current architecture, stop describing it as compatibility and document the named owner contract instead.
-The cleanup pass should find them now, while the architecture request is active, rather than letting them surface later during unrelated feature work.
-It should review JavaScript and server-side patterns, compatibility scaffolding, tests, durable docs, generated payload status, and remaining architecture risks.
-It should not add source editor features, semantic-reference editing, visualization features, plugin architecture, route shell markup, generated payload schema changes, or backend write behavior.
+The cleanup pass should find them now, while the architecture request is active, rather than letting them surface later during unrelated feature work. It should review:
+- JavaScript and server-side patterns,
+- compatibility scaffolding,
+- tests,
+- durable docs,
+- generated payload status, and
+- remaining architecture risks.
 
 ## Status
 
@@ -27,12 +30,12 @@ It should not add source editor features, semantic-reference editing, visualizat
 
 - Treat this as architecture review and cleanup, not a new feature slice.
 - Treat every remaining compatibility path, broad callback bridge, broad state dependency, or legacy JS/server structuring pattern as migration debt until reviewed.
-- Resolve reviewed migration debt in this slice when the owner contract is clear; otherwise create a named follow-up task immediately.
+- Resolve reviewed migration debt in this slice when the owner contract is clear; otherwise create a named follow-up task in this document immediately.
 - Keep the review grounded in the target Docs Viewer app architecture, not in historical compatibility paths.
 - Do not preserve compatibility wording as a neutral description. Name the owner, the replacement contract, and the removal task; if no removal is needed, rename the pattern as current architecture and document why it is not compatibility.
 - Do not remove a path blindly; first identify the current callers, replacement owner contract, and focused verification required for removal.
 - Do not replace compatibility callbacks with direct endpoint calls from feature modules.
-- Ask explicitly whether any legacy JavaScript or server pattern remains that might encourage future developers to add code in the wrong module for its intended purpose.
+- The cleanup analysis should specifically question whether any legacy JavaScript or server pattern remains that might encourage future developers to add code in the wrong module for its intended purpose.
 - Keep public read-only and local manage boundaries explicit while reviewing docs, tests, and runtime contracts.
 
 ### cleanup notes from controller/view lifecycle slice
@@ -43,20 +46,33 @@ The controller/view lifecycle slice identified these unresolved compatibility pa
 - `docs-viewer-app-session.js` keeps `compatibilityBridge.state` because existing controllers still consume the broad state object.
 - Route workflow callbacks, search/bookmark route callback bundles, and management runtime adapter callbacks remain private handoffs until a later slice narrows complete controller families to domain and service inputs.
 
-No compatibility fields or lifecycle methods were removed in that slice because it was a documentation and lifecycle-inventory pass.
-That does not make the remaining paths acceptable as a long-term shape.
-This review must either remove them, create specific cleanup tasks for their removal, or rename the pattern as current architecture with a clear owner contract because it is not actually compatibility.
-No new compatibility scaffold was added.
+No compatibility fields or lifecycle methods were removed in that slice because it was a documentation and lifecycle-inventory pass. It was not a complete cleanup review. That does not make the remaining paths acceptable as a long-term shape. This review must either:
 
-Follow-up decisions to review here:
+- remove them,
+- create specific cleanup tasks in this document for their removal, or
+- rename the pattern as current architecture with a clear owner contract because it is not actually compatibility.
+
+Follow-up decisions to review and expand upon here:
 
 - When a future feature needs an info-panel view, first decide whether it is public metadata, manage metadata, local diagnostics, semantic/reference info, or another separately-shaped view contract.
 - When a future controller change touches broad state, narrow one complete controller family to explicit state-domain and service inputs rather than adding another route-runtime callback.
 
+### documentation
+
+Record any architecture/ownership changes in the durable owning reference doc, not only in this cleanup tracker.
+
+For this request, the default destinations are:
+
+- [Docs Viewer Runtime Boundary](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/docs-viewer-runtime-boundary.md) for runtime ownership, controller/view lifecycle, public/manage boundaries, service boundaries, and “this is current architecture” contracts.
+- [Docs Viewer Overview](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/docs-viewer-overview.md) for the concise app architecture story.
+- [Docs Viewer JavaScript Inventory](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/docs-viewer-javascript-inventory.md) for file-specific owner notes and “do not add X here” guidance.
+- A service/script-specific doc if the owner contract is server-side, endpoint, generated-read, or write-flow related.
+
+The cleanup tracker should then link to the durable section and mark the finding resolved. It should not be the only place where the owner contract lives.
+
 ### baseline verification set
 
-Run only the checks warranted by touched files.
-Expected cleanup verification candidates:
+Run only the checks warranted by touched files. Expected cleanup verification candidates:
 
 - JavaScript syntax checks for any runtime modules touched by cleanup.
 - Focused app-shell module smoke coverage when owner contracts, app handle shape, state domains, hosted-view lifecycle, or public/manage access contracts are reviewed or changed:

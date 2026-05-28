@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-0540924e53513d592f5ff934d7203219",
-    "generated_at_utc": "2026-05-26T16:26:15Z",
-    "count": 4
+    "version": "blake2b-9e2d54fcb1ec5cca6df5664bbcdf6dd0",
+    "generated_at_utc": "2026-05-28T15:39:31Z",
+    "count": 6
   },
   "entries": [
     {
@@ -81,6 +81,38 @@
         "21"
       ],
       "search_text": "index-space index space index workspace workspace 2026-05-21 2026 05 21"
+    },
+    {
+      "id": "azure",
+      "kind": "doc",
+      "title": "azure",
+      "href": "/docs/?scope=tmp&doc=azure",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "azure",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "azure 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "links",
+      "kind": "doc",
+      "title": "links",
+      "href": "/docs/?scope=tmp&doc=links",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "links",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "links 2026-05-28 2026 05 28"
     }
   ]
 }

@@ -9,6 +9,10 @@ sort_order: 100
 
 # tmp
 
+docs viewer config:
+
+how to update config through manage-mode
+equivalent to an app's 'settings' UI
 
 
 ---
@@ -19,14 +23,11 @@ need more
 
 ---
 
-we are working on site-request-docs-viewer-frontend-app-architecture.md, 
-please proceed with the tasks.
+we are working on site-request-docs-viewer-architecture-review-cleanup-tasks.md,
+please proceed with task 1.
 
----
 
-markdown editor
-- but not a conventional one, this will be focussed on converting words to semantic references.
-- to do this, need an info panel to show current tags
+
 
 ---
 
@@ -79,11 +80,5 @@ scripts:
 
 ./studio/services/catalogue/search/build_search.rb
 
-
----
-
-<https://developers.openai.com/codex/migrate?utm_campaign=ML_MIX_GWT_AW_codexnewsletter_OF_EX_MAY_18&utm_content=utm_content&utm_medium=email&utm_source=sendgrid&utm_term=utm_term>
-
-<https://developers.openai.com/codex/skills>
 
 ---
