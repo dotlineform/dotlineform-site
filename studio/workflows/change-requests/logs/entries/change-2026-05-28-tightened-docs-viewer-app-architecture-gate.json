@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-28-tightened-docs-viewer-app-architecture-gate",
+  "date": "2026-05-28",
+  "title": "Tightened Docs Viewer App Architecture Gate",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "workflow",
+    "docs-viewer"
+  ],
+  "summary": "Updated the Development Workflow Docs Viewer App Architecture Gate with strict rules from the app refactor cleanup: compatibility paths must be removed, renamed as current owner contracts, or tracked with explicit removal criteria before adjacent feature work proceeds.",
+  "source": {
+    "file": "docs-viewer/source/studio/development-workflow.md",
+    "archive": "current"
+  },
+  "subjects": [
+    "development-workflow",
+    "app-architecture",
+    "compatibility-cleanup"
+  ],
+  "related_docs": [
+    "development-workflow",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-overview",
+    "docs-viewer-javascript-inventory",
+    "docs-viewer"
+  ],
+  "related_files": [
+    "docs-viewer/source/studio/development-workflow.md"
+  ],
+  "effect": "Future Docs Viewer runtime and app-architecture slices now have concrete rules for app contexts, hosted-view safety, generated-data access, management write authority, and avoiding new feature ownership in the private app runtime coordinator.",
+  "verification": [
+    "rg scans confirmed vague prefer/temporary compatibility wording was replaced in development-workflow.md",
+    "git diff --check"
+  ]
+}

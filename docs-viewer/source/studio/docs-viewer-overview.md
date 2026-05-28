@@ -69,13 +69,13 @@ The viewer behavior starts from:
 
 - `docs-viewer/runtime/js/docs-viewer.js`
 
-The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the compatibility runtime.
-The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
+The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
+The private app runtime coordinator delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
 Current helper modules:
 
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index, generated-data runtime, and config-service creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
@@ -85,7 +85,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config, generated docs-log, and broken-links audit reports in management-capable contexts
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
-- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the compatibility runtime uses it to keep the management controller import gated behind management route access
+- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
 - `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
@@ -106,7 +106,7 @@ When a management-capable route shell has `data-generated-base-url` and that loc
 Local Studio uses this path because generated docs/search reads are served by the Python app rather than by Jekyll.
 Public/static builds leave `data-generated-base-url` blank, and the service context also strips any local generated-read service base URL from public read-only contexts, so `/library/` and `/analysis/` use generated JSON asset URLs directly without backend probes.
 The returned app handle is not a feature-module escape hatch: it does not expose broad app/session state, composition/session internals, management service handles, backend capability probes, the management lazy loader, or route workflow bridge methods.
-Management reload and selected-document refresh still use private callbacks inside the compatibility runtime and management controller context.
+Management reload and selected-document refresh still use private callbacks inside the app runtime coordinator and management controller context.
 
 ## Controller And View Lifecycle
 

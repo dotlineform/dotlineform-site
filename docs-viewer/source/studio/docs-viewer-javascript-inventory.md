@@ -19,7 +19,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Docs Viewer browser JavaScript files in this focused app-shell snapshot: 56
 - Files above target score 4: 14
-- General risk themes: compatibility runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the compatibility runtime.
+- General risk themes: private app runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the app runtime coordinator.
 
 | Score | Files |
 | ---: | ---: |
@@ -34,7 +34,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 | Docs rank | Full rank | File | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 1 | `docs-viewer/runtime/js/docs-viewer-app-runtime.js` | 2 | 2 | 1 | 1 | 6 | Compatibility Docs Viewer runtime coordination after route workflow and runtime-owner extraction; app state defaults, controller construction, config handoff, event binding, initial load sequencing, and returned runtime API remain. |
+| 1 | 1 | `docs-viewer/runtime/js/docs-viewer-app-runtime.js` | 2 | 2 | 1 | 1 | 6 | Private Docs Viewer runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain. |
 | 2 | 9 | `docs-viewer/runtime/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 3 | 15 | `docs-viewer/runtime/js/docs-viewer-management.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 4 | 18 | `docs-viewer/runtime/js/docs-viewer-bookmarks.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
@@ -82,7 +82,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 36 | 154 | `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index panel chrome renderer and projection applier. |
 | 37 | new | `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned document shell, read-only metadata chrome, and narrow document/search/recent projection applier. |
 | 38 | new | `docs-viewer/runtime/js/docs-viewer-app-context.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route context assembly from route config/access projection and mutable route-context projection. |
-| 39 | new | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned compatibility panel projection handoff for index state, current document/search/recent visibility, and the view-state skeleton. |
+| 39 | new | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned panel projection handoff for index state, current document/search/recent visibility, and the view-state skeleton. |
 | 40 | new | `docs-viewer/runtime/js/docs-viewer-route-config.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper. |
 | 41 | new | `docs-viewer/runtime/js/docs-viewer-access.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned static public/manage/manage-local access projection and hosted-view access check. |
 | 42 | new | `docs-viewer/runtime/js/docs-viewer-view-state.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index/document/info view-state skeleton and projection helper. |
@@ -106,25 +106,25 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: header-control composition moved to `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved control IDs.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
 - 2026-05-27 owner note: document shell composition moved to `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved document/meta/search-result IDs. The entry module still orchestrates route boot and passes document-shell refs to focused controllers.
-- 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; compatibility panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
+- 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
 - 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/document/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
 - 2026-05-27 owner note: info-panel chrome moved to `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, hosted-view lifecycle moved to `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, selected-document context projection moved to `docs-viewer/runtime/js/docs-viewer-view-context.js`, and metadata rendering moved to `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`. `docs-viewer.js` now passes explicit route/viewer inputs into the context helper and wires open/close events, but should not absorb panel DOM composition, lifecycle, context shaping, or metadata presentation.
-- 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. The compatibility runtime passes the rendered refs into the lazy management controller after app-shell initialization but still leaves management workflows and backend capability checks in the existing management modules.
+- 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. The private app runtime coordinator passes the rendered refs into the lazy management controller after app-shell initialization while management workflows and backend capability checks stay in the management modules.
 - 2026-05-27 owner note: app boot ownership moved to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, and route/document workflow ownership later moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`. `docs-viewer.js` should remain an import-and-start wrapper.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, broader panel-layout ownership, or management lazy-boundary hardening.
-- Future route/document workflow changes should extend `docs-viewer-route-workflow.js`, not add responsibility back to the entrypoint or compatibility runtime.
+- Future route/document workflow changes should extend `docs-viewer-route-workflow.js`, not add responsibility back to the entrypoint or app runtime coordinator.
 - Preserve `docs-viewer/runtime/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-boot.js`
 
 - Added 2026-05-27 as the focused app boot owner.
-- Keep this module limited to root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, boot failure status projection, and starting the compatibility runtime.
+- Keep this module limited to root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, boot failure status projection, and starting the app runtime coordinator.
 - Do not move route application, generated docs/search reads, search/recent state transitions, bookmark storage, report rendering, backend writes, or management capability checks into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
 
-- Added 2026-05-27 as the compatibility owner for the existing shared route/document workflow after the entrypoint became a wrapper.
-- Current risk score: 6 after the route/document workflow and compatibility-runtime owner extractions.
+- Added 2026-05-27 as the private runtime coordinator for the existing shared route/document workflow after the entrypoint became a wrapper.
+- Current risk score: 6 after the route/document workflow and runtime-owner extractions.
 - 2026-05-27 owner note: URL/query helpers, current-doc resolution, route application, index-load orchestration, payload-load orchestration, missing/error handoff, route-link handling, and popstate coordination moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`.
 - 2026-05-28 owner note: search/recent route command bundling is now `createDocsViewerSearchRouteCommands(...)`, and the search controller consumes explicit search/recent, document-index, selected-document, route-command, and pane-command inputs instead of the broad runtime state.
 - 2026-05-28 owner note: bookmark document-load command bundling is now `createDocsViewerBookmarkRouteCommands(...)`, and the bookmark controller consumes explicit bookmark, document-index, selected-document, search/recent, route-command, and search-reset command inputs instead of the broad runtime state.
@@ -142,7 +142,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing moved to `docs-viewer/runtime/js/docs-viewer-app-composition.js`.
 - 2026-05-28 owner note: the returned app handle was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`. Broad `state`, app-composition internals, app-session internals, the management lazy loader, and route workflow bridges are no longer returned; search/recent, bookmarks, startup index loading, and management reloads now consume the private route workflow command contract instead of one-off runtime wrappers.
 - 2026-05-28 owner note: `compatibilityBridge` was removed from app-session, and `composition.state` was removed from app-composition. Focused tests now assert named state-domain and composition owner contracts rather than temporary compatibility aliases.
-- 2026-05-28 lifecycle note: this file remains the compatibility coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle. Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
+- 2026-05-28 lifecycle note: this file remains the private app coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle. Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
 - This module now remains the runtime coordinator for focused controller construction, config handoff, focused-controller callback handoff, event handler definitions, private management/startup callback handoff, and the small returned app handle.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
 
@@ -153,7 +153,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 lifecycle note: this module owns startup phase sequencing and authority records, including the public/manage split between browser route/config context, browser-safe config assets, generated reads, browser storage, management capability checks, and management write endpoints.
 - Keep this module limited to runtime defaults, foundational owner creation, startup phase records, startup authority records, public/manage startup gating, and initial startup sequence orchestration.
 - Do not move rendering, validation, generated-read internals, config normalization, bookmark storage, management writes, report behavior, or controller-specific UI behavior into it.
-- The compatibility runtime still constructs focused controllers until a later slice narrows controller families away from function-scoped bridge callbacks.
+- The private app runtime coordinator still constructs focused controllers until a later slice narrows remaining controller families away from function-scoped bridge callbacks.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-session.js`
 
@@ -262,7 +262,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current risk score: 6.
 - 2026-05-28 owner note: bookmark route command bundling moved into this focused owner through `createDocsViewerBookmarkRouteCommands(...)`. The controller now consumes explicit bookmark, document-index, selected-document, search/recent, route-command, and search-reset command inputs for bookmark rendering and document-load handoff when opening a bookmark.
 - Keep this module focused on bookmark loading, IndexedDB support fallback, list/toggle rendering, selected-document bookmark UI projection, edit state, pending focus, bookmark events, route command consumption, search-reset command consumption, and status-pill fallback callbacks.
-- Do not move low-level history construction, document payload rendering, info-panel lifecycle, management writes, or future bookmark grouping/sync/export features into the compatibility runtime.
+- Do not move low-level history construction, document payload rendering, info-panel lifecycle, management writes, or future bookmark grouping/sync/export features into the app runtime coordinator.
 
 ### `docs-viewer/runtime/js/docs-viewer-document-controller.js`
 
@@ -324,7 +324,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 ### `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
 
-- Added 2026-05-27 as the focused compatibility panel projection owner for the app shell.
+- Added 2026-05-27 as the focused panel projection owner for the app shell.
+- 2026-05-28 follow-up note: this module still passes the legacy sidebar local-storage key into the index-panel state helper so old sidebar state can migrate to the current index-panel storage key. Cleanup tracker `FU-1` owns retiring that compatibility fence when the migration window is intentionally closed.
 - Keep this module limited to index panel state storage/projection, current document/search/recent/results-status projection handoff, info-panel visibility/layout projection, and delegation to the view-state skeleton.
 - Do not add toolbar controls, hosted-view registration, document payload rendering, search result rendering, or management action behavior to it.
 
@@ -352,7 +353,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the focused hosted-view registration shape for ordinary repo JavaScript modules.
 - 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
 - 2026-05-28 lifecycle note: hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
-- 2026-05-28 owner note: built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. `createDocsViewerCompatibilityHostedViews()` remains only as a temporary alias for older callers.
+- 2026-05-28 owner note: built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
 - Keep this module limited to records, lifecycle method names, built-in hosted-view records, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
 - Do not turn it into a plugin system, dependency loader, panel toolbar renderer, or third-party visualization owner.
 

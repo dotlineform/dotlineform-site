@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-frontend-app-architecture
 title: Docs Viewer Front-End App Architecture Request
 added_date: 2026-05-28
 last_updated: 2026-05-28
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 sort_order: 14180
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- planned
+- done
 
 This request is the parent policy and benefits analysis for the next Docs Viewer frontend-app architecture work.
 Implementation should happen in child task documents, following the pattern used by the closed [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell).
@@ -248,9 +248,9 @@ Candidate owner:
 
 Implemented first slice 2026-05-28:
 
-- `docs-viewer/runtime/js/docs-viewer-app-session.js` creates the app session, broad compatibility state, named state-domain facades, and the explicit temporary compatibility bridge.
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` now imports the app-session owner, passes `appSession.state` to existing controllers, updates the route-session domain when route globals change, and returns `appSession` for future slices.
-- Existing controllers intentionally still receive the broad state object until a later slice narrows one complete controller family to domain inputs.
+- `docs-viewer/runtime/js/docs-viewer-app-session.js` creates the app session, runtime-internal state object, named state-domain facades, and public/manage route-session projection.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` imports the app-session owner, uses named domains for narrowed controllers, and updates the route-session domain when route globals change.
+- The removed `compatibilityBridge` and app-composition state aliases are no longer part of the runtime contract; any remaining broad state use is runtime-internal controller handoff debt that should shrink only through complete owner slices.
 
 Candidate domains:
 
@@ -345,7 +345,7 @@ Backend/service handling:
 Implemented third slice 2026-05-28:
 
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` now owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing.
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` remains the compatibility coordinator for focused controller construction and callback handoff because existing controllers still depend on function-scoped bridge callbacks. It now delegates foundational app composition and startup phase sequencing to the composition owner.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` remains the private app runtime coordinator for focused controller construction and private callback handoff where controller families still require function-scoped wiring. It delegates foundational app composition and startup phase sequencing to the composition owner.
 - Public startup records omit management initialization, management backend surfaces, local generated-read service base URLs, and import-open-on-load. Manage startup records keep management initialization and import-open-on-load gated by management route access plus the current `mode=manage` route state.
 
 ### 4. Runtime API Shrink
@@ -477,6 +477,14 @@ Backend/service handling:
 - record temporary compatibility layers and their removal task rather than leaving them implicit
 - keep portable docs clear about which pieces are public static app contract and which require local management services
 
+Implemented final cleanup 2026-05-28:
+
+- The review removed the remaining hosted-view compatibility factory alias and kept built-in hosted-view records behind `createDocsViewerBuiltInHostedViews()`.
+- Durable Docs Viewer docs now describe `docs-viewer-app-runtime.js` as the private app runtime coordinator with a named owner contract rather than an unresolved compatibility surface.
+- Public-safe hosted-view constraints and manage-only/write-authority constraints were rechecked against service-context, hosted-view context, management client, and server-side management endpoint boundaries.
+- The only newly identified compatibility fence outside the completed structural slices is the legacy sidebar local-storage migration in the index-panel owner; it is tracked in the cleanup task as a follow-on with removal criteria.
+- Structured docs-log entry `change-2026-05-28-closed-docs-viewer-architecture-cleanup` records the cleanup closeout.
+
 ## Verification Expectations
 
 Each structural slice should run only the checks warranted by touched files, but the baseline for app architecture work is:
@@ -498,4 +506,4 @@ This request is complete when:
 - broad shared state is replaced or hidden behind named state domains where it matters
 - generated/config/backend service boundaries are explicit
 - public and manage contexts are first-class and tested
-- future source editor, semantic-reference, activity, visualization, and portable fixture work can attach to named app contracts without expanding a compatibility runtime
+- future source editor, semantic-reference, activity, visualization, and portable fixture work can attach to named app contracts without expanding the private app runtime coordinator

@@ -160,10 +160,6 @@ export function createDocsViewerBuiltInHostedViews() {
   ];
 }
 
-export function createDocsViewerCompatibilityHostedViews() {
-  return createDocsViewerBuiltInHostedViews();
-}
-
 export function registerDocsViewerHostedViews(registry, records) {
   var target = registry || createDocsViewerHostedViewRegistry();
   (records || []).forEach(function (record) {

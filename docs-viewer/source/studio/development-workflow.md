@@ -38,7 +38,7 @@ Use the smallest owning area that explains the change:
 - Generated/runtime data contracts: [Data Models](/docs/?scope=studio&doc=data-models)
 - Checked-in config: [Config](/docs/?scope=studio&doc=config)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- Docs Viewer frontend-app architecture work: [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture)
+- Docs Viewer frontend-app architecture work: [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
 - Scripts, local services, and command behavior: [Scripts](/docs/?scope=studio&doc=scripts)
 - Source tree ownership or source/public boundary behavior: [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
@@ -80,8 +80,9 @@ For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
 For browser JavaScript maintenance-risk work, use [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
-For Docs Viewer frontend-app architecture work, start with [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture) and create child task trackers for implementation slices.
-Those slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
+For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+If the work needs a task tracker, create one from the current durable owner docs rather than from archived request history.
+Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
 ### JavaScript Maintenance Gate
 
@@ -138,6 +139,8 @@ Useful checks and follow-through:
 ### Docs Viewer App Architecture Gate
 
 Use this gate before changing Docs Viewer runtime/app architecture, especially work related to app session, state domains, service adapters, app composition, public/manage context, controller lifecycle, panels, hosted views, or management/backend contracts.
+The current architecture is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+Use durable owner docs for current rules and follow-up notes; archived request documents are historical context only.
 
 Before editing, answer:
 
@@ -145,17 +148,24 @@ Before editing, answer:
 - Which app context, state domain, service adapter, controller, or view owns it after the change?
 - What backend capability, generated-data contract, service endpoint, browser storage contract, or local-only read/write boundary does it consume?
 - Is the backend/service contract already clean enough, or does the child task need paired backend/service cleanup?
-- What compatibility path is temporary, how is it named, and what later slice removes it?
+- Did the review find a compatibility path, broad callback, broad state dependency, legacy storage migration, or temporary alias? If yes, remove it in this slice when the owner contract is clear. If removal is not safe, stop and create a named follow-up task with owner, removal/narrowing target, reason it cannot be removed now, and verification requirement before adding adjacent feature behavior.
 - How does the slice preserve public read-only behavior without management assets or backend capability probes?
 - How does the slice preserve manage-mode backend authority for writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data?
 
 Default rules:
 
+- Compatibility paths are not an acceptable end state. A slice that finds one must remove it, rename it as a current owner contract because it is not actually compatibility, or create a named blocker/follow-up with removal criteria in the owning task tracker.
+- Tests, smoke fixtures, helper convenience, or route config compatibility are not reasons to keep an old runtime field, alias, broad callback, or legacy handoff. Retarget tests and helpers to the current owner contract before or with runtime cleanup.
 - Do not introduce frontend service adapters that merely hide unclear backend ownership.
 - Do not move browser code closer to write authority; writes remain behind named backend endpoints with server-side validation.
 - Do not let route config imply backend write capability. Static route/app context and backend capability truth are separate.
-- Prefer explicit app context and view-model structures over repeated local checks against broad state flags.
-- If one UI slot has public-safe and manage-only meanings, model those as separate or separately-shaped view contracts rather than one implementation with scattered mode checks.
+- Use explicit app context, state-domain, service-adapter, controller, hosted-view context, or view-model structures. Do not add repeated local checks against broad state flags when a named owner contract can provide the needed shape.
+- If one UI slot has public-safe and manage-only meanings, model those as separate or separately-shaped view contracts. Do not implement the slot as one broad view with scattered mode checks.
+- Public-safe hosted views must receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from the hosted-view context, and must not receive management services, backend probes, local generated-read service base URLs, write-capable handles, or management assets.
+- Manage-only hosted views may receive explicit management service or capability inputs, but visibility, registration, route config, or toolbar availability must not imply write authority.
+- Feature-facing generated reads must go through `docs-viewer-generated-data-runtime.js`; direct `docs-viewer-data.js` imports stay limited to the generated-data runtime and config service owners.
+- Management writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data must go through `docs-viewer-management-client.js` and server-side management endpoints with validation.
+- Do not add new feature lifecycle ownership to `docs-viewer-app-runtime.js`. It is the private app runtime coordinator for focused controller construction, event wiring, route-global updates, private management/startup callbacks, and the small returned app handle.
 - Keep implementation details in child task documents; keep parent requests as policy, benefits, and slice-framing records.
 
 ## 4. Implement In A Focused Slice
