@@ -246,6 +246,12 @@ Candidate owner:
 
 - `docs-viewer/runtime/js/docs-viewer-app-session.js`
 
+Implemented first slice 2026-05-28:
+
+- `docs-viewer/runtime/js/docs-viewer-app-session.js` creates the app session, broad compatibility state, named state-domain facades, and the explicit temporary compatibility bridge.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` now imports the app-session owner, passes `appSession.state` to existing controllers, updates the route-session domain when route globals change, and returns `appSession` for future slices.
+- Existing controllers intentionally still receive the broad state object until a later slice narrows one complete controller family to domain inputs.
+
 Candidate domains:
 
 - route/session context

@@ -93,22 +93,103 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory the current broad runtime `state` object in `docs-viewer/runtime/js/docs-viewer-app-runtime.js`. Group each field into a candidate state domain and record which controllers/modules read or mutate it. Deliverable: short inventory note in this tracker. |
-| 2 | planned | Classify each candidate state domain by source of authority: browser-only, generated static data, local generated-read service, browser storage, management backend capability, or management backend write flow. Deliverable: backend/service contract note in this tracker. |
-| 3 | planned | Define the target app-session owner name and exported contract. Prefer `docs-viewer/runtime/js/docs-viewer-app-session.js` unless inventory shows a better name. The contract should create named domains without forcing every controller to change in one slice. |
-| 4 | planned | Decide which state domains move in this first slice and which remain temporarily bridged through the existing broad state object. Avoid moving a domain unless it reduces broad state access, clarifies authority, or creates a useful facade for a later slice. |
-| 5 | planned | Define compatibility limits for any temporary bridge. Name what remains in `docs-viewer-app-runtime.js`, why it remains, which child slice should remove it, and what tests guard the current boundary. |
-| 6 | planned | Implement app-session/state-domain creation only after the inventory and target contract are clear. Preserve existing object identity where controllers still require it; do not break route/search/bookmark/document/management owners in the same slice. |
-| 7 | planned | Move state defaults into the app-session owner where that is safe. Keep constants and text config in their existing owning config/text modules unless the inventory shows a clear state-domain reason to move them. |
-| 8 | planned | Narrow controller inputs only where the state domain provides an explicit facade and the affected controller contract remains readable. Do not perform broad controller rewrites in this first slice. |
-| 9 | planned | Preserve public read-only behavior: route boot, document rendering, search/recent, bookmarks, reports, metadata info, and management omission must remain unchanged. Public routes must not gain backend capability probes or management-only assets. |
-| 10 | planned | Preserve manage-mode behavior: generated-data reads, management capability checks, import-open-on-load, metadata edit flow, context menu, reports, bookmarks, info panel, search/recent, status pills, route history, and backend write authority must continue through the existing management/service flow. |
-| 11 | planned | Add or extend focused smoke coverage for app-session/state-domain contracts. Cover creation, public/manage context separation, state-domain defaults, and any narrowed controller input contract where practical. |
-| 12 | planned | Run management modal/service smoke checks if management state, capability state, generated reads, config handoff, status projection, info panel, route state, or initial load sequencing changes. |
-| 13 | planned | Run public read-only checks if public app context, generated reads, document visibility, panel/info projection, search/recent, bookmarks, reports, or public omission changes. |
-| 14 | planned | Review touched runtime files for new compatibility scaffolding. Deliverable: short cleanup note listing temporary bridges kept, bridges removed, and why any bridge is acceptable. |
-| 15 | planned | Update owning docs after implementation: this tracker, Docs Viewer Front-End App Architecture Request, Docs Viewer runtime boundary, Docs Viewer overview, Docs Viewer JavaScript inventory, and portable files only if runtime copy sets change. |
-| 16 | planned | Create or update a structured docs-log entry when the implementation lands and record the entry id in this tracker. |
+| 1 | done | Inventory the current broad runtime `state` object in `docs-viewer/runtime/js/docs-viewer-app-runtime.js`. Group each field into a candidate state domain and record which controllers/modules read or mutate it. Deliverable: short inventory note in this tracker. |
+| 2 | done | Classify each candidate state domain by source of authority: browser-only, generated static data, local generated-read service, browser storage, management backend capability, or management backend write flow. Deliverable: backend/service contract note in this tracker. |
+| 3 | done | Define the target app-session owner name and exported contract. Prefer `docs-viewer/runtime/js/docs-viewer-app-session.js` unless inventory shows a better name. The contract should create named domains without forcing every controller to change in one slice. |
+| 4 | done | Decide which state domains move in this first slice and which remain temporarily bridged through the existing broad state object. Avoid moving a domain unless it reduces broad state access, clarifies authority, or creates a useful facade for a later slice. |
+| 5 | done | Define compatibility limits for any temporary bridge. Name what remains in `docs-viewer-app-runtime.js`, why it remains, which child slice should remove it, and what tests guard the current boundary. |
+| 6 | done | Implement app-session/state-domain creation only after the inventory and target contract are clear. Preserve existing object identity where controllers still require it; do not break route/search/bookmark/document/management owners in the same slice. |
+| 7 | done | Move state defaults into the app-session owner where that is safe. Keep constants and text config in their existing owning config/text modules unless the inventory shows a clear state-domain reason to move them. |
+| 8 | done | Narrow controller inputs only where the state domain provides an explicit facade and the affected controller contract remains readable. Do not perform broad controller rewrites in this first slice. |
+| 9 | done | Preserve public read-only behavior: route boot, document rendering, search/recent, bookmarks, reports, metadata info, and management omission must remain unchanged. Public routes must not gain backend capability probes or management-only assets. |
+| 10 | done | Preserve manage-mode behavior: generated-data reads, management capability checks, import-open-on-load, metadata edit flow, context menu, reports, bookmarks, info panel, search/recent, status pills, route history, and backend write authority must continue through the existing management/service flow. |
+| 11 | done | Add or extend focused smoke coverage for app-session/state-domain contracts. Cover creation, public/manage context separation, state-domain defaults, and any narrowed controller input contract where practical. |
+| 12 | done | Run management modal/service smoke checks if management state, capability state, generated reads, config handoff, status projection, info panel, route state, or initial load sequencing changes. |
+| 13 | done | Run public read-only checks if public app context, generated reads, document visibility, panel/info projection, search/recent, bookmarks, reports, or public omission changes. |
+| 14 | done | Review touched runtime files for new compatibility scaffolding. Deliverable: short cleanup note listing temporary bridges kept, bridges removed, and why any bridge is acceptable. |
+| 15 | done | Update owning docs after implementation: this tracker, Docs Viewer Front-End App Architecture Request, Docs Viewer runtime boundary, Docs Viewer overview, Docs Viewer JavaScript inventory, and portable files only if runtime copy sets change. |
+| 16 | done | Create or update a structured docs-log entry when the implementation lands and record the entry id in this tracker. |
+
+## Implementation Notes
+
+### State Inventory
+
+`docs-viewer/runtime/js/docs-viewer-app-session.js` now owns app-session creation and the state defaults previously inline in `docs-viewer/runtime/js/docs-viewer-app-runtime.js`.
+The session creates the existing broad compatibility state object plus named domain facades.
+The facades expose only their declared fields through `get`, `set`, direct property accessors, and `snapshot`; unknown-field writes are rejected so a domain cannot mutate unrelated state accidentally.
+
+Current domain grouping:
+
+| domain | fields | current readers/mutators |
+| --- | --- | --- |
+| route/session | route context and access projection, not broad state fields | `docs-viewer-app-runtime.js`, `docs-viewer-app-context.js`, route config/access helpers, config route-global handoff |
+| scope/config | docs viewer config load flags/promises, scope configs/maps, default scope, viewer config flags/promises, UI statuses, recent limit, show-updated option, management text | config controller, document controller, management context, document-index status projection, sidebar metadata |
+| document index | all docs/maps, visible docs/maps, children map, expanded ids, hidden/manage-only/loadability sets, show-hidden/show-updated flags, status map | route workflow, document-index state owner, sidebar renderer, search controller, bookmark controller, document controller, info-panel controller |
+| selected document | selected doc id, payload cache, request id, reload nonce and expected doc id | route workflow, document controller, info panel, bookmarks, generated-data runtime |
+| search/recent | search index entries, load flag/promise, query, visible count, debounce id, search-route flag, recent-mode flag, recent limit | search controller, route workflow, bookmarks, document controller, runtime debounce/recent helpers |
+| bookmarks | bookmark records, load/support flags, edit/focus keys | bookmark controller and selected-document bookmark UI |
+| panel/view | index panel state, hosted-view registry, projected view state, expanded ids | panel layout, sidebar renderer, info-panel controller, hosted-view modules |
+| management | mode, availability/check/busy/capability flags, capability check id, messages, status ownership, metadata edit focus, status menu, management text | lazy management context, generated-data runtime, management controller, sidebar/status-pill rendering, route workflow |
+| generated data | generated-read capability flags/promise, management capabilities, reload nonce and expected doc id | generated-data runtime, route workflow, document controller, search controller |
+| busy/status | pending busy count, management status/message ownership | runtime busy/status helpers, management controller status handoff |
+
+### Authority Classification
+
+- Route/session context is browser URL plus browser-safe route-config authority. It can project public/manage intent, but it is not backend write authority.
+- Scope/config and document-index state are generated static data by default. In local manage mode, generated docs/search reads may come through the local generated-read service when capability checks allow it.
+- Selected-document payload state and search/recent state are generated static data or local generated-read service data plus browser-only transient state such as current query and debounce.
+- Bookmark state is browser storage authority through IndexedDB and remains local to the browser.
+- Panel/view and busy/status state are browser-only UI state.
+- Management state combines browser UI state with management backend capability and write-flow state. Visibility or mode flags do not grant write authority; backend endpoints and server-side validation remain the source of truth.
+- Generated-data capability state is local generated-read service state. It may cache backend-advertised capabilities but does not grant write authority.
+
+### App-Session Contract
+
+The target owner is `docs-viewer/runtime/js/docs-viewer-app-session.js`.
+It exports `createDocsViewerAppSession(options)`, returning:
+
+- `state`: the existing compatibility state object consumed by current controllers
+- `domains`: named domain facades for route/session, scope/config, document index, selected document, search/recent, bookmarks, panel/view, management, generated data, and busy/status
+- `compatibilityBridge`: a named bridge containing the same state object and the reason it remains
+
+`docs-viewer/runtime/js/docs-viewer-app-runtime.js` now imports this owner, creates the session after route context, hosted views, and panel layout exist, passes `appSession.state` into existing controllers, updates `domains.routeSession` when route globals change, and returns `appSession` from the runtime API.
+
+### First-Slice Move And Bridge Limits
+
+Moved in this slice:
+
+- broad state default construction
+- management text defaults that were already broad runtime state defaults
+- hosted-view, index-panel, and view-state default handoff
+- public/manage route-session projection into an explicit domain
+- focused smoke coverage for domain names, authority strings, defaults, facade mutation, route-session updates, and compatibility state identity
+
+Kept as temporary compatibility bridge:
+
+- existing controller inputs still receive the broad `state` object
+- `docs-viewer-app-runtime.js` still coordinates controller construction, event binding, initial load sequencing, config handoff, and the returned compatibility API
+- management/backend capability state remains in the shared state object because management, generated-data reads, and status projection still share those fields
+
+The bridge is acceptable for this slice because every existing focused owner keeps object identity and behavior while new work can target named domains.
+The next child slice should narrow one complete controller family to domain inputs, starting with a low-risk family such as busy/status or search/recent, and should remove that family's broad-state dependency from the runtime handoff once the controller contract is clear.
+
+No source editor, semantic-reference, visualization, plugin, route shell, generated schema, or backend-write behavior was added.
+
+### Verification
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-boot.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-session.js`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+
+Structured docs-log entry:
+
+- `change-2026-05-28-docs-viewer-app-session-state-domains`
 
 The closeout for this slice should confirm:
 

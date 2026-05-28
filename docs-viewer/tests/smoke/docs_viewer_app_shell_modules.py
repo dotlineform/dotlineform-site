@@ -784,6 +784,101 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
         raise AssertionError(f"public app boot context contract failed: {result!r}")
 
 
+def assert_app_session_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-app-session.js');
+            const panelLayout = {
+                indexPanelState: () => ({ expanded: false, source: 'stub' }),
+                projectViewState: () => ({ document: { mode: 'document' }, info: { open: false } })
+            };
+            const routeContext = {
+                routeConfig: { routeId: 'analysis-public' },
+                access: {
+                    publicReadOnly: true,
+                    canLoadManagementUi: false
+                }
+            };
+            const session = module.createDocsViewerAppSession({
+                defaultRecentLimit: 12,
+                hostedViewRegistry: { registry: true },
+                panelLayout,
+                routeContext,
+                searchBatchSize: 25,
+                window: {}
+            });
+            session.domains.searchRecent.searchQuery = 'metadata';
+            session.domains.bookmarks.set('bookmarksLoaded', true);
+            session.domains.routeSession.updateRouteContext({
+                routeConfig: { routeId: 'docs-manage' },
+                access: {
+                    publicReadOnly: false,
+                    canLoadManagementUi: true
+                }
+            });
+            const unknownSet = session.domains.bookmarks.set('searchQuery', 'leak');
+            return {
+                compatibilitySameState: session.compatibilityBridge.state === session.state,
+                bridgeName: session.compatibilityBridge.name,
+                domainNames: Object.keys(session.domains).sort(),
+                searchAuthority: session.domains.searchRecent.authority,
+                managementAuthority: session.domains.management.authority,
+                searchQuery: session.state.searchQuery,
+                bookmarksLoaded: session.state.bookmarksLoaded,
+                unknownSet,
+                leakedSearchQuery: session.state.searchQuery,
+                routePublicReadOnly: session.domains.routeSession.publicReadOnly,
+                routeCanLoadManagementUi: session.domains.routeSession.canLoadManagementUi,
+                searchVisibleCount: session.state.searchVisibleCount,
+                recentLimit: session.state.recentLimit,
+                bookmarkSupport: session.state.bookmarkSupport,
+                hostedViewsSameRef: session.state.hostedViews.registry === true,
+                indexPanelSource: session.state.indexPanelState.source,
+                viewStateInfoOpen: session.state.viewState.info.open,
+                defaultManagementText: session.state.managementText.copyLinkLabel,
+                docHiddenEmoji: session.state.managementText.docHiddenEmoji,
+                documentIndexFields: session.domains.documentIndex.fields.slice(0, 3)
+            };
+        }"""
+    )
+    expected_domain_names = [
+        "bookmarks",
+        "busyStatus",
+        "documentIndex",
+        "generatedData",
+        "management",
+        "panelView",
+        "routeSession",
+        "scopeConfig",
+        "searchRecent",
+        "selectedDocument",
+    ]
+    if result["compatibilitySameState"] is not True or result["bridgeName"] != "runtime-state-compatibility":
+        raise AssertionError(f"app session compatibility bridge failed: {result!r}")
+    if result["domainNames"] != expected_domain_names:
+        raise AssertionError(f"app session domain names changed unexpectedly: {result!r}")
+    if result["searchAuthority"] != "generated static data or local generated-read service plus browser-only query state":
+        raise AssertionError(f"app session search authority changed: {result!r}")
+    if result["managementAuthority"] != "management backend capability and write flow":
+        raise AssertionError(f"app session management authority changed: {result!r}")
+    if result["searchQuery"] != "metadata" or result["bookmarksLoaded"] is not True:
+        raise AssertionError(f"app session domain facade did not mutate shared state: {result!r}")
+    if result["unknownSet"] is not False or result["leakedSearchQuery"] != "metadata":
+        raise AssertionError(f"app session domain facade allowed cross-domain mutation: {result!r}")
+    if result["routePublicReadOnly"] is not False or result["routeCanLoadManagementUi"] is not True:
+        raise AssertionError(f"app session route context update failed: {result!r}")
+    if result["searchVisibleCount"] != 25 or result["recentLimit"] != 12:
+        raise AssertionError(f"app session defaults changed unexpectedly: {result!r}")
+    if result["bookmarkSupport"] is not False or result["hostedViewsSameRef"] is not True:
+        raise AssertionError(f"app session support/hosted view defaults failed: {result!r}")
+    if result["indexPanelSource"] != "stub" or result["viewStateInfoOpen"] is not False:
+        raise AssertionError(f"app session panel defaults failed: {result!r}")
+    if result["defaultManagementText"] != "Copy Link" or result["docHiddenEmoji"] != "🚫":
+        raise AssertionError(f"app session management text defaults changed: {result!r}")
+    if result["documentIndexFields"] != ["allDocs", "allDocsById", "docs"]:
+        raise AssertionError(f"app session document index domain fields changed: {result!r}")
+
+
 def assert_app_boot_management_context_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2701,6 +2796,7 @@ def main() -> int:
             assert_route_config_explicit_and_access_projection(page)
             assert_route_config_inline_and_malformed_fallback(page)
             assert_route_config_registry_resolution(page)
+            assert_app_session_contract(page)
             assert_app_boot_public_context_contract(page)
             assert_app_boot_management_context_contract(page)
             assert_app_boot_start_is_single_start(page)

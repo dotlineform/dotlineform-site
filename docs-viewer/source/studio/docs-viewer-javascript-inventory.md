@@ -17,7 +17,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 51
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 52
 - Files above target score 4: 14
 - General risk themes: compatibility runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the compatibility runtime.
 
@@ -28,7 +28,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 7 |
 | 5 | 7 |
-| 4 | 37 |
+| 4 | 38 |
 
 ## Current Priorities
 
@@ -88,7 +88,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
 | 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
 | 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
-| 50 | new | `docs-viewer/runtime/js/docs-viewer.js` | 1 | 1 | 1 | 1 | 4 | Stable Docs Viewer entrypoint wrapper that imports and starts the app boot owner. |
+| 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge. |
+| 51 | new | `docs-viewer/runtime/js/docs-viewer.js` | 1 | 1 | 1 | 1 | 4 | Stable Docs Viewer entrypoint wrapper that imports and starts the app boot owner. |
 
 ## Follow-Up Notes
 
@@ -126,8 +127,17 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
 - 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
-- This module now remains the runtime coordinator for app state defaults, controller construction, config handoff, focused-controller callback handoff, event binding, initial load sequencing, and the returned compatibility API.
+- 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
+- This module now remains the runtime coordinator for app-session creation, controller construction, config handoff, focused-controller callback handoff, event binding, initial load sequencing, and the returned compatibility API.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
+
+### `docs-viewer/runtime/js/docs-viewer-app-session.js`
+
+- Added 2026-05-28 as the app-session and state-domain owner.
+- Current risk score: 4.
+- Keep this module limited to app-session creation, state defaults, named domain facades, route-session projection, and the explicit temporary compatibility state bridge.
+- Do not move controller construction, event binding, generated reads, URL history, document rendering, bookmark persistence, or management writes into it.
+- Future slices should narrow complete controller families to the relevant domain facade and remove their broad-state dependency from runtime handoff.
 
 ### `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
 

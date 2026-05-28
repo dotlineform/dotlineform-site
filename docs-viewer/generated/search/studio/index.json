@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9c9d0d8bc1330a448fd87d3d0cfe391b",
-    "generated_at_utc": "2026-05-28T10:25:21Z",
+    "version": "blake2b-ff84194cb37939b58a765ee6a580bfc9",
+    "generated_at_utc": "2026-05-28T10:51:54Z",
     "count": 213
   },
   "entries": [
@@ -2258,19 +2258,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-27",
-      "display_meta": "2026-05-27",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-27 2026 05 27"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-28 2026 05 28"
     },
     {
       "id": "docs-viewer-media-handling",

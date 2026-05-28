@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 parent_id: ""
 sort_order: 5000
 viewable: true
@@ -25,7 +25,8 @@ The current implementation uses:
 - a browser-safe route-config registry in `docs-viewer/config/routes/docs-viewer-routes.json`, with route shells carrying only route id and route-config URL as boot context
 - one shared runtime entry module in `docs-viewer/runtime/js/docs-viewer.js`, which delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`
 - app-shell-owned boot orchestration, route config, access projection, shell refs, header, index panel shell, document shell, info panel shell, management shell, view-state skeleton, selected-document hosted-view context, compatibility panel projection, hosted-view registration, info-panel hosted-view lifecycle, and management action coordination in `docs-viewer/runtime/js/docs-viewer-app-boot.js`, `docs-viewer/runtime/js/docs-viewer-app-shell.js`, `docs-viewer/runtime/js/docs-viewer-app-context.js`, `docs-viewer/runtime/js/docs-viewer-route-config.js`, `docs-viewer/runtime/js/docs-viewer-access.js`, `docs-viewer/runtime/js/docs-viewer-view-state.js`, `docs-viewer/runtime/js/docs-viewer-view-context.js`, `docs-viewer/runtime/js/docs-viewer-panel-layout.js`, `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, and `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, with header controls rendered by `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, index panel chrome rendered by `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, document shell chrome rendered by `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, info panel chrome rendered by `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, read-only metadata info rendered by `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`, management-only action markup rendered by `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`, and management-only context/menu/modal hosts rendered by `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`
-- compatibility runtime wiring in `docs-viewer/runtime/js/docs-viewer-app-runtime.js` for app state, controller construction, config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, panel/info updates, generated-data capability checks, and lazy management loading
+- app-session and state-domain creation in `docs-viewer/runtime/js/docs-viewer-app-session.js`, with a temporary compatibility state bridge consumed by existing controllers
+- compatibility runtime wiring in `docs-viewer/runtime/js/docs-viewer-app-runtime.js` for app-session creation, controller construction, config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, panel/info updates, generated-data capability checks, and lazy management loading
 - route/document workflow ownership in `docs-viewer/runtime/js/docs-viewer-route-workflow.js` for URL/query helpers, current-doc resolution, route application, document index load orchestration, document payload load orchestration, canonical URL correction, route-link handling, and popstate coordination
 - search/recent controller ownership in `docs-viewer/runtime/js/docs-viewer-search-controller.js` for search index loading, result/recent rendering, debounce and more-results behavior, route callback consumption, and pane projection requests
 - bookmark controller ownership in `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark loading, list/toggle rendering, selected-document bookmark UI projection, edit state, bookmark events, and route callback consumption

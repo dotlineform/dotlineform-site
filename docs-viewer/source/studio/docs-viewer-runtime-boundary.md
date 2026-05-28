@@ -35,7 +35,8 @@ Current shared implementation:
 
 - `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for app state defaults, controller construction, initial config handoff, event binding, initial load sequencing, and the returned runtime API
+- `docs-viewer/runtime/js/docs-viewer-app-session.js` as the app-session owner for state default creation, named state-domain facades, public/manage route-session projection, and the temporary compatibility state bridge used by existing controllers
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for app-session creation, controller construction, initial config handoff, event binding, initial load sequencing, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, and popstate coordination
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, and generated-search read capability checks
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` for document visibility/loadability projection, hidden/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection

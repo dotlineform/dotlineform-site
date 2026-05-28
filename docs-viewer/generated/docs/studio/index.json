@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T10:29:47Z",
+  "generated_at": "2026-05-28T10:54:24Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -162,7 +162,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 12532
+      "content_text_length": 12807
     },
     {
       "scope": "studio",
@@ -1090,7 +1090,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 10922
+      "content_text_length": 10972
     },
     {
       "scope": "studio",
@@ -1444,7 +1444,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "",
       "sort_order": 5000,
       "hidden": false,
@@ -1452,7 +1452,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 9131
+      "content_text_length": 9312
     },
     {
       "scope": "studio",
@@ -1937,7 +1937,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 30016,
+      "content_text_length": 31167,
       "ui_status": "review"
     },
     {
@@ -2839,7 +2839,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 13910
+      "content_text_length": 14157
     },
     {
       "scope": "studio",
@@ -2946,7 +2946,7 @@
       "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
-      "content_text_length": 19397,
+      "content_text_length": 19997,
       "ui_status": "in-progress"
     },
     {
@@ -2962,7 +2962,7 @@
       "source_path": "site-request-docs-viewer-app-session-state-domains-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-session-state-domains-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-session-state-domains-tasks.json",
-      "content_text_length": 10400,
+      "content_text_length": 17262,
       "ui_status": "in-progress"
     },
     {
