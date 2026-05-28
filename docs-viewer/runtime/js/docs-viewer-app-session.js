@@ -231,6 +231,12 @@ function createStateDomains(state, settings) {
       authority: "route config and current browser URL",
       routeContext: routeContext,
       accessProjection: accessProjection,
+      get managementMode() {
+        return Boolean(state.managementMode);
+      },
+      set managementMode(value) {
+        state.managementMode = Boolean(value);
+      },
       publicReadOnly: Boolean(accessProjection.publicReadOnly),
       canLoadManagementUi: Boolean(accessProjection.canLoadManagementUi),
       updateRouteContext: function (nextRouteContext) {

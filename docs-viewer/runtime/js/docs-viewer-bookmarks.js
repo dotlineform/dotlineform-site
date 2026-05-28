@@ -13,10 +13,10 @@ import {
 
 export function createDocsViewerBookmarkRouteCommands(context) {
   var settings = context || {};
-  var routeWorkflow = settings.routeWorkflow;
+  var routeCommands = settings.routeCommands || {};
   return {
     loadDoc: function (docId, options) {
-      return routeWorkflow.loadDoc(docId, options);
+      return typeof routeCommands.loadDoc === "function" ? routeCommands.loadDoc(docId, options) : null;
     }
   };
 }

@@ -14,25 +14,25 @@ import {
 
 export function createDocsViewerSearchRouteCommands(context) {
   var settings = context || {};
-  var routeWorkflow = settings.routeWorkflow;
+  var routeCommands = settings.routeCommands || {};
   return {
     applyCurrentRoute: function (options) {
-      return routeWorkflow.applyCurrentRoute(options);
+      return typeof routeCommands.applyCurrentRoute === "function" ? routeCommands.applyCurrentRoute(options) : null;
     },
     defaultDocId: function () {
       return typeof settings.defaultDocId === "function" ? settings.defaultDocId() : "";
     },
     resolveDocId: function () {
-      return routeWorkflow.resolveDocId();
+      return typeof routeCommands.resolveDocId === "function" ? routeCommands.resolveDocId() : { docId: "" };
     },
     setHistory: function (docId, hash, query, mode) {
-      return routeWorkflow.setHistory(docId, hash, query, mode);
+      if (typeof routeCommands.setHistory === "function") routeCommands.setHistory(docId, hash, query, mode);
     },
     viewerTargetDocId: function (docId) {
       return typeof settings.viewerTargetDocId === "function" ? settings.viewerTargetDocId(docId) : docId;
     },
     viewerUrl: function (docId, hash, query) {
-      return routeWorkflow.viewerUrl(docId, hash, query);
+      return typeof routeCommands.viewerUrl === "function" ? routeCommands.viewerUrl(docId, hash, query) : "#";
     }
   };
 }

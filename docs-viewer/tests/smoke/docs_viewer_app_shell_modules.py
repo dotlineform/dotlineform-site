@@ -2157,6 +2157,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 allDocsById: new Map(),
                 docs: [],
                 docsById: new Map(),
+                scopeConfigsById: new Map(),
                 childrenByParent: new Map(),
                 payloadCache: new Map(),
                 selectedDocId: '',
@@ -2170,6 +2171,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 nonLoadableDocIds: new Set(),
                 manageOnlyTreeRootIds: new Set(),
                 showUpdatedDate: true,
+                reloadNonce: '',
                 reloadExpectedDocId: ''
             };
             const payloads = {
@@ -2213,6 +2215,17 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 if (!payload) return Promise.resolve({ ok: false, status: 404, json: async () => ({}) });
                 return Promise.resolve({ ok: true, status: 200, json: async () => payload });
             }
+            function stateDomain(fields) {
+                const domain = {};
+                fields.forEach((fieldName) => {
+                    Object.defineProperty(domain, fieldName, {
+                        enumerable: true,
+                        get: () => state[fieldName],
+                        set: (value) => { state[fieldName] = value; }
+                    });
+                });
+                return domain;
+            }
             const workflow = module.initDocsViewerRouteWorkflow({
                 allowManagement: () => false,
                 allowScopeQuery: () => false,
@@ -2247,18 +2260,45 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 renderSidebar: () => calls.push('sidebar'),
                 resolveLoadableDocId,
                 root,
+                routeSession: {
+                    get managementMode() { return state.managementMode; },
+                    set managementMode(value) { state.managementMode = Boolean(value); }
+                },
                 routeScopeFromUrl: () => 'library',
                 routeViewerBaseUrl: () => '/docs/',
-                scopeConfigsById: () => new Map(),
+                scopeConfig: stateDomain(['scopeConfigsById']),
+                documentIndex: stateDomain([
+                    'allDocs',
+                    'docs',
+                    'docsById',
+                    'expandedDocIds',
+                    'nonLoadableDocIds',
+                    'manageOnlyTreeRootIds',
+                    'showUpdatedDate'
+                ]),
+                selectedDocument: stateDomain([
+                    'selectedDocId',
+                    'payloadCache',
+                    'requestId',
+                    'reloadNonce',
+                    'reloadExpectedDocId'
+                ]),
+                searchRecent: stateDomain([
+                    'searchQuery',
+                    'searchVisibleCount',
+                    'searchRouteActive',
+                    'recentModeActive'
+                ]),
                 searchBatchSize: 50,
                 searchInput,
                 setRecentModeActive: (active) => { state.recentModeActive = Boolean(active); calls.push(`recent:${active}`); },
-                setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
-                startBusy: () => {
-                    calls.push('busy-start');
-                    return () => calls.push('busy-stop');
+                statusCommands: {
+                    setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
+                    startBusy: () => {
+                        calls.push('busy-start');
+                        return () => calls.push('busy-stop');
+                    }
                 },
-                state,
                 syncHiddenVisibilityForRequestedDoc: () => calls.push('sync-hidden'),
                 updateInfoPanel: () => calls.push('info'),
                 viewerBaseUrl: () => '/library/',
@@ -2268,7 +2308,8 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
             });
 
             history.replaceState(null, '', `${baseUrl}/library/?doc=folder&q=find&mode=manage#part`);
-            await workflow.loadIndex();
+            const routeCommands = workflow.commands;
+            await routeCommands.loadIndex();
             const afterIndexUrl = location.pathname + location.search + location.hash;
             const afterIndex = {
                 selectedDocId: state.selectedDocId,
@@ -2281,10 +2322,10 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
             };
 
             history.replaceState(null, '', `${baseUrl}/library/?doc=missing`);
-            workflow.applyCurrentRoute({ historyMode: 'replace', hash: '' });
+            routeCommands.applyCurrentRoute({ historyMode: 'replace', hash: '' });
             const afterMissingUrl = location.pathname + location.search + location.hash;
 
-            await workflow.loadDoc('child', { historyMode: 'push', hash: 'payload-hash' });
+            await routeCommands.loadDoc('child', { historyMode: 'push', hash: 'payload-hash' });
             const afterPayloadUrl = location.pathname + location.search + location.hash;
             const cachedChild = state.payloadCache.get('child')?.content_html || '';
 
@@ -2436,7 +2477,7 @@ def assert_search_controller_contract(page: Page) -> None:
                 resultsStatus,
                 routeCommands: module.createDocsViewerSearchRouteCommands({
                     defaultDocId: () => 'intro',
-                    routeWorkflow,
+                    routeCommands: routeWorkflow,
                     viewerTargetDocId: (docId) => docId
                 }),
                 searchBatchSize: 1,
@@ -2605,7 +2646,7 @@ def assert_bookmark_controller_contract(page: Page) -> None:
                 hideContextMenu: () => calls.push('hide-context'),
                 renderStatusPills: () => calls.push('status-pills'),
                 routeCommands: module.createDocsViewerBookmarkRouteCommands({
-                    routeWorkflow
+                    routeCommands: routeWorkflow
                 }),
                 searchRecent,
                 searchResetCommand: {

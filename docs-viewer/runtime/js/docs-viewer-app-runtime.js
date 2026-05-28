@@ -218,13 +218,18 @@ export function startDocsViewerRuntime(options) {
     root: root,
     routeScopeFromUrl: routeScopeFromUrl,
     routeViewerBaseUrl: function () { return routeViewerBaseUrl; },
-    scopeConfigsById: function () { return state.scopeConfigsById; },
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchInput: searchInput,
     setRecentModeActive: setRecentModeActive,
-    setStatus: setStatus,
-    startBusy: startBusy,
-    state: state,
+    routeSession: appSession.domains.routeSession,
+    scopeConfig: appSession.domains.scopeConfig,
+    documentIndex: appSession.domains.documentIndex,
+    selectedDocument: appSession.domains.selectedDocument,
+    searchRecent: appSession.domains.searchRecent,
+    statusCommands: {
+      setStatus: setStatus,
+      startBusy: startBusy
+    },
     syncHiddenVisibilityForRequestedDoc: function () {
       documentIndex.syncHiddenVisibilityForRequestedDoc(getCurrentDocId);
     },
@@ -234,9 +239,10 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; },
     window: window
   });
+  var routeWorkflowCommands = routeWorkflow.commands;
   var searchRouteCommands = createDocsViewerSearchRouteCommands({
     defaultDocId: documentIndex.defaultDocId,
-    routeWorkflow: routeWorkflow,
+    routeCommands: routeWorkflowCommands,
     viewerTargetDocId: documentIndex.viewerTargetDocId
   });
   var searchPaneCommands = {
@@ -314,8 +320,6 @@ export function startDocsViewerRuntime(options) {
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
       getCurrentMode: getCurrentMode,
-      loadDoc: loadDoc,
-      loadIndex: loadIndex,
       managementBaseUrl: managementBaseUrl,
       managementShellRefs: appShellRefs.managementShell || {},
       nav: nav,
@@ -324,8 +328,8 @@ export function startDocsViewerRuntime(options) {
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
       root: root,
+      routeCommands: routeWorkflowCommands,
       searchInput: searchInput,
-      setHistory: setHistory,
       setStatus: setStatus,
       state: state,
       uiTextUrl: uiTextUrl,
@@ -458,11 +462,11 @@ export function startDocsViewerRuntime(options) {
   }
 
   function viewerUrl(docId, hash, query) {
-    return routeWorkflow.viewerUrl(docId, hash, query);
+    return routeWorkflowCommands.viewerUrl(docId, hash, query);
   }
 
   function viewerUrlForScope(scope, docId, options) {
-    return routeWorkflow.viewerUrlForScope(scope, docId, options);
+    return routeWorkflowCommands.viewerUrlForScope(scope, docId, options);
   }
 
   function escapeMarkdownLinkText(value) {
@@ -597,10 +601,6 @@ export function startDocsViewerRuntime(options) {
     updateInfoPanel();
   }
 
-  function setHistory(docId, hash, query, mode) {
-    routeWorkflow.setHistory(docId, hash, query, mode);
-  }
-
   function cancelSearchDebounce() {
     var searchRecent = appSession.domains.searchRecent;
     if (searchRecent.searchDebounceId == null) return;
@@ -621,10 +621,6 @@ export function startDocsViewerRuntime(options) {
   function handlePayloadError(error) {
     documentController.handlePayloadError(error);
     updateInfoPanel();
-  }
-
-  function loadDoc(docId, options) {
-    return routeWorkflow.loadDoc(docId, options);
   }
 
   function bindLinkInterception() {
@@ -667,18 +663,6 @@ export function startDocsViewerRuntime(options) {
     searchController.bind();
   }
 
-  function resolveDocId() {
-    return routeWorkflow.resolveDocId();
-  }
-
-  function applyCurrentRoute(options) {
-    return routeWorkflow.applyCurrentRoute(options);
-  }
-
-  function loadIndex() {
-    return routeWorkflow.loadIndex();
-  }
-
   function renderRecentMode() {
     searchController.renderRecentMode();
   }
@@ -705,7 +689,7 @@ export function startDocsViewerRuntime(options) {
   });
 
   var bookmarkRouteCommands = createDocsViewerBookmarkRouteCommands({
-    routeWorkflow: routeWorkflow
+    routeCommands: routeWorkflowCommands
   });
   var bookmarkSearchResetCommand = {
     resetForBookmarkOpen: function () {
@@ -742,7 +726,7 @@ export function startDocsViewerRuntime(options) {
     loadViewerConfig: loadViewerConfig,
     initializeBookmarks: initializeBookmarks,
     initializeManagement: initializeManagement,
-    loadIndex: loadIndex,
+    loadIndex: routeWorkflowCommands.loadIndex,
     openImportOnLoad: function () {
       loadManagementController().then(function (controller) {
         if (controller) controller.openImportModal();

@@ -17,14 +17,63 @@ function currentValue(value) {
   return typeof value === "function" ? value() : value;
 }
 
+function createRouteWorkflowStateBridge(inputs) {
+  var routeSession = inputs.routeSession || {};
+  var documentIndex = inputs.documentIndex || {};
+  var selectedDocument = inputs.selectedDocument || {};
+  var searchRecent = inputs.searchRecent || {};
+
+  return {
+    get managementMode() { return Boolean(routeSession.managementMode); },
+    set managementMode(value) { routeSession.managementMode = Boolean(value); },
+    get allDocs() { return documentIndex.allDocs || []; },
+    set allDocs(value) { documentIndex.allDocs = value; },
+    get docs() { return documentIndex.docs || []; },
+    set docs(value) { documentIndex.docs = value; },
+    get docsById() { return documentIndex.docsById || new Map(); },
+    set docsById(value) { documentIndex.docsById = value; },
+    get expandedDocIds() { return documentIndex.expandedDocIds || new Set(); },
+    set expandedDocIds(value) { documentIndex.expandedDocIds = value; },
+    get nonLoadableDocIds() { return documentIndex.nonLoadableDocIds || new Set(); },
+    set nonLoadableDocIds(value) { documentIndex.nonLoadableDocIds = value; },
+    get manageOnlyTreeRootIds() { return documentIndex.manageOnlyTreeRootIds || new Set(); },
+    set manageOnlyTreeRootIds(value) { documentIndex.manageOnlyTreeRootIds = value; },
+    get showUpdatedDate() { return documentIndex.showUpdatedDate; },
+    set showUpdatedDate(value) { documentIndex.showUpdatedDate = value; },
+    get selectedDocId() { return selectedDocument.selectedDocId || ""; },
+    set selectedDocId(value) { selectedDocument.selectedDocId = value; },
+    get payloadCache() { return selectedDocument.payloadCache || new Map(); },
+    set payloadCache(value) { selectedDocument.payloadCache = value; },
+    get requestId() { return selectedDocument.requestId || 0; },
+    set requestId(value) { selectedDocument.requestId = value; },
+    get reloadNonce() { return selectedDocument.reloadNonce || ""; },
+    set reloadNonce(value) { selectedDocument.reloadNonce = value; },
+    get reloadExpectedDocId() { return selectedDocument.reloadExpectedDocId || ""; },
+    set reloadExpectedDocId(value) { selectedDocument.reloadExpectedDocId = value; },
+    get searchQuery() { return searchRecent.searchQuery || ""; },
+    set searchQuery(value) { searchRecent.searchQuery = value; },
+    get searchVisibleCount() { return searchRecent.searchVisibleCount || 0; },
+    set searchVisibleCount(value) { searchRecent.searchVisibleCount = value; },
+    get searchRouteActive() { return Boolean(searchRecent.searchRouteActive); },
+    set searchRouteActive(value) { searchRecent.searchRouteActive = Boolean(value); }
+  };
+}
+
 export function initDocsViewerRouteWorkflow(context) {
-  var state = context.state;
+  var state = createRouteWorkflowStateBridge({
+    routeSession: context.routeSession,
+    documentIndex: context.documentIndex,
+    selectedDocument: context.selectedDocument,
+    searchRecent: context.searchRecent
+  });
   var window = context.window;
   var root = context.root;
   var content = context.content;
   var results = context.results;
   var more = context.more;
   var searchInput = context.searchInput;
+  var scopeConfig = context.scopeConfig || {};
+  var statusCommands = context.statusCommands || {};
   var managementModeValue = context.managementModeValue || "manage";
 
   function viewerScope() {
@@ -64,7 +113,20 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function scopeConfigsById() {
-    return currentValue(context.scopeConfigsById);
+    return scopeConfig.scopeConfigsById || new Map();
+  }
+
+  function setStatus(message, isError) {
+    if (typeof statusCommands.setStatus === "function") {
+      statusCommands.setStatus(message, isError);
+    }
+  }
+
+  function startBusy() {
+    if (typeof statusCommands.startBusy === "function") {
+      return statusCommands.startBusy();
+    }
+    return function () {};
   }
 
   function currentDocId() {
@@ -159,7 +221,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function fetchDocPayload(doc, docId) {
-    var stopBusy = context.startBusy();
+    var stopBusy = startBusy();
     return context.generatedData.readDocumentPayload(doc, {
       docId: docId,
       viewerScope: viewerScope()
@@ -216,7 +278,7 @@ export function initDocsViewerRouteWorkflow(context) {
       searchInput: searchInput,
       setHistory: setHistory,
       setRecentModeActive: context.setRecentModeActive,
-      setStatus: context.setStatus,
+      setStatus: setStatus,
       state: state,
       syncHiddenVisibilityForRequestedDoc: context.syncHiddenVisibilityForRequestedDoc
     });
@@ -242,7 +304,7 @@ export function initDocsViewerRouteWorkflow(context) {
     context.renderBookmarkUi();
 
     if (state.docs.length === 0) {
-      context.setStatus("No docs available.", true);
+      setStatus("No docs available.", true);
       return;
     }
 
@@ -250,7 +312,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function loadIndex() {
-    var stopBusy = context.startBusy();
+    var stopBusy = startBusy();
     return context.generatedData.readDocsIndex({
       indexUrl: indexUrl(),
       viewerScope: viewerScope()
@@ -260,7 +322,7 @@ export function initDocsViewerRouteWorkflow(context) {
       })
       .catch(function (error) {
         state.reloadExpectedDocId = "";
-        context.setStatus(error.message || "Failed to load docs index.", true);
+        setStatus(error.message || "Failed to load docs index.", true);
         context.hideDocPane();
         if (content) content.textContent = "";
         throw error;
@@ -345,16 +407,26 @@ export function initDocsViewerRouteWorkflow(context) {
         hideContextMenu: context.hideContextMenu,
         reloadWindow: function () { window.location.reload(); },
         routeScopeFromUrl: context.routeScopeFromUrl,
-        setStatus: context.setStatus,
+        setStatus: setStatus,
         viewerScope: viewerScope()
       });
     });
   }
 
-  return {
+  var commands = {
     applyCurrentRoute: applyCurrentRoute,
+    loadDoc: loadDoc,
+    loadIndex: loadIndex,
+    resolveDocId: resolveDocId,
+    setHistory: setHistory,
+    viewerUrl: viewerUrl,
+    viewerUrlForScope: viewerUrlForScope
+  };
+
+  return {
     bindPopstate: bindPopstate,
     bindRouteLinks: bindRouteLinks,
+    commands: commands,
     currentDocId: currentDocId,
     currentHash: currentHash,
     currentMode: currentMode,
@@ -363,11 +435,7 @@ export function initDocsViewerRouteWorkflow(context) {
     hasDisallowedModeInUrl: hasDisallowedModeInUrl,
     hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
     initializeIndex: initializeIndex,
-    loadDoc: loadDoc,
-    loadIndex: loadIndex,
-    resolveDocId: resolveDocId,
     routeFromAnchor: routeFromAnchor,
-    setHistory: setHistory,
     shouldUseNativeNavigation: shouldUseNativeNavigation,
     viewerUrl: viewerUrl,
     viewerUrlForScope: viewerUrlForScope

@@ -454,6 +454,26 @@ export function initDocsViewerManagement(context) {
     if (capabilityController) capabilityController.refresh();
   }
 
+  function routeCommand(name) {
+    var routeCommands = context.routeCommands || {};
+    return typeof routeCommands[name] === "function" ? routeCommands[name] : null;
+  }
+
+  function setRouteHistory(docId, hash, query, mode) {
+    var command = routeCommand("setHistory");
+    if (command) command(docId, hash, query, mode);
+  }
+
+  function loadRouteIndex() {
+    var command = routeCommand("loadIndex");
+    return command ? command() : Promise.resolve(null);
+  }
+
+  function loadRouteDoc(docId, options) {
+    var command = routeCommand("loadDoc");
+    return command ? command(docId, options) : Promise.resolve(null);
+  }
+
   function reloadDocsIndex(targetDocId, summaryText) {
     state.payloadCache.clear();
     state.searchEntries = [];
@@ -470,10 +490,10 @@ export function initDocsViewerManagement(context) {
     }
 
     if (targetDocId) {
-      context.setHistory(targetDocId, "", "", "replace");
+      setRouteHistory(targetDocId, "", "", "replace");
     }
 
-    return context.loadIndex().then(function () {
+    return loadRouteIndex().then(function () {
       context.setStatus("", false);
       renderManagementUi();
     });
@@ -628,7 +648,7 @@ export function initDocsViewerManagement(context) {
       return;
     }
     if (targetDocId) {
-      context.loadDoc(targetDocId, { historyMode: "replace", hash: "" });
+      loadRouteDoc(targetDocId, { historyMode: "replace", hash: "" });
     }
   }
 
