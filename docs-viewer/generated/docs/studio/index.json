@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T18:10:30Z",
+  "generated_at": "2026-05-28T18:17:22Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3058,7 +3058,7 @@
       "source_path": "site-request-docs-viewer-architecture-review-cleanup-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-review-cleanup-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-review-cleanup-tasks.json",
-      "content_text_length": 49020,
+      "content_text_length": 49036,
       "ui_status": "planned"
     },
     {
