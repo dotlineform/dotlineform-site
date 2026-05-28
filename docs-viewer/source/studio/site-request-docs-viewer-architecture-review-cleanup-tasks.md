@@ -26,38 +26,17 @@ The cleanup pass should find them now, while the architecture request is active,
 
 ## Status
 
-### steer for this task
+### handoff note
 
-- Treat this as architecture review and cleanup, not a new feature slice.
-- Treat every remaining compatibility path, broad callback bridge, broad state dependency, or legacy JS/server structuring pattern as migration debt until reviewed.
-- Resolve reviewed migration debt in this slice when the owner contract is clear; otherwise create a named follow-up task in this document immediately.
-- Keep the review grounded in the target Docs Viewer app architecture, not in historical compatibility paths.
-- Do not preserve compatibility wording as a neutral description. Name the owner, the replacement contract, and the removal task; if no removal is needed, rename the pattern as current architecture and document why it is not compatibility.
-- Do not remove a path blindly; first identify the current callers, replacement owner contract, and focused verification required for removal.
-- Do not replace compatibility callbacks with direct endpoint calls from feature modules.
-- The cleanup analysis should specifically question whether any legacy JavaScript or server pattern remains that might encourage future developers to add code in the wrong module for its intended purpose.
-- Keep public read-only and local manage boundaries explicit while reviewing docs, tests, and runtime contracts.
+Tasks 1 through 5 completed the architecture cleanup review and converted the remaining compatibility and broad-state findings into concrete implementation tasks.
+The next phase should work through the `IT-*` table before treating the remaining review tasks as final closure.
 
-### cleanup notes from controller/view lifecycle slice
+Recommended sequence:
 
-The controller/view lifecycle slice identified these unresolved compatibility paths:
-
-- `docs-viewer-app-runtime.js` remains the compatibility coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the intentionally small returned app handle.
-- `docs-viewer-app-session.js` keeps `compatibilityBridge.state` because existing controllers still consume the broad state object.
-- Route workflow callbacks, search/bookmark route callback bundles, and management runtime adapter callbacks remain private handoffs until a later slice narrows complete controller families to domain and service inputs.
-
-No compatibility fields or lifecycle methods were removed in that slice because it was a documentation and lifecycle-inventory pass. It was not a complete cleanup review. That does not make the remaining paths acceptable as a long-term shape. This review must either:
-
-- remove them,
-- create specific cleanup tasks for their removal, or
-- rename the pattern as current architecture with a clear owner contract because it is not actually compatibility.
-
-**Additional tasks created as part of this cleanup review should be tracked in the 'Implementation tasks' table below.**
-
-Follow-up decisions to review and expand upon here:
-
-- When a future feature needs an info-panel view, first decide whether it is public metadata, manage metadata, local diagnostics, semantic/reference info, or another separately-shaped view contract.
-- When a future controller change touches broad state, narrow one complete controller family to explicit state-domain and service inputs rather than adding another route-runtime callback.
+- Implement focused cleanup tasks first, starting with route/search/bookmark state and command boundaries (`IT-1`, `IT-2`, `IT-3`), then document/sidebar/report, info-panel, and config/scope state narrowing (`IT-12`, `IT-13`, `IT-14`).
+- Include the focused test retargeting required by each implementation slice, so tests assert current owner contracts instead of historical compatibility surfaces.
+- After the implementation slices, complete the remaining review tasks for stale compatibility test assumptions, runtime fields kept only for tests, durable docs wording, public/manage boundary verification, final verification records, and docs-log entries.
+- Keep new behavior out of `docs-viewer-app-runtime.js`; use the replacement owner contracts named in the implementation table.
 
 ### durable documentation
 
@@ -134,8 +113,8 @@ No remove-now item was safe in this pass because the removable surfaces still ne
 
 | finding | classification | owner contract or replacement path | named follow-up |
 | --- | --- | --- | --- |
-| `docs-viewer-app-runtime.js` compatibility coordinator | create named follow-up | Runtime may continue as the private app coordinator only for controller construction, event binding, route-global updates, and private callback handoff. New feature behavior must land in focused owners. | IT-1, IT-2, IT-3, IT-4 |
-| `docs-viewer-app-session.js` broad state and `compatibilityBridge.state` | create named follow-up | App session owns state defaults and named state domains. Broad state is a temporary bridge until controller families consume explicit domains. | IT-1, IT-2, IT-4, IT-7 |
+| `docs-viewer-app-runtime.js` compatibility coordinator | create named follow-up | Runtime may continue as the private app coordinator only for controller construction, event binding, route-global updates, and private callback handoff. New feature behavior must land in focused owners. | IT-1, IT-2, IT-3, IT-4, IT-12, IT-13, IT-14 |
+| `docs-viewer-app-session.js` broad state and `compatibilityBridge.state` | create named follow-up | App session owns state defaults and named state domains. Broad state is a temporary bridge until controller families consume explicit domains. | IT-1, IT-2, IT-3, IT-4, IT-7, IT-12, IT-13, IT-14 |
 | Private route workflow wrapper callbacks | create named follow-up | Route workflow owns URL/history/index/payload commands. Private runtime wrappers are allowed only while search, bookmarks, and management reloads still need function-scoped handoff. | IT-3 |
 | Search/recent broad state, route callbacks, pane callbacks, and fallback direct callbacks | create named follow-up | Search/recent controller owns generated search reads, query state, result/recent rendering, debounce, and pane requests. Replacement contract is explicit search/recent state-domain plus route and pane command inputs. | IT-1 |
 | Bookmark broad state, route callbacks, search reset, and fallback direct callbacks | create named follow-up | Bookmark controller owns browser bookmark storage, list/toggle UI, selected-document projection, and bookmark open behavior. Replacement contract is explicit bookmark state-domain plus route and search-reset command inputs. | IT-2 |
@@ -166,11 +145,28 @@ No runtime behavior was changed.
 | Search/recent controller | `docs-viewer-search-controller.js` consumes generated-data runtime and named route/pane callbacks, but still receives broad state and fallback direct context callbacks. | Migration debt. The controller is not using an app handle, but it is not yet narrowed to state-domain and command inputs. | IT-1 |
 | Bookmark controller | `docs-viewer-bookmarks.js` consumes a route callback bundle, browser bookmark storage helpers, DOM refs, and broad state. It does not use app/runtime handles. | Migration debt. Bookmark open behavior still resets search route state through broad fields and private callbacks. | IT-2 |
 | Route workflow owner | `docs-viewer-route-workflow.js` owns low-level route application, history, index load, and payload load. Search, bookmarks, and management reload still consume route workflow through private runtime callback handoff. | Migration debt in the handoff, not a public API leak. | IT-3 |
-| Document controller and reports | `docs-viewer-document-controller.js` exposes a report context with generated-data methods such as `fetchDocsIndex`, `fetchDocsReferencesIndex`, and `fetchDocsReferenceTarget`. Public/read-only reports use those callbacks. Manage/local reports use `managementBaseUrl` and direct `window.fetch(...)` for source config, docs-log, and broken-links endpoints. | Mixed. The generated-data report path is good; local report endpoint access needs an explicit report service contract or a shared adapter. | IT-8 and IT-9 |
-| Info panel hosted views | `docs-viewer-info-panel-controller.js`, `docs-viewer-view-context.js`, and `docs-viewer-metadata-info-view.js` use hosted-view context and selected-document projection. The metadata view does not consume management services, generated-read service base URLs, or app/runtime handles. | Current architecture. This is the model for future public-safe hosted views. | Task 10 should verify public-safe constraints; IT-5 handles built-in view naming. |
+| Document controller and reports | `docs-viewer-document-controller.js` exposes a report context with generated-data methods such as `fetchDocsIndex`, `fetchDocsReferencesIndex`, and `fetchDocsReferenceTarget`. Public/read-only reports use those callbacks. Manage/local reports use `managementBaseUrl` and direct `window.fetch(...)` for source config, docs-log, and broken-links endpoints. | Mixed. The generated-data report path is good; local report endpoint access needs an explicit report service contract or a shared adapter, and document/report state inputs need a named projection. | IT-8, IT-9, and IT-12 |
+| Info panel hosted views | `docs-viewer-info-panel-controller.js`, `docs-viewer-view-context.js`, and `docs-viewer-metadata-info-view.js` use hosted-view context and selected-document projection. The metadata view does not consume management services, generated-read service base URLs, or app/runtime handles. | Mostly current architecture. This is the model for future public-safe hosted views, but the controller input still uses broad state instead of a named hosted-view projection. | Task 10 should verify public-safe constraints; IT-5 handles built-in view naming; IT-13 narrows the input shape. |
 | Management child modules | Management action, modal, capability, interaction, and scope-lifecycle modules use management client functions and parent-provided callbacks. They do not consume app/runtime handles directly, but they still receive broad management state and callback bundles. | Migration debt. The service-client path is mostly correct; state/callback boundaries need narrowing. | IT-4 |
 | Standalone Docs HTML Import | `docs-html-import.js` and `docs-html-import-workflow.js` use the management client for import/open-source calls and maintain their own route-readiness state. They do not consume app/runtime handles. | Separate current route app with ownership risk. It needs an explicit boundary relative to the Docs Viewer management modal import flow before future import features are added. | IT-10 |
 | Low-level generated-data helpers | `docs-viewer-generated-data-runtime.js` correctly owns feature-facing generated reads. Low-level helpers in `docs-viewer-data.js` are still imported by runtime owners and report registry/config code, so future feature modules could bypass generated-data runtime if this is not fenced. | Migration risk. The current callers are explainable, but the allowed caller set should be documented or narrowed. | IT-9 and IT-11 |
+
+### Task 5 controller-family cleanup task review
+
+Completed 2026-05-28.
+This pass converted the remaining broad-state controller findings into focused implementation tasks with named replacement contracts.
+No runtime behavior was changed.
+
+| controller family | broad dependency still present | replacement owner contract | implementation task |
+| --- | --- | --- | --- |
+| Search and recent | `docs-viewer-search-controller.js` still receives `context.state` plus fallback direct callbacks for route and pane behavior. | Explicit search/recent state-domain, generated-data runtime, route command inputs, and pane command inputs. | IT-1 |
+| Bookmarks | `docs-viewer-bookmarks.js` still receives `context.state` and uses parent callback handoff for route opening and search reset. | Explicit bookmark state-domain, browser bookmark storage owner, route command input, and search-reset command input. | IT-2 |
+| Route workflow | `docs-viewer-route-workflow.js` still receives broad state and remains the private handoff point for index load, document load, URL/history, and config selection. | Route workflow command contract backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs. | IT-3 |
+| Management | `docs-viewer-management.js` and child modules still receive broad management state and callback bundles even though service-client calls are centralized. | Management action, modal, scope-lifecycle, route reload, render-projection, and service-client contracts. | IT-4 |
+| Document, sidebar, and reports | `docs-viewer-document-controller.js` and `docs-viewer-sidebar.js` still receive broad state for selected doc, scope configs, document tree, payload/report context, management text, and status projection. | Document payload owner plus document-index/sidebar projection inputs; report context adapter that exposes generated reads and any local-report service access intentionally. | IT-12 |
+| Info panel hosted views | `docs-viewer-info-panel-controller.js` still reads broad state for selected doc, document maps, payload cache, UI status labels, and `viewState` projection. | Hosted-view projection input built from selected-document, document-index, payload-cache, UI-status, route-access, and view-state domains; no management or write-capable handles. | IT-13 |
+| Config and scope routing | `docs-viewer-config-controller.js` still receives broad state for config-load promise/cache, scope config maps, default scope, route globals, and UI text. | Scope-config state-domain plus route-config registry command input and config-load service input. | IT-14 |
+| Standalone import route | `docs-html-import.js` and `docs-html-import-workflow.js` maintain their own route-readiness and import state outside the viewer app. | Separate import route app contract with explicit boundary to the Docs Viewer management modal import flow. | IT-10 |
 
 Work through the table by ID order.
 A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
@@ -182,7 +178,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | done | Audit legacy JavaScript and server-side patterns that might encourage future developers to place code in the wrong module or bypass the target app architecture. Include broad route/controller files, local service endpoints, management write paths, generated-read paths, and any helper that hides unclear ownership. |
 | 3 | done | Classify each compatibility path or legacy pattern as: remove now, create a named follow-up task now, or rename it as current architecture with a clear owner contract because it is not actually compatibility. Do not leave unresolved compatibility language as an implicit future concern. |
 | 4 | done | Review feature-module access paths. Feature modules should use owner-specific callbacks, state-domain inputs, hosted-view context, generated-data runtime, or management service/controller contracts rather than app/runtime handles. |
-| 5 | planned | Create focused cleanup tasks for any controller family that still needs broad state narrowed to explicit state-domain and service inputs. Candidate tasks should avoid widening `docs-viewer-app-runtime.js` and should name the replacement owner contract. |
+| 5 | done | Create focused cleanup tasks for any controller family that still needs broad state narrowed to explicit state-domain and service inputs. Candidate tasks should avoid widening `docs-viewer-app-runtime.js` and should name the replacement owner contract. |
 | 6 | planned | Review focused tests for historical compatibility assumptions. Prefer tests that assert current owner contracts, DOM/user-visible behavior, service boundaries, app handle shape, state-domain behavior, hosted-view context, and public/manage separation. |
 | 7 | planned | Review runtime fields kept only for tests. Remove or retarget tests before removing runtime fields; do not keep runtime API solely for test convenience. |
 | 8 | planned | Review durable Docs Viewer docs for compatibility fields described as current public API. Update wording so temporary bridges are named as migration debt, private implementation details, or tracked cleanup tasks. |
@@ -199,7 +195,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | IT-1 | planned | Narrow the search/recent controller family to explicit search/recent state-domain, generated-data runtime, route command, and pane command inputs. Remove fallback direct context callbacks from `docs-viewer-search-controller.js` after focused app-shell smoke coverage is retargeted. |
 | IT-2 | planned | Narrow the bookmark controller family to explicit bookmark state-domain plus route and search-reset command inputs. Remove fallback direct context callbacks from `docs-viewer-bookmarks.js` after bookmark route-state smoke coverage is retargeted. |
-| IT-3 | planned | Define the route workflow command contract consumed by controllers and management reloads. Keep `applyCurrentRoute`, `loadIndex`, `loadDoc`, and `setHistory` private to route workflow/runtime handoff, and remove any one-off runtime wrappers once consumers use the contract directly. |
+| IT-3 | planned | Define the route workflow command contract consumed by controllers and management reloads. Back it with explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs. Keep `applyCurrentRoute`, `loadIndex`, `loadDoc`, and `setHistory` private to route workflow/runtime handoff, and remove any one-off runtime wrappers once consumers use the contract directly. |
 | IT-4 | planned | Narrow the management controller context into explicit management action, modal, scope-lifecycle, route reload, and service-client contracts. Keep writes behind management endpoints and avoid adding new write behavior directly to `docs-viewer-management.js` or `docs-viewer-app-runtime.js`. |
 | IT-5 | planned | Rename built-in hosted-view compatibility records as current built-in hosted-view records, or keep a temporary alias with a removal note. Update focused hosted-view tests and durable docs in the same slice. |
 | IT-6 | planned | Remove or fence route-config inline and legacy `#docsViewerRoot` dataset fallback after route-shell tests and smoke fixtures use explicit route config or the browser-safe route-config registry. |
@@ -208,6 +204,9 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | IT-9 | planned | Fence low-level generated-data helper use so feature modules consume `docs-viewer-generated-data-runtime.js` named read methods rather than assembling generated-read endpoint paths or reload options directly. Document the allowed caller set for runtime/config/report-registry helpers. |
 | IT-10 | planned | Define the ownership boundary between the standalone Docs HTML Import route app and the Docs Viewer management modal import flow. Keep import writes behind management endpoints and avoid duplicating route/readiness/service patterns in future import features. |
 | IT-11 | planned | Update durable Docs Viewer docs and JavaScript/server inventory notes with the task 3 classifications: temporary bridges, current architecture contracts, public/manage boundaries, generated-read owner, management write/rebuild authority, and transport/dispatcher limits. |
+| IT-12 | planned | Narrow the document/sidebar/report controller family to explicit document payload, selected-document, document-index/sidebar projection, scope-config, status, and report-context inputs. Keep generated report reads behind generated-data runtime and classify any local report endpoint access before exposing it through report context. |
+| IT-13 | planned | Narrow the info-panel hosted-view controller to a hosted-view projection input built from selected-document, document-index, payload-cache, UI-status, route-access, and view-state domains. Preserve the public-safe hosted-view constraint by excluding management services, local generated-read base URLs, and write-capable handles. |
+| IT-14 | planned | Narrow the config/scope controller to explicit scope-config state-domain, config-load service, route-config registry command, and UI-text inputs. Keep route globals and root dataset projection as shell/config responsibilities rather than new feature behavior in `docs-viewer-app-runtime.js`. |
 
 ## closeout
 
