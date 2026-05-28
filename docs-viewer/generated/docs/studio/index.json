@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T14:16:23Z",
+  "generated_at": "2026-05-28T14:31:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2946,7 +2946,7 @@
       "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
-      "content_text_length": 23551,
+      "content_text_length": 23615,
       "ui_status": "in-progress"
     },
     {
@@ -3028,6 +3028,22 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-app-contexts-tasks.json",
       "content_text_length": 20039,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-controller-view-lifecycle-tasks",
+      "title": "Docs Viewer Controller And View Lifecycle Tasks",
+      "added_date": "2026-05-28",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "sort_order": 14186,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-controller-view-lifecycle-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-controller-view-lifecycle-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-controller-view-lifecycle-tasks.json",
+      "content_text_length": 15052,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",

@@ -408,6 +408,8 @@ Backend/service handling:
 
 ### 6. Controller And View Lifecycle
 
+Task tracker: [Docs Viewer Controller And View Lifecycle Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-controller-view-lifecycle-tasks).
+
 Define a practical lifecycle for controllers and hosted views.
 
 This should build on existing hosted-view lifecycle methods without turning Docs Viewer into a plugin platform.
