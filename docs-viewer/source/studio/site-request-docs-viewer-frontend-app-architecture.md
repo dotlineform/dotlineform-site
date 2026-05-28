@@ -279,6 +279,8 @@ Backend/service handling:
 
 ### 2. Service Adapter Boundary
 
+Task tracker: [Docs Viewer Service Adapter Boundary Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-service-adapter-boundary-tasks).
+
 Define service adapters for generated/config/backend reads so controllers do not need ad hoc `fetch`, retry, capability, or URL option bundles.
 
 Candidate owners:

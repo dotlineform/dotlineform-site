@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff84194cb37939b58a765ee6a580bfc9",
-    "generated_at_utc": "2026-05-28T10:51:54Z",
-    "count": 213
+    "version": "blake2b-14c38daa01c9a6412652e0c7ec443a5c",
+    "generated_at_utc": "2026-05-28T11:00:34Z",
+    "count": 214
   },
   "entries": [
     {
@@ -4760,6 +4760,38 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-app-session-state-domains-tasks site request docs viewer app session state domains tasks docs viewer app session state domains tasks docs viewer front-end app architecture request front end architecture 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-service-adapter-boundary-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Service Adapter Boundary Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-service-adapter-boundary-tasks",
+      "last_updated": "2026-05-28",
+      "parent_id": "site-request-docs-viewer-frontend-app-architecture",
+      "parent_title": "Docs Viewer Front-End App Architecture Request",
+      "display_meta": "2026-05-28 • Docs Viewer Front-End App Architecture Request",
+      "search_terms": [
+        "site-request-docs-viewer-service-adapter-boundary-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "service",
+        "adapter",
+        "boundary",
+        "tasks",
+        "docs viewer service adapter boundary tasks",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "app",
+        "architecture",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-service-adapter-boundary-tasks site request docs viewer service adapter boundary tasks docs viewer service adapter boundary tasks docs viewer front-end app architecture request front end app architecture 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

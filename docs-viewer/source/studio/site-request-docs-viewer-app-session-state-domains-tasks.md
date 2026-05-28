@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-session-state-domains-tasks
 title: Docs Viewer App Session State Domains Tasks
 added_date: 2026-05-28
 last_updated: 2026-05-28
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-docs-viewer-frontend-app-architecture
 sort_order: 14181
 viewable: true
