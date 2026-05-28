@@ -69,7 +69,7 @@ The viewer behavior starts from:
 - `docs-viewer/runtime/js/docs-viewer.js`
 
 The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the compatibility runtime.
-The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through the current compatibility state bridge.
+The compatibility runtime delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the temporary compatibility state bridge for controller families that have not yet been narrowed.
 Current helper modules:
 
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index and generated-data runtime creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
@@ -84,8 +84,8 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
-- `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, route callback consumption, and pane projection requests
-- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark loading, list/toggle rendering, selected-document bookmark UI projection, edit state, bookmark events, and route callback consumption
+- `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, explicit route command consumption, and pane command requests from search/recent state-domain inputs
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark storage, bookmark row/toggle rendering, selected-document bookmark projection, explicit document-load route command consumption, and search-reset command consumption when opening a bookmark
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns hosted-view registration, access/availability checks, panel-specific listing, and graceful missing/disabled/access-blocked states

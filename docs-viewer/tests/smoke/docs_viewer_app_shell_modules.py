@@ -2365,7 +2365,7 @@ def assert_search_controller_contract(page: Page) -> None:
                 setHistory: (docId, hash, query, mode) => routeCalls.push(`history:${docId}:${hash || ''}:${query || ''}:${mode}`),
                 viewerUrl: (docId, hash, query) => `/docs/?doc=${docId}${query ? `&q=${encodeURIComponent(query)}` : ''}${hash ? `#${hash}` : ''}`
             };
-            const state = {
+            const documentIndex = {
                 docs: [
                     { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true },
                     { doc_id: 'second', title: 'Second Guide', parent_id: 'intro', added_date: '2026-05-26', viewable: true },
@@ -2374,8 +2374,12 @@ def assert_search_controller_contract(page: Page) -> None:
                 docsById: new Map([
                     ['intro', { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true }],
                     ['second', { doc_id: 'second', title: 'Second Guide', parent_id: 'intro', added_date: '2026-05-26', viewable: true }]
-                ]),
-                selectedDocId: 'intro',
+                ])
+            };
+            const selectedDocument = {
+                selectedDocId: 'intro'
+            };
+            const searchRecent = {
                 searchEntries: [
                     {
                         kind: 'doc',
@@ -2415,14 +2419,14 @@ def assert_search_controller_contract(page: Page) -> None:
                 recentLimit: 2
             };
             const controller = module.initDocsViewerSearchController({
-                cancelSearchDebounce: () => calls.push('cancel-search'),
                 generatedData: {
                     readSearchIndex: () => Promise.resolve({ entries: [] })
                 },
-                hasActiveQuery: (query) => Boolean(String(typeof query === 'string' ? query : state.searchQuery || '').trim()),
+                hasActiveQuery: (query) => Boolean(String(typeof query === 'string' ? query : searchRecent.searchQuery || '').trim()),
                 hideContextMenu: () => calls.push('hide-context'),
+                documentIndex,
                 more,
-                paneCallbacks: {
+                paneCommands: {
                     hideDocPane: () => paneCalls.push('hide-doc'),
                     showRecentPane: () => paneCalls.push('recent-pane'),
                     showSearchPane: () => paneCalls.push('search-pane')
@@ -2430,17 +2434,19 @@ def assert_search_controller_contract(page: Page) -> None:
                 recentButton,
                 results,
                 resultsStatus,
-                routeCallbacks: module.createDocsViewerSearchRouteCallbacks({
+                routeCommands: module.createDocsViewerSearchRouteCommands({
                     defaultDocId: () => 'intro',
                     routeWorkflow,
                     viewerTargetDocId: (docId) => docId
                 }),
                 searchBatchSize: 1,
                 searchDebounceMs: 0,
+                searchRecent,
                 searchIndexUrl: () => '/search.json',
                 searchInput,
+                selectedDocument,
                 setRecentModeActive: (active) => {
-                    state.recentModeActive = Boolean(active);
+                    searchRecent.recentModeActive = Boolean(active);
                     calls.push(`recent:${Boolean(active)}`);
                 },
                 setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
@@ -2448,7 +2454,6 @@ def assert_search_controller_contract(page: Page) -> None:
                     calls.push('busy-start');
                     return () => calls.push('busy-stop');
                 },
-                state,
                 viewerScope: () => 'studio'
             });
             controller.bind();
@@ -2469,14 +2474,14 @@ def assert_search_controller_contract(page: Page) -> None:
             const afterRecent = {
                 status: resultsStatus.textContent,
                 resultCount: results.querySelectorAll('li').length,
-                recentModeActive: state.recentModeActive,
-                query: state.searchQuery,
+                recentModeActive: searchRecent.recentModeActive,
+                query: searchRecent.searchQuery,
                 input: searchInput.value
             };
             searchInput.value = 'guide';
             searchInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
             await new Promise((resolve) => setTimeout(resolve, 10));
-            state.searchRouteActive = true;
+            searchRecent.searchRouteActive = true;
             searchInput.value = '';
             searchInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
             return {
@@ -2486,8 +2491,8 @@ def assert_search_controller_contract(page: Page) -> None:
                 calls,
                 routeCalls,
                 paneCalls,
-                finalQuery: state.searchQuery,
-                finalRouteActive: state.searchRouteActive
+                finalQuery: searchRecent.searchQuery,
+                finalRouteActive: searchRecent.searchRouteActive
             };
         }"""
     )
@@ -2540,7 +2545,7 @@ def assert_bookmark_controller_contract(page: Page) -> None:
             const bookmarkToggle = document.getElementById('bookmarkToggle');
             const searchInput = document.getElementById('search');
             const calls = [];
-            const state = {
+            const bookmarks = {
                 bookmarks: [
                     {
                         key: 'library::intro',
@@ -2565,15 +2570,21 @@ def assert_bookmark_controller_contract(page: Page) -> None:
                 ],
                 bookmarksLoaded: true,
                 bookmarkSupport: true,
+                editingBookmarkKey: '',
+                pendingBookmarkFocusKey: ''
+            };
+            const documentIndex = {
                 docsById: new Map([
                     ['intro', { doc_id: 'intro', title: 'Intro' }],
                     ['second', { doc_id: 'second', title: 'Second' }]
-                ]),
-                editingBookmarkKey: '',
-                pendingBookmarkFocusKey: '',
+                ])
+            };
+            const searchRecent = {
                 searchQuery: 'guide',
                 searchVisibleCount: 10,
-                searchRouteActive: false,
+                searchRouteActive: false
+            };
+            const selectedDocument = {
                 selectedDocId: 'intro'
             };
             const routeWorkflow = {
@@ -2583,22 +2594,30 @@ def assert_bookmark_controller_contract(page: Page) -> None:
                 }
             };
             const controller = module.initDocsViewerBookmarks({
+                bookmarks,
                 bookmarkRow,
                 bookmarkScope: () => 'library',
                 bookmarkToggle,
                 cssEscape: (value) => String(value).replace(/["\\\\]/g, '\\\\$&'),
                 dbName: 'smoke',
                 dbVersion: 1,
+                documentIndex,
                 hideContextMenu: () => calls.push('hide-context'),
                 renderStatusPills: () => calls.push('status-pills'),
-                routeCallbacks: module.createDocsViewerBookmarkRouteCallbacks({
-                    cancelSearchDebounce: () => calls.push('cancel-search'),
+                routeCommands: module.createDocsViewerBookmarkRouteCommands({
                     routeWorkflow
                 }),
-                searchBatchSize: 50,
-                searchInput,
+                searchRecent,
+                searchResetCommand: {
+                    resetForBookmarkOpen: () => {
+                        calls.push('reset-search');
+                        searchRecent.searchQuery = '';
+                        searchRecent.searchVisibleCount = 50;
+                        searchInput.value = '';
+                    }
+                },
+                selectedDocument,
                 setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`),
-                state,
                 storeName: 'favorites'
             });
             controller.bind();
@@ -2613,15 +2632,15 @@ def assert_bookmark_controller_contract(page: Page) -> None:
             };
             bookmarkRow.querySelector('[data-bookmark-open="second"]').click();
             const afterOpen = {
-                query: state.searchQuery,
-                visibleCount: state.searchVisibleCount,
+                query: searchRecent.searchQuery,
+                visibleCount: searchRecent.searchVisibleCount,
                 input: searchInput.value
             };
             bookmarkRow.querySelector('[data-bookmark-open="second"]').dispatchEvent(
                 new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
             );
             const afterRenameStart = {
-                editingKey: state.editingBookmarkKey,
+                editingKey: bookmarks.editingBookmarkKey,
                 inputCount: bookmarkRow.querySelectorAll('[data-bookmark-input="library::second"]').length
             };
             return {
@@ -2645,7 +2664,7 @@ def assert_bookmark_controller_contract(page: Page) -> None:
         raise AssertionError(f"bookmark controller route handoff did not reset search state: {result!r}")
     if result["afterRenameStart"] != {"editingKey": "library::second", "inputCount": 1}:
         raise AssertionError(f"bookmark controller rename state changed: {result!r}")
-    if result["calls"][:3] != ["status-pills", "cancel-search", "load:second:push:"]:
+    if result["calls"][:3] != ["status-pills", "reset-search", "load:second:push:"]:
         raise AssertionError(f"bookmark controller callbacks changed: {result!r}")
 
 

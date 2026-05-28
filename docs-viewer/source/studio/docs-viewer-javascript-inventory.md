@@ -123,7 +123,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the compatibility owner for the existing shared route/document workflow after the entrypoint became a wrapper.
 - Current risk score: 6 after the route/document workflow and compatibility-runtime owner extractions.
 - 2026-05-27 owner note: URL/query helpers, current-doc resolution, route application, index-load orchestration, payload-load orchestration, missing/error handoff, route-link handling, and popstate coordination moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`.
-- 2026-05-27 owner note: search/recent route callback bundling moved behind `createDocsViewerSearchRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-search-controller.js`; bookmark route callback bundling moved behind `createDocsViewerBookmarkRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-bookmarks.js`.
+- 2026-05-28 owner note: search/recent route command bundling is now `createDocsViewerSearchRouteCommands(...)`, and the search controller consumes explicit search/recent, document-index, selected-document, route-command, and pane-command inputs instead of the broad runtime state.
+- 2026-05-28 owner note: bookmark document-load command bundling is now `createDocsViewerBookmarkRouteCommands(...)`, and the bookmark controller consumes explicit bookmark, document-index, selected-document, search/recent, route-command, and search-reset command inputs instead of the broad runtime state.
 - 2026-05-27 owner note: info-panel toolbar click handoff now opens the selected info hosted view through `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`; toolbar rendering and view option projection stay in focused panel/hosted-view modules.
 - 2026-05-28 owner note: generated-data request shaping and generated-read capability caching moved to `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`.
 - 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
@@ -200,15 +201,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-search-controller.js`
 
 - Current risk score: 5.
-- 2026-05-27 owner note: search/recent route callback bundling moved into this focused owner through `createDocsViewerSearchRouteCallbacks(...)`. The controller now consumes explicit route callbacks for route application, history writes, current-doc resolution, default-doc fallback, result URL creation, and loadable-doc target resolution.
-- Keep this module focused on generated search-index loading, result/recent rendering, debounce handoff, search/recent route activation, more-results behavior, and pane projection requests.
+- 2026-05-28 owner note: search/recent route command bundling moved into this focused owner through `createDocsViewerSearchRouteCommands(...)`. The controller now consumes explicit `searchRecent`, `documentIndex`, `selectedDocument`, `routeCommands`, and `paneCommands` inputs for route application, history writes, current-doc resolution, default-doc fallback, result URL creation, loadable-doc target resolution, and pane projection requests.
+- Keep this module focused on generated search-index loading, result/recent rendering, debounce handoff, search/recent route activation, more-results behavior, route command consumption, and pane command requests.
 - Do not move low-level URL construction, browser history primitives, document payload rendering, config loading, management writes, or panel toolbar/view switching into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-bookmarks.js`
 
 - Current risk score: 6.
-- 2026-05-27 owner note: bookmark route callback bundling moved into this focused owner through `createDocsViewerBookmarkRouteCallbacks(...)`. The controller now consumes explicit route callbacks for search-debounce cancellation and document-load handoff when opening a bookmark.
-- Keep this module focused on bookmark loading, IndexedDB support fallback, list/toggle rendering, selected-document bookmark UI projection, edit state, pending focus, bookmark events, route callback consumption, and status-pill fallback callbacks.
+- 2026-05-28 owner note: bookmark route command bundling moved into this focused owner through `createDocsViewerBookmarkRouteCommands(...)`. The controller now consumes explicit bookmark, document-index, selected-document, search/recent, route-command, and search-reset command inputs for bookmark rendering and document-load handoff when opening a bookmark.
+- Keep this module focused on bookmark loading, IndexedDB support fallback, list/toggle rendering, selected-document bookmark UI projection, edit state, pending focus, bookmark events, route command consumption, search-reset command consumption, and status-pill fallback callbacks.
 - Do not move low-level history construction, document payload rendering, info-panel lifecycle, management writes, or future bookmark grouping/sync/export features into the compatibility runtime.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
