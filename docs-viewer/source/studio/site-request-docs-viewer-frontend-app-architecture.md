@@ -12,7 +12,12 @@ viewable: true
 
 Status:
 
-- done
+- completed
+
+The new Docs Viewer architecture is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+
+
+## Purpose
 
 This request is the parent policy and benefits analysis for the next Docs Viewer frontend-app architecture work.
 Implementation should happen in child task documents, following the pattern used by the closed [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell).

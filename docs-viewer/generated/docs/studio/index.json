@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T18:57:54Z",
+  "generated_at": "2026-05-28T19:19:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2946,7 +2946,7 @@
       "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
-      "content_text_length": 26645,
+      "content_text_length": 26801,
       "ui_status": "done"
     },
     {
@@ -3269,8 +3269,8 @@
       "source_path": "site-request-testing-framework-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-testing-framework-review",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-testing-framework-review.json",
-      "content_text_length": 7021,
-      "ui_status": "planned"
+      "content_text_length": 7258,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
