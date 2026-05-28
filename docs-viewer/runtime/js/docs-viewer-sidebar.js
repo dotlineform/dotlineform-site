@@ -4,23 +4,37 @@ import {
 } from "./docs-viewer-tree.js";
 
 export function initDocsViewerSidebarRenderer(context) {
-  var state = context.state;
+  var documentIndex = context.documentIndex;
+  var selectedDocument = context.selectedDocument;
+  var scopeConfig = context.scopeConfig;
   var nav = context.nav;
   var meta = context.meta;
   var pathEl = context.pathEl;
   var updatedEl = context.updatedEl;
   var summaryEl = context.summaryEl;
 
+  function managementText() {
+    return scopeConfig && scopeConfig.managementText ? scopeConfig.managementText : {};
+  }
+
+  function managementTextValue(key) {
+    return String(managementText()[key] || "");
+  }
+
+  function showUpdatedDate() {
+    return !scopeConfig || scopeConfig.showUpdatedDate !== false;
+  }
+
   function docChildren(docId) {
-    return state.childrenByParent.get(docId) || [];
+    return documentIndex.childrenByParent.get(docId) || [];
   }
 
   function buildTrail(docId) {
     var trail = [];
-    var current = state.docsById.get(docId);
+    var current = documentIndex.docsById.get(docId);
     while (current) {
       trail.unshift(current);
-      current = current.parent_id ? state.docsById.get(current.parent_id) : null;
+      current = current.parent_id ? documentIndex.docsById.get(current.parent_id) : null;
     }
     return trail;
   }
@@ -28,14 +42,14 @@ export function initDocsViewerSidebarRenderer(context) {
   function expandTrail(docId) {
     buildTrail(docId).forEach(function (doc) {
       if (docChildren(doc.doc_id).length > 0) {
-        state.expandedDocIds.add(doc.doc_id);
+        documentIndex.expandedDocIds.add(doc.doc_id);
       }
     });
   }
 
   function renderSidebar() {
     nav.textContent = "";
-    if (state.docs.length === 0) {
+    if (documentIndex.docs.length === 0) {
       return;
     }
 
@@ -47,7 +61,7 @@ export function initDocsViewerSidebarRenderer(context) {
     var list = document.createElement("ul");
     list.className = parentId ? "docsViewer__navList docsViewer__navList--child" : "docsViewer__navList";
 
-    var docs = state.childrenByParent.get(parentId) || [];
+    var docs = documentIndex.childrenByParent.get(parentId) || [];
     docs.forEach(function (doc) {
       var item = document.createElement("li");
       item.className = "docsViewer__navItem";
@@ -65,9 +79,9 @@ export function initDocsViewerSidebarRenderer(context) {
         toggle.type = "button";
         toggle.className = "docsViewer__toggle";
         toggle.dataset.toggleDocId = doc.doc_id;
-        toggle.setAttribute("aria-expanded", state.expandedDocIds.has(doc.doc_id) ? "true" : "false");
-        toggle.setAttribute("aria-label", state.expandedDocIds.has(doc.doc_id) ? "Collapse section" : "Expand section");
-        toggle.textContent = state.expandedDocIds.has(doc.doc_id) ? "▼" : "►";
+        toggle.setAttribute("aria-expanded", documentIndex.expandedDocIds.has(doc.doc_id) ? "true" : "false");
+        toggle.setAttribute("aria-label", documentIndex.expandedDocIds.has(doc.doc_id) ? "Collapse section" : "Expand section");
+        toggle.textContent = documentIndex.expandedDocIds.has(doc.doc_id) ? "▼" : "►";
         row.appendChild(toggle);
       } else {
         var spacer = document.createElement("span");
@@ -79,13 +93,13 @@ export function initDocsViewerSidebarRenderer(context) {
 
       var link = document.createElement("a");
       link.className = "docsViewer__navLink";
-      if (doc.doc_id === state.selectedDocId) {
+      if (doc.doc_id === selectedDocument.selectedDocId) {
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
       if (isDocHidden(doc)) {
         link.setAttribute("data-draft-doc", "true");
-        link.title = state.managementText.metadataHiddenLabel;
+        link.title = managementTextValue("metadataHiddenLabel");
       }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -106,14 +120,14 @@ export function initDocsViewerSidebarRenderer(context) {
         var draftIcon = document.createElement("span");
         draftIcon.className = "docsViewer__draftPrefix";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = state.managementText.docHiddenEmoji;
+        draftIcon.textContent = managementTextValue("docHiddenEmoji");
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
       item.appendChild(row);
 
-      if (hasChildren && state.expandedDocIds.has(doc.doc_id)) {
+      if (hasChildren && documentIndex.expandedDocIds.has(doc.doc_id)) {
         item.appendChild(renderNavList(doc.doc_id));
       }
 
@@ -143,8 +157,8 @@ export function initDocsViewerSidebarRenderer(context) {
       pathEl.appendChild(link);
     });
 
-    var hiddenLabel = state.managementText.metadataHiddenLabel;
-    if (!state.showUpdatedDate) {
+    var hiddenLabel = managementTextValue("metadataHiddenLabel");
+    if (!showUpdatedDate()) {
       updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
       updatedEl.hidden = isDocViewable(doc);
     } else if (doc.last_updated) {

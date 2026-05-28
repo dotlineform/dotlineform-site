@@ -1,5 +1,8 @@
 export function initDocsViewerDocumentController(context) {
-  var state = context.state;
+  var routeSession = context.routeSession;
+  var scopeConfigState = context.scopeConfig;
+  var selectedDocument = context.selectedDocument;
+  var statusCommands = context.statusCommands || {};
   var content = context.content;
   var meta = context.meta;
   var results = context.results;
@@ -10,7 +13,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function currentScopeConfigs() {
-    return typeof context.scopeConfigs === "function" ? context.scopeConfigs() : state.scopeConfigs;
+    return scopeConfigState && Array.isArray(scopeConfigState.scopeConfigs) ? scopeConfigState.scopeConfigs : [];
   }
 
   function currentReportRegistryUrl() {
@@ -23,7 +26,23 @@ export function initDocsViewerDocumentController(context) {
 
   function scopeConfig(scope) {
     var targetScope = String(scope || currentViewerScope() || "").trim().toLowerCase();
-    return state.scopeConfigsById.get(targetScope);
+    return scopeConfigState && scopeConfigState.scopeConfigsById ? scopeConfigState.scopeConfigsById.get(targetScope) : null;
+  }
+
+  function managementModeActive() {
+    return Boolean(routeSession && routeSession.managementMode);
+  }
+
+  function closeStatusMenu() {
+    if (typeof statusCommands.closeStatusMenu === "function") statusCommands.closeStatusMenu();
+  }
+
+  function setStatus(message, isError) {
+    if (typeof statusCommands.setStatus === "function") {
+      statusCommands.setStatus(message, isError);
+    } else if (typeof context.setStatus === "function") {
+      context.setStatus(message, isError);
+    }
   }
 
   function fetchDocsIndexForScope(scope) {
@@ -99,10 +118,10 @@ export function initDocsViewerDocumentController(context) {
       fetchDocsReferencesIndex: fetchDocsReferencesIndexForScope,
       fetchDocsIndex: fetchDocsIndexForScope,
       managementBaseUrl: currentManagementBaseUrl(),
-      managementMode: state.managementMode,
+      managementMode: managementModeActive(),
       payload: payload,
       reportRegistryUrl: currentReportRegistryUrl(),
-      setStatus: context.setStatus,
+      setStatus: setStatus,
       scopeConfigs: currentScopeConfigs().slice(),
       viewerScope: currentViewerScope(),
       viewerUrlForScope: context.viewerUrlForScope
@@ -181,8 +200,8 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function renderPayload(doc, payload, hash) {
-    state.statusMenuOpen = false;
-    state.selectedDocId = doc.doc_id;
+    closeStatusMenu();
+    selectedDocument.selectedDocId = doc.doc_id;
     context.renderSidebar();
     context.renderBookmarkUi();
     context.renderManagementUi();
@@ -198,7 +217,7 @@ export function initDocsViewerDocumentController(context) {
     content.innerHTML = payload.content_html || "";
     maybeMountDocsViewerReport(doc, payload);
     document.title = doc.title + " | dotlineform";
-    context.setStatus("", false);
+    setStatus("", false);
     context.renderManagementUi();
 
     window.requestAnimationFrame(function () {

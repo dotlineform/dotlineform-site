@@ -2709,6 +2709,141 @@ def assert_bookmark_controller_contract(page: Page) -> None:
         raise AssertionError(f"bookmark controller callbacks changed: {result!r}")
 
 
+def assert_document_and_sidebar_controller_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const documentModule = await import('/docs-viewer/runtime/js/docs-viewer-document-controller.js');
+            const sidebarModule = await import('/docs-viewer/runtime/js/docs-viewer-sidebar.js');
+            document.body.innerHTML = `
+                <nav id="nav"></nav>
+                <section id="meta" hidden>
+                  <p id="path"></p>
+                  <p id="updated"></p>
+                  <p id="summary"></p>
+                </section>
+                <main id="content"></main>
+                <ol id="results"></ol>
+                <div id="more"></div>
+            `;
+            const calls = [];
+            const docs = [
+                { doc_id: 'intro', title: 'Intro', parent_id: '', sort_order: 1, last_updated: '2026-05-28', viewable: true },
+                { doc_id: 'child', title: 'Child', parent_id: 'intro', sort_order: 1, summary: 'Child summary', viewable: true },
+                { doc_id: 'hidden', title: 'Hidden', parent_id: '', sort_order: 2, hidden: true, viewable: false }
+            ];
+            const documentIndex = {
+                docs,
+                docsById: new Map(docs.map((doc) => [doc.doc_id, doc])),
+                childrenByParent: new Map([
+                    ['', [docs[0], docs[2]]],
+                    ['intro', [docs[1]]]
+                ]),
+                expandedDocIds: new Set(),
+                statusForIndexDoc: (doc) => doc.doc_id === 'intro' ? { emoji: 'ok' } : null,
+                viewerTargetDocId: (docId) => docId === 'intro' ? 'child' : docId
+            };
+            const selectedDocument = {
+                selectedDocId: ''
+            };
+            const scopeConfig = {
+                scopeConfigs: [{ scope_id: 'studio', indexUrl: '/assets/data/docs/scopes/studio/index.json' }],
+                scopeConfigsById: new Map([
+                    ['studio', { scope_id: 'studio', indexUrl: '/assets/data/docs/scopes/studio/index.json' }]
+                ]),
+                managementText: {
+                    metadataHiddenLabel: 'hidden',
+                    docHiddenEmoji: 'H'
+                },
+                showUpdatedDate: true
+            };
+            const sidebar = sidebarModule.initDocsViewerSidebarRenderer({
+                canDragCurrentDoc: () => false,
+                documentIndex,
+                meta: document.getElementById('meta'),
+                nav: document.getElementById('nav'),
+                pathEl: document.getElementById('path'),
+                renderBookmarkToggle: () => calls.push('bookmark-toggle'),
+                renderStatusPills: () => calls.push('status-pills'),
+                scopeConfig,
+                selectedDocument,
+                statusForIndexDoc: documentIndex.statusForIndexDoc,
+                summaryEl: document.getElementById('summary'),
+                updateNavDragState: () => calls.push('drag-state'),
+                updatedEl: document.getElementById('updated'),
+                viewerTargetDocId: documentIndex.viewerTargetDocId,
+                viewerUrl: (docId) => `/docs/?doc=${docId}`
+            });
+            sidebar.expandTrail('child');
+            sidebar.renderSidebar();
+
+            const documentController = documentModule.initDocsViewerDocumentController({
+                allowManagement: false,
+                checkGeneratedDataReadCapability: () => Promise.resolve(false),
+                clearResultsStatus: () => calls.push('clear-results'),
+                content: document.getElementById('content'),
+                generatedData: {
+                    readScopeIndex: ({ viewerScope }) => Promise.resolve({ viewerScope }),
+                    readReferencesIndex: ({ viewerScope }) => Promise.resolve({ viewerScope }),
+                    readReferenceTarget: ({ targetSlug }) => Promise.resolve({ targetSlug })
+                },
+                hasActiveQuery: () => false,
+                managementBaseUrl: () => '',
+                meta: document.getElementById('meta'),
+                more: document.getElementById('more'),
+                projectDocumentShell: (projection) => calls.push(`shell:${Object.keys(projection).sort().join(',')}`),
+                renderBookmarkToggle: () => calls.push('bookmark-toggle'),
+                renderBookmarkUi: () => calls.push('bookmark-ui'),
+                renderManagementUi: () => calls.push('management-ui'),
+                renderMeta: sidebar.renderMeta,
+                renderSearchMode: () => calls.push('search-mode'),
+                renderSidebar: sidebar.renderSidebar,
+                renderStatusPills: () => calls.push('status-pills'),
+                reportRegistryUrl: () => '/assets/data/docs/reports.json',
+                results: document.getElementById('results'),
+                routeSession: { managementMode: false },
+                scopeConfig,
+                selectedDocument,
+                setRecentModeActive: (active) => calls.push(`recent:${Boolean(active)}`),
+                statusCommands: {
+                    closeStatusMenu: () => calls.push('close-status-menu'),
+                    setStatus: (message, isError) => calls.push(`status:${message}:${Boolean(isError)}`)
+                },
+                viewerScope: () => 'studio',
+                viewerUrlForScope: (scope, docId) => `/${scope}/?doc=${docId}`
+            });
+            documentController.renderPayload(docs[1], { content_html: '<h1 id="part">Child</h1>' }, 'part');
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            return {
+                selectedDocId: selectedDocument.selectedDocId,
+                expanded: Array.from(documentIndex.expandedDocIds),
+                activeHref: document.querySelector('.docsViewer__navLink.is-active')?.getAttribute('href') || '',
+                rootHref: document.querySelector('[data-doc-id="intro"]')?.getAttribute('href') || '',
+                hiddenTitle: document.querySelector('[data-doc-id="hidden"]')?.getAttribute('title') || '',
+                contentHtml: document.getElementById('content').innerHTML,
+                pathText: document.getElementById('path').textContent,
+                summaryText: document.getElementById('summary').textContent,
+                metaHidden: document.getElementById('meta').hidden,
+                calls
+            };
+        }"""
+    )
+    if result["selectedDocId"] != "child":
+        raise AssertionError(f"document controller did not update selected-document domain: {result!r}")
+    if result["expanded"] != ["intro"]:
+        raise AssertionError(f"sidebar renderer did not use document-index expansion state: {result!r}")
+    if result["activeHref"] != "/docs/?doc=child" or result["rootHref"] != "/docs/?doc=child":
+        raise AssertionError(f"sidebar renderer route URL projection changed: {result!r}")
+    if result["hiddenTitle"] != "hidden":
+        raise AssertionError(f"sidebar renderer management text projection changed: {result!r}")
+    if result["contentHtml"] != '<h1 id="part">Child</h1>':
+        raise AssertionError(f"document controller payload render changed: {result!r}")
+    if result["pathText"] != "Intro" or result["summaryText"] != "Child summary" or result["metaHidden"] is not False:
+        raise AssertionError(f"sidebar metadata render changed: {result!r}")
+    for expected in ["close-status-menu", "bookmark-ui", "management-ui", "status::false"]:
+        if expected not in result["calls"]:
+            raise AssertionError(f"document/sidebar callbacks changed: {result!r}")
+
+
 def assert_generated_data_runtime_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -3232,6 +3367,7 @@ def main() -> int:
             assert_route_workflow_contract(page, base_url)
             assert_search_controller_contract(page)
             assert_bookmark_controller_contract(page)
+            assert_document_and_sidebar_controller_contract(page)
             assert_generated_data_runtime_contract(page)
             assert_service_context_contract(page)
             assert_document_index_state_contract(page)

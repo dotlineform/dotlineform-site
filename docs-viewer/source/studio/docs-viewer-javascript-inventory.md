@@ -128,6 +128,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: info-panel toolbar click handoff now opens the selected info hosted view through `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`; toolbar rendering and view option projection stay in focused panel/hosted-view modules.
 - 2026-05-28 owner note: generated-data request shaping and generated-read capability caching moved to `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`.
 - 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
+- 2026-05-28 owner note: document payload rendering and sidebar tree rendering now consume explicit state-domain inputs. `docs-viewer-document-controller.js` receives route-session, scope-config, selected-document, generated-data, and status commands; `docs-viewer-sidebar.js` receives document-index, selected-document, and scope-config projections instead of the broad runtime state.
 - 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
 - 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
 - 2026-05-28 owner note: app-session and state default creation moved to `docs-viewer/runtime/js/docs-viewer-app-session.js`; `docs-viewer-app-runtime.js` now creates the session, passes the compatibility state bridge to existing controllers, updates the route-session domain during route-global changes, and returns `appSession`.
@@ -212,6 +213,20 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: bookmark route command bundling moved into this focused owner through `createDocsViewerBookmarkRouteCommands(...)`. The controller now consumes explicit bookmark, document-index, selected-document, search/recent, route-command, and search-reset command inputs for bookmark rendering and document-load handoff when opening a bookmark.
 - Keep this module focused on bookmark loading, IndexedDB support fallback, list/toggle rendering, selected-document bookmark UI projection, edit state, pending focus, bookmark events, route command consumption, search-reset command consumption, and status-pill fallback callbacks.
 - Do not move low-level history construction, document payload rendering, info-panel lifecycle, management writes, or future bookmark grouping/sync/export features into the compatibility runtime.
+
+### `docs-viewer/runtime/js/docs-viewer-document-controller.js`
+
+- Current risk score: 5.
+- 2026-05-28 owner note: this controller now consumes explicit route-session, scope-config, selected-document, generated-data, and status command inputs instead of `context.state`.
+- Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, and generated-data-backed report read handoff.
+- Do not move URL/history primitives, tree visibility projection, sidebar DOM rendering, search/recent rendering, local report endpoint ownership, backend writes, or management action behavior into it.
+
+### `docs-viewer/runtime/js/docs-viewer-sidebar.js`
+
+- Current risk score: 4.
+- 2026-05-28 owner note: this renderer now consumes explicit document-index, selected-document, and scope-config projections instead of `context.state`.
+- Keep this module focused on tree row rendering, expand-state projection, selected-document highlighting, breadcrumb rendering, update-date display, and scope-config management text display.
+- Do not move document payload rendering, route workflow, generated-data reads, bookmark storage, search/recent behavior, or management writes into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 

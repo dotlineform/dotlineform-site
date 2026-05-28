@@ -129,12 +129,14 @@ export function startDocsViewerRuntime(options) {
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
+    documentIndex: appSession.domains.documentIndex,
     meta: meta,
     nav: nav,
     pathEl: pathEl,
     renderBookmarkToggle: renderBookmarkToggle,
     renderStatusPills: renderStatusPills,
-    state: state,
+    scopeConfig: appSession.domains.scopeConfig,
+    selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
     summaryEl: summaryEl,
     updateNavDragState: updateNavDragState,
@@ -176,10 +178,14 @@ export function startDocsViewerRuntime(options) {
     renderStatusPills: renderStatusPills,
     reportRegistryUrl: function () { return reportRegistryUrl; },
     results: results,
-    scopeConfigs: function () { return state.scopeConfigs; },
+    routeSession: appSession.domains.routeSession,
+    scopeConfig: appSession.domains.scopeConfig,
+    selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
-    setStatus: setStatus,
-    state: state,
+    statusCommands: {
+      closeStatusMenu: function () { appSession.domains.management.statusMenuOpen = false; },
+      setStatus: setStatus
+    },
     viewerScope: function () { return viewerScope; },
     viewerUrlForScope: viewerUrlForScope
   });
