@@ -1,6 +1,5 @@
 import {
   buildIndexPanelStorageKey,
-  buildLegacySidebarStorageKey,
   expandedIndexPanelState,
   nextIndexPanelState,
   persistIndexPanelState,
@@ -32,7 +31,6 @@ export function createDocsViewerPanelLayout(options) {
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var storageScope = normalizeScope(settings.storageScope);
   var storageKey = buildIndexPanelStorageKey(storageScope);
-  var legacyStorageKey = buildLegacySidebarStorageKey(storageScope);
   var indexPanelState = readStoredIndexPanelState();
   var viewState = createDocsViewerViewState({
     indexPanelState: indexPanelState,
@@ -44,8 +42,7 @@ export function createDocsViewerPanelLayout(options) {
   function readStoredIndexPanelState() {
     return readIndexPanelState({
       storage: storage,
-      storageKey: storageKey,
-      legacyStorageKey: legacyStorageKey
+      storageKey: storageKey
     });
   }
 
@@ -60,7 +57,6 @@ export function createDocsViewerPanelLayout(options) {
   function setStorageScope(scope) {
     storageScope = normalizeScope(scope);
     storageKey = buildIndexPanelStorageKey(storageScope);
-    legacyStorageKey = buildLegacySidebarStorageKey(storageScope);
     indexPanelState = readStoredIndexPanelState();
     viewState = updateDocsViewerViewState(viewState, {
       indexPanelState: indexPanelState

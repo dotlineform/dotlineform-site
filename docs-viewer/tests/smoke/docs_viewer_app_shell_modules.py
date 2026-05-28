@@ -1346,7 +1346,6 @@ def assert_index_panel_projection(page: Page) -> None:
             });
             const collapsed = {
                 state: root.dataset.indexPanelState,
-                sidebarState: root.dataset.sidebarState,
                 toggleHidden: refs.sidebarToggle.hidden,
                 toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
                 toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
@@ -1360,7 +1359,6 @@ def assert_index_panel_projection(page: Page) -> None:
             });
             const expanded = {
                 state: root.dataset.indexPanelState,
-                sidebarState: root.dataset.sidebarState,
                 toggleHidden: refs.sidebarToggle.hidden,
                 toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
                 toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
@@ -1381,7 +1379,6 @@ def assert_index_panel_projection(page: Page) -> None:
     )
     if result["collapsed"] != {
         "state": "collapsed",
-        "sidebarState": "collapsed",
         "toggleHidden": False,
         "toggleExpanded": "false",
         "toggleLabel": "Restore index panel",
@@ -1391,7 +1388,6 @@ def assert_index_panel_projection(page: Page) -> None:
         raise AssertionError(f"collapsed index projection failed: {result!r}")
     if result["expanded"] != {
         "state": "expanded",
-        "sidebarState": "expanded",
         "toggleHidden": False,
         "toggleExpanded": "true",
         "toggleLabel": "Restore index panel",
@@ -1908,7 +1904,7 @@ def assert_panel_layout_contract(page: Page) -> None:
             await shell.initDocsViewerAppShell({ root, document });
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
             const values = {
-                'dotlineform-docs-viewer-sidebar:studio': 'collapsed',
+                'dotlineform-docs-viewer-index-panel:studio': 'collapsed',
                 'dotlineform-docs-viewer-index-panel:library': 'expanded'
             };
             const storage = {
@@ -1934,7 +1930,6 @@ def assert_panel_layout_contract(page: Page) -> None:
             layout.renderIndexPanelState();
             const initialProjection = {
                 state: root.dataset.indexPanelState,
-                sidebar: root.dataset.sidebarState,
                 toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label')
             };
             const toggledState = layout.toggleIndexPanelState();
@@ -1943,7 +1938,6 @@ def assert_panel_layout_contract(page: Page) -> None:
             layout.renderIndexPanelState();
             const libraryProjection = {
                 state: root.dataset.indexPanelState,
-                sidebar: root.dataset.sidebarState,
                 expandHidden: refs.indexPanel.sidebarExpand.hidden
             };
             available = false;
@@ -2004,7 +1998,6 @@ def assert_panel_layout_contract(page: Page) -> None:
         "initialState": "collapsed",
         "initialProjection": {
             "state": "collapsed",
-            "sidebar": "collapsed",
             "toggleLabel": "Restore index panel",
         },
         "toggledState": "normal",
@@ -2012,7 +2005,6 @@ def assert_panel_layout_contract(page: Page) -> None:
         "libraryState": "expanded",
         "libraryProjection": {
             "state": "expanded",
-            "sidebar": "expanded",
             "expandHidden": True,
         },
         "unavailableToggleState": "expanded",

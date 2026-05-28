@@ -78,7 +78,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 32 | 76 | `docs-viewer/runtime/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 33 | 77 | `docs-viewer/runtime/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 34 | 152 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
-| 35 | 153 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
+| 35 | 153 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, current-key persistence, toggle projection, and document-pane visibility helper. |
 | 36 | 154 | `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index panel chrome renderer and projection applier. |
 | 37 | new | `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned document shell, read-only metadata chrome, and narrow document/search/recent projection applier. |
 | 38 | new | `docs-viewer/runtime/js/docs-viewer-app-context.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route context assembly from route config/access projection and mutable route-context projection. |
@@ -325,7 +325,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
 
 - Added 2026-05-27 as the focused panel projection owner for the app shell.
-- 2026-05-28 follow-up note: this module still passes the legacy sidebar local-storage key into the index-panel state helper so old sidebar state can migrate to the current index-panel storage key. Cleanup tracker `FU-1` owns retiring that compatibility fence when the migration window is intentionally closed.
+- 2026-05-28 owner note: legacy sidebar local-storage migration was retired by cleanup tracker `FU-1`; this module reads and writes only the current `dotlineform-docs-viewer-index-panel:<scope>` key.
 - Keep this module limited to index panel state storage/projection, current document/search/recent/results-status projection handoff, info-panel visibility/layout projection, and delegation to the view-state skeleton.
 - Do not add toolbar controls, hosted-view registration, document payload rendering, search result rendering, or management action behavior to it.
 

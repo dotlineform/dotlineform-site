@@ -38,13 +38,13 @@ def assert_index_panel_helpers(page: Page) -> None:
                 setItem: (key, value) => storage.set(key, value)
             };
             const storageKey = module.buildIndexPanelStorageKey('studio');
-            const legacyKey = module.buildLegacySidebarStorageKey('studio');
-            storage.set(legacyKey, 'expanded');
-            const migratedNormal = module.readIndexPanelState({ storage: storageAdapter, storageKey, legacyStorageKey: legacyKey });
-            storage.set(legacyKey, 'collapsed');
-            const migratedCollapsed = module.readIndexPanelState({ storage: storageAdapter, storageKey, legacyStorageKey: legacyKey });
+            const defaultState = module.readIndexPanelState({ storage: storageAdapter, storageKey });
+            module.persistIndexPanelState({ storage: storageAdapter, storageKey, state: 'collapsed' });
+            const storedCollapsed = module.readIndexPanelState({ storage: storageAdapter, storageKey });
             module.persistIndexPanelState({ storage: storageAdapter, storageKey, state: 'expanded' });
-            const storedExpanded = module.readIndexPanelState({ storage: storageAdapter, storageKey, legacyStorageKey: legacyKey });
+            const storedExpanded = module.readIndexPanelState({ storage: storageAdapter, storageKey });
+            module.persistIndexPanelState({ storage: storageAdapter, storageKey, state: 'invalid' });
+            const normalizedInvalid = module.readIndexPanelState({ storage: storageAdapter, storageKey });
             const sequence = [
                 module.nextIndexPanelState('collapsed'),
                 module.nextIndexPanelState('normal'),
@@ -61,10 +61,10 @@ def assert_index_panel_helpers(page: Page) -> None:
             const unavailableProjection = module.projectIndexPanelState('expanded', { available: false });
             return {
                 storageKey,
-                legacyKey,
-                migratedNormal,
-                migratedCollapsed,
+                defaultState,
+                storedCollapsed,
                 storedExpanded,
+                normalizedInvalid,
                 sequence,
                 directExpanded,
                 collapsedProjection,
@@ -76,14 +76,14 @@ def assert_index_panel_helpers(page: Page) -> None:
     )
     if result["storageKey"] != "dotlineform-docs-viewer-index-panel:studio":
         raise AssertionError(f"unexpected storage key: {result!r}")
-    if result["legacyKey"] != "dotlineform-docs-viewer-sidebar:studio":
-        raise AssertionError(f"unexpected legacy storage key: {result!r}")
-    if result["migratedNormal"] != "normal":
-        raise AssertionError(f"legacy expanded did not migrate to normal: {result!r}")
-    if result["migratedCollapsed"] != "collapsed":
-        raise AssertionError(f"legacy collapsed did not migrate: {result!r}")
+    if result["defaultState"] != "normal":
+        raise AssertionError(f"empty storage did not default to normal: {result!r}")
+    if result["storedCollapsed"] != "collapsed":
+        raise AssertionError(f"stored collapsed was not preserved: {result!r}")
     if result["storedExpanded"] != "expanded":
         raise AssertionError(f"stored expanded was not preserved: {result!r}")
+    if result["normalizedInvalid"] != "normal":
+        raise AssertionError(f"invalid stored state was not normalized: {result!r}")
     if result["sequence"] != ["normal", "collapsed", "normal"]:
         raise AssertionError(f"unexpected state sequence: {result!r}")
     if result["directExpanded"] != ["expanded", "expanded", "expanded"]:
@@ -96,8 +96,6 @@ def assert_index_panel_helpers(page: Page) -> None:
         raise AssertionError(f"expanded mode should hide document pane: {result!r}")
     if result["expandedProjection"]["expandHidden"] is not True or result["expandedProjection"]["stepIcon"] != "‹" or result["expandedProjection"]["stepLabel"] != "Restore index panel":
         raise AssertionError(f"expanded controls mismatch: {result!r}")
-    if result["expandedProjection"]["legacySidebarState"] != "expanded":
-        raise AssertionError(f"expanded mode should remain sidebar-expanded for compatibility: {result!r}")
     if result["unavailableProjection"]["activeState"] != "normal" or result["unavailableProjection"]["toggleHidden"] is not True:
         raise AssertionError(f"unavailable projection mismatch: {result!r}")
 

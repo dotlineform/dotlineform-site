@@ -138,7 +138,6 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
             const step = document.querySelector('#docsViewerSidebarToggle');
             const expand = document.querySelector('#docsViewerSidebarExpand');
             return root?.dataset.indexPanelState === 'expanded' &&
-                root?.dataset.sidebarState === 'expanded' &&
                 content &&
                 getComputedStyle(content.closest('.docsViewer__main')).display === 'none' &&
                 step &&
@@ -165,7 +164,6 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
             const step = document.querySelector('#docsViewerSidebarToggle');
             const expand = document.querySelector('#docsViewerSidebarExpand');
             return root?.dataset.indexPanelState === 'collapsed' &&
-                root?.dataset.sidebarState === 'collapsed' &&
                 nav &&
                 getComputedStyle(nav).display === 'none' &&
                 main &&
@@ -186,7 +184,6 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
             const nav = document.querySelector('#docsViewerNav');
             const main = document.querySelector('.docsViewer__main');
             return root?.dataset.indexPanelState === 'normal' &&
-                root?.dataset.sidebarState === 'expanded' &&
                 nav &&
                 getComputedStyle(nav).display !== 'none' &&
                 main &&

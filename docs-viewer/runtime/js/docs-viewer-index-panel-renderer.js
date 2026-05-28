@@ -62,7 +62,6 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
   const projection = options.projection || {};
   if (root) {
     root.dataset.indexPanelState = projection.activeState || "normal";
-    root.dataset.sidebarState = projection.legacySidebarState || "expanded";
   }
   applyToggleProjection(refs.sidebarExpand, {
     hidden: projection.expandHidden,

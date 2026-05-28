@@ -18,21 +18,13 @@ export function buildIndexPanelStorageKey(scope) {
   return `dotlineform-docs-viewer-index-panel:${normalizeStorageScope(scope)}`;
 }
 
-export function buildLegacySidebarStorageKey(scope) {
-  return `dotlineform-docs-viewer-sidebar:${normalizeStorageScope(scope)}`;
-}
-
 export function readIndexPanelState(options = {}) {
   const storage = options.storage || null;
   if (!storage) return INDEX_PANEL_STATE_NORMAL;
   const storageKey = String(options.storageKey || "");
-  const legacyStorageKey = String(options.legacyStorageKey || "");
   try {
     const stored = storageKey ? storage.getItem(storageKey) : "";
     if (stored) return normalizeIndexPanelState(stored);
-    const legacyStored = legacyStorageKey ? storage.getItem(legacyStorageKey) : "";
-    if (legacyStored === INDEX_PANEL_STATE_COLLAPSED) return INDEX_PANEL_STATE_COLLAPSED;
-    if (legacyStored === INDEX_PANEL_STATE_EXPANDED) return INDEX_PANEL_STATE_NORMAL;
   } catch (error) {
     return INDEX_PANEL_STATE_NORMAL;
   }
@@ -75,7 +67,6 @@ export function projectIndexPanelState(state, options = {}) {
     nextState,
     expandedState: expandedIndexPanelState(activeState),
     documentPaneVisible: activeState !== INDEX_PANEL_STATE_EXPANDED,
-    legacySidebarState: activeState === INDEX_PANEL_STATE_COLLAPSED ? INDEX_PANEL_STATE_COLLAPSED : INDEX_PANEL_STATE_EXPANDED,
     toggleHidden: !available,
     toggleAriaExpanded: expanded ? "true" : "false",
     toggleIcon: stepIcon,

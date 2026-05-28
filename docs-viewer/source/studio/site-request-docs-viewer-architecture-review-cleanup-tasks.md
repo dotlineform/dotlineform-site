@@ -41,6 +41,10 @@ Completed 2026-05-28.
 - The final scan found one separate compatibility fence outside the completed app-architecture slices: legacy sidebar local-storage migration in `docs-viewer-index-panel.js` / `docs-viewer-panel-layout.js`. It is tracked below as `FU-1` instead of being left implicit.
 - Structured docs-log entry: `change-2026-05-28-closed-docs-viewer-architecture-cleanup`.
 
+Follow-up `FU-1` completed 2026-05-28.
+The legacy sidebar local-storage migration window is closed: `buildLegacySidebarStorageKey(...)`, `legacyStorageKey` reads, `legacySidebarState` projection, `data-sidebar-state` rendering/CSS fallback, and focused smoke assertions for `dotlineform-docs-viewer-sidebar:<scope>` were removed.
+Current index-panel storage remains `dotlineform-docs-viewer-index-panel:<scope>` and focused smokes cover collapsed, normal, and expanded projection through that key.
+
 ### durable documentation
 
 Record any architecture/ownership changes in the durable owning reference doc, not only in this cleanup tracker.
@@ -217,7 +221,7 @@ These tasks were found by the final closeout scan and are not part of the comple
 
 | ID | status | owner | action |
 | --- | --- | --- | --- |
-| FU-1 | planned | `docs-viewer-index-panel.js`, `docs-viewer-panel-layout.js`, `docs_viewer_index_panel_modules.py` | Retire the legacy sidebar local-storage migration once the storage migration window is intentionally closed. Removal target: `buildLegacySidebarStorageKey(...)`, `legacyStorageKey` reads, `legacySidebarState` projection, and focused smoke assertions that preserve the old `dotlineform-docs-viewer-sidebar:<scope>` key. Verification requirement: focused index-panel module smoke plus app-shell smoke proving current `dotlineform-docs-viewer-index-panel:<scope>` storage still handles collapsed/normal/expanded projection. |
+| FU-1 | done | `docs-viewer-index-panel.js`, `docs-viewer-panel-layout.js`, `docs-viewer-index-panel-renderer.js`, `docs-viewer.css`, `docs_viewer_index_panel_modules.py`, `docs_viewer_app_shell_modules.py` | Retired the legacy sidebar local-storage migration after intentionally closing the migration window. Removed `buildLegacySidebarStorageKey(...)`, `legacyStorageKey` reads, `legacySidebarState` projection, `data-sidebar-state` rendering/CSS fallback, and focused smoke assertions that preserved the old `dotlineform-docs-viewer-sidebar:<scope>` key. Verification requirement: focused index-panel module smoke plus app-shell smoke proving current `dotlineform-docs-viewer-index-panel:<scope>` storage still handles collapsed/normal/expanded projection. |
 
 ## closeout
 
