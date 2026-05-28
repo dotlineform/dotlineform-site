@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T09:08:31Z",
+  "generated_at": "2026-05-28T09:30:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2930,8 +2930,24 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 44427,
-      "ui_status": "in-progress"
+      "content_text_length": 45249,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-frontend-app-architecture",
+      "title": "Docs Viewer Front-End App Architecture Request",
+      "added_date": "2026-05-28",
+      "last_updated": "2026-05-28",
+      "parent_id": "change-requests",
+      "sort_order": 14180,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-frontend-app-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-frontend-app-architecture.json",
+      "content_text_length": 10111,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",

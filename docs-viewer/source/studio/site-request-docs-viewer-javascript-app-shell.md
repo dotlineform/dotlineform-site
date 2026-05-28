@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-javascript-app-shell
 title: Docs Viewer JavaScript App Shell Request
 added_date: 2026-05-26
 last_updated: 2026-05-28
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 sort_order: 14170
 viewable: true
@@ -12,11 +12,21 @@ viewable: true
 
 Status:
 
-- in progress
+- closed
+
+This request is closed as the completed JavaScript app-shell migration foundation.
+It now serves as the historical record for the shell, route-config, boot, workflow, hosted-view, management-shell, and compatibility-runtime extraction work.
+
+Successor request:
+
+- [Docs Viewer Front-End App Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture)
+
+The successor request frames the next work in terms of structural frontend-app architecture: app session/state ownership, runtime composition, service adapters, lifecycle boundaries, and public/manage app contexts.
+Future work should not add new task slices to this request.
 
 - **App-shell migration foundation:** complete for the planned pure migration/risk-reduction pass
-- **Full JavaScript App Shell Request goals:** ~82-84% there
-- **Current app-shell priority:** keep future work on feature-specific panels, editor modules, semantic-reference views, and portable fixture proof in their separate request trackers rather than adding those behaviors back to the compatibility runtime.
+- **Original JavaScript App Shell Request goals:** complete enough to close this request and continue under the successor architecture request
+- **Closed-scope guidance:** keep future work on structural frontend-app architecture, feature-specific panels, editor modules, semantic-reference views, and portable fixture proof in their separate request trackers rather than adding those behaviors back to the compatibility runtime.
 
 What is now in good shape:
 
@@ -39,18 +49,21 @@ What is now in good shape:
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
-What remains in this app-shell request:
+What remains after this app-shell request:
 
 - The pure migration/risk-reduction tracker is complete: [Docs Viewer App Shell Compatibility Runtime Tasks](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks).
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` remains as compatibility coordination for app state defaults, controller construction, config handoff, event binding, initial load sequencing, and the small returned runtime API. Future work should add or extend focused owners rather than reintroducing route, search, bookmark, info-panel, generated-data, visibility, or management workflow ownership there.
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still bridges the migrated focused owners through shared state defaults, controller construction, config handoff, event binding, initial load sequencing, and the small returned runtime API. The successor request should replace that bridge with a clearer app-session/composition shape rather than treating more helper extraction as the goal.
 
 Separately tracked work:
 
 - Feature-specific panel surfaces remain separate request work. The app-shell foundation now has `index/document/info` state, metadata info, hosted-view lifecycle, and minimal info-panel toolbar switching; broader panel behavior belongs to [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), source/editor work belongs to [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor), and semantic-reference support data/view work belongs to [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2).
 - Portable setup docs and proof-fixture work are now tracked under [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer), with the immediate public fixture slice in [Portable Docs Viewer Public Fixture Tasks](/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks).
 
-The remaining migration should be treated as completion work, not as optional polish.
-The next slices should reduce shell and entrypoint ownership while preserving the current `/docs/`, `/library/`, and `/analysis/` behavior.
+The remaining architectural work is tracked in the successor request.
+The next slices should make Docs Viewer recognisable as a frontend app while preserving the current `/docs/`, `/library/`, and `/analysis/` behavior.
+
+The original request body below is retained as historical context for the completed migration.
+For current planning, use the successor request above.
 
 ## Summary
 

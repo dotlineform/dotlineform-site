@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-54c42529b263c211b110f6855ae7d207",
-    "generated_at_utc": "2026-05-28T09:08:31Z",
-    "count": 211
+    "version": "blake2b-f5fb297324af0eb5eee10e8090b63728",
+    "generated_at_utc": "2026-05-28T09:30:00Z",
+    "count": 212
   },
   "entries": [
     {
@@ -4697,6 +4697,37 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-frontend-app-architecture",
+      "kind": "doc",
+      "title": "Docs Viewer Front-End App Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-frontend-app-architecture",
+      "last_updated": "2026-05-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-28 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-frontend-app-architecture",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "frontend",
+        "app",
+        "architecture",
+        "docs viewer front-end app architecture request",
+        "front",
+        "end",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-frontend-app-architecture site request docs viewer frontend app architecture docs viewer front-end app architecture request front end change requests change requests 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",
