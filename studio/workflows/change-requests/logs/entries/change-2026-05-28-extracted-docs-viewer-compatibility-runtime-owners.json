@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-05-28-extracted-docs-viewer-compatibility-runtime-owners",
+  "date": "2026-05-28",
+  "title": "Extracted Docs Viewer Compatibility Runtime Owners",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime"
+  ],
+  "summary": "Moved generated-data request shaping, document-index visibility/loadability projection, info-panel coordination, and lazy management loading out of docs-viewer-app-runtime.js into focused runtime owners.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-app-shell-compatibility-runtime-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "app-shell",
+    "compatibility-runtime",
+    "generated-data",
+    "info-panel",
+    "document-index",
+    "management-loading"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
+  "related_docs": [
+    "docs-viewer",
+    "docs-viewer-overview",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-javascript-inventory",
+    "site-request-docs-viewer-javascript-app-shell",
+    "site-request-docs-viewer-app-shell-compatibility-runtime-tasks"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-document-index-state.js",
+    "docs-viewer/runtime/js/docs-viewer-info-panel-controller.js",
+    "docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py"
+  ],
+  "effect": "The compatibility runtime now reads as controller construction and startup coordination while generated-data reads, visibility/loadability projection, info-panel lifecycle/event handoff, and management lazy loading have explicit focused contracts. Public read-only routes still avoid management-only assets, and local manage mode continues to get backend capability and write authority through the existing management/service flow.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-app-boot.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-document-index-state.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-info-panel-controller.js",
+    "node --check docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

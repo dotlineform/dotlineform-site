@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-05-25
+last_updated: 2026-05-28
 parent_id: docs-viewer
 sort_order: 1000
 ---
@@ -44,6 +44,7 @@ Current route shells:
 
 - `docs/index.md`
 - `library/index.md`
+- `analysis/index.md`
 
 ### 2. Shared shell include
 
@@ -71,8 +72,12 @@ The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.
 The compatibility runtime wires state and focused controllers.
 Current helper modules:
 
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime wiring for app state, controller construction, config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, panel/info updates, generated-data capability checks, and lazy management loading
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns compatibility runtime coordination for app state defaults, controller construction, config handoff, event binding, initial load sequencing, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, and generated-search read capability checks
+- `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
+- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
+- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the compatibility runtime uses it to keep the management controller import gated behind management route access
 - `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering

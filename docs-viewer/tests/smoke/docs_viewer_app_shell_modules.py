@@ -2298,6 +2298,313 @@ def assert_bookmark_controller_contract(page: Page) -> None:
         raise AssertionError(f"bookmark controller callbacks changed: {result!r}")
 
 
+def assert_generated_data_runtime_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js');
+            let fetchCount = 0;
+            const state = {
+                reloadNonce: 'nonce-1',
+                reloadExpectedDocId: 'doc-2',
+                managementAvailable: true,
+                managementCapabilities: null,
+                generatedDataReadChecked: false,
+                generatedDataReadAvailable: false,
+                generatedDataReadRequestPromise: null
+            };
+            const runtime = module.createDocsViewerGeneratedDataRuntime({
+                assetVersion: 'asset-1',
+                generatedBaseUrl: 'http://127.0.0.1:8789',
+                reloadRetryAttempts: 7,
+                reloadRetryDelayMs: 11,
+                state,
+                viewerScope: () => 'studio',
+                window: {
+                    fetch: async () => {
+                        fetchCount += 1;
+                        return {
+                            ok: true,
+                            async json() {
+                                return {
+                                    capabilities: {
+                                        generated_data_reads: true,
+                                        scopes: {
+                                            studio: { available: true, generated_data_reads: true, generated_search_reads: true },
+                                            library: { available: true, generated_data_reads: false, generated_search_reads: false }
+                                        }
+                                    }
+                                };
+                            }
+                        };
+                    },
+                    setTimeout: (resolve) => resolve()
+                }
+            });
+            const requestOptions = runtime.dataRequestOptions({ viewerScope: 'library', extra: 'value' });
+            const studioAllowed = await runtime.checkGeneratedDataReadCapability('studio');
+            const libraryAllowed = await requestOptions.checkGeneratedDataReadCapability();
+            const searchAllowed = requestOptions.scopeSupportsGeneratedSearchReads();
+            const cachedStudioAllowed = await runtime.checkGeneratedDataReadCapability('studio');
+            return {
+                requestShape: {
+                    assetVersion: requestOptions.assetVersion,
+                    reloadNonce: requestOptions.reloadNonce,
+                    reloadExpectedDocId: requestOptions.reloadExpectedDocId,
+                    reloadRetryAttempts: requestOptions.reloadRetryAttempts,
+                    reloadRetryDelayMs: requestOptions.reloadRetryDelayMs,
+                    managementAvailable: requestOptions.managementAvailable,
+                    managementBaseUrl: requestOptions.managementBaseUrl,
+                    extra: requestOptions.extra
+                },
+                studioAllowed,
+                libraryAllowed,
+                searchAllowed,
+                cachedStudioAllowed,
+                fetchCount,
+                checked: state.generatedDataReadChecked,
+                available: state.generatedDataReadAvailable
+            };
+        }"""
+    )
+    if result != {
+        "requestShape": {
+            "assetVersion": "asset-1",
+            "reloadNonce": "nonce-1",
+            "reloadExpectedDocId": "doc-2",
+            "reloadRetryAttempts": 7,
+            "reloadRetryDelayMs": 11,
+            "managementAvailable": True,
+            "managementBaseUrl": "http://127.0.0.1:8789",
+            "extra": "value",
+        },
+        "studioAllowed": True,
+        "libraryAllowed": False,
+        "searchAllowed": False,
+        "cachedStudioAllowed": True,
+        "fetchCount": 1,
+        "checked": True,
+        "available": True,
+    }:
+        raise AssertionError(f"generated-data runtime contract changed unexpectedly: {result!r}")
+
+
+def assert_document_index_state_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-document-index-state.js');
+            const publicState = {
+                allDocs: [
+                    { doc_id: 'root', title: 'Root', sort_order: 1, viewable: true },
+                    { doc_id: 'child', parent_id: 'root', title: 'Child', sort_order: 1, viewable: true },
+                    { doc_id: 'hidden-root', title: 'Hidden', sort_order: 2, hidden: true, viewable: true },
+                    { doc_id: 'hidden-child', parent_id: 'hidden-root', title: 'Hidden child', sort_order: 1, viewable: true },
+                    { doc_id: 'draft-root', title: 'Draft root', sort_order: 3, viewable: true },
+                    { doc_id: 'draft-child', parent_id: 'draft-root', title: 'Draft child', sort_order: 1, viewable: true }
+                ],
+                allDocsById: new Map(),
+                childrenByParent: new Map(),
+                docs: [],
+                docsById: new Map(),
+                manageOnlyTreeRootIds: new Set(['draft-root']),
+                managementMode: false,
+                nonLoadableDocIds: new Set(['root']),
+                showHidden: false,
+                uiStatusByValue: new Map([['planned', { label: 'Planned' }]])
+            };
+            const publicIndex = module.createDocsViewerDocumentIndexState({ state: publicState });
+            publicIndex.applyDocVisibility();
+            const publicDocs = publicState.docs.map((doc) => doc.doc_id);
+            const defaultDoc = publicIndex.defaultDocId();
+            const rootTarget = publicIndex.viewerTargetDocId('root');
+            const missingTarget = publicIndex.viewerTargetDocId('missing');
+            const manageState = Object.assign({}, publicState, {
+                allDocs: publicState.allDocs.map((doc) => Object.assign({}, doc)),
+                allDocsById: new Map(),
+                childrenByParent: new Map(),
+                docs: [],
+                docsById: new Map(),
+                managementMode: true,
+                showHidden: false,
+                nonLoadableDocIds: new Set(['root']),
+                manageOnlyTreeRootIds: new Set(['draft-root'])
+            });
+            const manageIndex = module.createDocsViewerDocumentIndexState({ state: manageState });
+            manageIndex.applyDocVisibility();
+            manageIndex.syncHiddenVisibilityForRequestedDoc(() => 'hidden-root');
+            manageIndex.applyDocVisibility();
+            return {
+                publicDocs,
+                defaultDoc,
+                rootTarget,
+                missingTarget,
+                publicHiddenStatus: publicIndex.statusForIndexDoc(publicState.allDocsById.get('hidden-root')),
+                manageShowHidden: manageState.showHidden,
+                manageDocs: manageState.docs.map((doc) => doc.doc_id),
+                findHidden: manageIndex.findAllDocById('hidden-root')?.doc_id || ''
+            };
+        }"""
+    )
+    if result != {
+        "publicDocs": ["child", "root"],
+        "defaultDoc": "child",
+        "rootTarget": "child",
+        "missingTarget": "missing",
+        "publicHiddenStatus": None,
+        "manageShowHidden": True,
+        "manageDocs": ["child", "draft-child", "hidden-child", "root", "hidden-root", "draft-root"],
+        "findHidden": "hidden-root",
+    }:
+        raise AssertionError(f"document-index state contract changed unexpectedly: {result!r}")
+
+
+def assert_info_panel_controller_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const info = await import('/docs-viewer/runtime/js/docs-viewer-info-panel-controller.js');
+            const hosted = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
+            document.body.innerHTML = `
+                <button id="infoToggle"></button>
+                <button id="closeButton"></button>
+                <div id="toolbar"><button id="metadataButton" data-info-panel-view="metadata-info"></button></div>
+                <div id="body"></div>
+            `;
+            const registry = hosted.createDocsViewerHostedViewRegistry({ accessProjection: { allowManagement: false, publicReadOnly: true } });
+            const events = [];
+            registry.register({
+                id: 'metadata-info',
+                label: 'Metadata',
+                panel: 'info',
+                access: 'public',
+                load: () => Promise.resolve({
+                    mount: ({ mount, selectedDoc }) => {
+                        events.push(`mount:${selectedDoc.doc_id}`);
+                        mount.textContent = selectedDoc.title;
+                    },
+                    update: ({ selectedDoc }) => {
+                        events.push(`update:${selectedDoc.doc_id}`);
+                    },
+                    unmount: () => {
+                        events.push('unmount');
+                    }
+                })
+            });
+            const projections = [];
+            const shellProjections = [];
+            const state = {
+                allDocsById: new Map([['doc-1', { doc_id: 'doc-1', title: 'Doc one' }]]),
+                docsById: new Map([['doc-1', { doc_id: 'doc-1', title: 'Doc one' }]]),
+                payloadCache: new Map(),
+                selectedDocId: 'doc-1',
+                uiStatusByValue: new Map(),
+                viewState: {}
+            };
+            const controller = info.createDocsViewerInfoPanelController({
+                buildTrail: () => [],
+                infoToggle: document.getElementById('infoToggle'),
+                projectDocumentShell: (projection) => shellProjections.push(projection),
+                projectInfoPanel: (projection) => projections.push(projection),
+                projectViewState: () => ({ info: 'open' }),
+                refs: {
+                    body: document.getElementById('body'),
+                    closeButton: document.getElementById('closeButton'),
+                    toolbar: document.getElementById('toolbar')
+                },
+                registry,
+                routeAccess: { allowManagement: false, publicReadOnly: true },
+                state,
+                viewerScope: () => 'studio',
+                viewerTargetDocId: (docId) => docId,
+                viewerUrl: (docId) => `/docs/?doc=${docId}`
+            });
+            controller.bind();
+            controller.renderToggleState();
+            document.getElementById('infoToggle').click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            controller.update();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            document.getElementById('metadataButton').click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            document.getElementById('closeButton').click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            return {
+                events,
+                bodyText: document.getElementById('body').textContent,
+                shellProjections,
+                panelVisibility: projections.map((projection) => projection.visible),
+                viewState: state.viewState,
+                openAfterClose: controller.isOpen()
+            };
+        }"""
+    )
+    if result["events"] != ["mount:doc-1", "update:doc-1", "unmount", "mount:doc-1", "unmount"]:
+        raise AssertionError(f"info-panel lifecycle changed unexpectedly: {result!r}")
+    if result["bodyText"] != "" or result["openAfterClose"] is not False:
+        raise AssertionError(f"info-panel close state changed unexpectedly: {result!r}")
+    if result["viewState"] != {"info": "open"}:
+        raise AssertionError(f"info-panel view-state projection changed unexpectedly: {result!r}")
+    if not any(projection.get("infoTogglePressed") is True for projection in result["shellProjections"]):
+        raise AssertionError(f"info-panel toggle projection never opened: {result!r}")
+    if result["panelVisibility"][-1] is not False:
+        raise AssertionError(f"info-panel final projection should be closed: {result!r}")
+
+
+def assert_management_runtime_adapter_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js');
+            const disabled = module.createDocsViewerManagementRuntimeAdapter({
+                allowManagement: false,
+                appShellReady: Promise.resolve()
+            });
+            const disabledResult = await disabled.load();
+            let importCount = 0;
+            let loadedCount = 0;
+            const adapter = module.createDocsViewerManagementRuntimeAdapter({
+                allowManagement: true,
+                appShellReady: Promise.resolve(),
+                constants: { MANAGEMENT_MODE: 'manage' },
+                context: { root: { id: 'root' }, state: { selectedDocId: 'doc-1' } },
+                importManagement: async () => {
+                    importCount += 1;
+                    return {
+                        initDocsViewerManagement(context) {
+                            return {
+                                contextMode: context.MANAGEMENT_MODE,
+                                rootId: context.root.id,
+                                selectedDocId: context.state.selectedDocId
+                            };
+                        }
+                    };
+                },
+                onLoaded: () => {
+                    loadedCount += 1;
+                }
+            });
+            const first = await adapter.load();
+            const second = await adapter.load();
+            return {
+                disabledResult,
+                sameController: first === second,
+                importCount,
+                loadedCount,
+                controller: adapter.controller()
+            };
+        }"""
+    )
+    if result != {
+        "disabledResult": None,
+        "sameController": True,
+        "importCount": 1,
+        "loadedCount": 1,
+        "controller": {
+            "contextMode": "manage",
+            "rootId": "root",
+            "selectedDocId": "doc-1",
+        },
+    }:
+        raise AssertionError(f"management runtime adapter contract changed unexpectedly: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2410,6 +2717,10 @@ def main() -> int:
             assert_route_workflow_contract(page, base_url)
             assert_search_controller_contract(page)
             assert_bookmark_controller_contract(page)
+            assert_generated_data_runtime_contract(page)
+            assert_document_index_state_contract(page)
+            assert_info_panel_controller_contract(page)
+            assert_management_runtime_adapter_contract(page)
             assert_render_is_idempotent(page)
 
             browser.close()

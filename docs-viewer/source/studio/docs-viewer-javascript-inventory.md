@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 ui_status: review
 parent_id: studio-javascript-payload-inventory
 sort_order: 7020
@@ -19,7 +19,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Docs Viewer browser JavaScript files in this focused app-shell snapshot: 51
 - Files above target score 4: 14
-- General risk themes: compatibility runtime wiring, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
+- General risk themes: compatibility runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the compatibility runtime.
 
 | Score | Files |
 | ---: | ---: |
@@ -34,7 +34,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 | Docs rank | Full rank | File | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 1 | `docs-viewer/runtime/js/docs-viewer-app-runtime.js` | 2 | 2 | 1 | 1 | 6 | Compatibility Docs Viewer runtime wiring after route workflow extraction; app state, controller construction, visibility rules, search/recent handoff, bookmarks, panel/info handoff, and lazy management loading remain. |
+| 1 | 1 | `docs-viewer/runtime/js/docs-viewer-app-runtime.js` | 2 | 2 | 1 | 1 | 6 | Compatibility Docs Viewer runtime coordination after route workflow and runtime-owner extraction; app state defaults, controller construction, config handoff, event binding, initial load sequencing, and returned runtime API remain. |
 | 2 | 9 | `docs-viewer/runtime/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 3 | 15 | `docs-viewer/runtime/js/docs-viewer-management.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 4 | 18 | `docs-viewer/runtime/js/docs-viewer-bookmarks.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
@@ -49,6 +49,10 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 13 | 25 | `docs-viewer/runtime/js/reports/docs-broken-links-report.js` | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired. |
 | 14 | 56 | `docs-viewer/runtime/js/docs-viewer-router.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-route-workflow.js` | 1 | 1 | 1 | 1 | 4 | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, and generated-search read capability projection. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` | 1 | 1 | 1 | 1 | 4 | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` | 1 | 1 | 1 | 1 | 4 | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes. |
 | 15 | 59 | `docs-viewer/runtime/js/docs-html-import-modals.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
 | 16 | 60 | `docs-viewer/runtime/js/docs-html-import-render.js` | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
 | 17 | 61 | `docs-viewer/runtime/js/docs-viewer-data.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
@@ -114,12 +118,44 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
 
 - Added 2026-05-27 as the compatibility owner for the existing shared route/document workflow after the entrypoint became a wrapper.
-- Current risk score: 6 after the route/document workflow extraction.
+- Current risk score: 6 after the route/document workflow and compatibility-runtime owner extractions.
 - 2026-05-27 owner note: URL/query helpers, current-doc resolution, route application, index-load orchestration, payload-load orchestration, missing/error handoff, route-link handling, and popstate coordination moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`.
 - 2026-05-27 owner note: search/recent route callback bundling moved behind `createDocsViewerSearchRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-search-controller.js`; bookmark route callback bundling moved behind `createDocsViewerBookmarkRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-bookmarks.js`.
 - 2026-05-27 owner note: info-panel toolbar click handoff now opens the selected info hosted view through `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`; toolbar rendering and view option projection stay in focused panel/hosted-view modules.
-- This module now remains the runtime wiring owner for app state, controller construction, config handoff, visibility rules, explicit focused-controller callback handoff, generated-data capability checks, panel/info updates, and lazy management loading.
-- Next risk-reduction slices should focus on broader panel-layout ownership, management lazy-boundary hardening, or generated-payload loading, not restore route/document/search/bookmark workflow behavior here.
+- 2026-05-28 owner note: generated-data request shaping and generated-read capability caching moved to `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`.
+- 2026-05-28 owner note: document visibility/loadability projection moved to `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
+- 2026-05-28 owner note: selected-document info-panel coordination moved to `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
+- 2026-05-28 owner note: lazy management loading and management context assembly moved behind neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`; keep the actual management controller import gated so public routes do not fetch management-only JS.
+- This module now remains the runtime coordinator for app state defaults, controller construction, config handoff, focused-controller callback handoff, event binding, initial load sequencing, and the returned compatibility API.
+- Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
+
+### `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
+
+- Added 2026-05-28 as the focused generated-data request owner.
+- Current risk score: 4.
+- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, and generated-search read capability checks.
+- Do not move config loading, payload rendering, backend write authority, or management capability UI projection into it.
+
+### `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
+
+- Added 2026-05-28 as the focused document-index projection owner.
+- Current risk score: 4.
+- Keep this module limited to all-doc/doc map projection, public/manage visibility filtering, hidden/manage-only tree handling, non-loadable fallback resolution, default-doc resolution, and index status projection.
+- Do not move route URL state, sidebar DOM rendering, document payload loading, search/recent rendering, or management writes into it.
+
+### `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`
+
+- Added 2026-05-28 as the focused info-panel coordination owner.
+- Current risk score: 4.
+- Keep this module limited to selected-document hosted-view context, metadata-info default open behavior, toggle projection, toolbar click handoff, update-on-document-change, close behavior, and public-safe availability.
+- Do not move info-panel chrome rendering, hosted-view registration, metadata presentation, document payload rendering, URL history, or management writes into it.
+
+### `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`
+
+- Added 2026-05-28 as a neutral lazy-controller adapter.
+- Current risk score: 4.
+- Keep this module limited to promise-cached dynamic controller loading and explicit context assembly.
+- Do not name this module as management-only or statically import `docs-viewer-management.js` from public-route startup paths; public read-only smokes assert that management-only JS is not fetched.
 
 ### `docs-viewer/runtime/js/docs-viewer-route-workflow.js`
 

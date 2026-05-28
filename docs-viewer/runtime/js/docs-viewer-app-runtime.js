@@ -1,11 +1,4 @@
 import {
-  buildChildrenMap,
-  hasHiddenAncestor,
-  compareDocs,
-  isDocHidden,
-  isDocViewable
-} from "./docs-viewer-tree.js";
-import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
@@ -41,17 +34,22 @@ import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
-  createDocsViewerInfoPanelHost
-} from "./docs-viewer-info-panel-host.js";
-import {
-  createDocsViewerHostedViewContext,
-  resolveDocsViewerSelectedDoc
-} from "./docs-viewer-view-context.js";
+  createDocsViewerInfoPanelController
+} from "./docs-viewer-info-panel-controller.js";
 import {
   createDocsViewerCompatibilityHostedViews,
   createDocsViewerHostedViewRegistry,
   registerDocsViewerHostedViews
 } from "./docs-viewer-hosted-views.js";
+import {
+  createDocsViewerGeneratedDataRuntime
+} from "./docs-viewer-generated-data-runtime.js";
+import {
+  createDocsViewerDocumentIndexState
+} from "./docs-viewer-document-index-state.js";
+import {
+  createDocsViewerManagementRuntimeAdapter
+} from "./docs-viewer-runtime-lazy-controller.js";
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
   var root = settings.root;
@@ -131,20 +129,12 @@ export function startDocsViewerRuntime(options) {
     infoPanelRefs: infoPanelRefs,
     indexPanelAvailable: sidebarCollapseAvailable
   });
-  var infoPanelHost = createDocsViewerInfoPanelHost({
-    refs: infoPanelRefs,
-    registry: hostedViewRegistry,
-    project: function (projection) {
-      panelLayout.projectInfoPanel(projection || {});
-      state.viewState = panelLayout.projectViewState();
-      renderInfoToggleState();
-    }
-  });
-  var managementController = null;
-  var managementControllerRequestPromise = null;
+  var managementRuntime = null;
   var bookmarkController = null;
   var documentController = null;
   var routeWorkflow = null;
+  var documentIndex = null;
+  var infoPanelController = null;
 
   var state = {
     allDocs: [],
@@ -312,6 +302,20 @@ export function startDocsViewerRuntime(options) {
   };
   state.hostedViews = hostedViewRegistry;
   state.viewState = panelLayout.projectViewState();
+  documentIndex = createDocsViewerDocumentIndexState({
+    state: state
+  });
+  var generatedDataRuntime = createDocsViewerGeneratedDataRuntime({
+    assetVersion: assetVersion,
+    generatedBaseUrl: generatedBaseUrl,
+    reloadRetryAttempts: RELOAD_RETRY_ATTEMPTS,
+    reloadRetryDelayMs: RELOAD_RETRY_DELAY_MS,
+    state: state,
+    viewerScope: function () { return viewerScope; },
+    window: window
+  });
+  var dataRequestOptions = generatedDataRuntime.dataRequestOptions;
+  var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
     meta: meta,
@@ -320,11 +324,25 @@ export function startDocsViewerRuntime(options) {
     renderBookmarkToggle: renderBookmarkToggle,
     renderStatusPills: renderStatusPills,
     state: state,
-    statusForIndexDoc: statusForIndexDoc,
+    statusForIndexDoc: documentIndex.statusForIndexDoc,
     summaryEl: summaryEl,
     updateNavDragState: updateNavDragState,
     updatedEl: updatedEl,
-    viewerTargetDocId: viewerTargetDocId,
+    viewerTargetDocId: documentIndex.viewerTargetDocId,
+    viewerUrl: viewerUrl
+  });
+  infoPanelController = createDocsViewerInfoPanelController({
+    buildTrail: buildTrail,
+    infoToggle: infoToggle,
+    projectDocumentShell: projectDocumentShell,
+    projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
+    projectViewState: function () { return panelLayout.projectViewState(); },
+    refs: infoPanelRefs,
+    registry: hostedViewRegistry,
+    routeAccess: function () { return routeContext.access; },
+    state: state,
+    viewerScope: function () { return viewerScope; },
+    viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
   documentController = initDocsViewerDocumentController({
@@ -357,16 +375,17 @@ export function startDocsViewerRuntime(options) {
   routeWorkflow = initDocsViewerRouteWorkflow({
     allowManagement: function () { return allowManagement; },
     allowScopeQuery: function () { return allowScopeQuery; },
-    applyDocVisibility: applyDocVisibility,
+    applyDocVisibility: documentIndex.applyDocVisibility,
     cancelSearchDebounce: cancelSearchDebounce,
     clearManagementMessageForDocChange: clearManagementMessageForDocChange,
     content: content,
     dataRequestOptions: dataRequestOptions,
-    defaultDocId: defaultDocId,
+    defaultDocId: documentIndex.defaultDocId,
     defaultRouteDocId: function () { return defaultRouteDocId; },
     expandTrail: expandTrail,
     handleManagementRootClick: function (event) {
-      return Boolean(managementController && managementController.handleRootClick(event));
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      return Boolean(controller && controller.handleRootClick(event));
     },
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,
@@ -383,7 +402,7 @@ export function startDocsViewerRuntime(options) {
     renderPayload: renderPayload,
     renderSearchMode: renderSearchMode,
     renderSidebar: renderSidebar,
-    resolveLoadableDocId: resolveLoadableDocId,
+    resolveLoadableDocId: documentIndex.resolveLoadableDocId,
     results: results,
     root: root,
     routeScopeFromUrl: routeScopeFromUrl,
@@ -395,7 +414,9 @@ export function startDocsViewerRuntime(options) {
     setStatus: setStatus,
     startBusy: startBusy,
     state: state,
-    syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc,
+    syncHiddenVisibilityForRequestedDoc: function () {
+      documentIndex.syncHiddenVisibilityForRequestedDoc(getCurrentDocId);
+    },
     updateInfoPanel: updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
@@ -403,9 +424,9 @@ export function startDocsViewerRuntime(options) {
     window: window
   });
   var searchRouteCallbacks = createDocsViewerSearchRouteCallbacks({
-    defaultDocId: defaultDocId,
+    defaultDocId: documentIndex.defaultDocId,
     routeWorkflow: routeWorkflow,
-    viewerTargetDocId: viewerTargetDocId
+    viewerTargetDocId: documentIndex.viewerTargetDocId
   });
   var searchPaneCallbacks = {
     hideDocPane: hideDocPane,
@@ -440,7 +461,9 @@ export function startDocsViewerRuntime(options) {
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
     docsViewerConfigUrl: docsViewerConfigUrl,
     getCurrentMode: getCurrentMode,
-    managementController: function () { return managementController; },
+    managementController: function () {
+      return managementRuntime ? managementRuntime.controller() : null;
+    },
     managementMode: MANAGEMENT_MODE,
     recentButton: recentButton,
     renderRecentMode: renderRecentMode,
@@ -456,113 +479,25 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; }
   });
 
-  function dataRequestOptions(overrides) {
-    var settings = overrides || {};
-    return Object.assign({
-      assetVersion: assetVersion,
-      reloadNonce: state.reloadNonce,
-      reloadExpectedDocId: state.reloadExpectedDocId,
-      reloadRetryAttempts: RELOAD_RETRY_ATTEMPTS,
-      reloadRetryDelayMs: RELOAD_RETRY_DELAY_MS,
-      managementAvailable: state.managementAvailable,
-      managementBaseUrl: generatedBaseUrl,
-      fetch: function (url, options) {
-        return window.fetch(url, options);
-      },
-      setTimeout: function (resolve, delayMs) {
-        return window.setTimeout(resolve, delayMs);
-      },
-      checkGeneratedDataReadCapability: function () {
-        return checkGeneratedDataReadCapability(settings.viewerScope || viewerScope);
-      },
-      scopeSupportsGeneratedSearchReads: function () {
-        return scopeGeneratedCapability(state.managementCapabilities || {}, settings.viewerScope || viewerScope, "generated_search_reads");
-      }
-    }, settings);
-  }
-
-  function scopeGeneratedCapability(capabilities, scope, key) {
-    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
-    return Boolean(
-      capabilities &&
-      capabilities.generated_data_reads &&
-      scopeCaps &&
-      scopeCaps.available &&
-      scopeCaps[key]
-    );
-  }
-
-  function readGeneratedCapabilities() {
-    if (!generatedBaseUrl) return Promise.resolve(null);
-    return window.fetch(generatedBaseUrl + "/capabilities", {
-      headers: { Accept: "application/json" },
-      cache: "no-store"
-    })
-      .then(function (response) {
-        if (!response.ok) return null;
-        return response.json();
-      })
-      .catch(function () {
-        return null;
-      });
-  }
-
-  function checkGeneratedDataReadCapability(scope) {
-    var targetScope = String(scope || viewerScope || "").trim();
-    if (!generatedBaseUrl) {
-      state.generatedDataReadChecked = true;
-      state.generatedDataReadAvailable = false;
-      return Promise.resolve(false);
-    }
-    if (state.generatedDataReadChecked) {
-      if (state.managementCapabilities && targetScope) {
-        return Promise.resolve(scopeGeneratedCapability(state.managementCapabilities, targetScope, "generated_data_reads"));
-      }
-      return Promise.resolve(state.generatedDataReadAvailable);
-    }
-    if (state.generatedDataReadRequestPromise) {
-      return state.generatedDataReadRequestPromise;
-    }
-
-    state.generatedDataReadRequestPromise = readGeneratedCapabilities()
-      .then(function (payload) {
-        if (!payload) {
-          state.generatedDataReadAvailable = false;
-          state.generatedDataReadChecked = true;
-          return false;
-        }
-        state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
-        state.generatedDataReadChecked = true;
-        return scopeGeneratedCapability(state.managementCapabilities, targetScope || viewerScope, "generated_data_reads");
-      })
-      .catch(function () {
-        state.generatedDataReadAvailable = false;
-        state.generatedDataReadChecked = true;
-        return false;
-      })
-      .finally(function () {
-        state.generatedDataReadRequestPromise = null;
-      });
-
-    return state.generatedDataReadRequestPromise;
-  }
-
-  function managementContext() {
-    return {
+  managementRuntime = createDocsViewerManagementRuntimeAdapter({
+    allowManagement: allowManagement,
+    appShellReady: appShellReady,
+    constants: {
       MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS,
       MANAGEMENT_CAPABILITY_RETRY_DELAY_MS: MANAGEMENT_CAPABILITY_RETRY_DELAY_MS,
       MANAGEMENT_MODE: MANAGEMENT_MODE,
-      SEARCH_BATCH_SIZE: SEARCH_BATCH_SIZE,
-      applyDocVisibility: applyDocVisibility,
+      SEARCH_BATCH_SIZE: SEARCH_BATCH_SIZE
+    },
+    context: {
+      applyDocVisibility: documentIndex.applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,
       currentViewerConfig: function () { return state.viewerConfig || {}; },
-      defaultDocId: defaultDocId,
+      defaultDocId: documentIndex.defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
       escapeHtml: escapeHtml,
-      findAllDocById: findAllDocById,
+      findAllDocById: documentIndex.findAllDocById,
       formatText: formatText,
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
@@ -585,32 +520,15 @@ export function startDocsViewerRuntime(options) {
       markdownDocLink: markdownDocLink,
       reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
       viewerScope: function () { return viewerScope; }
-    };
-  }
+    },
+    logger: window.console || console,
+    onLoaded: function () {
+      renderSidebar();
+    }
+  });
 
   function loadManagementController() {
-    if (!allowManagement) return Promise.resolve(null);
-    if (managementController) return Promise.resolve(managementController);
-    if (managementControllerRequestPromise) return managementControllerRequestPromise;
-
-    managementControllerRequestPromise = appShellReady
-      .then(function () {
-        return import("./docs-viewer-management.js");
-      })
-      .then(function (module) {
-        managementController = module.initDocsViewerManagement(managementContext());
-        renderSidebar();
-        return managementController;
-      })
-      .catch(function (error) {
-        console.warn("docs_viewer: management controller unavailable", error);
-        return null;
-      })
-      .finally(function () {
-        managementControllerRequestPromise = null;
-      });
-
-    return managementControllerRequestPromise;
+    return managementRuntime.load();
   }
 
   function routeScopeFromUrl() {
@@ -698,79 +616,22 @@ export function startDocsViewerRuntime(options) {
   function renderBookmarkToggle() {
     if (bookmarkController) {
       bookmarkController.renderToggle();
-      renderInfoToggleState();
+      infoPanelController.renderToggleState();
       return;
     }
     if (bookmarkToggle) bookmarkToggle.hidden = true;
-    renderInfoToggleState();
-  }
-
-  function currentSelectedDoc() {
-    return resolveDocsViewerSelectedDoc({
-      allDocsById: state.allDocsById,
-      docsById: state.docsById,
-      selectedDocId: state.selectedDocId
-    });
-  }
-
-  function infoPanelContext() {
-    return createDocsViewerHostedViewContext({
-      allDocsById: state.allDocsById,
-      buildTrail: buildTrail,
-      docsById: state.docsById,
-      payloadCache: state.payloadCache,
-      routeAccess: routeContext.access,
-      selectedDocId: state.selectedDocId,
-      uiStatusByValue: state.uiStatusByValue,
-      viewerScope: viewerScope,
-      viewerTargetDocId: viewerTargetDocId,
-      viewerUrl: viewerUrl
-    });
-  }
-
-  function metadataInfoAvailable() {
-    return infoPanelHost.viewOptions().some(function (view) {
-      return view.available;
-    });
-  }
-
-  function renderInfoToggleState() {
-    if (!infoToggle) return;
-    var canShow = Boolean(currentSelectedDoc() && metadataInfoAvailable());
-    var open = infoPanelHost.isOpen();
-    var label = open ? "Hide document info" : "Show document info";
-    projectDocumentShell({
-      infoToggleHidden: !canShow,
-      infoToggleLabel: label,
-      infoTogglePressed: open
-    });
+    infoPanelController.renderToggleState();
   }
 
   function updateInfoPanel() {
-    renderInfoToggleState();
-    if (infoPanelHost.isOpen()) {
-      infoPanelHost.update(infoPanelContext());
-    }
-  }
-
-  function openInfoPanelView(viewId) {
-    if (!currentSelectedDoc()) return;
-    var targetViewId = String(viewId || "").trim() || infoPanelHost.activeViewId() || "metadata-info";
-    infoPanelHost.open(targetViewId, infoPanelContext()).then(function () {
-      renderInfoToggleState();
-    });
-  }
-
-  function closeInfoPanel() {
-    infoPanelHost.close().then(function () {
-      renderInfoToggleState();
-    });
+    infoPanelController.update();
   }
 
   function renderStatusPills() {
     if (!statusPills) return;
-    if (managementController && typeof managementController.renderStatusPills === "function") {
-      managementController.renderStatusPills();
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    if (controller && typeof controller.renderStatusPills === "function") {
+      controller.renderStatusPills();
       return;
     }
     statusPills.hidden = true;
@@ -800,124 +661,8 @@ export function startDocsViewerRuntime(options) {
   function markdownDocLink(doc) {
     if (!doc || !doc.doc_id) return "";
     var title = escapeMarkdownLinkText(doc.title || doc.doc_id);
-    var url = viewerUrlForScope(viewerScope, viewerTargetDocId(doc.doc_id), { manage: false });
+    var url = viewerUrlForScope(viewerScope, documentIndex.viewerTargetDocId(doc.doc_id), { manage: false });
     return "[" + title + "](" + url + ")";
-  }
-
-  function isManageOnlyTreeDoc(doc) {
-    if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
-    var visited = new Set();
-    var current = doc;
-    while (current && current.doc_id && !visited.has(current.doc_id)) {
-      if (state.manageOnlyTreeRootIds.has(current.doc_id)) return true;
-      visited.add(current.doc_id);
-      current = current.parent_id ? state.allDocsById.get(current.parent_id) : null;
-    }
-    return false;
-  }
-
-  function shouldIncludeDoc(doc) {
-    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
-    if (!state.managementMode) return isDocViewable(doc) && !hasHiddenAncestor(doc, state.allDocsById);
-    return isDocViewable(doc) || state.showHidden;
-  }
-
-  function applyDocVisibility() {
-    state.allDocsById = new Map(
-      state.allDocs.map(function (doc) {
-        return [doc.doc_id, doc];
-      })
-    );
-    state.docs = state.allDocs.filter(shouldIncludeDoc).slice().sort(compareDocs);
-    state.docsById = new Map(
-      state.docs.map(function (doc) {
-        return [doc.doc_id, doc];
-      })
-    );
-    state.childrenByParent = buildChildrenMap(state.docs, {
-      managementMode: state.managementMode,
-      showHidden: state.showHidden
-    });
-  }
-
-  function findAllDocById(docId) {
-    for (var i = 0; i < state.allDocs.length; i += 1) {
-      if (state.allDocs[i].doc_id === docId) return state.allDocs[i];
-    }
-    return null;
-  }
-
-  function syncHiddenVisibilityForRequestedDoc() {
-    if (!state.managementMode) return;
-    var requestedDocId = getCurrentDocId();
-    if (!requestedDocId) return;
-    var requestedDoc = findAllDocById(requestedDocId);
-    if (requestedDoc && isDocHidden(requestedDoc)) {
-      state.showHidden = true;
-    }
-  }
-
-  function isNonLoadableDoc(doc) {
-    return Boolean(doc) && state.nonLoadableDocIds.has(doc.doc_id);
-  }
-
-  function statusForIndexDoc(doc) {
-    if (!doc || isNonLoadableDoc(doc)) return null;
-    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return null;
-    if (!isDocViewable(doc) && !state.managementMode) return null;
-    var statusValue = String(doc.ui_status || "").trim();
-    return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;
-  }
-
-  function firstLoadableDescendantDocId(parentId) {
-    var children = state.childrenByParent.get(parentId) || [];
-    for (var i = 0; i < children.length; i += 1) {
-      var child = children[i];
-      if (!isNonLoadableDoc(child)) {
-        return child.doc_id;
-      }
-      var nestedDocId = firstLoadableDescendantDocId(child.doc_id);
-      if (nestedDocId) {
-        return nestedDocId;
-      }
-    }
-    return "";
-  }
-
-  function resolveLoadableDocId(docId) {
-    var doc = state.docsById.get(docId);
-    if (!doc) return "";
-    if (!isNonLoadableDoc(doc)) return doc.doc_id;
-    return firstLoadableDescendantDocId(doc.doc_id);
-  }
-
-  function viewerTargetDocId(docId) {
-    var targetDocId = resolveLoadableDocId(docId);
-    if (targetDocId) return targetDocId;
-
-    var doc = state.docsById.get(docId);
-    if (isNonLoadableDoc(doc)) {
-      return defaultDocId();
-    }
-
-    return docId;
-  }
-
-  function flattenRoots() {
-    var roots = state.childrenByParent.get("") || [];
-    if (roots.length > 0) return roots;
-    return state.docs.slice().sort(compareDocs);
-  }
-
-  function defaultDocId() {
-    var roots = flattenRoots();
-    for (var i = 0; i < roots.length; i += 1) {
-      var docId = resolveLoadableDocId(roots[i].doc_id);
-      if (docId) {
-        return docId;
-      }
-    }
-    return "";
   }
 
   function buildTrail(docId) {
@@ -973,24 +718,28 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hideContextMenu() {
-    if (managementController) {
-      managementController.hideContextMenu();
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    if (controller) {
+      controller.hideContextMenu();
     }
   }
 
   function updateNavDragState() {
-    if (managementController) {
-      managementController.updateNavDragState();
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    if (controller) {
+      controller.updateNavDragState();
     }
   }
 
   function canDragCurrentDoc(doc) {
-    return Boolean(managementController && managementController.canDragCurrentDoc(doc));
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    return Boolean(controller && controller.canDragCurrentDoc(doc));
   }
 
   function renderManagementUi() {
-    if (managementController) {
-      managementController.render();
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    if (controller) {
+      controller.render();
     }
   }
 
@@ -1078,29 +827,7 @@ export function startDocsViewerRuntime(options) {
       });
     }
 
-    if (infoToggle) {
-      infoToggle.addEventListener("click", function () {
-        if (infoPanelHost.isOpen()) {
-          closeInfoPanel();
-        } else {
-          openInfoPanelView("metadata-info");
-        }
-      });
-    }
-
-    if (infoPanelRefs.closeButton) {
-      infoPanelRefs.closeButton.addEventListener("click", function () {
-        closeInfoPanel();
-      });
-    }
-
-    if (infoPanelRefs.toolbar) {
-      infoPanelRefs.toolbar.addEventListener("click", function (event) {
-        var button = event.target.closest("[data-info-panel-view]");
-        if (!button || button.disabled) return;
-        openInfoPanelView(button.dataset.infoPanelView);
-      });
-    }
+    infoPanelController.bind();
 
     if (scopeSelect) {
       scopeSelect.addEventListener("change", function () {
@@ -1113,11 +840,12 @@ export function startDocsViewerRuntime(options) {
     }
 
     document.addEventListener("keydown", function (event) {
-      if (managementController && managementController.handleDocumentKeydown(event)) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && controller.handleDocumentKeydown(event)) {
         return;
       }
-      if (event.key === "Escape" && infoPanelHost.isOpen()) {
-        closeInfoPanel();
+      if (event.key === "Escape") {
+        infoPanelController.closeIfOpen();
       }
     });
 

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 parent_id: docs-viewer
 sort_order: 13000
 ---
@@ -35,8 +35,12 @@ Current shared implementation:
 
 - `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime wiring owner for app state, controller construction, initial config handoff, visibility rules, explicit search/recent and bookmark controller callback handoff, generated-data capability checks, reports, panel/info updates, and lazy management loading
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` as the compatibility runtime coordinator for app state defaults, controller construction, initial config handoff, event binding, initial load sequencing, and the returned runtime API
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` as the focused route/document workflow owner for current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, document payload load orchestration, missing-doc and payload-error handoff, route-link handling, and popstate coordination
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` for generated-data request option shaping, generated-read capability caching, reload/retry option projection, and generated-search read capability checks
+- `docs-viewer/runtime/js/docs-viewer-document-index-state.js` for document visibility/loadability projection, hidden/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection
+- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` for selected-document info-panel coordination, default metadata-info open/close behavior, toolbar click handoff, toggle projection, and update-on-document-change behavior
+- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` for neutral lazy-controller loading, currently used by the compatibility runtime to assemble the explicit management context and import the management controller only when management is allowed
 - `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, route config shape, migration data-attribute fallback, and route/scope projection imported by the entry and config controllers
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
@@ -51,7 +55,7 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
 - `docs-viewer/runtime/js/docs-viewer-management-client.js` for Docs Viewer service transport helpers used by the management controller
 - `docs-viewer/runtime/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
-- `docs-viewer/runtime/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by focused document-index and management modules
 - `docs-viewer/runtime/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the search controller
 - `docs-viewer/runtime/js/docs-viewer-search-controller.js` for inline-search and recently-added controller ownership: search index loading, result rendering, recent rendering, search debounce behavior, route callback consumption, more-results behavior, and pane projection requests
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, bookmark events, selected-document bookmark UI projection, and explicit route callback consumption
@@ -66,7 +70,7 @@ Current shared implementation:
 
 The shell loads the entrypoint as an ES module.
 Extracted helper modules must not import the entrypoint or mutate compatibility runtime state directly.
-The management controller receives a narrow context API from the compatibility runtime so public read-only viewers do not download or execute management orchestration.
+The management controller receives a narrow context API through the neutral lazy-controller adapter so public read-only viewers do not download or execute management-only orchestration.
 
 Current CSS base boundary:
 

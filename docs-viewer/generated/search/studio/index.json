@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-70234746e0467db4228f1df097c125d5",
-    "generated_at_utc": "2026-05-27T21:56:24Z",
+    "version": "blake2b-54c42529b263c211b110f6855ae7d207",
+    "generated_at_utc": "2026-05-28T09:08:31Z",
     "count": 211
   },
   "entries": [
@@ -205,22 +205,22 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-28",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-28 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-28",
         "2026",
         "05",
-        "25"
+        "28"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-28 2026 05 28"
     },
     {
       "id": "site-request-portable-docs-viewer",
@@ -1667,10 +1667,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-27 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-28 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -1682,12 +1682,12 @@
         "manifest",
         "docs viewer portable setup",
         "setup",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-27 2026 05 27"
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-28 2026 05 28"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -3031,10 +3031,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "studio-javascript-payload-inventory",
       "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-27 • JavaScript Inventory Policy",
+      "display_meta": "2026-05-28 • JavaScript Inventory Policy",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3044,12 +3044,12 @@
         "docs viewer javascript inventory",
         "javascript inventory policy",
         "policy",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory policy policy 2026-05-27 2026 05 27"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory policy policy 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-css-token-audit",
@@ -4478,10 +4478,10 @@
       "kind": "doc",
       "title": "Docs Viewer App Shell Compatibility Runtime Tasks",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "site-request-docs-viewer-javascript-app-shell",
       "parent_title": "Docs Viewer JavaScript App Shell Request",
-      "display_meta": "2026-05-27 • Docs Viewer JavaScript App Shell Request",
+      "display_meta": "2026-05-28 • Docs Viewer JavaScript App Shell Request",
       "search_terms": [
         "site-request-docs-viewer-app-shell-compatibility-runtime-tasks",
         "site",
@@ -4496,12 +4496,12 @@
         "docs viewer app shell compatibility runtime tasks",
         "docs viewer javascript app shell request",
         "javascript",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "site-request-docs-viewer-app-shell-compatibility-runtime-tasks site request docs viewer app shell compatibility runtime tasks docs viewer app shell compatibility runtime tasks docs viewer javascript app shell request javascript 2026-05-27 2026 05 27"
+      "search_text": "site-request-docs-viewer-app-shell-compatibility-runtime-tasks site request docs viewer app shell compatibility runtime tasks docs viewer app shell compatibility runtime tasks docs viewer javascript app shell request javascript 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -4533,10 +4533,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-27 • Docs Viewer",
+      "display_meta": "2026-05-28 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -4545,12 +4545,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-27 2026 05 27"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-28 2026 05 28"
     },
     {
       "id": "servers",
@@ -4674,10 +4674,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript App Shell Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-05-28",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
+      "display_meta": "2026-05-28 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-javascript-app-shell",
         "site",
@@ -4691,12 +4691,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-27",
+        "2026-05-28",
         "2026",
         "05",
-        "27"
+        "28"
       ],
-      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-27 2026 05 27"
+      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-28 2026 05 28"
     },
     {
       "id": "scripts-docs-management-server",

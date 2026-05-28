@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-javascript-app-shell
 title: Docs Viewer JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 14170
@@ -14,9 +14,9 @@ Status:
 
 - in progress
 
-- **App-shell migration foundation:** ~97% there
-- **Full JavaScript App Shell Request goals:** ~76-78% there
-- **Current app-shell priority:** finish the pure migration/risk-reduction work around `docs-viewer/runtime/js/docs-viewer-app-runtime.js`; portable public fixture proof is tracked under the portable Docs Viewer request before feature-specific panels or editor modules are added.
+- **App-shell migration foundation:** complete for the planned pure migration/risk-reduction pass
+- **Full JavaScript App Shell Request goals:** ~82-84% there
+- **Current app-shell priority:** keep future work on feature-specific panels, editor modules, semantic-reference views, and portable fixture proof in their separate request trackers rather than adding those behaviors back to the compatibility runtime.
 
 What is now in good shape:
 
@@ -31,13 +31,18 @@ What is now in good shape:
 - Search/recent route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, including explicit controller-owned callbacks for route application, history writes, current-doc resolution, result URLs, and default-doc fallback.
 - Bookmark route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, including explicit controller-owned callbacks for search-debounce cancellation and document-load handoff.
 - The info panel now has a minimal hosted-view toolbar and view-switching contract. `metadata-info` remains the default public-safe info view, and disabled/access-blocked/missing views are handled through explicit hosted-view states.
+- Generated-data read request shaping and capability checks now live in `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`.
+- Document visibility/loadability projection now lives in `docs-viewer/runtime/js/docs-viewer-document-index-state.js`.
+- Selected-document info-panel coordination now lives in `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`.
+- Lazy management loading now goes through neutral `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`, so public read-only routes still avoid management-only JS while manage mode keeps the existing backend capability and write flow.
 - Route shells are route-context thin and no longer carry management modal/context-menu markup.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
 What remains in this app-shell request:
 
-- Pure migration/risk-reduction remains in `docs-viewer/runtime/js/docs-viewer-app-runtime.js`: it still owns compatibility wiring for app state, controller construction, config handoff, visibility rules, panel/info handoff, generated-data capability checks, and management-controller loading. Task tracker: [Docs Viewer App Shell Compatibility Runtime Tasks](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks).
+- The pure migration/risk-reduction tracker is complete: [Docs Viewer App Shell Compatibility Runtime Tasks](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-app-shell-compatibility-runtime-tasks).
+- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` remains as compatibility coordination for app state defaults, controller construction, config handoff, event binding, initial load sequencing, and the small returned runtime API. Future work should add or extend focused owners rather than reintroducing route, search, bookmark, info-panel, generated-data, visibility, or management workflow ownership there.
 
 Separately tracked work:
 

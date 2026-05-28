@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 parent_id: docs-viewer-portable-setup
 sort_order: 3100
 ---
@@ -50,14 +50,18 @@ Copy the shared viewer runtime files:
 - `docs-viewer/runtime/js/docs-viewer-app-context.js`
 - `docs-viewer/runtime/js/docs-viewer-route-config.js`
 - `docs-viewer/runtime/js/docs-viewer-access.js`
+- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
+- `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
 - `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
 - `docs-viewer/runtime/js/docs-viewer-view-state.js`
 - `docs-viewer/runtime/js/docs-viewer-view-context.js`
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`
+- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`
+- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-config-controller.js`
 - `docs-viewer/runtime/js/docs-viewer-data.js`
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js`
