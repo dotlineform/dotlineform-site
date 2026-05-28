@@ -232,9 +232,9 @@ This keeps new product behavior aligned with the app architecture instead of for
 
 ## Structural Slices
 
-Work through these as child task trackers under this parent request.
-Each slice should define the app concept being introduced and the old bridge behavior it removes.
-Keep this parent request focused on policy, architecture direction, benefits, and slice framing.
+- Work through these as child task trackers under this parent request using [Tasks Template](/docs/?scope=studio&doc=tasks-template) as the template.
+- Each slice should define the app concept being introduced and the old bridge behavior it removes.
+- Keep this parent request focused on policy, architecture direction, benefits, and slice framing.
 
 ### 1. App Session And State Domains
 
