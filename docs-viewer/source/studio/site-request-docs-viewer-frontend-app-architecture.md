@@ -441,6 +441,14 @@ Acceptance:
 - `docs-viewer-app-runtime.js` is no longer described as compatibility coordination unless it truly still bridges legacy contracts
 - the app/session/service/controller/view model is documented in one place
 - JavaScript inventory scores and owner notes match the new boundaries
+- final cleanup audits tests against the target architecture, not just historical compatibility behavior
+
+Explicit final cleanup audit points:
+
+- tests reaching through broad state instead of focused owners or DOM/user-visible behavior
+- docs describing compatibility fields as current public API
+- runtime fields kept only for tests rather than runtime callers or intentional app contracts
+- feature modules using app/runtime handles instead of owner-specific callbacks or service/controller contracts
 
 Backend/service handling:
 

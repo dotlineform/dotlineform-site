@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8007140a000ed9627ec7258973b17b84",
-    "generated_at_utc": "2026-05-28T11:42:12Z",
-    "count": 216
+    "version": "blake2b-9adb4d6e1ab8ad1a098b53970637b8e3",
+    "generated_at_utc": "2026-05-28T12:02:46Z",
+    "count": 217
   },
   "entries": [
     {
@@ -5186,6 +5186,33 @@
         "30"
       ],
       "search_text": "config-search-build-json config search build json search build config json 2026-05-11 21:30 2026 05 11 21 30"
+    },
+    {
+      "id": "site-request-testing-framework-review",
+      "kind": "doc",
+      "title": "Testing Framework Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-testing-framework-review",
+      "last_updated": "2026-05-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-28 • Change Requests",
+      "search_terms": [
+        "site-request-testing-framework-review",
+        "site",
+        "request",
+        "testing",
+        "framework",
+        "review",
+        "testing framework review request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "site-request-testing-framework-review site request testing framework review testing framework review request change requests change requests 2026-05-28 2026 05 28"
     },
     {
       "id": "data-models-catalogue-indexes",
