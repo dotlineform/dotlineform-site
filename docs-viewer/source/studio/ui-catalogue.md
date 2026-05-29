@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: 2026-05-15
+last_updated: 2026-05-29
 parent_id: ui
 viewable: true
 ---
@@ -31,6 +31,11 @@ Current demo pages:
 - [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](/studio/ui-catalogue/demos/primitives/panel/)
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
 - [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](/studio/ui-catalogue/demos/patterns/column-links/)
+
+Planned composition pattern docs awaiting isolated demo implementation:
+
+- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu), planned route `/studio/ui-catalogue/demos/patterns/action-menu/`
+- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu), planned route `/studio/ui-catalogue/demos/patterns/select-menu/`
 
 Removed legacy routes such as `/studio/ui-catalogue/button/` and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the demo route hierarchy.
 During the Local Studio migration, demo route visibility should move into the local Studio navigation or an equivalent local Studio entry point while preserving the isolated demo namespace and ready-state contract.
@@ -139,6 +144,8 @@ UI screenshots and reference images for this catalogue should live in the repo u
 - `studio/ui-catalogue/assets/docs/list/`
 - `studio/ui-catalogue/assets/docs/toolbar/`
 - `studio/ui-catalogue/assets/docs/modal-shell/`
+- `studio/ui-catalogue/assets/docs/action-menu/`
+- `studio/ui-catalogue/assets/docs/select-menu/`
 - `studio/ui-catalogue/assets/docs/column-links/`
 - `studio/ui-catalogue/assets/docs/reopenable-command-result/`
 

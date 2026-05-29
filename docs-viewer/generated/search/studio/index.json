@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-446075ddf77783f7b3ead808188c1151",
-    "generated_at_utc": "2026-05-29T15:38:49Z",
-    "count": 198
+    "version": "blake2b-00a210b8428667d2d997dce4f6d69915",
+    "generated_at_utc": "2026-05-29T17:58:31Z",
+    "count": 200
   },
   "entries": [
     {
@@ -4271,21 +4271,46 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
+      "display_meta": "2026-05-29 • UI",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-29 2026 05 29"
+    },
+    {
+      "id": "ui-pattern-action-menu",
+      "kind": "doc",
+      "title": "Action Menu Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-action-menu",
+      "last_updated": "2026-05-29",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-action-menu",
+        "ui",
+        "pattern",
+        "action",
+        "menu",
+        "action menu pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-29",
+        "2026",
+        "05",
+        "29"
+      ],
+      "search_text": "ui-pattern-action-menu ui pattern action menu action menu pattern ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-primitive-button",
@@ -4534,6 +4559,31 @@
         "15"
       ],
       "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "ui-pattern-select-menu",
+      "kind": "doc",
+      "title": "Select Menu Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-select-menu",
+      "last_updated": "2026-05-29",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-select-menu",
+        "ui",
+        "pattern",
+        "select",
+        "menu",
+        "select menu pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-29",
+        "2026",
+        "05",
+        "29"
+      ],
+      "search_text": "ui-pattern-select-menu ui pattern select menu select menu pattern ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "studio-ui-framework-primitives",
