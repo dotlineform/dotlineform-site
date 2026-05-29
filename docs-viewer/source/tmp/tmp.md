@@ -9,6 +9,16 @@ sort_order: 100
 
 # tmp
 
+
+It is not an emoji. It’s a Unicode punctuation character:
+
+Collapse: ‹ = U+2039, single left-pointing angle quotation mark
+Restore from collapsed: › = U+203A, single right-pointing angle quotation mark
+Expand index: ⤢ = U+2922, diagonal expand arrow
+
+
+---
+
 docs viewer config:
 
 how to update config through manage-mode

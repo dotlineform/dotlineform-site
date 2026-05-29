@@ -266,6 +266,10 @@ th{ background: var(--panel-2); }
   padding: var(--space-6) 18px var(--space-7);
 }
 
+main.container:has(> .docsViewer){
+  max-width: none;
+}
+
 .studio{
   max-width: 980px;
   margin: 0 auto;
@@ -836,6 +840,10 @@ th{ background: var(--panel-2); }
   grid-template-columns: auto 1fr;
   align-items: baseline;
   gap: 18px;
+}
+body:not(.studio-local-app) .site-header .container{
+  max-width: none;
+  padding: 18px 18px 16px;
 }
 .site-title a{
   text-decoration: none;

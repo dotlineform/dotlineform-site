@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5753244662582901958963612b7a7dcf",
-    "generated_at_utc": "2026-05-29T11:07:43Z",
-    "count": 197
+    "version": "blake2b-4c1f0c0502346875167b6c4987172290",
+    "generated_at_utc": "2026-05-29T14:10:45Z",
+    "count": 198
   },
   "entries": [
     {
@@ -2047,19 +2047,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-28",
-      "display_meta": "2026-05-28",
+      "last_updated": "2026-05-29",
+      "display_meta": "2026-05-29",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-28",
+        "2026-05-29",
         "2026",
         "05",
-        "28"
+        "29"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-29 2026 05 29"
     },
     {
       "id": "doc-ui-status",
@@ -2670,6 +2670,31 @@
         "14"
       ],
       "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
+    },
+    {
+      "id": "docs-viewer-view-capability-contract",
+      "kind": "doc",
+      "title": "Docs Viewer View Capability Contract",
+      "href": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
+      "last_updated": "2026-05-29",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-29 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-view-capability-contract",
+        "docs",
+        "viewer",
+        "view",
+        "capability",
+        "contract",
+        "docs viewer view capability contract",
+        "docs viewer",
+        "2026-05-29",
+        "2026",
+        "05",
+        "29"
+      ],
+      "search_text": "docs-viewer-view-capability-contract docs viewer view capability contract docs viewer view capability contract docs viewer 2026-05-29 2026 05 29"
     },
     {
       "id": "scripts-docs-export",

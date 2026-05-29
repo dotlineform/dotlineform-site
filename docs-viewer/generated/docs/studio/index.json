@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T11:10:07Z",
+  "generated_at": "2026-05-29T14:33:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1232,14 +1232,14 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 9460
+      "content_text_length": 9623
     },
     {
       "scope": "studio",
@@ -1584,6 +1584,21 @@
       "ui_status": "report",
       "viewer_report": "source_config",
       "viewer_report_access": "manage"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-view-capability-contract",
+      "title": "Docs Viewer View Capability Contract",
+      "added_date": "2026-05-29",
+      "last_updated": "2026-05-29",
+      "parent_id": "docs-viewer",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-view-capability-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json",
+      "content_text_length": 7979,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

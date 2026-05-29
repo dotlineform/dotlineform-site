@@ -61,6 +61,11 @@ body.docs-viewer-service{
   padding: var(--docs-viewer-space-6, var(--space-6, 28px)) 18px var(--docs-viewer-space-7, var(--space-7, 60px));
 }
 
+.docs-viewer-shell .docsViewerShell__container:has(> .docsViewer),
+.docs-viewer-service .docs-viewer-service__main:has(> .docsViewer){
+  max-width: none;
+}
+
 .docsViewer [hidden]{
   display: none !important;
 }
