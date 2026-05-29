@@ -46,6 +46,8 @@ Use [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) for co
 
 Prefer a native `<select>` when it can satisfy the interaction requirement.
 Native selects provide reliable keyboard, pointer, screen-reader, and mobile behavior with less custom code.
+When a native select appears beside custom toolbar controls, align it with the same control-height, border, font, and horizontal padding tokens where practical.
+Native select rendering can still vary by browser and platform; do not replace native behavior only to achieve pixel-perfect height matching.
 
 Use a custom select-menu only when a native select cannot meet a real requirement, such as:
 
@@ -75,6 +77,19 @@ The custom-menu version has five parts:
 
 The selected value should be stable in width and legible in compact toolbars.
 If option labels vary significantly, set a sensible control width rather than letting the toolbar jump between values.
+Custom select menus that show `meta` should use route-scoped sizing tokens to avoid pushing secondary text too far from the label.
+A useful default is a fixed menu width plus a label column that has a minimum width but does not consume all remaining space.
+
+Example:
+
+```css
+.routeSelectMenu {
+  --select-menu-width: 19rem;
+  --select-menu-label-min: 7rem;
+}
+```
+
+Then map those tokens into the live namespace so the row grid can keep emoji, label, and meta aligned without making a full-width gutter between label and meta.
 
 ## Option Record Contract
 

@@ -416,14 +416,15 @@ a.uiCatalogueDemoPanel:focus-visible {
   box-sizing: border-box;
   min-width: 11rem;
   max-width: 100%;
+  height: var(--ui-demo-control-height);
   min-height: var(--ui-demo-control-height);
   border: 1px solid var(--ui-demo-line-strong);
   border-radius: var(--ui-demo-radius);
-  padding: 0.36rem 2rem 0.36rem 0.58rem;
+  padding: 0 2rem 0 0.58rem;
   color: inherit;
   font: inherit;
   font-size: var(--font-small, 0.9rem);
-  line-height: 1.2;
+  line-height: var(--ui-demo-control-height);
   background: var(--ui-demo-surface);
 }
 
@@ -468,6 +469,11 @@ a.uiCatalogueDemoPanel:focus-visible {
   box-shadow: 0 10px 22px color-mix(in srgb, var(--ui-demo-text) 14%, transparent);
 }
 
+.uiCatalogueDemoSelectMenu .uiCatalogueDemoMenu__surface {
+  width: min(var(--ui-demo-select-menu-width, 19rem), calc(100vw - 1rem));
+  min-width: min(100%, var(--ui-demo-select-menu-width, 19rem));
+}
+
 .uiCatalogueDemoMenu__surface[hidden] {
   display: none;
 }
@@ -493,7 +499,7 @@ a.uiCatalogueDemoPanel:focus-visible {
 }
 
 .uiCatalogueDemoMenu__item[role="option"] {
-  grid-template-columns: 1.45rem minmax(0, 1fr) max-content;
+  grid-template-columns: 1.45rem minmax(var(--ui-demo-select-label-min, 7rem), max-content) max-content;
 }
 
 .uiCatalogueDemoMenu__item:hover,
@@ -903,6 +909,11 @@ a.uiCatalogueDemoPanel:focus-visible {
   .uiCatalogueDemoMenu__surface {
     width: 100%;
     max-width: 100%;
+  }
+
+  .uiCatalogueDemoSelectMenu .uiCatalogueDemoMenu__surface {
+    width: 100%;
+    min-width: 100%;
   }
 
   .uiCatalogueDemoMenu__item[role="option"] {

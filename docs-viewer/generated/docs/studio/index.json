@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T18:23:46Z",
+  "generated_at": "2026-05-29T18:50:07Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2729,7 +2729,7 @@
       "source_path": "ui-pattern-select-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-select-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json",
-      "content_text_length": 8183
+      "content_text_length": 8995
     },
     {
       "scope": "studio",
