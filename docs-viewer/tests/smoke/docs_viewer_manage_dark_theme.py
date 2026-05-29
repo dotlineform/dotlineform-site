@@ -76,6 +76,25 @@ def assert_dark_state(theme_state: dict[str, object]) -> None:
         raise AssertionError(f"unexpected dark manage theme at viewport {theme_state.get('viewportWidth')}: {theme_state!r}")
 
 
+def assert_theme_toggle_style(page: Page) -> None:
+    toggle = page.locator(".docsViewer__themeToggle")
+    default_state = toggle.evaluate(
+        """button => {
+            const styles = getComputedStyle(button);
+            return {
+                borderWidth: styles.borderTopWidth,
+                background: styles.backgroundColor
+            };
+        }"""
+    )
+    if default_state != {"borderWidth": "0px", "background": "rgba(0, 0, 0, 0)"}:
+        raise AssertionError(f"unexpected Docs Viewer theme toggle default style: {default_state!r}")
+    toggle.hover()
+    hover_state = toggle.evaluate("button => getComputedStyle(button).backgroundColor")
+    if hover_state != "rgb(28, 28, 31)":
+        raise AssertionError(f"unexpected Docs Viewer theme toggle hover background: {hover_state!r}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout-ms", type=int, default=15000)
@@ -92,6 +111,7 @@ def main() -> int:
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
                 state = collect_theme_state(page, base_url, args.timeout_ms)
                 assert_dark_state(state)
+                assert_theme_toggle_style(page)
                 states.append(state)
                 page.close()
             browser.close()

@@ -2,26 +2,39 @@
   var button = document.getElementById('themeToggle');
   if (!button) return;
 
+  var LIGHT_THEME = 'light';
+  var DARK_THEME = 'dark';
+
+  function normalizeTheme(theme) {
+    return theme === DARK_THEME ? DARK_THEME : LIGHT_THEME;
+  }
+
   function getTheme() {
-    return document.documentElement.getAttribute('data-theme') || 'light';
+    return normalizeTheme(document.documentElement.getAttribute('data-theme'));
   }
 
   function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
+    var activeTheme = normalizeTheme(theme);
+    var isDark = activeTheme === DARK_THEME;
+    var nextLabel = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    document.documentElement.setAttribute('data-theme', activeTheme);
     try {
-      if (theme === 'auto') {
-        localStorage.removeItem('theme');
-      } else {
-        localStorage.setItem('theme', theme);
-      }
+      localStorage.setItem('theme', activeTheme);
     } catch (e) {}
-    button.textContent = theme;
+    button.setAttribute('aria-label', nextLabel);
+    button.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    button.title = nextLabel;
+    button.querySelectorAll('[data-theme-icon]').forEach(function (icon) {
+      if (icon.dataset.themeIcon === activeTheme) {
+        icon.removeAttribute('hidden');
+      } else {
+        icon.setAttribute('hidden', '');
+      }
+    });
   }
 
   function nextTheme(theme) {
-    if (theme === 'auto') return 'light';
-    if (theme === 'light') return 'dark';
-    return 'auto';
+    return normalizeTheme(theme) === DARK_THEME ? LIGHT_THEME : DARK_THEME;
   }
 
   setTheme(getTheme());

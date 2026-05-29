@@ -189,6 +189,22 @@ def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dic
     actual = {key: state.get(key) for key in expected}
     if actual != expected:
         raise AssertionError(f"unexpected UI Catalogue dark theme at viewport {viewport!r}: {state!r}")
+    toggle = page.locator(".studioThemeToggle")
+    default_toggle_state = toggle.evaluate(
+        """button => {
+            const styles = getComputedStyle(button);
+            return {
+                borderWidth: styles.borderTopWidth,
+                background: styles.backgroundColor
+            };
+        }"""
+    )
+    if default_toggle_state != {"borderWidth": "0px", "background": "rgba(0, 0, 0, 0)"}:
+        raise AssertionError(f"unexpected Studio theme toggle default style: {default_toggle_state!r}")
+    toggle.hover()
+    hover_toggle_state = toggle.evaluate("button => getComputedStyle(button).backgroundColor")
+    if hover_toggle_state != "rgb(28, 28, 31)":
+        raise AssertionError(f"unexpected Studio theme toggle hover background: {hover_toggle_state!r}")
     return {"width": viewport["width"], "height": viewport["height"], "theme": "dark"}
 
 

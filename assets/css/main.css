@@ -845,6 +845,13 @@ body:not(.studio-local-app) .site-header .container{
   max-width: none;
   padding: 18px 18px 16px;
 }
+.siteHeader__actions{
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
 .site-title a{
   text-decoration: none;
   font-weight: 700;
@@ -997,6 +1004,10 @@ body:not(.studio-local-app) .site-header .container{
 }
 
 @media (max-width: 640px){
+  .siteHeader__actions{
+    gap: 7px;
+  }
+
   .studio-local-app .site-header .container{
     padding-right: 12px;
     padding-left: 12px;
@@ -1015,6 +1026,50 @@ body:not(.studio-local-app) .site-header .container{
   }
 }
 
+
+.siteThemeToggle{
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.siteThemeToggle:hover{
+  background: var(--panel-2);
+}
+
+.siteThemeToggle:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.siteThemeToggle__icon{
+  width: 1.16rem;
+  height: 1.16rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 640px){
+  .siteThemeToggle{
+    width: 1.85rem;
+    min-width: 1.85rem;
+    height: 1.85rem;
+  }
+}
 
 .theme-toggle{
   margin-left: 14px;
@@ -1233,10 +1288,11 @@ body:not(.studio-local-app) .site-header .container{
   padding-bottom: 18px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 14px;
   font-size: var(--font-caption);
   line-height: 1.2;
+  text-align: center;
 }
 
 .site-footer .muted{ font-size: var(--font-caption); line-height: 1.2; }

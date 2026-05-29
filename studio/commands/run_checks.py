@@ -151,6 +151,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_html_import_modules.py",
                 "studio/tests/smoke/data_sharing_prepare_modules.py",
                 "studio/tests/smoke/ui_catalogue_modal_demo.py",
+                "studio/tests/smoke/public_site_theme_toggle.py",
                 "studio/tests/python/test_studio_app_server.py",
                 "studio/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
@@ -389,6 +390,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/smoke/ui_catalogue_modal_demo.py",
             ),
             "Smoke-check the UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
+        ),
+        CheckCommand(
+            "public-site-theme-toggle-smoke",
+            (
+                sys.executable,
+                "studio/tests/smoke/public_site_theme_toggle.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check the public /series/ header theme toggle.",
         ),
         CheckCommand(
             "local-studio-data-sharing-routes-smoke",

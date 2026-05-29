@@ -329,10 +329,10 @@ html[data-theme="dark"] {
   min-width: 2rem;
   height: 2rem;
   padding: 0;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 999px;
   color: var(--text);
-  background: var(--panel);
+  background: transparent;
   cursor: pointer;
 }
 

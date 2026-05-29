@@ -879,10 +879,10 @@ select.docsViewer__fieldInput--listbox{
   min-width: 2.3rem;
   height: 2.3rem;
   padding: 0;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 0;
   border-radius: 999px;
   color: var(--docs-viewer-text, var(--text, #111));
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  background: transparent;
   cursor: pointer;
 }
 
