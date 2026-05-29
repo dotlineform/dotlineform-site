@@ -34,7 +34,9 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
   <section class="uiCatalogueDemoNav__group">
     <h3 class="uiCatalogueDemoHeading">Composition Patterns</h3>
     <ul class="uiCatalogueDemoNav__list">
+      <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/patterns/action-menu/' | relative_url }}">action menu</a></li>
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/patterns/reopenable-command-result/' | relative_url }}">reopenable command result</a></li>
+      <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/patterns/select-menu/' | relative_url }}">select menu</a></li>
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/patterns/column-links/' | relative_url }}">column links</a></li>
     </ul>
   </section>

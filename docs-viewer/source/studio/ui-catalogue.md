@@ -29,13 +29,10 @@ Current demo pages:
 - [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](/studio/ui-catalogue/demos/primitives/list/)
 - [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](/studio/ui-catalogue/demos/primitives/modal-shell/)
 - [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](/studio/ui-catalogue/demos/primitives/panel/)
+- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) / [demo page](/studio/ui-catalogue/demos/patterns/action-menu/)
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
+- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](/studio/ui-catalogue/demos/patterns/select-menu/)
 - [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](/studio/ui-catalogue/demos/patterns/column-links/)
-
-Planned composition pattern docs awaiting isolated demo implementation:
-
-- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu), planned route `/studio/ui-catalogue/demos/patterns/action-menu/`
-- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu), planned route `/studio/ui-catalogue/demos/patterns/select-menu/`
 
 Removed legacy routes such as `/studio/ui-catalogue/button/` and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the demo route hierarchy.
 During the Local Studio migration, demo route visibility should move into the local Studio navigation or an equivalent local Studio entry point while preserving the isolated demo namespace and ready-state contract.
@@ -69,7 +66,9 @@ Current roots:
 - `/studio/ui-catalogue/demos/primitives/list/` uses `#uiCatalogueDemoListRoot`
 - `/studio/ui-catalogue/demos/primitives/modal-shell/` uses `#uiCatalogueDemoModalShellRoot`
 - `/studio/ui-catalogue/demos/primitives/panel/` uses `#uiCatalogueDemoPanelRoot`
+- `/studio/ui-catalogue/demos/patterns/action-menu/` uses `#uiCatalogueDemoActionMenuRoot`
 - `/studio/ui-catalogue/demos/patterns/reopenable-command-result/` uses `#uiCatalogueDemoReopenableCommandResultRoot`
+- `/studio/ui-catalogue/demos/patterns/select-menu/` uses `#uiCatalogueDemoSelectMenuRoot`
 - `/studio/ui-catalogue/demos/patterns/column-links/` uses `#uiCatalogueDemoColumnLinksRoot`
 
 This contract is intentionally separate from the production `data-studio-ready` route contract.

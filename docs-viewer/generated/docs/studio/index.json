@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T17:58:30Z",
+  "generated_at": "2026-05-29T18:23:46Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2561,7 +2561,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6440
+      "content_text_length": 6432
     },
     {
       "scope": "studio",
@@ -2575,7 +2575,7 @@
       "source_path": "ui-pattern-action-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-action-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-action-menu.json",
-      "content_text_length": 7079
+      "content_text_length": 8002
     },
     {
       "scope": "studio",
@@ -2729,7 +2729,7 @@
       "source_path": "ui-pattern-select-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-select-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json",
-      "content_text_length": 7125
+      "content_text_length": 8183
     },
     {
       "scope": "studio",

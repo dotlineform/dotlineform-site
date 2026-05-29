@@ -10,9 +10,9 @@ parent_id: ui-catalogue
 This composition pattern covers compact value-selection controls that share visual treatment with toolbar controls while preserving selection semantics.
 It is a sibling of [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu), not a command-menu variant.
 
-Planned demo reference:
+Demo reference:
 
-- `/studio/ui-catalogue/demos/patterns/select-menu/`
+- [Select menu pattern demo](/studio/ui-catalogue/demos/patterns/select-menu/)
 
 Initial live migration target:
 
@@ -27,6 +27,10 @@ Use this pattern when:
 - the selected value should remain visible after the menu closes
 - option state comes from route config, loaded data, or capability data
 - visual treatment should align with nearby toolbar buttons
+
+The pattern supports user-config-backed option records by default.
+This is appropriate for controls such as the Docs Viewer scope dropdown, where config describes selectable values rather than executable behavior.
+That support is not a requirement for every live use of the pattern: each route still decides whether its option source may be user-editable, checked-in config, generated data, or code-owned state.
 
 Do not use this pattern for:
 
@@ -75,12 +79,14 @@ If option labels vary significantly, set a sensible control width rather than le
 ## Option Record Contract
 
 Live routes should define option records close to the route/controller state that owns the current value.
+Option records may come from user-editable config when the route explicitly treats those values as safe selectable data.
 
 Recommended record shape:
 
 ```js
 {
   value: "studio",
+  emoji: "🛠️",
   label: "Studio",
   title: "Studio documentation",
   selected: state.scope === "studio",
@@ -95,6 +101,7 @@ Required fields:
 
 Optional fields:
 
+- `emoji`: short emoji marker shown in a reserved leading slot
 - `title`: tooltip or disabled reason
 - `selected`: current selected projection when the helper does not receive a separate value
 - `disabled`: render the option but prevent selection
@@ -104,6 +111,11 @@ Optional fields:
 
 Routes may derive options from route config, generated data, or backend capability data.
 The pattern should receive already-normalized options and a current value.
+
+If any option uses `emoji`, every option row should reserve the same leading emoji slot.
+Options without `emoji` should render an empty placeholder rather than shifting the label left.
+For scope pickers, emoji can provide a compact visual indication of scope type, such as public, local, management-only, or generated-data-backed scopes.
+The selected-value display may include the selected option emoji when space allows, but the text label remains the accessible source of meaning.
 
 ## Lifecycle Contract
 

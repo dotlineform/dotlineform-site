@@ -248,7 +248,8 @@ a.uiCatalogueDemoPanel:focus-visible {
 .uiCatalogueDemoActions,
 .uiCatalogueDemoButtonPair,
 .uiCatalogueDemoInputRow,
-.uiCatalogueDemoListSortControls {
+.uiCatalogueDemoListSortControls,
+.uiCatalogueDemoToolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
@@ -402,6 +403,136 @@ a.uiCatalogueDemoPanel:focus-visible {
   outline: none;
   border-color: var(--ui-demo-focus);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-demo-focus) 24%, transparent);
+}
+
+.uiCatalogueDemoSelectField {
+  display: grid;
+  gap: 0.3rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.uiCatalogueDemoSelect {
+  box-sizing: border-box;
+  min-width: 11rem;
+  max-width: 100%;
+  min-height: var(--ui-demo-control-height);
+  border: 1px solid var(--ui-demo-line-strong);
+  border-radius: var(--ui-demo-radius);
+  padding: 0.36rem 2rem 0.36rem 0.58rem;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.2;
+  background: var(--ui-demo-surface);
+}
+
+.uiCatalogueDemoSelect:focus {
+  outline: none;
+  border-color: var(--ui-demo-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-demo-focus) 24%, transparent);
+}
+
+.uiCatalogueDemoMenu,
+.uiCatalogueDemoSelectMenu {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.uiCatalogueDemoMenu__trigger,
+.uiCatalogueDemoSelectMenu__trigger {
+  min-width: 6.5rem;
+}
+
+.uiCatalogueDemoSelectMenu__trigger {
+  justify-content: flex-start;
+  gap: 0.35rem;
+  min-width: 11rem;
+}
+
+.uiCatalogueDemoMenu__surface {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.12rem;
+  min-width: max(100%, 12rem);
+  max-width: min(24rem, calc(100vw - 1rem));
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  padding: 0.28rem;
+  background: var(--ui-demo-surface);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--ui-demo-text) 14%, transparent);
+}
+
+.uiCatalogueDemoMenu__surface[hidden] {
+  display: none;
+}
+
+.uiCatalogueDemoMenu__item {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1.45rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: center;
+  width: 100%;
+  min-height: 2rem;
+  border: 0;
+  border-radius: 4px;
+  padding: 0.42rem 0.5rem;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.2;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.uiCatalogueDemoMenu__item[role="option"] {
+  grid-template-columns: 1.45rem minmax(0, 1fr) max-content;
+}
+
+.uiCatalogueDemoMenu__item:hover,
+.uiCatalogueDemoMenu__item:focus-visible {
+  outline: none;
+  background: var(--ui-demo-surface-soft);
+}
+
+.uiCatalogueDemoMenu__item[aria-selected="true"] {
+  font-weight: 700;
+}
+
+.uiCatalogueDemoMenu__item:disabled {
+  color: var(--ui-demo-muted);
+  cursor: not-allowed;
+}
+
+.uiCatalogueDemoMenu__item:disabled:hover,
+.uiCatalogueDemoMenu__item:disabled:focus-visible {
+  background: transparent;
+}
+
+.uiCatalogueDemoMenu__emoji {
+  display: inline-flex;
+  justify-content: center;
+  width: 1.45rem;
+  min-width: 1.45rem;
+  line-height: 1;
+}
+
+.uiCatalogueDemoMenu__label,
+.uiCatalogueDemoMenu__meta {
+  min-width: 0;
+}
+
+.uiCatalogueDemoMenu__meta {
+  color: var(--ui-demo-muted);
+  font-size: var(--font-caption, 0.78rem);
+  white-space: nowrap;
 }
 
 .uiCatalogueDemoInput--readonly {
@@ -730,7 +861,17 @@ a.uiCatalogueDemoPanel:focus-visible {
 
   .uiCatalogueDemoField,
   .uiCatalogueDemoField__control,
-  .uiCatalogueDemoInput {
+  .uiCatalogueDemoInput,
+  .uiCatalogueDemoSelect,
+  .uiCatalogueDemoSelectField {
+    width: 100%;
+  }
+
+  .uiCatalogueDemoToolbar,
+  .uiCatalogueDemoMenu,
+  .uiCatalogueDemoSelectMenu,
+  .uiCatalogueDemoMenu__trigger,
+  .uiCatalogueDemoSelectMenu__trigger {
     width: 100%;
   }
 
@@ -757,5 +898,18 @@ a.uiCatalogueDemoPanel:focus-visible {
   .uiCatalogueDemoList--dense .uiCatalogueDemoList__head,
   .uiCatalogueDemoList--dense .uiCatalogueDemoList__row {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uiCatalogueDemoMenu__surface {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .uiCatalogueDemoMenu__item[role="option"] {
+    grid-template-columns: 1.45rem minmax(0, 1fr);
+  }
+
+  .uiCatalogueDemoMenu__meta {
+    grid-column: 2;
   }
 }

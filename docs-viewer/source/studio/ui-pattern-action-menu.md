@@ -10,9 +10,9 @@ parent_id: ui-catalogue
 This composition pattern covers a button-triggered menu of commands where each item invokes a route-owned action.
 It is intended for repeated command groups that should share visual treatment, accessibility behavior, and lifecycle rules without sharing route-specific business logic.
 
-Planned demo reference:
+Demo reference:
 
-- `/studio/ui-catalogue/demos/patterns/action-menu/`
+- [Action menu pattern demo](/studio/ui-catalogue/demos/patterns/action-menu/)
 
 Initial live migration target:
 
@@ -24,7 +24,7 @@ Use this pattern when:
 
 - a compact toolbar or header needs several related commands
 - the commands are actions, not navigation links
-- the route can define commands as structured action records
+- trusted route code can define commands as structured action records
 - the command list needs disabled or hidden projection from route state
 - menu open/close behavior should be consistent across Studio surfaces
 
@@ -61,12 +61,15 @@ The visual treatment should be compact and stable:
 
 Live routes should define action records close to the route/controller state that owns them.
 The shared pattern should not know route-specific services, document state, backend endpoints, or modal flows.
+Action records are design-time code, not user-editable config.
+The route may read stable UI text from the route's normal copy/config source, but user-editable config must not create, remove, reorder, rename, or retarget action commands.
 
 Recommended record shape:
 
 ```js
 {
   id: "rebuild-docs",
+  emoji: "🔁",
   label: "Rebuild docs",
   title: "Rebuild generated docs for the active scope",
   hidden: false,
@@ -84,6 +87,7 @@ Required fields:
 Optional fields:
 
 - `title`: tooltip or disabled reason
+- `emoji`: short emoji marker shown in a reserved leading slot
 - `hidden`: omit or hide the action from the menu
 - `disabled`: render the action but prevent dispatch
 - `danger`: visual variant for destructive commands when the route has already handled confirmation rules
@@ -92,6 +96,11 @@ Optional fields:
 
 Routes may derive records from local config, backend capability data, or route state.
 The menu pattern should receive already-normalized records and callbacks.
+Those sources may decide availability or disabled state, but the executable command set stays code-owned.
+
+If any item in a menu uses `emoji`, every item row should reserve the same leading emoji slot.
+Items without `emoji` should render an empty placeholder rather than shifting the label left.
+This keeps scan alignment stable and allows selective visual hints for action type, risk, or destination without turning emoji into required UI copy.
 
 ## Lifecycle Contract
 
@@ -109,7 +118,7 @@ The menu controller owns:
 The route owns:
 
 - action record construction
-- label source and production UI text lookup
+- label source and production UI text lookup from trusted route-owned copy
 - hidden and disabled projection from route state
 - command callbacks
 - busy state and status messages
@@ -166,10 +175,11 @@ The migration target is no visible UI change with a clearer internal shape:
 
 - keep management-only loading behind the Docs Viewer lazy management boundary
 - keep Docs Viewer classes and current visual styling
-- define management actions as records in the management controller or a focused management action-menu owner
+- define management actions as design-time records in the management controller or a focused management action-menu owner
 - keep actual write workflows in `docs-viewer-management-actions.js`
 - keep backend calls behind `docs-viewer-management-client.js`
 - preserve existing stable ids where current smoke tests or activity contexts need them
+- do not make the Docs Viewer `Actions` menu user-configurable
 
 The action-menu helper should not become a Docs Viewer service adapter.
 It should only own menu rendering, state projection, and command dispatch.
@@ -187,7 +197,8 @@ It should only own menu rendering, state projection, and command dispatch.
 - an overly broad helper could hide route-specific write authority
 - storing callbacks inside long-lived records can become stale after route state changes
 - keyboard behavior can regress if the helper relies only on click handling
-- generic labels can bypass route-owned UI text sources
+- generic labels can bypass trusted route-owned UI text sources
+- user-editable action configuration can create false expectations or security risk
 - destructive actions can look too casual if confirmation remains unclear
 
 Keep the pattern narrow: a consistent command menu shell with explicit route-supplied records and callbacks.

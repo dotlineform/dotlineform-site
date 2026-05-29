@@ -174,10 +174,24 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "script": "/studio/ui-catalogue/assets/js/ui-catalogue-demo.js",
         "nav": "false",
     },
+    "ui_catalogue_demo_action_menu": {
+        "label": "action menu",
+        "title": "UI Demo Pattern: Action Menu",
+        "path": "/studio/ui-catalogue/demos/patterns/action-menu/",
+        "script": "/studio/ui-catalogue/assets/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
     "ui_catalogue_demo_reopenable_command_result": {
         "label": "reopenable result",
         "title": "UI Demo Pattern: Reopenable Command Result",
         "path": "/studio/ui-catalogue/demos/patterns/reopenable-command-result/",
+        "script": "/studio/ui-catalogue/assets/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_select_menu": {
+        "label": "select menu",
+        "title": "UI Demo Pattern: Select Menu",
+        "path": "/studio/ui-catalogue/demos/patterns/select-menu/",
         "script": "/studio/ui-catalogue/assets/js/ui-catalogue-demo.js",
         "nav": "false",
     },
@@ -323,8 +337,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-studio.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",
         repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",
-        repo_root / "assets" / "ui-catalogue" / "js" / "ui-catalogue-demo.js",
-        repo_root / "assets" / "ui-catalogue" / "css" / "ui-catalogue-demo.css",
+        repo_root / "studio" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-demo.js",
+        repo_root / "studio" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-demo.css",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"

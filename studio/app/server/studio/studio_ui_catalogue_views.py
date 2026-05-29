@@ -21,7 +21,9 @@ UI_CATALOGUE_DEMO_SOURCES: dict[str, str] = {
     "ui_catalogue_demo_list": "studio/ui-catalogue/demos/primitives/list/index.md",
     "ui_catalogue_demo_modal_shell": "studio/ui-catalogue/demos/primitives/modal-shell/index.md",
     "ui_catalogue_demo_panel": "studio/ui-catalogue/demos/primitives/panel/index.md",
+    "ui_catalogue_demo_action_menu": "studio/ui-catalogue/demos/patterns/action-menu/index.md",
     "ui_catalogue_demo_reopenable_command_result": "studio/ui-catalogue/demos/patterns/reopenable-command-result/index.md",
+    "ui_catalogue_demo_select_menu": "studio/ui-catalogue/demos/patterns/select-menu/index.md",
     "ui_catalogue_demo_column_links": "studio/ui-catalogue/demos/patterns/column-links/index.md",
 }
 
@@ -32,7 +34,9 @@ UI_CATALOGUE_DEMO_ROUTES: dict[str, str] = {
     "/studio/ui-catalogue/demos/primitives/list/": "ui_catalogue_demo_list",
     "/studio/ui-catalogue/demos/primitives/modal-shell/": "ui_catalogue_demo_modal_shell",
     "/studio/ui-catalogue/demos/primitives/panel/": "ui_catalogue_demo_panel",
+    "/studio/ui-catalogue/demos/patterns/action-menu/": "ui_catalogue_demo_action_menu",
     "/studio/ui-catalogue/demos/patterns/reopenable-command-result/": "ui_catalogue_demo_reopenable_command_result",
+    "/studio/ui-catalogue/demos/patterns/select-menu/": "ui_catalogue_demo_select_menu",
     "/studio/ui-catalogue/demos/patterns/column-links/": "ui_catalogue_demo_column_links",
 }
 
