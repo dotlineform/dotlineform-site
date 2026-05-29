@@ -139,7 +139,9 @@
         "ui_catalogue_demo_list": "ui-primitive-list",
         "ui_catalogue_demo_modal_shell": "ui-primitive-modal-shell",
         "ui_catalogue_demo_panel": "ui-primitive-panel",
+        "ui_catalogue_demo_action_menu": "ui-pattern-action-menu",
         "ui_catalogue_demo_reopenable_command_result": "ui-pattern-reopenable-command-result",
+        "ui_catalogue_demo_select_menu": "ui-pattern-select-menu",
         "ui_catalogue_demo_column_links": "ui-pattern-column-links"
       }
     }

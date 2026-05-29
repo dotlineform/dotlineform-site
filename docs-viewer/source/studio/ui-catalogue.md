@@ -24,15 +24,18 @@ Published demo pages live under:
 
 Current demo pages:
 
-- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](/studio/ui-catalogue/demos/primitives/button/)
-- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [demo page](/studio/ui-catalogue/demos/primitives/input/)
-- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](/studio/ui-catalogue/demos/primitives/list/)
-- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](/studio/ui-catalogue/demos/primitives/modal-shell/)
-- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](/studio/ui-catalogue/demos/primitives/panel/)
-- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) / [demo page](/studio/ui-catalogue/demos/patterns/action-menu/)
-- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
-- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](/studio/ui-catalogue/demos/patterns/select-menu/)
-- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](/studio/ui-catalogue/demos/patterns/column-links/)
+- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/button/)
+- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/input/)
+- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/list/)
+- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/modal-shell/)
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/panel/)
+- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/action-menu/)
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
+- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/select-menu/)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/column-links/)
+
+The demo links target the default Local Studio app port.
+If `STUDIO_APP_PORT` is changed from `8765`, adjust the port in the browser URL.
 
 Removed legacy routes such as `/studio/ui-catalogue/button/` and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the demo route hierarchy.
 During the Local Studio migration, demo route visibility should move into the local Studio navigation or an equivalent local Studio entry point while preserving the isolated demo namespace and ready-state contract.

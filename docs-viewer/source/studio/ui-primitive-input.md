@@ -2,7 +2,7 @@
 doc_id: ui-primitive-input
 title: Input Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-15
+last_updated: 2026-05-29
 parent_id: ui-catalogue
 ---
 # Input Primitive
@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared input controls and fi
 
 Demo reference:
 
-- [Input primitive demo](/studio/ui-catalogue/demos/primitives/input/)
+- [Input primitive demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/input/)
 
 ## Scope
 

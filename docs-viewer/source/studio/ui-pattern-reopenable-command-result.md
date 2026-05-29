@@ -2,7 +2,7 @@
 doc_id: ui-pattern-reopenable-command-result
 title: Reopenable Command Result Pattern
 added_date: 2026-05-05
-last_updated: 2026-05-15
+last_updated: 2026-05-29
 parent_id: ui-catalogue
 ---
 # Reopenable Command Result Pattern
@@ -15,7 +15,7 @@ Current live examples:
 
 Demo reference:
 
-- [Reopenable command result pattern demo](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
+- [Reopenable command result pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
 
 ## Scope
 

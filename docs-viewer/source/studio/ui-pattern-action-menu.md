@@ -12,7 +12,7 @@ It is intended for repeated command groups that should share visual treatment, a
 
 Demo reference:
 
-- [Action menu pattern demo](/studio/ui-catalogue/demos/patterns/action-menu/)
+- [Action menu pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/action-menu/)
 
 Initial live migration target:
 

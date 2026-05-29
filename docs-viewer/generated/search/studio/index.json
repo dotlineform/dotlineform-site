@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-00a210b8428667d2d997dce4f6d69915",
-    "generated_at_utc": "2026-05-29T17:58:31Z",
+    "version": "blake2b-4e2966ad1273e1a7ae91f7683099b7a1",
+    "generated_at_utc": "2026-05-29T19:05:09Z",
     "count": 200
   },
   "entries": [
@@ -4317,10 +4317,10 @@
       "kind": "doc",
       "title": "Button Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-button",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-primitive-button",
         "ui",
@@ -4329,22 +4329,22 @@
         "button primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-pattern-column-links",
       "kind": "doc",
       "title": "Column Links Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-column-links",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-pattern-column-links",
         "ui",
@@ -4354,12 +4354,12 @@
         "column links pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "css-primitives",
@@ -4390,10 +4390,10 @@
       "kind": "doc",
       "title": "Input Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-input",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-primitive-input",
         "ui",
@@ -4402,22 +4402,22 @@
         "input primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-primitive-list",
       "kind": "doc",
       "title": "List Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-list",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-primitive-list",
         "ui",
@@ -4426,12 +4426,12 @@
         "list primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-primitive-list ui primitive list list primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-primitive-list ui primitive list list primitive ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "studio-ui-framework-modal-contract",
@@ -4490,10 +4490,10 @@
       "kind": "doc",
       "title": "Modal Shell Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-primitive-modal-shell",
         "ui",
@@ -4503,22 +4503,22 @@
         "modal shell primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-primitive-panel",
       "kind": "doc",
       "title": "Panel Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-panel",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-primitive-panel",
         "ui",
@@ -4527,22 +4527,22 @@
         "panel primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-pattern-reopenable-command-result",
       "kind": "doc",
       "title": "Reopenable Command Result Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-29",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
+      "display_meta": "2026-05-29 • UI Catalogue",
       "search_terms": [
         "ui-pattern-reopenable-command-result",
         "ui",
@@ -4553,12 +4553,12 @@
         "reopenable command result pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-15",
+        "2026-05-29",
         "2026",
         "05",
-        "15"
+        "29"
       ],
-      "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-15 2026 05 15"
+      "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-29 2026 05 29"
     },
     {
       "id": "ui-pattern-select-menu",

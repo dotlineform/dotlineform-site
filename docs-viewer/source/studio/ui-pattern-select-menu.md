@@ -12,7 +12,7 @@ It is a sibling of [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-acti
 
 Demo reference:
 
-- [Select menu pattern demo](/studio/ui-catalogue/demos/patterns/select-menu/)
+- [Select menu pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/select-menu/)
 
 Initial live migration target:
 

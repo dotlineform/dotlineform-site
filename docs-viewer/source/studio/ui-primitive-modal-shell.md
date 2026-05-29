@@ -2,7 +2,7 @@
 doc_id: ui-primitive-modal-shell
 title: Modal Shell Primitive
 added_date: 2026-05-15
-last_updated: 2026-05-15
+last_updated: 2026-05-29
 parent_id: ui-catalogue
 ---
 # Modal Shell Primitive
@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared modal shells across S
 
 Demo reference:
 
-- [Modal shell primitive demo](/studio/ui-catalogue/demos/primitives/modal-shell/)
+- [Modal shell primitive demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/modal-shell/)
 
 ## Scope
 

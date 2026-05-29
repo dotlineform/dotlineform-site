@@ -2,7 +2,7 @@
 doc_id: ui-primitive-list
 title: List Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-15
+last_updated: 2026-05-29
 parent_id: ui-catalogue
 ---
 # List Primitive
@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared list surfaces.
 
 Demo reference:
 
-- [List primitive demo](/studio/ui-catalogue/demos/primitives/list/)
+- [List primitive demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/list/)
 
 ## Scope
 
