@@ -146,8 +146,10 @@ Do not hand-edit this file.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.
 
 `docs_viewer.scope_type_badges` maps scope types to selector display labels and emoji.
-The Docs Viewer scope dropdown prefixes each scope id with the configured emoji for its `scope_type`.
+Each browser scope record may also include `meta`, a short user-configured descriptor shown in the custom scope menu beside the scope id.
+The Docs Viewer scope dropdown prefixes each scope id with the configured emoji for its `scope_type` and shows the per-scope `meta` value when present.
 Use type-level badges for shared meaning such as public versus local availability, not per-scope branding.
+Use per-scope `meta` for compact operational context such as `public scope` or `local management`.
 
 ## UI Text
 

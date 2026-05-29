@@ -134,6 +134,7 @@ Adding a configured scope no longer requires editing `_includes/docs_viewer_shel
 If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
 The scope delete lifecycle action removes the matching `ui_statuses_by_scope` entry from `docs-viewer/config/scopes/docs_scopes.json` along with the scope record.
 If the new scope uses a new availability type, add or update its `docs_viewer.scope_type_badges` entry so the management scope dropdown can prefix the scope name consistently.
+Set the scope record `meta` to the short descriptor that should appear beside the scope id in the custom scope dropdown.
 
 Management route adapter inputs:
 

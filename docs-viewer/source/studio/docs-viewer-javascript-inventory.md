@@ -16,7 +16,7 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 56
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 57
 - Files above target score 4: 14
 - General risk themes: private app runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the app runtime coordinator.
 
@@ -27,7 +27,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 7 |
 | 5 | 7 |
-| 4 | 42 |
+| 4 | 43 |
 
 ## Current Priorities
 
@@ -51,6 +51,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | new | new | `docs-viewer/runtime/js/docs-viewer-service-context.js` | 1 | 1 | 1 | 1 | 4 | Focused public/manage service-context projection owner; public contexts omit management and local generated-read backend surfaces. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` | 1 | 1 | 1 | 1 | 4 | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-config-service.js` | 1 | 1 | 1 | 1 | 4 | Focused browser-safe Docs Viewer config and UI-text fetch/retry owner consumed by the config controller. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-scope-select-menu.js` | 1 | 1 | 1 | 1 | 4 | Focused custom scope select-menu projection and interaction owner consumed by the config controller. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-asset-url.js` | 1 | 1 | 1 | 1 | 4 | Focused asset-version URL projection helper for static browser assets. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-report-service.js` | 1 | 1 | 1 | 1 | 4 | Focused local report endpoint adapter for source-config, generated docs-log, and broken-links audit reports. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
@@ -247,6 +248,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 5.
 - 2026-05-28 owner note: this controller now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs instead of broad `state`.
+- 2026-05-29 owner note: the scope picker now projects custom select-menu option rows with `emoji`, scope id label, and config-backed `meta` while preserving the hidden native select as the existing value/change bridge for route workflow handoff.
 - Keep this module focused on browser-safe Docs Viewer config loading, route-scope resolution, scope-picker projection, route-global/root-dataset projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates.
 - Do not move document index loading, payload rendering, URL history primitives, generated-read capability checks, backend writes, management actions, or route shell boot into it.
 
@@ -292,7 +294,13 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
 
 - Added 2026-05-27 as the focused renderer for scope picker, recently-added button, search input, and management-action mount composition.
+- 2026-05-29 owner note: the scope picker shell now renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount from route context.
+
+### `docs-viewer/runtime/js/docs-viewer-scope-select-menu.js`
+
+- Added 2026-05-29 as the focused owner for custom scope select-menu option rendering, trigger projection, open/close behavior, keyboard navigation, and dispatching the preserved native select `change` event.
+- Keep route navigation, browser config normalization, scope option record construction, and route-global projection in `docs-viewer/runtime/js/docs-viewer-config-controller.js`.
 
 ### `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
 

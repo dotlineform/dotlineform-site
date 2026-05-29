@@ -4,6 +4,7 @@
     {
       "scope_id": "studio",
       "scope_type": "local",
+      "meta": "local management",
       "source": "docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
       "output": "docs-viewer/generated/docs/studio",
@@ -27,6 +28,7 @@
     {
       "scope_id": "library",
       "scope_type": "public",
+      "meta": "public scope",
       "source": "docs-viewer/source/library",
       "media_path_prefix": "docs/library",
       "output": "assets/data/docs/scopes/library",
@@ -48,6 +50,7 @@
     {
       "scope_id": "analysis",
       "scope_type": "public",
+      "meta": "public scope",
       "source": "docs-viewer/source/analysis",
       "media_path_prefix": "docs/analysis",
       "output": "assets/data/docs/scopes/analysis",
@@ -69,6 +72,7 @@
     {
       "scope_id": "tmp",
       "scope_type": "local",
+      "meta": "local management",
       "source": "docs-viewer/source/tmp",
       "media_path_prefix": "docs/tmp",
       "output": "docs-viewer/generated/docs/tmp",

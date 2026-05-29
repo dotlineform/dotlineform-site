@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T19:25:24Z",
+  "generated_at": "2026-05-29T19:42:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -290,7 +290,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 46023,
+      "content_text_length": 47088,
       "ui_status": "review"
     },
     {
@@ -1396,7 +1396,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 14623
+      "content_text_length": 14642
     },
     {
       "scope": "studio",
@@ -1410,7 +1410,7 @@
       "source_path": "config-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 8487
+      "content_text_length": 8765
     },
     {
       "scope": "studio",
@@ -1522,7 +1522,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 10767
+      "content_text_length": 10886
     },
     {
       "scope": "studio",
@@ -1640,7 +1640,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 17820
+      "content_text_length": 17894
     },
     {
       "scope": "studio",
@@ -2729,7 +2729,7 @@
       "source_path": "ui-pattern-select-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-select-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json",
-      "content_text_length": 9505
+      "content_text_length": 9669
     },
     {
       "scope": "studio",

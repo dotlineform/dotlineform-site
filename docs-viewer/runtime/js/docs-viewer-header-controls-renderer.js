@@ -19,10 +19,41 @@ function appendScopeSelect(documentRef, row) {
   label.setAttribute("aria-label", "Docs scope");
 
   var select = documentRef.createElement("select");
-  select.className = "docsViewer__scopeSelect";
+  select.className = "docsViewer__scopeSelectNative visually-hidden";
   select.id = "docsViewerScopeSelect";
+  select.tabIndex = -1;
+  select.setAttribute("aria-hidden", "true");
 
-  label.appendChild(select);
+  var menu = documentRef.createElement("div");
+  menu.className = "docsViewer__scopeSelectMenu";
+  menu.setAttribute("data-docs-viewer-scope-select-menu", "");
+
+  var button = documentRef.createElement("button");
+  button.className = "docsViewer__scopeSelectButton";
+  button.type = "button";
+  button.id = "docsViewerScopeSelectButton";
+  button.setAttribute("aria-haspopup", "listbox");
+  button.setAttribute("aria-expanded", "false");
+  button.setAttribute("aria-controls", "docsViewerScopeSelectList");
+  button.setAttribute("aria-label", "Docs scope");
+
+  var emoji = documentRef.createElement("span");
+  emoji.className = "docsViewer__scopeSelectEmoji";
+  emoji.setAttribute("aria-hidden", "true");
+
+  var text = documentRef.createElement("span");
+  text.className = "docsViewer__scopeSelectText";
+  text.setAttribute("data-docs-viewer-scope-select-label", "");
+
+  var list = documentRef.createElement("div");
+  list.className = "docsViewer__scopeSelectSurface";
+  list.id = "docsViewerScopeSelectList";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+
+  button.append(emoji, text);
+  menu.append(button, list);
+  label.append(select, menu);
   row.appendChild(label);
 }
 

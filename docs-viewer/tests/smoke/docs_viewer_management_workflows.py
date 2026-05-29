@@ -84,6 +84,8 @@ def write_docs_scope_config(target_root: Path) -> None:
             "scopes": [
                 {
                     "scope_id": "studio",
+                    "scope_type": "local",
+                    "meta": "local management",
                     "source": "docs-viewer/source/studio",
                     "media_path_prefix": "docs/studio",
                     "output": "docs-viewer/generated/docs/studio",
@@ -104,6 +106,8 @@ def write_docs_scope_config(target_root: Path) -> None:
                 },
                 {
                     "scope_id": "library",
+                    "scope_type": "public",
+                    "meta": "public scope",
                     "source": "docs-viewer/source/library",
                     "media_path_prefix": "docs/library",
                     "output": "assets/data/docs/scopes/library",
@@ -124,6 +128,8 @@ def write_docs_scope_config(target_root: Path) -> None:
                 },
                 {
                     "scope_id": "analysis",
+                    "scope_type": "public",
+                    "meta": "public scope",
                     "source": "docs-viewer/source/analysis",
                     "media_path_prefix": "docs/analysis",
                     "output": "assets/data/docs/scopes/analysis",
@@ -166,6 +172,8 @@ def write_browser_config(target_root: Path) -> None:
             "scopes": [
                 {
                     "scope_id": "studio",
+                    "scope_type": "local",
+                    "meta": "local management",
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "root-doc",
@@ -175,6 +183,8 @@ def write_browser_config(target_root: Path) -> None:
                 },
                 {
                     "scope_id": "library",
+                    "scope_type": "public",
+                    "meta": "public scope",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -184,6 +194,8 @@ def write_browser_config(target_root: Path) -> None:
                 },
                 {
                     "scope_id": "analysis",
+                    "scope_type": "public",
+                    "meta": "public scope",
                     "viewer_base_url": "/analysis/",
                     "include_scope_param": False,
                     "default_doc_id": "analysis",
@@ -217,6 +229,8 @@ def refresh_browser_config_from_scope_config(target_root: Path) -> None:
         "scopes": [
             {
                 "scope_id": str(scope.get("scope_id") or ""),
+                "scope_type": str(scope.get("scope_type") or ""),
+                "meta": str(scope.get("meta") or ""),
                 "viewer_base_url": str(scope.get("viewer_base_url") or "/docs/"),
                 "include_scope_param": scope.get("include_scope_param") is True,
                 "default_doc_id": str(scope.get("default_doc_id") or ""),

@@ -282,6 +282,14 @@ def planned_scope_type(publishing_mode: str) -> str:
     return "local"
 
 
+def planned_scope_meta(publishing_mode: str) -> str:
+    if publishing_mode == PUBLIC_MODE:
+        return "public scope"
+    if publishing_mode == LOCAL_UNCOMMITTED_MODE:
+        return "local only"
+    return "local management"
+
+
 def path_is_relative_to(path: Path, parent: Path) -> bool:
     try:
         path.relative_to(parent)
@@ -316,6 +324,7 @@ def planned_scope_config_record(
     return {
         "scope_id": scope_id,
         "scope_type": planned_scope_type(publishing_mode),
+        "meta": planned_scope_meta(publishing_mode),
         "source": source_root.as_posix(),
         "media_path_prefix": f"docs/{scope_id}",
         "output": planned_docs_output(scope_id, publishing_mode).as_posix(),

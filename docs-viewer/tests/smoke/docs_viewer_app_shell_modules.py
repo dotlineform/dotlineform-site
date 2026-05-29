@@ -95,6 +95,8 @@ def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
                 scopeLabelFor: document.querySelector('.docsViewer__scopeField')?.getAttribute('for') || '',
+                scopeButtonCount: document.querySelectorAll('#docsViewerScopeSelectButton').length,
+                scopeListRole: document.querySelector('#docsViewerScopeSelectList')?.getAttribute('role') || '',
                 recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
@@ -106,6 +108,8 @@ def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
         "returnedHeaderClass": "docsViewer__searchRow",
         "scopeSelectCount": 1,
         "scopeLabelFor": "docsViewerScopeSelect",
+        "scopeButtonCount": 1,
+        "scopeListRole": "listbox",
         "recentButtonCount": 0,
         "searchInputCount": 0,
         "managementMountCount": 0,
@@ -137,6 +141,8 @@ def assert_header_controls_management_render(page: Page) -> None:
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
                 returnedRowId: returned.managementActions && returned.managementActions.id,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
+                scopeButtonCount: document.querySelectorAll('#docsViewerScopeSelectButton').length,
+                scopeListCount: document.querySelectorAll('#docsViewerScopeSelectList[role="listbox"]').length,
                 recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
@@ -147,7 +153,9 @@ def assert_header_controls_management_render(page: Page) -> None:
     )
     if result["returnedHeaderClass"] != "docsViewer__searchRow" or result["returnedRowId"] != "docsViewerManageRow":
         raise AssertionError(f"management header render did not return expected rows: {result!r}")
-    if result["scopeSelectCount"] != 1 or result["recentButtonCount"] != 1 or result["searchInputCount"] != 1:
+    if result["scopeSelectCount"] != 1 or result["scopeButtonCount"] != 1 or result["scopeListCount"] != 1:
+        raise AssertionError(f"management header render omitted expected scope select controls: {result!r}")
+    if result["recentButtonCount"] != 1 or result["searchInputCount"] != 1:
         raise AssertionError(f"management header render omitted expected controls: {result!r}")
     if result["managementMountCount"] != 1 or result["manageRowCount"] != 1:
         raise AssertionError(f"management header render omitted action mount/row: {result!r}")
@@ -3133,7 +3141,16 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
             const serviceModule = await import('/docs-viewer/runtime/js/docs-viewer-config-service.js');
             document.body.innerHTML = `
                 <section id="root"></section>
-                <select id="scopeSelect"></select>
+                <label class="docsViewer__scopeField" for="scopeSelect">
+                  <select id="scopeSelect"></select>
+                  <div data-docs-viewer-scope-select-menu>
+                    <button id="docsViewerScopeSelectButton" type="button" aria-expanded="false" aria-controls="docsViewerScopeSelectList">
+                      <span class="docsViewer__scopeSelectEmoji" aria-hidden="true"></span>
+                      <span class="docsViewer__scopeSelectText"></span>
+                    </button>
+                    <div id="docsViewerScopeSelectList" role="listbox" hidden></div>
+                  </div>
+                </label>
                 <button id="recentButton"></button>
             `;
             history.replaceState(null, '', `${baseUrl}/docs/?scope=library`);
@@ -3191,6 +3208,7 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                     {
                         scope_id: 'studio',
                         scope_type: 'local',
+                        meta: 'local management',
                         viewer_base_url: '/docs/',
                         include_scope_param: true,
                         default_doc_id: 'studio-home',
@@ -3200,6 +3218,7 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                     {
                         scope_id: 'library',
                         scope_type: 'public',
+                        meta: 'public scope',
                         viewer_base_url: '/library/',
                         include_scope_param: false,
                         default_doc_id: 'library-home',
@@ -3262,6 +3281,18 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                     scopeIds: scopeConfig.scopeConfigs.map((config) => config.scopeId),
                     selectedScope: scopeSelect.value,
                     optionText: Array.from(scopeSelect.options).map((option) => option.textContent),
+                    customSelected: {
+                        emoji: document.querySelector('#docsViewerScopeSelectButton .docsViewer__scopeSelectEmoji')?.textContent || '',
+                        label: document.querySelector('#docsViewerScopeSelectButton .docsViewer__scopeSelectText')?.textContent || '',
+                        aria: document.querySelector('#docsViewerScopeSelectButton')?.getAttribute('aria-label') || ''
+                    },
+                    customOptions: Array.from(document.querySelectorAll('[data-docs-viewer-scope-option]')).map((option) => ({
+                        value: option.dataset.value || '',
+                        emoji: option.querySelector('.docsViewer__scopeSelectEmoji')?.textContent || '',
+                        label: option.querySelector('.docsViewer__scopeSelectOptionLabel')?.textContent || '',
+                        meta: option.querySelector('.docsViewer__scopeSelectMeta')?.textContent || '',
+                        selected: option.getAttribute('aria-selected') || ''
+                    })),
                     rootDataset: {
                         viewerScope: root.dataset.viewerScope,
                         indexUrl: root.dataset.indexUrl,
@@ -3286,6 +3317,13 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
         raise AssertionError(f"config controller scope normalization changed: {result!r}")
     if result["selectedScope"] != "library" or result["optionText"] != ["P library", "studio"]:
         raise AssertionError(f"config controller scope picker projection changed: {result!r}")
+    if result["customSelected"] != {"emoji": "P", "label": "library", "aria": "Docs scope: library, public scope"}:
+        raise AssertionError(f"config controller custom scope trigger projection changed: {result!r}")
+    if result["customOptions"] != [
+        {"value": "library", "emoji": "P", "label": "library", "meta": "public scope", "selected": "true"},
+        {"value": "studio", "emoji": "", "label": "studio", "meta": "local management", "selected": "false"},
+    ]:
+        raise AssertionError(f"config controller custom scope option projection changed: {result!r}")
     if result["rootDataset"] != {
         "viewerScope": "library",
         "indexUrl": "/library/index.json",

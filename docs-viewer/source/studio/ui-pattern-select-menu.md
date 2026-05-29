@@ -209,22 +209,23 @@ Studio routes can use route-owned modules or local route JavaScript until Studio
 Do not import production Docs Viewer or Studio CSS into the demo page to prove the pattern.
 Do not make the demo load real route data.
 
-## Docs Viewer Migration Notes
+## Docs Viewer Implementation Notes
 
-The Docs Viewer scope picker is currently rendered as a native select in the header controls renderer and populated by the config controller.
-The migration target is a visually consistent toolbar select with no unnecessary semantic downgrade.
+The Docs Viewer scope picker uses the custom select-menu pattern in the header controls renderer, config controller, and `docs-viewer/runtime/js/docs-viewer-scope-select-menu.js`.
+The rendered toolbar control is custom so it can align emoji, label, and `meta` consistently.
+A visually hidden native select remains as the value and `change` event bridge, so route changes stay owned by the config/route workflow.
 
-For the first Docs Viewer pass:
+Implementation boundaries:
 
-- prefer keeping the native select unless a custom menu requirement is explicit
-- move repeated select projection into a focused helper only if it reduces controller wiring
 - keep scope options owned by Docs Viewer config and route context
+- read option `meta` from each browser scope config record
+- keep scope type emoji owned by `docs_viewer.scope_type_badges`
+- keep scope menu interaction owned by `docs-viewer-scope-select-menu.js`
 - keep scope changes owned by the Docs Viewer config/route workflow
 - preserve public/manage route capability rules
 - keep the control available only where the route allows scope query selection
 
-The select-menu helper should not know about Docs Viewer scopes.
-It should receive option records, current value, labels, and an `onChange` callback.
+The select-menu projection should not know about Docs Viewer navigation beyond dispatching the existing scope-select change event.
 
 ## Benefits
 

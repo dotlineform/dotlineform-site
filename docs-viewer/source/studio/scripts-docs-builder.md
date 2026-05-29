@@ -65,7 +65,7 @@ The `search_output` field owns the generated docs-search index path.
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incremental semantic-reference relationship artifacts under `references/`
-- writes `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from `docs-viewer/config/scopes/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by local manage mode and public read-only routes
+- writes `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from `docs-viewer/config/scopes/docs_scopes.json`, including route/scope data, scope menu `meta`, and the `docs_viewer` browser settings used by local manage mode and public read-only routes
 - writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 

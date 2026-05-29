@@ -304,28 +304,129 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  position: relative;
   color: var(--docs-viewer-text);
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
 }
 
-.docsViewer__scopeSelect{
+.docsViewer__scopeSelectMenu{
+  position: relative;
+  display: inline-flex;
+  --docs-viewer-scope-select-width: 15rem;
+  --docs-viewer-scope-select-label-min: 4rem;
+}
+
+.docsViewer__scopeSelectButton{
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.38rem;
   height: 2.3rem;
   min-height: 2.3rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
   background: var(--docs-viewer-panel);
   color: var(--docs-viewer-text);
-  padding: 0.45rem 2rem 0.45rem 0.85rem;
+  padding: 0.45rem 0.85rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
+  text-align: left;
+  cursor: pointer;
 }
 
-.docsViewer__scopeSelect:focus-visible{
+.docsViewer__scopeSelectButton::after{
+  content: "▾";
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+}
+
+.docsViewer__scopeSelectButton:focus-visible{
   outline: 2px solid var(--docs-viewer-border-strong);
   outline-offset: 2px;
+}
+
+.docsViewer__scopeSelectSurface{
+  position: absolute;
+  z-index: 35;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.12rem;
+  width: min(var(--docs-viewer-scope-select-width), calc(100vw - 1rem));
+  min-width: min(100%, var(--docs-viewer-scope-select-width));
+  max-width: min(24rem, calc(100vw - 1rem));
+  max-height: min(18rem, calc(100vh - 7rem));
+  overflow: auto;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 0.85rem;
+  padding: 0.28rem;
+  background: var(--docs-viewer-panel);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
+}
+
+.docsViewer__scopeSelectSurface[hidden]{
+  display: none;
+}
+
+.docsViewer__scopeSelectOption{
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1.35rem minmax(var(--docs-viewer-scope-select-label-min), max-content) max-content;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 2rem;
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0.42rem 0.5rem;
+  background: transparent;
+  color: var(--docs-viewer-text);
+  font: inherit;
+  font-size: var(--docs-viewer-font-small);
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+}
+
+.docsViewer__scopeSelectOption:hover,
+.docsViewer__scopeSelectOption:focus-visible{
+  background: var(--docs-viewer-panel-2);
+  outline: none;
+}
+
+.docsViewer__scopeSelectOption[aria-selected="true"]{
+  font-weight: 700;
+}
+
+.docsViewer__scopeSelectEmoji{
+  display: inline-flex;
+  width: 1.35rem;
+  min-width: 1.35rem;
+  justify-content: center;
+  line-height: 1;
+}
+
+.docsViewer__scopeSelectText,
+.docsViewer__scopeSelectOptionLabel,
+.docsViewer__scopeSelectMeta{
+  min-width: 0;
+}
+
+.docsViewer__scopeSelectText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.docsViewer__scopeSelectMeta{
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-caption);
+  font-weight: 400;
+  white-space: nowrap;
 }
 
 .docsViewer__search{

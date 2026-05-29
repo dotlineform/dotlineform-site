@@ -22,6 +22,7 @@ DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 ScopeConfig = Struct.new(
   :scope_id,
   :scope_type,
+  :meta,
   :source,
   :media_path_prefix,
   :output,
@@ -1436,6 +1437,7 @@ def browser_scope_config_payload(scope_configs)
       {
         "scope_id" => config.scope_id,
         "scope_type" => config.scope_type,
+        "meta" => config.meta,
         "viewer_base_url" => normalized_browser_viewer_base_url(config.viewer_base_url),
         "include_scope_param" => config.include_scope_param == true,
         "default_doc_id" => config.default_doc_id,
@@ -1497,6 +1499,7 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
     config = ScopeConfig.new(
       scope_id: scope_id,
       scope_type: item["scope_type"].to_s.strip.downcase,
+      meta: item["meta"].to_s.strip,
       source: normalize_scope_config_path(item["source"], "scopes[#{index}].source"),
       media_path_prefix: normalize_scope_config_path(
         item["media_path_prefix"] || "docs/#{scope_id}",

@@ -5,6 +5,7 @@
     {
       "scope_id": "studio",
       "scope_type": "local",
+      "meta": "local management",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "dev-home",
@@ -26,6 +27,7 @@
     {
       "scope_id": "library",
       "scope_type": "public",
+      "meta": "public scope",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library",
@@ -47,6 +49,7 @@
     {
       "scope_id": "analysis",
       "scope_type": "public",
+      "meta": "public scope",
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "analysis",
@@ -68,6 +71,7 @@
     {
       "scope_id": "tmp",
       "scope_type": "local",
+      "meta": "local management",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "tmp",

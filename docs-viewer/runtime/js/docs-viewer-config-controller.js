@@ -4,6 +4,9 @@ import {
 import {
   escapeHtml
 } from "./docs-viewer-render.js";
+import {
+  createDocsViewerScopeSelectMenu
+} from "./docs-viewer-scope-select-menu.js";
 
 export function positiveInteger(value, fallback) {
   var parsed = parseInt(value, 10);
@@ -44,6 +47,11 @@ export function initDocsViewerConfigController(context) {
   var routeCommands = context.routeCommands || {};
   var root = context.root;
   var scopeSelect = context.scopeSelect;
+  var scopeSelectMenu = createDocsViewerScopeSelectMenu({
+    document: document,
+    scopeSelect: scopeSelect,
+    window: window
+  });
   var recentButton = context.recentButton;
   if (!Array.isArray(scopeConfig.scopeConfigs)) scopeConfig.scopeConfigs = [];
   if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
@@ -62,6 +70,7 @@ export function initDocsViewerConfigController(context) {
     return {
       scopeId: scopeId,
       scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
+      meta: String(rawScope.meta || "").trim(),
       viewerBaseUrl: viewerBase,
       includeScopeParam: rawScope.include_scope_param === true,
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
@@ -141,19 +150,33 @@ export function initDocsViewerConfigController(context) {
     return scopeConfig.defaultScopeId;
   }
 
-  function scopeOptionLabel(config) {
+  function scopeTypeBadge(config) {
     var badges = getConfigValue(scopeConfig.docsViewerConfig, "docsViewerSettings.scope_type_badges");
-    var badge = badges && typeof badges === "object" ? badges[config.scopeType] : null;
-    var emoji = badge && typeof badge === "object" ? String(badge.emoji || "").trim() : "";
-    return (emoji ? emoji + " " : "") + config.scopeId;
+    return badges && typeof badges === "object" && badges[config.scopeType] && typeof badges[config.scopeType] === "object"
+      ? badges[config.scopeType]
+      : null;
+  }
+
+  function scopeOptionRecord(config) {
+    var badge = scopeTypeBadge(config);
+    var emoji = badge ? String(badge.emoji || "").trim() : "";
+    var meta = config.meta || (badge ? String(badge.label || "").trim() : "");
+    return {
+      value: config.scopeId,
+      label: config.scopeId,
+      emoji: emoji,
+      meta: meta
+    };
   }
 
   function renderScopeOptions() {
     if (!scopeSelect) return;
-    scopeSelect.innerHTML = scopeConfig.scopeConfigs.map(function (config) {
-      return '<option value="' + escapeHtml(config.scopeId) + '">' + escapeHtml(scopeOptionLabel(config)) + '</option>';
+    var records = scopeConfig.scopeConfigs.map(scopeOptionRecord);
+    scopeSelect.innerHTML = records.map(function (record) {
+      return '<option value="' + escapeHtml(record.value) + '">' + escapeHtml((record.emoji ? record.emoji + " " : "") + record.label) + '</option>';
     }).join("");
     scopeSelect.value = context.viewerScope();
+    scopeSelectMenu.render(records);
   }
 
   function applyRouteScopeConfig(scope) {
@@ -216,6 +239,7 @@ export function initDocsViewerConfigController(context) {
     var config = scopeConfig.scopeConfigsById.get(nextScope);
     if (!config) {
       scopeSelect.value = context.viewerScope();
+      scopeSelectMenu.project();
       return;
     }
 

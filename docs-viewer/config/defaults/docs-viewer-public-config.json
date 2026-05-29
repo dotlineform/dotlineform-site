@@ -5,6 +5,7 @@
     {
       "scope_id": "library",
       "scope_type": "public",
+      "meta": "public scope",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library",
@@ -26,6 +27,7 @@
     {
       "scope_id": "analysis",
       "scope_type": "public",
+      "meta": "public scope",
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "analysis",

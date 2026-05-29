@@ -300,13 +300,13 @@ Expected preview storage paths:
 - `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
 - `local_uncommitted`: the same non-public generated path shape as `local_committed`, but the resulting local worktree changes should not be committed
 
-The planned source-scope config also stores a browser-facing `scope_type`:
+The planned source-scope config also stores browser-facing `scope_type` and `meta` values:
 
 - `public_readonly` -> `public`
 - `local_committed` -> `local`
 - `local_uncommitted` -> `local_uncommitted`
 
-The Docs Viewer scope dropdown maps these types through `docs_viewer.scope_type_badges`.
+The Docs Viewer scope dropdown maps these types through `docs_viewer.scope_type_badges` for emoji and shows the scope record `meta` beside the scope id.
 
 ## Create Apply Endpoint
 
