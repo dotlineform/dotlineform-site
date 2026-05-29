@@ -214,6 +214,11 @@ def write_docs_scope_config(root: Path) -> None:
             ],
             "docs_viewer": {
                 "recently_added_limit": 10,
+                "ui_statuses_by_scope": {
+                    "studio": [
+                        {"ui_status": "draft", "label": "Draft", "emoji": "D"},
+                    ],
+                },
             },
         },
     )
@@ -817,6 +822,12 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
+            config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+            created_source_payload = json.loads(config_path.read_text(encoding="utf-8"))
+            created_source_payload["docs_viewer"]["ui_statuses_by_scope"]["research"] = [
+                {"ui_status": "draft", "label": "Draft", "emoji": "D"},
+            ]
+            write_json(config_path, created_source_payload)
             payload = docs_management_service.handle_scope_delete_apply(
                 repo_root,
                 {
@@ -841,6 +852,8 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert delete_calls == [repo_root]
     assert create_calls == [(repo_root, "research", {"include_search": True})]
     assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]
+    assert "research" not in source_payload["docs_viewer"]["ui_statuses_by_scope"]
+    assert "studio" in source_payload["docs_viewer"]["ui_statuses_by_scope"]
     assert "research" not in {record["scope_id"] for record in manifest_payload["scopes"]}
     assert source_root_exists is False
     assert route_exists is False

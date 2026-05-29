@@ -453,6 +453,11 @@ def remove_scope_config(repo_root: Path, scope_id: str) -> None:
     if len(retained) == len(scopes):
         raise ValueError(f"scope_id {scope_id!r} is missing from docs scope config")
     payload["scopes"] = retained
+    docs_viewer_settings = payload.get("docs_viewer")
+    if isinstance(docs_viewer_settings, dict):
+        statuses_by_scope = docs_viewer_settings.get("ui_statuses_by_scope")
+        if isinstance(statuses_by_scope, dict):
+            statuses_by_scope.pop(scope_id, None)
     write_text_atomic(config_path, render_json(payload))
 
 
