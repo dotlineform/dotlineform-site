@@ -9,6 +9,7 @@
 <section
   class="docsViewer"
   id="docsViewerRoot"
+  data-allow-management="{{ include.allow_management | default: false }}"
   data-route-id="{{ include.route_id | default: '' }}"
   data-route-config-url="{{ docs_viewer_route_config_url | relative_url }}"
 >

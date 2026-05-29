@@ -263,7 +263,7 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_attrs = {
-            "allowManagement": "",
+            "allowManagement": "true",
             "allowScopeQuery": "",
             "includeScopeParam": "true",
             "viewerBaseUrl": "/docs/",

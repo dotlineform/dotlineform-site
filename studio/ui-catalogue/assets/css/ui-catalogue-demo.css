@@ -16,6 +16,38 @@
   color: var(--ui-demo-text);
 }
 
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .uiCatalogueDemoRoot {
+    --ui-demo-surface: #161618;
+    --ui-demo-surface-soft: #1c1c1f;
+    --ui-demo-surface-code: #121316;
+    --ui-demo-line: #2b2b30;
+    --ui-demo-line-strong: #4a4a52;
+    --ui-demo-text: #f2f2f2;
+    --ui-demo-muted: #c7c7c7;
+    --ui-demo-focus: #7bb0ff;
+    --ui-demo-success: #8bd6a9;
+    --ui-demo-warning: #e1bf74;
+    --ui-demo-overlay: rgba(0, 0, 0, 0.68);
+    color-scheme: dark;
+  }
+}
+
+html[data-theme="dark"] .uiCatalogueDemoRoot {
+  --ui-demo-surface: #161618;
+  --ui-demo-surface-soft: #1c1c1f;
+  --ui-demo-surface-code: #121316;
+  --ui-demo-line: #2b2b30;
+  --ui-demo-line-strong: #4a4a52;
+  --ui-demo-text: #f2f2f2;
+  --ui-demo-muted: #c7c7c7;
+  --ui-demo-focus: #7bb0ff;
+  --ui-demo-success: #8bd6a9;
+  --ui-demo-warning: #e1bf74;
+  --ui-demo-overlay: rgba(0, 0, 0, 0.68);
+  color-scheme: dark;
+}
+
 .uiCatalogueDemoRoot,
 .uiCatalogueDemoPage {
   display: grid;

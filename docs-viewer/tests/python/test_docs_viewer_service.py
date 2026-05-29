@@ -103,6 +103,7 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
     assert "<title>Docs Viewer</title>" in rendered
+    assert 'data-allow-management="true"' in rendered
     assert 'data-route-id="docs-manage"' in rendered
     assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"' in rendered
     assert manage_route["viewer_base_url"] == "/docs/"
@@ -117,6 +118,14 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert "/studio/app/assets/css/studio.css" not in rendered
     assert "{%" not in rendered
     assert "{{" not in rendered
+    assert "__DOCS_VIEWER_" not in rendered
+
+
+def test_manage_shell_template_is_service_template_not_liquid() -> None:
+    template = (REPO_ROOT / "docs-viewer/shell/docs-viewer-shell.html").read_text(encoding="utf-8")
+
+    assert "{%" not in template
+    assert "{{" not in template
 
 
 def test_manage_shell_can_disable_management_markup_by_capability_flag() -> None:
@@ -135,6 +144,7 @@ def test_manage_shell_can_disable_management_markup_by_capability_flag() -> None
 
     assert manage_route["access"]["allow_management"] is False
     assert manage_route["access"]["management_base_url"] == ""
+    assert 'data-allow-management="false"' in rendered
     assert "docs-viewer-management.css" not in rendered
     assert "docsViewerManagementShellMount" not in rendered
     assert "docsViewerManageActionsButton" not in rendered

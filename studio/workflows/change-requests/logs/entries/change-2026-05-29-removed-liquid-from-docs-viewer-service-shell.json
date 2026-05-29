@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-29-removed-liquid-from-docs-viewer-service-shell",
+  "date": "2026-05-29",
+  "title": "Removed Liquid From Docs Viewer Service Shell",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "scripts"
+  ],
+  "summary": "Converted the standalone local Docs Viewer /docs/ service shell from a Liquid-compatible shared fragment to a service-owned HTML template with explicit service placeholders, while leaving Liquid in the public Jekyll include adapter.",
+  "source": {
+    "file": "docs-viewer/services/docs_viewer_service.py"
+  },
+  "subjects": [
+    "docs-viewer-service",
+    "manage-mode",
+    "shell-template",
+    "dark-theme"
+  ],
+  "related_docs": [
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-css-cascade-design",
+    "docs-viewer-overview",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "docs-viewer/shell/docs-viewer-shell.html",
+    "docs-viewer/services/docs_viewer_service.py",
+    "_includes/docs_viewer_shell.html",
+    "docs-viewer/tests/python/test_docs_viewer_service.py",
+    "docs-viewer/tests/smoke/docs_viewer_manage_dark_theme.py",
+    "studio/commands/run_checks.py"
+  ],
+  "effect": "The local manage-mode shell is now closer to a JavaScript app mount surface and no longer depends on Liquid-style conditional stripping in the Python service renderer; tests also cover the management theme flag and dark manage-mode colors.",
+  "verification": [
+    "pytest docs-viewer/tests/python/test_docs_viewer_service.py",
+    "py_compile for touched Python files",
+    "docs_viewer_manage_dark_theme.py passed at 1280px and 390px",
+    "jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "git diff --check"
+  ]
+}

@@ -196,70 +196,24 @@ def asset_version(repo_root: Path) -> str:
 
 
 def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, version: str) -> str:
-    text = (repo_root / SHELL_TEMPLATE.relative_to(REPO_ROOT)).read_text(encoding="utf-8")
-    lines: list[str] = []
-    active_stack = [True]
-    allow_management = config.management_enabled
-    for raw_line in text.splitlines():
-        stripped = raw_line.strip()
-        if stripped.startswith("{%- assign "):
-            continue
-        if stripped == "{%- if include.allow_management -%}":
-            active_stack.append(active_stack[-1] and allow_management)
-            continue
-        if stripped == "{%- if include.allow_scope_query -%}":
-            active_stack.append(active_stack[-1])
-            continue
-        if stripped in {"{%- endif -%}", "{%- endunless -%}"}:
-            if len(active_stack) > 1:
-                active_stack.pop()
-            continue
-        if active_stack[-1]:
-            lines.append(raw_line)
-
-    shell = "\n".join(lines)
+    shell = (repo_root / SHELL_TEMPLATE.relative_to(REPO_ROOT)).read_text(encoding="utf-8")
     escaped_version = html.escape(version, quote=True)
-    management_base_url = html.escape(config.base_url if config.management_enabled else "", quote=True)
-    generated_base_url = html.escape(config.base_url if config.generated_reads_enabled else "", quote=True)
+    allow_management = "true" if config.management_enabled else "false"
+    management_stylesheet = (
+        f'<link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-management.css?v={escaped_version}">'
+        if config.management_enabled
+        else ""
+    )
+    management_mount = (
+        '<div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>'
+        if config.management_enabled
+        else ""
+    )
     replacements = {
-        "{{ '/docs-viewer/static/css/docs-viewer-base.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-base.css",
-        "{{ '/docs-viewer/static/css/docs-viewer.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer.css",
-        "{{ '/docs-viewer/static/css/docs-viewer-reports.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-reports.css",
-        "{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-management.css",
-        "{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}": "/docs-viewer/runtime/js/docs-viewer.js",
-        "{{ site.time | date: '%s' }}": escaped_version,
-        "{{ include.route_id | default: '' }}": "docs-manage",
-        "{{ include.route_id | default: '' | jsonify }}": '"docs-manage"',
-        "{{ docs_viewer_route_config_url | relative_url }}": "/docs-viewer/config/routes/docs-viewer-routes.json",
-        "{{ include.index_url }}": "",
-        "{{ include.index_url | default: '' | jsonify }}": '""',
-        "{{ include.viewer_base_url }}": MANAGE_ROUTE,
-        "{{ include.viewer_base_url | jsonify }}": f'"{MANAGE_ROUTE}"',
-        "{{ include.viewer_scope | default: '' }}": "",
-        "{{ include.viewer_scope | default: '' | jsonify }}": '""',
-        "{{ include.include_scope_param | default: false }}": "true",
-        "{{ include.include_scope_param | default: false | jsonify }}": "true",
-        "{{ include.allow_management | default: false }}": "true" if config.management_enabled else "false",
-        "{{ include.allow_management | default: false | jsonify }}": "true" if config.management_enabled else "false",
-        "{{ include.allow_scope_query | default: false }}": "true",
-        "{{ include.allow_scope_query | default: false | jsonify }}": "true",
-        "{{ include.default_doc_id | default: '' }}": "",
-        "{{ include.default_doc_id | default: '' | jsonify }}": '""',
-        "{{ include.search_index_url | default: '' }}": "",
-        "{{ include.search_index_url | default: '' | jsonify }}": '""',
-        "{{ docs_viewer_config_url | relative_url }}": "/docs-viewer/config/defaults/docs-viewer-config.json",
-        "{{ docs_viewer_config_url | relative_url | jsonify }}": '"/docs-viewer/config/defaults/docs-viewer-config.json"',
-        "{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}": "/docs-viewer/config/ui-text/ui-text.json",
-        "{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url | jsonify }}": '"/docs-viewer/config/ui-text/ui-text.json"',
-        "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}": "/assets/data/docs/reports.json",
-        "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url | jsonify }}": '"/assets/data/docs/reports.json"',
-        "{{ docs_viewer_generated_base_url }}": generated_base_url,
-        "{{ docs_viewer_generated_base_url | jsonify }}": f'"{generated_base_url}"',
-        "{{ include.management_base_url | default: '' }}": management_base_url,
-        "{{ include.management_base_url | default: '' | jsonify }}": f'"{management_base_url}"',
-        "{%- if include.enable_search == false -%}false{%- else -%}true{%- endif -%}": "true",
-        "{{ include.search_aria_label | default: 'Search docs' }}": "Search docs",
-        "{{ include.search_placeholder | default: 'search docs' }}": "search docs",
+        "__DOCS_VIEWER_ASSET_VERSION__": escaped_version,
+        "__DOCS_VIEWER_ALLOW_MANAGEMENT__": allow_management,
+        "__DOCS_VIEWER_MANAGEMENT_STYLESHEET__": management_stylesheet,
+        "__DOCS_VIEWER_MANAGEMENT_MOUNT__": management_mount,
     }
     for token, value in replacements.items():
         shell = shell.replace(token, value)

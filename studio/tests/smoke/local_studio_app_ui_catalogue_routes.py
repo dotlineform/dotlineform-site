@@ -51,9 +51,19 @@ ROUTES = [
         "root": "#uiCatalogueDemoPanelRoot",
     },
     {
+        "view_id": "ui_catalogue_demo_action_menu",
+        "path": "/studio/ui-catalogue/demos/patterns/action-menu/",
+        "root": "#uiCatalogueDemoActionMenuRoot",
+    },
+    {
         "view_id": "ui_catalogue_demo_reopenable_command_result",
         "path": "/studio/ui-catalogue/demos/patterns/reopenable-command-result/",
         "root": "#uiCatalogueDemoReopenableCommandResultRoot",
+    },
+    {
+        "view_id": "ui_catalogue_demo_select_menu",
+        "path": "/studio/ui-catalogue/demos/patterns/select-menu/",
+        "root": "#uiCatalogueDemoSelectMenuRoot",
     },
     {
         "view_id": "ui_catalogue_demo_column_links",
@@ -136,6 +146,52 @@ def check_modal_shell(page: Page, base_url: str, viewport: dict[str, int]) -> di
     return {"width": viewport["width"], "height": viewport["height"], "modal": "confirm"}
 
 
+def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
+    page.set_viewport_size(viewport)
+    page.add_init_script("window.localStorage.setItem('theme', 'dark')")
+    page.goto(f"{base_url}/studio/ui-catalogue/demos/patterns/action-menu/", wait_until="domcontentloaded")
+    wait_for_demo_ready(page, "#uiCatalogueDemoActionMenuRoot")
+    page.locator("[data-ui-demo-menu-trigger]").click()
+    page.wait_for_selector(".uiCatalogueDemoMenu__surface:not([hidden])", timeout=10_000)
+    state = page.evaluate(
+        """() => {
+            const styles = element => getComputedStyle(element);
+            const root = document.querySelector("#uiCatalogueDemoActionMenuRoot");
+            const framed = document.querySelector(".uiCatalogueDemoExample--framed");
+            const button = document.querySelector(".uiCatalogueDemoButton");
+            const menu = document.querySelector(".uiCatalogueDemoMenu__surface");
+            const code = document.querySelector(".uiCatalogueDemoCode pre");
+            return {
+                viewportWidth: window.innerWidth,
+                theme: document.documentElement.getAttribute("data-theme"),
+                bodyBackground: styles(document.body).backgroundColor,
+                rootColor: root ? styles(root).color : "",
+                rootSurfaceToken: root ? styles(root).getPropertyValue("--ui-demo-surface").trim() : "",
+                rootCodeToken: root ? styles(root).getPropertyValue("--ui-demo-surface-code").trim() : "",
+                framedBackground: framed ? styles(framed).backgroundColor : "",
+                buttonBackground: button ? styles(button).backgroundColor : "",
+                menuBackground: menu ? styles(menu).backgroundColor : "",
+                codeBackground: code ? styles(code).backgroundColor : ""
+            };
+        }"""
+    )
+    expected = {
+        "theme": "dark",
+        "bodyBackground": "rgb(15, 15, 16)",
+        "rootColor": "rgb(242, 242, 242)",
+        "rootSurfaceToken": "#161618",
+        "rootCodeToken": "#121316",
+        "framedBackground": "rgb(22, 22, 24)",
+        "buttonBackground": "rgb(22, 22, 24)",
+        "menuBackground": "rgb(22, 22, 24)",
+        "codeBackground": "rgb(18, 19, 22)",
+    }
+    actual = {key: state.get(key) for key in expected}
+    if actual != expected:
+        raise AssertionError(f"unexpected UI Catalogue dark theme at viewport {viewport!r}: {state!r}")
+    return {"width": viewport["width"], "height": viewport["height"], "theme": "dark"}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -156,6 +212,7 @@ def main(argv: list[str] | None = None) -> int:
         requests: list[str] = []
         failed_responses: list[str] = []
         modal_results: list[dict[str, object]] = []
+        dark_theme_results: list[dict[str, object]] = []
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             try:
@@ -184,6 +241,7 @@ def main(argv: list[str] | None = None) -> int:
 
                 for viewport in ({"width": 1280, "height": 900}, {"width": 390, "height": 844}):
                     modal_results.append(check_modal_shell(page, base_url, viewport))
+                    dark_theme_results.append(check_dark_theme(page, base_url, viewport))
             finally:
                 browser.close()
 
@@ -205,7 +263,17 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(json.dumps({"base_url": base_url, "routes": len(ROUTES), "modal_viewports": modal_results}, sort_keys=True))
+        print(
+            json.dumps(
+                {
+                    "base_url": base_url,
+                    "routes": len(ROUTES),
+                    "modal_viewports": modal_results,
+                    "dark_theme_viewports": dark_theme_results,
+                },
+                sort_keys=True,
+            )
+        )
         return 0
     finally:
         server.shutdown()
