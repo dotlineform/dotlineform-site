@@ -2,7 +2,7 @@
 doc_id: site-shell-runtime
 title: Site Shell Runtime
 added_date: 2026-03-31
-last_updated: "2026-05-11 17:50"
+last_updated: 2026-05-29
 parent_id: architecture
 ---
 # Site Shell Runtime
@@ -15,8 +15,8 @@ Current scope:
 - `_includes/nav_item.html`
 - `assets/js/theme-toggle.js`
 - `assets/js/public-catalogue-runtime.js`
-- `docs/index.md`
 - `library/index.md`
+- `analysis/index.md`
 - `_includes/docs_viewer_shell.html`
 
 ## Default Layout Responsibilities
@@ -33,9 +33,11 @@ It is the shared shell for:
 - public catalogue pages
 - public search
 - library docs
+- analysis docs
 - any non-Studio page using the default layout
 
 Studio application pages use `_layouts/studio.html` instead.
+The local `/docs/` management route is served by the standalone Docs Viewer service, not by Jekyll.
 
 ## Theme Bootstrap
 

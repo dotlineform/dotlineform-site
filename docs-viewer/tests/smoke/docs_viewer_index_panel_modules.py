@@ -57,6 +57,21 @@ def assert_index_panel_helpers(page: Page) -> None:
             ];
             const collapsedProjection = module.projectIndexPanelState('collapsed', { available: true });
             const normalProjection = module.projectIndexPanelState('normal', { available: true });
+            const treeProjection = module.projectIndexPanelState('normal', {
+                available: true,
+                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+            });
+            const treeExpandedProjection = module.projectIndexPanelState('expanded', {
+                available: true,
+                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+            });
+            module.persistIndexPanelState({
+                storage: storageAdapter,
+                storageKey,
+                state: 'expanded',
+                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+            });
+            const cappedStoredExpanded = module.readIndexPanelState({ storage: storageAdapter, storageKey });
             const expandedProjection = module.projectIndexPanelState('expanded', { available: true });
             const unavailableProjection = module.projectIndexPanelState('expanded', { available: false });
             return {
@@ -69,6 +84,9 @@ def assert_index_panel_helpers(page: Page) -> None:
                 directExpanded,
                 collapsedProjection,
                 normalProjection,
+                treeProjection,
+                treeExpandedProjection,
+                cappedStoredExpanded,
                 expandedProjection,
                 unavailableProjection
             };
@@ -92,6 +110,12 @@ def assert_index_panel_helpers(page: Page) -> None:
         raise AssertionError(f"collapsed projection mismatch: {result!r}")
     if result["normalProjection"]["stepLabel"] != "Collapse index panel" or result["normalProjection"]["stepIcon"] != "‹" or result["normalProjection"]["expandHidden"] is not False:
         raise AssertionError(f"normal projection mismatch: {result!r}")
+    if result["treeProjection"]["expandHidden"] is not True or result["treeProjection"]["expandedState"] != "normal":
+        raise AssertionError(f"tree capability projection should not expose expanded mode: {result!r}")
+    if result["treeExpandedProjection"]["activeState"] != "normal" or result["treeExpandedProjection"]["documentPaneVisible"] is not True:
+        raise AssertionError(f"unsupported expanded tree state was not restored: {result!r}")
+    if result["cappedStoredExpanded"] != "normal":
+        raise AssertionError(f"unsupported persisted state was not capped: {result!r}")
     if result["expandedProjection"]["documentPaneVisible"] is not False:
         raise AssertionError(f"expanded mode should hide document pane: {result!r}")
     if result["expandedProjection"]["expandHidden"] is not True or result["expandedProjection"]["stepIcon"] != "‹" or result["expandedProjection"]["stepLabel"] != "Restore index panel":

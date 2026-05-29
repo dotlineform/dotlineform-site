@@ -165,12 +165,6 @@
           "exists": true
         },
         {
-          "kind": "route_file",
-          "path": "docs/index.md",
-          "action": "track",
-          "exists": true
-        },
-        {
           "kind": "generated_docs_root",
           "path": "docs-viewer/generated/docs/studio",
           "action": "track",

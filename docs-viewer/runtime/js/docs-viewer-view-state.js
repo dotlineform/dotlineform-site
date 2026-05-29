@@ -35,7 +35,7 @@ export function createDocsViewerViewState(options) {
         enabled: panelDefaults.index.enabled,
         state: cleanString(settings.indexPanelState) || panelDefaults.index.defaultState,
         mounted: panelDefaults.index.enabled,
-        activeViewId: "index-tree"
+        activeViewId: cleanString(settings.indexViewId) || "index-tree"
       },
       document: {
         id: "document",
@@ -67,6 +67,9 @@ export function updateDocsViewerViewState(viewState, patch) {
   };
   if (changes.indexPanelState) {
     next.panels.index.state = cleanString(changes.indexPanelState);
+  }
+  if (changes.indexViewId) {
+    next.panels.index.activeViewId = cleanString(changes.indexViewId);
   }
   if (changes.documentViewId) {
     next.panels.document.activeViewId = cleanString(changes.documentViewId);

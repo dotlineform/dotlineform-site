@@ -169,6 +169,7 @@ export function createDocsViewerAppComposition(options) {
     indexPanelRefs: appShellRefs.indexPanel,
     documentShellRefs: appShellRefs.documentShell,
     infoPanelRefs: appShellRefs.infoPanel,
+    hostedViewRegistry: hostedViewRegistry,
     indexPanelAvailable: settings.indexPanelAvailable
   });
   var appSession = createDocsViewerAppSession({

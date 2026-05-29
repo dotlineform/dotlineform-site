@@ -119,39 +119,17 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
         """() => {
             const step = document.querySelector('#docsViewerSidebarToggle');
             const expand = document.querySelector('#docsViewerSidebarExpand');
+            const switcher = document.querySelector('#docsViewerIndexViewSwitcher');
             return step &&
                 expand &&
                 !step.hidden &&
-                !expand.hidden &&
+                expand.hidden &&
+                switcher &&
+                !switcher.hidden &&
+                document.querySelector('[data-index-panel-view="index-tree"][aria-pressed="true"]') &&
                 step.textContent.trim() === '‹' &&
-                expand.textContent.trim() === '⤢' &&
                 (step.compareDocumentPosition(expand) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
         }""",
-        timeout=timeout_ms,
-    )
-    expand_toggle.click()
-    page.wait_for_function(
-        """selector => {
-            const root = document.querySelector(selector);
-            const content = document.querySelector('#docsViewerContent');
-            const step = document.querySelector('#docsViewerSidebarToggle');
-            const expand = document.querySelector('#docsViewerSidebarExpand');
-            return root?.dataset.indexPanelState === 'expanded' &&
-                content &&
-                getComputedStyle(content.closest('.docsViewer__main')).display === 'none' &&
-                step &&
-                !step.hidden &&
-                step.textContent.trim() === '‹' &&
-                expand &&
-                expand.hidden;
-        }""",
-        arg=ROOT_SELECTOR,
-        timeout=timeout_ms,
-    )
-    step_toggle.click()
-    page.wait_for_function(
-        """selector => document.querySelector(selector)?.dataset.indexPanelState === 'normal'""",
-        arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
     step_toggle.click()
@@ -193,9 +171,28 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
     )
 
 
-def assert_index_panel_expanded_tree_click(page: Page, timeout_ms: int) -> None:
+def assert_index_graph_expand_and_restore(page: Page, timeout_ms: int) -> None:
     page.wait_for_function(
         """selector => document.querySelector(selector)?.dataset.indexPanelState === 'normal'""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    page.locator('[data-index-panel-view="index-graph"]').click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const nav = document.querySelector('#docsViewerNav');
+            const placeholder = document.querySelector('#docsViewerIndexPlaceholder');
+            const expand = document.querySelector('#docsViewerSidebarExpand');
+            return root?.dataset.indexPanelView === 'index-graph' &&
+                root?.dataset.indexPanelState === 'normal' &&
+                nav?.hidden === true &&
+                placeholder &&
+                !placeholder.hidden &&
+                placeholder.textContent.trim() === 'Graph index placeholder' &&
+                expand &&
+                !expand.hidden;
+        }""",
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
@@ -204,39 +201,36 @@ def assert_index_panel_expanded_tree_click(page: Page, timeout_ms: int) -> None:
         """selector => {
             const root = document.querySelector(selector);
             const main = document.querySelector('.docsViewer__main');
+            const activeGraph = document.querySelector('[data-index-panel-view="index-graph"][aria-pressed="true"]');
             return root?.dataset.indexPanelState === 'expanded' &&
+                root?.dataset.indexPanelView === 'index-graph' &&
+                activeGraph &&
                 main &&
                 getComputedStyle(main).display === 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    page.locator('[data-index-panel-view="index-tree"]').click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const nav = document.querySelector('#docsViewerNav');
+            const main = document.querySelector('.docsViewer__main');
+            const expand = document.querySelector('#docsViewerSidebarExpand');
+            return root?.dataset.indexPanelState === 'normal' &&
+                root?.dataset.indexPanelView === 'index-tree' &&
+                nav?.hidden === false &&
+                main &&
+                getComputedStyle(main).display !== 'none' &&
+                expand &&
+                expand.hidden;
         }""",
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
     page.locator("#docsViewerNav a[data-doc-id='docs-viewer-overview']").first.click()
-    page.wait_for_function(
-        """([selector, docId]) => {
-            const heading = document.querySelector(`${selector} h1`);
-            return heading && heading.id === docId;
-        }""",
-        arg=[CONTENT_SELECTOR, "docs-viewer-overview"],
-        timeout=timeout_ms,
-    )
-    active_doc = query_value(page.url, "doc")
-    if active_doc != "docs-viewer-overview":
-        raise AssertionError(f"expected tree click to set doc='docs-viewer-overview', got {active_doc!r} in {page.url}")
-    page.wait_for_function(
-        """selector => {
-            const root = document.querySelector(selector);
-            const activeLink = document.querySelector("#docsViewerNav a[data-doc-id='docs-viewer-overview']");
-            const main = document.querySelector('.docsViewer__main');
-            return root?.dataset.indexPanelState === 'expanded' &&
-                activeLink?.classList.contains('is-active') &&
-                activeLink?.getAttribute('aria-current') === 'page' &&
-                main &&
-                getComputedStyle(main).display === 'none';
-        }""",
-        arg=ROOT_SELECTOR,
-        timeout=timeout_ms,
-    )
+    wait_for_doc(page, "docs-viewer-overview", timeout_ms)
 
 
 def run_navigation_smoke(page: Page, base_url: str, timeout_ms: int) -> dict[str, object]:
@@ -273,7 +267,7 @@ def run_index_panel_smoke(page: Page, base_url: str, timeout_ms: int) -> dict[st
     page.goto(route_url(base_url, "/docs/?scope=studio&doc=docs-viewer"), wait_until="domcontentloaded")
     docs_title = wait_for_doc(page, "docs-viewer", timeout_ms)
     assert_index_panel_toggle(page, timeout_ms)
-    assert_index_panel_expanded_tree_click(page, timeout_ms)
+    assert_index_graph_expand_and_restore(page, timeout_ms)
     return {
         "direct_doc": docs_title,
         "tree_click_doc": wait_for_doc(page, "docs-viewer-overview", timeout_ms),

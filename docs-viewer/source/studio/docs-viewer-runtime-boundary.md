@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 parent_id: docs-viewer
 ---
 # Docs Viewer Runtime Boundary
@@ -11,7 +11,7 @@ parent_id: docs-viewer
 
 This document records the current boundary between:
 
-- scope-specific docs page shells such as `/docs/` and `/library/`
+- scope-specific docs shells such as service-owned `/docs/` and public Jekyll `/library/`
 - the shared Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer.js`
 
 It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
@@ -24,9 +24,9 @@ Current model:
 - the viewer runtime remains shared
 - the structural shell include remains shared
 
-Current route-shell examples:
+Current shell examples:
 
-- `docs/index.md`
+- `docs-viewer/shell/docs-viewer-shell.html` for local `/docs/` management mode
 - `library/index.md`
 - `analysis/index.md`
 

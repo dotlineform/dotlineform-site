@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 parent_id: docs-viewer-portable-setup
 ---
 # Docs Viewer Portable File Manifest
@@ -20,7 +20,6 @@ Copy:
 - `docs-viewer/shell/docs-viewer-shell.html`
 - `_includes/docs_viewer_shell.html`
 - `_includes/docs_viewer_readonly_route.html`
-- `_includes/docs_viewer_management_route.html`
 
 If management mode should include Docs Import, also copy:
 
@@ -29,14 +28,13 @@ If management mode should include Docs Import, also copy:
 The route adapter includes wrap `docs_viewer_shell.html` with the right public or management flags.
 Examples in this repo are:
 
-- `docs/index.md`
 - `library/index.md`
 - `analysis/index.md`
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
 The standalone service renders route context and app-shell mounts only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables the management shell in `var/local/site.env`; the browser app shell renders the header controls, index panel chrome, management shell hosts, and action controls into those mounts.
-The Jekyll management adapter remains a host integration artifact during the extraction and should not be treated as the durable service shell owner.
+The retired Jekyll `docs/index.md` management adapter should not be restored.
 
 ### Browser Runtime
 

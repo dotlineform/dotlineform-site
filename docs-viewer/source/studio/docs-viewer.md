@@ -87,7 +87,7 @@ Those boundaries are intentional:
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and generated title ordering.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
 - [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) records the current panel regions, hosted-view lifecycle, info-panel metadata view, access gating, and non-plugin module boundary.
-- [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) records the to-be-implemented config-driven model for hosted-view capabilities, panel layout states, and future index-view toolbar rules.
+- [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) records the config-driven model for hosted-view capabilities, panel layout states, index-view switching, and future index-view toolbar rules.
 - [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) tracks the Docs Viewer-specific browser JavaScript risk scores, priorities, and follow-up tasks.
 - [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec) records the `viewable: true | false` visibility workflow.
 - [Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) documents staged source-format dispatch, preview payloads, media planning, and service write boundaries for Docs Import.

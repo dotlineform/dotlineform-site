@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T14:33:21Z",
+  "generated_at": "2026-05-29T14:52:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -213,14 +213,14 @@
       "doc_id": "site-shell-runtime",
       "title": "Site Shell Runtime",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-29",
       "parent_id": "architecture",
       "hidden": false,
       "viewable": true,
       "source_path": "site-shell-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json",
-      "content_text_length": 4833
+      "content_text_length": 4949
     },
     {
       "scope": "studio",
@@ -1239,7 +1239,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 9623
+      "content_text_length": 9627
     },
     {
       "scope": "studio",
@@ -1480,7 +1480,7 @@
       "source_path": "docs-viewer-panel-hosts.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
-      "content_text_length": 6428
+      "content_text_length": 6620
     },
     {
       "scope": "studio",
@@ -1501,14 +1501,14 @@
       "doc_id": "docs-viewer-portable-files",
       "title": "Docs Viewer Portable File Manifest",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer-portable-setup",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11234
+      "content_text_length": 11102
     },
     {
       "scope": "studio",
@@ -1559,14 +1559,14 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 26194
+      "content_text_length": 26271
     },
     {
       "scope": "studio",
@@ -1597,8 +1597,8 @@
       "source_path": "docs-viewer-view-capability-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json",
-      "content_text_length": 7979,
-      "ui_status": "in-progress"
+      "content_text_length": 8021,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1633,28 +1633,28 @@
       "doc_id": "docs-viewer-new-scopes-builder",
       "title": "New Scopes Builder",
       "added_date": "2026-05-15",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 17776
+      "content_text_length": 17820
     },
     {
       "scope": "studio",
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 17333
+      "content_text_length": 17900
     },
     {
       "scope": "studio",

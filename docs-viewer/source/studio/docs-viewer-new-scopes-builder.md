@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-05-25
+last_updated: 2026-05-29
 parent_id: docs-viewer
 viewable: true
 ---
@@ -80,9 +80,9 @@ permalink: /research/
 %}
 ```
 
-Use `docs_viewer_management_route.html` only for the local management shell.
+Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local management shell.
 In this repo, that route is `/docs/`.
-The adapter requires `docs_viewer_management_enabled: true`; public builds leave the flag false and receive the read-only shell, while the standalone Docs Viewer service serves `/docs/` management locally.
+The retired Jekyll `docs_viewer_management_route.html` adapter should not be restored; public builds use read-only route shells, while the standalone Docs Viewer service serves `/docs/` management locally.
 
 The management shell can switch scopes with the `scope` query parameter.
 Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.

@@ -1,6 +1,9 @@
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
+import {
+  normalizeHostedViewCapabilities
+} from "./docs-viewer-hosted-view-capabilities.js";
 
 export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v1";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
@@ -75,7 +78,10 @@ function normalizeHostedViews(rawHostedViews) {
         panel: cleanString(record.panel) || "document",
         access: cleanString(record.access) || "public",
         availability: cleanString(record.availability) || "available",
-        module: cleanString(record.module)
+        module: cleanString(record.module),
+        renderer: cleanString(record.renderer),
+        placeholderText: cleanString(record.placeholder_text || record.placeholderText),
+        capabilities: normalizeHostedViewCapabilities(record.capabilities)
       };
     }).filter(Boolean)
   };

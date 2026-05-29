@@ -3,18 +3,16 @@ doc_id: docs-viewer-view-capability-contract
 title: Docs Viewer View Capability Contract
 added_date: 2026-05-29
 last_updated: 2026-05-29
-ui_status: in-progress
+ui_status: done
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer View Capability Contract
 
-**Status: to be implemented.**
+**Status: implemented.**
 
 This document records the intended model for Docs Viewer panel views, layout rules, and extensible view-specific UI capabilities.
-The contract is not implemented yet.
-
-Implement this in the config/runtime path rather than special-casing tree behavior: capabilities normalize from hosted views, panel layout uses the active index view’s capabilities, and manage mode gets a placeholder graph view plus a small switcher.
+The first implementation is in the config/runtime path: capabilities normalize from hosted views, panel layout uses the active index view’s capabilities, and management-enabled Docs Viewer routes get a placeholder graph view plus a small switcher.
 
 ## Purpose
 
@@ -51,7 +49,7 @@ Runtime normalization currently flows through:
 Built-in hosted-view defaults may still be defined in code, but they should use the same normalized record shape as config-provided hosted views.
 The renderer should consume projected controls and should not know why a capability is available.
 
-## Proposed Hosted View Shape
+## Hosted View Shape
 
 Hosted views should carry a `capabilities` object.
 The object should be optional and defaulted during normalization.
@@ -72,7 +70,7 @@ Example tree index view:
 }
 ```
 
-Example future graph index view:
+Example placeholder graph index view:
 
 ```json
 {
@@ -81,7 +79,8 @@ Example future graph index view:
   "panel": "index",
   "access": "manage",
   "availability": "available",
-  "module": "/docs-viewer/runtime/js/index-graph-view.js",
+  "renderer": "index-placeholder",
+  "placeholder_text": "Graph index placeholder",
   "capabilities": {
     "layout_states": ["normal", "collapsed", "expanded"],
     "toolbar": true,
@@ -125,20 +124,20 @@ These should be added as explicit fields rather than inferred from a view id.
 
 ## Runtime Responsibilities
 
-`docs-viewer-route-config.js` should normalize hosted-view capability records from route config.
+`docs-viewer-route-config.js` normalizes hosted-view capability records from route config.
 
-`docs-viewer-hosted-views.js` should carry the normalized capability object for built-in and config-provided views.
+`docs-viewer-hosted-views.js` carries the normalized capability object for built-in and config-provided views.
 
-`docs-viewer-view-state.js` should expose the active view id for each panel.
-It should not decide view-specific behavior by id.
+`docs-viewer-view-state.js` exposes the active view id for each panel.
+It does not decide view-specific behavior by id.
 
-`docs-viewer-panel-layout.js` should resolve the active index view and pass its capabilities to index-panel projection.
+`docs-viewer-panel-layout.js` resolves the active index view and passes its capabilities to index-panel projection.
 
-`docs-viewer-index-panel.js` should project available state transitions from capabilities.
+`docs-viewer-index-panel.js` projects available state transitions from capabilities.
 For example, when `layout_states` is `["normal", "collapsed"]`, it should hide or disable the full expand control and prevent `expanded` from becoming the persisted state.
 
-`docs-viewer-index-panel-renderer.js` should only render the projected controls.
-It should not contain view-specific rules.
+`docs-viewer-index-panel-renderer.js` renders the projected controls, switcher options, and placeholder/tree visibility.
+It does not decide layout-state availability.
 
 CSS should define layouts for available states.
 It should not decide whether a view is allowed to enter a state.
@@ -164,7 +163,7 @@ Behavior:
 
 ## Future Index View Rule
 
-For the first implementation, add a placeholder `index-graph` view in manage mode.
+For the first implementation, `docs-viewer/config/routes/docs-viewer-routes.json` adds a placeholder `index-graph` view to the management route.
 The placeholder may render static text such as "Graph index placeholder" so the runtime can prove that the config-driven capability path works before a real graph implementation exists.
 
 That view should explicitly opt into expanded mode:
@@ -186,7 +185,7 @@ Behavior:
 
 ## Manage-Mode Index View Toggle
 
-Manage mode should expose a small index-view toggle after the tree capability rule is in place.
+Management-enabled Docs Viewer routes expose a small index-view toggle after the tree capability rule is in place.
 The toggle is the practical test surface for the config-driven view contract.
 
 Initial requirements:
@@ -204,15 +203,15 @@ This keeps view selection separate from tree rendering and allows future index v
 
 ## Implementation Notes
 
-The implementation should be split into testable steps:
+The implemented slice covers:
 
-1. Add capability normalization to hosted-view config records and built-in hosted-view defaults.
-2. Pass active index-view capabilities into index-panel state projection.
-3. Prevent unsupported layout states from being selected or persisted.
-4. Hide the full expand control for `index-tree`.
-5. Keep expanded CSS behavior available for future views that opt in.
-6. Add a manage-only placeholder `index-graph` hosted view with expanded-mode capability.
-7. Add a manage-only index-view toggle for switching between `index-tree` and `index-graph`.
-8. Update focused index-panel module tests and route smoke expectations.
+1. capability normalization for hosted-view config records and built-in hosted-view defaults
+2. active index-view capabilities passed into index-panel state projection
+3. unsupported layout states prevented from being selected or persisted
+4. the full expand control hidden for `index-tree`
+5. expanded CSS behavior preserved for views that opt in
+6. a manage-only placeholder `index-graph` hosted view with expanded-mode capability
+7. an index-view toggle for switching between `index-tree` and `index-graph` when both hosted views are available
+8. focused index-panel module tests and route smoke expectations updated
 
 The implementation should avoid hardcoded checks such as `if viewId === "index-tree"` outside built-in default configuration.

@@ -1,5 +1,6 @@
 const INDEX_PANEL_MOUNT_SELECTOR = "[data-docs-viewer-index-panel-mount]";
 const SIDEBAR_TOGGLE_ICON_CLASS = "docsViewer__sidebarToggleIcon";
+const INDEX_VIEW_BUTTON_CLASS = "docsViewer__indexViewButton";
 
 export function indexPanelMount(root) {
   if (!root) return null;
@@ -21,6 +22,16 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   const header = documentRef.createElement("div");
   header.className = "docsViewer__sidebarHeader";
 
+  const viewSwitcher = documentRef.createElement("div");
+  viewSwitcher.className = "docsViewer__indexViewSwitcher";
+  viewSwitcher.id = "docsViewerIndexViewSwitcher";
+  viewSwitcher.setAttribute("role", "group");
+  viewSwitcher.setAttribute("aria-label", "Index view");
+  viewSwitcher.hidden = true;
+
+  const controls = documentRef.createElement("div");
+  controls.className = "docsViewer__sidebarControls";
+
   const sidebarToggle = renderSidebarToggle(documentRef, {
     id: "docsViewerSidebarToggle",
     label: "Collapse docs index",
@@ -37,8 +48,14 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   nav.id = "docsViewerNav";
   nav.setAttribute("aria-label", "Docs tree");
 
-  header.append(sidebarToggle, sidebarExpand);
-  inner.append(header, nav);
+  const placeholder = documentRef.createElement("div");
+  placeholder.className = "docsViewer__indexPlaceholder";
+  placeholder.id = "docsViewerIndexPlaceholder";
+  placeholder.hidden = true;
+
+  controls.append(sidebarToggle, sidebarExpand);
+  header.append(viewSwitcher, controls);
+  inner.append(header, nav, placeholder);
   aside.appendChild(inner);
   mount.replaceChildren(aside);
 
@@ -51,6 +68,8 @@ export function findDocsViewerIndexPanelRefs(options = {}) {
   return {
     sidebar: root.querySelector(".docsViewer__sidebar"),
     nav: root.querySelector("#docsViewerNav"),
+    indexViewSwitcher: root.querySelector("#docsViewerIndexViewSwitcher"),
+    indexPlaceholder: root.querySelector("#docsViewerIndexPlaceholder"),
     sidebarToggle: root.querySelector("#docsViewerSidebarToggle"),
     sidebarExpand: root.querySelector("#docsViewerSidebarExpand")
   };
@@ -62,6 +81,13 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
   const projection = options.projection || {};
   if (root) {
     root.dataset.indexPanelState = projection.activeState || "normal";
+    root.dataset.indexPanelView = projection.activeViewId || "";
+  }
+  renderIndexViewSwitcher(refs.indexViewSwitcher, projection.viewOptions || []);
+  if (refs.nav) refs.nav.hidden = Boolean(projection.treeHidden);
+  if (refs.indexPlaceholder) {
+    refs.indexPlaceholder.hidden = Boolean(projection.placeholderHidden);
+    refs.indexPlaceholder.textContent = projection.placeholderText || "";
   }
   applyToggleProjection(refs.sidebarExpand, {
     hidden: projection.expandHidden,
@@ -74,6 +100,22 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
     ariaExpanded: projection.stepAriaExpanded,
     label: projection.stepLabel,
     icon: projection.stepIcon
+  });
+}
+
+function renderIndexViewSwitcher(mount, views) {
+  if (!mount) return;
+  const records = Array.isArray(views) ? views : [];
+  mount.hidden = records.length <= 1;
+  mount.replaceChildren();
+  records.forEach(function (view) {
+    const button = mount.ownerDocument.createElement("button");
+    button.type = "button";
+    button.className = INDEX_VIEW_BUTTON_CLASS;
+    button.dataset.indexPanelView = view.id || "";
+    button.setAttribute("aria-pressed", view.active ? "true" : "false");
+    button.textContent = view.label || view.id || "";
+    mount.appendChild(button);
   });
 }
 

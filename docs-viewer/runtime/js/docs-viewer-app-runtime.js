@@ -54,6 +54,7 @@ export function startDocsViewerRuntime(options) {
 
   var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
+  var indexViewSwitcher = indexPanelRefs.indexViewSwitcher;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
   var documentShellRefs = appShellRefs.documentShell;
@@ -445,6 +446,13 @@ export function startDocsViewerRuntime(options) {
     state.indexPanelState = panelLayout.expandIndexPanelState();
   }
 
+  function setActiveIndexView(viewId) {
+    hideContextMenu();
+    panelLayout.setActiveIndexView(viewId);
+    state.indexPanelState = panelLayout.indexPanelState();
+    state.viewState = panelLayout.projectViewState();
+  }
+
   function loadViewerConfig() {
     return configController.loadViewerConfig();
   }
@@ -661,6 +669,16 @@ export function startDocsViewerRuntime(options) {
     if (sidebarExpand) {
       sidebarExpand.addEventListener("click", function () {
         expandIndexPanelState();
+      });
+    }
+
+    if (indexViewSwitcher) {
+      indexViewSwitcher.addEventListener("click", function (event) {
+        var button = event.target && event.target.closest
+          ? event.target.closest("[data-index-panel-view]")
+          : null;
+        if (!button || !indexViewSwitcher.contains(button)) return;
+        setActiveIndexView(button.dataset.indexPanelView);
       });
     }
 

@@ -1301,6 +1301,8 @@ def assert_index_panel_shell_render(page: Page) -> None:
                 refNavId: refs.nav && refs.nav.id,
                 sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
+                switcherCount: document.querySelectorAll('#docsViewerIndexViewSwitcher').length,
+                placeholderCount: document.querySelectorAll('#docsViewerIndexPlaceholder').length,
                 toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
                 expandCount: document.querySelectorAll('#docsViewerSidebarExpand').length,
                 toggleControls: document.getElementById('docsViewerSidebarToggle')?.getAttribute('aria-controls') || '',
@@ -1314,6 +1316,8 @@ def assert_index_panel_shell_render(page: Page) -> None:
         "refNavId": "docsViewerNav",
         "sidebarCount": 1,
         "navCount": 1,
+        "switcherCount": 1,
+        "placeholderCount": 1,
         "toggleCount": 1,
         "expandCount": 1,
         "toggleControls": "docsViewerNav",
@@ -1340,10 +1344,19 @@ def assert_index_panel_projection(page: Page) -> None:
             shell.renderDocsViewerAppShellIndexPanelState({
                 root,
                 refs,
-                projection: state.projectIndexPanelState('collapsed', { available: true })
+                projection: Object.assign(state.projectIndexPanelState('collapsed', { available: true }), {
+                    activeViewId: 'index-tree',
+                    activeViewRenderer: 'index-tree',
+                    treeHidden: false,
+                    placeholderHidden: true,
+                    viewOptions: []
+                })
             });
             const collapsed = {
                 state: root.dataset.indexPanelState,
+                view: root.dataset.indexPanelView,
+                navHidden: refs.nav.hidden,
+                placeholderHidden: refs.indexPlaceholder.hidden,
                 toggleHidden: refs.sidebarToggle.hidden,
                 toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
                 toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
@@ -1353,10 +1366,30 @@ def assert_index_panel_projection(page: Page) -> None:
             shell.renderDocsViewerAppShellIndexPanelState({
                 root,
                 refs,
-                projection: state.projectIndexPanelState('expanded', { available: true })
+                projection: Object.assign(state.projectIndexPanelState('expanded', { available: true }), {
+                    activeViewId: 'index-graph',
+                    activeViewRenderer: 'index-placeholder',
+                    placeholderText: 'Graph index placeholder',
+                    treeHidden: true,
+                    placeholderHidden: false,
+                    viewOptions: [
+                        { id: 'index-tree', label: 'Index tree', active: false },
+                        { id: 'index-graph', label: 'Index graph', active: true }
+                    ]
+                })
             });
             const expanded = {
                 state: root.dataset.indexPanelState,
+                view: root.dataset.indexPanelView,
+                navHidden: refs.nav.hidden,
+                placeholderHidden: refs.indexPlaceholder.hidden,
+                placeholderText: refs.indexPlaceholder.textContent,
+                switcherHidden: refs.indexViewSwitcher.hidden,
+                switcherButtons: Array.from(refs.indexViewSwitcher.querySelectorAll('[data-index-panel-view]')).map((button) => ({
+                    id: button.dataset.indexPanelView,
+                    pressed: button.getAttribute('aria-pressed'),
+                    text: button.textContent
+                })),
                 toggleHidden: refs.sidebarToggle.hidden,
                 toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
                 toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
@@ -1377,6 +1410,9 @@ def assert_index_panel_projection(page: Page) -> None:
     )
     if result["collapsed"] != {
         "state": "collapsed",
+        "view": "index-tree",
+        "navHidden": False,
+        "placeholderHidden": True,
         "toggleHidden": False,
         "toggleExpanded": "false",
         "toggleLabel": "Restore index panel",
@@ -1386,6 +1422,15 @@ def assert_index_panel_projection(page: Page) -> None:
         raise AssertionError(f"collapsed index projection failed: {result!r}")
     if result["expanded"] != {
         "state": "expanded",
+        "view": "index-graph",
+        "navHidden": True,
+        "placeholderHidden": False,
+        "placeholderText": "Graph index placeholder",
+        "switcherHidden": False,
+        "switcherButtons": [
+            {"id": "index-tree", "pressed": "false", "text": "Index tree"},
+            {"id": "index-graph", "pressed": "true", "text": "Index graph"},
+        ],
         "toggleHidden": False,
         "toggleExpanded": "true",
         "toggleLabel": "Restore index panel",
@@ -1891,6 +1936,8 @@ def assert_panel_layout_contract(page: Page) -> None:
         """async () => {
             const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             const panels = await import('/docs-viewer/runtime/js/docs-viewer-panel-layout.js');
+            const hostedViews = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
+            const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
@@ -1910,6 +1957,29 @@ def assert_panel_layout_contract(page: Page) -> None:
                 setItem: (key, value) => { values[key] = value; }
             };
             let available = true;
+            const accessProjection = access.createDocsViewerAccessProjection({
+                routeConfig: { routeType: 'manage', access: { allowManagement: true } },
+                search: ''
+            });
+            const registry = hostedViews.registerDocsViewerHostedViews(
+                hostedViews.createDocsViewerHostedViewRegistry({ accessProjection }),
+                hostedViews.createDocsViewerBuiltInHostedViews().concat([
+                    {
+                        id: 'index-graph',
+                        label: 'Index graph',
+                        panel: 'index',
+                        access: 'manage',
+                        availability: 'available',
+                        renderer: 'index-placeholder',
+                        placeholderText: 'Graph index placeholder',
+                        capabilities: {
+                            layoutStates: ['normal', 'collapsed', 'expanded'],
+                            toolbar: true,
+                            toolbarView: 'index-graph-toolbar'
+                        }
+                    }
+                ])
+            );
             const layout = panels.createDocsViewerPanelLayout({
                 root,
                 storage,
@@ -1922,13 +1992,38 @@ def assert_panel_layout_contract(page: Page) -> None:
                     document: { enabled: true, defaultView: 'document-host' },
                     info: { enabled: true, defaultView: 'metadata-info' }
                 },
+                hostedViewRegistry: registry,
                 indexPanelAvailable: () => available
             });
             const initialState = layout.indexPanelState();
             layout.renderIndexPanelState();
             const initialProjection = {
                 state: root.dataset.indexPanelState,
-                toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label')
+                view: root.dataset.indexPanelView,
+                toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label'),
+                expandHidden: refs.indexPanel.sidebarExpand.hidden,
+                switcherHidden: refs.indexPanel.indexViewSwitcher.hidden
+            };
+            layout.setActiveIndexView('index-graph');
+            const graphProjection = {
+                state: root.dataset.indexPanelState,
+                view: root.dataset.indexPanelView,
+                expandHidden: refs.indexPanel.sidebarExpand.hidden,
+                navHidden: refs.indexPanel.nav.hidden,
+                placeholderHidden: refs.indexPanel.indexPlaceholder.hidden,
+                placeholderText: refs.indexPanel.indexPlaceholder.textContent
+            };
+            const graphExpandedState = layout.expandIndexPanelState();
+            const graphExpandedProjection = {
+                state: root.dataset.indexPanelState,
+                view: root.dataset.indexPanelView
+            };
+            layout.setActiveIndexView('index-tree');
+            const restoredTreeProjection = {
+                state: root.dataset.indexPanelState,
+                view: root.dataset.indexPanelView,
+                expandHidden: refs.indexPanel.sidebarExpand.hidden,
+                navHidden: refs.indexPanel.nav.hidden
             };
             const toggledState = layout.toggleIndexPanelState();
             const storedStudio = values['dotlineform-docs-viewer-index-panel:studio'];
@@ -1979,6 +2074,10 @@ def assert_panel_layout_contract(page: Page) -> None:
             return {
                 initialState,
                 initialProjection,
+                graphProjection,
+                graphExpandedState,
+                graphExpandedProjection,
+                restoredTreeProjection,
                 toggledState,
                 storedStudio,
                 libraryState: layout.indexPanelState(),
@@ -1996,16 +2095,38 @@ def assert_panel_layout_contract(page: Page) -> None:
         "initialState": "collapsed",
         "initialProjection": {
             "state": "collapsed",
+            "view": "index-tree",
             "toggleLabel": "Restore index panel",
+            "expandHidden": True,
+            "switcherHidden": False,
         },
-        "toggledState": "normal",
-        "storedStudio": "normal",
-        "libraryState": "expanded",
-        "libraryProjection": {
+        "graphProjection": {
+            "state": "collapsed",
+            "view": "index-graph",
+            "expandHidden": True,
+            "navHidden": True,
+            "placeholderHidden": False,
+            "placeholderText": "Graph index placeholder",
+        },
+        "graphExpandedState": "expanded",
+        "graphExpandedProjection": {
             "state": "expanded",
+            "view": "index-graph",
+        },
+        "restoredTreeProjection": {
+            "state": "normal",
+            "view": "index-tree",
+            "expandHidden": True,
+            "navHidden": False,
+        },
+        "toggledState": "collapsed",
+        "storedStudio": "collapsed",
+        "libraryState": "normal",
+        "libraryProjection": {
+            "state": "normal",
             "expandHidden": True,
         },
-        "unavailableToggleState": "expanded",
+        "unavailableToggleState": "normal",
         "unavailableProjectedState": "normal",
         "recentProjection": {
             "contentHidden": True,

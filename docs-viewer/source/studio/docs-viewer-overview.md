@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 parent_id: docs-viewer
 ---
 # Docs Viewer Overview
@@ -19,7 +19,7 @@ It provides:
 
 Current live scopes:
 
-- Studio docs at `/docs/`
+- Studio docs at `/docs/` through the standalone Docs Viewer service
 - Library docs at `/library/`
 - Analysis docs at `/analysis/`
 
@@ -29,9 +29,10 @@ Catalogue pages do not use the Docs Viewer.
 
 The current implementation is split into three layers.
 
-### 1. Scope-owned route shells
+### 1. Scope-owned route shells and service shell
 
-The route pages identify the active Docs Viewer route through `data-route-id` and locate the browser-safe route-config registry through `data-route-config-url`.
+Public route pages identify the active Docs Viewer route through `data-route-id` and locate the browser-safe route-config registry through `data-route-config-url`.
+The local `/docs/` management route is rendered by the standalone Docs Viewer service from `docs-viewer/shell/docs-viewer-shell.html`, not by a Jekyll `docs/index.md` route.
 The registry defines scope-specific values such as:
 
 - the docs index URL
@@ -40,11 +41,14 @@ The registry defines scope-specific values such as:
 - the default root doc
 - whether the scope parameter is part of the canonical URL
 
-Current route shells:
+Current public Jekyll route shells:
 
-- `docs/index.md`
 - `library/index.md`
 - `analysis/index.md`
+
+Current management service shell:
+
+- `docs-viewer/shell/docs-viewer-shell.html`
 
 ### 2. Shared shell include
 
@@ -180,8 +184,10 @@ Current document metadata behavior:
 
 Current sidebar behavior:
 
-- larger screens show index panel controls in the header for direct expanded mode and one-step restore/collapse
-- the direct expand control is visible only in normal state and moves the index panel straight to expanded mode
+- larger screens show index panel controls in the header for view-supported layout states
+- `index-tree` supports normal and collapsed states and does not expose direct expanded mode
+- management-enabled Docs Viewer routes can switch the index panel between `index-tree` and the placeholder `index-graph` view when both hosted views are available
+- the placeholder `index-graph` view supports direct expanded mode, so the expand control is visible only while that view is active in normal state
 - the one-step control restores collapsed to normal, collapses normal to collapsed, and restores expanded to normal
 - the collapsed rail keeps the one-step control visible so the index can always be restored
 - the collapsed desktop layout widens the Docs Viewer reading measure without making prose fully fluid

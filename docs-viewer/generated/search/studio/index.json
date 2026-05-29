@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4c1f0c0502346875167b6c4987172290",
-    "generated_at_utc": "2026-05-29T14:10:45Z",
+    "version": "blake2b-143f47dd8522c20f2edc1e867a9eb6cf",
+    "generated_at_utc": "2026-05-29T14:52:13Z",
     "count": 198
   },
   "entries": [
@@ -338,10 +338,10 @@
       "kind": "doc",
       "title": "Site Shell Runtime",
       "href": "/docs/?scope=studio&doc=site-shell-runtime",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-29",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-11 17:50 • Architecture",
+      "display_meta": "2026-05-29 • Architecture",
       "search_terms": [
         "site-shell-runtime",
         "site",
@@ -349,14 +349,12 @@
         "runtime",
         "site shell runtime",
         "architecture",
-        "2026-05-11 17:50",
+        "2026-05-29",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "29"
       ],
-      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-29 2026 05 29"
     },
     {
       "id": "sorting-architecture",
@@ -2526,10 +2524,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-28 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-29 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -2541,12 +2539,12 @@
         "manifest",
         "docs viewer portable setup",
         "setup",
-        "2026-05-28",
+        "2026-05-29",
         "2026",
         "05",
-        "28"
+        "29"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-29 2026 05 29"
     },
     {
       "id": "docs-viewer-portable-scope-setup",
@@ -2627,10 +2625,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-28 • Docs Viewer",
+      "display_meta": "2026-05-29 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -2639,12 +2637,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-28",
+        "2026-05-29",
         "2026",
         "05",
-        "28"
+        "29"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-29 2026 05 29"
     },
     {
       "id": "docs-viewer-source-config-report",
@@ -2759,10 +2757,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-29 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -2772,34 +2770,34 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-29",
         "2026",
         "05",
-        "25"
+        "29"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-29 2026 05 29"
     },
     {
       "id": "docs-viewer-overview",
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-28 • Docs Viewer",
+      "display_meta": "2026-05-29 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-05-28",
+        "2026-05-29",
         "2026",
         "05",
-        "28"
+        "29"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-29 2026 05 29"
     },
     {
       "id": "docs-viewer-scopes",

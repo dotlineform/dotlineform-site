@@ -1,6 +1,9 @@
 import {
   hostedViewAccessAllowed
 } from "./docs-viewer-access.js";
+import {
+  normalizeHostedViewCapabilities
+} from "./docs-viewer-hosted-view-capabilities.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -24,6 +27,10 @@ function normalizeHostedView(record) {
     panel: cleanString(view.panel) || "document",
     access: cleanString(view.access) || "public",
     availability: normalizeAvailability(view.availability),
+    module: cleanString(view.module),
+    renderer: cleanString(view.renderer),
+    placeholderText: cleanString(view.placeholderText || view.placeholder_text),
+    capabilities: normalizeHostedViewCapabilities(view.capabilities),
     load: typeof view.load === "function" ? view.load : function () { return Promise.resolve(null); },
     mount: typeof view.mount === "function" ? view.mount : noop,
     update: typeof view.update === "function" ? view.update : noop,
@@ -114,7 +121,12 @@ export function createDocsViewerBuiltInHostedViews() {
       label: "Index tree",
       panel: "index",
       access: "public",
-      availability: "available"
+      availability: "available",
+      renderer: "index-tree",
+      capabilities: {
+        layoutStates: ["normal", "collapsed"],
+        toolbar: false
+      }
     },
     {
       id: "document-host",

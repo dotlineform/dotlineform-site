@@ -33,7 +33,22 @@
         "info": { "enabled": true, "default_view": "metadata-info" }
       },
       "hosted_views": {
-        "records": []
+        "records": [
+          {
+            "id": "index-graph",
+            "label": "Index graph",
+            "panel": "index",
+            "access": "manage",
+            "availability": "available",
+            "renderer": "index-placeholder",
+            "placeholder_text": "Graph index placeholder",
+            "capabilities": {
+              "layout_states": ["normal", "collapsed", "expanded"],
+              "toolbar": true,
+              "toolbar_view": "index-graph-toolbar"
+            }
+          }
+        ]
       }
     },
     {

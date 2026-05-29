@@ -98,12 +98,46 @@
 .docsViewer__sidebarHeader{
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 0.4rem;
   min-height: 1.8rem;
   margin: calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
     calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
     0.45rem 0;
+}
+
+.docsViewer__sidebarControls,
+.docsViewer__indexViewSwitcher{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.docsViewer__indexViewSwitcher[hidden]{
+  display: none;
+}
+
+.docsViewer__indexViewButton{
+  box-sizing: border-box;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.8rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-muted);
+  font: inherit;
+  font-size: var(--docs-viewer-font-small);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.docsViewer__indexViewButton[aria-pressed="true"]{
+  border-color: var(--docs-viewer-border-strong);
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__sidebarToggle{
@@ -138,6 +172,21 @@
   min-width: 0;
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewer__indexPlaceholder{
+  min-height: 16rem;
+  border: 1px dashed var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  display: grid;
+  place-items: center;
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+}
+
+.docsViewer__indexPlaceholder[hidden],
+.docsViewer__nav[hidden]{
+  display: none;
 }
 
 @media (min-width: 821px){
