@@ -53,20 +53,20 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_doc(
         repo_root,
-        "archive.md",
+        "hidden-doc.md",
         {
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "viewable": False,
         },
-        scope="archive",
+        scope="scratch",
     )
     write_doc(
         repo_root,
-        "archive.md",
+        "hidden-doc.md",
         {
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "viewable": False,
         },
     )
@@ -76,7 +76,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "child",
             "title": "Child",
-            "parent_id": "archive",
+            "parent_id": "hidden-doc",
             "viewable": True,
         },
     )
@@ -156,10 +156,10 @@ def write_generated_docs(root: Path) -> None:
     docs = [
         {
             "scope": "studio",
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "viewable": False,
-            "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/hidden-doc.json",
         },
         {
             "scope": "studio",
@@ -180,7 +180,7 @@ def write_generated_docs(root: Path) -> None:
             "docs": docs,
         },
     )
-    write_json(root / "docs-viewer/generated/docs/studio/by-id/archive.json", {"doc_id": "archive"})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/hidden-doc.json", {"doc_id": "hidden-doc"})
     write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
@@ -248,15 +248,15 @@ def write_docs_viewer_browser_config(root: Path) -> None:
     )
 
 
-def test_archive_doc_is_editable_in_dry_run() -> None:
+def test_hidden_doc_is_editable_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         result = docs_management_service.handle_update_metadata(
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "archive",
-                "title": "Archive",
+                "doc_id": "hidden-doc",
+                "title": "Hidden Doc",
                 "parent_id": "",
                 "sort_order": 30,
             },
@@ -264,7 +264,7 @@ def test_archive_doc_is_editable_in_dry_run() -> None:
         )
 
     assert result["ok"] is True
-    assert result["doc_id"] == "archive"
+    assert result["doc_id"] == "hidden-doc"
     assert result["record"]["sort_order"] == 30
 
 
@@ -291,28 +291,28 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     assert result["changes"]["status_changed"] is False
 
 
-def test_archive_doc_viewability_can_be_changed_in_dry_run() -> None:
+def test_hidden_doc_viewability_can_be_changed_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         result = docs_management_service.handle_update_viewability(
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "archive",
+                "doc_id": "hidden-doc",
                 "viewable": True,
             },
             dry_run=True,
         )
 
     assert result["ok"] is True
-    assert result["changed_doc_ids"] == ["archive"]
+    assert result["changed_doc_ids"] == ["hidden-doc"]
     assert result["records"][0]["viewable"] is True
 
 
-def test_archive_parent_delete_is_blocked_only_by_children() -> None:
+def test_hidden_parent_delete_is_blocked_only_by_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "archive")
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "hidden-doc")
 
     assert result["allowed"] is False
     assert result["blockers"] == ["1 child docs still depend on this parent"]
@@ -1066,10 +1066,10 @@ def test_docs_export_request_passes_target_format() -> None:
 
 def main() -> None:
     tests = [
-        test_archive_doc_is_editable_in_dry_run,
+        test_hidden_doc_is_editable_in_dry_run,
         test_update_metadata_can_change_viewability_in_dry_run,
-        test_archive_doc_viewability_can_be_changed_in_dry_run,
-        test_archive_parent_delete_is_blocked_only_by_children,
+        test_hidden_doc_viewability_can_be_changed_in_dry_run,
+        test_hidden_parent_delete_is_blocked_only_by_children,
         test_capabilities_advertise_generated_data_reads,
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,

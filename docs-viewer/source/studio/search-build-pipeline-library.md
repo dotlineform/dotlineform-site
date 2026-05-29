@@ -24,7 +24,6 @@ sort_order: 8400
 
 The current Library search artifact is derived from the generated Library docs index rather than directly from `docs-viewer/source/library/`.
 Rows with `viewable: false` are skipped so draft Library docs can be generated for manage-mode review without appearing in public/default search.
-Archive docs follow the same rule as every other doc: set `viewable: false` when they should remain generated and manageable without appearing in public/default search.
 
 ### Current Commands
 

@@ -81,7 +81,7 @@ For search work, start with [Search](/docs/?scope=studio&doc=search) and update 
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
 For browser JavaScript maintenance-risk work, use [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
 For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
-If the work needs a task tracker, create one from the current durable owner docs rather than from archived request history.
+If the work needs a task tracker, create one from [Tasks Template](/docs/?scope=studio&doc=tasks-template).
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
 ### JavaScript Maintenance Gate
@@ -140,7 +140,7 @@ Useful checks and follow-through:
 
 Use this gate before changing Docs Viewer runtime/app architecture, especially work related to app session, state domains, service adapters, app composition, public/manage context, controller lifecycle, panels, hosted views, or management/backend contracts.
 The current architecture is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
-Use durable owner docs for current rules and follow-up notes; archived request documents are historical context only.
+Use durable owner docs for current rules and follow-up notes, not a change request document.
 
 Before editing, answer:
 
@@ -208,9 +208,9 @@ When sweeping for stale references during verification, keep the scan focused on
 - always scan active code, config, runtime assets, scripts, and tests relevant to the change
 - scan current owning docs when documentation is part of the task
 - scan active request or task docs when closing or updating that request
-- exclude logs, archived requests, historical change docs, and broad request-history docs by default
+- exclude logs, historical change docs, and broad request-history docs by default
+- only include historical logs when the active task is specifically to clean docs logs history.
 
-Only include historical logs or archive material when the active task is specifically to clean docs history, close/archive a request, or verify that a durable decision has been copied out of a request document.
 Use this as the default shape for repo sweeps, replacing `PATTERN` with the retired path, symbol, or URL under review:
 
 ```bash
@@ -255,13 +255,8 @@ A close-out should include:
 - generated payloads updated or intentionally not rebuilt
 - remaining risks or follow-up tasks
 - request status updates when the work was driven by a change request
-
-For change requests:
-
 - mark completed tasks clearly
-- move or mark the request according to the current request/archive practice
-- add references from the completed request to the relevant structured docs-log entry ids when the request has a closure/cleanup task for that
-- archive only when the parent request is complete, durable docs contain the important decisions, verification is recorded, and remaining risks are explicit
+- mark an owning change request `done` only when durable docs contain the important decisions, verification is recorded, and remaining risks are explicit.
 
 ## 8. Record Durable Change History
 
@@ -282,7 +277,4 @@ This workflow exposes a few areas where the docs are useful but may need later r
 These are not part of the current implementation task.
 
 - AGENTS.md still carries detailed procedural guidance that could move into this workflow doc once the workflow is stable.
-- Studio UI guidance is split across [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), framework docs, primitive docs, and the long UI decision log; the decision log likely needs pruning or archival.
 - State routing and module-dependency guidance exists across route, runtime, and script docs but may need a shorter “where to look first” index.
-- Generated docs/search payload follow-through is documented, but a compact checklist may be useful after the change-log workflow is implemented.
-- The structured docs-log system still needs compact archive/view follow-through as it replaces old prose logs.

@@ -246,7 +246,6 @@ Current content families:
 Current site mapping:
 
 - left-hand tree and lookup layer for `/docs/`
-- Studio Archive is an ordinary docs folder; setting `viewable: false` hides it from public/default tree, search, and recently-added views
 
 Why it exists separately from the per-doc payload:
 

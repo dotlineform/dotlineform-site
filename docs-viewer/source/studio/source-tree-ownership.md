@@ -9,8 +9,7 @@ viewable: true
 ---
 # Source Tree Ownership
 
-This document is the maintained source-tree ownership contract after the Studio source-tree reorganization.
-Completed change requests can be archived; this page is the current reference for where source, generated output, local working output, checks, and command owners live.
+This document is the maintained source-tree ownership contract after the Studio source-tree reorganization. It is the current reference for where source, generated output, local working output, checks, and command owners live.
 
 ## Core Boundary
 

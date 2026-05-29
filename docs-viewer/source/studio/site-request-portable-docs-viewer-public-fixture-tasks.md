@@ -33,7 +33,7 @@ It should not implement local manage mode, backend writes, source editing, seman
 - Keep `docs-viewer/runtime/js/docs-viewer.js` as the stable public entrypoint.
 - Keep route config and access projection as the app-shell gate; the fixture must avoid management-only CSS, JavaScript, shell markup, and service URLs.
 - Keep generated docs/search payloads static and fixture-local.
-- Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/archive/move behavior, rebuild behavior, and generated-data capability checks out of the fixture.
+- Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/move behavior, rebuild behavior, and generated-data capability checks out of the fixture.
 - Keep local manage fixture work separate.
 
 ### baseline verification set
@@ -85,7 +85,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 6 | planned | Add fixture-local generated docs payloads for a small parent/child tree. Include enough metadata to exercise default document loading, tree navigation, recently-added ordering, metadata info, and basic document content rendering. |
 | 7 | planned | Add fixture-local generated search payloads. Include enough entries to exercise inline search result rendering, result links, no-result status, and recent/search route transitions. |
 | 8 | planned | Add or update a focused portable public fixture smoke. Cover route boot, default document rendering, document navigation/history, inline search, recently-added list, metadata info panel, info toolbar continuity, bookmark support non-blocking behavior, and absence of management-only shell/assets. |
-| 9 | planned | Keep local manage mode out of this slice. Do not copy management CSS/JS, management shell markup, local service URLs, backend capability checks, source write endpoints, imports, settings, scope lifecycle, delete/archive/move behavior, rebuild behavior, or generated-data service reads into the public fixture. |
+| 9 | planned | Keep local manage mode out of this slice. Do not copy management CSS/JS, management shell markup, local service URLs, backend capability checks, source write endpoints, imports, settings, scope lifecycle, delete/move behavior, rebuild behavior, or generated-data service reads into the public fixture. |
 | 10 | planned | Run focused fixture smoke and the proportional public Docs Viewer regression checks. Use elevated localhost/browser permissions for fixture and browser smokes when needed. |
 | 11 | planned | Update owning docs after implementation: this tracker, the portable Docs Viewer request, Docs Viewer Portable Setup if setup instructions change, the app-shell request if the infrastructure sequence status changes, and any fixture/smoke docs introduced by the slice. |
 | 12 | planned | Create or update the structured docs-log entry for this slice and record the entry id in this tracker. |

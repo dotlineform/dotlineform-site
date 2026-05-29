@@ -28,7 +28,7 @@ The first implementation is now in place for the shared Docs Viewer, docs builde
 
 ## Current Model
 
-Docs source files already support a binary front-matter field:
+Docs source files support a binary front-matter field:
 
 ```yaml
 viewable: false
@@ -39,9 +39,7 @@ Every Markdown source doc in a configured scope is included in generated docs pa
 Use `viewable: false` when a generated doc should be reviewable in manage mode but hidden from public/default discovery.
 
 There is no docs `status` field.
-The docs builder and management flow now support `viewable`.
-
-There is no active `archive` tree convention. Visibility is controlled by `viewable`, not by a structural archive location.
+The docs builder and management flow support `viewable`.
 
 ## Decision: Use `viewable`
 

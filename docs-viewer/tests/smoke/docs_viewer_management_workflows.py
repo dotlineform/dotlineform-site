@@ -256,7 +256,7 @@ def create_fixture_repo(target_root: Path) -> None:
             "analysis": "docs-viewer/source/analysis",
         }[scope]
         write_doc(target_root / source_root / f"{default_doc}.md", doc_id=default_doc, title=default_doc.replace("-", " ").title())
-    write_doc(target_root / "docs-viewer/source/studio" / "archive.md", doc_id="archive", title="Archive", sort_order=9000)
+    write_doc(target_root / "docs-viewer/source/studio" / "hidden-doc.md", doc_id="hidden-doc", title="Hidden Doc", sort_order=9000)
     write_doc(target_root / "docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc", sort_order=2000)
     write_doc(target_root / "docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc", sort_order=1000)
     (target_root / "var" / "docs" / "import-staging").mkdir(parents=True)

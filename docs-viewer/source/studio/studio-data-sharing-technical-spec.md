@@ -12,7 +12,8 @@ viewable: true
 Studio Data Sharing is the shared Studio shell for preparing outbound share packages, listing returned packages, reviewing returned structured data, and applying confirmed changes through domain adapters.
 
 The module uses Data Sharing terminology for current routes, code, configuration, and UI copy.
-Older import/export names remain only in archived request docs, historical change-log entries, and separate domain workflows such as Docs Import or catalogue workbook import.
+
+Older import/export names remain only in historical change-log entries, and separate domain workflows such as Docs Import or catalogue workbook import.
 
 ## Routes
 

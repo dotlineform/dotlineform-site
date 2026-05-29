@@ -1112,12 +1112,12 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
-        write_staged_package_file(root, "broken-note", "attachments/archive.exe", b"fake exe")
+        write_staged_package_file(root, "broken-note", "attachments/sample-binary.exe", b"fake exe")
         write_staged_package_file(
             root,
             "broken-note",
             "Broken Note.md",
-            "# Broken Note\n\n![Missing](images/missing.png)\n\n[Unsupported](attachments/archive.exe)\n",
+            "# Broken Note\n\n![Missing](images/missing.png)\n\n[Unsupported](attachments/sample-binary.exe)\n",
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__

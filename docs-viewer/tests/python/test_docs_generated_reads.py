@@ -56,10 +56,10 @@ def write_generated_docs(root: Path) -> None:
     docs = [
         {
             "scope": "studio",
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "viewable": False,
-            "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/hidden-doc.json",
         },
         {
             "scope": "studio",
@@ -70,7 +70,7 @@ def write_generated_docs(root: Path) -> None:
         },
     ]
     write_json(root / "docs-viewer/generated/docs/studio/index.json", {"docs": docs})
-    write_json(root / "docs-viewer/generated/docs/studio/by-id/archive.json", {"doc_id": "archive"})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/hidden-doc.json", {"doc_id": "hidden-doc"})
     write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(
         root / "docs-viewer/generated/docs/studio/references/index.json",
@@ -100,9 +100,9 @@ def test_generated_doc_payload_allows_non_viewable_indexed_doc() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
-        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", "archive")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", "hidden-doc")
 
-    assert payload["doc_id"] == "archive"
+    assert payload["doc_id"] == "hidden-doc"
 
 
 def test_generated_doc_payload_rejects_unsafe_doc_id() -> None:

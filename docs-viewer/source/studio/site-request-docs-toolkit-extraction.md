@@ -27,7 +27,7 @@ The work has split into clearer, narrower surfaces:
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) is the current install and copy guide.
 - [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing) describes the shared prepare/review/apply workflow that replaced the old import/export framing.
 - [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec) records the Data Sharing adapter, endpoint, registry, row, and portability boundaries.
-- [Import/Export Historical Notes](/docs/?scope=studio&doc=import-export) keeps the old terminology only as archive context.
+- [Import/Export Historical Notes](/docs/?scope=studio&doc=import-export) keeps the old terminology only as context.
 
 No separate implementation request should be opened from this document unless a later decision intentionally packages these surfaces together again.
 

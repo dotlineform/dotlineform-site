@@ -38,21 +38,21 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_doc(
         repo_root,
-        "archive.md",
+        "hidden-doc.md",
         {
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "sort_order": 10,
             "viewable": False,
         },
-        scope="archive",
+        scope="scratch",
     )
     write_doc(
         repo_root,
-        "archive.md",
+        "hidden-doc.md",
         {
-            "doc_id": "archive",
-            "title": "Archive",
+            "doc_id": "hidden-doc",
+            "title": "Hidden Doc",
             "sort_order": 90,
             "viewable": False,
         },
@@ -300,9 +300,9 @@ def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_sea
             },
         )
 
-    assert plan.response["changed_doc_ids"] == ["parent", "target", "sibling", "archive"]
+    assert plan.response["changed_doc_ids"] == ["parent", "target", "sibling", "hidden-doc"]
     assert [record["sort_order"] for record in plan.response["records"]] == [1000, 2000, 3000, 4000]
-    assert [write.path.name for write in plan.source_writes] == ["parent.md", "target.md", "sibling.md", "archive.md"]
+    assert [write.path.name for write in plan.source_writes] == ["parent.md", "target.md", "sibling.md", "hidden-doc.md"]
     assert plan.backup_operation is None
     assert plan.search_doc_ids == []
 

@@ -156,4 +156,4 @@ The retained smoke entry points are:
 - `studio/tests/python/test_tags_data_sharing_adapter.py`
 
 The architecture request tracker records the latest focused evidence for Studio API dispatch, Docs Management non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
-Remaining close-out risk belongs to the final request verification pass: rerun the focused checks after the documentation/log slice and then close or archive the request.
+Remaining close-out risk belongs to the final request verification pass: rerun the focused checks after the documentation/log slice and then mark the request as 'done'.

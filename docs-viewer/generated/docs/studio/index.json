@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T09:59:27Z",
+  "generated_at": "2026-05-29T10:19:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -269,7 +269,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 9079
+      "content_text_length": 9077
     },
     {
       "scope": "studio",
@@ -284,7 +284,7 @@
       "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
-      "content_text_length": 9257
+      "content_text_length": 9122
     },
     {
       "scope": "studio",
@@ -299,7 +299,7 @@
       "source_path": "site-request-portable-docs-viewer-public-fixture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
-      "content_text_length": 8913,
+      "content_text_length": 8897,
       "ui_status": "urgent"
     },
     {
@@ -315,7 +315,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 19917
+      "content_text_length": 19038
     },
     {
       "scope": "studio",
@@ -330,7 +330,7 @@
       "source_path": "site-request-docs-toolkit-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-toolkit-extraction.json",
-      "content_text_length": 6010,
+      "content_text_length": 6002,
       "ui_status": "deferred"
     },
     {
@@ -441,7 +441,7 @@
       "source_path": "tasks-template.md",
       "viewer_url": "/docs/?scope=studio&doc=tasks-template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-template.json",
-      "content_text_length": 3304
+      "content_text_length": 3309
     },
     {
       "scope": "studio",
@@ -638,7 +638,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 12868
+      "content_text_length": 12845
     },
     {
       "scope": "studio",
@@ -848,7 +848,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json",
-      "content_text_length": 11776
+      "content_text_length": 11737
     },
     {
       "scope": "studio",
@@ -1060,7 +1060,7 @@
       "source_path": "studio-docs-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 2983,
+      "content_text_length": 2846,
       "ui_status": "urgent"
     },
     {
@@ -1574,7 +1574,7 @@
       "source_path": "docs-viewer-panel-hosts.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
-      "content_text_length": 6512
+      "content_text_length": 6428
     },
     {
       "scope": "studio",
@@ -2137,7 +2137,7 @@
       "source_path": "search-build-pipeline-library.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-library.json",
-      "content_text_length": 2633
+      "content_text_length": 2466
     },
     {
       "scope": "studio",
@@ -2568,7 +2568,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 7892
+      "content_text_length": 7842
     },
     {
       "scope": "studio",
@@ -2690,7 +2690,7 @@
       "source_path": "docs-viewer-draft-publishing-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-draft-publishing-spec.json",
-      "content_text_length": 12308
+      "content_text_length": 12175
     },
     {
       "scope": "studio",
@@ -2931,7 +2931,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
-      "content_text_length": 581
+      "content_text_length": 430
     },
     {
       "scope": "studio",

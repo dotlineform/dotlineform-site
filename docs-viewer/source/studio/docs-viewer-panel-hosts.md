@@ -12,7 +12,6 @@ viewable: true
 Docs Viewer now has a JavaScript-owned app-shell foundation for coordinated panel regions and hosted views.
 
 This document records the durable design and implemented ownership boundaries.
-Historical implementation planning is archived in the original multi-panel request.
 
 ## Current Shape
 

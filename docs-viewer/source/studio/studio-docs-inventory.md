@@ -35,7 +35,7 @@ Completed non-Priority-1 splits on 2026-05-19:
 
 - Priority 3: `docs-viewer/source/studio/scripts-catalogue-write-server.md` split into an overview plus endpoint reference, build/lookup, and operations child docs.
 
-- Priority 4: `docs-viewer/source/studio/docs-viewer-management.md` split into an archived index plus current state, contract, and write-model child docs.
+- Priority 4: `docs-viewer/source/studio/docs-viewer-management.md` split into current state, contract, and write-model child docs.
 
 - Priority 5: `docs-viewer/source/studio/data-models-catalogue.md` split into an overview plus source model, indexes/payloads, and maintenance child docs.
 
@@ -49,6 +49,6 @@ Completed secondary splits on 2026-05-19:
 
 Remaining review candidates:
 
-- `docs-viewer/source/studio/studio-implementation-plan.md` - `834` lines; likely an implementation-history/archive candidate rather than a current reference split.
-- `docs-viewer/source/studio/implementation-plan.md` - `782` lines; likely similar archive or supersession review.
-- `docs-viewer/source/studio/site-request-catalogue-js-runtime-consistency.md` - `781` lines; request history may need closure/archive review before splitting.
+- `docs-viewer/source/studio/studio-implementation-plan.md` - `834` lines; likely for deletion.
+- `docs-viewer/source/studio/implementation-plan.md` - `782` lines; likely for deletion.
+- `docs-viewer/source/studio/site-request-catalogue-js-runtime-consistency.md` - `781` lines; request history needs review before splitting.

@@ -71,7 +71,7 @@ When work was driven by a change request:
 4. Set `change_request_doc_id` to the request doc id on each related log record.
 5. Include related docs and files that would help Codex trace the decision later.
 6. Add references from the completed request back to the created log entry ids when the request has a closure/cleanup task for that.
-7. Move or mark the request according to the current request archive practice.
+7. Mark the request 'done'.
 8. Rebuild generated log indexes/search payloads after the entries are written.
 
 One change request may produce more than one log entry when the implementation landed as distinct meaningful changes.
@@ -106,7 +106,7 @@ Keep records compact:
 ### Current Implementation State
 
 The source model, schema, authoring workflow, entry helper, legacy migration, generated indexes, and migration review report exist.
-The report UI and compact human-facing archive replacement are still part of the change-log entry model implementation.
+The report UI is still part of the change-log entry model implementation.
 
 ## Helper Script
 

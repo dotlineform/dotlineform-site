@@ -8,7 +8,7 @@ sort_order: 17000
 ---
 # Change Requests
 
-This section stores proposed and in-progress feature or infrastructure changes. When implementation is complete or closed, the request is manually moved to [Archive](/docs/?scope=archive&doc=archive).
+This section stores proposed and in-progress feature or infrastructure changes.
 
 Use it for:
 
@@ -23,5 +23,3 @@ Do not use it for:
 - stable design-system rules
 - script reference docs
 - changelog entries for already-completed work
-
-Those still belong in the owning reference docs and change logs.
