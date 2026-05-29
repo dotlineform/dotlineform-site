@@ -929,7 +929,10 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__actionMenuItem{
-  display: block;
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.48rem;
   width: 100%;
   border: 0;
   border-radius: 0.6rem;
@@ -941,6 +944,18 @@ select.docsViewer__fieldInput--listbox{
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
   text-align: left;
   cursor: pointer;
+}
+
+.docsViewer__actionMenuEmoji{
+  display: inline-flex;
+  width: 1.35rem;
+  min-width: 1.35rem;
+  justify-content: center;
+  line-height: 1;
+}
+
+.docsViewer__actionMenuLabel{
+  min-width: 0;
 }
 
 .docsViewer__actionMenuItem:hover,

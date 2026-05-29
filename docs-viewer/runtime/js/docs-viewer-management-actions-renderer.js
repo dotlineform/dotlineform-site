@@ -1,3 +1,75 @@
+var MANAGEMENT_ACTION_MENU_ITEMS = [
+  {
+    id: "docsViewerManageNewButton",
+    action: "new",
+    emoji: "📄",
+    label: "New"
+  },
+  {
+    id: "docsViewerManageImportButton",
+    action: "import",
+    emoji: "📥",
+    label: "Import"
+  },
+  {
+    id: "docsViewerManageEditButton",
+    action: "edit",
+    emoji: "✏️",
+    label: "Edit"
+  },
+  {
+    id: "docsViewerManageDeleteButton",
+    action: "delete",
+    emoji: "🗑️",
+    label: "Delete"
+  },
+  {
+    id: "docsViewerManageNewScopeButton",
+    action: "new-scope",
+    emoji: "🗂️",
+    label: "New Scope",
+    hidden: true
+  },
+  {
+    id: "docsViewerManageDeleteScopeButton",
+    action: "delete-scope",
+    emoji: "🗑️",
+    label: "Delete Scope",
+    hidden: true
+  },
+  {
+    id: "docsViewerManageSettingsButton",
+    action: "settings",
+    emoji: "⚙️",
+    label: "Settings"
+  },
+  {
+    id: "docsViewerManageRebuildButton",
+    action: "rebuild-docs",
+    emoji: "🔄",
+    label: "Rebuild docs"
+  }
+];
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderActionMenuItem(item) {
+  var hidden = item.hidden ? " hidden" : "";
+  var action = item.action ? ' data-docs-viewer-action="' + escapeHtml(item.action) + '"' : "";
+  return [
+    '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + hidden + ">",
+    '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
+    '          <span class="docsViewer__actionMenuLabel">' + escapeHtml(item.label) + "</span>",
+    "        </button>"
+  ].join("");
+}
+
 var MANAGEMENT_ACTIONS_MARKUP = [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
   '  <div class="docsViewer__manageActions">',
@@ -5,14 +77,7 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '    <div class="docsViewer__actionsMenuHost">',
   '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
   '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewScopeButton" hidden>New scope</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteScopeButton" hidden>Delete scope</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>',
+  MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
   '      </div>',
   '    </div>',
   '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>',

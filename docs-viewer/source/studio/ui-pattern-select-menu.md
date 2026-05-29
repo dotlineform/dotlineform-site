@@ -193,12 +193,18 @@ Current demo implementation should live in:
 
 The UI Catalogue demo must use `uiCatalogueDemo*` classes and demo-owned JavaScript.
 Treat the demo as the pattern reference, then map the structure into the owning live namespace.
+The reusable contract is the composition pattern: option record shape, markup structure, class roles, visual behavior, and interaction expectations.
+It is not a requirement that every Studio route use the same JavaScript app model as Docs Viewer.
 
 Live implementations should use route-owned classes:
 
 - Docs Viewer should use `docsViewer*`
 - Studio routes should use their existing route or family namespace
 - UI Catalogue demos should use `uiCatalogueDemo*`
+
+Live implementations should adapt the pattern into their owning runtime.
+Docs Viewer can use a lazy app-shell renderer and route/config controller bindings.
+Studio routes can use route-owned modules or local route JavaScript until Studio has a broader app model.
 
 Do not import production Docs Viewer or Studio CSS into the demo page to prove the pattern.
 Do not make the demo load real route data.

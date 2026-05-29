@@ -158,6 +158,8 @@ Current demo implementation should live in:
 
 The UI Catalogue demo must use `uiCatalogueDemo*` classes and demo-owned JavaScript.
 Treat the demo as the pattern reference, then map the structure into the owning live namespace.
+The reusable contract is the composition pattern: item record shape, markup structure, class roles, visual behavior, and interaction expectations.
+It is not a requirement that every Studio route use the same JavaScript app model as Docs Viewer.
 
 Live implementations should use route-owned classes:
 
@@ -165,24 +167,31 @@ Live implementations should use route-owned classes:
 - Studio routes should use their existing route or family namespace
 - UI Catalogue demos should use `uiCatalogueDemo*`
 
+Live implementations should adapt the pattern into their owning runtime.
+Docs Viewer can use a lazy app-shell renderer and management controller bindings.
+Studio routes can use route-owned modules or local route JavaScript until Studio has a broader app model.
+
 Do not import production Docs Viewer or Studio CSS into the demo page to prove the pattern.
 Do not make the demo call real write services.
 
-## Docs Viewer Migration Notes
+## Docs Viewer Implementation Notes
 
-The current Docs Viewer management `Actions` menu hardcodes menu markup and item ids in the management-actions renderer, then binds each item individually in the management controller.
-The migration target is no visible UI change with a clearer internal shape:
+The Docs Viewer management `Actions` menu uses this pattern in `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
+Menu rows are design-time records owned by the renderer, with stable ids, labels, optional emoji, and visibility defaults.
+The management controller still owns capability projection and command binding.
+
+Implementation boundaries:
 
 - keep management-only loading behind the Docs Viewer lazy management boundary
 - keep Docs Viewer classes and current visual styling
-- define management actions as design-time records in the management controller or a focused management action-menu owner
+- define management actions as design-time records in the focused management action renderer
 - keep actual write workflows in `docs-viewer-management-actions.js`
 - keep backend calls behind `docs-viewer-management-client.js`
 - preserve existing stable ids where current smoke tests or activity contexts need them
 - do not make the Docs Viewer `Actions` menu user-configurable
 
-The action-menu helper should not become a Docs Viewer service adapter.
-It should only own menu rendering, state projection, and command dispatch.
+The action-menu renderer must not become a Docs Viewer service adapter.
+It owns menu markup only; state projection and command dispatch remain with the management controller and action workflow modules.
 
 ## Benefits
 

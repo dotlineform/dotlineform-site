@@ -239,6 +239,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 6.
 - 2026-05-28 owner note: this controller now receives named `managementState`, `serviceClient`, and `routeReload` contracts from the lazy runtime boundary instead of broad runtime `state`. It builds a management-local state facade from explicit route-session, scope-config, document-index, selected-document, search/recent, generated-data, and management domains for existing management child modules.
+- 2026-05-29 owner note: action menu markup is design-time record rendering in `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`; this controller preserves binding, capability projection, and command workflow handoff for the rendered stable ids.
 - Keep service access behind the management service-client contract and post-write reloads behind the route-reload contract.
 - Do not move new backend writes, generated-read behavior, public hosted-view behavior, route shell boot, or route URL primitives into this file.
 
@@ -296,6 +297,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
 
 - Added 2026-05-27 as the focused renderer for management action markup.
+- 2026-05-29 owner note: the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; command behavior remains outside this renderer.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
 ### `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`

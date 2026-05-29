@@ -102,6 +102,18 @@ function setButtonLabel(button, label) {
   button.title = label;
 }
 
+function setActionMenuButtonLabel(button, label) {
+  if (!button) return;
+  var labelNode = button.querySelector(".docsViewer__actionMenuLabel");
+  if (labelNode) {
+    labelNode.textContent = label;
+  } else {
+    button.textContent = label;
+  }
+  button.setAttribute("aria-label", label);
+  button.title = label;
+}
+
 export function applyDocsViewerManagementConfig(options) {
   var config = options.config || {};
   var context = options.context;
@@ -130,15 +142,15 @@ export function applyDocsViewerManagementConfig(options) {
     setButtonLabel(refs.manageViewableButton, context.getConfigText(config, "docs_viewer.make_viewable_button", "Show"));
   }
   if (refs.manageSettingsButton) {
-    refs.manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
+    setActionMenuButtonLabel(refs.manageSettingsButton, context.getConfigText(config, "docs_viewer.settings_button", "Settings"));
   }
   state.managementText.scopeNewButton = context.getConfigText(config, "docs_viewer.scope_new_button", state.managementText.scopeNewButton);
   if (refs.manageNewScopeButton) {
-    refs.manageNewScopeButton.textContent = state.managementText.scopeNewButton;
+    setActionMenuButtonLabel(refs.manageNewScopeButton, state.managementText.scopeNewButton);
   }
   state.managementText.scopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.scope_delete_menu_button", state.managementText.scopeDeleteMenuButton);
   if (refs.manageDeleteScopeButton) {
-    refs.manageDeleteScopeButton.textContent = state.managementText.scopeDeleteMenuButton;
+    setActionMenuButtonLabel(refs.manageDeleteScopeButton, state.managementText.scopeDeleteMenuButton);
   }
   state.managementText.copyLinkLabel = context.getConfigText(config, "docs_viewer.copy_link_label", state.managementText.copyLinkLabel);
   if (refs.contextCopyLinkButton) {

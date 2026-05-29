@@ -751,15 +751,23 @@ export function initDocsViewerManagement(context) {
       });
     }
     if (manageSettingsButton) {
-      manageSettingsButton.addEventListener("click", openSettingsModal);
+      manageSettingsButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        openSettingsModal();
+      });
     }
     if (manageNewScopeButton) {
       manageNewScopeButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
         handleCreateScope();
       });
     }
     if (manageDeleteScopeButton) {
       manageDeleteScopeButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
         handleDeleteScope();
       });
     }
