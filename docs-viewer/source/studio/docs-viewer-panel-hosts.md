@@ -115,7 +115,7 @@ Public routes can use public-safe panel views such as read-only metadata.
 Manage mode can expose additional views or actions only after route access and backend capability checks allow them.
 
 The browser app must not gain direct write authority.
-Source Markdown writes, metadata saves, move/archive/delete/import workflows, source opening, rebuilds, filesystem allowlists, and validation remain backend-owned.
+Source Markdown writes, metadata saves, move/delete/import workflows, source opening, rebuilds, filesystem allowlists, and validation remain backend-owned.
 
 Management-only modules should not be loaded or shown on public read-only routes.
 Backend endpoints must still enforce capability server-side even when client controls are hidden.

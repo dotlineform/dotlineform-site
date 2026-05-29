@@ -223,7 +223,6 @@ Current visibility behavior:
 - source front matter uses `viewable: false` for non-viewable docs; `hidden` is not part of the current source schema
 - public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
 - public/default viewer discovery also excludes descendants of a non-viewable parent, without changing descendant `viewable` values
-- `archive` is a normal doc id and parent folder; if it should be hidden, set `viewable: false` in front matter
 
 Current manage-mode draft behavior:
 

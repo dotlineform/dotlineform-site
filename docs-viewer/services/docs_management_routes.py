@@ -31,7 +31,6 @@ CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
 NORMALIZE_ORDER_PATH = "/docs/normalize-order"
-ARCHIVE_PATH = "/docs/archive"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
 SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
@@ -72,7 +71,6 @@ POST_PATHS = (
     REBUILD_PATH,
     MOVE_PATH,
     NORMALIZE_ORDER_PATH,
-    ARCHIVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
     SCOPE_CREATE_PREVIEW_PATH,

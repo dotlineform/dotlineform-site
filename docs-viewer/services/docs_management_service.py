@@ -51,7 +51,6 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     execute_management_mutation_plan,
-    handle_archive,
     handle_create,
     handle_delete_apply,
     handle_move,
@@ -129,8 +128,6 @@ def docs_management_post_response(
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
     if path == routes.NORMALIZE_ORDER_PATH:
         return HTTPStatus.OK, handle_normalize_order(repo_root, body, dry_run)
-    if path == routes.ARCHIVE_PATH:
-        return HTTPStatus.OK, handle_archive(repo_root, body, dry_run)
     if path == routes.DELETE_PREVIEW_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
         doc_id = str(body.get("doc_id") or "").strip()

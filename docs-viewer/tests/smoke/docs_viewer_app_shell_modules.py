@@ -185,7 +185,6 @@ def assert_management_actions_render(page: Page) -> None:
                 'docsViewerManageImportButton',
                 'docsViewerManageNewButton',
                 'docsViewerManageEditButton',
-                'docsViewerManageArchiveButton',
                 'docsViewerManageDeleteButton',
                 'docsViewerManageViewableButton',
                 'docsViewerDraftToggle'
@@ -241,7 +240,7 @@ def assert_management_actions_render(page: Page) -> None:
         raise AssertionError(f"app shell omitted expected management refs: {result!r}")
     if result["missingShellIds"]:
         raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
-    if result["menuRole"] != "menu" or result["menuItemCount"] != 10:
+    if result["menuRole"] != "menu" or result["menuItemCount"] != 9:
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
     if result["contextActionCount"] != 5 or result["metadataDialogLabel"] != "docsViewerMetadataHeading":
         raise AssertionError(f"management context/metadata shell changed unexpectedly: {result!r}")

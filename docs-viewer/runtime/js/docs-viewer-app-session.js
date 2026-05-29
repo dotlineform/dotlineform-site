@@ -42,9 +42,6 @@ function stateDomain(name, authority, state, fieldNames) {
 
 function createManagementTextDefaults() {
   return {
-    archiveUnavailableNote: "Archive is unavailable until the archive scope exists.",
-    archiveUnavailableTitle: "Archive unavailable",
-    archiveScopeMissingPrompt: "archive scope doesn't exist.",
     checkingNote: "Checking manage mode...",
     clearSearchNote: "Clear search to manage the current doc.",
     serverNotConfiguredError: "Local docs-management server is not configured.",
@@ -64,9 +61,6 @@ function createManagementTextDefaults() {
     createDocLabel: "title",
     createDocDefaultTitle: "New Doc",
     createDocButton: "Create",
-    archiveConfirmTitle: "Confirm archive",
-    archiveConfirmBody: "Archive {title}?",
-    archiveConfirmButton: "Archive",
     deleteConfirmTitle: "Confirm delete",
     deleteConfirmButton: "Delete",
     metadataStatusLabel: "status",

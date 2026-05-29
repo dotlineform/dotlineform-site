@@ -41,7 +41,7 @@ Use `viewable: false` when a generated doc should be reviewable in manage mode b
 There is no docs `status` field.
 The docs builder and management flow now support `viewable`.
 
-The docs-management flow can still use `archive` as a conventional tree location for archived docs, but `archive` is not a publication state or a special visibility mechanism.
+There is no active `archive` tree convention. Visibility is controlled by `viewable`, not by a structural archive location.
 
 ## Decision: Use `viewable`
 
@@ -52,7 +52,6 @@ Direction:
 - `viewable: true` means visible in the public/default viewer
 - `viewable: false` means generated and reviewable in manage mode, but hidden from public/default discovery
 - absence of `viewable` should default to `true` for existing docs
-- `archive` can be used as an ordinary parent folder, not as a status value
 - no `status` field should be added yet
 
 Reasons:
@@ -66,7 +65,6 @@ Reasons:
 Avoided ambiguity:
 
 - `status: draft` plus `viewable: true`
-- `status: archived` versus parent `archive`
 - `deprecated` but still visible in search
 - warning banners or lifecycle badges before the product behavior is clear
 
@@ -269,25 +267,6 @@ Generated docs index row should include:
 Both fields should be included for every generated row so consumers do not need to infer absence.
 
 No `status` field should be introduced until there is a concrete need for more than pipeline inclusion and public/default visibility gating.
-
-## Relationship To Archive
-
-Archive and viewability are separate concerns.
-
-Non-viewable:
-
-- generated but not publicly visible
-- not in public/default search
-- can be made viewable later
-
-Archive:
-
-- optional tree location under `archive`
-- may still be viewable if the archive section is visible in the current scope
-- may be hidden by setting `viewable: false` like any other doc
-- used for docs that should remain available but are no longer active
-
-The system should not treat `archive` as equivalent to `viewable: false`.
 
 ## Suggested Phases
 

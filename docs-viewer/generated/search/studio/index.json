@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2879949a9606199ed6002fe756aba53b",
-    "generated_at_utc": "2026-05-28T21:32:34Z",
+    "version": "blake2b-624fdcb166296d448623e24fef53a049",
+    "generated_at_utc": "2026-05-29T09:21:00Z",
     "count": 197
   },
   "entries": [
@@ -4064,35 +4064,6 @@
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-05-27 2026 05 27"
     },
     {
-      "id": "site-request-docs-viewer-workstream-priority-plan",
-      "kind": "doc",
-      "title": "Docs Viewer Workstream Priority Plan",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-workstream-priority-plan",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "workstream",
-        "priority",
-        "plan",
-        "docs viewer workstream priority plan",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-27",
-        "2026",
-        "05",
-        "27"
-      ],
-      "search_text": "site-request-docs-viewer-workstream-priority-plan site request docs viewer workstream priority plan docs viewer workstream priority plan change requests change requests 2026-05-27 2026 05 27"
-    },
-    {
       "id": "scripts-catalogue-lookup",
       "kind": "doc",
       "title": "Catalogue Lookup Export",
@@ -4257,6 +4228,35 @@
         "20"
       ],
       "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-05-13 20:20 2026 05 13 20"
+    },
+    {
+      "id": "site-request-docs-viewer-workstream-priority-plan",
+      "kind": "doc",
+      "title": "Docs Viewer Workstream Priority Plan",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
+      "last_updated": "2026-05-27",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-27 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-workstream-priority-plan",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "workstream",
+        "priority",
+        "plan",
+        "docs viewer workstream priority plan",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-27",
+        "2026",
+        "05",
+        "27"
+      ],
+      "search_text": "site-request-docs-viewer-workstream-priority-plan site request docs viewer workstream priority plan docs viewer workstream priority plan change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "scripts-docs-management-server",

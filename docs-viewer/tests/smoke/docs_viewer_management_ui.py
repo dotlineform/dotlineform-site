@@ -149,16 +149,10 @@ def main(argv: list[str] | None = None) -> int:
                 wait_for_doc(page, "ui-smoke-created", args.timeout_ms)
 
                 open_actions_menu(page, args.timeout_ms)
-                page.locator("#docsViewerManageArchiveButton").click()
-                click_modal_primary(page, args.timeout_ms)
-                wait_for_doc(page, "ui-smoke-created", args.timeout_ms)
-                wait_for_management_idle(page, args.timeout_ms)
-
-                open_actions_menu(page, args.timeout_ms)
                 page.locator("#docsViewerManageDeleteButton").click()
                 page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=args.timeout_ms)
                 click_modal_primary(page, args.timeout_ms)
-                wait_for_doc(page, "archive", args.timeout_ms)
+                wait_for_doc(page, "root-doc", args.timeout_ms)
                 browser.close()
 
             source_path = fixture_root / "docs-viewer/source/studio" / "ui-smoke-created.md"
@@ -171,7 +165,6 @@ def main(argv: list[str] | None = None) -> int:
                 "/docs/create",
                 "/docs/update-metadata",
                 "/docs/source-config-settings",
-                "/docs/archive",
                 "/docs/delete-preview",
                 "/docs/delete-apply",
             ]

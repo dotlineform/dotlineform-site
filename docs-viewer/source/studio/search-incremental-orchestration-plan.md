@@ -207,13 +207,9 @@ Affected-record rules for current docs search:
 - `doc_id` or filename changed:
   - treat as remove old id plus add new id
   - full fallback is acceptable until rename flows exist
-- `archive` changed:
-  - apply the same `viewable` rule as any other doc
-  - child docs are affected only if their `parent_title` changes
-
 Server behavior:
 
-- docs-management already knows the intended operation for create, update metadata, update viewability, move, archive, delete, import, and overwrite
+- docs-management already knows the intended operation for create, update metadata, update viewability, move, delete, import, and overwrite
 - each write handler should return or pass an affected-search plan to the rebuild orchestrator
 - bulk handlers should merge affected ids before one search update
 - if an operation cannot describe affected ids confidently, run the full same-scope search rebuild
@@ -396,7 +392,6 @@ For later targeted search phases:
 - test title changes that affect child `parent_title`
 - test viewable false-to-true and true-to-false
 - test deleted docs
-- test changed docs with `archive` as parent
 
 ## Close-Out Criteria Before Implementation
 

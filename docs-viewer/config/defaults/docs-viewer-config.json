@@ -66,27 +66,6 @@
       }
     },
     {
-      "scope_id": "archive",
-      "scope_type": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "archive",
-      "media_path_prefix": "docs/archive",
-      "index_url": "/docs-viewer/generated/docs/archive/index.json",
-      "search_index_url": "/docs-viewer/generated/search/archive/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "search_index_archive_v1",
-        "index_url": "/docs-viewer/generated/search/archive/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
-      }
-    },
-    {
       "scope_id": "tmp",
       "scope_type": "local",
       "viewer_base_url": "/docs/",
@@ -181,48 +160,6 @@
           "ui_status": "draft",
           "label": "Draft",
           "emoji": "📝"
-        }
-      ],
-      "archive": [
-        {
-          "ui_status": "draft",
-          "label": "Draft",
-          "emoji": "📝"
-        },
-        {
-          "ui_status": "done",
-          "label": "Done",
-          "emoji": "✅"
-        },
-        {
-          "ui_status": "urgent",
-          "label": "Urgent",
-          "emoji": "❗"
-        },
-        {
-          "ui_status": "review",
-          "label": "Review",
-          "emoji": "👀"
-        },
-        {
-          "ui_status": "in-progress",
-          "label": "In progress",
-          "emoji": "🔄"
-        },
-        {
-          "ui_status": "paused",
-          "label": "Paused",
-          "emoji": "⏸️"
-        },
-        {
-          "ui_status": "deferred",
-          "label": "Deferred",
-          "emoji": "😴"
-        },
-        {
-          "ui_status": "report",
-          "label": "Report",
-          "emoji": "📊"
         }
       ]
     }

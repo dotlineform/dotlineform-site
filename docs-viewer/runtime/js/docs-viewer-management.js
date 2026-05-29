@@ -7,7 +7,6 @@ import {
 } from "./docs-viewer-management-client.js";
 import {
   createDocsViewerManagementCapabilityController,
-  scopeArchiveAvailable,
   scopeCreateSupported,
   scopeDeleteSupported,
   scopeLifecycleDeleteTargets
@@ -117,7 +116,6 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
-  var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var statusPills = document.getElementById("docsViewerStatusPills");
@@ -381,17 +379,10 @@ export function initDocsViewerManagement(context) {
     if (interactionController) interactionController.updateNavDragState();
   }
 
-  function managementArchiveAvailable() {
-    return scopeArchiveAvailable(state.managementCapabilities, viewerScope());
-  }
-
   function managementNoteText() {
     if (state.managementMessage) return state.managementMessage;
     if (state.searchRouteActive) {
       return state.managementText.clearSearchNote;
-    }
-    if (!managementArchiveAvailable()) {
-      return state.managementText.archiveUnavailableNote;
     }
     return "";
   }
@@ -437,7 +428,7 @@ export function initDocsViewerManagement(context) {
     }
     syncManagementStatus(noteText, noteIsError);
 
-    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
     var draftDoc = Boolean(doc && isDocHidden(doc));
@@ -445,12 +436,6 @@ export function initDocsViewerManagement(context) {
       state.managementBusy ||
       !doc ||
       state.searchRouteActive
-    );
-    var archiveDisabled = (
-      state.managementBusy ||
-      !doc ||
-      state.searchRouteActive ||
-      viewerScope() === "archive"
     );
     var deleteDisabled = (
       state.managementBusy ||
@@ -493,7 +478,6 @@ export function initDocsViewerManagement(context) {
     }
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageEditButton.disabled = !state.managementAvailable || editDisabled;
-    manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {
@@ -824,13 +808,6 @@ export function initDocsViewerManagement(context) {
       manageEditButton.addEventListener("click", function () {
         hideManageActionsMenu();
         openMetadataModal().then(actionController.handleEditMetadataSave);
-      });
-    }
-    if (manageArchiveButton) {
-      manageArchiveButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleArchiveDoc();
       });
     }
     if (manageDeleteButton) {

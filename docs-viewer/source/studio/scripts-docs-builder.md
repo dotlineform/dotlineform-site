@@ -78,7 +78,6 @@ The `search_output` field owns the generated docs-search index path.
 - nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
 - nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
-- `archive` is treated as an ordinary doc id and parent folder; visibility comes from `viewable`, not from a structural system-folder rule
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
 - Library source docs may temporarily contain imported `parent_id` values that do not resolve to current Library docs; the builder preserves those values in source but emits them as root-level generated relationships so `/library/` remains navigable

@@ -22,7 +22,6 @@
         "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
-        "exclude_archived": false,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },
@@ -111,7 +110,7 @@
           "required": true
         }
       ],
-      "notes": "Intended for selected Library branches or the full generated, non-archived corpus when the operator explicitly selects all."
+      "notes": "Intended for selected Library branches or the full generated corpus when the operator explicitly selects all."
     },
     {
       "id": "library-document-summaries",
@@ -133,7 +132,6 @@
         "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
-        "exclude_archived": false,
         "supports_missing_summary_only": true,
         "default_missing_summary_only": true
       },
@@ -219,7 +217,6 @@
         "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
-        "exclude_archived": false,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },

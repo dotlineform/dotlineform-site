@@ -86,8 +86,6 @@ Examples:
 - `design-backlog.md`
 - `search-config-architecture.md`
 
-Archive remains a normal viewer-tree concept through the `archive` doc id, not through a special storage folder or protected system folder.
-
 ## Guidance Split
 
 The current docs set now distinguishes between two different documentation jobs:
@@ -113,9 +111,6 @@ Current effect:
 
 - Studio file storage no longer carries section meaning
 - tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
-- `archive` remains meaningful as a conventional parent id in the viewer tree
-- `archive` is treated as an ordinary doc node; hide it from public views with `viewable: false`
-- if `archive` is not viewable, public viewer links and search omit it through the same viewability rules as other docs
 
 Important builder consequence:
 

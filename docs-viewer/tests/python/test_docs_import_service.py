@@ -115,7 +115,6 @@ def make_repo() -> tempfile.TemporaryDirectory:
                             "mode": "explicit_doc_ids",
                             "include_descendants": False,
                             "include_non_viewable": True,
-                            "exclude_archived": False,
                             "supports_missing_summary_only": False,
                             "default_missing_summary_only": False,
                         },

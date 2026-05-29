@@ -1,7 +1,4 @@
 var MANAGEMENT_TEXT_KEYS = [
-  ["archiveUnavailableNote", "docs_viewer.manage_archive_unavailable_note"],
-  ["archiveUnavailableTitle", "docs_viewer.archive_unavailable_title"],
-  ["archiveScopeMissingPrompt", "docs_viewer.archive_scope_missing_prompt"],
   ["checkingNote", "docs_viewer.manage_checking_note"],
   ["clearSearchNote", "docs_viewer.manage_clear_search_note"],
   ["serverNotConfiguredError", "docs_viewer.manage_server_not_configured_error"],
@@ -21,9 +18,6 @@ var MANAGEMENT_TEXT_KEYS = [
   ["createDocLabel", "docs_viewer.create_doc_label"],
   ["createDocDefaultTitle", "docs_viewer.create_doc_default_title"],
   ["createDocButton", "docs_viewer.create_doc_button"],
-  ["archiveConfirmTitle", "docs_viewer.archive_confirm_title"],
-  ["archiveConfirmBody", "docs_viewer.archive_confirm_body"],
-  ["archiveConfirmButton", "docs_viewer.archive_confirm_button"],
   ["deleteConfirmTitle", "docs_viewer.delete_confirm_title"],
   ["deleteConfirmButton", "docs_viewer.delete_confirm_button"],
   ["metadataStatusLabel", "docs_viewer.metadata_status_label"],

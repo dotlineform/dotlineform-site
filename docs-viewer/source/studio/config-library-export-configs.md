@@ -59,7 +59,7 @@ The first config file defines three enabled Library export patterns:
   JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
 
 These configs are Library-only for v1.
-They include generated but non-viewable docs. `archive` is treated like any other generated Library doc.
+They include generated but non-viewable docs when the profile requests it.
 Catalogue and Analytics do not use these configs unless a future adapter explicitly chooses a compatible document-backed export model.
 
 ## Top-Level Shape
@@ -145,13 +145,12 @@ The first export engine is documented in [Docs Export](/docs/?scope=studio&doc=s
 - `all_matching`
   the exporter includes every document matching the config filters
 
-Selection also defines whether the run includes descendants, non-viewable docs, and archived docs.
+Selection also defines whether the run includes descendants and non-viewable docs.
 The initial Library export patterns use explicit document selection; Select all in Studio or `--all` in the CLI remains available when a whole-corpus export is intentional.
 
 V1 Library exports should normally use:
 
 - `include_non_viewable: true`
-- `exclude_archived: false`
 
 `supports_missing_summary_only` and `default_missing_summary_only` are config-level flags for summary-focused exports.
 
@@ -255,7 +254,7 @@ It uses `image_text_mode: "extract_text"` and `empty_image_mode: "marker"` so ex
 ## Validation Boundary
 
 The schema validates config shape and allowed keys.
-Runtime validation still needs to check source-dependent concerns such as unknown `doc_id` values, archived descendants, missing required fields, output path resolution, and whether a selected config is enabled for the requested scope.
+Runtime validation still needs to check source-dependent concerns such as unknown `doc_id` values, missing required fields, output path resolution, and whether a selected config is enabled for the requested scope.
 
 The export engine also applies v1 semantic validation before writing.
 Blocking config errors include duplicate config ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `source_text` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.

@@ -490,9 +490,9 @@ def run_transient_confirm_check(page: Page) -> None:
             const smoke = window.__docsViewerManagementModalSmoke;
             smoke.confirmPromise = smoke.managementModals.openDocsViewerConfirmModal({
                 root: smoke.root,
-                title: 'Confirm archive',
-                body: 'Archive Current Doc?',
-                primaryLabel: 'Archive',
+                title: 'Confirm change',
+                body: 'Apply current change?',
+                primaryLabel: 'Apply',
                 cancelLabel: 'Cancel'
             }).then(value => smoke.confirmResult = value);
         }"""
@@ -502,8 +502,8 @@ def run_transient_confirm_check(page: Page) -> None:
     assert_shell(
         page,
         '[data-role="docs-viewer-management-modal"]',
-        "Confirm archive",
-        ["Archive", "Cancel"],
+        "Confirm change",
+        ["Apply", "Cancel"],
         active_role="modal-primary",
         size_class="docsViewer__modalCard--compact",
     )
@@ -522,8 +522,8 @@ def run_transient_notice_check(page: Page) -> None:
             const smoke = window.__docsViewerManagementModalSmoke;
             smoke.noticePromise = smoke.managementModals.openDocsViewerNoticeModal({
                 root: smoke.root,
-                title: 'Archive unavailable',
-                body: "archive scope doesn't exist.",
+                title: 'Action unavailable',
+                body: "This action is not available.",
                 primaryLabel: 'OK'
             }).then(value => smoke.noticeResult = value);
         }"""
@@ -533,12 +533,12 @@ def run_transient_notice_check(page: Page) -> None:
     state = assert_shell(
         page,
         '[data-role="docs-viewer-management-modal"]',
-        "Archive unavailable",
+        "Action unavailable",
         ["OK"],
         active_role="modal-primary",
         size_class="docsViewer__modalCard--compact",
     )
-    if "archive scope doesn't exist." not in state["bodyText"]:
+    if "This action is not available." not in state["bodyText"]:
         raise AssertionError(f"notice modal did not render body text: {state!r}")
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerManagementModalSmoke.noticeResult?.confirmed === true")
@@ -1210,7 +1210,6 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     <button id="docsViewerManageImportButton" type="button">Import</button>
                     <button id="docsViewerManageNewButton" type="button">New</button>
                     <button id="docsViewerManageEditButton" type="button">Edit</button>
-                    <button id="docsViewerManageArchiveButton" type="button">Archive</button>
                     <button id="docsViewerManageViewableButton" type="button">Show</button>
                   </div>
                 </div>
@@ -1244,22 +1243,19 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                 managementCapabilities: {
                     scopes: {
                         studio: {
-                            available: true,
-                            archive_available: true
-                        },
-                        archive: {
                             available: true
                         }
                     }
                 },
                 managementText: {
-                    archiveUnavailableNote: 'Archive unavailable.',
                     cancelButton: 'Cancel',
                     checkingNote: 'Checking manage mode...',
                     clearSearchNote: 'Clear search to manage the current doc.',
                     deleteConfirmButton: 'Delete',
                     deleteConfirmTitle: 'Confirm delete',
                     serverNotConfiguredError: 'Server unavailable.',
+                    scopeDeleteMenuButton: 'Delete scope',
+                    scopeNewButton: 'New scope',
                     unavailableNote: 'Manage mode unavailable.'
                 },
                 searchRouteActive: false,
@@ -1296,7 +1292,17 @@ def run_delete_confirm_idle_check(page: Page) -> None:
             const controller = management.initDocsViewerManagement({
                 root,
                 nav,
-                state,
+                managementState: {
+                    domains: {
+                        documentIndex: state,
+                        generatedData: state,
+                        management: state,
+                        routeSession: state,
+                        scopeConfig: state,
+                        searchRecent: state,
+                        selectedDocument: state
+                    }
+                },
                 MANAGEMENT_MODE: 'manage',
                 managementBaseUrl: 'http://docs-management.test',
                 getCurrentMode: () => 'manage',
@@ -1358,7 +1364,6 @@ def run_index_double_click_edit_check(page: Page) -> None:
                       <button id="docsViewerManageImportButton" type="button">Import</button>
                       <button id="docsViewerManageNewButton" type="button">New</button>
                       <button id="docsViewerManageEditButton" type="button">Edit</button>
-                      <button id="docsViewerManageArchiveButton" type="button">Archive</button>
                       <button id="docsViewerManageDeleteButton" type="button">Delete</button>
                       <button id="docsViewerManageViewableButton" type="button">Show</button>
                     </div>
@@ -1436,9 +1441,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 managementChecked: true,
                 managementAvailable: true,
                 managementBusy: false,
-                managementCapabilities: { scopes: { studio: { available: true, archive_available: true }, archive: { available: true } } },
+                managementCapabilities: { scopes: { studio: { available: true } } },
                 managementText: {
-                    archiveUnavailableNote: 'Archive unavailable.',
                     checkingNote: 'Checking manage mode...',
                     clearSearchNote: 'Clear search to manage the current doc.',
                     docHiddenEmoji: 'H',
@@ -1450,6 +1454,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
                     metadataStatusNoneOption: 'None',
                     metadataStatusSelectedSuffix: 'selected',
                     serverNotConfiguredError: 'Server unavailable.',
+                    scopeDeleteMenuButton: 'Delete scope',
+                    scopeNewButton: 'New scope',
                     settingsLoading: 'Loading settings...',
                     settingsLoadFailed: 'Settings failed.',
                     settingsSaveFailed: 'Save failed.',
@@ -1474,7 +1480,17 @@ def run_index_double_click_edit_check(page: Page) -> None:
             const controller = management.initDocsViewerManagement({
                 root: document.getElementById('docsViewerRoot'),
                 nav: document.getElementById('docsViewerNav'),
-                state,
+                managementState: {
+                    domains: {
+                        documentIndex: state,
+                        generatedData: state,
+                        management: state,
+                        routeSession: state,
+                        scopeConfig: state,
+                        searchRecent: state,
+                        selectedDocument: state
+                    }
+                },
                 SEARCH_BATCH_SIZE: 20,
                 MANAGEMENT_MODE: 'manage',
                 managementBaseUrl: 'http://docs-management.test',

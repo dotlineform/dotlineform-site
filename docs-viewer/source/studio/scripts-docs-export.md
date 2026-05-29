@@ -70,7 +70,6 @@ Implemented now:
 - resolves selected `doc_id` values
 - supports all-matching profiles
 - expands selected descendants when the profile requests it
-- excludes archived docs when the profile requests it
 - includes generated but non-viewable docs when the profile requests it
 - supports missing-summary filtering for profiles that allow it
 - maps supported document fields into configured output paths
@@ -203,7 +202,7 @@ The engine validates runtime concerns that the static config schema cannot know:
 - selected config id exists
 - sharing profile is enabled for the requested scope
 - selected docs exist
-- archive and publication filters are applied
+- viewability filters are applied
 - required mapped fields are present
 - source-text mappings use plain-text conversion rather than raw rendered HTML
 - truncating mappings have configured integer limits

@@ -232,7 +232,6 @@ Current enforcement:
 - duplicate `doc_id` values are rejected by the docs builder before Library docs data is written
 - unresolved Library `parent_id` references are allowed for imported hierarchy staging and are emitted as root-level generated relationships
 - `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Library search and public/default viewer discovery
-- `archive` and its descendants remain generated; public/default Library tree discovery and Library search include only docs whose own `viewable` value permits it
 
 ## Performance Notes
 

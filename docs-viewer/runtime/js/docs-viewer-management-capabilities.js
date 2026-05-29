@@ -46,11 +46,6 @@ export function scopeLifecycleDeleteTargets(capabilities) {
   });
 }
 
-export function scopeArchiveAvailable(capabilities, scope) {
-  var archiveCaps = scopeManagementCapabilities(capabilities, "archive");
-  return Boolean(archiveCaps && archiveCaps.available);
-}
-
 export function createDocsViewerManagementCapabilityController(options) {
   var state = options.state;
   var context = options.context;

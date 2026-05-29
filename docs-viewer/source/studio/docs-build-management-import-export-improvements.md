@@ -107,7 +107,7 @@ Implementation scope:
 - update semantic-reference output so affected-doc writes can update all changed by-doc and by-target payloads without leaving stale target buckets
 - update `docs-viewer/services/docs_write_rebuild.py` to select targeted or full rebuilds and report why
 - update `docs-viewer/services/docs_live_rebuild_watcher.py` to pass affected doc ids only when safe
-- update docs-management write flows to pass affected doc ids for create, import overwrite, metadata, viewability, move, archive, delete, and settings writes only where the dependency map allows it
+- update docs-management write flows to pass affected doc ids for create, import overwrite, metadata, viewability, move, delete, and settings writes only where the dependency map allows it
 
 Acceptance checks:
 

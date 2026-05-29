@@ -183,7 +183,7 @@ Record:
 - desktop and mobile modal checks run
 - focus entry, focus containment, Escape/backdrop/action close behavior, and focus return
 - validation or status-message placement
-- action ownership, especially whether writes, rebuilds, archive/delete operations, reloads, and durable page status remain owned by the opener or route command
+- action ownership, especially whether writes, rebuilds, delete operations, reloads, and durable page status remain owned by the opener or route command
 - parity notes for portable Docs Viewer implementations when applicable
 
 If a route has modal behavior but the audit cannot open the modal, record that as a blocked verification path rather than treating the modal as covered.

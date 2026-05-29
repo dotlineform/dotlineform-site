@@ -89,10 +89,6 @@ export function updateSourceConfigSettings(changes, options) {
   }, options), options);
 }
 
-export function archiveManagedDoc(docId, options) {
-  return fetchManagementJson("/docs/archive", "POST", scopedPayload({ doc_id: docId }, options), options);
-}
-
 export function previewManagedDocDelete(docId, options) {
   return fetchManagementJson("/docs/delete-preview", "POST", scopedPayload({ doc_id: docId }, options), options);
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T12:41:45Z",
+  "generated_at": "2026-05-29T09:42:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -220,21 +220,6 @@
       "viewer_url": "/library/?doc=coincidence-salience",
       "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json",
       "content_text_length": 1188
-    },
-    {
-      "scope": "library",
-      "doc_id": "archive",
-      "title": "Archive",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
-      "parent_id": "",
-      "sort_order": 1000,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "archive.md",
-      "viewer_url": "/library/?doc=archive",
-      "content_url": "/assets/data/docs/scopes/library/by-id/archive.json",
-      "content_text_length": 92
     }
   ]
 }

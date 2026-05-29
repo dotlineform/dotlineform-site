@@ -60,8 +60,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scope_configs = docs_source_config_settings.load_docs_scope_configs(repo_root)
     except FileNotFoundError:
         scope_configs = DOCS_SCOPE_CONFIGS
-    archive_config = scope_configs.get("archive")
-    archive_scope_available = bool(archive_config and (repo_root / archive_config.source).exists())
     for scope in sorted(scope_configs):
         config = scope_configs[scope]
         root = repo_root / config.source
@@ -70,7 +68,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
-            "archive_available": archive_scope_available,
             "generated_data_reads": (repo_root / config.output / "index.json").exists(),
             "generated_search_reads": (repo_root / config.search_output).exists(),
             "count": len(scope_docs),

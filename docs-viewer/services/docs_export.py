@@ -58,7 +58,6 @@ SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
 SUPPORTED_RECORD_SHAPES = {"envelope", "document_rows"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
 SKIPPED_REASON_LABELS = {
-    "archived": "are archived",
     "has_summary": "already have summaries",
     "max_documents": "exceeded the configured maximum document count",
     "non_viewable": "are not viewable",
@@ -461,7 +460,7 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     selection_mode = normalize_text(selection.get("mode"))
     if selection_mode not in SUPPORTED_SELECTION_MODES:
         errors.append(f"config {config_id}: unsupported selection.mode {selection_mode!r}")
-    for key in ["include_descendants", "include_non_viewable", "exclude_archived"]:
+    for key in ["include_descendants", "include_non_viewable"]:
         if not isinstance(selection.get(key), bool):
             errors.append(f"config {config_id}: selection.{key} must be true or false")
 
@@ -570,10 +569,6 @@ def descendant_ids(children_by_parent: dict[str, list[dict[str, Any]]], root_id:
     return found
 
 
-def archived_doc_ids(children_by_parent: dict[str, list[dict[str, Any]]]) -> set[str]:
-    return {"archive", *descendant_ids(children_by_parent, "archive")}
-
-
 def expand_selected_doc_ids(context: ExportContext, selected_doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
     expanded: list[str] = []
@@ -608,7 +603,6 @@ def selected_docs(
     skipped: list[dict[str, str]] = []
     errors: list[str] = []
     warnings: list[str] = []
-    archive_ids = archived_doc_ids(context.children_by_parent) if selection.get("exclude_archived") else set()
 
     if select_all and selected_doc_ids:
         warnings.append("selection: explicit doc_ids were ignored because select_all is true")
@@ -627,9 +621,6 @@ def selected_docs(
         doc = context.docs_by_id.get(doc_id)
         if doc is None:
             skipped.append({"doc_id": doc_id, "reason": "unknown_doc_id"})
-            continue
-        if doc_id in archive_ids:
-            skipped.append({"doc_id": doc_id, "reason": "archived"})
             continue
         if not selection.get("include_non_viewable") and doc.get("viewable") is False:
             skipped.append({"doc_id": doc_id, "reason": "non_viewable"})

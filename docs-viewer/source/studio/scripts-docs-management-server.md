@@ -63,7 +63,7 @@ Focused modules own the workflow behavior behind it:
 - `docs-viewer/services/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
 - `docs-viewer/services/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
 - `docs-viewer/services/docs_management_capabilities_service.py` owns capability and scope availability payloads.
-- `docs-viewer/services/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, archive, delete apply, and scope lifecycle apply routes.
+- `docs-viewer/services/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, delete apply, and scope lifecycle apply routes.
 - `docs-viewer/services/docs_management_import_service.py` owns Docs/HTML import-source dependency wiring.
 - `docs-viewer/services/docs_management_source_service.py` owns source-file open behavior.
 - `docs-viewer/services/docs_management_broken_links_service.py` owns broken-links audit route behavior.
@@ -79,5 +79,5 @@ Local Studio does not provide a Docs Viewer API adapter; it renders configured p
 - [Generated Reads And Config](/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads) lists generated-data, source-config, capability, and source-config settings endpoints.
 - [Import And Rebuild](/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild) covers create/import, explicit rebuild, and broken-link audit endpoints.
 - [Data Sharing (Retired)](/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing) records the removed transitional Data Sharing endpoints.
-- [Write Actions](/docs/?scope=studio&doc=scripts-docs-management-server-write-actions) covers source-open, metadata, viewability, move, normalize, archive, delete, and scope lifecycle endpoints.
+- [Write Actions](/docs/?scope=studio&doc=scripts-docs-management-server-write-actions) covers source-open, metadata, viewability, move, normalize, delete, and scope lifecycle endpoints.
 - [Operations](/docs/?scope=studio&doc=scripts-docs-management-server-operations) covers security constraints, operational notes, verification, and related references.

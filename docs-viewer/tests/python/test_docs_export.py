@@ -52,7 +52,6 @@ BASE_CONFIG = {
                 "mode": "explicit_doc_ids",
                 "include_descendants": True,
                 "include_non_viewable": True,
-                "exclude_archived": False,
                 "supports_missing_summary_only": True,
                 "default_missing_summary_only": True,
             },
@@ -97,14 +96,6 @@ INDEX_PAYLOAD = {
             "summary": "Existing summary.",
             "last_updated": "2026-05-03 10:01",
             "viewable": True,
-        },
-        {
-            "doc_id": "archive",
-            "title": "Archive",
-            "parent_id": "",
-            "summary": "",
-            "last_updated": "2026-05-03 10:02",
-            "viewable": False,
         },
     ],
 }

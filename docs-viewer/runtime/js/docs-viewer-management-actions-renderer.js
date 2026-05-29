@@ -12,7 +12,6 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageArchiveButton">Archive</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>',
   '      </div>',
   '    </div>',

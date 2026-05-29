@@ -260,7 +260,7 @@ The current shared treatment is:
 - docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
 - active state should be obvious without turning the viewer into a tabbed interface
 - scope-level structural visibility, such as a manage-only Archive branch, should come from generated docs index options rather than hard-coded scope checks in the viewer
-- in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, archive unavailable, or operation results; the available local-server state should stay quiet
+- in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, or operation results; the available local-server state should stay quiet
 - in manage mode, non-viewable docs remain visible by default and the checked-by-default `show viewable` checkbox controls whether viewable docs stay in the tree for context
 - non-viewable tree rows use a `✏️` title prefix plus the draft color from `studio_config.json`; they should not rely on bold text as the primary distinction
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"

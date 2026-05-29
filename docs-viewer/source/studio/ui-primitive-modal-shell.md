@@ -52,7 +52,7 @@ The shared modal shell contract includes:
 - responsive sizing through shell variants rather than page-specific modal chrome
 
 The shell owns modal structure and interaction affordances.
-The opener or route command owns service payload assembly, writes, rebuilds, archive/delete operations, reloads, navigation, and durable status messages.
+The opener or route command owns service payload assembly, writes, rebuilds, delete operations, reloads, navigation, and durable status messages.
 
 ## Canonical Implementation Direction
 
@@ -123,7 +123,7 @@ Modal helpers may own:
 
 Modal helpers should not own:
 
-- create, update, delete, archive, publish, import, rebuild, or write actions
+- create, update, delete, publish, import, rebuild, or write actions
 - service endpoint selection
 - service payload assembly beyond local returned values
 - route reloads or navigation
@@ -136,7 +136,7 @@ They are listed here to keep the primitive tied to actual page work, not to crea
 
 | Pattern | Use when | Current examples |
 | --- | --- | --- |
-| Confirmation modal | A command needs explicit review before continuing. | Catalogue editor publish/delete confirmations, tag delete confirmations, Docs Viewer archive/delete confirmations. |
+| Confirmation modal | A command needs explicit review before continuing. | Catalogue editor publish/delete confirmations, tag delete confirmations, Docs Viewer delete confirmations. |
 | Notice or result modal | A completed command needs readable details but no extra decision. | Activity details, Data Sharing Prepare result, Data Sharing Review result. |
 | Short input modal | A command needs one or two values before the opener can continue. | Docs Viewer new document title. |
 | Choice modal | A command needs a small structured selection. | Docs Viewer viewability parent/descendant choices. |

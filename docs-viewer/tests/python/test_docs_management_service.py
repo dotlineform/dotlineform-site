@@ -313,23 +313,6 @@ def test_archive_parent_delete_is_blocked_only_by_children() -> None:
     assert result["blockers"] == ["1 child docs still depend on this parent"]
 
 
-def test_archive_command_noops_on_archive_parent() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        result = docs_management_service.handle_archive(
-            repo_root,
-            {
-                "scope": "archive",
-                "doc_id": "archive",
-            },
-            dry_run=True,
-        )
-
-    assert result["ok"] is True
-    assert result["doc_id"] == "archive"
-    assert "already in the archive scope" in result["summary_text"]
-
-
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -1074,7 +1057,6 @@ def main() -> None:
         test_update_metadata_can_change_viewability_in_dry_run,
         test_archive_doc_viewability_can_be_changed_in_dry_run,
         test_archive_parent_delete_is_blocked_only_by_children,
-        test_archive_command_noops_on_archive_parent,
         test_capabilities_advertise_generated_data_reads,
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,

@@ -152,23 +152,6 @@ Normalize-order behavior:
 - creates no backup bundle
 - rebuilds targeted current-scope docs payloads without a docs-search update
 
-`POST /docs/archive` expects:
-
-```json
-{
-  "scope": "studio",
-  "doc_id": "docs-viewer-management"
-}
-```
-
-Request behavior:
-
-- moves the doc into the Archive section by setting `parent_id = archive`
-- appends the archived doc as the last sibling under `archive`
-- does not move the file on disk
-- preserves `added_date` and refreshes `last_updated` to the current minute
-- fails when `archive` is not defined for the scope
-
 `POST /docs/delete-preview` expects:
 
 ```json

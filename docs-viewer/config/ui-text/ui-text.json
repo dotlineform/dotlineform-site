@@ -84,7 +84,6 @@
   "copy_link_status": "Copied link for {title}.",
   "copy_link_failed": "Copy link failed.",
   "make_viewable_button": "Show",
-  "manage_archive_unavailable_note": "Archive is unavailable for this scope until `archive` exists.",
   "manage_checking_note": "Checking manage mode...",
   "manage_clear_search_note": "Clear search to manage the current doc.",
   "manage_server_not_configured_error": "Local docs-management server is not configured.",
@@ -104,9 +103,6 @@
   "create_doc_label": "title",
   "create_doc_default_title": "New Doc",
   "create_doc_button": "Create",
-  "archive_confirm_title": "Confirm archive",
-  "archive_confirm_body": "Archive {title}?",
-  "archive_confirm_button": "Archive",
   "delete_confirm_title": "Confirm delete",
   "delete_confirm_button": "Delete",
   "docs_html_import": {

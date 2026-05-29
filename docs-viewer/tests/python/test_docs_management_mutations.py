@@ -307,77 +307,6 @@ def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_sea
     assert plan.search_doc_ids == []
 
 
-def test_archive_plan_preserves_already_archived_noop() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        plan = mutations.plan_archive(
-            repo_root,
-            {
-                "scope": "archive",
-                "doc_id": "archive",
-            },
-        )
-
-    assert plan.has_source_changes is False
-    assert plan.include_write_result_keys is False
-    assert plan.response["summary_text"] == "archive is already in the archive scope."
-
-
-def test_archive_plan_moves_doc_to_archive_scope() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        plan = mutations.plan_archive(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_id": "sibling",
-            },
-        )
-
-    assert plan.source_writes
-    assert plan.source_deletes
-    assert plan.rebuilds[0].scope == "studio"
-    assert plan.rebuilds[1].scope == "archive"
-    assert plan.response["archive_scope"] == "archive"
-    assert plan.response["record"]["from_path"] == "docs-viewer/source/studio/sibling.md"
-    assert plan.response["record"]["path"] == "docs-viewer/source/archive/sibling.md"
-    assert plan.response["record"]["parent_id"] == ""
-    assert 'last_updated: "2026-05-02 11:00"' in plan.source_writes[0].text
-    assert "parent_id:" not in plan.source_writes[0].text
-
-
-def test_archive_plan_moves_archive_children_without_moving_archive_doc() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_doc(
-            repo_root,
-            "archived-child.md",
-            {
-                "doc_id": "archived-child",
-                "title": "Archived Child",
-                "parent_id": "archive",
-                "sort_order": 10,
-                "viewable": True,
-            },
-        )
-        plan = mutations.plan_archive(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_id": "archive",
-            },
-        )
-
-    assert plan.response["doc_id"] == "archive"
-    assert plan.response["moved_doc_ids"] == ["archived-child"]
-    assert plan.response["record"]["path"] == "docs-viewer/source/archive/archived-child.md"
-    assert plan.response["record"]["parent_id"] == ""
-    assert [delete.path.name for delete in plan.source_deletes] == ["archived-child.md"]
-    assert [write.path.name for write in plan.source_writes] == ["archived-child.md"]
-    assert "parent_id:" not in plan.source_writes[0].text
-    assert "archive.md" not in [delete.path.name for delete in plan.source_deletes]
-
-
 def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -421,9 +350,6 @@ def main() -> None:
         test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder,
         test_move_plan_keeps_search_target_for_reparent,
         test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
-        test_archive_plan_preserves_already_archived_noop,
-        test_archive_plan_moves_doc_to_archive_scope,
-        test_archive_plan_moves_archive_children_without_moving_archive_doc,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
         test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
     ]

@@ -132,8 +132,7 @@
       "required": [
         "mode",
         "include_descendants",
-        "include_non_viewable",
-        "exclude_archived"
+        "include_non_viewable"
       ],
       "properties": {
         "mode": {
@@ -143,9 +142,6 @@
           "type": "boolean"
         },
         "include_non_viewable": {
-          "type": "boolean"
-        },
-        "exclude_archived": {
           "type": "boolean"
         },
         "supports_missing_summary_only": {
