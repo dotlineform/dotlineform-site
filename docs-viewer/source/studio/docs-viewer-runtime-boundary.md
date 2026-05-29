@@ -171,7 +171,7 @@ Current route capability boundary:
 - `/docs/` is the only route that enables `?mode=manage`; it is served by the standalone Docs Viewer service
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS
-- public read-only viewer routes also avoid loading the management controller module, management base URLs, local generated-read service base URLs, and backend capability probes
+- public read-only viewer routes also avoid publishing or loading management-only JS/CSS, the HTML import modules, the local manage-capable route registry, management base URLs, local generated-read service base URLs, and backend capability probes
 - local `bin/local-studio` links to the configured Docs Viewer service but does not serve Docs Viewer management, generated reads, or Docs Viewer assets
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 - canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode
@@ -181,7 +181,8 @@ Current app-shell route handoff boundary:
 - route config is the preferred durable route/app shape for new app-shell work
 - the shared and standalone route shells expose only `data-route-id` and `data-route-config-url` as boot route context
 - the shared and standalone route shells provide app mounts for header controls, index panel, management shell, document shell, and info panel; management-only context-menu and modal markup is no longer authored in the route shell templates
-- `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry for `/docs/`, `/library/`, and `/analysis/`
+- `docs-viewer/config/routes/docs-viewer-routes.json` is the local service route-config registry for `/docs/`, `/library/`, and `/analysis/`
+- `docs-viewer/config/routes/docs-viewer-public-routes.json` is the Jekyll-published public route-config registry for `/library/` and `/analysis/`; it intentionally omits the local `/docs/` management route and manage-only hosted views
 - `docs-viewer/runtime/js/docs-viewer-route-config.js` fetches that registry and resolves the current `docs_viewer_route_config_v1` record; route config resolution no longer reads inline config scripts or legacy `#docsViewerRoot` data attributes
 - the standalone Docs Viewer service serves the same route registry path with local `/docs/` management and generated-read base URLs injected from service config; static public builds keep those URLs blank
 - scope-specific generated docs and search paths remain owned by `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`

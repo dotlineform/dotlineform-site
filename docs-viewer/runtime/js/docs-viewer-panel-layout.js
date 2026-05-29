@@ -11,6 +11,7 @@ import {
 } from "./docs-viewer-hosted-views.js";
 import {
   renderDocsViewerAppShellDocumentState,
+  renderDocsViewerAppShellIndexViewToggleState,
   renderDocsViewerAppShellInfoPanelState,
   renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
@@ -39,6 +40,7 @@ export function createDocsViewerPanelLayout(options) {
   var root = settings.root || null;
   var storage = settings.storage || null;
   var indexPanelRefs = settings.indexPanelRefs || {};
+  var indexViewToggleRefs = settings.indexViewToggleRefs || {};
   var documentShellRefs = settings.documentShellRefs || {};
   var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
@@ -94,6 +96,17 @@ export function createDocsViewerPanelLayout(options) {
     });
   }
 
+  function nextIndexViewId(activeView) {
+    var options = availableIndexViews();
+    if (options.length <= 1) return "";
+    var activeId = activeView && activeView.id ? activeView.id : "";
+    var activeIndex = options.findIndex(function (view) {
+      return view.id === activeId;
+    });
+    var next = options[(activeIndex + 1) % options.length] || null;
+    return next && next.id ? next.id : "";
+  }
+
   function normalizeCurrentIndexState() {
     var projection = projectIndexPanelState(indexPanelState, {
       available: indexPanelAvailable(),
@@ -143,11 +156,13 @@ export function createDocsViewerPanelLayout(options) {
     projection.activeViewId = activeView && activeView.id ? activeView.id : "";
     projection.activeViewLabel = activeView && activeView.label ? activeView.label : projection.activeViewId;
     projection.activeViewRenderer = activeView && activeView.renderer ? activeView.renderer : "";
+    projection.nextViewId = nextIndexViewId(activeView);
     projection.placeholderText = activeView && activeView.placeholderText
       ? activeView.placeholderText
       : projection.activeViewLabel;
     projection.treeHidden = projection.activeViewRenderer !== "index-tree";
     projection.placeholderHidden = projection.activeViewRenderer !== "index-placeholder";
+    projection.toggleHidden = !projection.nextViewId;
     projection.viewOptions = viewOptionProjection(activeView);
     viewState = updateDocsViewerViewState(viewState, {
       indexPanelState: projection.activeState,
@@ -156,6 +171,10 @@ export function createDocsViewerPanelLayout(options) {
     renderDocsViewerAppShellIndexPanelState({
       root: root,
       refs: indexPanelRefs,
+      projection: projection
+    });
+    renderDocsViewerAppShellIndexViewToggleState({
+      refs: indexViewToggleRefs,
       projection: projection
     });
     renderInfoPanelState();

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T14:52:13Z",
+  "generated_at": "2026-05-29T15:38:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1148,14 +1148,14 @@
       "doc_id": "config-jekyll-site-config",
       "title": "Jekyll Site Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-29",
       "parent_id": "dev-home",
       "hidden": false,
       "viewable": true,
       "source_path": "config-jekyll-site-config.md",
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
-      "content_text_length": 2195
+      "content_text_length": 2303
     },
     {
       "scope": "studio",
@@ -1480,7 +1480,7 @@
       "source_path": "docs-viewer-panel-hosts.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
-      "content_text_length": 6620
+      "content_text_length": 6766
     },
     {
       "scope": "studio",
@@ -1566,7 +1566,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 26271
+      "content_text_length": 26569
     },
     {
       "scope": "studio",
@@ -1597,7 +1597,7 @@
       "source_path": "docs-viewer-view-capability-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json",
-      "content_text_length": 8021,
+      "content_text_length": 8262,
       "ui_status": "done"
     },
     {
@@ -1654,7 +1654,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 17900
+      "content_text_length": 17922
     },
     {
       "scope": "studio",

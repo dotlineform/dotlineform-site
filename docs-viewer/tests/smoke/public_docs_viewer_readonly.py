@@ -131,7 +131,10 @@ def main() -> int:
                             viewerBaseUrl: root.dataset.viewerBaseUrl || "",
                             routeId: root.dataset.routeId || "",
                             routeConfigUrl,
-                            routeConfig
+                            routeConfig,
+                            routeIds: (payload.routes || []).map(record => record.route_id),
+                            managementRouteCount: (payload.routes || []).filter(record => record.access?.allow_management === true).length,
+                            hostedViewIds: (payload.routes || []).flatMap(record => (record.hosted_views?.records || []).map(view => view.id))
                         };
                     }"""
                 )
@@ -156,7 +159,7 @@ def main() -> int:
                     raise AssertionError(f"{route} unexpectedly exposes management base URL: {root_attrs!r}")
                 if root_attrs["routeId"] not in {"library", "analysis"}:
                     raise AssertionError(f"{route} has unexpected route id: {root_attrs!r}")
-                if root_attrs["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-routes.json":
+                if root_attrs["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-public-routes.json":
                     raise AssertionError(f"{route} has unexpected route config URL: {root_attrs!r}")
                 if root_attrs["routeConfig"].get("default_scope_id") != root_attrs["routeId"]:
                     raise AssertionError(f"{route} route config does not match route scope: {root_attrs!r}")
@@ -164,6 +167,10 @@ def main() -> int:
                     raise AssertionError(f"{route} route config unexpectedly allows management: {root_attrs!r}")
                 if root_attrs["routeConfig"].get("viewer_base_url") not in {"/library/", "/analysis/"}:
                     raise AssertionError(f"{route} route config has unexpected viewer base URL: {root_attrs!r}")
+                if root_attrs["managementRouteCount"] or "docs-manage" in root_attrs["routeIds"]:
+                    raise AssertionError(f"{route} public route registry exposed management routes: {root_attrs!r}")
+                if root_attrs["hostedViewIds"]:
+                    raise AssertionError(f"{route} public route registry exposed hosted manage-only views: {root_attrs!r}")
                 if base_css_count != 1:
                     raise AssertionError(f"{route} expected one Docs Viewer base stylesheet, got {base_css_count}")
                 if management_css_count:

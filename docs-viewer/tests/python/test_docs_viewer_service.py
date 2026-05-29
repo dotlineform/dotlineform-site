@@ -99,14 +99,18 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     )
 
     rendered = docs_viewer_service.render_manage_page(REPO_ROOT, config, "test-version")
+    route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
+    manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
     assert "<title>Docs Viewer</title>" in rendered
-    assert 'data-viewer-base-url="/docs/"' in rendered
-    assert 'data-include-scope-param="true"' in rendered
-    assert 'data-allow-management="true"' in rendered
-    assert 'data-allow-scope-query="true"' in rendered
-    assert 'data-generated-base-url="http://127.0.0.1:8776"' in rendered
-    assert 'data-management-base-url="http://127.0.0.1:8776"' in rendered
+    assert 'data-route-id="docs-manage"' in rendered
+    assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"' in rendered
+    assert manage_route["viewer_base_url"] == "/docs/"
+    assert manage_route["include_scope_param"] is True
+    assert manage_route["access"]["allow_management"] is True
+    assert manage_route["access"]["allow_scope_query"] is True
+    assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
     assert "/docs-viewer/runtime/js/docs-viewer.js?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-management.css?v=test-version" in rendered
     assert "/studio/api/docs" not in rendered
@@ -126,10 +130,13 @@ def test_manage_shell_can_disable_management_markup_by_capability_flag() -> None
     )
 
     rendered = docs_viewer_service.render_manage_page(REPO_ROOT, config, "test-version")
+    route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
+    manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
-    assert 'data-allow-management="false"' in rendered
-    assert 'data-management-base-url=""' in rendered
+    assert manage_route["access"]["allow_management"] is False
+    assert manage_route["access"]["management_base_url"] == ""
     assert "docs-viewer-management.css" not in rendered
+    assert "docsViewerManagementShellMount" not in rendered
     assert "docsViewerManageActionsButton" not in rendered
 
 

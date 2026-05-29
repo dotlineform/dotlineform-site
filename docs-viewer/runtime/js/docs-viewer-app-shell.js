@@ -246,6 +246,7 @@ export function getDocsViewerAppShellRefs(options) {
     managementActions: {
       mount: documentRef.getElementById("docsViewerManageActionsMount"),
       row: documentRef.getElementById("docsViewerManageRow"),
+      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle"),
       actionsButton: documentRef.getElementById("docsViewerManageActionsButton"),
       actionsMenu: documentRef.getElementById("docsViewerManageActionsMenu")
     }
@@ -262,4 +263,23 @@ export function renderDocsViewerAppShellDocumentState(options) {
 
 export function renderDocsViewerAppShellInfoPanelState(options) {
   applyDocsViewerInfoPanelProjection(options || {});
+}
+
+export function renderDocsViewerAppShellIndexViewToggleState(options) {
+  var settings = options || {};
+  var refs = settings.refs || {};
+  var projection = settings.projection || {};
+  var button = refs.indexViewToggle || null;
+  if (!button) return;
+  var activeViewId = projection.activeViewId || "";
+  var targetViewId = projection.nextViewId || "";
+  var activeLabel = projection.activeViewLabel || activeViewId || "Index view";
+  if (activeViewId === "index-tree") activeLabel = "Tree index view";
+  if (activeViewId === "index-graph") activeLabel = "Graph index view";
+  button.hidden = Boolean(projection.toggleHidden);
+  button.dataset.indexPanelView = targetViewId;
+  button.dataset.activeIndexPanelView = activeViewId;
+  button.textContent = activeViewId === "index-graph" ? "🕸️" : "📁";
+  button.setAttribute("aria-label", activeLabel);
+  button.title = activeLabel;
 }

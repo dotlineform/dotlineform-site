@@ -25,7 +25,9 @@
   </div>
 
   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+  {%- if include.allow_management -%}
   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
+  {%- endif -%}
   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount>
     <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
   </div>

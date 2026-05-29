@@ -836,6 +836,39 @@ select.docsViewer__fieldInput--listbox{
   gap: 0.55rem;
 }
 
+.docsViewer__indexViewToggle{
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  min-width: 2.3rem;
+  height: 2.3rem;
+  padding: 0;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: 999px;
+  color: var(--docs-viewer-text, var(--text, #111));
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.docsViewer__indexViewToggle[hidden]{
+  display: none;
+}
+
+.docsViewer__indexViewToggle:hover{
+  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+}
+
+.docsViewer__indexViewToggle:focus-visible{
+  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  outline-offset: 2px;
+}
+
 .docsViewer__themeToggle{
   box-sizing: border-box;
   flex: 0 0 auto;

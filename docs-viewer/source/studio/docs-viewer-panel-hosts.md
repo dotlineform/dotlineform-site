@@ -46,6 +46,7 @@ Core ownership:
 The current panel projection still preserves existing two-panel behavior where needed.
 The index panel projects collapsed, normal, and expanded states from the active index hosted view’s capabilities.
 The built-in `index-tree` view supports normal and collapsed states, while the management-route `index-graph` placeholder opts into expanded mode.
+The management toolbar exposes the available index-view switch as a single projected icon pill when more than one index hosted view is available.
 The document shell still owns document payload rendering plus search, recent, and report surfaces through the existing document/search/report controllers.
 The info panel is a real app-shell panel with a selected-document metadata hosted view.
 

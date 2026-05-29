@@ -186,7 +186,7 @@ Current sidebar behavior:
 
 - larger screens show index panel controls in the header for view-supported layout states
 - `index-tree` supports normal and collapsed states and does not expose direct expanded mode
-- management-enabled Docs Viewer routes can switch the index panel between `index-tree` and the placeholder `index-graph` view when both hosted views are available
+- management-enabled Docs Viewer routes can switch the index panel between `index-tree` and the placeholder `index-graph` view through the round toolbar pill immediately left of Actions
 - the placeholder `index-graph` view supports direct expanded mode, so the expand control is visible only while that view is active in normal state
 - the one-step control restores collapsed to normal, collapses normal to collapsed, and restores expanded to normal
 - the collapsed rail keeps the one-step control visible so the index can always be restored

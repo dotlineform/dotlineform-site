@@ -106,38 +106,10 @@
     0.45rem 0;
 }
 
-.docsViewer__sidebarControls,
-.docsViewer__indexViewSwitcher{
+.docsViewer__sidebarControls{
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-}
-
-.docsViewer__indexViewSwitcher[hidden]{
-  display: none;
-}
-
-.docsViewer__indexViewButton{
-  box-sizing: border-box;
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.8rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: var(--docs-viewer-radius);
-  background: var(--docs-viewer-panel);
-  color: var(--docs-viewer-muted);
-  font: inherit;
-  font-size: var(--docs-viewer-font-small);
-  line-height: 1;
-  cursor: pointer;
-}
-
-.docsViewer__indexViewButton[aria-pressed="true"]{
-  border-color: var(--docs-viewer-border-strong);
-  color: var(--docs-viewer-text);
-  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__sidebarToggle{

@@ -119,14 +119,16 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
         """() => {
             const step = document.querySelector('#docsViewerSidebarToggle');
             const expand = document.querySelector('#docsViewerSidebarExpand');
-            const switcher = document.querySelector('#docsViewerIndexViewSwitcher');
+            const viewToggle = document.querySelector('#docsViewerIndexViewToggle');
             return step &&
                 expand &&
                 !step.hidden &&
                 expand.hidden &&
-                switcher &&
-                !switcher.hidden &&
-                document.querySelector('[data-index-panel-view="index-tree"][aria-pressed="true"]') &&
+                viewToggle &&
+                !viewToggle.hidden &&
+                viewToggle.dataset.activeIndexPanelView === 'index-tree' &&
+                viewToggle.dataset.indexPanelView === 'index-graph' &&
+                viewToggle.textContent.trim() === '📁' &&
                 step.textContent.trim() === '‹' &&
                 (step.compareDocumentPosition(expand) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
         }""",
@@ -177,19 +179,24 @@ def assert_index_graph_expand_and_restore(page: Page, timeout_ms: int) -> None:
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    page.locator('[data-index-panel-view="index-graph"]').click()
+    page.locator("#docsViewerIndexViewToggle").click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);
             const nav = document.querySelector('#docsViewerNav');
             const placeholder = document.querySelector('#docsViewerIndexPlaceholder');
             const expand = document.querySelector('#docsViewerSidebarExpand');
+            const viewToggle = document.querySelector('#docsViewerIndexViewToggle');
             return root?.dataset.indexPanelView === 'index-graph' &&
                 root?.dataset.indexPanelState === 'normal' &&
                 nav?.hidden === true &&
                 placeholder &&
                 !placeholder.hidden &&
                 placeholder.textContent.trim() === 'Graph index placeholder' &&
+                viewToggle &&
+                viewToggle.dataset.activeIndexPanelView === 'index-graph' &&
+                viewToggle.dataset.indexPanelView === 'index-tree' &&
+                viewToggle.textContent.trim() === '🕸️' &&
                 expand &&
                 !expand.hidden;
         }""",
@@ -201,28 +208,34 @@ def assert_index_graph_expand_and_restore(page: Page, timeout_ms: int) -> None:
         """selector => {
             const root = document.querySelector(selector);
             const main = document.querySelector('.docsViewer__main');
-            const activeGraph = document.querySelector('[data-index-panel-view="index-graph"][aria-pressed="true"]');
+            const viewToggle = document.querySelector('#docsViewerIndexViewToggle');
             return root?.dataset.indexPanelState === 'expanded' &&
                 root?.dataset.indexPanelView === 'index-graph' &&
-                activeGraph &&
+                viewToggle &&
+                viewToggle.dataset.activeIndexPanelView === 'index-graph' &&
                 main &&
                 getComputedStyle(main).display === 'none';
         }""",
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    page.locator('[data-index-panel-view="index-tree"]').click()
+    page.locator("#docsViewerIndexViewToggle").click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);
             const nav = document.querySelector('#docsViewerNav');
             const main = document.querySelector('.docsViewer__main');
             const expand = document.querySelector('#docsViewerSidebarExpand');
+            const viewToggle = document.querySelector('#docsViewerIndexViewToggle');
             return root?.dataset.indexPanelState === 'normal' &&
                 root?.dataset.indexPanelView === 'index-tree' &&
                 nav?.hidden === false &&
                 main &&
                 getComputedStyle(main).display !== 'none' &&
+                viewToggle &&
+                viewToggle.dataset.activeIndexPanelView === 'index-tree' &&
+                viewToggle.dataset.indexPanelView === 'index-graph' &&
+                viewToggle.textContent.trim() === '📁' &&
                 expand &&
                 expand.hidden;
         }""",

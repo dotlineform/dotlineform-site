@@ -54,7 +54,7 @@ export function startDocsViewerRuntime(options) {
 
   var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
-  var indexViewSwitcher = indexPanelRefs.indexViewSwitcher;
+  var indexViewToggle = appShellRefs.managementActions && appShellRefs.managementActions.indexViewToggle;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
   var documentShellRefs = appShellRefs.documentShell;
@@ -672,13 +672,9 @@ export function startDocsViewerRuntime(options) {
       });
     }
 
-    if (indexViewSwitcher) {
-      indexViewSwitcher.addEventListener("click", function (event) {
-        var button = event.target && event.target.closest
-          ? event.target.closest("[data-index-panel-view]")
-          : null;
-        if (!button || !indexViewSwitcher.contains(button)) return;
-        setActiveIndexView(button.dataset.indexPanelView);
+    if (indexViewToggle) {
+      indexViewToggle.addEventListener("click", function () {
+        setActiveIndexView(indexViewToggle.dataset.indexPanelView);
       });
     }
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-143f47dd8522c20f2edc1e867a9eb6cf",
-    "generated_at_utc": "2026-05-29T14:52:13Z",
+    "version": "blake2b-446075ddf77783f7b3ead808188c1151",
+    "generated_at_utc": "2026-05-29T15:38:49Z",
     "count": 198
   },
   "entries": [
@@ -1903,10 +1903,10 @@
       "kind": "doc",
       "title": "Jekyll Site Config",
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-29",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-25 • Dev Home",
+      "display_meta": "2026-05-29 • Dev Home",
       "search_terms": [
         "config-jekyll-site-config",
         "config",
@@ -1916,12 +1916,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-25",
+        "2026-05-29",
         "2026",
         "05",
-        "25"
+        "29"
       ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-25 2026 05 25"
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-29 2026 05 29"
     },
     {
       "id": "scripts-run-checks",

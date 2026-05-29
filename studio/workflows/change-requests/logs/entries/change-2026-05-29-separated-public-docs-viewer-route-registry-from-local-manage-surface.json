@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-29-separated-public-docs-viewer-route-registry-from-local-manage-surface",
+  "date": "2026-05-29",
+  "title": "Separated Public Docs Viewer Route Registry From Local Manage Surface",
+  "status": "implemented",
+  "type": "maintenance",
+  "domains": [
+    "docs-viewer",
+    "build",
+    "config"
+  ],
+  "summary": "Split public Jekyll Docs Viewer routes onto a public-only route registry and excluded local manage-only Docs Viewer modules, HTML import modules, management CSS, and the full local route registry from public Jekyll output.",
+  "source": {
+    "file": "docs-viewer/source/studio/docs-viewer-runtime-boundary.md"
+  },
+  "subjects": [
+    "jekyll",
+    "route-config",
+    "public-readonly",
+    "manage-mode"
+  ],
+  "related_docs": [
+    "docs-viewer-runtime-boundary",
+    "config-jekyll-site-config",
+    "docs-viewer-overview",
+    "docs-viewer-view-capability-contract"
+  ],
+  "related_files": [
+    "_config.yml",
+    "_includes/docs_viewer_shell.html",
+    "_includes/docs_viewer_readonly_route.html",
+    "docs-viewer/shell/docs-viewer-shell.html",
+    "docs-viewer/config/routes/docs-viewer-public-routes.json",
+    "docs-viewer/config/routes/docs-viewer-routes.json",
+    "docs-viewer/runtime/js/docs-viewer-app-shell.js",
+    "docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js",
+    "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
+    "docs-viewer/tests/python/test_docs_viewer_service.py"
+  ],
+  "effect": "Public /library/ and /analysis/ builds no longer publish or load the local /docs/ management route, graph placeholder hosted view, management shell assets, or import/write modules, while the standalone Docs Viewer service keeps the manage-capable route registry and management assets for local use.",
+  "verification": [
+    "jekyll build --quiet --destination /tmp/dlf-jekyll-pill-audit",
+    "grep audit of public build output found no management route, management mount, graph hosted view, management CSS, or management JS",
+    "public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-pill-audit",
+    "docs_viewer_app_shell_modules.py --site-root .",
+    "pytest docs-viewer/tests/python/test_docs_viewer_service.py -q",
+    "git diff --check"
+  ]
+}

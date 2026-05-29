@@ -118,11 +118,31 @@ exclude:
   - docs-viewer/config/defaults/docs-viewer-config.json
   - docs-viewer/config/defaults/docs-viewer-service.json
   - docs-viewer/config/reports/
+  - docs-viewer/config/routes/docs-viewer-routes.json
   - docs-viewer/config/schema/
   - docs-viewer/config/scopes/
   - docs-viewer/generated/
+  - docs-viewer/runtime/js/docs-html-import.js
+  - docs-viewer/runtime/js/docs-html-import-modals.js
+  - docs-viewer/runtime/js/docs-html-import-render.js
+  - docs-viewer/runtime/js/docs-html-import-workflow.js
+  - docs-viewer/runtime/js/docs-viewer-management.js
+  - docs-viewer/runtime/js/docs-viewer-management-action-workflow.js
+  - docs-viewer/runtime/js/docs-viewer-management-actions.js
+  - docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js
+  - docs-viewer/runtime/js/docs-viewer-management-capabilities.js
+  - docs-viewer/runtime/js/docs-viewer-management-client.js
+  - docs-viewer/runtime/js/docs-viewer-management-config.js
+  - docs-viewer/runtime/js/docs-viewer-management-interactions.js
+  - docs-viewer/runtime/js/docs-viewer-management-modal-shell.js
+  - docs-viewer/runtime/js/docs-viewer-management-modals.js
+  - docs-viewer/runtime/js/docs-viewer-management-parent-picker.js
+  - docs-viewer/runtime/js/docs-viewer-management-render.js
+  - docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js
+  - docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js
   - docs-viewer/services/
   - docs-viewer/shell/
   - docs-viewer/source/
+  - docs-viewer/static/css/docs-viewer-management.css
   - docs-viewer/tests/
   - studio/ui-catalogue/

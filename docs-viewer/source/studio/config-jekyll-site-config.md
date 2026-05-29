@@ -2,7 +2,7 @@
 doc_id: config-jekyll-site-config
 title: Jekyll Site Config
 added_date: 2026-03-31
-last_updated: 2026-05-25
+last_updated: 2026-05-29
 parent_id: dev-home
 ---
 # Jekyll Site Config
@@ -31,7 +31,8 @@ Current exclusions include local operational and non-site inputs such as:
 - `studio/tests`
 - mutable Studio activity and catalogue source/lookup data that local Studio reads through localhost services
 - Docs Viewer local service files under `docs-viewer/bin/`, `docs-viewer/services/`, and `docs-viewer/shell/`
-- Docs Viewer source/config inputs that are not browser-safe public route assets, while `docs-viewer/runtime/`, `docs-viewer/static/`, public config defaults, and UI text remain publishable for public read-only routes
+- Docs Viewer source/config inputs that are not browser-safe public route assets
+- Docs Viewer local/manage-only runtime modules, HTML import modules, management CSS, and the full local route registry; public Jekyll routes publish the shared read-only runtime/CSS plus `docs-viewer/config/routes/docs-viewer-public-routes.json`
 
 ## What calls it
 

@@ -12,7 +12,7 @@ viewable: true
 **Status: implemented.**
 
 This document records the intended model for Docs Viewer panel views, layout rules, and extensible view-specific UI capabilities.
-The first implementation is in the config/runtime path: capabilities normalize from hosted views, panel layout uses the active index view’s capabilities, and management-enabled Docs Viewer routes get a placeholder graph view plus a small switcher.
+The first implementation is in the config/runtime path: capabilities normalize from hosted views, panel layout uses the active index view’s capabilities, and management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
 
 ## Purpose
 
@@ -136,7 +136,8 @@ It does not decide view-specific behavior by id.
 `docs-viewer-index-panel.js` projects available state transitions from capabilities.
 For example, when `layout_states` is `["normal", "collapsed"]`, it should hide or disable the full expand control and prevent `expanded` from becoming the persisted state.
 
-`docs-viewer-index-panel-renderer.js` renders the projected controls, switcher options, and placeholder/tree visibility.
+`docs-viewer-index-panel-renderer.js` renders the projected layout controls and placeholder/tree visibility.
+`docs-viewer-management-actions-renderer.js` renders the management toolbar index-view toggle from panel-layout projection.
 It does not decide layout-state availability.
 
 CSS should define layouts for available states.
@@ -185,7 +186,7 @@ Behavior:
 
 ## Manage-Mode Index View Toggle
 
-Management-enabled Docs Viewer routes expose a small index-view toggle after the tree capability rule is in place.
+Management-enabled Docs Viewer routes expose a small index-view toggle in the management toolbar, immediately to the left of the Actions button.
 The toggle is the practical test surface for the config-driven view contract.
 
 Initial requirements:
@@ -196,9 +197,10 @@ Initial requirements:
 - uses hosted-view access and availability projection rather than hardcoded route checks
 - restores unsupported layout state when switching views; for example, switching from expanded `index-graph` back to `index-tree` should return the index panel to `normal`
 - keeps the tree view as the default index view
+- uses a round icon pill: folder for tree view and web for graph view
 - may use placeholder graph content only; no real graph layout is required for this implementation slice
 
-The toggle should live in Docs Viewer app-shell or index-panel chrome, not inside the tree renderer.
+The toggle lives in Docs Viewer app-shell management toolbar chrome, not inside the tree renderer or index panel body.
 This keeps view selection separate from tree rendering and allows future index views to add their own toolbar capabilities.
 
 ## Implementation Notes
@@ -211,7 +213,7 @@ The implemented slice covers:
 4. the full expand control hidden for `index-tree`
 5. expanded CSS behavior preserved for views that opt in
 6. a manage-only placeholder `index-graph` hosted view with expanded-mode capability
-7. an index-view toggle for switching between `index-tree` and `index-graph` when both hosted views are available
+7. an index-view toolbar toggle for switching between `index-tree` and `index-graph` when both hosted views are available
 8. focused index-panel module tests and route smoke expectations updated
 
 The implementation should avoid hardcoded checks such as `if viewId === "index-tree"` outside built-in default configuration.

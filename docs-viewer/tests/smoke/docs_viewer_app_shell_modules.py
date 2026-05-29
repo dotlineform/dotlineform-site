@@ -175,10 +175,10 @@ def assert_management_actions_render(page: Page) -> None:
             const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             const ids = [
                 'docsViewerManageRow',
+                'docsViewerIndexViewToggle',
                 'docsViewerManageActionsButton',
                 'docsViewerManageActionsMenu',
                 'docsViewerManageRebuildButton',
-                'docsViewerManageNormalizeOrderButton',
                 'docsViewerManageSettingsButton',
                 'docsViewerManageNewScopeButton',
                 'docsViewerManageDeleteScopeButton',
@@ -217,6 +217,8 @@ def assert_management_actions_render(page: Page) -> None:
                 missingShellIds: shellIds.filter((id) => !document.getElementById(id)),
                 menuRole: document.getElementById('docsViewerManageActionsMenu')?.getAttribute('role') || '',
                 menuItemCount: document.querySelectorAll('#docsViewerManageActionsMenu [role="menuitem"]').length,
+                indexToggleHidden: document.getElementById('docsViewerIndexViewToggle')?.hidden,
+                actionOrder: Array.from(document.querySelector('.docsViewer__manageActions').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
                 contextActionCount: document.querySelectorAll('#docsViewerContextMenu [data-context-action]').length,
                 metadataDialogLabel: document.querySelector('#docsViewerMetadataModal [role="dialog"]')?.getAttribute('aria-labelledby') || '',
                 importRouteReady: document.getElementById('docsHtmlImportRoot')?.dataset.studioReady || '',
@@ -239,8 +241,12 @@ def assert_management_actions_render(page: Page) -> None:
         raise AssertionError(f"app shell omitted expected management refs: {result!r}")
     if result["missingShellIds"]:
         raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
-    if result["menuRole"] != "menu" or result["menuItemCount"] != 9:
+    if result["menuRole"] != "menu" or result["menuItemCount"] != 8:
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
+    if result["indexToggleHidden"] is not True:
+        raise AssertionError(f"index-view toolbar toggle should start hidden until projected: {result!r}")
+    if result["actionOrder"][:2] != ["docsViewerIndexViewToggle", "docsViewerManageActionsButton"]:
+        raise AssertionError(f"index-view toolbar toggle should sit immediately left of Actions: {result!r}")
     if result["contextActionCount"] != 5 or result["metadataDialogLabel"] != "docsViewerMetadataHeading":
         raise AssertionError(f"management context/metadata shell changed unexpectedly: {result!r}")
     if result["importRouteReady"] != "false" or result["settingsFieldName"] != "show_updated_date":
@@ -1301,7 +1307,7 @@ def assert_index_panel_shell_render(page: Page) -> None:
                 refNavId: refs.nav && refs.nav.id,
                 sidebarCount: document.querySelectorAll('.docsViewer__sidebar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
-                switcherCount: document.querySelectorAll('#docsViewerIndexViewSwitcher').length,
+                retiredSwitcherCount: document.querySelectorAll('#docsViewerIndexViewSwitcher').length,
                 placeholderCount: document.querySelectorAll('#docsViewerIndexPlaceholder').length,
                 toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
                 expandCount: document.querySelectorAll('#docsViewerSidebarExpand').length,
@@ -1316,7 +1322,7 @@ def assert_index_panel_shell_render(page: Page) -> None:
         "refNavId": "docsViewerNav",
         "sidebarCount": 1,
         "navCount": 1,
-        "switcherCount": 1,
+        "retiredSwitcherCount": 0,
         "placeholderCount": 1,
         "toggleCount": 1,
         "expandCount": 1,
@@ -1372,10 +1378,7 @@ def assert_index_panel_projection(page: Page) -> None:
                     placeholderText: 'Graph index placeholder',
                     treeHidden: true,
                     placeholderHidden: false,
-                    viewOptions: [
-                        { id: 'index-tree', label: 'Index tree', active: false },
-                        { id: 'index-graph', label: 'Index graph', active: true }
-                    ]
+                    nextViewId: 'index-tree'
                 })
             });
             const expanded = {
@@ -1384,12 +1387,6 @@ def assert_index_panel_projection(page: Page) -> None:
                 navHidden: refs.nav.hidden,
                 placeholderHidden: refs.indexPlaceholder.hidden,
                 placeholderText: refs.indexPlaceholder.textContent,
-                switcherHidden: refs.indexViewSwitcher.hidden,
-                switcherButtons: Array.from(refs.indexViewSwitcher.querySelectorAll('[data-index-panel-view]')).map((button) => ({
-                    id: button.dataset.indexPanelView,
-                    pressed: button.getAttribute('aria-pressed'),
-                    text: button.textContent
-                })),
                 toggleHidden: refs.sidebarToggle.hidden,
                 toggleExpanded: refs.sidebarToggle.getAttribute('aria-expanded'),
                 toggleLabel: refs.sidebarToggle.getAttribute('aria-label'),
@@ -1426,11 +1423,6 @@ def assert_index_panel_projection(page: Page) -> None:
         "navHidden": True,
         "placeholderHidden": False,
         "placeholderText": "Graph index placeholder",
-        "switcherHidden": False,
-        "switcherButtons": [
-            {"id": "index-tree", "pressed": "false", "text": "Index tree"},
-            {"id": "index-graph", "pressed": "true", "text": "Index graph"},
-        ],
         "toggleHidden": False,
         "toggleExpanded": "true",
         "toggleLabel": "Restore index panel",
@@ -1563,8 +1555,8 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
             const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
             await module.initDocsViewerAppShell({ root, document, routeContext });
             await new Promise((resolve) => requestAnimationFrame(resolve));
-            const indexRect = document.querySelector('[data-docs-viewer-index-panel-mount]').getBoundingClientRect();
-            const documentRect = document.querySelector('[data-docs-viewer-document-shell-mount]').getBoundingClientRect();
+            const indexRect = document.querySelector('.docsViewer__sidebar').getBoundingClientRect();
+            const documentRect = document.querySelector('.docsViewer__main').getBoundingClientRect();
             const managementMount = document.querySelector('[data-docs-viewer-management-shell-mount]');
             return {
                 managementMountDisplay: getComputedStyle(managementMount).display,
@@ -1939,14 +1931,20 @@ def assert_panel_layout_contract(page: Page) -> None:
             const hostedViews = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
             const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
             document.body.innerHTML = `
-                <section id="docsViewerRoot" data-allow-management="false">
+                <section id="docsViewerRoot" data-allow-management="true">
+                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
-            await shell.initDocsViewerAppShell({ root, document });
+            await shell.initDocsViewerAppShell({
+                root,
+                document,
+                routeContext: { access: { allowScopeQuery: false, canLoadManagementUi: true } }
+            });
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
             const values = {
                 'dotlineform-docs-viewer-index-panel:studio': 'collapsed',
@@ -1985,6 +1983,7 @@ def assert_panel_layout_contract(page: Page) -> None:
                 storage,
                 storageScope: 'studio',
                 indexPanelRefs: refs.indexPanel,
+                indexViewToggleRefs: refs.managementActions,
                 documentShellRefs: refs.documentShell,
                 infoPanelRefs: refs.infoPanel,
                 panels: {
@@ -2002,7 +2001,11 @@ def assert_panel_layout_contract(page: Page) -> None:
                 view: root.dataset.indexPanelView,
                 toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label'),
                 expandHidden: refs.indexPanel.sidebarExpand.hidden,
-                switcherHidden: refs.indexPanel.indexViewSwitcher.hidden
+                indexToggleHidden: refs.managementActions.indexViewToggle.hidden,
+                indexToggleText: refs.managementActions.indexViewToggle.textContent,
+                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label'),
+                actionOrder: Array.from(document.querySelector('.docsViewer__manageActions').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
             };
             layout.setActiveIndexView('index-graph');
             const graphProjection = {
@@ -2011,7 +2014,10 @@ def assert_panel_layout_contract(page: Page) -> None:
                 expandHidden: refs.indexPanel.sidebarExpand.hidden,
                 navHidden: refs.indexPanel.nav.hidden,
                 placeholderHidden: refs.indexPanel.indexPlaceholder.hidden,
-                placeholderText: refs.indexPanel.indexPlaceholder.textContent
+                placeholderText: refs.indexPanel.indexPlaceholder.textContent,
+                indexToggleText: refs.managementActions.indexViewToggle.textContent,
+                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label')
             };
             const graphExpandedState = layout.expandIndexPanelState();
             const graphExpandedProjection = {
@@ -2023,7 +2029,10 @@ def assert_panel_layout_contract(page: Page) -> None:
                 state: root.dataset.indexPanelState,
                 view: root.dataset.indexPanelView,
                 expandHidden: refs.indexPanel.sidebarExpand.hidden,
-                navHidden: refs.indexPanel.nav.hidden
+                navHidden: refs.indexPanel.nav.hidden,
+                indexToggleText: refs.managementActions.indexViewToggle.textContent,
+                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label')
             };
             const toggledState = layout.toggleIndexPanelState();
             const storedStudio = values['dotlineform-docs-viewer-index-panel:studio'];
@@ -2098,7 +2107,16 @@ def assert_panel_layout_contract(page: Page) -> None:
             "view": "index-tree",
             "toggleLabel": "Restore index panel",
             "expandHidden": True,
-            "switcherHidden": False,
+            "indexToggleHidden": False,
+            "indexToggleText": "📁",
+            "indexToggleTarget": "index-graph",
+            "indexToggleLabel": "Tree index view",
+            "actionOrder": [
+                "docsViewerIndexViewToggle",
+                "docsViewerManageActionsButton",
+                "docsViewerManageViewableButton",
+                "docsViewerDraftToggle",
+            ],
         },
         "graphProjection": {
             "state": "collapsed",
@@ -2107,6 +2125,9 @@ def assert_panel_layout_contract(page: Page) -> None:
             "navHidden": True,
             "placeholderHidden": False,
             "placeholderText": "Graph index placeholder",
+            "indexToggleText": "🕸️",
+            "indexToggleTarget": "index-tree",
+            "indexToggleLabel": "Graph index view",
         },
         "graphExpandedState": "expanded",
         "graphExpandedProjection": {
@@ -2118,6 +2139,9 @@ def assert_panel_layout_contract(page: Page) -> None:
             "view": "index-tree",
             "expandHidden": True,
             "navHidden": False,
+            "indexToggleText": "📁",
+            "indexToggleTarget": "index-graph",
+            "indexToggleLabel": "Tree index view",
         },
         "toggledState": "collapsed",
         "storedStudio": "collapsed",
@@ -3508,7 +3532,7 @@ def assert_document_index_state_contract(page: Page) -> None:
         "missingTarget": "missing",
         "publicHiddenStatus": None,
         "manageShowHidden": True,
-        "manageDocs": ["child", "draft-child", "hidden-child", "root", "hidden-root", "draft-root"],
+        "manageDocs": ["child", "draft-child", "draft-root", "hidden-root", "hidden-child", "root"],
         "findHidden": "hidden-root",
     }:
         raise AssertionError(f"document-index state contract changed unexpectedly: {result!r}")
