@@ -5,7 +5,6 @@ added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: draft
 parent_id: change-requests
-sort_order: 14170
 viewable: true
 ---
 # Docs Viewer Workstream Priority Plan

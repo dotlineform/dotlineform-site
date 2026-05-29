@@ -15,9 +15,6 @@ import {
   applyDocsViewerManagementConfig
 } from "./docs-viewer-management-config.js";
 import {
-  normalizeSortOrderValue
-} from "./docs-viewer-drag-drop.js";
-import {
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
 import {
@@ -109,7 +106,6 @@ export function initDocsViewerManagement(context) {
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
-  var manageNormalizeOrderButton = document.getElementById("docsViewerManageNormalizeOrderButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
   var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
@@ -132,7 +128,6 @@ export function initDocsViewerManagement(context) {
   var metadataHiddenLabel = shellRef("metadataHiddenLabel", "docsViewerMetadataHiddenLabel");
   var metadataParentInput = shellRef("metadataParentInput", "docsViewerMetadataParentInput");
   var metadataParentPopup = shellRef("metadataParentPopup", "docsViewerMetadataParentPopup");
-  var metadataSortOrderInput = shellRef("metadataSortOrderInput", "docsViewerMetadataSortOrderInput");
   var metadataCancelButton = shellRef("metadataCancelButton", "docsViewerMetadataCancelButton");
   var metadataSaveButton = shellRef("metadataSaveButton", "docsViewerMetadataSaveButton");
   var importModal = shellRef("importModal", "docsViewerImportModal");
@@ -470,9 +465,6 @@ export function initDocsViewerManagement(context) {
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
-    if (manageNormalizeOrderButton) {
-      manageNormalizeOrderButton.disabled = state.managementBusy || !state.managementAvailable;
-    }
     if (manageSettingsButton) {
       manageSettingsButton.disabled = state.managementBusy || !state.managementAvailable;
     }
@@ -554,7 +546,7 @@ export function initDocsViewerManagement(context) {
 
   function metadataPayloadFromModal() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return null;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput) return null;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -568,18 +560,6 @@ export function initDocsViewerManagement(context) {
       metadataParentInput.focus();
       return null;
     }
-    var originalParentId = String(doc.parent_id || "").trim();
-    var originalSortOrderText = normalizeSortOrderValue(doc.sort_order);
-    var sortOrderText = String(metadataSortOrderInput.value || "").trim();
-    if (sortOrderText && Number(sortOrderText) < 0) {
-      setManagementMessage("sort_order must be zero or greater.", true);
-      metadataSortOrderInput.focus();
-      return null;
-    }
-    var payloadSortOrder = sortOrderText;
-    if (parentId && parentId !== originalParentId && sortOrderText === originalSortOrderText) {
-      payloadSortOrder = "append";
-    }
     var selectedStatus = String(metadataStatusInput.value || "").trim();
     return {
       doc_id: doc.doc_id,
@@ -587,8 +567,7 @@ export function initDocsViewerManagement(context) {
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
       ui_status: selectedStatus,
       viewable: !metadataHiddenInput.checked,
-      parent_id: parentId,
-      sort_order: payloadSortOrder
+      parent_id: parentId
     };
   }
 
@@ -711,7 +690,6 @@ export function initDocsViewerManagement(context) {
         draftLabel: draftLabel,
         draftToggle: draftToggle,
         manageDeleteScopeButton: manageDeleteScopeButton,
-        manageNormalizeOrderButton: manageNormalizeOrderButton,
         manageNewScopeButton: manageNewScopeButton,
         manageSettingsButton: manageSettingsButton,
         manageViewableButton: manageViewableButton,
@@ -763,13 +741,6 @@ export function initDocsViewerManagement(context) {
         hideContextMenu();
         hideManageActionsMenu();
         actionController.handleRebuildDocs();
-      });
-    }
-    if (manageNormalizeOrderButton) {
-      manageNormalizeOrderButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleNormalizeOrder();
       });
     }
     if (manageImportButton) {
@@ -902,8 +873,8 @@ export function initDocsViewerManagement(context) {
         hideManageActionsMenu();
         openMetadataModalForDocId(docId).then(actionController.handleEditMetadataSave);
       },
-      onMoveDoc: function (movingDocId, targetDocId, position) {
-        if (actionController) actionController.handleMoveDoc(movingDocId, targetDocId, position);
+      onMoveDoc: function (movingDocId, parentId) {
+        if (actionController) actionController.handleMoveDoc(movingDocId, parentId);
       }
     }
   });
@@ -950,7 +921,6 @@ export function initDocsViewerManagement(context) {
       metadataModal: metadataModal,
       metadataParentInput: metadataParentInput,
       metadataParentPopup: metadataParentPopup,
-      metadataSortOrderInput: metadataSortOrderInput,
       metadataStatusInput: metadataStatusInput,
       metadataSummaryInput: metadataSummaryInput,
       metadataTitleInput: metadataTitleInput,

@@ -2,11 +2,84 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-9e2d54fcb1ec5cca6df5664bbcdf6dd0",
-    "generated_at_utc": "2026-05-28T15:39:31Z",
+    "version": "blake2b-77318be3fa7016aa8304ba9eb14a92b7",
+    "generated_at_utc": "2026-05-29T11:01:56Z",
     "count": 6
   },
   "entries": [
+    {
+      "id": "azure",
+      "kind": "doc",
+      "title": "azure",
+      "href": "/docs/?scope=tmp&doc=azure",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "azure",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "azure 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "index-space",
+      "kind": "doc",
+      "title": "index workspace",
+      "href": "/docs/?scope=tmp&doc=index-space",
+      "last_updated": "2026-05-21",
+      "display_meta": "2026-05-21",
+      "search_terms": [
+        "index-space",
+        "index",
+        "space",
+        "index workspace",
+        "workspace",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "index-space index space index workspace workspace 2026-05-21 2026 05 21"
+    },
+    {
+      "id": "links",
+      "kind": "doc",
+      "title": "links",
+      "href": "/docs/?scope=tmp&doc=links",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "links",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "links 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "panel-sizes",
+      "kind": "doc",
+      "title": "panel sizes",
+      "href": "/docs/?scope=tmp&doc=panel-sizes",
+      "last_updated": "2026-05-20 19:37",
+      "display_meta": "2026-05-20 19:37",
+      "search_terms": [
+        "panel-sizes",
+        "panel",
+        "sizes",
+        "panel sizes",
+        "2026-05-20 19:37",
+        "2026",
+        "05",
+        "20",
+        "19",
+        "37"
+      ],
+      "search_text": "panel-sizes panel sizes panel sizes 2026-05-20 19:37 2026 05 20 19 37"
+    },
     {
       "id": "tmp",
       "kind": "doc",
@@ -40,79 +113,6 @@
         "24"
       ],
       "search_text": "studio tmp studio tmp 2026-05-24 2026 05 24"
-    },
-    {
-      "id": "panel-sizes",
-      "kind": "doc",
-      "title": "panel sizes",
-      "href": "/docs/?scope=tmp&doc=panel-sizes",
-      "last_updated": "2026-05-20 19:37",
-      "display_meta": "2026-05-20 19:37",
-      "search_terms": [
-        "panel-sizes",
-        "panel",
-        "sizes",
-        "panel sizes",
-        "2026-05-20 19:37",
-        "2026",
-        "05",
-        "20",
-        "19",
-        "37"
-      ],
-      "search_text": "panel-sizes panel sizes panel sizes 2026-05-20 19:37 2026 05 20 19 37"
-    },
-    {
-      "id": "index-space",
-      "kind": "doc",
-      "title": "index workspace",
-      "href": "/docs/?scope=tmp&doc=index-space",
-      "last_updated": "2026-05-21",
-      "display_meta": "2026-05-21",
-      "search_terms": [
-        "index-space",
-        "index",
-        "space",
-        "index workspace",
-        "workspace",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "index-space index space index workspace workspace 2026-05-21 2026 05 21"
-    },
-    {
-      "id": "azure",
-      "kind": "doc",
-      "title": "azure",
-      "href": "/docs/?scope=tmp&doc=azure",
-      "last_updated": "2026-05-28",
-      "display_meta": "2026-05-28",
-      "search_terms": [
-        "azure",
-        "2026-05-28",
-        "2026",
-        "05",
-        "28"
-      ],
-      "search_text": "azure 2026-05-28 2026 05 28"
-    },
-    {
-      "id": "links",
-      "kind": "doc",
-      "title": "links",
-      "href": "/docs/?scope=tmp&doc=links",
-      "last_updated": "2026-05-28",
-      "display_meta": "2026-05-28",
-      "search_terms": [
-        "links",
-        "2026-05-28",
-        "2026",
-        "05",
-        "28"
-      ],
-      "search_text": "links 2026-05-28 2026 05 28"
     }
   ]
 }

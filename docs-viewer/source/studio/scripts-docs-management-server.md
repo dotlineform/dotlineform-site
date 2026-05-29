@@ -4,7 +4,6 @@ title: Docs Management Service
 added_date: 2026-04-24
 last_updated: 2026-05-26
 parent_id: docs-viewer
-sort_order: 15000
 ---
 # Docs Management Service
 

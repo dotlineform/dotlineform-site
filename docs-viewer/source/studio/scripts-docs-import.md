@@ -4,7 +4,6 @@ title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
 last_updated: "2026-05-19 14:30"
 parent_id: docs-viewer
-sort_order: 10000
 ---
 # Documents Returned Package Script
 
@@ -170,7 +169,7 @@ Service handler checks live in:
 docs-viewer/tests/python/test_docs_import_service.py
 ```
 
-They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, preserved `sort_order`, and rebuild diagnostics shape.
+They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, retired `sort_order` removal, and rebuild diagnostics shape.
 The parser and service checks run in the `docs` profile:
 
 ```bash

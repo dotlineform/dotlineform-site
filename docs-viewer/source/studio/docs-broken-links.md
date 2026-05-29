@@ -5,7 +5,6 @@ added_date: 2026-04-23
 last_updated: 2026-05-22
 ui_status: report
 parent_id: docs-viewer
-sort_order: 18000
 viewable: true
 viewer_report: docs_broken_links
 viewer_report_access: manage

@@ -4,7 +4,6 @@ title: Library Scope
 added_date: 2026-03-31
 last_updated: 2026-05-26
 parent_id: docs-viewer-scopes
-sort_order: 1000
 viewable: true
 ---
 # Library Scope
@@ -194,7 +193,7 @@ Current model:
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
 - summary apply can update selected source `summary` values through the Studio Data Sharing API after preflight and confirmation
-- hierarchy apply can update selected source `parent_id` values through the Studio Data Sharing API after preflight and confirmation; current `sort_order` values are preserved
+- hierarchy apply can update selected source `parent_id` values through the Studio Data Sharing API after preflight and confirmation; retired `sort_order` front matter is removed when touched
 - hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
 
 Current consumers:
@@ -208,7 +207,7 @@ Current consumers:
 Current limits:
 
 - Library is the only supported v1 import scope
-- full-content apply and imported `sort_order` apply are out of scope until explicitly specified
+- full-content apply is out of scope until explicitly specified
 
 ## Why The Library Model Is Valuable Even While Small
 

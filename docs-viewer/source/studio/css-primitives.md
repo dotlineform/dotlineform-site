@@ -4,7 +4,6 @@ title: CSS Primitives
 added_date: 2026-03-31
 last_updated: "2026-05-24"
 parent_id: ui-catalogue
-sort_order: 1625
 ---
 # CSS Primitives
 

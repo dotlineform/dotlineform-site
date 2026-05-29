@@ -4,7 +4,6 @@ title: Reopenable Command Result Pattern
 added_date: 2026-05-05
 last_updated: 2026-05-15
 parent_id: ui-catalogue
-sort_order: 6000
 ---
 # Reopenable Command Result Pattern
 

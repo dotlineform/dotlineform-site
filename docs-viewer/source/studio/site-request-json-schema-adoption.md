@@ -5,7 +5,6 @@ added_date: "2026-05-03 14:35"
 last_updated: 2026-05-26
 ui_status: deferred
 parent_id: change-requests
-sort_order: 3000
 viewable: true
 ---
 # JSON Schema Adoption Request

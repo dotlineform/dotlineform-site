@@ -4,7 +4,6 @@ title: Studio Ready-State Audit
 added_date: 2026-05-03
 last_updated: "2026-05-24"
 parent_id: audit
-sort_order: 2000
 viewable: true
 ---
 # Studio Ready-State Audit

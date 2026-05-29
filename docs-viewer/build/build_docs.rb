@@ -46,7 +46,6 @@ DocRecord = Struct.new(
   :summary,
   :ui_status,
   :parent_id,
-  :sort_order,
   :hidden,
   :viewable,
   :source_path,
@@ -134,7 +133,7 @@ class DocsDataBuilder
       [doc.doc_id, item_entry(doc, docs, semantic_references_by_doc)]
     end
     docs_for_item_build.each { |doc| semantic_references_by_doc[doc.doc_id] ||= [] }
-    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, docs, item_payloads[doc.doc_id]) }
+    docs_index = ordered_docs_for_index(docs).map { |doc| index_entry(doc, docs, item_payloads[doc.doc_id]) }
     viewer_options = viewer_options_payload
     index_payload = {
       "generated_at" => effective_generated_at(docs_index, viewer_options),
@@ -238,7 +237,6 @@ class DocsDataBuilder
       added_date = front_matter["added_date"] ? front_matter["added_date"].to_s : last_updated
       summary = normalize_summary(front_matter["summary"])
       ui_status = normalize_ui_status(front_matter["ui_status"])
-      sort_order = normalize_sort_order(front_matter["sort_order"])
       hidden = hidden_front_matter_value(front_matter)
       viewable = !hidden
       viewer_report = normalize_optional_string(front_matter["viewer_report"])
@@ -255,7 +253,6 @@ class DocsDataBuilder
         summary: summary,
         ui_status: ui_status,
         parent_id: parent_id,
-        sort_order: sort_order,
         hidden: hidden,
         viewable: viewable,
         source_path: relative_path,
@@ -324,14 +321,6 @@ class DocsDataBuilder
     value.to_s.tr("_-", " ").split.map(&:capitalize).join(" ")
   end
 
-  def normalize_sort_order(value)
-    return nil if value.nil? || value.to_s.strip.empty?
-
-    Integer(value)
-  rescue ArgumentError, TypeError
-    raise "Invalid sort_order #{value.inspect}; expected an integer"
-  end
-
   def normalize_summary(value)
     value.to_s.gsub(/\s+/, " ").strip
   end
@@ -386,7 +375,6 @@ class DocsDataBuilder
       "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
       "parent_id" => effective_parent_id(doc, docs),
-      "sort_order" => doc.sort_order,
       "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
@@ -412,7 +400,6 @@ class DocsDataBuilder
       "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
       "parent_id" => effective_parent_id(doc, docs),
-      "sort_order" => doc.sort_order,
       "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
@@ -556,11 +543,37 @@ class DocsDataBuilder
 
   def doc_sort_key(doc)
     [
-      doc.sort_order.nil? ? 1 : 0,
-      doc.sort_order || 0,
       doc.title.downcase,
       doc.doc_id
     ]
+  end
+
+  def ordered_docs_for_index(docs)
+    children_by_parent = Hash.new { |hash, key| hash[key] = [] }
+    docs.each do |doc|
+      children_by_parent[effective_parent_id(doc, docs)] << doc
+    end
+    children_by_parent.each_value { |children| children.sort_by! { |doc| doc_sort_key(doc) } }
+
+    ordered = []
+    seen = {}
+    append_children = lambda do |parent_id|
+      children_by_parent[parent_id].each do |child|
+        next if seen[child.doc_id]
+
+        seen[child.doc_id] = true
+        ordered << child
+        append_children.call(child.doc_id)
+      end
+    end
+    append_children.call("")
+    docs.sort_by { |doc| doc_sort_key(doc) }.each do |doc|
+      next if seen[doc.doc_id]
+
+      seen[doc.doc_id] = true
+      ordered << doc
+    end
+    ordered
   end
 
   def effective_generated_at(docs_index, viewer_options)

@@ -4,7 +4,6 @@ title: index workspace
 added_date: 2026-05-21
 last_updated: 2026-05-21
 parent_id: ""
-sort_order: 600
 ---
 # Codex discussion
 

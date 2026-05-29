@@ -4,7 +4,6 @@ title: Analysis Scope
 added_date: 2026-04-26
 last_updated: "2026-05-06 20:54"
 parent_id: docs-viewer-scopes
-sort_order: 2000
 viewable: true
 ---
 # Analysis Scope
@@ -43,7 +42,7 @@ Current design:
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Analysis does not bleed into Library or Studio docs
 - nested source folders are allowed for Analysis source files
-- viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`, not from source folders
+- viewer organisation still comes from `doc_id`, `parent_id`, and generated title ordering, not from source folders
 
 Expected future source-folder conventions:
 

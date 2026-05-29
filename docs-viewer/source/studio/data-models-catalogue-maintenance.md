@@ -4,7 +4,6 @@ title: Catalogue Model Maintenance
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: catalogue
-sort_order: 18000
 viewable: true
 ---
 # Catalogue Model Maintenance

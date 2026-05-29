@@ -2,7 +2,6 @@ import {
   applyManagedDocDelete,
   createManagedDoc,
   moveManagedDoc,
-  normalizeManagedDocOrder,
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
@@ -11,15 +10,10 @@ import {
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
 import {
-  normalizeSortOrderValue
-} from "./docs-viewer-drag-drop.js";
-import {
   isDocHidden,
   isDocViewable
 } from "./docs-viewer-tree.js";
 import {
-  buildNormalizeOrderChoices,
-  normalizeOrderPayload,
   resolveViewabilityTargetDocIds
 } from "./docs-viewer-management-action-workflow.js";
 import {
@@ -132,8 +126,7 @@ export function createDocsViewerManagementActionController(options) {
       summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
       ui_status: String(uiStatus || "").trim(),
       hidden: isDocHidden(doc),
-      parent_id: String(doc.parent_id || "").trim(),
-      sort_order: normalizeSortOrderValue(doc.sort_order)
+      parent_id: String(doc.parent_id || "").trim()
     };
   }
 
@@ -185,7 +178,7 @@ export function createDocsViewerManagementActionController(options) {
 
     createManagedDoc({
       title: title,
-      after_doc_id: currentDoc ? currentDoc.doc_id : ""
+      parent_id: currentDoc ? String(currentDoc.parent_id || "").trim() : ""
     }, managementClientOptions())
       .then(function (payload) {
         setManagementMessage("", false);
@@ -222,7 +215,7 @@ export function createDocsViewerManagementActionController(options) {
     if (kind === "child") {
       payload.parent_id = baseDoc.doc_id;
     } else {
-      payload.after_doc_id = baseDoc.doc_id;
+      payload.parent_id = String(baseDoc.parent_id || "").trim();
     }
 
     setManagementBusy(true);
@@ -307,49 +300,6 @@ export function createDocsViewerManagementActionController(options) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs rebuild failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
-
-  async function handleNormalizeOrder() {
-    if (state.managementBusy) return;
-    var doc = currentSelectedDoc();
-    var choices = buildNormalizeOrderChoices({
-      doc: doc,
-      docsById: state.docsById,
-      text: state.managementText,
-      formatText: context.formatText
-    });
-    var result = await openDocsViewerChoiceModal({
-      root: root,
-      title: state.managementText.normalizeOrderTitle,
-      body: state.managementText.normalizeOrderPrompt,
-      value: choices.length ? choices[0].value : "",
-      choices: choices,
-      primaryLabel: state.managementText.normalizeOrderButton,
-      cancelLabel: state.managementText.cancelButton,
-      requiredMessage: state.managementText.normalizeOrderRequired
-    });
-    if (!result || !result.confirmed) return;
-    var payload = normalizeOrderPayload(result.value);
-    if (!payload) {
-      setManagementMessage(state.managementText.normalizeOrderRequired, true);
-      return;
-    }
-
-    setManagementBusy(true);
-    setManagementMessage(state.managementText.normalizeOrderRunning, false);
-
-    normalizeManagedDocOrder(payload, managementClientOptions())
-      .then(function (response) {
-        setManagementMessage(response.summary_text || state.managementText.normalizeOrderDone, false);
-        return reloadDocsIndex(state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId(), "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || state.managementText.normalizeOrderFailed, true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -470,17 +420,18 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleMoveDoc(docId, targetDocId, position) {
-    if (!docId || !targetDocId || !position) return;
+  function handleMoveDoc(docId, parentId) {
+    if (!docId) return;
     var movingDoc = state.docsById.get(docId);
-    var targetDoc = state.docsById.get(targetDocId);
-    if (!movingDoc || !targetDoc) return;
+    var nextParentId = String(parentId || "").trim();
+    if (!movingDoc) return;
+    if (nextParentId && !state.docsById.has(nextParentId)) return;
 
     setManagementBusy(true);
     clearDragState();
     setManagementMessage("Moving " + movingDoc.title + "...", false);
 
-    moveManagedDoc(movingDoc.doc_id, targetDoc.doc_id, position, managementClientOptions())
+    moveManagedDoc(movingDoc.doc_id, nextParentId, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
         return reloadDocsIndex(movingDoc.doc_id, "");
@@ -543,7 +494,6 @@ export function createDocsViewerManagementActionController(options) {
     handleEditMetadataSave: handleEditMetadataSave,
     handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,
-    handleNormalizeOrder: handleNormalizeOrder,
     handleOpenSource: handleOpenSource,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit,

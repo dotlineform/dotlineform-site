@@ -4,7 +4,6 @@ title: Docs Viewer Dependencies
 added_date: 2026-05-14
 last_updated: 2026-05-18
 parent_id: docs-viewer
-sort_order: 4000
 ---
 # Docs Viewer Dependencies
 

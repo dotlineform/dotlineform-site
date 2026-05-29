@@ -4,7 +4,6 @@ title: Docs Images And Assets
 added_date: 2026-04-23
 last_updated: 2026-04-23
 parent_id: user-guide
-sort_order: 1000
 ---
 # Docs Images And Assets
 

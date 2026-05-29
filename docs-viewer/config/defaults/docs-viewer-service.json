@@ -41,7 +41,6 @@
     "create": "/docs/create",
     "rebuild": "/docs/rebuild",
     "move": "/docs/move",
-    "normalize_order": "/docs/normalize-order",
     "delete_preview": "/docs/delete-preview",
     "delete_apply": "/docs/delete-apply",
     "scope_create_preview": "/docs/scopes/create-preview",

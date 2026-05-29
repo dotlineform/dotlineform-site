@@ -4,7 +4,6 @@ title: Search Field Definitions
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: search-field-registry
-sort_order: 2200
 ---
 # Search Field Definitions
 

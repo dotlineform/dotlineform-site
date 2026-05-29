@@ -4,7 +4,6 @@ title: CSS Audit Spec (v1)
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:00"
 parent_id: ui
-sort_order: 7000
 ---
 # CSS Audit Spec (v1)
 

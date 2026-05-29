@@ -19,7 +19,6 @@ FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
-SORT_ORDER_GAP = 1000
 
 
 @dataclass
@@ -33,7 +32,6 @@ class ScopeDoc:
     title: str
     ui_status: str
     parent_id: str
-    sort_order: Optional[int]
     hidden: bool
     viewable: bool
 
@@ -117,7 +115,6 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "summary",
         "ui_status",
         "parent_id",
-        "sort_order",
         "viewable",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
@@ -203,12 +200,6 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
-        sort_order = front_matter.get("sort_order")
-        if sort_order is not None:
-            try:
-                sort_order = int(sort_order)
-            except (TypeError, ValueError) as exc:
-                raise ValueError(f"Invalid sort_order for {path.name}: {sort_order!r}") from exc
         hidden = doc_is_hidden(front_matter)
         docs.append(
             ScopeDoc(
@@ -221,7 +212,6 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 title=title,
                 ui_status=ui_status,
                 parent_id=parent_id,
-                sort_order=sort_order,
                 hidden=hidden,
                 viewable=not hidden,
             )
@@ -247,17 +237,8 @@ def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool 
             raise ValueError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
 
-def next_sort_order(docs: list[ScopeDoc], parent_id: str) -> int:
-    sibling_orders = [doc.sort_order for doc in docs if doc.parent_id == parent_id and isinstance(doc.sort_order, int)]
-    if not sibling_orders:
-        return SORT_ORDER_GAP
-    return max(sibling_orders) + SORT_ORDER_GAP
-
-
 def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
     return (
-        doc.sort_order is None,
-        0 if doc.sort_order is None else doc.sort_order,
         doc.title.lower(),
         doc.doc_id,
     )
@@ -265,27 +246,6 @@ def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
 
 def sorted_siblings(docs: list[ScopeDoc], parent_id: str) -> list[ScopeDoc]:
     return sorted((doc for doc in docs if doc.parent_id == parent_id), key=scope_doc_sort_key)
-
-
-def create_sort_order_after(docs: list[ScopeDoc], after_doc: ScopeDoc) -> int:
-    current_order = after_doc.sort_order if isinstance(after_doc.sort_order, int) else None
-    if current_order is None:
-        return next_sort_order(docs, after_doc.parent_id)
-    siblings = sorted_siblings(docs, after_doc.parent_id)
-    sibling_index = next((index for index, doc in enumerate(siblings) if doc.doc_id == after_doc.doc_id), None)
-    next_doc = siblings[sibling_index + 1] if sibling_index is not None and sibling_index + 1 < len(siblings) else None
-    next_order = next_doc.sort_order if next_doc and isinstance(next_doc.sort_order, int) else None
-    return sparse_order_between(current_order, next_order) or (current_order + 1)
-
-
-def sparse_order_between(previous_order: Optional[int], next_order: Optional[int]) -> Optional[int]:
-    if previous_order is None:
-        return None
-    if next_order is None:
-        return previous_order + SORT_ORDER_GAP
-    if next_order - previous_order > 1:
-        return previous_order + ((next_order - previous_order) // 2)
-    return None
 
 
 def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
@@ -320,90 +280,19 @@ def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> s
             updated_front_matter.pop(key, None)
         else:
             updated_front_matter[key] = value
+    updated_front_matter.pop("sort_order", None)
     return format_source(updated_front_matter, doc.body)
 
 
-def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str, sort_order: Optional[int]) -> str:
+def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str) -> str:
     timestamp = current_doc_timestamp()
     updated_front_matter = dict(doc.front_matter)
     updated_front_matter["added_date"] = str(
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
     updated_front_matter["parent_id"] = parent_id
-    if sort_order is None:
-        updated_front_matter.pop("sort_order", None)
-    else:
-        updated_front_matter["sort_order"] = sort_order
+    updated_front_matter.pop("sort_order", None)
     return format_source(updated_front_matter, doc.body)
-
-
-def normalized_move_placements(
-    docs: list[ScopeDoc],
-    moving_doc: ScopeDoc,
-    target_doc: ScopeDoc,
-    position: str,
-) -> list[tuple[ScopeDoc, str, int]]:
-    if position in {"inside", "inside-start"}:
-        next_parent_id = target_doc.doc_id
-        ordered_docs = sorted_siblings(docs, next_parent_id)
-        ordered_docs = [doc for doc in ordered_docs if doc.doc_id != moving_doc.doc_id]
-        if position == "inside-start":
-            ordered_docs.insert(0, moving_doc)
-        else:
-            ordered_docs.append(moving_doc)
-    else:
-        next_parent_id = target_doc.parent_id
-        ordered_docs = sorted_siblings(docs, next_parent_id)
-        ordered_docs = [doc for doc in ordered_docs if doc.doc_id != moving_doc.doc_id]
-        target_index = next((index for index, doc in enumerate(ordered_docs) if doc.doc_id == target_doc.doc_id), None)
-        if target_index is None:
-            raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not in the expected sibling set")
-        ordered_docs.insert(target_index + 1, moving_doc)
-
-    return [(doc, next_parent_id, (index + 1) * SORT_ORDER_GAP) for index, doc in enumerate(ordered_docs)]
-
-
-def normalized_sibling_placements(docs: list[ScopeDoc], parent_id: str) -> list[tuple[ScopeDoc, str, int]]:
-    return [(doc, parent_id, (index + 1) * SORT_ORDER_GAP) for index, doc in enumerate(sorted_siblings(docs, parent_id))]
-
-
-def move_placements(
-    docs: list[ScopeDoc],
-    moving_doc: ScopeDoc,
-    target_doc: ScopeDoc,
-    position: str,
-) -> list[tuple[ScopeDoc, str, int]]:
-    if position in {"inside", "inside-start"}:
-        next_parent_id = target_doc.doc_id
-        ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
-        if not ordered_docs:
-            return [(moving_doc, next_parent_id, SORT_ORDER_GAP)]
-        if position == "inside-start":
-            next_order = ordered_docs[0].sort_order if isinstance(ordered_docs[0].sort_order, int) else None
-            next_sort_order_value = next_order // 2 if next_order and next_order > 1 else None
-            if next_sort_order_value is not None:
-                return [(moving_doc, next_parent_id, next_sort_order_value)]
-            return normalized_move_placements(docs, moving_doc, target_doc, position)
-        previous_order = ordered_docs[-1].sort_order if isinstance(ordered_docs[-1].sort_order, int) else None
-        next_sort_order_value = sparse_order_between(previous_order, None)
-        if next_sort_order_value is not None:
-            return [(moving_doc, next_parent_id, next_sort_order_value)]
-        return normalized_move_placements(docs, moving_doc, target_doc, position)
-
-    next_parent_id = target_doc.parent_id
-    ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
-    target_index = next((index for index, doc in enumerate(ordered_docs) if doc.doc_id == target_doc.doc_id), None)
-    if target_index is None:
-        raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not in the expected sibling set")
-
-    next_doc = ordered_docs[target_index + 1] if target_index + 1 < len(ordered_docs) else None
-    previous_order = target_doc.sort_order if isinstance(target_doc.sort_order, int) else None
-    next_order = next_doc.sort_order if next_doc and isinstance(next_doc.sort_order, int) else None
-    next_sort_order_value = sparse_order_between(previous_order, next_order)
-    if next_sort_order_value is not None:
-        return [(moving_doc, next_parent_id, next_sort_order_value)]
-
-    return normalized_move_placements(docs, moving_doc, target_doc, position)
 
 
 def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:

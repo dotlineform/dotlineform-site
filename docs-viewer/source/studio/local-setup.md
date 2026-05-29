@@ -4,7 +4,6 @@ title: Local Setup
 added_date: 2026-04-13
 last_updated: 2026-05-23
 parent_id: ""
-sort_order: 16000
 viewable: true
 ---
 # Local Setup

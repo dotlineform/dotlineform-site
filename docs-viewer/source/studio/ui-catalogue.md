@@ -4,7 +4,6 @@ title: UI Catalogue
 added_date: 2026-04-21
 last_updated: 2026-05-15
 parent_id: ui
-sort_order: 9000
 viewable: true
 ---
 # UI Catalogue

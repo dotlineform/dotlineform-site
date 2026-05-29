@@ -258,14 +258,13 @@ def test_hidden_doc_is_editable_in_dry_run() -> None:
                 "doc_id": "hidden-doc",
                 "title": "Hidden Doc",
                 "parent_id": "",
-                "sort_order": 30,
             },
             dry_run=True,
         )
 
     assert result["ok"] is True
     assert result["doc_id"] == "hidden-doc"
-    assert result["record"]["sort_order"] == 30
+    assert result["record"]["parent_id"] == ""
 
 
 def test_update_metadata_can_change_viewability_in_dry_run() -> None:
@@ -278,7 +277,6 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
                 "doc_id": "other",
                 "title": "Other",
                 "parent_id": "",
-                "sort_order": "",
                 "ui_status": "",
                 "viewable": False,
             },

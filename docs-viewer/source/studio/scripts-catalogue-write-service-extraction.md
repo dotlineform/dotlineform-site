@@ -4,7 +4,6 @@ title: Catalogue Write Service Extraction
 added_date: 2026-05-22
 last_updated: 2026-05-23
 parent_id: scripts-catalogue-write-server
-sort_order: 4400
 ---
 # Catalogue Write Service Extraction
 

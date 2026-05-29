@@ -4,7 +4,6 @@ title: Studio Backup Retention
 added_date: 2026-05-04
 last_updated: "2026-05-09 22:35"
 parent_id: studio
-sort_order: 10000
 ---
 # Studio Backup Retention
 

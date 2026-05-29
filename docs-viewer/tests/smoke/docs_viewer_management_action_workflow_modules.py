@@ -41,26 +41,18 @@ def install_fixture(page: Page) -> None:
             const docs = [
                 { doc_id: 'root', title: 'Root', parent_id: '', hidden: true },
                 { doc_id: 'parent', title: 'Parent', parent_id: 'root', viewable: false },
-                { doc_id: 'current', title: 'Current', parent_id: 'parent', hidden: true, sort_order: 3 },
+                { doc_id: 'current', title: 'Current', parent_id: 'parent', hidden: true },
                 { doc_id: 'child-a', title: 'Child A', parent_id: 'current' },
                 { doc_id: 'child-b', title: 'Child B', parent_id: 'child-a' },
                 { doc_id: 'sibling', title: 'Sibling', parent_id: 'parent' }
             ];
             const docsById = new Map(docs.map((doc) => [doc.doc_id, doc]));
-            const text = {
-                normalizeOrderRootLabel: 'Top level',
-                normalizeOrderCurrentSiblingsLabel: 'Siblings under {parent}',
-                normalizeOrderSelectedChildrenLabel: 'Children under {title}',
-                normalizeOrderRootChoiceLabel: 'Root docs',
-                normalizeOrderWholeScopeLabel: 'Whole scope'
-            };
             window.__docsViewerManagementActionWorkflowSmoke = {
                 workflow,
                 actions,
                 management,
                 docs,
                 docsById,
-                text,
                 formatText(template, tokens = {}) {
                     let result = String(template || '');
                     Object.keys(tokens).forEach((key) => {
@@ -71,43 +63,6 @@ def install_fixture(page: Page) -> None:
             };
         }"""
     )
-
-
-def assert_normalize_order(page: Page) -> None:
-    result = page.evaluate(
-        """() => {
-            const smoke = window.__docsViewerManagementActionWorkflowSmoke;
-            const { workflow, docsById, text, formatText } = smoke;
-            const choices = workflow.buildNormalizeOrderChoices({
-                doc: docsById.get('current'),
-                docsById,
-                text,
-                formatText
-            });
-            return {
-                choices,
-                currentParentPayload: workflow.normalizeOrderPayload('parent:parent'),
-                rootPayload: workflow.normalizeOrderPayload('parent:'),
-                wholePayload: workflow.normalizeOrderPayload('whole'),
-                invalidPayload: workflow.normalizeOrderPayload('invalid')
-            };
-        }"""
-    )
-    if result["choices"] != [
-        {"value": "parent:parent", "label": "Siblings under Parent"},
-        {"value": "parent:current", "label": "Children under Current"},
-        {"value": "parent:", "label": "Root docs"},
-        {"value": "whole", "label": "Whole scope"},
-    ]:
-        raise AssertionError(f"normalize-order choices changed: {result!r}")
-    if result["currentParentPayload"] != {"parent_id": "parent"}:
-        raise AssertionError(f"parent payload changed: {result!r}")
-    if result["rootPayload"] != {"parent_id": ""}:
-        raise AssertionError(f"root payload changed: {result!r}")
-    if result["wholePayload"] != {"whole_scope": True}:
-        raise AssertionError(f"whole-scope payload changed: {result!r}")
-    if result["invalidPayload"] is not None:
-        raise AssertionError(f"invalid choice should return null: {result!r}")
 
 
 def assert_viewability_targets(page: Page) -> None:
@@ -182,7 +137,6 @@ def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_changed_module_imports(page)
-    assert_normalize_order(page)
     assert_viewability_targets(page)
 
 

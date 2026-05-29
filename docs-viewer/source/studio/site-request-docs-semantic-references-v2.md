@@ -5,7 +5,6 @@ added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: draft
 parent_id: change-requests
-sort_order: 10000
 viewable: true
 ---
 # Docs Semantic References v2 Request

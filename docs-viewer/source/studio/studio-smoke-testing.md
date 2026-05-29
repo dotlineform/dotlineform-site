@@ -4,7 +4,6 @@ title: Studio Smoke Testing
 added_date: 2026-05-01
 last_updated: 2026-05-13
 parent_id: testing
-sort_order: 2000
 viewable: true
 ---
 # Studio Smoke Testing

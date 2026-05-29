@@ -4,7 +4,6 @@ title: Catalogue Source Model
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: catalogue
-sort_order: 16000
 viewable: true
 ---
 # Catalogue Source Model

@@ -5,7 +5,6 @@ added_date: 2026-05-26
 last_updated: 2026-05-26
 ui_status: ""
 parent_id: dev-home
-sort_order: 1880
 viewable: true
 ---
 # [Implementation Name]

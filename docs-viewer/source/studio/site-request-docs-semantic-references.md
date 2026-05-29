@@ -5,7 +5,6 @@ added_date: 2026-05-18
 last_updated: 2026-05-19
 ui_status: paused
 parent_id: site-request-docs-semantic-references-v2
-sort_order: 1000
 viewable: true
 ---
 # Docs Semantic References Request

@@ -4,7 +4,6 @@ title: Data Flow
 added_date: 2026-03-31
 last_updated: "2026-05-11 14:10"
 parent_id: catalogue
-sort_order: 7000
 ---
 # Data Flow
 

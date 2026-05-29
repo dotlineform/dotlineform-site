@@ -4,7 +4,6 @@ title: Docs Live Rebuild Watcher
 added_date: 2026-04-24
 last_updated: 2026-05-25
 parent_id: docs-viewer
-sort_order: 16000
 ---
 # Docs Live Rebuild Watcher
 

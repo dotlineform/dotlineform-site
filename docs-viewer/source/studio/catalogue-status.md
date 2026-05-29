@@ -4,7 +4,6 @@ title: Catalogue Drafts
 added_date: 2026-04-18
 last_updated: "2026-05-22 20:55"
 parent_id: catalogue
-sort_order: 2000
 ---
 # Catalogue Drafts
 

@@ -4,7 +4,6 @@ title: Catalogue Works
 added_date: 2026-04-01
 last_updated: 2026-05-22
 parent_id: catalogue
-sort_order: 3000
 ---
 # Catalogue Works
 

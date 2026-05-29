@@ -4,7 +4,6 @@ title: Series Tags
 added_date: 2026-03-31
 last_updated: 2026-05-15
 parent_id: analytics
-sort_order: 6000
 ---
 # Series Tags
 

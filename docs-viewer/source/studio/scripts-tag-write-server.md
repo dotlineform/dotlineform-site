@@ -4,7 +4,6 @@ title: Retired Tag Write Server
 added_date: 2026-03-31
 last_updated: "2026-05-22"
 parent_id: servers
-sort_order: 3000
 ---
 # Retired Tag Write Server
 

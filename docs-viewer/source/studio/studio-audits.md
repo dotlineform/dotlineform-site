@@ -4,7 +4,6 @@ title: Studio Audits
 added_date: 2026-05-03
 last_updated: "2026-05-23"
 parent_id: audit
-sort_order: 5000
 viewable: true
 ---
 # Studio Audits

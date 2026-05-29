@@ -5,7 +5,6 @@ added_date: 2026-05-19
 last_updated: 2026-05-28
 ui_status: urgent
 parent_id: audit
-sort_order: 4000
 viewable: true
 ---
 # Studio Python And Ruby Script Inventory

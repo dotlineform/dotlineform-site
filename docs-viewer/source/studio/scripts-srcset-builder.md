@@ -4,7 +4,6 @@ title: Srcset Builder
 added_date: 2026-03-31
 last_updated: "2026-05-09 22:35"
 parent_id: catalogue
-sort_order: 8000
 ---
 # Srcset Builder
 

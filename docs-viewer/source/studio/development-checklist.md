@@ -4,7 +4,6 @@ title: Development Checklist
 added_date: 2026-05-23
 last_updated: 2026-05-23
 parent_id: dev-home
-sort_order: 1510
 viewable: true
 ---
 # Development Checklist

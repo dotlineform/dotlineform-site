@@ -4,7 +4,6 @@ title: Studio Config JSON
 added_date: 2026-04-24
 last_updated: 2026-05-26
 parent_id: config
-sort_order: 2000
 viewable: true
 ---
 # Studio Config JSON

@@ -93,11 +93,6 @@ def install_modal_fixture(page: Page) -> None:
                           <div class="docsViewer__parentPopup" id="docsViewerMetadataParentPopup" role="listbox" hidden></div>
                         </div>
                       </div>
-                      <label class="docsViewer__field">
-                        <span class="docsViewer__fieldLabel">sort order</span>
-                        <input class="docsViewer__fieldInput" id="docsViewerMetadataSortOrderInput" name="sort_order" type="number" step="1">
-                      </label>
-                      <p class="docsViewer__modalNote muted small" id="docsViewerMetadataNote">Blank sort order leaves the doc unordered.</p>
                       <div class="docsViewer__modalActions">
                         <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button" id="docsViewerMetadataCancelButton">Cancel</button>
                         <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="submit" id="docsViewerMetadataSaveButton">OK</button>
@@ -179,7 +174,6 @@ def install_modal_fixture(page: Page) -> None:
                         title: 'Current Doc',
                         summary: 'Smoke fixture doc.',
                         parent_id: '',
-                        sort_order: 2,
                         ui_status: 'in-progress',
                         hidden: false
                     }]
@@ -216,7 +210,6 @@ def install_modal_fixture(page: Page) -> None:
                 metadataModal: document.getElementById('docsViewerMetadataModal'),
                 metadataParentInput: document.getElementById('docsViewerMetadataParentInput'),
                 metadataParentPopup: document.getElementById('docsViewerMetadataParentPopup'),
-                metadataSortOrderInput: document.getElementById('docsViewerMetadataSortOrderInput'),
                 metadataStatusInput: document.getElementById('docsViewerMetadataStatusInput'),
                 metadataSummaryInput: document.getElementById('docsViewerMetadataSummaryInput'),
                 metadataTitleInput: document.getElementById('docsViewerMetadataTitleInput'),
@@ -1226,7 +1219,6 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                 doc_id: 'current-doc',
                 title: 'Current Doc',
                 parent_id: '',
-                sort_order: 1,
                 hidden: false
             };
             const state = {
@@ -1396,7 +1388,6 @@ def run_index_double_click_edit_check(page: Page) -> None:
                       <span id="docsViewerMetadataHiddenLabel">hidden</span>
                       <input id="docsViewerMetadataParentInput" name="parent_id">
                       <div id="docsViewerMetadataParentPopup" hidden></div>
-                      <input id="docsViewerMetadataSortOrderInput" name="sort_order" type="number">
                       <button id="docsViewerMetadataCancelButton" type="button">Cancel</button>
                       <button id="docsViewerMetadataSaveButton" type="submit">OK</button>
                     </form>
@@ -1422,8 +1413,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
             `;
 
             const docs = [
-                { doc_id: 'current-doc', title: 'Current Doc', parent_id: '', sort_order: 1, hidden: false },
-                { doc_id: 'other-doc', title: 'Other Doc', parent_id: '', sort_order: 2, hidden: false }
+                { doc_id: 'current-doc', title: 'Current Doc', parent_id: '', hidden: false },
+                { doc_id: 'other-doc', title: 'Other Doc', parent_id: '', hidden: false }
             ];
             const status = document.getElementById('docsViewerStatus');
             const state = {

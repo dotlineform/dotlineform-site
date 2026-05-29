@@ -4,7 +4,6 @@ title: Scripts
 added_date: 2026-04-23
 last_updated: 2026-05-25
 parent_id: dev-home
-sort_order: 7000
 ---
 # Scripts
 

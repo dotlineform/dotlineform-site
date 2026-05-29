@@ -4,7 +4,6 @@ title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
 last_updated: 2026-05-28
 parent_id: docs-viewer
-sort_order: 13000
 ---
 # Docs Viewer Runtime Boundary
 

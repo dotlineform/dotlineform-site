@@ -377,6 +377,10 @@ html[data-theme="dark"] body.docs-viewer-service{
   box-shadow: inset 0 0 0 1px var(--docs-viewer-border, var(--border, #d8d8d8));
 }
 
+.docsViewer__nav.is-drop-root{
+  box-shadow: inset 0 0 0 2px var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+}
+
 .docsViewer__contextMenu{
   position: fixed;
   z-index: 30;

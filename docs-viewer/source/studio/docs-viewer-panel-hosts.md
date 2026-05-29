@@ -4,7 +4,6 @@ title: Docs Viewer Panel Hosts
 added_date: 2026-05-28
 last_updated: 2026-05-28
 parent_id: docs-viewer
-sort_order: 5080
 viewable: true
 ---
 # Docs Viewer Panel Hosts

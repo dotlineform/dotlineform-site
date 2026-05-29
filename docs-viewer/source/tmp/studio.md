@@ -4,7 +4,6 @@ title: tmp studio
 added_date: 2026-05-24
 last_updated: 2026-05-24
 parent_id: ""
-sort_order: 200
 ---
 
 > great. my initial reading is that lots of actions are needed which implies that the previous work wasn't thorough enough. but perhaps the reason is rather that the migration targetted functional areas, which was the only way to tackle it, and accept that gaps will remain. if we were to do a similar app/shell rewrite for studio, would we keep the same basic approach and follow up cleanup as we are doing here?

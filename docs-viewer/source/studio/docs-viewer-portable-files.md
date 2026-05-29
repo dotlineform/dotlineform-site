@@ -4,7 +4,6 @@ title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
 last_updated: 2026-05-28
 parent_id: docs-viewer-portable-setup
-sort_order: 3100
 ---
 # Docs Viewer Portable File Manifest
 

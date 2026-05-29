@@ -4,7 +4,6 @@ title: Docs Viewer CSS Cascade Design
 added_date: 2026-05-11
 last_updated: 2026-05-25
 parent_id: docs-viewer
-sort_order: 12000
 viewable: true
 ---
 # Docs Viewer CSS Cascade Design

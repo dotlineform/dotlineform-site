@@ -4,7 +4,6 @@ title: Thumbnail Quality Page
 added_date: 2026-05-12
 last_updated: 2026-05-22
 parent_id: catalogue
-sort_order: 9000
 ---
 # Thumbnail Quality Page
 

@@ -4,7 +4,6 @@ title: Project State Report
 added_date: 2026-04-27
 last_updated: "2026-05-26"
 parent_id: catalogue
-sort_order: 11000
 ---
 # Project State Report
 

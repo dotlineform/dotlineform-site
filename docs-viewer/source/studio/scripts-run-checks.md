@@ -4,7 +4,6 @@ title: Run Checks
 added_date: 2026-05-01
 last_updated: 2026-05-15
 parent_id: dev-home
-sort_order: 5000
 ---
 # Run Checks
 

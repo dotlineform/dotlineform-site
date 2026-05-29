@@ -4,7 +4,6 @@ title: Development Workflow
 added_date: 2026-05-19
 last_updated: 2026-05-28
 parent_id: dev-home
-sort_order: 1500
 viewable: true
 ---
 # Development Workflow

@@ -4,7 +4,6 @@ title: Overview
 added_date: 2026-04-24
 last_updated: 2026-05-28
 parent_id: docs-viewer
-sort_order: 1000
 ---
 # Docs Viewer Overview
 
@@ -167,7 +166,7 @@ At runtime the viewer:
 
 1. loads the scope index JSON
 2. builds the tree from `parent_id`
-3. sorts siblings by `sort_order`, then title, then `doc_id`
+3. uses generated title order for root siblings and each parent’s children, with `doc_id` as the tie-breaker
 4. loads per-doc rendered HTML from the selected document payload
 5. keeps the left navigation in place while the right pane switches between document view and inline search results
 
@@ -212,7 +211,7 @@ Current report behavior:
 - docs source front matter can opt into a report with `viewer_report`
 - `viewer_report_scope` selects the generated docs scope the report reads; if omitted, the current viewer scope is used
 - `viewer_report_access` gates reports to public, manage, or local-only contexts
-- report-backed docs remain normal docs in the index, so `parent_id`, `sort_order`, visibility, bookmarks, and management moves still work normally
+- report-backed docs remain normal docs in the index, so `parent_id`, title-ordered placement, visibility, bookmarks, and management moves still work normally
 - public/read-only reports consume generated-data callbacks; local/manage reports consume `docs-viewer-report-service.js` for local source-config, generated docs-log, and broken-links audit endpoint access
 - the first report is `docs_index_table`, a scope-aware generated-docs table with filter buttons, sortable columns, and Docs Viewer row links
 - the Library Documents review now uses `viewer_report: docs_index_table` with `viewer_report_scope: library`

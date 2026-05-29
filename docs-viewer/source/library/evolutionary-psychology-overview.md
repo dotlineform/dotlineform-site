@@ -5,7 +5,6 @@ added_date: 2026-04-23
 last_updated: 2026-04-23
 summary: This overview frames evolutionary psychology for a Processing application.
 parent_id: ""
-sort_order: 40
 ---
 # Evolutionary Psychology — Overview
 

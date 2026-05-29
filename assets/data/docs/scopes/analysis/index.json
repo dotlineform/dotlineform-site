@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T09:42:44Z",
+  "generated_at": "2026-05-29T11:01:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -8,33 +8,31 @@
   "docs": [
     {
       "scope": "analysis",
-      "doc_id": "analysis",
-      "title": "Analysis",
-      "added_date": "2026-04-26",
-      "last_updated": "2026-04-26",
-      "parent_id": "",
-      "sort_order": 10,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "analysis.md",
-      "viewer_url": "/analysis/?doc=analysis",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
-      "content_text_length": 235
-    },
-    {
-      "scope": "analysis",
       "doc_id": "3-symbols",
       "title": "3 symbols",
       "added_date": "2026-05-18 18:07",
       "last_updated": "2026-05-18 18:07",
       "parent_id": "",
-      "sort_order": 1010,
       "hidden": true,
       "viewable": false,
       "source_path": "3-symbols.md",
       "viewer_url": "/analysis/?doc=3-symbols",
       "content_url": "/assets/data/docs/scopes/analysis/by-id/3-symbols.json",
       "content_text_length": 7373
+    },
+    {
+      "scope": "analysis",
+      "doc_id": "analysis",
+      "title": "Analysis",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-26",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "analysis.md",
+      "viewer_url": "/analysis/?doc=analysis",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
+      "content_text_length": 235
     }
   ]
 }

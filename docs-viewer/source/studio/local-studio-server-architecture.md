@@ -4,7 +4,6 @@ title: Local Studio Server Architecture
 added_date: 2026-04-17
 last_updated: 2026-05-26
 parent_id: servers
-sort_order: 1000
 ---
 # Local Studio Server Architecture
 

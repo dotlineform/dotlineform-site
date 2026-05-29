@@ -5,7 +5,6 @@ added_date: 2026-05-20
 last_updated: 2026-05-21
 ui_status: review
 parent_id: studio-javascript-payload-inventory
-sort_order: 7010
 viewable: true
 ---
 # Javascript Inventory
@@ -188,7 +187,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 151 | `assets/studio/js/tag-modal-shell.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Shared tag modal shell, focus lifecycle, status, and escaping helper. |
 | 152 | `docs-viewer/runtime/js/docs-viewer-management-modal-shell.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer transient management modal shell, focus lifecycle, and choice/text/confirm helper. |
 | 153 | `docs-viewer/runtime/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
-| 154 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 154 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management viewability target workflow helper. |
 | 155 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
 | 156 | `assets/studio/js/catalogue-work-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor state factory for required elements, initial route state, derived panel nodes, media config, modal host, and route-state option projection. |
 | 157 | `assets/studio/js/catalogue-work-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor event binder that attaches DOM listeners and delegates to injected selection, embedded-item, action, and route-state callbacks. |

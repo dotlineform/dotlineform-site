@@ -4,7 +4,6 @@ title: Catalogue Moment Editor
 added_date: 2026-04-27
 last_updated: "2026-05-22"
 parent_id: user-guide
-sort_order: 6000
 ---
 # Catalogue Moment Editor
 

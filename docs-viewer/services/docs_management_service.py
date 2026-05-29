@@ -54,7 +54,6 @@ from docs_management_mutation_service import (  # noqa: E402
     handle_create,
     handle_delete_apply,
     handle_move,
-    handle_normalize_order,
     handle_scope_create_apply,
     handle_scope_delete_apply,
     handle_update_metadata,
@@ -126,8 +125,6 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
-    if path == routes.NORMALIZE_ORDER_PATH:
-        return HTTPStatus.OK, handle_normalize_order(repo_root, body, dry_run)
     if path == routes.DELETE_PREVIEW_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
         doc_id = str(body.get("doc_id") or "").strip()

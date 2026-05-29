@@ -73,7 +73,6 @@ function findDocsViewerManagementShellRefs(options) {
     metadataHiddenLabel: nodeById(documentRef, "docsViewerMetadataHiddenLabel"),
     metadataParentInput: nodeById(documentRef, "docsViewerMetadataParentInput"),
     metadataParentPopup: nodeById(documentRef, "docsViewerMetadataParentPopup"),
-    metadataSortOrderInput: nodeById(documentRef, "docsViewerMetadataSortOrderInput"),
     metadataCancelButton: nodeById(documentRef, "docsViewerMetadataCancelButton"),
     metadataSaveButton: nodeById(documentRef, "docsViewerMetadataSaveButton"),
     importModal: nodeById(documentRef, "docsViewerImportModal"),

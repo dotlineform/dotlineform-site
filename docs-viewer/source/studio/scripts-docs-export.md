@@ -4,7 +4,6 @@ title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
 last_updated: 2026-05-26
 parent_id: docs-viewer
-sort_order: 2000
 ---
 # Documents Package Preparation Script
 

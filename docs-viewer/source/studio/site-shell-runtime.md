@@ -4,7 +4,6 @@ title: Site Shell Runtime
 added_date: 2026-03-31
 last_updated: "2026-05-11 17:50"
 parent_id: architecture
-sort_order: 3000
 ---
 # Site Shell Runtime
 

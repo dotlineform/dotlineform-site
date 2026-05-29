@@ -12,29 +12,6 @@ function docTitleList(docs) {
   }).join(", ");
 }
 
-function docLabel(doc) {
-  return doc && doc.title ? doc.title : (doc && doc.doc_id ? doc.doc_id : "");
-}
-
-function parentLabel(parentId, options) {
-  var normalized = normalizeText(parentId);
-  var text = options.text || {};
-  if (!normalized) return text.normalizeOrderRootLabel;
-  var docsById = options.docsById instanceof Map ? options.docsById : new Map();
-  return docLabel(docsById.get(normalized)) || normalized;
-}
-
-function formatText(options, template, tokens) {
-  if (typeof options.formatText === "function") {
-    return options.formatText(template, tokens);
-  }
-  var text = String(template || "");
-  Object.keys(tokens || {}).forEach(function (key) {
-    text = text.replace(new RegExp("\\{" + key + "\\}", "g"), tokens[key]);
-  });
-  return text;
-}
-
 export function collectDescendantDocIds(docs, docId, bucket) {
   var records = Array.isArray(docs) ? docs : [];
   var targetDocId = normalizeText(docId);
@@ -46,47 +23,6 @@ export function collectDescendantDocIds(docs, docId, bucket) {
     collectDescendantDocIds(records, candidate.doc_id, targetBucket);
   });
   return targetBucket;
-}
-
-export function buildNormalizeOrderChoices(options = {}) {
-  var doc = options.doc || null;
-  var text = options.text || {};
-  var choices = [];
-  var seen = new Set();
-
-  function push(value, label) {
-    if (!value || seen.has(value)) return;
-    seen.add(value);
-    choices.push({ value: value, label: label });
-  }
-
-  if (doc) {
-    var currentParentId = normalizeText(doc.parent_id);
-    push(
-      "parent:" + currentParentId,
-      formatText(options, text.normalizeOrderCurrentSiblingsLabel, {
-        parent: parentLabel(currentParentId, options)
-      })
-    );
-    push(
-      "parent:" + doc.doc_id,
-      formatText(options, text.normalizeOrderSelectedChildrenLabel, {
-        title: docLabel(doc)
-      })
-    );
-  }
-  push("parent:", text.normalizeOrderRootChoiceLabel);
-  push("whole", text.normalizeOrderWholeScopeLabel);
-  return choices;
-}
-
-export function normalizeOrderPayload(choiceValue) {
-  var value = normalizeText(choiceValue);
-  if (value === "whole") return { whole_scope: true };
-  if (value.indexOf("parent:") === 0) {
-    return { parent_id: value.slice("parent:".length) };
-  }
-  return null;
 }
 
 export function nonViewableAncestorDocs(doc, findDocById) {

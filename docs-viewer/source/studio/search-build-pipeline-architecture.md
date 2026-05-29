@@ -4,7 +4,6 @@ title: Search Build Pipeline Architecture
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: search-build-pipeline
-sort_order: 8100
 ---
 # Search Build Pipeline Architecture
 

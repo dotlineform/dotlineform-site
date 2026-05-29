@@ -4,7 +4,6 @@ title: Studio
 added_date: 2026-04-23
 last_updated: 2026-05-26
 parent_id: ""
-sort_order: 2000
 ---
 # Studio
 

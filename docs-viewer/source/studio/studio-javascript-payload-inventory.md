@@ -4,7 +4,6 @@ title: JavaScript Inventory Policy
 added_date: 2026-05-14
 last_updated: 2026-05-21
 parent_id: audit
-sort_order: 6000
 viewable: true
 ---
 # JavaScript Inventory Policy

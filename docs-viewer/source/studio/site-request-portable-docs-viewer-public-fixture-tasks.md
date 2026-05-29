@@ -5,7 +5,6 @@ added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: urgent
 parent_id: site-request-portable-docs-viewer
-sort_order: 1010
 viewable: true
 ---
 # Portable Docs Viewer Public Fixture Tasks

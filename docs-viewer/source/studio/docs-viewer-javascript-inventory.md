@@ -5,7 +5,6 @@ added_date: 2026-05-20
 last_updated: 2026-05-28
 ui_status: review
 parent_id: studio-javascript-payload-inventory
-sort_order: 7020
 viewable: true
 ---
 # Docs Viewer JavaScript Inventory
@@ -77,7 +76,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 31 | 75 | `docs-viewer/runtime/js/reports/reports-list-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 32 | 76 | `docs-viewer/runtime/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 33 | 77 | `docs-viewer/runtime/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 34 | 152 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 34 | 152 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management viewability target workflow helper. |
 | 35 | 153 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, current-key persistence, toggle projection, and document-pane visibility helper. |
 | 36 | 154 | `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index panel chrome renderer and projection applier. |
 | 37 | new | `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned document shell, read-only metadata chrome, and narrow document/search/recent projection applier. |
@@ -395,7 +394,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Keep import writes behind `docs-viewer/runtime/js/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
 - 2026-05-28 lifecycle note: management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, status pills, and write orchestration remain behind `docs-viewer/runtime/js/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
-- Keep normalize-order choice shaping and make-viewable target resolution in `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`.
+- Keep make-viewable target resolution in `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `docs-viewer/runtime/js/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 
 ### Reports, Search, And Bookmarks

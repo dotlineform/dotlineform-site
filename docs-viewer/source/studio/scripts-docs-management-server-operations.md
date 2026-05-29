@@ -4,7 +4,6 @@ title: Docs Management Service Operations
 added_date: 2026-05-19
 last_updated: 2026-05-23
 parent_id: scripts-docs-management-server
-sort_order: 15500
 ---
 # Docs Management Service Operations
 

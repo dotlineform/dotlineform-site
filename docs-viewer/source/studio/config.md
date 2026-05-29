@@ -4,7 +4,6 @@ title: Config
 added_date: 2026-03-31
 last_updated: 2026-05-26
 parent_id: ""
-sort_order: 14000
 ---
 # Config
 

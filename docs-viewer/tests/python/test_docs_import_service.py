@@ -1316,7 +1316,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
     assert payload["hierarchy_apply_written"] is False
 
 
-def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order() -> None:
+def test_library_import_hierarchy_apply_creates_backup_and_removes_retired_sort_order() -> None:
     original_rebuild = stub_rebuild()
     try:
         with make_repo() as temp:
@@ -1366,7 +1366,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert "last_updated: 2026-05-01" in alpha_text
     assert 'parent_id: ""' in alpha_text
-    assert "sort_order: 30" in alpha_text
+    assert "sort_order:" not in alpha_text
     assert "parent_id: external-root" not in library_text
 
 
@@ -1445,7 +1445,7 @@ def main() -> None:
         test_library_import_summary_apply_creates_backup_and_writes_source,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,
         test_library_import_hierarchy_apply_preflight_reports_missing_target_doc,
-        test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order,
+        test_library_import_hierarchy_apply_creates_backup_and_removes_retired_sort_order,
         test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write,
         test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows,
     ]

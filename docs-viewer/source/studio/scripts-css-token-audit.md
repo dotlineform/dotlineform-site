@@ -4,7 +4,6 @@ title: CSS Token Audit
 added_date: 2026-03-31
 last_updated: "2026-05-26"
 parent_id: ui
-sort_order: 8000
 viewable: true
 ---
 # CSS Token Audit

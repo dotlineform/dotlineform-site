@@ -4,7 +4,6 @@ title: Catalogue Write Server Endpoints
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: scripts-catalogue-write-server
-sort_order: 4100
 ---
 # Catalogue Write Server Endpoints
 

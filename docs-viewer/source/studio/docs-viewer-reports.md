@@ -4,7 +4,6 @@ title: Docs Viewer Reports
 added_date: 2026-05-13
 last_updated: 2026-05-25
 parent_id: docs-viewer
-sort_order: 8000
 viewer_report: reports_list
 viewer_report_access: public
 ---
@@ -13,7 +12,7 @@ viewer_report_access: public
 Docs Viewer reports are lightweight, document-level inspection surfaces rendered inside the normal Docs Viewer document pane.
 
 They exist so a document can show generated data that is easier to scan as a list, table, or summary than as prose.
-The report-backed document still behaves like any other Docs Viewer document: it has a `doc_id`, title, `parent_id`, `sort_order`, visibility, search metadata, bookmarks, and management-mode routing.
+The report-backed document still behaves like any other Docs Viewer document: it has a `doc_id`, title, `parent_id`, generated title ordering, visibility, search metadata, bookmarks, and management-mode routing.
 
 Reports are deliberately not a dashboard or workflow framework.
 They are for read-only or inspection-oriented views over Docs Viewer data, not for source edits, imports, exports, rebuilds, or apply flows.

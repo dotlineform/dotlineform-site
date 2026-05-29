@@ -1,9 +1,9 @@
 import {
   canDragDoc,
-  canDropOnDoc,
+  canDropOnParent,
   currentDropTargetFromEvent,
-  rowDropPosition,
-  terminalListDropTargetFromEvent
+  rowDropParentIdFromEvent,
+  terminalRootDropTargetFromEvent
 } from "./docs-viewer-drag-drop.js";
 
 export function createDocsViewerManagementInteractionController(options) {
@@ -16,8 +16,8 @@ export function createDocsViewerManagementInteractionController(options) {
   var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var contextMenuDocId = "";
   var dragDocId = "";
-  var dropTargetDocId = "";
-  var dropPosition = "";
+  var dropTargetParentId = "";
+  var hasDropTarget = false;
   var suppressNextClick = false;
   var lastEditRequestDocId = "";
   var lastEditRequestTime = 0;
@@ -62,8 +62,8 @@ export function createDocsViewerManagementInteractionController(options) {
 
   function clearDragState() {
     dragDocId = "";
-    dropTargetDocId = "";
-    dropPosition = "";
+    dropTargetParentId = "";
+    hasDropTarget = false;
     updateNavDragState();
   }
 
@@ -90,13 +90,8 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function updateNavDragState() {
-    function dropClassName(position) {
-      if (position === "inside") return "is-drop-inside";
-      if (position === "inside-start") return "is-drop-inside-start";
-      return "is-drop-after";
-    }
-
     if (!nav) return;
+    nav.classList.remove("is-drop-root");
     nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
       row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside", "is-drop-inside-start");
     });
@@ -106,10 +101,14 @@ export function createDocsViewerManagementInteractionController(options) {
         dragRow.classList.add("is-dragging");
       }
     }
-    if (dropTargetDocId && dropPosition) {
-      var dropRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dropTargetDocId) + '"]');
+    if (hasDropTarget) {
+      if (!dropTargetParentId) {
+        nav.classList.add("is-drop-root");
+        return;
+      }
+      var dropRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dropTargetParentId) + '"]');
       if (dropRow) {
-        dropRow.classList.add(dropClassName(dropPosition));
+        dropRow.classList.add("is-drop-inside");
       }
     }
   }
@@ -214,8 +213,8 @@ export function createDocsViewerManagementInteractionController(options) {
       if (!dragHandle || !dragEnabled()) return;
       hideContextMenu();
       dragDocId = dragHandle.dataset.dragDocId || "";
-      dropTargetDocId = "";
-      dropPosition = "";
+      dropTargetParentId = "";
+      hasDropTarget = false;
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/plain", dragDocId);
@@ -226,34 +225,33 @@ export function createDocsViewerManagementInteractionController(options) {
     nav.addEventListener("dragover", function (event) {
       var row = event.target.closest("[data-doc-row-id]");
       if (!row) {
-        var terminalTarget = terminalListDropTargetFromEvent(event, dragDropOptions());
-        if (terminalTarget && canDropOnDoc(terminalTarget.targetDocId, terminalTarget.position, dragDropOptions())) {
+        var terminalTarget = terminalRootDropTargetFromEvent(event, dragDropOptions());
+        if (terminalTarget && canDropOnParent(terminalTarget.parentId, dragDropOptions())) {
           event.preventDefault();
           if (event.dataTransfer) {
             event.dataTransfer.dropEffect = "move";
           }
-          if (dropTargetDocId !== terminalTarget.targetDocId || dropPosition !== terminalTarget.position) {
-            dropTargetDocId = terminalTarget.targetDocId;
-            dropPosition = terminalTarget.position;
+          if (!hasDropTarget || dropTargetParentId !== terminalTarget.parentId) {
+            dropTargetParentId = terminalTarget.parentId;
+            hasDropTarget = true;
             updateNavDragState();
           }
           return;
         }
-        if (dropTargetDocId || dropPosition) {
-          dropTargetDocId = "";
-          dropPosition = "";
+        if (hasDropTarget) {
+          dropTargetParentId = "";
+          hasDropTarget = false;
           updateNavDragState();
         }
         return;
       }
 
-      var targetDocId = row.dataset.docRowId || "";
       var dropOptions = dragDropOptions();
-      var nextPosition = rowDropPosition(row, event, dropOptions);
-      if (!canDropOnDoc(targetDocId, nextPosition, dropOptions)) {
-        if (dropTargetDocId || dropPosition) {
-          dropTargetDocId = "";
-          dropPosition = "";
+      var nextParentId = rowDropParentIdFromEvent(row, event, dropOptions);
+      if (!canDropOnParent(nextParentId, dropOptions)) {
+        if (hasDropTarget) {
+          dropTargetParentId = "";
+          hasDropTarget = false;
           updateNavDragState();
         }
         return;
@@ -263,9 +261,9 @@ export function createDocsViewerManagementInteractionController(options) {
       if (event.dataTransfer) {
         event.dataTransfer.dropEffect = "move";
       }
-      if (dropTargetDocId !== targetDocId || dropPosition !== nextPosition) {
-        dropTargetDocId = targetDocId;
-        dropPosition = nextPosition;
+      if (!hasDropTarget || dropTargetParentId !== nextParentId) {
+        dropTargetParentId = nextParentId;
+        hasDropTarget = true;
         updateNavDragState();
       }
     });
@@ -274,22 +272,16 @@ export function createDocsViewerManagementInteractionController(options) {
       event.preventDefault();
       var dropOptions = dragDropOptions();
       var dropTarget = currentDropTargetFromEvent(event, {
-        targetDocId: dropTargetDocId,
-        position: dropPosition
+        parentId: dropTargetParentId
       }, dropOptions);
-      var targetDocId = dropTarget.targetDocId;
-      var position = dropTarget.position;
-      if ((!targetDocId || !position) && dropTargetDocId && dropPosition) {
-        targetDocId = dropTargetDocId;
-        position = dropPosition;
-      }
-      if (!canDropOnDoc(targetDocId, position, dropOptions) || !position) {
+      var parentId = dropTarget.parentId;
+      if (!canDropOnParent(parentId, dropOptions)) {
         clearDragState();
         return;
       }
       var movingDocId = dragDocId;
       clearDragState();
-      if (callbacks.onMoveDoc) callbacks.onMoveDoc(movingDocId, targetDocId, position);
+      if (callbacks.onMoveDoc) callbacks.onMoveDoc(movingDocId, parentId);
     });
 
     nav.addEventListener("dragend", function () {

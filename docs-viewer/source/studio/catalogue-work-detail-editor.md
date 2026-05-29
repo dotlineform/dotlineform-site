@@ -4,7 +4,6 @@ title: Catalogue Work Detail Editor
 added_date: 2026-04-22
 last_updated: "2026-05-22"
 parent_id: user-guide
-sort_order: 4000
 ---
 # Catalogue Work Detail Editor
 

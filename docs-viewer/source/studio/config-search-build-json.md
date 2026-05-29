@@ -4,7 +4,6 @@ title: Search Build Config JSON
 added_date: 2026-04-25
 last_updated: "2026-05-11 21:30"
 parent_id: search
-sort_order: 16000
 ---
 # Search Build Config JSON
 

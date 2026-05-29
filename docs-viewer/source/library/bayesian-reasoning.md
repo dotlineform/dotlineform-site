@@ -4,7 +4,6 @@ title: Bayesian Reasoning
 added_date: "2026-05-07 16:55"
 last_updated: "2026-05-07 22:13"
 parent_id: ""
-sort_order: 80
 ---
 # Bayesian Reasoning
 

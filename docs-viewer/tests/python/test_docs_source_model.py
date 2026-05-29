@@ -27,7 +27,6 @@ def make_doc(
     *,
     title: str | None = None,
     parent_id: str = "",
-    sort_order: int | None = None,
     stem: str | None = None,
 ) -> source_model.ScopeDoc:
     front_matter: dict[str, object] = {
@@ -35,8 +34,6 @@ def make_doc(
         "title": title or doc_id.title(),
         "parent_id": parent_id,
     }
-    if sort_order is not None:
-        front_matter["sort_order"] = sort_order
     body = f"# {front_matter['title']}\n"
     return source_model.ScopeDoc(
         scope="studio",
@@ -48,7 +45,6 @@ def make_doc(
         title=str(front_matter["title"]),
         ui_status="",
         parent_id=parent_id,
-        sort_order=sort_order,
         hidden=False,
         viewable=True,
     )
@@ -64,7 +60,6 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
                     "doc_id: sample",
                     "title: \"Quoted Title\"",
                     "parent_id: \"\"",
-                    "sort_order: 20",
                     "viewable: false",
                     "summary: \"\"",
                     "---",
@@ -80,11 +75,9 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
 
     assert front_matter["title"] == "Quoted Title"
     assert front_matter["parent_id"] == ""
-    assert front_matter["sort_order"] == 20
     assert front_matter["viewable"] is False
     assert front_matter["summary"] == ""
     assert "parent_id: \"\"" in formatted
-    assert "sort_order: 20" in formatted
     assert "viewable: false" in formatted
 
 
@@ -135,18 +128,15 @@ def test_load_scope_docs_allows_unknown_library_parent() -> None:
     assert docs[0].parent_id == "external-parent"
 
 
-def test_sort_order_and_child_helpers_are_stable() -> None:
+def test_title_order_and_child_helpers_are_stable() -> None:
     parent = make_doc("parent", title="Parent")
-    first = make_doc("first", title="First", parent_id="parent", sort_order=20)
-    second = make_doc("second", title="Second", parent_id="parent", sort_order=10)
-    blank = make_doc("blank", title="Blank", parent_id="parent")
+    first = make_doc("first", title="bravo", parent_id="parent")
+    second = make_doc("second", title="Alpha", parent_id="parent")
+    blank = make_doc("blank", title="alpha", parent_id="parent")
     docs = [parent, first, second, blank]
 
-    assert source_model.next_sort_order(docs, "parent") == 1020
-    assert [doc.doc_id for doc in source_model.sorted_siblings(docs, "parent")] == ["second", "first", "blank"]
-    assert source_model.create_sort_order_after(docs, first) == 1020
-    assert source_model.create_sort_order_after(docs, blank) == 1020
-    assert source_model.direct_child_doc_ids(docs, "parent") == ["second", "first", "blank"]
+    assert [doc.doc_id for doc in source_model.sorted_siblings(docs, "parent")] == ["blank", "second", "first"]
+    assert source_model.direct_child_doc_ids(docs, "parent") == ["blank", "second", "first"]
 
 
 def test_descendant_helper_handles_cycles_without_looping() -> None:
@@ -156,82 +146,19 @@ def test_descendant_helper_handles_cycles_without_looping() -> None:
     assert source_model.descendant_doc_ids([alpha, beta], "alpha") == {"alpha", "beta"}
 
 
-def test_move_placement_uses_sparse_single_doc_orders_when_possible() -> None:
-    parent = make_doc("parent", title="Parent")
-    target = make_doc("target", title="Target", parent_id="parent", sort_order=10)
-    sibling = make_doc("sibling", title="Sibling", parent_id="parent", sort_order=20)
-    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
-    docs = [parent, target, sibling, moving]
-
-    inside = source_model.move_placements(docs, moving, parent, "inside")
-    after = source_model.move_placements(docs, moving, target, "after")
-
-    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside] == [
-        ("moving", "parent", 1020),
-    ]
-    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
-        ("moving", "parent", 15),
-    ]
-
-
-def test_move_placement_supports_first_child_under_parent() -> None:
-    parent = make_doc("parent", title="Parent")
-    first = make_doc("first", title="First", parent_id="parent", sort_order=10)
-    second = make_doc("second", title="Second", parent_id="parent", sort_order=20)
-    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
-    docs = [parent, first, second, moving]
-
-    inside_start = source_model.move_placements(docs, moving, parent, "inside-start")
-
-    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside_start] == [
-        ("moving", "parent", 5),
-    ]
-
-
-def test_move_placement_normalizes_first_child_when_sparse_gap_is_exhausted() -> None:
-    parent = make_doc("parent", title="Parent")
-    first = make_doc("first", title="First", parent_id="parent", sort_order=1)
-    second = make_doc("second", title="Second", parent_id="parent", sort_order=2)
-    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
-    docs = [parent, first, second, moving]
-
-    inside_start = source_model.move_placements(docs, moving, parent, "inside-start")
-
-    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside_start] == [
-        ("moving", "parent", 1000),
-        ("first", "parent", 2000),
-        ("second", "parent", 3000),
-    ]
-
-
-def test_move_placement_normalizes_only_when_sparse_gap_is_exhausted() -> None:
-    parent = make_doc("parent", title="Parent")
-    target = make_doc("target", title="Target", parent_id="parent", sort_order=10)
-    sibling = make_doc("sibling", title="Sibling", parent_id="parent", sort_order=11)
-    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
-    docs = [parent, target, sibling, moving]
-
-    after = source_model.move_placements(docs, moving, target, "after")
-
-    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
-        ("target", "parent", 1000),
-        ("moving", "parent", 2000),
-        ("sibling", "parent", 3000),
-    ]
-
-
-def test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order() -> None:
+def test_source_rewrite_preserves_doc_dates_and_removes_retired_sort_order() -> None:
     original_timestamp = source_model.current_doc_timestamp
     source_model.current_doc_timestamp = lambda: "2026-05-09 13:00"
     try:
-        doc = make_doc("sample", title="Sample", parent_id="parent", sort_order=10)
+        doc = make_doc("sample", title="Sample", parent_id="parent")
+        doc.front_matter["sort_order"] = 10
         doc.front_matter["added_date"] = "2026-01-01"
         doc.front_matter["last_updated"] = "2026-01-02 09:00"
 
         doc.front_matter["viewable"] = True
 
         metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "viewable": False})
-        placement_text = source_model.rewrite_doc_placement_source(doc, "", None)
+        placement_text = source_model.rewrite_doc_placement_source(doc, "")
     finally:
         source_model.current_doc_timestamp = original_timestamp
 
@@ -260,11 +187,9 @@ def main() -> None:
         test_load_scope_docs_rejects_duplicate_doc_ids,
         test_load_scope_docs_rejects_unknown_studio_parent,
         test_load_scope_docs_allows_unknown_library_parent,
-        test_sort_order_and_child_helpers_are_stable,
+        test_title_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
-        test_move_placement_uses_sparse_single_doc_orders_when_possible,
-        test_move_placement_normalizes_only_when_sparse_gap_is_exhausted,
-        test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order,
+        test_source_rewrite_preserves_doc_dates_and_removes_retired_sort_order,
         test_ensure_unique_stem_checks_existing_stems_and_doc_ids,
     ]
     for test in tests:

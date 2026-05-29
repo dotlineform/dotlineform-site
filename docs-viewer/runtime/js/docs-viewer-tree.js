@@ -1,7 +1,5 @@
 export function sortKey(doc) {
   return [
-    doc.sort_order == null ? 1 : 0,
-    doc.sort_order == null ? 0 : doc.sort_order,
     String(doc.title || "").toLowerCase(),
     String(doc.doc_id || "")
   ];

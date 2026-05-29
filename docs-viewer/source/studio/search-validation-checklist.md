@@ -4,7 +4,6 @@ title: Search Validation Checklist
 added_date: 2026-04-01
 last_updated: "2026-05-11 21:30"
 parent_id: search
-sort_order: 10000
 ---
 # Search Validation Checklist
 

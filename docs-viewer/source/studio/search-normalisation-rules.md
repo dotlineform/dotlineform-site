@@ -4,7 +4,6 @@ title: Search Normalisation Rules
 added_date: 2026-04-01
 last_updated: 2026-04-01
 parent_id: search
-sort_order: 5000
 ---
 # Search Normalisation Rules
 

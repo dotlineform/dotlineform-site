@@ -4,7 +4,6 @@ title: Source Organisation
 added_date: 2026-04-23
 last_updated: "2026-05-13 20:20"
 parent_id: docs-viewer
-sort_order: 11000
 ---
 # Docs Viewer Source Organisation
 
@@ -48,7 +47,7 @@ Analysis allows nested source folders:
 
 - Analysis docs: `docs-viewer/source/analysis/**/*.md`
 
-Analysis folder names are source-organisation affordances for future helpers such as series/work analysis lookup. Viewer navigation still comes from `doc_id`, `parent_id`, and `sort_order`.
+Analysis folder names are source-organisation affordances for future helpers such as series/work analysis lookup. Viewer navigation still comes from `doc_id` and `parent_id`.
 
 ## Current Tree Model
 
@@ -58,8 +57,8 @@ Current tree rules:
 
 - a blank `parent_id` makes a top-level document within that scope
 - a populated `parent_id` places the document under that parent
-- `sort_order` controls sibling ordering
-- if `sort_order` is equal or absent, the viewer falls back to title and `doc_id`
+- root siblings and each parent’s children are sorted case-insensitively by `title`
+- `doc_id` is the stable tie-breaker when titles match
 
 This gives each scope its own hierarchical navigation tree without requiring separate viewer code.
 
@@ -110,7 +109,7 @@ The flat Studio source layout is now part of the live Docs Viewer contract.
 Current effect:
 
 - Studio file storage no longer carries section meaning
-- tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
+- tree structure comes only from `doc_id` and `parent_id`; sibling order comes from generated title ordering
 
 Important builder consequence:
 

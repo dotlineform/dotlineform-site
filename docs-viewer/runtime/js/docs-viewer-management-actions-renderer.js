@@ -5,7 +5,6 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
   '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>',
-  '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNormalizeOrderButton">Normalize order</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewScopeButton" hidden>New scope</button>',
   '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteScopeButton" hidden>Delete scope</button>',

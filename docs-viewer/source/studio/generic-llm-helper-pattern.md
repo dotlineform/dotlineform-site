@@ -5,7 +5,6 @@ added_date: 2026-04-16
 last_updated: 2026-04-16
 ui_status: draft
 parent_id: llm
-sort_order: 2000
 viewable: true
 ---
 # Generic LLM Helper Pattern

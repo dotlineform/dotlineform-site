@@ -274,7 +274,6 @@ def apply_hierarchy_updates(
                 "path": relative_path(repo_root, target.path),
                 "from_parent_id": target.parent_id,
                 "to_parent_id": parent_id,
-                "sort_order": target.sort_order,
             }
         )
 

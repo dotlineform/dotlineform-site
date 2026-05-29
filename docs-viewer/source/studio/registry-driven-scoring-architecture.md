@@ -5,7 +5,6 @@ added_date: 2026-04-16
 last_updated: "2026-05-06 20:54"
 ui_status: draft
 parent_id: analytics
-sort_order: 7000
 viewable: true
 ---
 # Registry-Driven Scoring Architecture

@@ -4,7 +4,6 @@ title: Entropy & Evolution Under Two Cosmologies
 added_date: "2026-05-07 21:29"
 last_updated: "2026-05-07 22:12"
 parent_id: ""
-sort_order: 120
 ---
 # Entropy & Evolution Under Two Cosmologies — Closed vs. Open/Cyclic
 

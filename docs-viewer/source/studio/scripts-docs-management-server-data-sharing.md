@@ -4,7 +4,6 @@ title: Docs Management Service Data Sharing (Retired)
 added_date: 2026-05-19
 last_updated: 2026-05-26
 parent_id: scripts-docs-management-server
-sort_order: 15300
 ---
 # Docs Management Service Data Sharing (Retired)
 

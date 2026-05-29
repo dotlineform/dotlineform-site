@@ -4,7 +4,6 @@ title: Jekyll Site Config
 added_date: 2026-03-31
 last_updated: 2026-05-25
 parent_id: dev-home
-sort_order: 4000
 ---
 # Jekyll Site Config
 

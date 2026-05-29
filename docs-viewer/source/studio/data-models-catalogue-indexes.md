@@ -4,7 +4,6 @@ title: Catalogue Indexes And Payloads
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: catalogue
-sort_order: 17000
 viewable: true
 ---
 # Catalogue Indexes And Payloads

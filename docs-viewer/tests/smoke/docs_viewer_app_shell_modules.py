@@ -199,7 +199,6 @@ def assert_management_actions_render(page: Page) -> None:
                 'docsViewerMetadataHiddenInput',
                 'docsViewerMetadataParentInput',
                 'docsViewerMetadataParentPopup',
-                'docsViewerMetadataSortOrderInput',
                 'docsViewerMetadataCancelButton',
                 'docsViewerMetadataSaveButton',
                 'docsViewerImportModal',
@@ -2179,9 +2178,9 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                         show_updated_date: false
                     },
                     docs: [
-                        { doc_id: 'folder', title: 'Folder', parent_id: '', sort_order: 1, content_url: '/folder.json', viewable: true },
-                        { doc_id: 'child', title: 'Child', parent_id: 'folder', sort_order: 1, content_url: '/child.json', viewable: true },
-                        { doc_id: 'intro', title: 'Intro', parent_id: '', sort_order: 2, content_url: '/intro.json', viewable: true }
+                        { doc_id: 'folder', title: 'Folder', parent_id: '', content_url: '/folder.json', viewable: true },
+                        { doc_id: 'child', title: 'Child', parent_id: 'folder', content_url: '/child.json', viewable: true },
+                        { doc_id: 'intro', title: 'Intro', parent_id: '', content_url: '/intro.json', viewable: true }
                     ]
                 },
                 '/child.json': { content_html: '<h1>Child</h1>' },
@@ -2724,9 +2723,9 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
             `;
             const calls = [];
             const docs = [
-                { doc_id: 'intro', title: 'Intro', parent_id: '', sort_order: 1, last_updated: '2026-05-28', viewable: true },
-                { doc_id: 'child', title: 'Child', parent_id: 'intro', sort_order: 1, summary: 'Child summary', viewable: true },
-                { doc_id: 'hidden', title: 'Hidden', parent_id: '', sort_order: 2, hidden: true, viewable: false }
+                { doc_id: 'intro', title: 'Intro', parent_id: '', last_updated: '2026-05-28', viewable: true },
+                { doc_id: 'child', title: 'Child', parent_id: 'intro', summary: 'Child summary', viewable: true },
+                { doc_id: 'hidden', title: 'Hidden', parent_id: '', hidden: true, viewable: false }
             ];
             const documentIndex = {
                 docs,
@@ -3331,12 +3330,12 @@ def assert_document_index_state_contract(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-document-index-state.js');
             const publicState = {
                 allDocs: [
-                    { doc_id: 'root', title: 'Root', sort_order: 1, viewable: true },
-                    { doc_id: 'child', parent_id: 'root', title: 'Child', sort_order: 1, viewable: true },
-                    { doc_id: 'hidden-root', title: 'Hidden', sort_order: 2, hidden: true, viewable: true },
-                    { doc_id: 'hidden-child', parent_id: 'hidden-root', title: 'Hidden child', sort_order: 1, viewable: true },
-                    { doc_id: 'draft-root', title: 'Draft root', sort_order: 3, viewable: true },
-                    { doc_id: 'draft-child', parent_id: 'draft-root', title: 'Draft child', sort_order: 1, viewable: true }
+                    { doc_id: 'root', title: 'Root', viewable: true },
+                    { doc_id: 'child', parent_id: 'root', title: 'Child', viewable: true },
+                    { doc_id: 'hidden-root', title: 'Hidden', hidden: true, viewable: true },
+                    { doc_id: 'hidden-child', parent_id: 'hidden-root', title: 'Hidden child', viewable: true },
+                    { doc_id: 'draft-root', title: 'Draft root', viewable: true },
+                    { doc_id: 'draft-child', parent_id: 'draft-root', title: 'Draft child', viewable: true }
                 ],
                 allDocsById: new Map(),
                 childrenByParent: new Map(),

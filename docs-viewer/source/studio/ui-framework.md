@@ -4,7 +4,6 @@ title: UI Framework
 added_date: 2026-04-24
 last_updated: 2026-05-22
 parent_id: ui
-sort_order: 2500
 ---
 # UI Framework
 
@@ -263,6 +262,6 @@ The current shared treatment is:
 - in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, or operation results; the available local-server state should stay quiet
 - in manage mode, non-viewable docs remain visible by default and the checked-by-default `show viewable` checkbox controls whether viewable docs stay in the tree for context
 - non-viewable tree rows use a `✏️` title prefix plus the draft color from `studio_config.json`; they should not rely on bold text as the primary distinction
-- in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
-- the "move after" state should render a visible insert line after the target row rather than relying only on a subtle row shadow
-- drag/drop tree moves should normalize the destination sibling set to sparse unique sort orders so the requested placement is visible even when earlier metadata contains duplicate order values
+- in manage mode, drag/drop tree moves should treat every doc node as a potential parent, and the root list as a root-level target
+- drop indicators should distinguish the target parent row from the root-level drop target
+- drag/drop tree moves update only `parent_id`; index order remains generated title order within each parent

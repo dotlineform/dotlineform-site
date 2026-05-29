@@ -4,7 +4,6 @@ title: Local Setup Public Site Preview
 added_date: 2026-05-23
 last_updated: 2026-05-23
 parent_id: local-setup
-sort_order: 2250
 ---
 # Local Setup Public Site Preview
 

@@ -60,7 +60,7 @@ def assert_drag_drop_helpers(page: Page) -> None:
             const rootRect = rootB.getBoundingClientRect();
             const childRect = childB.getBoundingClientRect();
             const docsById = new Map([
-                ['moving', { doc_id: 'moving' }],
+                ['moving', { doc_id: 'moving', parent_id: 'root-b' }],
                 ['root-a', { doc_id: 'root-a' }],
                 ['root-b', { doc_id: 'root-b' }],
                 ['child-a', { doc_id: 'child-a' }],
@@ -73,38 +73,32 @@ def assert_drag_drop_helpers(page: Page) -> None:
                 hasChildren: () => false,
                 nav
             };
-            const rootTerminal = module.terminalListDropTargetFromEvent({
+            const rootTerminal = module.terminalRootDropTargetFromEvent({
                 target: nav,
                 clientY: rootRect.bottom + 8
             }, options);
-            const childTerminal = module.terminalListDropTargetFromEvent({
+            const childTerminal = module.terminalRootDropTargetFromEvent({
                 target: childList,
                 clientY: childRect.bottom + 8
-            }, options);
-            const aboveLastMidpoint = module.terminalListDropTargetFromEvent({
-                target: childList,
-                clientY: childRect.top + 2
             }, options);
             const currentTarget = module.currentDropTargetFromEvent({
                 target: childList,
-                clientY: childRect.bottom + 8
-            }, { targetDocId: 'root-a', position: 'after' }, options);
-            const expandedParentPosition = module.rowDropPosition(rootB, {
+                clientY: childRect.top + 2
+            }, { parentId: 'root-a' }, options);
+            const parentId = module.rowDropParentIdFromEvent(rootB, {
                 clientY: rootRect.bottom - 2
             }, options);
-            return { rootTerminal, childTerminal, aboveLastMidpoint, currentTarget, expandedParentPosition };
+            return { rootTerminal, childTerminal, currentTarget, parentId };
         }"""
     )
-    if result["rootTerminal"] != {"targetDocId": "root-b", "position": "after"}:
-        raise AssertionError(f"root terminal drop target was not after the final root sibling: {result!r}")
-    if result["childTerminal"] != {"targetDocId": "child-b", "position": "after"}:
-        raise AssertionError(f"child terminal drop target was not after the final child sibling: {result!r}")
-    if result["aboveLastMidpoint"] is not None:
-        raise AssertionError(f"terminal target should not activate above the last-row midpoint: {result!r}")
-    if result["currentTarget"] != {"targetDocId": "child-b", "position": "after"}:
-        raise AssertionError(f"current drop target did not use terminal list target: {result!r}")
-    if result["expandedParentPosition"] != "inside-start":
-        raise AssertionError(f"expanded parent lower-half drop did not resolve to first child: {result!r}")
+    if result["rootTerminal"] != {"parentId": ""}:
+        raise AssertionError(f"root terminal drop target did not resolve to root: {result!r}")
+    if result["childTerminal"] is not None:
+        raise AssertionError(f"child terminal drop target should not resolve to root: {result!r}")
+    if result["currentTarget"] != {"parentId": "root-a"}:
+        raise AssertionError(f"current drop target did not use fallback parent: {result!r}")
+    if result["parentId"] != "root-b":
+        raise AssertionError(f"row drop did not resolve to the row doc as parent: {result!r}")
 
 
 def assert_management_interaction_terminal_drop(page: Page) -> None:
@@ -138,7 +132,7 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
                     searchRouteActive: false,
                     selectedDocId: 'moving',
                     docsById: new Map([
-                        ['moving', { doc_id: 'moving', title: 'Moving' }],
+                        ['moving', { doc_id: 'moving', title: 'Moving', parent_id: 'root-b' }],
                         ['root-b', { doc_id: 'root-b', title: 'Root B' }]
                     ]),
                     childrenByParent: new Map()
@@ -147,7 +141,7 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
                     cssEscape: (value) => CSS.escape(value)
                 },
                 callbacks: {
-                    onMoveDoc: (movingDocId, targetDocId, position) => moveCalls.push({ movingDocId, targetDocId, position })
+                    onMoveDoc: (movingDocId, parentId) => moveCalls.push({ movingDocId, parentId })
                 }
             });
             controller.wireEvents();
@@ -159,7 +153,7 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
             const dragover = new Event('dragover', { bubbles: true, cancelable: true });
             Object.defineProperty(dragover, 'clientY', { value: rootRect.bottom + 8 });
             nav.dispatchEvent(dragover);
-            const indicator = rootB.classList.contains('is-drop-after');
+            const indicator = nav.classList.contains('is-drop-root');
             const drop = new Event('drop', { bubbles: true, cancelable: true });
             Object.defineProperty(drop, 'clientY', { value: rootRect.bottom + 8 });
             nav.dispatchEvent(drop);
@@ -177,8 +171,8 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
     if not result["dropPrevented"]:
         raise AssertionError(f"terminal drop was not handled by the nav controller: {result!r}")
     if not result["indicator"]:
-        raise AssertionError(f"terminal dragover did not project the after-row indicator: {result!r}")
-    if result["moveCalls"] != [{"movingDocId": "moving", "targetDocId": "root-b", "position": "after"}]:
+        raise AssertionError(f"terminal dragover did not project the root indicator: {result!r}")
+    if result["moveCalls"] != [{"movingDocId": "moving", "parentId": ""}]:
         raise AssertionError(f"terminal drop did not request the expected move: {result!r}")
 
 
@@ -230,7 +224,7 @@ def assert_management_interaction_first_child_drop(page: Page) -> None:
                     cssEscape: (value) => CSS.escape(value)
                 },
                 callbacks: {
-                    onMoveDoc: (movingDocId, targetDocId, position) => moveCalls.push({ movingDocId, targetDocId, position })
+                    onMoveDoc: (movingDocId, parentId) => moveCalls.push({ movingDocId, parentId })
                 }
             });
             controller.wireEvents();
@@ -242,20 +236,20 @@ def assert_management_interaction_first_child_drop(page: Page) -> None:
             const dragover = new Event('dragover', { bubbles: true, cancelable: true });
             Object.defineProperty(dragover, 'clientY', { value: parentRect.bottom - 2 });
             parent.dispatchEvent(dragover);
-            const firstChildIndicator = parent.classList.contains('is-drop-inside-start');
-            const rootIndicator = parent.classList.contains('is-drop-after');
+            const parentIndicator = parent.classList.contains('is-drop-inside');
+            const rootIndicator = nav.classList.contains('is-drop-root');
             const drop = new Event('drop', { bubbles: true, cancelable: true });
             Object.defineProperty(drop, 'clientY', { value: parentRect.bottom - 2 });
             parent.dispatchEvent(drop);
 
-            return { dragoverPrevented: dragover.defaultPrevented, firstChildIndicator, rootIndicator, moveCalls };
+            return { dragoverPrevented: dragover.defaultPrevented, parentIndicator, rootIndicator, moveCalls };
         }"""
     )
     if not result["dragoverPrevented"]:
         raise AssertionError(f"first-child dragover was not accepted as droppable: {result!r}")
-    if not result["firstChildIndicator"] or result["rootIndicator"]:
-        raise AssertionError(f"first-child dragover did not project the indented indicator: {result!r}")
-    if result["moveCalls"] != [{"movingDocId": "moving", "targetDocId": "parent", "position": "inside-start"}]:
+    if not result["parentIndicator"] or result["rootIndicator"]:
+        raise AssertionError(f"parent dragover did not project the parent indicator: {result!r}")
+    if result["moveCalls"] != [{"movingDocId": "moving", "parentId": "parent"}]:
         raise AssertionError(f"first-child drop did not request the expected move: {result!r}")
 
 

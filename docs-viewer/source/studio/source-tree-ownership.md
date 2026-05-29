@@ -4,7 +4,6 @@ title: Source Tree Ownership
 added_date: 2026-05-24
 last_updated: 2026-05-25
 parent_id: architecture
-sort_order: 12100
 viewable: true
 ---
 # Source Tree Ownership

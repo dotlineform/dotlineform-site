@@ -4,7 +4,6 @@ title: Studio Ready State
 added_date: 2026-05-14
 last_updated: 2026-05-15
 parent_id: studio
-sort_order: 4000
 ---
 # Studio Ready State
 

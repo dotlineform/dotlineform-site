@@ -4,7 +4,6 @@ title: Tag Registry
 added_date: 2026-03-31
 last_updated: "2026-05-21"
 parent_id: analytics
-sort_order: 4000
 ---
 # Tag Registry
 

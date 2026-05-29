@@ -4,7 +4,6 @@ title: Local Runners
 added_date: 2026-04-22
 last_updated: 2026-05-25
 parent_id: servers
-sort_order: 2000
 ---
 # Local Runners
 

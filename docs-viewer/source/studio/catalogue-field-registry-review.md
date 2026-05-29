@@ -4,7 +4,6 @@ title: Catalogue Field Registry
 added_date: 2026-05-01
 last_updated: "2026-05-22"
 parent_id: catalogue
-sort_order: 4000
 ---
 # Catalogue Field Registry
 

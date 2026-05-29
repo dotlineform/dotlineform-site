@@ -130,16 +130,11 @@ export function updateManagedDocsViewability(docIds, hidden, options) {
   }, options), options);
 }
 
-export function moveManagedDoc(docId, targetDocId, position, options) {
+export function moveManagedDoc(docId, parentId, options) {
   return fetchManagementJson("/docs/move", "POST", scopedPayload({
     doc_id: docId,
-    target_doc_id: targetDocId,
-    position: position
+    parent_id: parentId
   }, options), options);
-}
-
-export function normalizeManagedDocOrder(payload, options) {
-  return fetchManagementJson("/docs/normalize-order", "POST", scopedPayload(payload || {}, options), options);
 }
 
 export function openManagedDocSource(docId, editor, options) {

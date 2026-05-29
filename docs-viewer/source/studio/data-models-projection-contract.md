@@ -4,7 +4,6 @@ title: Projection Contract
 added_date: 2026-05-23
 last_updated: 2026-05-24
 parent_id: data-models
-sort_order: 1500
 ---
 # Projection Contract
 

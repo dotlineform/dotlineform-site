@@ -5,7 +5,6 @@ added_date: 2026-04-28
 last_updated: 2026-05-02
 ui_status: paused
 parent_id: change-requests
-sort_order: 4000
 viewable: true
 ---
 # Catalogue Work Unified Editor Request

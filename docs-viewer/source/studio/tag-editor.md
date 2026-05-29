@@ -4,7 +4,6 @@ title: Tag Editor
 added_date: 2026-03-31
 last_updated: "2026-05-09 16:00"
 parent_id: analytics
-sort_order: 3000
 ---
 # Tag Editor
 

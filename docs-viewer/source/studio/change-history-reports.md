@@ -4,7 +4,6 @@ title: Change History Reports
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: dev-home
-sort_order: 26000
 viewable: true
 ---
 # Change History Reports

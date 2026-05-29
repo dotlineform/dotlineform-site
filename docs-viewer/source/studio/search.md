@@ -4,7 +4,6 @@ title: Search
 added_date: 2026-03-31
 last_updated: 2026-05-11
 parent_id: ""
-sort_order: 8000
 ---
 # Search
 

@@ -4,7 +4,6 @@ title: Local Setup Environment
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: local-setup
-sort_order: 2200
 ---
 # Local Setup Environment
 

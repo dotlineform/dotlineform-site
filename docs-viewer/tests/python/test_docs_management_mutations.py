@@ -42,7 +42,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "hidden-doc",
             "title": "Hidden Doc",
-            "sort_order": 10,
             "viewable": False,
         },
         scope="scratch",
@@ -53,7 +52,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "hidden-doc",
             "title": "Hidden Doc",
-            "sort_order": 90,
             "viewable": False,
         },
     )
@@ -63,7 +61,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "parent",
             "title": "Parent",
-            "sort_order": 10,
             "viewable": True,
         },
         "See /docs/?scope=studio&doc=target-child and target-child.md\n",
@@ -75,7 +72,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "child",
             "title": "Child",
             "parent_id": "parent",
-            "sort_order": 10,
             "viewable": True,
         },
     )
@@ -86,7 +82,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "target",
             "title": "Target",
             "last_updated": "2026-05-01 10:00",
-            "sort_order": 20,
             "summary": "old summary",
             "ui_status": "ready",
             "viewable": True,
@@ -99,7 +94,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "target-child",
             "title": "Target Child",
             "parent_id": "target",
-            "sort_order": 10,
             "viewable": True,
         },
     )
@@ -110,7 +104,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "sibling",
             "title": "Sibling",
             "last_updated": "2026-05-02 11:00",
-            "sort_order": 30,
             "viewable": False,
         },
     )
@@ -125,13 +118,12 @@ def test_create_plan_selects_unique_source_path_backup_metadata_and_search_targe
             {
                 "scope": "studio",
                 "title": "Target",
-                "after_doc_id": "parent",
+                "parent_id": "",
             },
         )
 
     assert plan.response["doc_id"] == "target-2"
     assert plan.response["record"]["parent_id"] == ""
-    assert plan.response["record"]["sort_order"] == 15
     assert plan.backup_operation == "create"
     assert plan.backup_metadata is not None
     assert plan.backup_metadata["path"] == "docs-viewer/source/studio/target-2.md"
@@ -149,7 +141,6 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
                 "doc_id": "target",
                 "title": "Renamed Target",
                 "parent_id": "",
-                "sort_order": 20,
                 "summary": "new summary",
                 "ui_status": "ready",
                 "viewable": True,
@@ -175,7 +166,6 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
                 "doc_id": "target",
                 "title": "Target",
                 "parent_id": "",
-                "sort_order": 20,
                 "ui_status": "review",
             },
         )
@@ -195,7 +185,6 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
                 "doc_id": "target",
                 "title": "Target",
                 "parent_id": "",
-                "sort_order": 20,
                 "viewable": False,
             },
         )
@@ -231,7 +220,7 @@ def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() ->
         assert "hidden:" not in write.text
 
 
-def test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder() -> None:
+def test_move_plan_noops_when_parent_is_unchanged() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_move(
@@ -239,13 +228,12 @@ def test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder() -> Non
             {
                 "scope": "studio",
                 "doc_id": "sibling",
-                "target_doc_id": "parent",
-                "position": "after",
+                "parent_id": "",
             },
     )
 
-    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "", "sort_order": 15}
-    assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
+    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": ""}
+    assert plan.source_writes == ()
     assert plan.backup_operation is None
     assert plan.backup_metadata is None
     assert plan.search_doc_ids == []
@@ -259,52 +247,32 @@ def test_move_plan_keeps_search_target_for_reparent() -> None:
             {
                 "scope": "studio",
                 "doc_id": "sibling",
-                "target_doc_id": "parent",
-                "position": "inside",
+                "parent_id": "parent",
             },
     )
 
-    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 1010}
+    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent"}
     assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
     assert plan.backup_operation is None
     assert plan.search_doc_ids == ["sibling"]
 
 
-def test_move_plan_supports_first_child_under_parent() -> None:
+def test_move_plan_supports_moving_parent_subtree() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_move(
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "sibling",
-                "target_doc_id": "parent",
-                "position": "inside-start",
+                "doc_id": "target",
+                "parent_id": "parent",
             },
         )
 
-    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 5}
-    assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
+    assert plan.response["record"] == {"doc_id": "target", "parent_id": "parent"}
+    assert [write.path.name for write in plan.source_writes] == ["target.md"]
     assert plan.backup_operation is None
-    assert plan.search_doc_ids == ["sibling"]
-
-
-def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        plan = mutations.plan_normalize_order(
-            repo_root,
-            {
-                "scope": "studio",
-                "parent_id": "",
-            },
-        )
-
-    assert plan.response["changed_doc_ids"] == ["parent", "target", "sibling", "hidden-doc"]
-    assert [record["sort_order"] for record in plan.response["records"]] == [1000, 2000, 3000, 4000]
-    assert [write.path.name for write in plan.source_writes] == ["parent.md", "target.md", "sibling.md", "hidden-doc.md"]
-    assert plan.backup_operation is None
-    assert plan.search_doc_ids == []
+    assert plan.search_doc_ids == ["target", "target-child"]
 
 
 def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
@@ -347,9 +315,9 @@ def main() -> None:
         test_metadata_status_only_plan_suppresses_search_target,
         test_metadata_viewable_plan_writes_current_viewability,
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
-        test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder,
+        test_move_plan_noops_when_parent_is_unchanged,
         test_move_plan_keeps_search_target_for_reparent,
-        test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
+        test_move_plan_supports_moving_parent_subtree,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
         test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
     ]

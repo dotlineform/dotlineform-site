@@ -4,7 +4,6 @@ title: Docs Management Service Import And Rebuild
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: scripts-docs-management-server
-sort_order: 15200
 ---
 # Docs Management Service Import And Rebuild
 
@@ -14,7 +13,7 @@ sort_order: 15200
 {
   "scope": "studio",
   "title": "New Doc",
-  "after_doc_id": "docs-viewer-management"
+  "parent_id": "docs-viewer-management"
 }
 ```
 
@@ -27,9 +26,8 @@ Request behavior:
 - new Analysis docs write `viewable: false`
 - new Library docs write `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
-- `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
-- `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
-- `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
+- `parent_id`, when present, must resolve inside the same scope; blank or omitted creates a root-level doc
+- source writes do not include `sort_order`; the generated index sorts siblings by title
 
 `GET /docs/import-source-files` returns:
 
@@ -91,14 +89,14 @@ Import behavior:
 - new Studio imports omit `viewable` unless a hidden state is needed
 - new Analysis imports write `viewable: false`
 - new Library imports write `viewable: false`
-- preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
+- preserves blank `parent_id`; the generated index places the new imported doc by title among root siblings
 - reports `media_plan` for standalone image and file-media imports, including the expected media path and generated media token
 - reports `media_plans` for extracted inline raster images, including staged filenames, expected media paths, generated media tokens, MIME type, and decoded byte sizes
 - reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
 - asks browser callers to provide `replacement_doc_id` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
 - the Studio filename-conflict modal uses `overwrite_doc_id` plus `confirm_overwrite: true` for its explicit Replace action
-- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `viewable` state
+- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, and existing `viewable` state; retired `sort_order` front matter is removed during overwrite
 - refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - writes decoded inline raster media files only during create or overwrite, not during preview-only responses

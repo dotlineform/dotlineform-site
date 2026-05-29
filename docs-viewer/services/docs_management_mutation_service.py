@@ -89,10 +89,6 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
     return execute_management_mutation_plan(repo_root, mutations.plan_move(repo_root, body), dry_run)
 
 
-def handle_normalize_order(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, mutations.plan_normalize_order(repo_root, body), dry_run)
-
-
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     return execute_management_mutation_plan(repo_root, mutations.plan_delete_apply(repo_root, body), dry_run)
 

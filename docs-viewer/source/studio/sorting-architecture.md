@@ -4,7 +4,6 @@ title: Sorting Architecture
 added_date: 2026-03-31
 last_updated: "2026-05-09 21:28"
 parent_id: architecture
-sort_order: 4000
 ---
 # Sorting Architecture
 

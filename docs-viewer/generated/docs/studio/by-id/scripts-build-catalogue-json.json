@@ -5,7 +5,6 @@
   "added_date": "2026-04-18",
   "last_updated": "2026-05-12 18:45",
   "parent_id": "catalogue",
-  "sort_order": 12000,
   "hidden": false,
   "viewable": true,
   "source_path": "scripts-build-catalogue-json.md",

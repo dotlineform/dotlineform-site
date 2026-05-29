@@ -4,7 +4,6 @@ title: Docs Management Service Write Actions
 added_date: 2026-05-19
 last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
-sort_order: 15400
 ---
 # Docs Management Service Write Actions
 
@@ -38,15 +37,14 @@ Open-source behavior:
   "summary": "Manage-mode source editing contract.",
   "ui_status": "done",
   "viewable": true,
-  "parent_id": "ui-requests",
-  "sort_order": 21
+  "parent_id": "ui-requests"
 }
 ```
 
 Metadata-update behavior:
 
 - updates only front matter; body content and filename remain unchanged
-- currently supports `title`, `summary`, `ui_status`, `viewable`, `parent_id`, and `sort_order`
+- currently supports `title`, `summary`, `ui_status`, `viewable`, and `parent_id`
 - title changes do not mutate `doc_id` or filename
 - `added_date` is preserved; `last_updated` is refreshed to the current minute after a successful metadata write
 - blank `summary` removes the front matter field
@@ -56,9 +54,6 @@ Metadata-update behavior:
 - responses include `changes.status_changed` and `changes.viewable_changed` alongside the other metadata change flags
 - `parent_id` may be blank for root, but must otherwise resolve inside the same scope
 - `parent_id` cannot point at the current doc or any of its descendants
-- `sort_order` accepts a non-negative integer, blank, or `append`
-- `append` stores the next available sparse `sort_order` under the requested `parent_id`
-- sparse order spacing uses `1000` between normalized siblings
 - always rebuilds docs payloads for the scope, using targeted docs payload ids for changed source docs
 - runs a targeted same-scope docs-search update for affected ids after a successful write
 - skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
@@ -89,7 +84,7 @@ Metadata-update behavior:
 Viewability-update behavior:
 
 - updates only the source doc's `viewable` and `last_updated` front matter
-- preserves `doc_id`, title, parent, sort order, body content, and `added_date`
+- preserves `doc_id`, title, parent, body content, and `added_date`
 - the single-doc endpoint is preserved for callers that already use `doc_id`
 - the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
 - no-op requests write no files, create no backup, and do not rebuild docs/search
@@ -103,54 +98,22 @@ Viewability-update behavior:
 {
   "scope": "studio",
   "doc_id": "docs-viewer-management",
-  "target_doc_id": "scripts-docs-management-server",
-  "position": "after"
+  "parent_id": "scripts-docs-management-server"
 }
 ```
 
 Move behavior:
 
-- `position: "after"` places the dragged doc immediately after the target doc and adopts the target doc's `parent_id`
-- `position: "inside"` places the dragged doc as the last child of the target doc
-- only leaf docs can move; docs with child docs are rejected
+- blank `parent_id` moves the doc to the root level
+- non-blank `parent_id` moves the doc under that parent doc
+- `parent_id` must resolve inside the same scope and cannot point at the moved doc or its descendants
 - moves rewrite front matter only and never move files on disk
-- moves update the dragged doc's `parent_id` and assign a sparse `sort_order` to the moved doc when there is room between neighboring siblings
-- moves normalize the destination sibling set to sparse unique `sort_order` values only when the numeric gap is exhausted or the target order is ambiguous
+- moves update only the dragged doc's `parent_id`
 - moves preserve `added_date`
-- moves refresh `last_updated` on each source doc whose placement front matter is rewritten
-- moves usually rewrite only the moved doc; they may rewrite multiple sibling docs when fallback normalization changes order values
-- same-parent reorder rebuilds targeted current-scope docs payloads without a docs-search update
-- reparenting rebuilds targeted current-scope docs payloads and runs a targeted docs-search update for the moved doc
+- moves refresh `last_updated` on the moved source doc when its parent changes
+- no-op moves write no files and do not rebuild docs/search
+- reparenting rebuilds the moved doc payload and runs a targeted docs-search update for the moved doc and its descendants
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
-
-`POST /docs/normalize-order` expects either a single sibling group:
-
-```json
-{
-  "scope": "studio",
-  "parent_id": "docs-viewer"
-}
-```
-
-or a whole-scope repair:
-
-```json
-{
-  "scope": "studio",
-  "whole_scope": true
-}
-```
-
-Normalize-order behavior:
-
-- rewrites sibling `sort_order` values to `1000`, `2000`, `3000`, and so on
-- defaults to the root sibling group when `parent_id` is omitted or blank
-- validates non-root `parent_id` values against current scope source data
-- `whole_scope: true` normalizes every sibling group in the scope
-- the Docs Viewer `Actions` menu opens a modal for current sibling group, selected-doc children, root sibling group, or whole-scope repair
-- writes only docs whose `sort_order` changes
-- creates no backup bundle
-- rebuilds targeted current-scope docs payloads without a docs-search update
 
 `POST /docs/delete-preview` expects:
 

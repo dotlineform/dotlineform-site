@@ -4,7 +4,6 @@ title: Docs Viewer Config
 added_date: 2026-05-12
 last_updated: 2026-05-25
 parent_id: docs-viewer
-sort_order: 21000
 viewable: true
 ---
 # Docs Viewer Config

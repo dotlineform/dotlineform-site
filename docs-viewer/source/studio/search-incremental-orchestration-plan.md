@@ -4,7 +4,6 @@ title: Incremental Search Orchestration Plan
 added_date: 2026-04-24
 last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 11000
 ---
 # Incremental Search Orchestration Plan
 

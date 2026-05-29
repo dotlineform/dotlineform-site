@@ -5,7 +5,6 @@ added_date: 2026-05-11
 last_updated: 2026-05-27
 ui_status: paused
 parent_id: change-requests
-sort_order: 1000
 viewable: true
 ---
 # Portable Docs Viewer Request

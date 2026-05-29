@@ -4,7 +4,6 @@ title: Testing
 added_date: 2026-05-01
 last_updated: 2026-05-28
 parent_id: ""
-sort_order: 4000
 ---
 # Testing
 

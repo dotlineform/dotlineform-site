@@ -4,7 +4,6 @@ title: Docs Viewer Builder
 added_date: 2026-04-23
 last_updated: 2026-05-26
 parent_id: docs-viewer
-sort_order: 20000
 ---
 # Docs Viewer Builder
 
@@ -55,7 +54,7 @@ The `search_output` field owns the generated docs-search index path.
 ## What The Builder Does
 
 - reads Markdown source docs from each configured scope source root
-- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, optional `sort_order`, and optional `viewable`
+- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, and optional `viewable`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
@@ -76,7 +75,7 @@ The `search_output` field owns the generated docs-search index path.
 - every root-level `.md` file in `docs-viewer/source/library/` is included in generated docs payloads
 - every `.md` file under `docs-viewer/source/analysis/` is included in generated docs payloads, including nested docs
 - nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
-- nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`
+- nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id` and `parent_id`
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
@@ -101,10 +100,10 @@ The `search_output` field owns the generated docs-search index path.
   optional UI status key carried into docs-viewer index and per-doc payloads; the builder normalizes whitespace but does not validate the value against viewer config
 - `parent_id`
   empty string for a top-level doc
-- `sort_order`
-  optional integer for stable ordering inside the index tree
 - `viewable`
   optional boolean; set `false` to keep a generated doc hidden from public/default Docs Viewer discovery
+
+Index tree ordering is generated from source metadata: root siblings and each parent’s child list are sorted case-insensitively by `title`, with `doc_id` as a stable tie-breaker.
 
 ## Link And Media Conventions
 
@@ -246,7 +245,7 @@ Current fields:
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
   - unchanged semantic-reference by-doc and by-target payloads are not rewritten
   - stale semantic-reference by-doc and by-target payloads are removed when references or source docs no longer generate them
-- targeted `--only-doc-ids` writes still rebuild the scope index from current source metadata, but render and write only selected per-doc payloads; unchanged unselected rows keep their existing generated payload text length
+- targeted `--only-doc-ids` writes still rebuild the scope index from current source metadata, including title-based sibling ordering, but render and write only selected per-doc payloads; unchanged unselected rows keep their existing generated payload text length
 - targeted semantic-reference writes rebuild the selected docs' by-doc records and derive by-target buckets from the refreshed selected records plus existing unselected by-doc records, so stale target buckets are removed when a selected doc changes or drops references
 - targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.rb --scope <scope> --write` first when initializing or repairing an output tree
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly

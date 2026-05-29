@@ -4,7 +4,6 @@ title: Catalogue Write Service Operations
 added_date: 2026-05-19
 last_updated: 2026-05-23
 parent_id: scripts-catalogue-write-server
-sort_order: 4300
 ---
 # Catalogue Write Service Operations
 

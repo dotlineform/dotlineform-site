@@ -94,25 +94,10 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     docs = source_model.load_scope_docs(repo_root, scope)
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     docs_by_id = {doc.doc_id: doc for doc in docs}
-    raw_sort_order = body.get("sort_order")
-    after_doc_id = str(body.get("after_doc_id") or "").strip()
     parent_id = str(body.get("parent_id") or "").strip()
 
-    if after_doc_id:
-        after_doc = docs_by_id.get(after_doc_id)
-        if after_doc is None:
-            raise ValueError(f"Unknown after_doc_id {after_doc_id!r} for scope {scope}")
-        parent_id = after_doc.parent_id
-        sort_order = source_model.create_sort_order_after(docs, after_doc)
-    elif parent_id and parent_id not in docs_by_id:
+    if parent_id and parent_id not in docs_by_id:
         raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-    elif raw_sort_order in {None, ""}:
-        sort_order = source_model.next_sort_order(docs, parent_id)
-    else:
-        try:
-            sort_order = int(raw_sort_order)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("sort_order must be an integer") from exc
 
     doc_id = source_model.ensure_unique_stem(docs, title)
     target_root = source_model.scope_root(repo_root, scope)
@@ -124,7 +109,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "added_date": timestamp,
         "last_updated": timestamp,
         "parent_id": parent_id,
-        "sort_order": sort_order,
     }
     if not source_model.default_viewable_for_scope(scope):
         front_matter["viewable"] = False
@@ -143,7 +127,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
                 "doc_id": doc_id,
                 "title": title,
                 "parent_id": parent_id,
-                "sort_order": sort_order,
                 "hidden": hidden,
                 "viewable": not hidden,
             },
@@ -155,8 +138,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             "title": title,
             "path": path,
             "parent_id": parent_id,
-            "sort_order": sort_order,
-            "after_doc_id": after_doc_id,
         },
         source_writes=(SourceWrite(target_path, source_text),),
         suppression_reason="docs-create",
@@ -191,24 +172,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     if parent_id and parent_id in source_model.descendant_doc_ids(docs, target.doc_id):
         raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
-    raw_sort_order = body.get("sort_order")
-    raw_sort_order_text = "" if raw_sort_order is None else str(raw_sort_order).strip()
-    if raw_sort_order_text.lower() == "append":
-        remaining_docs = [doc for doc in docs if doc.doc_id != target.doc_id]
-        sort_order = source_model.next_sort_order(remaining_docs, parent_id)
-    elif raw_sort_order_text == "":
-        sort_order = None
-    else:
-        try:
-            sort_order = int(raw_sort_order_text)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("sort_order must be an integer, blank, or append") from exc
-        if sort_order < 0:
-            raise ValueError("sort_order must be zero or greater")
-
     title_changed = title != target.title
     parent_changed = parent_id != target.parent_id
-    sort_changed = sort_order != target.sort_order
     summary_was_provided = "summary" in body
     current_summary = normalize_summary(target.front_matter.get("summary"))
     summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
@@ -227,7 +192,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     changes = {
         "title_changed": title_changed,
         "parent_changed": parent_changed,
-        "sort_changed": sort_changed,
         "summary_changed": summary_changed,
         "status_changed": status_changed,
         "hidden_changed": hidden_changed,
@@ -245,7 +209,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                     "doc_id": target.doc_id,
                     "title": target.title,
                     "parent_id": target.parent_id,
-                    "sort_order": target.sort_order,
                     "summary": current_summary,
                     "ui_status": current_ui_status,
                     "hidden": current_hidden,
@@ -275,13 +238,10 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     if viewable_was_provided:
         updated_front_matter["viewable"] = viewable
     updated_front_matter["parent_id"] = parent_id
-    if sort_order is None:
-        updated_front_matter.pop("sort_order", None)
-    else:
-        updated_front_matter["sort_order"] = sort_order
+    updated_front_matter.pop("sort_order", None)
 
     search_doc_ids = metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed)
-    if status_changed and not (title_changed or parent_changed or sort_changed or summary_changed or viewable_changed):
+    if status_changed and not (title_changed or parent_changed or summary_changed or viewable_changed):
         search_doc_ids = []
 
     return ManagementMutationPlan(
@@ -295,7 +255,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                 "doc_id": target.doc_id,
                 "title": title,
                 "parent_id": parent_id,
-                "sort_order": sort_order,
                 "summary": summary,
                 "ui_status": ui_status,
                 "hidden": hidden,
@@ -312,8 +271,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "to_title": title,
             "from_parent_id": target.parent_id,
             "to_parent_id": parent_id,
-            "from_sort_order": target.sort_order,
-            "to_sort_order": sort_order,
             "summary_changed": summary_changed,
             "status_changed": status_changed,
             "hidden_changed": hidden_changed,
@@ -329,7 +286,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "doc_id": target.doc_id,
             "title_changed": title_changed,
             "parent_changed": parent_changed,
-            "sort_changed": sort_changed,
             "summary_changed": summary_changed,
             "status_changed": status_changed,
             "hidden_changed": hidden_changed,
@@ -534,37 +490,26 @@ def plan_update_viewability(repo_root: Path, body: Dict[str, Any]) -> Management
 def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     scope = source_model.normalize_scope(body.get("scope"))
     doc_id = str(body.get("doc_id") or "").strip()
-    target_doc_id = str(body.get("target_doc_id") or "").strip()
-    position = str(body.get("position") or "after").strip().lower()
+    parent_id = str(body.get("parent_id") or "").strip()
     if not doc_id:
         raise ValueError("doc_id is required")
-    if not target_doc_id:
-        raise ValueError("target_doc_id is required")
-    if position not in {"after", "inside", "inside-start"}:
-        raise ValueError("position must be `after`, `inside`, or `inside-start`")
 
     docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     moving_doc = docs_by_id.get(doc_id)
-    target_doc = docs_by_id.get(target_doc_id)
     if moving_doc is None:
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if target_doc is None:
-        raise FileNotFoundError(f"target_doc_id {target_doc_id!r} not found in scope {scope}")
-    if moving_doc.doc_id == target_doc.doc_id:
-        raise ValueError("doc cannot be moved onto itself")
-    if any(doc.parent_id == moving_doc.doc_id for doc in docs):
-        raise ValueError(f"{moving_doc.doc_id} has child docs and cannot be moved")
+    if parent_id == moving_doc.doc_id:
+        raise ValueError("parent_id cannot be the current doc")
+    if parent_id and parent_id not in docs_by_id:
+        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
+    if parent_id and parent_id in source_model.descendant_doc_ids(docs, moving_doc.doc_id):
+        raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
-    planned_placements = source_model.move_placements(docs, moving_doc, target_doc, position)
-    changed_placements = [
-        (doc, parent_id, sort_order)
-        for doc, parent_id, sort_order in planned_placements
-        if doc.parent_id != parent_id or doc.sort_order != sort_order
-    ]
-    touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
-    moved_parent_id = next(parent_id for doc, parent_id, _sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
-    moved_sort_order = next(sort_order for doc, _parent_id, sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
+    changed = moving_doc.parent_id != parent_id
+    search_doc_ids = [moving_doc.doc_id]
+    if changed:
+        search_doc_ids.extend(sorted(source_model.descendant_doc_ids(docs, moving_doc.doc_id)))
 
     return ManagementMutationPlan(
         scope=scope,
@@ -574,92 +519,23 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "doc_id": moving_doc.doc_id,
             "record": {
                 "doc_id": moving_doc.doc_id,
-                "parent_id": moved_parent_id,
-                "sort_order": moved_sort_order,
+                "parent_id": parent_id,
             },
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            "summary_text": f"Moved {moving_doc.doc_id}.",
+            "changed_doc_ids": [moving_doc.doc_id] if changed else [],
+            "summary_text": f"Moved {moving_doc.doc_id}." if changed else f"No move needed for {moving_doc.doc_id}.",
         },
         backup_operation=None,
-        source_writes=tuple(
-            SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
-            for doc, parent_id, sort_order in changed_placements
-        ),
+        source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id)),) if changed else (),
         suppression_reason="docs-move",
-        build_doc_ids=[doc.doc_id for doc in touched_docs],
-        search_doc_ids=[moving_doc.doc_id] if moving_doc.parent_id != moved_parent_id else [],
-        log_event_name="docs-move" if touched_docs else None,
+        build_doc_ids=[moving_doc.doc_id] if changed else [],
+        search_doc_ids=search_doc_ids if changed else [],
+        log_event_name="docs-move" if changed else None,
         log_details={
             "scope": scope,
             "doc_id": moving_doc.doc_id,
-            "target_doc_id": target_doc.doc_id,
-            "position": position,
-            "parent_id": moved_parent_id,
-            "sort_order": moved_sort_order,
-            "changed_count": len(touched_docs),
-        },
-        include_write_result_keys=True,
-    )
-
-
-def plan_normalize_order(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
-    docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    whole_scope = bool(body.get("whole_scope"))
-
-    if whole_scope:
-        parent_ids = sorted({doc.parent_id for doc in docs})
-    else:
-        parent_id = str(body.get("parent_id") or "").strip()
-        if parent_id and parent_id not in docs_by_id and not any(doc.parent_id == parent_id for doc in docs):
-            raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-        parent_ids = [parent_id]
-
-    planned_placements: list[tuple[source_model.ScopeDoc, str, int]] = []
-    for parent_id in parent_ids:
-        planned_placements.extend(source_model.normalized_sibling_placements(docs, parent_id))
-
-    changed_placements = [
-        (doc, parent_id, sort_order)
-        for doc, parent_id, sort_order in planned_placements
-        if doc.parent_id != parent_id or doc.sort_order != sort_order
-    ]
-    touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
-    changed_parent_ids = sorted({parent_id for _doc, parent_id, _sort_order in changed_placements})
-
-    return ManagementMutationPlan(
-        scope=scope,
-        response={
-            "ok": True,
-            "scope": scope,
-            "parent_ids": parent_ids,
-            "changed_parent_ids": changed_parent_ids,
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            "records": [
-                {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
-                for doc, parent_id, sort_order in changed_placements
-            ],
-            "summary_text": (
-                f"Normalized order for {len(touched_docs)} doc{'s' if len(touched_docs) != 1 else ''}."
-                if touched_docs
-                else "Order already normalized."
-            ),
-        },
-        source_writes=tuple(
-            SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
-            for doc, parent_id, sort_order in changed_placements
-        ),
-        suppression_reason="docs-normalize-order",
-        build_doc_ids=[doc.doc_id for doc in touched_docs],
-        search_doc_ids=[],
-        log_event_name="docs-normalize-order" if touched_docs else None,
-        log_details={
-            "scope": scope,
-            "whole_scope": whole_scope,
-            "parent_ids": parent_ids,
-            "changed_parent_ids": changed_parent_ids,
-            "changed_count": len(touched_docs),
+            "from_parent_id": moving_doc.parent_id,
+            "to_parent_id": parent_id,
+            "changed_count": 1 if changed else 0,
         },
         include_write_result_keys=True,
     )

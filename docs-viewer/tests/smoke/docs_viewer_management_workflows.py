@@ -29,7 +29,7 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def write_doc(path: Path, *, doc_id: str, title: str, parent_id: str = "", sort_order: int = 1000) -> None:
+def write_doc(path: Path, *, doc_id: str, title: str, parent_id: str = "") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         "\n".join(
@@ -40,7 +40,6 @@ def write_doc(path: Path, *, doc_id: str, title: str, parent_id: str = "", sort_
                 "added_date: 2026-05-22 00:00",
                 "last_updated: 2026-05-22 00:00",
                 f"parent_id: {parent_id}",
-                f"sort_order: {sort_order}",
                 "---",
                 f"# {title}",
                 "",
@@ -256,9 +255,9 @@ def create_fixture_repo(target_root: Path) -> None:
             "analysis": "docs-viewer/source/analysis",
         }[scope]
         write_doc(target_root / source_root / f"{default_doc}.md", doc_id=default_doc, title=default_doc.replace("-", " ").title())
-    write_doc(target_root / "docs-viewer/source/studio" / "hidden-doc.md", doc_id="hidden-doc", title="Hidden Doc", sort_order=9000)
-    write_doc(target_root / "docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc", sort_order=2000)
-    write_doc(target_root / "docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc", sort_order=1000)
+    write_doc(target_root / "docs-viewer/source/studio" / "hidden-doc.md", doc_id="hidden-doc", title="Hidden Doc")
+    write_doc(target_root / "docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc")
+    write_doc(target_root / "docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc")
     (target_root / "var" / "docs" / "import-staging").mkdir(parents=True)
     (target_root / "var" / "docs" / "import-staging" / "staged-doc.md").write_text("# Staged Doc\n", encoding="utf-8")
 
@@ -278,9 +277,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
             front_matter, body = source_model.parse_source(path)
             doc_id = str(front_matter.get("doc_id") or path.stem).strip()
             title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
-            sort_order = front_matter.get("sort_order")
-            if sort_order is not None:
-                sort_order = int(sort_order)
             hidden = source_model.doc_is_hidden(front_matter)
             docs.append(
                 SimpleNamespace(
@@ -289,7 +285,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                     front_matter=dict(front_matter),
                     ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                     parent_id=str(front_matter.get("parent_id") or "").strip(),
-                    sort_order=sort_order,
                     hidden=hidden,
                     viewable=not hidden,
                     body=body,
@@ -306,7 +301,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                 "summary": str(doc.front_matter.get("summary") or ""),
                 "ui_status": doc.ui_status,
                 "parent_id": doc.parent_id,
-                "sort_order": doc.sort_order,
                 "hidden": doc.hidden,
                 "viewable": doc.viewable,
                 "content_url": content_url,
@@ -318,7 +312,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                 "doc_id": doc.doc_id,
                 "title": doc.title,
                 "parent_id": doc.parent_id,
-                "sort_order": doc.sort_order,
                 "content_html": f"<h1 id=\"{doc.doc_id}\">{doc.title}</h1>",
             },
         )
@@ -490,7 +483,6 @@ def main(argv: list[str] | None = None) -> int:
                     "summary": "workflow fixture",
                     "ui_status": "review",
                     "parent_id": "",
-                    "sort_order": "append",
                     "viewable": True,
                 },
             )
@@ -502,10 +494,10 @@ def main(argv: list[str] | None = None) -> int:
                 base_url,
                 "POST",
                 "/docs/move",
-                {"scope": "studio", "doc_id": doc_id, "target_doc_id": "sibling-doc", "position": "after"},
+                {"scope": "studio", "doc_id": doc_id, "parent_id": "sibling-doc"},
             )
             assert_ok(moved, "move")
-            if moved["record"]["parent_id"] != "":
+            if moved["record"]["parent_id"] != "sibling-doc":
                 raise AssertionError(f"move changed parent unexpectedly: {moved!r}")
 
             delete_preview = request_json(

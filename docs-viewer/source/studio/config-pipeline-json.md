@@ -4,7 +4,6 @@ title: Pipeline Config JSON
 added_date: 2026-03-31
 last_updated: "2026-05-12 18:45"
 parent_id: catalogue
-sort_order: 14000
 ---
 # Pipeline Config JSON
 
