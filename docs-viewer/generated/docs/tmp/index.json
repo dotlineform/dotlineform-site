@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T15:45:44Z",
+  "generated_at": "2026-05-30T10:47:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -76,7 +76,7 @@
       "source_path": "tmp.md",
       "viewer_url": "/docs/?scope=tmp&doc=tmp",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "content_text_length": 2279,
+      "content_text_length": 2185,
       "ui_status": "draft"
     },
     {

@@ -9,8 +9,6 @@ sort_order: 100
 
 # tmp
 
-we are working on docs-viewer-view-capability-contract.md,
-please proceed with implementaion.
 
 
 

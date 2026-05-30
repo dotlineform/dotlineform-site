@@ -4,20 +4,9 @@
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - code changes: summarise the intended change set and ask for confirmation before editing code unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
-- update source documents but do not rebuild doc payloads, this is done manually or by `bin/local-studio` / the docs-watcher. If docs-watcher re-generates published JSON when source documents change, let it. Do not revert published changes created by docs-watcher.
+- update source documents but do not rebuild doc payloads because this is done manually or by `bin/local-studio` / the docs-watcher. If docs-watcher re-generates published JSON when source documents change, let it. Do not revert published changes created by docs-watcher.
 - when a command is clearly a localhost/browser smoke that binds a server or launches Playwright, run it elevated immediately with a concise justification instead of doing the doomed sandbox attempt first. For non-network checks like quick, syntax checks, git diff --check, and pure pytest that doesn’t bind ports, keep them sandboxed.
-
-## Project Priorities and Tradeoffs
-
-- Optimize for decisions that help the user understand:
-  - organized, maintainable code
-  - best practice and where compromise is justified
-  - how Codex should best be used to implement requirements
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
-
-## Context and Batching
-
-- Treat the visible context window as a working budget; do not rely on automatic compaction succeeding.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs that flood the transcript.
 - For long-running multi-batch work, or before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to the document at the top of the document for the next Codex session to read.
 
@@ -43,9 +32,9 @@
 
 - Do not add new responsibilities to large route/controller files by default.
 - Before changing a Studio or Docs Viewer route controller, check whether the behavior belongs in an existing route-local module, shared module, render module, service/write module, domain module, modal module, or workflow module.
-- Prefer creating or extending a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
+- Create a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
 - Keep route entry modules as orchestration shells: boot/config, route readiness, event wiring, and handoff between focused modules.
-- Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
+- When optimising code or refactoring, extract around stable ownership boundaries.
 - For risk mitigation and scoring, consult as appropriate:
   - Javascript: `docs-viewer/source/studio/studio-javascript-payload-inventory.md`
   - Python, Ruby: `docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
@@ -53,13 +42,11 @@
 ## Studio Documentation and Search
 
 - Docs source is flat under `docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders.
-- scope `studio` contains live development and maintenance documents.
+- scope `studio` is the reference for live development and maintenance documents.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not source Markdown directly.
-- Do not rebuild doc payloads.
+- Do not rebuild doc payloads
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
-- Use explicit scope for docs search rebuilds:
-  - `./scripts/build_search.rb --scope studio --write`
-  - `./scripts/build_search.rb --scope library --write`
+- Use explicit scope for docs search rebuilds: `./scripts/build_search.rb --scope studio --write`
 
 ## Change Log
 
@@ -97,11 +84,6 @@
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
 
-## Safety Defaults
-
-- Prefer dry-run behavior for generators unless explicitly asked to write.
-- Do not delete generated or source files unless explicitly requested.
-
 ## Verification
 
 - For implementation changes, define proportional targeted verification for both:
@@ -109,7 +91,7 @@
   - manual checks
 - Browser smoke tests are only needed when changes have been to the operational site or front end, not when documents have been edited.
 - Codex performs most testing where practical. Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
-- Include changed file paths (and line references when useful) in summaries.
+- Include changed file paths in summaries.
 - After changing scripts, run a syntax check with the configured interpreter.
 - After UI changes, verify behavior on both desktop and mobile.
 
