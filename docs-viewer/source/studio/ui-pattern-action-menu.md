@@ -12,7 +12,7 @@ It is intended for repeated command groups that should share visual treatment, a
 
 Demo reference:
 
-- [Action menu pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/action-menu/)
+- [Action menu pattern demo](http://127.0.0.1:8767/ui-catalogue/demos/patterns/action-menu/)
 
 Initial live migration target:
 
@@ -152,9 +152,9 @@ If a first implementation does not include full roving focus, it must still keep
 
 Current demo implementation should live in:
 
-- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
-- `studio/ui-catalogue/assets/js/ui-catalogue-demo.js` or a scoped demo module under `studio/ui-catalogue/assets/js/`
-- `studio/ui-catalogue/demos/patterns/action-menu/index.md`
+- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
+- `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js` or a scoped demo module under `ui-catalogue-app/app/assets/js/`
+- `ui-catalogue-app/source/demos/patterns/action-menu/index.md`
 
 The UI Catalogue demo must use `uiCatalogueDemo*` classes and demo-owned JavaScript.
 Treat the demo as the pattern reference, then map the structure into the owning live namespace.

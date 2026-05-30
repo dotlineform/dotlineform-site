@@ -178,7 +178,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 142 | `assets/studio/js/tag-studio-suggestions.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag suggestion helper. |
 | 143 | `assets/studio/js/tag-studio-interactions.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series tag editor selected-work, tag-entry, weight, restore, metrics, and dirty-save enablement interaction state owner. |
 | 144 | `assets/studio/js/tag-aliases-modal-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag Aliases modal workflow owner for create/edit, promote, and demote state transitions, validation projection, tag selection, and popup matching. |
-| 145 | `studio/ui-catalogue/assets/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Catalogue route support module. |
+| 145 | `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Standalone UI Catalogue demo support module. |
 | 146 | `assets/studio/js/catalogue-editor-route-boot.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue editor boot, route-state projection, required-element, and lookup-loading helper. |
 | 147 | `assets/studio/js/catalogue-editor-action-workflow.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue save/build normalization, action presentation projection, pending build target projection, and action preview result contract helper. |
 | 148 | `assets/studio/js/tag-aliases-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases mutation-state projection helper. |

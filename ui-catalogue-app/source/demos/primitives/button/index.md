@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Primitive: Button"
-permalink: /studio/ui-catalogue/demos/primitives/button/
+permalink: /ui-catalogue/demos/primitives/button/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-button
 ui_catalogue_demo_primitive: button
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture field_markup %}<div class="uiCatalogueDemoFieldGroup">
   <div class="uiCatalogueDemoFieldGrid">
@@ -34,7 +34,7 @@ ui_catalogue_demo_primitive: button
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoButtonIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-button' | relative_url }}">Docs viewer: Button Primitive</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Primitive</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoButtonIntroHeading">Button demo namespace</h3>
@@ -142,4 +142,4 @@ ui_catalogue_demo_primitive: button
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

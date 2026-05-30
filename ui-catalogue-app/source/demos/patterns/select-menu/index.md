@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Pattern: Select Menu"
-permalink: /studio/ui-catalogue/demos/patterns/select-menu/
+permalink: /ui-catalogue/demos/patterns/select-menu/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-select-menu
 ui_catalogue_demo_pattern: select-menu
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture native_select_markup %}<label class="uiCatalogueDemoSelectField">
   <span class="uiCatalogueDemoField__label">scope</span>
@@ -78,7 +78,7 @@ ui_catalogue_demo_pattern: select-menu
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoSelectMenuIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-pattern-select-menu' | relative_url }}">Docs viewer: Select Menu Pattern</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Composition Pattern</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoSelectMenuIntroHeading">Select menu demo namespace</h3>
@@ -133,4 +133,4 @@ ui_catalogue_demo_pattern: select-menu
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

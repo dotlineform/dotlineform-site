@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Primitive: Panel"
-permalink: /studio/ui-catalogue/demos/primitives/panel/
+permalink: /ui-catalogue/demos/primitives/panel/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-panel
 ui_catalogue_demo_primitive: panel
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture panel_markup %}<div class="uiCatalogueDemoPanel">
   <h4 class="uiCatalogueDemoPanel__heading">Panel Heading</h4>
@@ -28,7 +28,7 @@ ui_catalogue_demo_primitive: panel
 {% capture image_markup %}<a
   class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image uiCatalogueDemoPanel--imageContrast"
   href="#"
-  style="--ui-demo-panel-image: url('/assets/moments/img/blue-sky-thumb-96.webp');"
+  style="--ui-demo-panel-image: url('/ui-catalogue/app/assets/img/moments/blue-sky-thumb-96.webp');"
 >
   <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link</h4>
   <p class="uiCatalogueDemoText">Use the contrast modifier when the image needs white text.</p>
@@ -44,7 +44,7 @@ ui_catalogue_demo_primitive: panel
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoPanelIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-panel' | relative_url }}">Docs viewer: Panel Primitive</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Primitive</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoPanelIntroHeading">Panel demo namespace</h3>
@@ -137,7 +137,7 @@ ui_catalogue_demo_primitive: panel
     <a
       class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image"
       href="#"
-      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-96.webp' | relative_url }}');"
+      style="--ui-demo-panel-image: url('{{ '/ui-catalogue/app/assets/img/moments/blue-sky-thumb-96.webp' | relative_url }}');"
     >
       <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link</h4>
       <p class="uiCatalogueDemoText">Choose image and overlay together at design time.</p>
@@ -152,7 +152,7 @@ ui_catalogue_demo_primitive: panel
     <a
       class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image uiCatalogueDemoPanel--imageContrast"
       href="#"
-      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-96.webp' | relative_url }}');"
+      style="--ui-demo-panel-image: url('{{ '/ui-catalogue/app/assets/img/moments/blue-sky-thumb-96.webp' | relative_url }}');"
     >
       <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link: Contrast Override</h4>
       <p class="uiCatalogueDemoText">Use the contrast modifier when the chosen image needs white text.</p>
@@ -187,4 +187,4 @@ ui_catalogue_demo_primitive: panel
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

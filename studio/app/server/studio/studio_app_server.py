@@ -47,7 +47,6 @@ from studio_app_views import (  # noqa: E402
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio_ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -65,7 +64,6 @@ STATIC_PREFIXES = (
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",
-    "/studio/ui-catalogue/assets/",
     "/studio/data/canonical/catalogue/",
     "/studio/data/config/catalogue/",
     "/studio/data/generated/activity/",
@@ -158,10 +156,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path in {"/studio/catalogue-moment", "/studio/catalogue-moment/"}:
             self.send_html(catalogue_moment_view(self.version))
             return
-        for route_path, view_id in UI_CATALOGUE_DEMO_ROUTES.items():
-            if path in {route_path.rstrip("/"), route_path}:
-                self.send_html(ui_catalogue_demo_view(self.version, self.repo_root, view_id))
-                return
         if self.is_allowed_static_path(path):
             self.send_static(path)
             return

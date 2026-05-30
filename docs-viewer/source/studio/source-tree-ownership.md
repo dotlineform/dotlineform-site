@@ -42,7 +42,7 @@ The current Studio-owned source homes are:
 | `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, and other verification checks. |
 | `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
 | `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
-| `studio/ui-catalogue/` | UI Catalogue demos, notes, fixtures, and assets. |
+| `ui-catalogue-app/` | UI Catalogue demos, notes, fixtures, and assets. |
 | `studio/workflows/change-requests/` | Structured change-request workflow source, docs-log source entries, generated workflow projections, reports, and helper services. |
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.

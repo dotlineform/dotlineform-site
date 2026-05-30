@@ -59,7 +59,7 @@ Active local shells include `/studio/`, `/docs/`, analytics tag routes, Data Sha
 
 Remaining Jekyll route inventory:
 
-- `studio/ui-catalogue/demos/index.md`
+- `ui-catalogue-app/source/demos/index.md`
 
 The remaining UI Catalogue demo route is not a retired workflow shell.
 It is an isolated Studio reference surface that should become visible from Local Studio while keeping demo CSS, JavaScript, and ready-state contracts separate from production Studio routes.

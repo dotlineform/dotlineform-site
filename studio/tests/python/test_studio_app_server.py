@@ -22,7 +22,6 @@ from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, 
 from studio.app.server.studio.studio_app_views import studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio.app.server.studio.studio_ui_catalogue_views import ui_catalogue_demo_view  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -59,6 +58,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
+    assert not any(str(view["id"]).startswith("ui_catalogue") for view in runtime["views"])
     assert any(view["id"] == "studio_audits" and view["path"] == "/studio/audits/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
@@ -85,6 +85,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert docs_viewer_links["doc_ids"]["catalogue_work_editor"] == "catalogue-work-editor"
     assert "tag_groups" not in docs_viewer_links["doc_ids"]
     assert "data_sharing_prepare" not in docs_viewer_links["doc_ids"]
+    assert "ui_catalogue_demos" not in docs_viewer_links["doc_ids"]
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -148,7 +149,6 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
-    assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
     assert allowed("/data-sharing/config/adapters.json") is False
     assert allowed("/data-sharing/config/library-export-configs.json") is False
@@ -159,6 +159,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
+    assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
+    assert allowed("/ui-catalogue/app/assets/js/ui-catalogue-demo.js") is False
     assert allowed("/assets/studio/css/studio.css") is False
     assert allowed("/assets/studio/img/panel-backgrounds/aqua.jpg") is False
     assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
@@ -184,6 +186,7 @@ def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> 
             excludes.add(line.removeprefix("  - ").strip())
 
     assert "data-sharing/config/" in excludes
+    assert "ui-catalogue-app/" in excludes
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
 
@@ -192,14 +195,13 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_home_view("test-version"),
         studio_route_view("test-version", "studio_audits", "<p>Studio audits</p>"),
-        ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos"),
     ]
 
     for shell in html_shells:
         assert "/studio/app/assets/css/studio.css?v=test-version" in shell
         assert "/assets/css/main.css" not in shell
-    assert "/studio/ui-catalogue/assets/css/ui-catalogue-demo.css?v=test-version" in html_shells[-1]
-    assert "/assets/ui-catalogue/" not in html_shells[-1]
+        assert "/studio/ui-catalogue/" not in shell
+        assert "/ui-catalogue/app/" not in shell
 
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:

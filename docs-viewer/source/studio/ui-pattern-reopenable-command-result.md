@@ -15,7 +15,7 @@ Current live examples:
 
 Demo reference:
 
-- [Reopenable command result pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
+- [Reopenable command result pattern demo](http://127.0.0.1:8767/ui-catalogue/demos/patterns/reopenable-command-result/)
 
 ## Scope
 
@@ -71,9 +71,9 @@ The stored payload should contain the data required to reopen the modal, not jus
 
 Current demo implementation lives in:
 
-- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
-- `studio/ui-catalogue/assets/js/ui-catalogue-demo.js`
-- `studio/ui-catalogue/demos/patterns/reopenable-command-result/index.md`
+- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
+- `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
+- `ui-catalogue-app/source/demos/patterns/reopenable-command-result/index.md`
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned modal JavaScript. Treat the demo as the pattern reference, then map the lifecycle, result storage, modal helper, and class names into the live route.
 

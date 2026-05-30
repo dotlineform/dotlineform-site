@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Primitive: List"
-permalink: /studio/ui-catalogue/demos/primitives/list/
+permalink: /ui-catalogue/demos/primitives/list/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-list
 ui_catalogue_demo_primitive: list
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture simple_markup %}<div class="uiCatalogueDemoList uiCatalogueDemoList--simple">
   <ul class="uiCatalogueDemoList__rows">
@@ -56,7 +56,7 @@ ui_catalogue_demo_primitive: list
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoListIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-list' | relative_url }}">Docs viewer: List Primitive</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Primitive</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoListIntroHeading">List demo namespace</h3>
@@ -175,7 +175,7 @@ ui_catalogue_demo_primitive: list
       <ul class="uiCatalogueDemoList__rows">
         <li class="uiCatalogueDemoList__row uiCatalogueDemoList__row--center">
           <span class="uiCatalogueDemoList__thumb">
-            <img class="uiCatalogueDemoList__thumbImage" src="{{ '/studio/app/assets/img/panel-backgrounds/01007-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
+            <img class="uiCatalogueDemoList__thumbImage" src="{{ '/ui-catalogue/app/assets/img/panel-backgrounds/01007-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
           </span>
           <span class="uiCatalogueDemoList__cell">
             <a class="uiCatalogueDemoList__link" href="#">Soft geometry study</a>
@@ -211,4 +211,4 @@ ui_catalogue_demo_primitive: list
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

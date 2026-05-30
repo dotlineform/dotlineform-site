@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Pattern: Reopenable Command Result"
-permalink: /studio/ui-catalogue/demos/patterns/reopenable-command-result/
+permalink: /ui-catalogue/demos/patterns/reopenable-command-result/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-reopenable-command-result
 ui_catalogue_demo_pattern: reopenable-command-result
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture status_markup %}<div class="uiCatalogueDemoResultRow">
   <p class="uiCatalogueDemoStatus" data-state="success">Generated 6 Library import preview files.</p>
@@ -34,7 +34,7 @@ ui_catalogue_demo_pattern: reopenable-command-result
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoReopenableIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-pattern-reopenable-command-result' | relative_url }}">Docs viewer: Reopenable Command Result Pattern</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Composition Pattern</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoReopenableIntroHeading">Reopenable result demo namespace</h3>
@@ -100,4 +100,4 @@ ui_catalogue_demo_pattern: reopenable-command-result
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

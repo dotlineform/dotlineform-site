@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SITE_ENV_PATH="$ROOT_DIR/var/local/site.env"
+if [ -f "$SITE_ENV_PATH" ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "$SITE_ENV_PATH"
+  set +a
+fi
+
+if [ -x "$HOME/miniconda3/bin/python3" ]; then
+  PYTHON_BIN="$HOME/miniconda3/bin/python3"
+else
+  PYTHON_BIN="${PYTHON_BIN:-python3}"
+fi
+
+UI_CATALOGUE_APP_HOST="${UI_CATALOGUE_APP_HOST:-127.0.0.1}"
+UI_CATALOGUE_APP_PORT="${UI_CATALOGUE_APP_PORT:-8767}"
+UI_CATALOGUE_APP_ACCESS_LOG="${UI_CATALOGUE_APP_ACCESS_LOG:-0}"
+RUNNER_NAME="bin/local-ui-catalogue"
+UI_CATALOGUE_APP_PID=""
+
+port_available() {
+  local host="$1"
+  local port="$2"
+
+  "$PYTHON_BIN" - "$host" "$port" <<'PY'
+import socket
+import sys
+
+host = sys.argv[1]
+port = int(sys.argv[2])
+last_error = None
+
+try:
+    addrinfo = socket.getaddrinfo(
+        host, port, type=socket.SOCK_STREAM, flags=socket.AI_PASSIVE
+    )
+except OSError as exc:
+    print(exc, file=sys.stderr)
+    raise SystemExit(1)
+
+for family, socktype, proto, _canonname, sockaddr in addrinfo:
+    sock = socket.socket(family, socktype, proto)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(sockaddr)
+        raise SystemExit(0)
+    except OSError as exc:
+        last_error = exc
+    finally:
+        sock.close()
+
+if last_error is not None:
+    print(last_error, file=sys.stderr)
+raise SystemExit(1)
+PY
+}
+
+require_open_port() {
+  local service_name="$1"
+  local host="$2"
+  local port="$3"
+  local env_name="$4"
+
+  if port_available "$host" "$port"; then
+    return 0
+  fi
+
+  echo "ERROR: $service_name cannot start on $host:$port because the port is unavailable." >&2
+  echo "Set $env_name to a different port or stop the conflicting process, then rerun $RUNNER_NAME." >&2
+  exit 1
+}
+
+cleanup() {
+  trap - EXIT INT TERM
+  if [ -n "$UI_CATALOGUE_APP_PID" ] && kill -0 "$UI_CATALOGUE_APP_PID" 2>/dev/null; then
+    kill "$UI_CATALOGUE_APP_PID" 2>/dev/null || true
+  fi
+  if [ -n "$UI_CATALOGUE_APP_PID" ]; then
+    wait "$UI_CATALOGUE_APP_PID" 2>/dev/null || true
+  fi
+}
+
+trap cleanup EXIT INT TERM
+
+echo "Starting UI Catalogue from $ROOT_DIR"
+echo "UI Catalogue App: http://$UI_CATALOGUE_APP_HOST:$UI_CATALOGUE_APP_PORT/ui-catalogue/demos/"
+case "$UI_CATALOGUE_APP_ACCESS_LOG" in
+  1|on|true|yes)
+    echo "UI Catalogue App access log: enabled"
+    ;;
+  *)
+    echo "UI Catalogue App access log: disabled"
+    ;;
+esac
+echo
+
+require_open_port "UI Catalogue App" "$UI_CATALOGUE_APP_HOST" "$UI_CATALOGUE_APP_PORT" "UI_CATALOGUE_APP_PORT"
+
+UI_CATALOGUE_APP_ARGS=(--host "$UI_CATALOGUE_APP_HOST" --port "$UI_CATALOGUE_APP_PORT")
+case "$UI_CATALOGUE_APP_ACCESS_LOG" in
+  1|on|true|yes)
+    UI_CATALOGUE_APP_ARGS+=(--access-log)
+    ;;
+esac
+"$PYTHON_BIN" ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_server.py "${UI_CATALOGUE_APP_ARGS[@]}" &
+UI_CATALOGUE_APP_PID=$!
+
+echo "Press Ctrl+C to stop UI Catalogue."
+echo
+
+while true; do
+  if ! kill -0 "$UI_CATALOGUE_APP_PID" 2>/dev/null; then
+    wait "$UI_CATALOGUE_APP_PID"
+    break
+  fi
+  sleep 1
+done

@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import sys
@@ -17,28 +15,14 @@ from playwright.sync_api import Page, sync_playwright
 ROOT_SELECTOR = "#uiCatalogueDemoModalShellRoot"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
+SERVER_DIR = REPO_ROOT / "ui-catalogue-app" / "app" / "server" / "ui_catalogue_app"
+sys.path.insert(0, str(SERVER_DIR))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
-
-
-class QuietStaticHandler(SimpleHTTPRequestHandler):
-    def log_message(self, format, *args):  # noqa: A003
-        return
+from ui_catalogue_app_server import UiCatalogueAppServer  # noqa: E402
 
 
-def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
-    resolved_root = site_root.expanduser().resolve()
-    if not resolved_root.exists():
-        raise FileNotFoundError(f"site root does not exist: {resolved_root}")
-    handler = partial(QuietStaticHandler, directory=str(resolved_root))
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
-
-
-def start_studio_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_ui_catalogue_server() -> tuple[UiCatalogueAppServer, str]:
+    server = UiCatalogueAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -222,7 +206,7 @@ def run_workflow_check(page: Page) -> None:
 
 def run_viewport_smoke(page: Page, base_url: str, viewport: dict[str, int], timeout_ms: int) -> dict[str, object]:
     page.set_viewport_size(viewport)
-    page.goto(route_url(base_url, "/studio/ui-catalogue/demos/primitives/modal-shell/"), wait_until="domcontentloaded")
+    page.goto(route_url(base_url, "/ui-catalogue/demos/primitives/modal-shell/"), wait_until="domcontentloaded")
     wait_for_demo_ready(page, timeout_ms)
     run_notice_check(page)
     run_confirm_check(page)
@@ -238,16 +222,13 @@ def run_viewport_smoke(page: Page, base_url: str, viewport: dict[str, int], time
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url")
-    parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
     server = None
     base_url = args.base_url
-    if args.site_root:
-        server, base_url = start_static_server(Path(args.site_root))
-    elif not base_url:
-        server, base_url = start_studio_server()
+    if not base_url:
+        server, base_url = start_ui_catalogue_server()
 
     errors: list[str] = []
     results: list[dict[str, object]] = []

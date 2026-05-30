@@ -15,6 +15,20 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Ran the basic split verification pass:
+  - focused Analytics/tag/data-sharing pytest passed: 57 tests
+  - `analytics-smoke` passed all 19 route/API/module/modal/ready-state/data-sharing checks
+  - Local Studio catalogue/admin smoke passed for Catalogue Drafts and catalogue editor routes
+  - standalone `ui-catalogue-smoke` also passed as part of the task 10 close-out
+- Moved UI Catalogue out of Studio routing and startup:
+  - moved demo source/assets from `studio/ui-catalogue/` into `ui-catalogue-app/`
+  - added the standalone `ui-catalogue-app` local server and `bin/local-ui-catalogue`
+  - added `UI_CATALOGUE_APP_*` support to `bin/local-all` so UI Catalogue starts as its own local app
+  - moved UI Catalogue routes to `/ui-catalogue/demos/...` and assets to `/ui-catalogue/app/assets/...`
+  - removed Studio UI Catalogue route dispatch, runtime-config views, home link, static allowlist, doc-id mappings, and asset-version coupling
+  - retargeted UI Catalogue smokes to the standalone app and updated Studio tests to assert old Studio UI Catalogue paths are not exposed
+  - updated owning UI Catalogue/source-boundary docs for the new standalone route and file ownership
+  - verified the new `ui-catalogue-smoke` profile passes and ran the Local Studio navigation adapter smoke after removal
 - Retired Thumbnail Quality from active Studio:
   - removed the `/studio/thumbnail-quality/` route, home/admin link, runtime-config view, fallback config entries, and doc-link mapping
   - removed `POST /studio/api/catalogue/thumbnail-quality-preview` from the local Catalogue API and health route list
@@ -49,7 +63,7 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue with task 10: move UI Catalogue out of Studio routing and service startup.
+- Continue with task 12: decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics.
 - Preserve the clean cutover: do not add aliases, redirects, proxy handlers, or static shims for retired Studio paths to make old tests pass.
 
 ### baseline verification set
@@ -101,8 +115,8 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 7 | done | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, API dispatch, and static serving assumptions. Old routes should fail clearly; do not add redirects, aliases, proxy handlers, static shims, or dual-path config. |
 | 8 | done | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
 | 9 | done | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, CSS, and smokes. Archive its page/script code in a repo-local retired tooling location, separate from the public Jekyll site |
-| 10 | planned | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
-| 11 | planned | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
+| 10 | done | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
+| 11 | done | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
 | 12 | planned | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
 | 13 | planned | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
 | 14 | planned | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |

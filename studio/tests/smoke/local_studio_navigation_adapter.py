@@ -253,6 +253,7 @@ def main(argv: list[str] | None = None) -> int:
             for href in home_link_hrefs
             if href.startswith("/studio/analytics/")
             or href.startswith("/studio/data-sharing/")
+            or href.startswith("/studio/ui-catalogue/")
             or href.startswith("/studio/thumbnail-quality")
         }
         if retired_home_hrefs:
@@ -260,7 +261,6 @@ def main(argv: list[str] | None = None) -> int:
         expected_home_hrefs = {
             "/studio/catalogue-status/?mode=manage",
             "/studio/activity/?mode=manage",
-            "/studio/ui-catalogue/demos/",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")

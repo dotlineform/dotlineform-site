@@ -36,7 +36,6 @@ STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
         "label": "admin",
         "links": (
             ("studio audits", "/studio/audits/?mode=manage"),
-            ("UI demos", "/studio/ui-catalogue/demos/"),
             ("studio activity", "/studio/activity/?mode=manage"),
             ("field registry", "/studio/catalogue-field-registry/?mode=manage"),
         ),

@@ -11,7 +11,7 @@ This composition pattern covers compact route-link column groups used on Studio 
 
 Demo reference:
 
-- [Column links pattern demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/patterns/column-links/)
+- [Column links pattern demo](http://127.0.0.1:8767/ui-catalogue/demos/patterns/column-links/)
 
 Current live examples:
 
@@ -67,8 +67,8 @@ Current implementation lives in:
 
 Current demo implementation lives in:
 
-- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
-- `studio/ui-catalogue/demos/patterns/column-links/index.md`
+- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
+- `ui-catalogue-app/source/demos/patterns/column-links/index.md`
 
 Current live pages use:
 

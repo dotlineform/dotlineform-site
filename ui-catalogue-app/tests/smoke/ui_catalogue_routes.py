@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Smoke-check local Studio UI Catalogue demo routes."""
+"""Smoke-check standalone UI Catalogue demo routes."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import sys
-import urllib.request
 from pathlib import Path
 from threading import Thread
 
@@ -15,66 +14,68 @@ from playwright.sync_api import Page, sync_playwright
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
+SERVER_DIR = REPO_ROOT / "ui-catalogue-app" / "app" / "server" / "ui_catalogue_app"
+sys.path.insert(0, str(SERVER_DIR))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from ui_catalogue_app_server import UiCatalogueAppServer  # noqa: E402
 
 
 ROUTES = [
     {
         "view_id": "ui_catalogue_demos",
-        "path": "/studio/ui-catalogue/demos/",
+        "path": "/ui-catalogue/demos/",
         "root": "#uiCatalogueDemoIndexRoot",
     },
     {
         "view_id": "ui_catalogue_demo_button",
-        "path": "/studio/ui-catalogue/demos/primitives/button/",
+        "path": "/ui-catalogue/demos/primitives/button/",
         "root": "#uiCatalogueDemoButtonRoot",
     },
     {
         "view_id": "ui_catalogue_demo_input",
-        "path": "/studio/ui-catalogue/demos/primitives/input/",
+        "path": "/ui-catalogue/demos/primitives/input/",
         "root": "#uiCatalogueDemoInputRoot",
     },
     {
         "view_id": "ui_catalogue_demo_list",
-        "path": "/studio/ui-catalogue/demos/primitives/list/",
+        "path": "/ui-catalogue/demos/primitives/list/",
         "root": "#uiCatalogueDemoListRoot",
     },
     {
         "view_id": "ui_catalogue_demo_modal_shell",
-        "path": "/studio/ui-catalogue/demos/primitives/modal-shell/",
+        "path": "/ui-catalogue/demos/primitives/modal-shell/",
         "root": "#uiCatalogueDemoModalShellRoot",
     },
     {
         "view_id": "ui_catalogue_demo_panel",
-        "path": "/studio/ui-catalogue/demos/primitives/panel/",
+        "path": "/ui-catalogue/demos/primitives/panel/",
         "root": "#uiCatalogueDemoPanelRoot",
     },
     {
         "view_id": "ui_catalogue_demo_action_menu",
-        "path": "/studio/ui-catalogue/demos/patterns/action-menu/",
+        "path": "/ui-catalogue/demos/patterns/action-menu/",
         "root": "#uiCatalogueDemoActionMenuRoot",
     },
     {
         "view_id": "ui_catalogue_demo_reopenable_command_result",
-        "path": "/studio/ui-catalogue/demos/patterns/reopenable-command-result/",
+        "path": "/ui-catalogue/demos/patterns/reopenable-command-result/",
         "root": "#uiCatalogueDemoReopenableCommandResultRoot",
     },
     {
         "view_id": "ui_catalogue_demo_select_menu",
-        "path": "/studio/ui-catalogue/demos/patterns/select-menu/",
+        "path": "/ui-catalogue/demos/patterns/select-menu/",
         "root": "#uiCatalogueDemoSelectMenuRoot",
     },
     {
         "view_id": "ui_catalogue_demo_column_links",
-        "path": "/studio/ui-catalogue/demos/patterns/column-links/",
+        "path": "/ui-catalogue/demos/patterns/column-links/",
         "root": "#uiCatalogueDemoColumnLinksRoot",
     },
 ]
 
 
-def start_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_server() -> tuple[UiCatalogueAppServer, str]:
+    server = UiCatalogueAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -96,7 +97,7 @@ def wait_for_demo_ready(page: Page, root_selector: str) -> None:
 
 def check_modal_shell(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
-    page.goto(f"{base_url}/studio/ui-catalogue/demos/primitives/modal-shell/", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/ui-catalogue/demos/primitives/modal-shell/", wait_until="domcontentloaded")
     wait_for_demo_ready(page, "#uiCatalogueDemoModalShellRoot")
     opener = page.locator('[data-ui-demo-modal-open="uiCatalogueDemoConfirmModal"]')
     opener.scroll_into_view_if_needed()
@@ -149,7 +150,7 @@ def check_modal_shell(page: Page, base_url: str, viewport: dict[str, int]) -> di
 def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
     page.add_init_script("window.localStorage.setItem('theme', 'dark')")
-    page.goto(f"{base_url}/studio/ui-catalogue/demos/patterns/action-menu/", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/ui-catalogue/demos/patterns/action-menu/", wait_until="domcontentloaded")
     wait_for_demo_ready(page, "#uiCatalogueDemoActionMenuRoot")
     page.locator("[data-ui-demo-menu-trigger]").click()
     page.wait_for_selector(".uiCatalogueDemoMenu__surface:not([hidden])", timeout=10_000)
@@ -189,7 +190,7 @@ def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dic
     actual = {key: state.get(key) for key in expected}
     if actual != expected:
         raise AssertionError(f"unexpected UI Catalogue dark theme at viewport {viewport!r}: {state!r}")
-    toggle = page.locator(".studioThemeToggle")
+    toggle = page.locator(".uiCatalogueThemeToggle")
     default_toggle_state = toggle.evaluate(
         """button => {
             const styles = getComputedStyle(button);
@@ -200,11 +201,11 @@ def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dic
         }"""
     )
     if default_toggle_state != {"borderWidth": "0px", "background": "rgba(0, 0, 0, 0)"}:
-        raise AssertionError(f"unexpected Studio theme toggle default style: {default_toggle_state!r}")
+        raise AssertionError(f"unexpected UI Catalogue theme toggle default style: {default_toggle_state!r}")
     toggle.hover()
     hover_toggle_state = toggle.evaluate("button => getComputedStyle(button).backgroundColor")
     if hover_toggle_state != "rgb(28, 28, 31)":
-        raise AssertionError(f"unexpected Studio theme toggle hover background: {hover_toggle_state!r}")
+        raise AssertionError(f"unexpected UI Catalogue theme toggle hover background: {hover_toggle_state!r}")
     return {"width": viewport["width"], "height": viewport["height"], "theme": "dark"}
 
 
@@ -214,15 +215,6 @@ def main(argv: list[str] | None = None) -> int:
 
     server, base_url = start_server()
     try:
-        with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
-            runtime_config = json.loads(response.read().decode("utf-8"))
-        runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
-        runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
-        for route in ROUTES:
-            runtime_view = runtime_by_id.get(route["view_id"])
-            if not runtime_view or runtime_view.get("path") != route["path"]:
-                raise AssertionError(f"runtime config missing {route['view_id']}: {runtime_views!r}")
-
         console_errors: list[str] = []
         page_errors: list[str] = []
         requests: list[str] = []
@@ -242,16 +234,14 @@ def main(argv: list[str] | None = None) -> int:
                     if response.status >= 400
                     else None,
                 )
-                page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
-                home_links = page.locator('.studioLinkList__item[href="/studio/ui-catalogue/demos/"]').count()
-                if home_links != 1:
-                    raise AssertionError("local Studio home does not expose the UI Catalogue demo index")
+                page.goto(f"{base_url}/ui-catalogue/demos/", wait_until="domcontentloaded")
+                wait_for_demo_ready(page, "#uiCatalogueDemoIndexRoot")
                 requests.clear()
 
                 for route in ROUTES:
                     page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
                     wait_for_demo_ready(page, route["root"])
-                    doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                    doc_link = page.locator(".uiCatalogueShellDocLink").get_attribute("href")
                     if "mode=manage" not in str(doc_link or ""):
                         raise AssertionError(f"{route['path']} doc link is not manage-mode: {doc_link!r}")
 
@@ -261,15 +251,20 @@ def main(argv: list[str] | None = None) -> int:
             finally:
                 browser.close()
 
-        if not any("/studio/ui-catalogue/assets/css/ui-catalogue-demo.css" in request for request in requests):
+        if not any("/ui-catalogue/app/assets/css/ui-catalogue-demo.css" in request for request in requests):
             raise AssertionError("UI Catalogue demo CSS was not requested")
-        if not any("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js" in request for request in requests):
+        if not any("/ui-catalogue/app/assets/css/ui-catalogue-shell.css" in request for request in requests):
+            raise AssertionError("UI Catalogue shell CSS was not requested")
+        if not any("/ui-catalogue/app/assets/js/ui-catalogue-demo.js" in request for request in requests):
             raise AssertionError("UI Catalogue demo JS was not requested")
-        legacy_ui_catalogue_requests = [request for request in requests if "/assets/ui-catalogue/" in request]
+        if not any("/ui-catalogue/app/assets/js/ui-catalogue-shell.js" in request for request in requests):
+            raise AssertionError("UI Catalogue shell JS was not requested")
+        legacy_ui_catalogue_requests = [request for request in requests if "/assets/ui-catalogue/" in request or "/studio/ui-catalogue/" in request]
         if legacy_ui_catalogue_requests:
-            raise AssertionError(f"UI Catalogue demos should not request legacy public UI Catalogue assets: {legacy_ui_catalogue_requests!r}")
-        if not any("/studio/app/assets/css/studio.css" in request for request in requests):
-            raise AssertionError("UI Catalogue demos should request Studio shell CSS")
+            raise AssertionError(f"UI Catalogue demos should not request retired UI Catalogue paths: {legacy_ui_catalogue_requests!r}")
+        studio_asset_requests = [request for request in requests if "/studio/app/" in request]
+        if studio_asset_requests:
+            raise AssertionError(f"UI Catalogue demos should not request Studio app assets: {studio_asset_requests!r}")
         main_css_requests = [request for request in requests if "/assets/css/main.css" in request]
         if main_css_requests:
             raise AssertionError(f"UI Catalogue demos should not request public main CSS: {main_css_requests!r}")

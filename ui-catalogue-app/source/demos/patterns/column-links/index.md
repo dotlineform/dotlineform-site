@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Pattern: Column Links"
-permalink: /studio/ui-catalogue/demos/patterns/column-links/
+permalink: /ui-catalogue/demos/patterns/column-links/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-column-links
 ui_catalogue_demo_pattern: column-links
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture column_links_markup %}<section class="uiCatalogueDemoColumnLinks" aria-label="Example dashboard links">
   <section class="uiCatalogueDemoColumnLinks__column">
@@ -38,7 +38,7 @@ ui_catalogue_demo_pattern: column-links
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoColumnLinksIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-pattern-column-links' | relative_url }}">Docs viewer: Column Links Pattern</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Composition Pattern</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoColumnLinksIntroHeading">Column links demo namespace</h3>
@@ -68,4 +68,4 @@ ui_catalogue_demo_pattern: column-links
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

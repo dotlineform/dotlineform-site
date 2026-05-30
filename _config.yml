@@ -147,4 +147,4 @@ exclude:
   - docs-viewer/source/
   - docs-viewer/static/css/docs-viewer-management.css
   - docs-viewer/tests/
-  - studio/ui-catalogue/
+  - ui-catalogue-app/

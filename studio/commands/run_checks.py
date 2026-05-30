@@ -107,6 +107,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "analytics-app/app/server/analytics_app/data_sharing_adapters.py",
                 "analytics-app/app/server/analytics_app/data_sharing_routes.py",
                 "analytics-app/app/server/analytics_app/data_sharing_service.py",
+                "ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_config.py",
+                "ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_views.py",
+                "ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_server.py",
                 "studio/checks/audit_studio_ready_state.py",
                 "studio/checks/verify_activity_contract.py",
                 "docs-viewer/services/docs_activity.py",
@@ -175,11 +178,13 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "analytics-app/tests/smoke/tag_registry_modal.py",
                 "analytics-app/tests/smoke/tag_registry_modules.py",
                 "analytics-app/tests/smoke/tag_route_shell_modules.py",
-                "studio/tests/smoke/ui_catalogue_modal_demo.py",
+                "ui-catalogue-app/tests/smoke/ui_catalogue_modal_demo.py",
+                "ui-catalogue-app/tests/smoke/ui_catalogue_routes.py",
                 "studio/tests/smoke/public_site_theme_toggle.py",
                 "studio/tests/python/test_studio_app_server.py",
                 "analytics-app/tests/python/test_analytics_app_server.py",
                 "analytics-app/tests/python/test_analytics_data_sharing_api.py",
+                "ui-catalogue-app/tests/python/test_ui_catalogue_app_server.py",
                 "studio/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
                 "studio/tests/python/test_javascript_inventory_guardrail.py",
@@ -248,6 +253,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_tag_write_transactions.py",
                 "analytics-app/tests/python/test_analytics_app_server.py",
                 "analytics-app/tests/python/test_analytics_data_sharing_api.py",
+                "ui-catalogue-app/tests/python/test_ui_catalogue_app_server.py",
                 "studio/tests/python/test_catalogue_save_build.py",
                 "studio/tests/python/test_catalogue_source_mutation.py",
                 "studio/tests/python/test_studio_activity_context.py",
@@ -406,19 +412,34 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
         ),
     ),
-    "studio-smoke": (
+    "ui-catalogue-smoke": (
         CheckCommand(
-            "jekyll-temp-build",
-            bundle_argv(),
-            "Build the site to a temporary destination for browser smoke tests.",
+            "ui-catalogue-python-pytest",
+            pytest_argv("ui-catalogue-app/tests/python/test_ui_catalogue_app_server.py"),
+            "Run standalone UI Catalogue app server tests through pytest collection.",
+        ),
+        CheckCommand(
+            "ui-catalogue-routes-smoke",
+            (
+                sys.executable,
+                "ui-catalogue-app/tests/smoke/ui_catalogue_routes.py",
+            ),
+            "Smoke-check standalone UI Catalogue demo routes, assets, docs links, and dark theme.",
         ),
         CheckCommand(
             "ui-catalogue-modal-demo-smoke",
             (
                 sys.executable,
-                "studio/tests/smoke/ui_catalogue_modal_demo.py",
+                "ui-catalogue-app/tests/smoke/ui_catalogue_modal_demo.py",
             ),
-            "Smoke-check the UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
+            "Smoke-check the standalone UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
+        ),
+    ),
+    "studio-smoke": (
+        CheckCommand(
+            "jekyll-temp-build",
+            bundle_argv(),
+            "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
             "public-site-theme-toggle-smoke",

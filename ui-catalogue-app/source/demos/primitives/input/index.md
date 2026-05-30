@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Primitive: Input"
-permalink: /studio/ui-catalogue/demos/primitives/input/
+permalink: /ui-catalogue/demos/primitives/input/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-input
 ui_catalogue_demo_primitive: input
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture default_markup %}<div class="uiCatalogueDemoField">
   <div class="uiCatalogueDemoField__control">
@@ -43,7 +43,7 @@ ui_catalogue_demo_primitive: input
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoInputIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-input' | relative_url }}">Docs viewer: Input Primitive</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Primitive</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoInputIntroHeading">Input demo namespace</h3>
@@ -199,4 +199,4 @@ ui_catalogue_demo_primitive: input
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

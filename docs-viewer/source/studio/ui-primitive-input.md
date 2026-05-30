@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared input controls and fi
 
 Demo reference:
 
-- [Input primitive demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/input/)
+- [Input primitive demo](http://127.0.0.1:8767/ui-catalogue/demos/primitives/input/)
 
 ## Scope
 
@@ -43,8 +43,8 @@ Current live implementation lives in:
 
 Current demo implementation lives in:
 
-- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
-- `studio/ui-catalogue/demos/primitives/input/index.md`
+- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
+- `ui-catalogue-app/source/demos/primitives/input/index.md`
 
 Primary classes:
 

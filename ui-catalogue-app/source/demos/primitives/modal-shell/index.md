@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Primitive: Modal Shell"
-permalink: /studio/ui-catalogue/demos/primitives/modal-shell/
+permalink: /ui-catalogue/demos/primitives/modal-shell/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-modal-shell
 ui_catalogue_demo_primitive: modal-shell
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture shell_markup %}<div class="uiCatalogueDemoModal" id="exampleModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden>
   <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
@@ -45,7 +45,7 @@ ui_catalogue_demo_primitive: modal-shell
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoModalShellIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-modal-shell' | relative_url }}">Docs viewer: Modal Shell Primitive</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Primitive</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoModalShellIntroHeading">Modal shell demo namespace</h3>
@@ -226,4 +226,4 @@ ui_catalogue_demo_primitive: modal-shell
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

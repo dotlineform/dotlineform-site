@@ -174,15 +174,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "catalogue_series_editor": "catalogue-series-editor",
         "catalogue_work_editor": "catalogue-work-editor",
         "catalogue_work_detail_editor": "catalogue-work-detail-editor",
-        "catalogue_moment_editor": "catalogue-moment-editor",
-        "ui_catalogue_demos": "ui-catalogue",
-        "ui_catalogue_demo_button": "ui-primitive-button",
-        "ui_catalogue_demo_input": "ui-primitive-input",
-        "ui_catalogue_demo_list": "ui-primitive-list",
-        "ui_catalogue_demo_modal_shell": "ui-primitive-modal-shell",
-        "ui_catalogue_demo_panel": "ui-primitive-panel",
-        "ui_catalogue_demo_reopenable_command_result": "ui-pattern-reopenable-command-result",
-        "ui_catalogue_demo_column_links": "ui-pattern-column-links"
+        "catalogue_moment_editor": "catalogue-moment-editor"
       }
     }
   },

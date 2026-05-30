@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared panel surfaces.
 
 Demo reference:
 
-- [Panel primitive demo](http://127.0.0.1:8765/studio/ui-catalogue/demos/primitives/panel/)
+- [Panel primitive demo](http://127.0.0.1:8767/ui-catalogue/demos/primitives/panel/)
 
 ## Scope
 
@@ -46,8 +46,8 @@ Current live implementation lives in:
 
 Current demo implementation lives in:
 
-- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
-- `studio/ui-catalogue/demos/primitives/panel/index.md`
+- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
+- `ui-catalogue-app/source/demos/primitives/panel/index.md`
 
 Dark-mode panel surfaces must override the Studio surface token set together.
 Do not combine a light `--studio-surface` with global dark-mode text tokens such as `--muted`; that makes labels and disabled text low contrast on white panels.

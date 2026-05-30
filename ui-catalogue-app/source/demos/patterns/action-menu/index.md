@@ -1,11 +1,11 @@
 ---
 title: "UI Demo Pattern: Action Menu"
-permalink: /studio/ui-catalogue/demos/patterns/action-menu/
+permalink: /ui-catalogue/demos/patterns/action-menu/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-action-menu
 ui_catalogue_demo_pattern: action-menu
 ---
 
-<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/ui-catalogue/app/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture action_menu_markup %}<div class="uiCatalogueDemoToolbar" aria-label="Example command toolbar">
   <div class="uiCatalogueDemoMenu" data-ui-demo-action-menu>
@@ -65,7 +65,7 @@ ui_catalogue_demo_pattern: action-menu
 >
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoActionMenuIntroHeading">
     <div class="uiCatalogueDemoSection__header">
-      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
+      <p class="uiCatalogueDemoEyebrow"><a href="{{ '/ui-catalogue/demos/' | relative_url }}">&larr; UI catalogue demos</a></p>
       <p class="uiCatalogueDemoEyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-pattern-action-menu' | relative_url }}">Docs viewer: Action Menu Pattern</a></p>
       <p class="uiCatalogueDemoEyebrow">Demo Composition Pattern</p>
       <h3 class="uiCatalogueDemoHeading" id="uiCatalogueDemoActionMenuIntroHeading">Action menu demo namespace</h3>
@@ -101,4 +101,4 @@ ui_catalogue_demo_pattern: action-menu
   </section>
 </div>
 
-<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/ui-catalogue/app/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
