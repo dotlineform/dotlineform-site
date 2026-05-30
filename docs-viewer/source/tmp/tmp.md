@@ -14,15 +14,6 @@ sort_order: 100
 
 ---
 
-It is not an emoji. It’s a Unicode punctuation character:
-
-Collapse: ‹ = U+2039, single left-pointing angle quotation mark
-Restore from collapsed: › = U+203A, single right-pointing angle quotation mark
-Expand index: ⤢ = U+2922, diagonal expand arrow
-
-
----
-
 docs viewer config:
 
 how to update config through manage-mode
@@ -31,7 +22,6 @@ equivalent to an app's 'settings' UI
 
 ---
 
-
 semantic [work_id]-[detail_id] link
 need more
 
@@ -39,7 +29,6 @@ need more
 
 we are working on site-request-testing-framework-review.md,
 please proceed with the tasks.
-
 
 
 

@@ -56,7 +56,7 @@ Codex sandbox note: local service, browser, and temporary localhost checks will 
 - No new Analytics features in the split.
 - No broad redesign, CSS class rename pass, or cosmetic cleanup.
 - Decouple Studio helpers/CSS during the split where it is cheap, obvious, and does not turn the cutover into a redesign.
-- If any coupling remains after the basic split is tested, write a specific follow-on task to be completedAny before close-out.
+- If any coupling remains after the basic split is tested, write a specific follow-on task to be completed before close-out.
 - UI Catalogue should become completely standalone, not Studio-hosted or with any Studio dependencies.
 - Thumbnail quality should become retired tooling, not an active Studio route.
 - Update source docs, not generated docs payloads, unless a separate rebuild is intentionally run.
