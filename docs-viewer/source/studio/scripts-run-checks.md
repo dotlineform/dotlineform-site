@@ -54,9 +54,13 @@ $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer
 - `docs-viewer-smoke`
   Builds the site to a temporary Jekyll destination and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/` for the standalone service, public read-only installs, browser modules, and management UI behavior.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained Studio-owned browser smoke checks, including the UI Catalogue modal demo, Studio data import route checks with docs-service unavailable, and a mocked Library import preview flow. Docs Viewer smoke checks live only in `docs-viewer-smoke`.
+  Builds the site to a temporary Jekyll destination and runs retained Studio-owned browser smoke checks, including public-site theme behavior and catalogue route/module checks. Docs Viewer smoke checks live only in `docs-viewer-smoke`; Analytics smoke checks live only in `analytics-smoke`.
+- `analytics-smoke`
+  Runs Local Analytics route/API/module/modal/ready-state smoke checks for tag workflows and Analytics-owned Data Sharing prepare/review behavior.
+- `ui-catalogue-smoke`
+  Runs UI Catalogue Python checks plus route and modal-demo smoke checks for the standalone UI Catalogue app.
 - `full`
-  Runs `quick`, `catalogue`, `docs`, and `studio-smoke`. It does not run `docs-viewer-smoke`; run that profile explicitly when Docs Viewer browser behavior is in scope.
+  Runs `quick`, `catalogue`, `docs`, and `studio-smoke`. It does not run `docs-viewer-smoke`, `analytics-smoke`, or `ui-catalogue-smoke`; run those profiles explicitly when those browser/runtime surfaces are in scope.
 
 ## Outputs
 

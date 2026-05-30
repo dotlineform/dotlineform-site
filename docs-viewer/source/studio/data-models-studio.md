@@ -19,14 +19,15 @@ The Studio scope has two main model families:
 Current checked-in Studio data artifacts:
 
 - Studio route data:
-  - `assets/studio/data/tag_registry.json`
-  - `assets/studio/data/tag_aliases.json`
-  - `assets/studio/data/tag_assignments.json`
-  - `assets/studio/data/tag_groups.json`
   - `assets/studio/data/work_storage_index.json`
   - local service-backed activity data:
     - `var/studio/activity/activity_log.json`
     - `var/studio/activity/activity_log.jsonl`
+- Analytics tag source data, owned outside Studio:
+  - `analytics-app/data/canonical/tag-registry.json`
+  - `analytics-app/data/canonical/tag-aliases.json`
+  - `analytics-app/data/canonical/tag-assignments.json`
+  - `analytics-app/data/canonical/tag-groups.json`
 - Studio docs source:
   - `docs-viewer/source/studio/*.md`
 - generated Studio docs data:
@@ -41,8 +42,8 @@ Do not move Studio generated docs/search back under `assets/data/docs/scopes/stu
 
 Related config, documented separately:
 
-- `assets/studio/data/studio_config.json`
-- `assets/studio/js/studio-config.js`
+- `studio/app/frontend/config/studio-config.json`
+- `studio/app/frontend/js/studio-config.js`
 
 ## Studio Route Data
 
@@ -67,11 +68,16 @@ Why it is separate:
 - `storage` is useful to the curator but does not belong in the current public works summary index
 - the Studio works page needs one lightweight bulk lookup, not one per-work JSON fetch per row
 
-### `tag_registry.json`
+## Analytics Tag Source Data
+
+Analytics tag source data is no longer Studio route data.
+It lives under `analytics-app/data/canonical/` and is read/written through the Local Analytics API and Analytics-owned tag helper package.
+
+### `tag-registry.json`
 
 Purpose:
 
-- canonical vocabulary for Studio tags
+- canonical vocabulary for Analytics tags
 
 Current content families:
 
@@ -96,9 +102,9 @@ Current consumers:
 - Tag Registry
 - Tag Aliases
 - Series Tags status and labeling logic
-- catalogue search tag-label enrichment through the search builder
+- Data Sharing tags adapter
 
-### `tag_aliases.json`
+### `tag-aliases.json`
 
 Purpose:
 
@@ -122,13 +128,13 @@ Current consumers:
 
 - Tag Editor input resolution
 - Tag Aliases page
-- local mutation flows in the Studio analytics API
+- local mutation flows in the Local Analytics API
 
-### `tag_assignments.json`
+### `tag-assignments.json`
 
 Purpose:
 
-- canonical Studio-owned assignment state for series tags and per-work overrides
+- canonical Analytics-owned assignment state for series tags and per-work overrides
 
 Current content families:
 
@@ -142,16 +148,16 @@ Current content families:
 
 Why it is designed around series-first ownership:
 
-- series is the main curation unit in Studio
+- series is the main curation unit for Analytics tag assignment
 - per-work overrides are intentionally modeled as deltas under the owning series rather than as a separate flat table
-- catalogue search and Studio status logic can derive effective work tags by combining series tags with work overrides
+- Analytics status logic can derive effective work tags by combining series tags with work overrides
 
 Current consumers:
 
 - Tag Editor
 - Series Tags
-- Studio RAG/status logic
-- catalogue search generation
+- Analytics RAG/status logic
+- Data Sharing tags adapter
 
 Important design choice:
 
@@ -163,7 +169,7 @@ Why:
 - it makes it easier to detect invalid overrides when a work no longer belongs to a series
 - it keeps override review close to the series row that owns it
 
-### `tag_groups.json`
+### `tag-groups.json`
 
 Purpose:
 
@@ -183,25 +189,25 @@ Why it is separate:
 Current consumers:
 
 - Tag Groups page
-- group keys and info buttons across Studio pages and modals
+- group keys and info buttons across Analytics pages and modals
 
-## Studio Route Data Dependencies
+## Analytics Tag Source Dependencies
 
-The Studio route data model has important dependencies that are only partly explicit in the JSON.
+The Analytics tag source model has important dependencies that are only partly explicit in the JSON.
 
 Key dependencies:
 
-- `tag_aliases.json` targets must refer to canonical tags in `tag_registry.json`
-- `tag_assignments.json` series keys must line up with `assets/data/series_index.json`
-- `tag_assignments.json` work override keys must line up with `assets/data/works_index.json` and with the owning series membership in `series_index.json`
-- group logic in the UI depends on `tag_registry.json`, `tag_groups.json`, and the group order configured in `studio_config.json`
+- `tag-aliases.json` targets must refer to canonical tags in `tag-registry.json`
+- `tag-assignments.json` series keys must line up with `assets/data/series_index.json`
+- `tag-assignments.json` work override keys must line up with `assets/data/works_index.json` and with the owning series membership in `series_index.json`
+- group logic in the UI depends on `tag-registry.json`, `tag-groups.json`, and the group order configured in Analytics route config
 
 Current enforcement:
 
 - the scoped JSON build flow refreshes generated catalogue payloads that tag assignments align against
-- Studio delete and save flows update canonical source JSON without relying on workbook-led cleanup
+- catalogue build and cleanup flows update Analytics tag assignments through the Analytics tag source path contract where catalogue membership changes require sync
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency) checks cross-references between assignments, series membership, and works
-- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) records the migration of tag writes into the local Studio analytics API, which constrains writes to Studio-owned JSON files and creates backups/logs
+- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) records the migration of tag writes into the Local Analytics API, which constrains writes to Analytics-owned JSON files and creates backups/logs
 
 ## Studio Docs Data
 

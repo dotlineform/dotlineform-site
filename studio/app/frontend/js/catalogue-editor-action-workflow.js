@@ -1,4 +1,4 @@
-import { utcTimestamp } from "./tag-studio-save.js";
+import { utcTimestamp } from "./studio-save-utils.js";
 
 export const CATALOGUE_ACTION_OUTCOME = Object.freeze({
   UNCHANGED: "unchanged",

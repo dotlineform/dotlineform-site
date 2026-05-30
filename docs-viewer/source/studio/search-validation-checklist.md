@@ -76,7 +76,7 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] Confirm records exist for all three current kinds: `work`, `series`, `moment`
 - [ ] Confirm every serialized record has `kind`, `id`, `title`, `href`, `search_terms`, and `search_text`
-- [ ] Confirm array fields such as `series_ids`, `series_titles`, `tag_ids`, and `tag_labels` use the expected empty-array convention
+- [ ] Confirm array fields such as `series_ids` and `series_titles` use the expected empty-array convention
 - [ ] Confirm optional scalar fields such as `medium_type` and `series_type` are omitted when empty rather than serialized inconsistently
 - [ ] Confirm ids are unique across the full entry list
 - [ ] Confirm representative example records in the docs still reflect reality closely enough to stay useful

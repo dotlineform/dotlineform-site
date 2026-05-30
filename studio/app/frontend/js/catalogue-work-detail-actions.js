@@ -27,7 +27,7 @@ import {
   resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
-import { utcTimestamp } from "./tag-studio-save.js";
+import { utcTimestamp } from "./studio-save-utils.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
   buildCreateWorkDetailPayload,

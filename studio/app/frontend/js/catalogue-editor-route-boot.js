@@ -9,7 +9,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { buildSaveModeText } from "./tag-studio-save.js";
+import { buildSaveModeText } from "./studio-save-utils.js";
 
 function defaultItemsFromPayload(payload) {
   return Array.isArray(payload && payload.items) ? payload.items : [];

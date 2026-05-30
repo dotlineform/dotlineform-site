@@ -142,22 +142,8 @@ Retired catalogue create routes:
 - The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
 - Active create behavior now lives in `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `assets/studio/js/catalogue-series-editor.js`.
 
-Controller splits that are already live:
+Studio controller splits that are already live:
 
-- Tag Editor:
-  - `tag-studio.js`
-  - `tag-studio-domain.js`
-  - `tag-studio-save.js`
-- Tag Registry:
-  - `tag-registry.js`
-  - `tag-registry-domain.js`
-  - `tag-registry-save.js`
-  - `tag-registry-service.js`
-- Tag Aliases:
-  - `tag-aliases.js`
-  - `tag-aliases-domain.js`
-  - `tag-aliases-save.js`
-  - `tag-aliases-service.js`
 - Catalogue Work Editor:
   - `catalogue-work-editor.js`
   - `catalogue-work-fields.js`

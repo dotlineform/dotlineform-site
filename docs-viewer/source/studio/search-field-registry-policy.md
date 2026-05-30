@@ -32,8 +32,6 @@ Current policy split:
 - present but not active in v1 search:
   - `kind`
   - `href`
-  - `tag_ids`
-  - `tag_labels`
 
 ## Filterability rules
 
@@ -49,7 +47,6 @@ Current fields that could support structured filters if that capability is enabl
 - `series_ids`
 - `medium_type`
 - `series_type`
-- `tag_ids`
 
 Current fields that should not become structured filters:
 
@@ -79,8 +76,6 @@ Current fields stored but not displayed:
 - `year`
 - `date`
 - `series_ids`
-- `tag_ids`
-- `tag_labels`
 - `search_terms`
 - `search_text`
 
@@ -135,8 +130,6 @@ Current examples:
 
 - `kind`
 - `href`
-- `tag_ids`
-- `tag_labels`
 
 ## Match mode policy
 

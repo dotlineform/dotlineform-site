@@ -37,7 +37,7 @@ Canonical source can remain in a public repo while generated public projections 
 | Catalogue metadata | `studio/data/canonical/catalogue/works.json`, `series.json`, `work_details.json`, `moments.json`, `meta.json` | `_works/`, `_series/`, `_work_details/`, `_moments/`, `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, `assets/data/moments_index.json`, `assets/series/index/`, `assets/works/index/`, `assets/moments/index/` | `studio/data/generated/catalogue-lookup/`, catalogue editor API read responses, project-state and thumbnail-quality local reports | [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source), [Catalogue Indexes And Payloads](/docs/?scope=studio&doc=data-models-catalogue-indexes) |
 | Catalogue prose | `studio/data/canonical/catalogue-markdown/works/`, `studio/data/canonical/catalogue-markdown/series/`, `studio/data/canonical/catalogue-markdown/moments/` | rendered `content_html` in per-record public payloads | editor/source-open workflows and prose import preview/apply state | [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) |
 | Catalogue media metadata | source image fields in canonical catalogue JSON plus `DOTLINEFORM_PROJECTS_BASE_DIR` media roots | public route thumbnails under `assets/works/img/`, `assets/work_details/img/`, `assets/moments/img/`; public page media URLs from generated payloads | local derivative staging under `var/catalogue/media/` | [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json), [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) |
-| Catalogue search | public catalogue projections plus selected Studio tag data | `assets/data/search/catalogue/index.json` | search preview/build diagnostics | [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) |
+| Catalogue search | public catalogue projections | `assets/data/search/catalogue/index.json` | search preview/build diagnostics | [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) |
 
 Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
 The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
@@ -45,8 +45,8 @@ It also treats work `storage` and any retired `notes` keys as forbidden in publi
 `storage` remains available to Studio through the Studio-only `studio/data/generated/activity/work-storage-index.json` projection; public catalogue work records, public indexes, and catalogue search must not publish it.
 Work and series `notes` are no longer source-schema fields; catalogue prose Markdown files own narrative text.
 
-Catalogue search is allowed to include selected Studio-derived tag labels or terms when the search builder documents the transform.
-That does not make the tag registry, aliases, assignments, or full Studio lookup payloads public projections.
+Catalogue search is catalogue-owned and does not consume Analytics tag source data.
+Analytics tag registry, aliases, assignments, and groups are local Analytics source data, not public catalogue projections.
 
 ## Docs Viewer Scopes
 

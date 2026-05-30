@@ -15,21 +15,19 @@ Important dependencies:
 - `_work_details/*.md` depends on the parent work record for canonical detail data
 - `works_index.json` depends on valid `series_ids` membership
 - `series_index.json` depends on ordered work membership and stable `sort_fields`
-- catalogue search depends on series/work/moment data plus Studio tag data from:
-  - `assets/studio/data/tag_assignments.json`
-  - `assets/studio/data/tag_registry.json`
+- catalogue search depends on series/work/moment generated catalogue data only; it does not consume Analytics tag source data
 
 Current enforcement visible in code:
 
 - the generator writes and hashes the shared catalogue indexes and per-record catalogue payloads
-- the search builder writes the catalogue search artifact from those generated JSON families plus Studio tag data
+- the search builder writes the catalogue search artifact from those generated JSON families
 - the generator keeps `_moments`, `_series`, and `_works` stubs minimal and current
 - the audit script checks:
   - `detail_uid` and `work_id` consistency
   - `series_index` membership integrity
   - `works_index` `series_ids`
   - JSON header and root-shape expectations
-  - `tag_assignments` references back into series/work membership
+  - Analytics `tag-assignments.json` references back into series/work membership through the Analytics tag source path contract
 
 ## Performance Notes
 

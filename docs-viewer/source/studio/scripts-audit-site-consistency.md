@@ -97,7 +97,7 @@ Source artifacts checked by the current audit include:
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
 - `assets/works/index/*.json`
-- `assets/studio/data/tag_assignments.json`
+- `analytics-app/data/canonical/tag-assignments.json`
 - generated URLs and media paths referenced by those artifacts
 
 Collection Markdown files are treated as route anchors. Their canonical IDs come from the filename stem when front matter omits `work_id`, `series_id`, `detail_uid`, or `moment_id`; work-detail parent `work_id` is derived from the `detail_uid` prefix.

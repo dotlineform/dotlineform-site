@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T19:06:44Z",
+  "generated_at": "2026-05-30T19:20:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -79,7 +79,7 @@
       "source_path": "series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json",
-      "content_text_length": 8112
+      "content_text_length": 8115
     },
     {
       "scope": "studio",
@@ -93,7 +93,7 @@
       "source_path": "tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-aliases.json",
-      "content_text_length": 8412
+      "content_text_length": 8415
     },
     {
       "scope": "studio",
@@ -107,7 +107,7 @@
       "source_path": "tag-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-editor.json",
-      "content_text_length": 11654
+      "content_text_length": 11657
     },
     {
       "scope": "studio",
@@ -121,7 +121,7 @@
       "source_path": "tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-groups.json",
-      "content_text_length": 2764
+      "content_text_length": 2767
     },
     {
       "scope": "studio",
@@ -135,7 +135,7 @@
       "source_path": "tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json",
-      "content_text_length": 9250
+      "content_text_length": 9253
     },
     {
       "scope": "studio",
@@ -178,7 +178,7 @@
       "source_path": "data-models.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models.json",
-      "content_text_length": 589
+      "content_text_length": 663
     },
     {
       "scope": "studio",
@@ -192,7 +192,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 11043
+      "content_text_length": 10979
     },
     {
       "scope": "studio",
@@ -320,7 +320,7 @@
       "source_path": "scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json",
-      "content_text_length": 4132
+      "content_text_length": 4142
     },
     {
       "scope": "studio",
@@ -477,7 +477,7 @@
       "source_path": "data-models-catalogue-indexes.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue-indexes",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-indexes.json",
-      "content_text_length": 4840
+      "content_text_length": 4798
     },
     {
       "scope": "studio",
@@ -505,7 +505,7 @@
       "source_path": "data-models-catalogue-maintenance.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue-maintenance",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-maintenance.json",
-      "content_text_length": 1919
+      "content_text_length": 1928
     },
     {
       "scope": "studio",
@@ -716,8 +716,8 @@
       "source_path": "site-request-analytics-app-split-follow-on.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 22465,
-      "ui_status": "in-progress"
+      "content_text_length": 25028,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1199,7 +1199,7 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 2892
+      "content_text_length": 3209
     },
     {
       "scope": "studio",
@@ -1833,7 +1833,7 @@
       "source_path": "llm-semantic-enrichment-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/llm-semantic-enrichment-spec.json",
-      "content_text_length": 13916,
+      "content_text_length": 13955,
       "ui_status": "draft"
     },
     {
@@ -1961,7 +1961,7 @@
       "source_path": "search-catalogue-targeted-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-targeted-plan.json",
-      "content_text_length": 7006
+      "content_text_length": 6863
     },
     {
       "scope": "studio",
@@ -2115,7 +2115,7 @@
       "source_path": "search-field-registry-definitions.md",
       "viewer_url": "/docs/?scope=studio&doc=search-field-registry-definitions",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-definitions.json",
-      "content_text_length": 4707
+      "content_text_length": 4227
     },
     {
       "scope": "studio",
@@ -2129,7 +2129,7 @@
       "source_path": "search-field-registry-policy.md",
       "viewer_url": "/docs/?scope=studio&doc=search-field-registry-policy",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-policy.json",
-      "content_text_length": 4057
+      "content_text_length": 3992
     },
     {
       "scope": "studio",
@@ -2143,7 +2143,7 @@
       "source_path": "search-field-registry-table.md",
       "viewer_url": "/docs/?scope=studio&doc=search-field-registry-table",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-table.json",
-      "content_text_length": 2325
+      "content_text_length": 2065
     },
     {
       "scope": "studio",
@@ -2157,7 +2157,7 @@
       "source_path": "search-index-schema.md",
       "viewer_url": "/docs/?scope=studio&doc=search-index-schema",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-index-schema.json",
-      "content_text_length": 7710
+      "content_text_length": 7360
     },
     {
       "scope": "studio",
@@ -2171,7 +2171,7 @@
       "source_path": "search-normalisation-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=search-normalisation-rules",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-normalisation-rules.json",
-      "content_text_length": 10246
+      "content_text_length": 9950
     },
     {
       "scope": "studio",
@@ -2255,7 +2255,7 @@
       "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-validation-checklist.json",
-      "content_text_length": 8889
+      "content_text_length": 8864
     },
     {
       "scope": "studio",
@@ -2465,7 +2465,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 14446
+      "content_text_length": 14196
     },
     {
       "scope": "studio",
@@ -2479,7 +2479,7 @@
       "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
-      "content_text_length": 9111
+      "content_text_length": 9476
     },
     {
       "scope": "studio",
@@ -2773,7 +2773,7 @@
       "source_path": "studio-ui-framework-primitives.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-primitives.json",
-      "content_text_length": 9980
+      "content_text_length": 11607
     },
     {
       "scope": "studio",

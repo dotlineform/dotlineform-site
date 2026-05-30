@@ -415,7 +415,7 @@ def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str,
         (repo_root / "assets" / "data" / "series_index.json").resolve(),
         (repo_root / "assets" / "data" / "recent_index.json").resolve(),
         (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
-        (repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
+        (repo_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),
     }
     for raw_path in cleanup.get("delete_paths") or []:
         path = Path(raw_path)

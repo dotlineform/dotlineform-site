@@ -3,7 +3,7 @@ doc_id: site-request-analytics-app-split-follow-on
 title: Analytics App Split Follow-On Tasks
 added_date: "2026-05-30 17:24"
 last_updated: "2026-05-30 21:35"
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-analytics-app-split
 ---
 # Analytics App Split Follow-On Tasks
@@ -29,17 +29,19 @@ Key boundary decisions:
 
 ### just done
 
-- Completed task 12 inventory refresh:
-  - refreshed the JavaScript inventory table paths from retired `assets/studio/js/...` owners to the current `studio/app/frontend/js/` and `analytics-app/app/frontend/js/` app roots
-  - moved Analytics tag, Data Sharing, series-tag, and scoring rows to Analytics-owned inventory families
-  - refreshed the Python/Ruby inventory guardrail so tag helper work points at `analytics-app/app/server/analytics_app/tag_services/` and Analytics adapters, not Studio service scripts
-  - kept inventory scoring as the current scored row set after the split cleanup, with app-root paths and family names now acting as the ownership signal
+- Completed tasks 13, 14, and 15:
+  - refreshed durable docs for Analytics tag source ownership, Data Sharing ownership, public catalogue search boundaries, Analytics UI class naming, Run Checks profiles, data-model contracts, and semantic-enrichment references
+  - fixed the remaining active carryover discovered during verification by moving catalogue cleanup/write allowlists to the Analytics `tag_source_paths` contract
+  - renamed the remaining generic Local Studio save utility from `tag-studio-save.js` to `studio-save-utils.js` and updated Studio route imports
+  - ran focused Python, pytest, Playwright module, quick-profile, analytics-smoke, stale-reference, and diff checks
+  - created structured docs-log entry `change-2026-05-30-closed-analytics-app-split-follow-on-cleanup`
 
 ### steer for next task
 
-- Start task 13 by updating durable docs that still mention old Studio-owned Analytics paths, helper ownership, route-ready names, or Data Sharing roots.
-- Update source docs only. Let the docs watcher update generated payloads if it is running; do not manually rebuild docs payloads.
-- Keep historical change-request/log records out of the cleanup unless the active durable doc points to an obsolete current contract.
+- Follow-on request is closed.
+- Docs source was updated directly; the docs watcher regenerated Studio docs payloads while running.
+- The docs-log helper wrote the structured log entry and rebuilt change-log generated indexes.
+- Historical request/log records were left intact except for the new close-out entry and generated change-log indexes.
 
 ### baseline verification set
 
@@ -342,6 +344,46 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 10 | done | Rename tag UI/module naming from `tagStudio*` and `tag-studio-*` to Analytics-owned naming. Include CSS classes in `analytics.css`, JS class tokens/templates, modal selectors, smoke tests, and docs. Use one consistent family such as `analytics*`, `analyticsModal*`, `analyticsForm*`, `analyticsList*`, and `analyticsToolbar*`. |
 | 11 | done | Rename remaining runtime event/state names that still imply Studio ownership, including `studio:open-modal`, `initializeStudioRouteState`, and Analytics-local activity-context helper names where appropriate. Preserve behavior; only change ownership language and route-local contracts. |
 | 12 | done | Refresh JavaScript and Python inventory docs for the post-follow-on state. Replace stale pre-split `assets/studio/js/tag-*` and `data-sharing-*` inventory rows with actual `analytics-app/app/frontend/js/` rows and rescore maintenance risk. Update Python/Ruby inventory rows for the moved Analytics helper package. |
-| 13 | planned | Update durable docs: Analytics, Data Sharing, Data Sharing technical spec, Source Tree Ownership, Run Checks, local setup/runtime docs, projection/data-model docs, tag docs, search docs, and script docs that mention old Studio-owned paths or helper ownership. Update source docs only; do not manually rebuild generated docs payloads. |
-| 14 | planned | Run the final focused verification set: Python syntax/import checks, focused tag helper pytest, focused Data Sharing adapter/path pytest, affected catalogue/search/audit tests, `analytics-smoke`, stale-reference scans for retired Studio paths/names, and `git diff --check`. |
-| 15 | planned | Close out the follow-on request with moved-path summary, removed old paths, adapter/search ownership decisions, verification results, generated-payload status, remaining risks, and structured docs-log entry. |
+| 13 | done | Update durable docs: Analytics, Data Sharing, Data Sharing technical spec, Source Tree Ownership, Run Checks, local setup/runtime docs, projection/data-model docs, tag docs, search docs, and script docs that mention old Studio-owned paths or helper ownership. Update source docs only; do not manually rebuild generated docs payloads. |
+| 14 | done | Run the final focused verification set: Python syntax/import checks, focused tag helper pytest, focused Data Sharing adapter/path pytest, affected catalogue/search/audit tests, `analytics-smoke`, stale-reference scans for retired Studio paths/names, and `git diff --check`. |
+| 15 | done | Close out the follow-on request with moved-path summary, removed old paths, adapter/search ownership decisions, verification results, generated-payload status, remaining risks, and structured docs-log entry. |
+
+## Close-Out
+
+Moved/confirmed ownership:
+
+- tag source data and tag helper ownership are under `analytics-app/data/canonical/` and `analytics-app/app/server/analytics_app/tag_services/`
+- Data Sharing runtime artifacts are under `var/analytics/data-sharing/<domain>/...`
+- Analytics route UI class and module ownership uses `analytics*` class families and `analytics-app/app/frontend/js/` modules
+- Local Studio's generic save utility is now `studio/app/frontend/js/studio-save-utils.js`, not a tag-named helper
+
+Removed or rejected old ownership:
+
+- no active code or durable doc contract depends on `studio/data/canonical/analytics/...`, `/studio/data/canonical/analytics/...`, `studio/services/analytics`, `studio.services.analytics`, `var/studio/data-sharing/...`, or `tag-studio*`
+- remaining mentions of retired Data Sharing and tag-write paths are explicit historical/compatibility warnings
+- public catalogue search remains catalogue-owned and does not consume Analytics tags or publish `tag_ids` / `tag_labels`
+
+Verification:
+
+- `$HOME/miniconda3/bin/python3 -m py_compile studio/services/catalogue/catalogue_cleanup.py studio/services/catalogue/catalogue_transactions.py`
+- `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_catalogue_cleanup.py studio/tests/python/test_catalogue_transactions.py` passed, 15 tests
+- focused tag/Data Sharing pytest passed, 61 tests
+- `studio/tests/smoke/studio_operational_route_modules.py --site-root .` passed
+- `studio/tests/smoke/catalogue_editor_route_boot_modules.py --site-root .` passed
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id analytics-split-follow-on-task13-quick` passed; summary at `var/test-runs/analytics-split-follow-on-task13-quick/summary.md`
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile analytics-smoke --run-id analytics-split-follow-on-task14-analytics-smoke` passed; summary at `var/test-runs/analytics-split-follow-on-task14-analytics-smoke/summary.md`
+- final stale-reference scans and `git diff --check` passed
+
+Generated payload status:
+
+- Studio docs payloads changed because the docs watcher was running after source doc edits
+- change-log generated indexes changed because the structured docs-log helper rebuilt them after writing the close-out entry
+
+Remaining risks:
+
+- no known implementation blockers remain for this follow-on request
+- tag-write backups still use their current documented backup location; moving backup roots was not part of this follow-on close-out slice
+
+## Change Log Entries
+
+- `change-2026-05-30-closed-analytics-app-split-follow-on-cleanup`

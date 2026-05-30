@@ -163,31 +163,6 @@ Provides structured series classification metadata.
 Notes:
 The runtime can rank matches on `series_type`, and the current UI may display it for series records.
 
-### `tag_ids`
-Searchable in v1: no  
-Filterable now: no  
-Displayed in results: no  
-Importance: none in v1  
-Match modes: none  
-Field class: structured  
-
-Purpose:
-Carries canonical assigned tag ids.
-
-Notes:
-This field is present in the current artifact but is not currently used by ranking or UI filters.
-
-### `tag_labels`
-Searchable in v1: no  
-Filterable now: no  
-Displayed in results: no  
-Importance: none in v1  
-Match modes: none  
-Field class: structured  
-
-Purpose:
-Carries display labels for assigned tags.
-
 Notes:
 This field exists in the current artifact so tag-aware search can be enabled later without reshaping the base record.
 

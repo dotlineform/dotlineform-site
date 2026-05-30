@@ -39,7 +39,7 @@ import {
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   utcTimestamp
-} from "./tag-studio-save.js";
+} from "./studio-save-utils.js";
 import {
   WORK_DIMENSION_FIELD_KEYS,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,

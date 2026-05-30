@@ -296,16 +296,6 @@ Current treatment:
 - retained as normalized phrases
 - split into additional tokens where separators or spaces exist
 
-### `tag_ids` and `tag_labels`
-
-Current treatment:
-
-- tag ids are normalized when read from tag assignments
-- tag labels are normalized when stored structurally
-- neither is currently included in the derived `search_terms` build set
-
-This is an intentional current limitation, not an omission in the documentation.
-
 ## Equivalence rules
 
 Current effective equivalences include:

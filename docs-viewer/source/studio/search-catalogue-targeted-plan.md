@@ -31,7 +31,7 @@ Current catalogue search behavior:
 - `scripts/search/build_config.json` marks the catalogue scope with `targeted_policy: "additive_only"` and `targeted_operations: ["create"]`
 - generated catalogue search remains one combined artifact at `assets/data/search/catalogue/index.json`
 
-A full rebuild remains the operational escape hatch for edits, removals, tag changes, work-detail changes, and ambiguous dependency states.
+A full rebuild remains the operational escape hatch for edits, removals, work-detail changes, and ambiguous dependency states.
 
 ## Key Observations
 
@@ -42,8 +42,7 @@ Reasons:
 - a work entry can depend on work index data, per-work payload data, series relationships, and series titles
 - a series title or series metadata change can affect the series entry and related work entries
 - a moment entry is probably more isolated than works and series, but still needs explicit id and removal rules
-- `tag_ids` and `tag_labels` are serialized in the current catalogue search artifact but do not participate in matching or ranking
-- tag search, tag-assignment search, and tag-label invalidation should stay out of the catalogue targeted-search slice
+- Analytics tag source data is outside the catalogue search contract and should stay out of the catalogue targeted-search slice
 - work details are not separate public search entries and should stay out of scope to avoid noisy recall
 - generated public search artifacts should not gain operation provenance just to support targeted updates
 
@@ -130,7 +129,7 @@ Before enabling catalogue targeted search in live write flows:
 - verify deterministic ordering and header version behavior
 - verify catalogue targeted mode refuses `--remove-missing`
 - verify existing changed records are refused and routed to full rebuild
-- confirm `catalogue` targeted mode still refuses ambiguous source-family changes, tag changes, and work-detail changes
+- confirm `catalogue` targeted mode still refuses ambiguous source-family changes and work-detail changes
 - update [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) with catalogue-targeted checks
 
 ## First Implementation Slice

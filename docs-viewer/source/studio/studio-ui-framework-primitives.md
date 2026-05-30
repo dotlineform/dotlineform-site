@@ -8,6 +8,16 @@ viewable: true
 ---
 # UI Framework Primitives
 
+## App Naming Boundaries
+
+Local Studio and Local Analytics share the same primitive intent, but they do not share class names across app roots.
+
+Studio-owned routes under `studio/app/` use the `tagStudio*` families in `studio/app/assets/css/studio.css`.
+Analytics-owned routes under `analytics-app/` use the matching `analytics*` families in `analytics-app/app/assets/css/analytics.css`.
+
+Do not introduce new Analytics markup that depends on `tagStudio*` classes.
+Do not rename still-live Local Studio markup to `analytics*` unless that route is moving into the Analytics app boundary.
+
 ## Studio Naming Boundary
 
 - `tagStudio__*`
@@ -24,6 +34,27 @@ viewable: true
   Page- or feature-specific layout and presentation only.
 
 Rule of thumb: if two Studio pages need the same visual treatment, the class should move into the shared `tagStudio*` layer instead of borrowing another page's namespace.
+
+## Analytics Naming Boundary
+
+- `analytics__*`
+  Shared Analytics primitives such as buttons, inputs, chips, panels, popups, and modal shells.
+- `analyticsField__*`
+  Shared input-field compositions such as label placement, width handling, and stepped value controls.
+- `analyticsToolbar__*`
+  Shared import/action toolbar pattern used by registry-, alias-, series-tag-, and Data Sharing pages.
+- `analyticsFilters__*`
+  Shared filter/search row pattern used by list pages.
+- `analyticsForm__*`
+  Shared modal form layout primitives such as fields, labels, warnings, statuses, and selected-chip areas.
+- `analyticsList__*`
+  Shared outer list structure, row rhythm, sortable header treatment, and common cell text.
+- `analyticsModal__*`
+  Shared Analytics modal shell and action-row treatment.
+- `tagRegistry__*`, `tagAliases__*`, `analyticsSuggest__*`, `seriesTags__*`, `dataSharing*`
+  Page- or feature-specific layout and presentation only.
+
+Rule of thumb: if two Analytics pages need the same visual treatment, the class should move into the shared `analytics*` layer instead of borrowing another page's namespace.
 
 ## Studio Shared Primitives
 

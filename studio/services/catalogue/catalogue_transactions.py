@@ -181,7 +181,7 @@ def ensure_catalogue_delete_payload_scope(
         (repo_root / "assets" / "data" / "series_index.json").resolve(),
         (repo_root / "assets" / "data" / "recent_index.json").resolve(),
         (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
-        (repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
+        (repo_root / catalogue_cleanup.tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),
     }
     allowed = {path.resolve() for path in allowed_write_paths}
     for target_path in payloads:

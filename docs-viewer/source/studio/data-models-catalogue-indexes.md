@@ -187,7 +187,7 @@ Current content families:
 - one `entries[]` array across all three catalogue kinds
 - per-entry display metadata and route href
 - normalized search terms and combined `search_text`
-- selected structured fields such as series relationships, work medium type from per-work JSON, and Studio-derived tag data where available
+- selected structured fields such as series relationships and work medium type from per-work JSON
 - work-only search enrichment terms such as `medium_caption` folded into derived search fields from per-work JSON
 
 Current site mapping:

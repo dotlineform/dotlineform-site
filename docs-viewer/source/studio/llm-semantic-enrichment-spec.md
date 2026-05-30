@@ -88,7 +88,7 @@ LLM responses should be treated as proposals or working artifacts until applied.
 
 Canonical state remains in the owning source systems:
 
-- Studio tag data for tag registry, aliases, groups, and assignments
+- Analytics tag data for tag registry, aliases, groups, and assignments
 - future catalogue dimension or scoring data if that model is implemented
 - Library source Markdown front matter for summaries
 - generated docs/search artifacts only after explicit rebuilds
@@ -136,8 +136,8 @@ Likely outputs:
 
 Initial persistence direction:
 
-- suggestions should be reviewed in Studio before becoming tag assignments
-- accepted suggestions should write through the existing Studio tag data model
+- suggestions should be reviewed in Analytics before becoming tag assignments
+- accepted suggestions should write through the existing Analytics tag data model
 - rejected or ignored suggestions may optionally be kept in an audit trace later
 
 ### Dimension recommendation
@@ -328,7 +328,7 @@ Accepted changes should write through the domain's normal source boundary.
 
 Examples:
 
-- tag assignment writes through Studio tag data
+- tag assignment writes through Analytics tag data
 - Library summary writes source Markdown front matter
 - Library structure changes use docs-management move/metadata rules
 
@@ -372,8 +372,8 @@ Canonical source data remains domain-owned.
 Examples:
 
 - `docs-viewer/source/library/*.md` for Library summary front matter
-- `assets/studio/data/tag_assignments.json`
-- `assets/studio/data/tag_registry.json`
+- `analytics-app/data/canonical/tag-assignments.json`
+- `analytics-app/data/canonical/tag-registry.json`
 - future catalogue dimension/scoring source if implemented
 
 ### Generated data
@@ -418,7 +418,7 @@ LLM enrichment can improve search, but search should not drive every enrichment 
 Current direction:
 
 - Library search should initially use summaries before considering full body text
-- catalogue search may benefit from tags and future dimension data
+- catalogue search may benefit from future catalogue-owned dimension data
 - Studio docs search may not need the same summary population effort as Library
 - search behavior can diverge by domain priority even when the underlying docs schema is shared
 

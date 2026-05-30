@@ -24,8 +24,6 @@ Current field-policy registry:
 | `series_titles` | yes | no | yes | yes | medium | contains | structured | explicit mid-tier ranking field for works |
 | `medium_type` | yes | no | yes | yes | medium | contains | structured | explicit mid-tier ranking field for works |
 | `series_type` | yes | no | yes | yes | low-medium | contains | structured | searched in v1 and displayed for series |
-| `tag_ids` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current filtering |
-| `tag_labels` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current ranking and filtering |
 | `search_terms` | yes | no | no | no | high support | exact, prefix | derived | primary derived retrieval field |
 | `search_text` | yes | no | no | no | low fallback | substring | derived | broad fallback field only |
 
@@ -47,8 +45,6 @@ Current examples:
 - `series_titles`
 - `medium_type`
 - `series_type`
-- `tag_ids`
-- `tag_labels`
 
 ### Structural
 
