@@ -6,48 +6,11 @@ import json
 import os
 from pathlib import Path
 
-try:
-    from studio_data_sharing_api import service_endpoints as data_sharing_service_endpoints
-except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_data_sharing_api import service_endpoints as data_sharing_service_endpoints
-
-
 STUDIO_VIEWS: dict[str, dict[str, str]] = {
     "docs": {
         "label": "docs",
         "title": "Docs",
         "path": "/docs/?mode=manage",
-    },
-    "tag_groups": {
-        "label": "tag groups",
-        "title": "Tag Groups",
-        "path": "/studio/analytics/tag-groups/",
-        "script": "/studio/app/frontend/js/tag-groups.js",
-    },
-    "tag_registry": {
-        "label": "registry",
-        "title": "Tag Registry",
-        "path": "/studio/analytics/tag-registry/",
-        "script": "/studio/app/frontend/js/tag-registry.js",
-    },
-    "tag_aliases": {
-        "label": "aliases",
-        "title": "Tag Aliases",
-        "path": "/studio/analytics/tag-aliases/",
-        "script": "/studio/app/frontend/js/tag-aliases.js",
-    },
-    "series_tags": {
-        "label": "series tags",
-        "title": "Series Tags",
-        "path": "/studio/analytics/series-tags/",
-        "script": "/studio/app/frontend/js/series-tags.js",
-    },
-    "series_tag_editor": {
-        "label": "tag editor",
-        "title": "Series Tag Editor",
-        "path": "/studio/analytics/series-tag-editor/",
-        "script": "/studio/app/frontend/js/series-tag-editor-page.js",
-        "nav": "false",
     },
     "studio_audits": {
         "label": "audits",
@@ -78,18 +41,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "title": "Studio Activity",
         "path": "/studio/activity/?mode=manage",
         "script": "/studio/app/frontend/js/activity-log.js",
-    },
-    "data_sharing_prepare": {
-        "label": "prepare share",
-        "title": "Prepare Share Package",
-        "path": "/studio/data-sharing/prepare/?mode=manage",
-        "script": "/studio/app/frontend/js/data-sharing-prepare.js",
-    },
-    "data_sharing_review": {
-        "label": "review share",
-        "title": "Review Returned Package",
-        "path": "/studio/data-sharing/review/?mode=manage",
-        "script": "/studio/app/frontend/js/data-sharing-review.js",
     },
     "catalogue_field_registry": {
         "label": "field registry",
@@ -225,29 +176,6 @@ STUDIO_MEDIA: dict[str, object] = {
 }
 
 STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
-    "analytics": {
-        "base": "/studio/api/analytics",
-        "health": "/studio/api/analytics/health",
-        "delete_tag_alias": "/studio/api/analytics/delete-tag-alias",
-        "demote_tag": "/studio/api/analytics/demote-tag",
-        "demote_tag_preview": "/studio/api/analytics/demote-tag-preview",
-        "import_tag_assignments": "/studio/api/analytics/import-tag-assignments",
-        "import_tag_assignments_preview": "/studio/api/analytics/import-tag-assignments-preview",
-        "import_tag_aliases": "/studio/api/analytics/import-tag-aliases",
-        "import_tag_registry": "/studio/api/analytics/import-tag-registry",
-        "mutate_tag_alias": "/studio/api/analytics/mutate-tag-alias",
-        "mutate_tag_alias_preview": "/studio/api/analytics/mutate-tag-alias-preview",
-        "mutate_tag": "/studio/api/analytics/mutate-tag",
-        "mutate_tag_preview": "/studio/api/analytics/mutate-tag-preview",
-        "promote_tag_alias": "/studio/api/analytics/promote-tag-alias",
-        "promote_tag_alias_preview": "/studio/api/analytics/promote-tag-alias-preview",
-        "tag_aliases": "/studio/api/analytics/tag-aliases",
-        "tag_assignments": "/studio/api/analytics/tag-assignments",
-        "tag_groups": "/studio/api/analytics/tag-groups",
-        "tag_registry": "/studio/api/analytics/tag-registry",
-        "save_tags": "/studio/api/analytics/save-tags",
-    },
-    "data_sharing": {},
     "audits": {
         "base": "/studio/api/audits",
         "health": "/studio/api/audits/health",
@@ -307,7 +235,6 @@ def studio_views(_repo_root: Path) -> dict[str, dict[str, str]]:
 
 def studio_service_endpoints(_repo_root: Path) -> dict[str, object]:
     endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
-    endpoints["data_sharing"] = data_sharing_service_endpoints()
     return endpoints
 
 
@@ -315,26 +242,18 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-groups.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-aliases.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "series-tags.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "series-tag-editor-page.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "thumbnail-quality.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-modals.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "data-sharing-prepare.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "data-sharing-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-detail-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-editor.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-studio.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",
         repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",
         repo_root / "studio" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-demo.js",

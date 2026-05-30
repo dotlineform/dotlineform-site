@@ -1,4 +1,4 @@
-"""HTML views for the local Studio app server."""
+"""HTML views for the local Analytics app server."""
 
 from __future__ import annotations
 
@@ -7,39 +7,38 @@ import json
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, studio_views
+    from analytics_app_config import ANALYTICS_MEDIA, ANALYTICS_TOP_NAV_VIEW_IDS, analytics_views
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, studio_views
+    from .analytics_app_config import ANALYTICS_MEDIA, ANALYTICS_TOP_NAV_VIEW_IDS, analytics_views
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
-STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {}
+ANALYTICS_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {}
 
 
 STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
     {
-        "label": "catalogue",
+        "label": "tags",
         "links": (
-            ("drafts", "/studio/catalogue-status/?mode=manage"),
-            ("series editor", "/studio/catalogue-series/"),
-            ("work editor", "/studio/catalogue-work/"),
-            ("work detail editor", "/studio/catalogue-work-detail/?mode=manage"),
-            ("bulk add work", "/studio/bulk-add-work/?mode=manage"),
-            ("moment editor", "/studio/catalogue-moment/?mode=manage"),
-            ("list of works", "/studio/studio-works/?mode=manage&sort=cat&dir=asc"),
-            ("project state", "/studio/project-state/?mode=manage"),
+            ("series tags", "/analytics/series-tags/"),
+            ("series tag editor", "/analytics/series-tag-editor/"),
         ),
     },
     {
-        "label": "admin",
+        "label": "registry",
         "links": (
-            ("studio audits", "/studio/audits/?mode=manage"),
-            ("thumbnail tests", "/studio/thumbnail-quality/?mode=manage"),
-            ("UI demos", "/studio/ui-catalogue/demos/"),
-            ("studio activity", "/studio/activity/?mode=manage"),
-            ("field registry", "/studio/catalogue-field-registry/?mode=manage"),
+            ("tag registry", "/analytics/tag-registry/"),
+            ("tag aliases", "/analytics/tag-aliases/"),
+            ("tag groups", "/analytics/tag-groups/"),
+        ),
+    },
+    {
+        "label": "data sharing",
+        "links": (
+            ("prepare package", "/analytics/data-sharing/prepare/?mode=manage&scope=library"),
+            ("returned package", "/analytics/data-sharing/review/?mode=manage&scope=library"),
         ),
     },
 )
@@ -47,9 +46,9 @@ STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
 
 def studio_nav(active_view_id: str = "") -> str:
     items = []
-    active_nav_id = STUDIO_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
-    views = studio_views(REPO_ROOT)
-    for view_id in STUDIO_TOP_NAV_VIEW_IDS:
+    active_nav_id = ANALYTICS_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
+    views = analytics_views(REPO_ROOT)
+    for view_id in ANALYTICS_TOP_NAV_VIEW_IDS:
         view = views[view_id]
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)
@@ -62,7 +61,7 @@ def studio_nav(active_view_id: str = "") -> str:
 def studio_header(active_view_id: str = "") -> str:
     return f"""<header class="site-header">
     <div class="container">
-      <div class="site-title"><a href="/studio/">dotlineform studio</a></div>
+      <div class="site-title"><a href="/analytics/">dotlineform analytics</a></div>
       <div class="studioHeader__actions">
         <nav class="site-nav" aria-label="Studio">
           {studio_nav(active_view_id)}
@@ -124,7 +123,7 @@ def studio_home_column_links() -> str:
 
 
 def studio_route_view(version: str, view_id: str, body_html: str) -> str:
-    view = studio_views(REPO_ROOT)[view_id]
+    view = analytics_views(REPO_ROOT)[view_id]
     escaped_version = html.escape(version, quote=True)
     escaped_view_id = html.escape(view_id, quote=True)
     title = html.escape(view["title"])
@@ -135,10 +134,10 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
-  <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
-  <title>{title} | dotlineform Studio</title>
+  <meta name="dlf-studio-config-url" content="/analytics/runtime-config.json">
+  <title>{title} | dotlineform Analytics</title>
   {studio_theme_boot_script()}
-  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
+  <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header(view_id)}
@@ -152,8 +151,8 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
           data-studio-doc-view="{escaped_view_id}"
           target="_blank"
           rel="noopener noreferrer"
-          title="Open Studio page implementation notes"
-          aria-label="Open Studio page implementation notes"
+          title="Open Analytics page implementation notes"
+          aria-label="Open Analytics page implementation notes"
         >
           <em>i</em>
         </a>
@@ -163,7 +162,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/analytics/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
   <script type="module" src="{script}?v={escaped_version}"></script>
 </body>
 </html>
@@ -266,7 +265,7 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
         render_widths = [800, 1200, 1600]
     display_width = render_widths[-1] if render_widths else 1600
     full_width = primary_variants.get("preferred_width") or display_width
-    media_config = STUDIO_MEDIA.get("media") if isinstance(STUDIO_MEDIA.get("media"), dict) else {}
+    media_config = ANALYTICS_MEDIA.get("media") if isinstance(ANALYTICS_MEDIA.get("media"), dict) else {}
     media_base = str(media_config.get("base") or "")
     media_works = str(media_config.get("works_images") or "/works/img")
     media_image_works_base = f"{media_base}{media_works}/"
@@ -281,7 +280,7 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
           data-primary-suffix="{html.escape(str(primary_variants.get("suffix") or "primary"), quote=True)}"
           data-asset-format="{html.escape(str(encoding.get("format") or "webp"), quote=True)}"
           data-series-index-url="/assets/data/series_index.json"
-          data-tag-studio-module-url="/studio/app/frontend/js/tag-studio.js?v={escaped_version}"
+          data-tag-studio-module-url="/analytics/app/frontend/js/tag-studio.js?v={escaped_version}"
           hidden
           data-studio-ready="false"
           data-studio-busy="false"
@@ -710,23 +709,26 @@ def studio_home_view(version: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
-  <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
-  <title>dotlineform Studio</title>
+  <meta name="dlf-studio-config-url" content="/analytics/runtime-config.json">
+  <title>dotlineform Analytics</title>
   {studio_theme_boot_script()}
-  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
+  <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header()}
   <main class="container">
     <div class="studio" id="studioHomeRoot" data-studio-ready="true" data-studio-busy="false">
       <div class="studio__content">
-        <section class="studioHomeLinks" aria-label="Studio home links">
+        <section class="studioHomeLinks" aria-label="Analytics home links">
           {links}
         </section>
       </div>
     </div>
   </main>
-  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/analytics/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
 </body>
 </html>
 """
+
+
+analytics_home_view = studio_home_view

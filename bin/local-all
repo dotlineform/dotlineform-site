@@ -25,6 +25,9 @@ PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
+ANALYTICS_APP_ENABLED="${ANALYTICS_APP_ENABLED:-1}"
+ANALYTICS_APP_HOST="${ANALYTICS_APP_HOST:-127.0.0.1}"
+ANALYTICS_APP_PORT="${ANALYTICS_APP_PORT:-8766}"
 DOCS_VIEWER_HOST="${DOCS_VIEWER_HOST:-127.0.0.1}"
 DOCS_VIEWER_PORT="${DOCS_VIEWER_PORT:-8776}"
 DOCS_VIEWER_BASE_URL="${DOCS_VIEWER_BASE_URL:-http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT}"
@@ -211,6 +214,11 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
 else
   echo "Local Studio app: disabled by STUDIO_APP_ENABLED=0"
 fi
+if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
+  echo "Local Analytics app: http://$ANALYTICS_APP_HOST:$ANALYTICS_APP_PORT/analytics/"
+else
+  echo "Local Analytics app: disabled by ANALYTICS_APP_ENABLED=0"
+fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 echo
 
@@ -218,11 +226,17 @@ remember_binding "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   remember_binding "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT"
 fi
+if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
+  remember_binding "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT"
+fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
 require_open_port "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT" "PUBLIC_SITE_PORT"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
+fi
+if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
+  require_open_port "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT" "ANALYTICS_APP_PORT"
 fi
 require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VIEWER_PORT"
 
@@ -231,6 +245,9 @@ echo
 
 start_child "Public site preview" "$ROOT_DIR/bin/public-site-preview"
 start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
+if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
+  start_child "Local Analytics runner" "$ROOT_DIR/bin/local-analytics"
+fi
 start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
 
 while true; do

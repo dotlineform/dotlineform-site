@@ -1,0 +1,5 @@
+{
+  "load_failed_error": "Failed to load group descriptions from /studio/data/canonical/analytics/tag-groups.json.",
+  "empty_state": "No group descriptions available.",
+  "description_long_fallback": "No long description available."
+}

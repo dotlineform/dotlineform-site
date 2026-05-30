@@ -1,4 +1,4 @@
-"""Analytics API adapters for the local Studio app server."""
+"""Analytics API adapters for the local Analytics app server."""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def utc_now() -> str:
 def analytics_health_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "service": "studio_analytics",
+        "service": "analytics",
         "writes": {
             "import_tag_assignments": True,
             "import_tag_assignments_preview": True,

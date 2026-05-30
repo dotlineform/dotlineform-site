@@ -1,0 +1,57 @@
+{
+  "studio_config_version": "analytics_config_v1",
+  "updated_at_utc": "2026-05-30T00:00:00Z",
+  "paths": {
+    "routes": {
+      "series_tags": "/analytics/series-tags/",
+      "series_tag_editor": "/analytics/series-tag-editor/",
+      "data_sharing_prepare": "/analytics/data-sharing/prepare/?mode=manage",
+      "data_sharing_review": "/analytics/data-sharing/review/?mode=manage",
+      "tag_registry": "/analytics/tag-registry/",
+      "tag_aliases": "/analytics/tag-aliases/",
+      "tag_groups": "/analytics/tag-groups/",
+      "series_page_base": "/series/",
+      "library_page": "/library/",
+      "analysis_page": "/analysis/",
+      "moments_page_base": "/moments/",
+      "works_page_base": "/works/",
+      "work_details_page_base": "/work_details/"
+    },
+    "data": {
+      "studio": {
+        "data_sharing_adapters": "/data-sharing/config/adapters.json",
+        "library_export_configs": "/data-sharing/config/library-export-configs.json"
+      },
+      "site": {
+        "series_index": "/assets/data/series_index.json",
+        "works_index": "/assets/data/works_index.json"
+      },
+      "ui_text": {
+        "tag_registry": "/analytics/app/frontend/config/ui-text/tag-registry.json",
+        "tag_aliases": "/analytics/app/frontend/config/ui-text/tag-aliases.json",
+        "data_sharing_review": "/analytics/app/frontend/config/ui-text/data-sharing-review.json",
+        "data_sharing_prepare": "/analytics/app/frontend/config/ui-text/data-sharing-prepare.json",
+        "series_tag_editor": "/analytics/app/frontend/config/ui-text/series-tag-editor.json",
+        "series_tags": "/analytics/app/frontend/config/ui-text/series-tags.json",
+        "tag_groups": "/analytics/app/frontend/config/ui-text/tag-groups.json"
+      }
+    }
+  },
+  "external_links": {
+    "docs_viewer": {
+      "base_url": "http://127.0.0.1:8776",
+      "docs_path": "/docs/",
+      "default_mode": "manage",
+      "doc_scope": "studio",
+      "doc_ids": {
+        "tag_groups": "tag-groups",
+        "tag_registry": "tag-registry",
+        "tag_aliases": "tag-aliases",
+        "series_tags": "series-tags",
+        "series_tag_editor": "tag-editor",
+        "data_sharing_prepare": "studio-data-sharing",
+        "data_sharing_review": "studio-data-sharing"
+      }
+    }
+  }
+}

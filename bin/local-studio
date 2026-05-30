@@ -206,9 +206,7 @@ fi
 echo "Catalogue APIs: handled by Local Studio App"
 echo "Docs Viewer links/API: handled by configured Docs Viewer service (${DOCS_VIEWER_BASE_URL:-http://${DOCS_VIEWER_HOST:-127.0.0.1}:${DOCS_VIEWER_PORT:-8776}})"
 echo "Audit API: handled by Local Studio App"
-if [ "$STUDIO_APP_ENABLED" != "0" ]; then
-  echo "Series Tag Editor: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/analytics/series-tag-editor/?series=<series_id>"
-fi
+echo "Analytics/tag/data-sharing routes: handled by bin/local-analytics"
 if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
   echo "Startup docs rebuild scopes: ${STARTUP_DOC_SCOPES[*]}"
 else

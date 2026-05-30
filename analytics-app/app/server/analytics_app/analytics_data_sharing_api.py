@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Studio-owned Data Sharing API dispatch."""
+"""Analytics-owned Data Sharing API dispatch."""
 
 from __future__ import annotations
 
@@ -24,10 +24,13 @@ import docs_write_rebuild as write_rebuild  # noqa: E402
 from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_management_context import log_event, make_backup_bundle  # noqa: E402
-from studio import data_sharing_service  # noqa: E402
+try:
+    from analytics_app import data_sharing_service  # noqa: E402
+except ModuleNotFoundError:  # pragma: no cover - supports direct script imports.
+    import data_sharing_service  # type: ignore[no-redef]  # noqa: E402
 
 
-API_BASE = "/studio/api/data-sharing"
+API_BASE = "/analytics/api/data-sharing"
 HEALTH_PATH = "/health"
 SELECTABLE_RECORDS_PATH = "/selectable-records"
 RETURNED_PACKAGES_PATH = "/returned-packages"
@@ -80,7 +83,7 @@ def data_sharing_get_payload(
     if api_path == HEALTH_PATH:
         return {
             "ok": True,
-            "service": "studio_data_sharing",
+            "service": "analytics_data_sharing",
             "dry_run": dry_run,
             "endpoints": service_endpoints(),
         }

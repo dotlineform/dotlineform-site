@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve the local vanilla Studio app shell."""
+"""Serve the local vanilla Analytics app shell."""
 
 from __future__ import annotations
 
@@ -24,51 +24,36 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
-STUDIO_DIR = Path(__file__).resolve().parent
-if str(STUDIO_DIR) not in sys.path:
-    sys.path.insert(0, str(STUDIO_DIR))
+ANALYTICS_SERVER_DIR = Path(__file__).resolve().parent
+if str(ANALYTICS_SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(ANALYTICS_SERVER_DIR))
 
-from studio_app_config import asset_version, runtime_config  # noqa: E402
-from studio_catalogue_views import (  # noqa: E402
-    catalogue_field_registry_view,
-    catalogue_moment_view,
-    catalogue_series_view,
-    catalogue_status_view,
-    catalogue_work_detail_view,
-    catalogue_work_view,
-    studio_works_view,
+from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from analytics_app_config import asset_version, runtime_config  # noqa: E402
+from analytics_app_views import (  # noqa: E402
+    analytics_home_view,
+    data_sharing_prepare_view,
+    data_sharing_review_view,
+    series_tag_editor_view,
+    series_tags_view,
+    tag_aliases_view,
+    tag_groups_view,
+    tag_registry_view,
 )
-from studio_app_views import (  # noqa: E402
-    activity_view,
-    bulk_add_work_view,
-    project_state_view,
-    studio_audits_view,
-    studio_home_view,
-    thumbnail_quality_view,
-)
-from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
-from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio_ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view  # noqa: E402
+from analytics_data_sharing_api import data_sharing_get_payload, data_sharing_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = (
-    "/assets/css/",
     "/assets/data/",
-    "/assets/docs/",
-    "/assets/home/",
-    "/assets/js/",
-    "/assets/moments/",
     "/assets/series/",
-    "/assets/site/",
     "/assets/work_details/",
     "/assets/works/",
+    "/data-sharing/config/",
     "/docs-viewer/generated/",
-    "/studio/data/generated/thumbnail-quality/img/",
-    "/studio/app/frontend/js/",
-    "/studio/app/frontend/config/",
-    "/studio/app/assets/",
-    "/studio/ui-catalogue/assets/",
     "/studio/data/",
+    "/analytics/app/assets/",
+    "/analytics/app/frontend/js/",
+    "/analytics/app/frontend/config/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -89,8 +74,8 @@ def env_flag(name: str, default: bool = False) -> bool:
     return value.strip().lower() in ENABLED_VALUES
 
 
-class StudioAppRequestHandler(BaseHTTPRequestHandler):
-    server_version = "StudioAppServer/0.1"
+class AnalyticsAppRequestHandler(BaseHTTPRequestHandler):
+    server_version = "AnalyticsAppServer/0.1"
 
     @property
     def repo_root(self) -> Path:
@@ -110,60 +95,41 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         query = parse_qs(request.query)
 
         if path == "/health":
-            self.send_json({"status": "ok", "app": "studio"})
+            self.send_json({"status": "ok", "app": "analytics"})
             return
-        if path == "/studio/runtime-config.json":
+        if path == "/analytics/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
             return
-        if path.startswith("/studio/api/audits/"):
-            self.send_audit_api_json(path.removeprefix("/studio/api/audits"))
+        if path.startswith("/analytics/api/data-sharing/"):
+            self.send_data_sharing_api_json(path.removeprefix("/analytics/api/data-sharing"), query)
             return
-        if path.startswith("/studio/api/catalogue/"):
-            self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
+        if path.startswith("/analytics/api/"):
+            self.send_analytics_api_json(path.removeprefix("/analytics/api"))
             return
-        if path in {"/studio", "/studio/"}:
-            self.send_html(studio_home_view(self.version))
+        if path in {"/analytics", "/analytics/"}:
+            self.send_html(analytics_home_view(self.version))
             return
-        if path in {"/studio/audits", "/studio/audits/"}:
-            self.send_html(studio_audits_view(self.version))
+        if path in {"/analytics/tag-groups", "/analytics/tag-groups/"}:
+            self.send_html(tag_groups_view(self.version))
             return
-        if path in {"/studio/project-state", "/studio/project-state/"}:
-            self.send_html(project_state_view(self.version))
+        if path in {"/analytics/tag-registry", "/analytics/tag-registry/"}:
+            self.send_html(tag_registry_view(self.version))
             return
-        if path in {"/studio/thumbnail-quality", "/studio/thumbnail-quality/"}:
-            self.send_html(thumbnail_quality_view(self.version))
+        if path in {"/analytics/tag-aliases", "/analytics/tag-aliases/"}:
+            self.send_html(tag_aliases_view(self.version))
             return
-        if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
-            self.send_html(bulk_add_work_view(self.version, self.repo_root))
+        if path in {"/analytics/series-tags", "/analytics/series-tags/"}:
+            self.send_html(series_tags_view(self.version))
             return
-        if path in {"/studio/activity", "/studio/activity/"}:
-            self.send_html(activity_view(self.version))
+        if path in {"/analytics/series-tag-editor", "/analytics/series-tag-editor/"}:
+            self.send_html(series_tag_editor_view(self.version, self.repo_root))
             return
-        if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
-            self.send_html(catalogue_field_registry_view(self.version))
+        if path in {"/analytics/data-sharing/prepare", "/analytics/data-sharing/prepare/"}:
+            self.send_html(data_sharing_prepare_view(self.version))
             return
-        if path in {"/studio/catalogue-status", "/studio/catalogue-status/"}:
-            self.send_html(catalogue_status_view(self.version))
+        if path in {"/analytics/data-sharing/review", "/analytics/data-sharing/review/"}:
+            self.send_html(data_sharing_review_view(self.version))
             return
-        if path in {"/studio/studio-works", "/studio/studio-works/"}:
-            self.send_html(studio_works_view(self.version))
-            return
-        if path in {"/studio/catalogue-series", "/studio/catalogue-series/"}:
-            self.send_html(catalogue_series_view(self.version))
-            return
-        if path in {"/studio/catalogue-work", "/studio/catalogue-work/"}:
-            self.send_html(catalogue_work_view(self.version, self.repo_root))
-            return
-        if path in {"/studio/catalogue-work-detail", "/studio/catalogue-work-detail/"}:
-            self.send_html(catalogue_work_detail_view(self.version, self.repo_root))
-            return
-        if path in {"/studio/catalogue-moment", "/studio/catalogue-moment/"}:
-            self.send_html(catalogue_moment_view(self.version))
-            return
-        for route_path, view_id in UI_CATALOGUE_DEMO_ROUTES.items():
-            if path in {route_path.rstrip("/"), route_path}:
-                self.send_html(ui_catalogue_demo_view(self.version, self.repo_root, view_id))
-                return
         if self.is_allowed_static_path(path):
             self.send_static(path)
             return
@@ -173,17 +139,17 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path.startswith("/studio/api/audits/"):
+        if path.startswith("/analytics/api/data-sharing/"):
             if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_audit_api_post_json(path.removeprefix("/studio/api/audits"))
+            self.send_data_sharing_api_post_json(path.removeprefix("/analytics/api/data-sharing"))
             return
-        if path.startswith("/studio/api/catalogue/"):
+        if path.startswith("/analytics/api/"):
             if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_catalogue_api_post_json(path.removeprefix("/studio/api/catalogue"))
+            self.send_analytics_api_post_json(path.removeprefix("/analytics/api"))
             return
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
@@ -191,7 +157,7 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith(("/studio/api/audits/", "/studio/api/catalogue/")):
+        if not path.startswith("/analytics/api/"):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -248,17 +214,17 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def send_audit_api_json(self, api_path: str) -> None:
+    def send_analytics_api_json(self, api_path: str) -> None:
         try:
-            self.send_json(audit_get_payload(self.repo_root, api_path))
+            self.send_json(analytics_get_payload(self.repo_root, api_path))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_catalogue_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+    def send_data_sharing_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
-            self.send_json(catalogue_get_payload(self.repo_root, api_path, query))
+            self.send_json(data_sharing_get_payload(self.repo_root, api_path, query))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:
@@ -266,10 +232,10 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_audit_api_post_json(self, api_path: str) -> None:
+    def send_analytics_api_post_json(self, api_path: str) -> None:
         try:
             body = self.read_json_body()
-            status, payload = audit_post_response(self.repo_root, api_path, body)
+            status, payload = analytics_post_response(self.repo_root, api_path, body)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
@@ -278,10 +244,10 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_catalogue_api_post_json(self, api_path: str) -> None:
+    def send_data_sharing_api_post_json(self, api_path: str) -> None:
         try:
             body = self.read_json_body()
-            status, payload = catalogue_post_response(self.repo_root, api_path, body)
+            status, payload = data_sharing_post_response(self.repo_root, api_path, body)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
@@ -317,7 +283,10 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_static(self, request_path: str) -> None:
-        relative = request_path.lstrip("/")
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+        else:
+            relative = request_path.lstrip("/")
         if not relative or ".." in Path(relative).parts:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
@@ -342,9 +311,9 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
-class StudioAppServer(ThreadingHTTPServer):
+class AnalyticsAppServer(ThreadingHTTPServer):
     def __init__(self, server_address: tuple[str, int], repo_root: Path, access_log_enabled: bool = False):
-        super().__init__(server_address, StudioAppRequestHandler)
+        super().__init__(server_address, AnalyticsAppRequestHandler)
         self.repo_root = repo_root.resolve()
         self.asset_version = asset_version(self.repo_root)
         self.access_log_enabled = access_log_enabled
@@ -353,21 +322,21 @@ class StudioAppServer(ThreadingHTTPServer):
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=8766)
     parser.add_argument(
         "--access-log",
         action="store_true",
-        default=env_flag("STUDIO_APP_ACCESS_LOG"),
-        help="Print one access log line for each Studio app HTTP request.",
+        default=env_flag("ANALYTICS_APP_ACCESS_LOG"),
+        help="Print one access log line for each Analytics app HTTP request.",
     )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    server = StudioAppServer((args.host, args.port), REPO_ROOT, access_log_enabled=args.access_log)
+    server = AnalyticsAppServer((args.host, args.port), REPO_ROOT, access_log_enabled=args.access_log)
     host, port = server.server_address
-    print(f"Studio app server: http://{host}:{port}/studio/", flush=True)
+    print(f"Analytics app server: http://{host}:{port}/analytics/", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

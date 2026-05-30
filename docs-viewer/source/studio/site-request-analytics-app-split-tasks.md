@@ -15,13 +15,19 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
-- Created the parent Analytics App Split request with the target Studio, Analytics, Docs Viewer, UI Catalogue, thumbnail-quality, and public-preview ownership boundaries.
+- Paused the running `bin/local-all` stack before file moves: public preview, Local Studio, Docs Viewer service, and docs live rebuild watcher were stopped.
+- Inventoried the current Analytics/Data Sharing/UI Catalogue/thumbnail-quality route, API, frontend, config, test, and docs surfaces.
+- Added a standalone Local Analytics app under `analytics-app/` with `/analytics/` routes, `/analytics/api/...` tag endpoints, `/analytics/api/data-sharing/...` endpoints, copied frontend modules/UI text, copied CSS, and `bin/local-analytics`.
+- Updated `bin/local-all` so Analytics starts separately on `ANALYTICS_APP_PORT` (default `8766`).
+- Removed active Analytics/Data Sharing route and API dispatch from Local Studio. Old `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` paths now fail instead of aliasing.
+- Deleted the old Studio-owned Analytics/Data Sharing API adapter modules from `studio/app/server/studio/`.
+- Verified the new Analytics server health/runtime/API/page smoke and verified Studio no longer exposes the old Analytics/Data Sharing routes in runtime config.
 
 ### steer for next task
 
-- Start with the route/service cutover plan and pause current local services before moving files or changing routes.
-- The target is a clean split with no compatibility layers and no planned cleanup pass.
-- Split tests as part of implementation, before final testing, so service-boundary checks exist before the verification pass.
+- Continue with the test split. There are still active tests and smokes named `local_studio_*` or importing deleted `studio_data_sharing_api`/`studio_analytics_api` modules; move or retarget those to Analytics ownership before running broad checks.
+- Preserve the clean cutover: do not add aliases or proxy handlers for the retired Studio paths to make old tests pass.
+- Keep the preserved `var/studio/data-sharing/...` artifact paths for now; those are data artifact path contracts, not active Studio routes.
 
 ### baseline verification set
 
@@ -63,14 +69,14 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Confirm the cutover path, identify currently running local services, and pause Studio, Docs Viewer, docs watcher, Analytics-related local routes, and public preview before file moves or route changes. |
-| 2 | planned | Inventory current analytics, data-sharing, UI Catalogue, thumbnail-quality, and mixed Studio/Analytics tests so the move list, retired routes, and test split are explicit before implementation starts. |
-| 3 | planned | Add a standalone Analytics app server and launcher using the current Studio analytics/data-sharing views, config, static serving, API adapters, CORS checks, and loopback-only behavior as the starting point. |
-| 4 | planned | Move or copy the current analytics and data-sharing frontend modules and UI text into Analytics-owned app paths with minimal code changes. Preserve UI behavior and current interface. |
-| 5 | planned | Move Analytics API ownership out of Studio, including tag health/read/write endpoints, while preserving current service behavior and write safeguards. |
-| 6 | planned | Move Data Sharing API ownership out of Studio, including prepare/review/apply, selectable records, returned packages, adapter dispatch, and current activity hooks. |
-| 7 | planned | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, API dispatch, and static serving assumptions. Old routes should fail clearly; do not add redirects, aliases, proxy handlers, static shims, or dual-path config. |
-| 8 | planned | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
+| 1 | done | Confirm the cutover path, identify currently running local services, and pause Studio, Docs Viewer, docs watcher, Analytics-related local routes, and public preview before file moves or route changes. |
+| 2 | done | Inventory current analytics, data-sharing, UI Catalogue, thumbnail-quality, and mixed Studio/Analytics tests so the move list, retired routes, and test split are explicit before implementation starts. |
+| 3 | done | Add a standalone Analytics app server and launcher using the current Studio analytics/data-sharing views, config, static serving, API adapters, CORS checks, and loopback-only behavior as the starting point. |
+| 4 | done | Move or copy the current analytics and data-sharing frontend modules and UI text into Analytics-owned app paths with minimal code changes. Preserve UI behavior and current interface. |
+| 5 | done | Move Analytics API ownership out of Studio, including tag health/read/write endpoints, while preserving current service behavior and write safeguards. |
+| 6 | done | Move Data Sharing API ownership out of Studio, including prepare/review/apply, selectable records, returned packages, adapter dispatch, and current activity hooks. |
+| 7 | done | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, API dispatch, and static serving assumptions. Old routes should fail clearly; do not add redirects, aliases, proxy handlers, static shims, or dual-path config. |
+| 8 | in progress | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
 | 9 | planned | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, and smokes. Archive its page/script code in a repo-local retired tooling location, separate from the public Jekyll site |
 | 10 | planned | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
 | 11 | planned | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
