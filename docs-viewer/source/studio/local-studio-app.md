@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: studio
 ---
 # Local Studio App
@@ -45,7 +45,6 @@ Current mounted views:
 - `/studio/analytics/series-tag-editor/?series=<series_id>`
 - `/studio/audits/?mode=manage`
 - `/studio/project-state/?mode=manage`
-- `/studio/thumbnail-quality/?mode=manage`
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
 - `/studio/data-sharing/prepare/?mode=manage`
@@ -92,7 +91,6 @@ Current app endpoints:
 - `POST /studio/api/catalogue/import-preview`
 - `POST /studio/api/catalogue/import-apply`
 - `POST /studio/api/catalogue/project-state-report`
-- `POST /studio/api/catalogue/thumbnail-quality-preview`
 - `POST /studio/api/catalogue/bulk-save`
 - `POST /studio/api/catalogue/work/create`
 - `POST /studio/api/catalogue/work/save`
@@ -133,10 +131,9 @@ The Project State route shell is hosted by the local app at `/studio/project-sta
 It reuses `studio/app/frontend/js/project-state.js` and calls Local Studio for both catalogue report generation and local report opening.
 `studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` and `POST /studio/api/catalogue/project-state-open-report` adapters and reuses `studio/services/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
-The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
-It reuses `studio/app/frontend/js/thumbnail-quality.js`, checked-in preview JSON/image data under `studio/data/generated/thumbnail-quality/`, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
-The refresh adapter reuses `studio/services/media/build_thumbnail_quality_preview.py`.
-The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
+The Thumbnail Quality route shell is no longer an active Local Studio route.
+`/studio/thumbnail-quality/?mode=manage`, `POST /studio/api/catalogue/thumbnail-quality-preview`, and static thumbnail-quality preview data under `/studio/data/generated/thumbnail-quality/` are retired and intentionally have no Studio aliases, proxies, or static-serving shims.
+The retired implementation has been archived under `studio/retired/thumbnail-quality/` for reference outside public Jekyll output.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing package preparation and returned-package review route shells are hosted by the local app at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
 They reuse the existing Data Sharing browser modules.
@@ -214,7 +211,6 @@ Current focused checks:
 - `studio/tests/smoke/local_studio_app_tag_routes.py`
 - `studio/tests/smoke/local_studio_app_audits_route.py`
 - `studio/tests/smoke/local_studio_app_project_state_route.py`
-- `studio/tests/smoke/local_studio_app_thumbnail_quality_route.py`
 - `studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
 - `studio/tests/smoke/local_studio_app_activity_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`

@@ -44,7 +44,6 @@ from studio_app_views import (  # noqa: E402
     project_state_view,
     studio_audits_view,
     studio_home_view,
-    thumbnail_quality_view,
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
@@ -63,12 +62,14 @@ STATIC_PREFIXES = (
     "/assets/work_details/",
     "/assets/works/",
     "/docs-viewer/generated/",
-    "/studio/data/generated/thumbnail-quality/img/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",
     "/studio/ui-catalogue/assets/",
-    "/studio/data/",
+    "/studio/data/canonical/catalogue/",
+    "/studio/data/config/catalogue/",
+    "/studio/data/generated/activity/",
+    "/studio/data/generated/catalogue-lookup/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -129,9 +130,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/project-state", "/studio/project-state/"}:
             self.send_html(project_state_view(self.version))
-            return
-        if path in {"/studio/thumbnail-quality", "/studio/thumbnail-quality/"}:
-            self.send_html(thumbnail_quality_view(self.version))
             return
         if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
             self.send_html(bulk_add_work_view(self.version, self.repo_root))

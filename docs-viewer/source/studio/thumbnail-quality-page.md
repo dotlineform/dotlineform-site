@@ -2,13 +2,14 @@
 doc_id: thumbnail-quality-page
 title: Thumbnail Quality Page
 added_date: 2026-05-12
-last_updated: 2026-05-22
+last_updated: 2026-05-30
 parent_id: catalogue
 ---
 # Thumbnail Quality Page
 
-This document describes the Studio page at `/studio/thumbnail-quality/?mode=manage`.
-The route shell is served by the local Studio app, not by a Jekyll Studio page.
+This page has been retired from active Studio routing.
+`/studio/thumbnail-quality/?mode=manage` and `POST /studio/api/catalogue/thumbnail-quality-preview` intentionally no longer resolve through the Local Studio app.
+The page script, CSS, UI text, and preview builder were archived under `studio/retired/thumbnail-quality/` so the old comparison tooling remains available as reference code without being public Jekyll output or active local-app runtime.
 
 ## Purpose
 
@@ -18,7 +19,8 @@ The page compares thumbnail WebP output settings using source images from:
 $DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/
 ```
 
-The comparison is isolated from production thumbnails. It writes preview images under `assets/studio/img/thumbnail-quality/` and page data to `assets/studio/data/thumbnail_quality_preview.json`.
+The comparison was isolated from production thumbnails.
+It wrote preview images and page data under `studio/data/generated/thumbnail-quality/`, which is no longer served by the Studio static allowlist.
 
 ## Inputs
 
@@ -59,35 +61,33 @@ That row uses the public `.seriesGrid`, `.seriesGrid__item`, and `.seriesGrid__i
 
 ## Refresh Command
 
-The `Refresh` button calls the local Catalogue Write Server endpoint:
+The retired `Refresh` button called the local Catalogue endpoint:
 
 ```text
 POST /studio/api/catalogue/thumbnail-quality-preview
 ```
 
-The endpoint reruns `scripts/media/build_thumbnail_quality_preview.py` and rewrites the preview JSON and referenced preview images.
-
-If the local Studio app catalogue API is unavailable, the page still loads the last generated preview data when present, but the refresh command reports that the service must be started.
-The old sibling catalogue refresh URL is no longer used by the local app route.
+The endpoint has been removed from active Studio.
+The archived builder is `studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py`.
 
 ## Manual Command
 
 Preview planned writes:
 
 ```bash
-./scripts/media/build_thumbnail_quality_preview.py
+./studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py
 ```
 
 Write preview assets and data:
 
 ```bash
-./scripts/media/build_thumbnail_quality_preview.py --write
+./studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py --write
 ```
 
 Write only missing preview images while refreshing the JSON:
 
 ```bash
-./scripts/media/build_thumbnail_quality_preview.py --write --missing-only
+./studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py --write --missing-only
 ```
 
 ## Boundaries

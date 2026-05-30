@@ -24,12 +24,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "path": "/studio/project-state/?mode=manage",
         "script": "/studio/app/frontend/js/project-state.js",
     },
-    "thumbnail_quality": {
-        "label": "thumbnail quality",
-        "title": "Thumbnail Quality",
-        "path": "/studio/thumbnail-quality/?mode=manage",
-        "script": "/studio/app/frontend/js/thumbnail-quality.js",
-    },
     "bulk_add_work": {
         "label": "bulk add",
         "title": "Bulk Add Work",
@@ -209,7 +203,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_moment": "/studio/api/catalogue/moment/save",
         "project_state_report": "/studio/api/catalogue/project-state-report",
         "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
-        "thumbnail_quality_preview": "/studio/api/catalogue/thumbnail-quality-preview",
     },
 }
 
@@ -244,7 +237,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "thumbnail-quality.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-modals.js",

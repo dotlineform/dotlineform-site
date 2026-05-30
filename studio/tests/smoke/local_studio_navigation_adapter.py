@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 from threading import Thread
 
@@ -15,6 +17,15 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+
+
+def request_status(url: str, *, method: str = "GET", body: bytes | None = None) -> int:
+    request = urllib.request.Request(url, data=body, method=method, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            return int(response.status)
+    except urllib.error.HTTPError as error:
+        return int(error.code)
 
 
 def start_server() -> tuple[StudioAppServer, str]:
@@ -115,6 +126,10 @@ def main(argv: list[str] | None = None) -> int:
 
                     return {
                         hasDocsService: Object.prototype.hasOwnProperty.call(services, "docs"),
+                        hasThumbnailQualityView: config.app.runtime.views.some((view) => view.id === "thumbnail_quality"),
+                        hasThumbnailQualityService: Object.prototype.hasOwnProperty.call(config.app.runtime.services.catalogue || {}, "thumbnail_quality_preview"),
+                        hasThumbnailQualityDataPath: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths.studio || {}, "thumbnail_quality_preview"),
+                        hasThumbnailQualityDocId: Object.prototype.hasOwnProperty.call(config.external_links.docs_viewer.doc_ids || {}, "thumbnail_quality"),
                         docsExternalLink: externalLinks.docs_viewer,
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
@@ -147,9 +162,31 @@ def main(argv: list[str] | None = None) -> int:
             )
             browser.close()
 
+        thumbnail_route_status = request_status(f"{base_url}/studio/thumbnail-quality/?mode=manage")
+        thumbnail_api_status = request_status(
+            f"{base_url}/studio/api/catalogue/thumbnail-quality-preview",
+            method="POST",
+            body=b"{}",
+        )
+        thumbnail_data_status = request_status(f"{base_url}/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json")
+
         expected_url = "/studio/catalogue-status/?mode=manage&scope=studio&zero=0"
         if result["hasDocsService"]:
             raise AssertionError("runtime services unexpectedly exposed a Docs Viewer service")
+        if result["hasThumbnailQualityView"]:
+            raise AssertionError("runtime views unexpectedly exposed retired thumbnail-quality")
+        if result["hasThumbnailQualityService"]:
+            raise AssertionError("runtime services unexpectedly exposed retired thumbnail-quality API")
+        if result["hasThumbnailQualityDataPath"]:
+            raise AssertionError("runtime data paths unexpectedly exposed retired thumbnail-quality data")
+        if result["hasThumbnailQualityDocId"]:
+            raise AssertionError("Docs Viewer links unexpectedly exposed retired thumbnail-quality doc id")
+        if thumbnail_route_status != 404:
+            raise AssertionError(f"retired thumbnail-quality route returned {thumbnail_route_status}, expected 404")
+        if thumbnail_api_status != 404:
+            raise AssertionError(f"retired thumbnail-quality API returned {thumbnail_api_status}, expected 404")
+        if thumbnail_data_status != 404:
+            raise AssertionError(f"retired thumbnail-quality static data returned {thumbnail_data_status}, expected 404")
         if result["docsExternalLink"]["base_url"] != "http://127.0.0.1:8776":
             raise AssertionError(f"unexpected Docs external link base: {result['docsExternalLink']!r}")
         if result["docsExternalLink"]["docs_path"] != "/docs/":
@@ -214,10 +251,12 @@ def main(argv: list[str] | None = None) -> int:
         retired_home_hrefs = {
             href
             for href in home_link_hrefs
-            if href.startswith("/studio/analytics/") or href.startswith("/studio/data-sharing/")
+            if href.startswith("/studio/analytics/")
+            or href.startswith("/studio/data-sharing/")
+            or href.startswith("/studio/thumbnail-quality")
         }
         if retired_home_hrefs:
-            raise AssertionError(f"Studio home exposed retired Analytics/Data Sharing links: {result['homeLinks']!r}")
+            raise AssertionError(f"Studio home exposed retired links: {result['homeLinks']!r}")
         expected_home_hrefs = {
             "/studio/catalogue-status/?mode=manage",
             "/studio/activity/?mode=manage",

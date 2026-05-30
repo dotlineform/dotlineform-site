@@ -9,7 +9,6 @@
       "search": "/catalogue/search/",
       "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage",
       "project_state": "/studio/project-state/?mode=manage",
-      "thumbnail_quality": "/studio/thumbnail-quality/?mode=manage",
       "catalogue_status": "/studio/catalogue-status/?mode=manage",
       "activity": "/studio/activity/?mode=manage",
       "bulk_add_work": "/studio/bulk-add-work/?mode=manage",
@@ -38,8 +37,7 @@
         "catalogue_lookup_work_base": "/studio/data/generated/catalogue-lookup/works/",
         "catalogue_lookup_work_detail_base": "/studio/data/generated/catalogue-lookup/work_details/",
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
-        "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json",
-        "thumbnail_quality_preview": "/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json"
+        "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
@@ -83,7 +81,6 @@
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",
         "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
-        "thumbnail_quality": "/studio/app/frontend/config/ui-text/thumbnail-quality.json",
         "site_series_index": "/studio/app/frontend/config/ui-text/site-series-index.json",
         "studio_audits": "/studio/app/frontend/config/ui-text/studio-audits.json",
         "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
@@ -100,7 +97,6 @@
         "docs": "docs-viewer",
         "studio_audits": "studio-audits",
         "project_state": "project-state-page",
-        "thumbnail_quality": "thumbnail-quality-page",
         "bulk_add_work": "bulk-add-work",
         "activity": "studio-activity",
         "catalogue_field_registry": "catalogue-field-registry-review",

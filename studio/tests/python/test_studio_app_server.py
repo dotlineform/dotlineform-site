@@ -61,7 +61,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert any(view["id"] == "studio_audits" and view["path"] == "/studio/audits/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "thumbnail_quality" and view["path"] == "/studio/thumbnail-quality/?mode=manage" for view in runtime["views"])
+    assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "activity" and view["path"] == "/studio/activity/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
@@ -113,11 +113,12 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_moment"] == "/studio/api/catalogue/moment/save"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
-    assert runtime["services"]["catalogue"]["thumbnail_quality_preview"] == "/studio/api/catalogue/thumbnail-quality-preview"
+    assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
+    assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "library_export_configs" not in runtime["data_paths"]["studio"]
     assert "tag_groups" not in runtime["data_paths"]["ui_text"]
@@ -153,7 +154,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is True
+    assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is False
+    assert allowed("/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
@@ -305,31 +307,9 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         assert open_payload["editor"] == "vscode"
 
 
-def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        projects_base = Path(tmp_dir) / "source"
-        source_dir = projects_base / "thumbnail-quality-preview"
-        source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").parent.mkdir(parents=True, exist_ok=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
-        (source_dir / "sample.jpg").write_bytes(b"")
-        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
-
-        status, payload = catalogue_post_response(
-            repo_root,
-            "/thumbnail-quality-preview",
-            {},
-            dry_run=True,
-        )
-
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["dry_run"] is True
-        assert payload["source_count"] == 1
-        assert payload["data_path"] == "studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json"
-        assert payload["rows"][0]["source_name"] == "sample.jpg"
-        assert payload["rows"][0]["baseline"]["path"].endswith("-current.webp")
+def test_catalogue_thumbnail_quality_route_is_retired() -> None:
+    with pytest.raises(FileNotFoundError, match="Unknown catalogue API route"):
+        catalogue_post_response(REPO_ROOT, "/thumbnail-quality-preview", {}, dry_run=True)
 
 
 def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:

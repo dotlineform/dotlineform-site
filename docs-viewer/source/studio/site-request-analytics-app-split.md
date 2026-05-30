@@ -221,8 +221,8 @@ Analytics may inherit some of the current structural problems in the first cutov
 - `data-sharing/`
 - `studio/app/server/studio/studio_ui_catalogue_views.py`
 - `studio/ui-catalogue/`
-- `studio/app/frontend/js/thumbnail-quality.js`
-- `studio/services/media/build_thumbnail_quality_preview.py`
+- `studio/retired/thumbnail-quality/thumbnail-quality.js`
+- `studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py`
 - `studio/app/frontend/js/tag-*.js`
 - `studio/app/frontend/js/series-tag*.js`
 - `studio/app/frontend/js/data-sharing-*.js`

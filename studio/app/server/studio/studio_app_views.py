@@ -36,7 +36,6 @@ STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
         "label": "admin",
         "links": (
             ("studio audits", "/studio/audits/?mode=manage"),
-            ("thumbnail tests", "/studio/thumbnail-quality/?mode=manage"),
             ("UI demos", "/studio/ui-catalogue/demos/"),
             ("studio activity", "/studio/activity/?mode=manage"),
             ("field registry", "/studio/catalogue-field-registry/?mode=manage"),
@@ -448,45 +447,6 @@ def project_state_view(version: str) -> str:
         <p class="tagStudio__status" id="projectStateLoading">loading project state...</p>
         <p class="tagStudio__empty" id="projectStateEmpty" hidden></p>"""
     return studio_route_view(version, "project_state", body)
-
-
-def thumbnail_quality_view(version: str) -> str:
-    body = """<div
-          class="tagStudioPage thumbnailQualityPage"
-          id="thumbnailQualityRoot"
-          hidden
-          data-studio-ready="false"
-          data-studio-busy="false"
-        >
-          <section class="tagStudio__panel tagStudio__panel--editor">
-            <div class="tagStudio__headingRow">
-              <h2 class="tagStudio__heading" id="thumbnailQualityPageHeading">thumbnail quality</h2>
-              <div class="catalogueWorkPage__actions">
-                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="thumbnailQualityRefreshButton">Refresh</button>
-              </div>
-            </div>
-            <p class="tagStudio__contextHint" id="thumbnailQualityContext"></p>
-            <p class="tagStudio__status" id="thumbnailQualityStatus"></p>
-            <p class="tagStudio__saveResult" id="thumbnailQualityResult"></p>
-          </section>
-
-          <section class="tagStudio__panel thumbnailQualitySettings" aria-labelledby="thumbnailQualitySettingsHeading">
-            <h2 class="tagStudio__heading" id="thumbnailQualitySettingsHeading">settings</h2>
-            <div class="thumbnailQualitySettings__grid" id="thumbnailQualitySettingsList"></div>
-          </section>
-
-          <section class="tagStudio__panel thumbnailQualitySeriesPreview" aria-labelledby="thumbnailQualitySeriesHeading">
-            <h2 class="tagStudio__heading" id="thumbnailQualitySeriesHeading">series gallery comparison</h2>
-            <p class="tagStudio__contextHint" id="thumbnailQualitySeriesContext"></p>
-            <div class="seriesGrid thumbnailQualitySeriesPreview__grid" id="thumbnailQualitySeriesGrid"></div>
-          </section>
-
-          <section class="thumbnailQualityRows" id="thumbnailQualityRows" aria-label="Thumbnail quality comparison rows"></section>
-        </div>
-
-        <p class="tagStudio__status" id="thumbnailQualityLoading">loading thumbnail quality preview...</p>
-        <p class="tagStudio__empty" id="thumbnailQualityEmpty" hidden></p>"""
-    return studio_route_view(version, "thumbnail_quality", body)
 
 
 def bulk_add_work_view(version: str, repo_root: Path) -> str:

@@ -169,11 +169,14 @@ Relevant files:
 
 - `scripts/media/make_srcset_images.py`
 - `scripts/media/publish_media_to_r2.py`
-- `scripts/media/build_thumbnail_quality_preview.py`
 - `studio/services/catalogue/catalogue_build_media.py`
 
 Media scripts are smaller than catalogue and docs scripts, but their performance risk is high because they are external-command and file-I/O heavy.
 They also depend on local environment values, source image location, derivative naming, accepted legacy sizes, and R2 credentials.
+
+Retired media tooling:
+
+- `studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py`
 
 Recommended improvements:
 

@@ -86,7 +86,6 @@ def assert_operational_route_helpers(page: Page) -> None:
                 import('/studio/app/frontend/js/bulk-add-work.js'),
                 import('/studio/app/frontend/js/project-state.js'),
                 import('/studio/app/frontend/js/studio-audits.js'),
-                import('/studio/app/frontend/js/thumbnail-quality.js')
             ]);
             return {
                 required,

@@ -40,7 +40,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveMoment: "/studio/api/catalogue/moment/save",
   projectStateReport: "/studio/api/catalogue/project-state-report",
   projectStateOpenReport: "/studio/api/catalogue/project-state-open-report",
-  thumbnailQualityPreview: "/studio/api/catalogue/thumbnail-quality-preview",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
 });
@@ -66,11 +65,6 @@ const PROJECT_STATE_ENDPOINTS = Object.freeze({
   openReport: "/studio/api/catalogue/project-state-open-report"
 });
 
-const THUMBNAIL_QUALITY_ENDPOINTS = Object.freeze({
-  catalogueHealth: "/studio/api/catalogue/health",
-  refresh: "/studio/api/catalogue/thumbnail-quality-preview"
-});
-
 const CATALOGUE_READ_ENDPOINTS = Object.freeze({
   catalogueHealth: "/studio/api/catalogue/health",
   read: "/studio/api/catalogue/read"
@@ -89,7 +83,6 @@ export {
   DATA_SHARING_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
   PROJECT_STATE_ENDPOINTS,
-  THUMBNAIL_QUALITY_ENDPOINTS
 };
 
 export function configureStudioTransport(config) {
@@ -151,10 +144,6 @@ export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {
 
 export async function probeProjectStateCatalogueOpenHealth(timeoutMs = 500) {
   return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
-}
-
-export async function probeThumbnailQualityCatalogueHealth(timeoutMs = 500) {
-  return probeHealth(THUMBNAIL_QUALITY_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 export async function probeCatalogueReadHealth(timeoutMs = 500) {

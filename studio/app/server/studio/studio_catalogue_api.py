@@ -65,7 +65,6 @@ from catalogue.project_state_report import (  # noqa: E402
 )
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from local_env import runtime_env  # noqa: E402
-from media.build_thumbnail_quality_preview import build_preview as build_thumbnail_quality_preview  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from studio_activity import append_studio_activity  # noqa: E402
 
@@ -118,7 +117,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "import-apply",
                 "project-state-report",
                 "project-state-open-report",
-                "thumbnail-quality-preview",
             ],
         }
     if api_path == "/read":
@@ -137,8 +135,6 @@ def catalogue_post_response(
         return HTTPStatus.OK, project_state_report_payload(repo_root, body, dry_run=dry_run)
     if api_path == "/project-state-open-report":
         return HTTPStatus.OK, open_project_state_report_payload(repo_root, body, dry_run=dry_run)
-    if api_path == "/thumbnail-quality-preview":
-        return HTTPStatus.OK, thumbnail_quality_preview_payload(repo_root, dry_run=dry_run)
     if api_path == "/import-preview":
         return HTTPStatus.OK, import_preview_payload(repo_root, body)
     if api_path == "/import-apply":
@@ -403,25 +399,6 @@ def open_project_state_report_payload(
         {
             "path": payload["path"],
             "editor": payload["editor"],
-            "dry_run": dry_run,
-        },
-    )
-    return payload
-
-
-def thumbnail_quality_preview_payload(repo_root: Path, *, dry_run: bool = False) -> dict[str, Any]:
-    payload = build_thumbnail_quality_preview(
-        repo_root,
-        env=runtime_env(repo_root=repo_root),
-        write=not dry_run,
-    )
-    payload["dry_run"] = dry_run
-    log_event(
-        repo_root,
-        "thumbnail_quality_preview",
-        {
-            "source_count": payload.get("source_count"),
-            "data_path": payload.get("data_path"),
             "dry_run": dry_run,
         },
     )

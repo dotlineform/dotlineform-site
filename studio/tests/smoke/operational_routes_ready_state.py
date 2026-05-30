@@ -24,11 +24,6 @@ ROUTES = [
         "root": "#studioAuditsRoot",
         "button": "[data-run-audit]",
     },
-    {
-        "path": "/studio/thumbnail-quality/",
-        "root": "#thumbnailQualityRoot",
-        "button": "#thumbnailQualityRefreshButton",
-    },
 ]
 
 

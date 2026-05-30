@@ -11,7 +11,6 @@ const DEFAULT_STUDIO_CONFIG = {
       "series_tag_editor": "/studio/analytics/series-tag-editor/",
       "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage",
       "project_state": "/studio/project-state/?mode=manage",
-      "thumbnail_quality": "/studio/thumbnail-quality/?mode=manage",
       "data_sharing_prepare": "/studio/data-sharing/prepare/?mode=manage",
       "data_sharing_review": "/studio/data-sharing/review/?mode=manage",
       "catalogue_status": "/studio/catalogue-status/?mode=manage",
@@ -47,8 +46,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
         "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json",
         "data_sharing_adapters": "/data-sharing/config/adapters.json",
-        "library_export_configs": "/data-sharing/config/library-export-configs.json",
-        "thumbnail_quality_preview": "/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json"
+        "library_export_configs": "/data-sharing/config/library-export-configs.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
@@ -96,7 +94,6 @@ const DEFAULT_STUDIO_CONFIG = {
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",
         "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
-        "thumbnail_quality": "/studio/app/frontend/config/ui-text/thumbnail-quality.json",
         "series_tag_editor": "/studio/app/frontend/config/ui-text/series-tag-editor.json",
         "series_tags": "/studio/app/frontend/config/ui-text/series-tags.json",
         "site_series_index": "/studio/app/frontend/config/ui-text/site-series-index.json",
@@ -167,7 +164,6 @@ const DEFAULT_STUDIO_CONFIG = {
         "series_tag_editor": "tag-editor",
         "studio_audits": "studio-audits",
         "project_state": "project-state-page",
-        "thumbnail_quality": "thumbnail-quality-page",
         "bulk_add_work": "bulk-add-work",
         "activity": "studio-activity",
         "data_sharing_prepare": "studio-data-sharing",
