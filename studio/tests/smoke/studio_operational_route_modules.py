@@ -87,9 +87,33 @@ def assert_operational_route_helpers(page: Page) -> None:
                 import('/studio/app/frontend/js/project-state.js'),
                 import('/studio/app/frontend/js/studio-audits.js'),
             ]);
-            const configModule = await import('/studio/app/frontend/js/studio-config.js');
             const registry = await import('/studio/app/frontend/js/studio-route-registry.js');
-            const config = configModule.DEFAULT_STUDIO_CONFIG;
+            const config = {
+                app: {
+                    routes: {
+                        project_state: {
+                            label: 'project state',
+                            title: 'Project State',
+                            path: '/studio/project-state/?mode=manage',
+                            script: '/studio/app/frontend/js/project-state.js',
+                            doc_id: 'project-state-page',
+                            nav: false,
+                            shell_type: 'javascript',
+                            ready_state_route_id: 'project-state'
+                        },
+                        catalogue_work_editor: {
+                            label: 'work editor',
+                            title: 'Catalogue Work Editor',
+                            path: '/studio/catalogue-work/?mode=manage',
+                            script: '/studio/app/frontend/js/catalogue-work-editor.js',
+                            doc_id: 'catalogue-work-editor',
+                            nav: false,
+                            shell_type: 'javascript',
+                            ready_state_route_id: 'catalogue-work'
+                        }
+                    }
+                }
+            };
             const route = registry.resolveStudioRoute(config, { pathname: '/studio/project-state/' });
             const contract = registry.buildStudioShellContract(config, { pathname: '/studio/project-state/' });
             const missing = registry.buildStudioShellContract(config, { pathname: '/studio/not-registered/' });

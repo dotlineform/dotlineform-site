@@ -3,6 +3,16 @@
   "updated_at_utc": "2026-05-12T00:00:00Z",
   "app": {
     "routes": {
+      "studio_home": {
+        "label": "home",
+        "title": "Studio Home",
+        "path": "/studio/",
+        "script": "/studio/app/frontend/js/studio-home.js",
+        "doc_id": "local-studio-app",
+        "nav": false,
+        "shell_type": "javascript",
+        "ready_state_route_id": "studio-home"
+      },
       "docs": {
         "label": "docs",
         "title": "Docs",
@@ -129,7 +139,6 @@
       "search": "/catalogue/search/",
       "series_page_base": "/series/",
       "library_page": "/library/",
-      "analysis_page": "/analysis/",
       "moments_page_base": "/moments/",
       "works_page_base": "/works/",
       "work_details_page_base": "/work_details/"
@@ -175,9 +184,6 @@
           },
           "studio": {
             "index": "/docs-viewer/generated/search/studio/index.json"
-          },
-          "analysis": {
-            "index": "/assets/data/search/analysis/index.json"
           }
         }
       },
@@ -204,52 +210,6 @@
       "docs_path": "/docs/",
       "default_mode": "manage",
       "doc_scope": "studio"
-    }
-  },
-  "analysis": {
-    "groups": {
-      "ordered": [
-        "subject",
-        "domain",
-        "form",
-        "theme"
-      ],
-      "coverage_groups": [
-        "subject",
-        "domain",
-        "form",
-        "theme"
-      ]
-    },
-    "rag": {
-      "deprecated_statuses": [
-        "deprecated",
-        "candidate"
-      ],
-      "completeness": {
-        "group_coverage_denominator": 4,
-        "tag_bonus_max": 0.25,
-        "tag_bonus_cap_at_total_tags": 6,
-        "score_cap": 1.0
-      },
-      "rules": {
-        "red": {
-          "if_total_tags_eq": 0,
-          "if_unknown_tags_gt": 0
-        },
-        "amber": {
-          "if_groups_present_lte": 1,
-          "if_total_tags_lt": 3,
-          "if_deprecated_tags_gt": 0,
-          "if_missing_all_groups": [
-            "form",
-            "theme"
-          ]
-        },
-        "green": {
-          "fallback": true
-        }
-      }
     }
   },
   "catalogue": {

@@ -19,7 +19,7 @@ if str(REPO_ROOT) not in sys.path:
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
-from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view, studio_home_view  # noqa: E402
+from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
@@ -45,6 +45,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
+    assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
+    assert payload["app"]["routes"]["studio_home"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
     assert payload["app"]["routes"]["catalogue_work_editor"]["doc_id"] == "catalogue-work-editor"
     assert payload["app"]["routes"]["studio_audits"]["shell_type"] == "javascript"
@@ -62,9 +64,11 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "docs_page" not in payload["paths"]["routes"]
+    assert "analysis_page" not in payload["paths"]["routes"]
     assert "docs_html_import" not in payload["paths"]["routes"]
     assert "catalogue_work_editor" not in payload["paths"]["routes"]
     assert "catalogue_field_registry_review" not in payload["paths"]["routes"]
+    assert any(view["id"] == "studio_home" and view["path"] == "/studio/" for view in runtime["views"])
     assert any(
         view["id"] == "docs"
         and view["path"] == "/docs/?mode=manage"
@@ -139,6 +143,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "library_export_configs" not in runtime["data_paths"]["studio"]
     assert "tag_groups" not in runtime["data_paths"]["ui_text"]
+    assert "analysis" not in runtime["data_paths"]["search"]["scopes"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
@@ -261,7 +266,6 @@ def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_app_bootstrap_view("test-version"),
-        studio_home_view("test-version"),
     ]
 
     for shell in html_shells:
@@ -269,7 +273,6 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
         assert "/assets/css/main.css" not in shell
         assert "/studio/ui-catalogue/" not in shell
         assert "/ui-catalogue/app/" not in shell
-
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:

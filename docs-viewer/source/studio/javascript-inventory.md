@@ -20,6 +20,7 @@ Split refresh status:
 - task 12 refreshed the table paths for the post-split app roots and moved Analytics tag/Data Sharing rows to their current `analytics-app/app/frontend/js/` owners
 - risk scores are carried forward from the current scored rows after the split cleanup; use the app-root path, family, and focus note as the ownership signal for future work
 - Slice 6 of the Studio JavaScript app shell work refreshed the active Studio module count, added the static shell/registry rows that were introduced during shell migration, and confirmed all configured Studio-local routes now use the JavaScript shell.
+- Follow-up cleanup removed the Studio-served analysis scoring copy; Analytics remains the owner for that runtime surface.
 
 Rescored on 2026-05-21 from the current filesystem inventory.
 Category scores may range from 0 to 3 under the current policy.
@@ -29,7 +30,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 ## Summary
 
 - Current local Analytics browser modules under `analytics-app/app/frontend/js/`: 58 files, 16,488 lines.
-- Current local Studio browser modules under `studio/app/frontend/js/`: 85 files, 17,752 lines.
+- Current local Studio browser modules under `studio/app/frontend/js/`: 86 files, 17,304 lines.
 - The table still includes public runtime, Docs Viewer runtime, UI Catalogue, and retired reference rows that are outside those two local app roots.
 - Files above target score 4, excluding `docs-viewer/runtime/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
@@ -41,7 +42,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 7 | 0 |
 | 6 | 17 |
 | 5 | 37 |
-| 4 | 135 |
+| 4 | 136 |
 
 ## Current Inventory
 
@@ -233,8 +234,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 186 | `studio/app/frontend/js/catalogue-work-detail-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Work Detail editor before the side-effect controller boots. |
 | 187 | `studio/app/frontend/js/catalogue-series-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Series editor before the side-effect controller boots. |
 | 188 | `studio/app/frontend/js/catalogue-moment-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Moment editor before the side-effect controller boots. |
-| 189 | `studio/app/frontend/js/analysis-tag-scoring.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Shared analysis tag scoring helper still served from the Studio app frontend root. |
-| 190 | `studio/app/frontend/js/studio-route-body-renderers.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Focused route body renderer registry that maps JavaScript-shell route IDs to route-local `*-shell.js` modules. |
+| 189 | `studio/app/frontend/js/studio-route-body-renderers.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Focused route body renderer registry that maps JavaScript-shell route IDs to route-local `*-shell.js` modules. |
+| 190 | `studio/app/frontend/js/studio-home-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | JavaScript-rendered Studio home dashboard links grouped by route IDs from the runtime route registry. |
+| 191 | `studio/app/frontend/js/studio-home.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | No-op Studio home route controller; home behavior is rendered by `studio-home-shell.js`. |
 
 ## Rerun Notes
 

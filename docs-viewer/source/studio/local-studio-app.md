@@ -51,8 +51,8 @@ Current mounted views:
 - `/studio/catalogue-moment/?mode=manage`
 
 The local app owns `/studio/`.
-Studio home navigation is a local-app owned grouped column-links layout, not Jekyll/Liquid page data.
-The local home exposes Studio-owned Catalogue and Admin links using static route targets so labels, order, and query-string defaults stay deliberate.
+Studio home navigation is rendered by the JavaScript Studio app shell, not Python or Jekyll/Liquid page data.
+The local home exposes Studio-owned Catalogue and Admin links through `studio-home-shell.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home layout owns grouping, order, and route-specific query-string defaults.
 The shared Studio top navigation is separate from that home link list.
 Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
 The former Catalogue dashboard page is retired; its links now live on the `/studio/` home page, and metrics belong on the individual pages where they are relevant.
@@ -174,7 +174,7 @@ The main management API workflow routes are covered through a fixture repo smoke
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns the shared HTML bootstrap/home shells, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns the shared HTML bootstrap, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
 Ordinary Studio route body markup is owned by route-local browser shell modules that run inside `studio-app.js`; new route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:

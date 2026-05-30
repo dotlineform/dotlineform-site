@@ -21,6 +21,7 @@ STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("javascript",))
 STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES | frozenset(("external",))
 
 STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
+    "studio_home": "/studio/",
     "studio_audits": "/studio/audits/",
     "project_state": "/studio/project-state/",
     "bulk_add_work": "/studio/bulk-add-work/",
@@ -237,6 +238,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-body-renderers.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-home.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-home-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",

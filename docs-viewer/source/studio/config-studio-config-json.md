@@ -15,6 +15,7 @@ Config file:
 ## Scope
 
 `studio_config.json` is the shared browser-facing bootstrap manifest for Studio pages.
+It is published into the local Studio runtime config; it is not a shared manifest for Analytics or public Docs Viewer scopes.
 
 Current responsibilities include:
 
@@ -32,7 +33,7 @@ The file is the root browser manifest.
 It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`, while Docs Viewer copy belongs under `docs-viewer/config/ui-text/ui-text.json`.
 Domain behavior should live with the domain runtime that uses the config.
 Analytics app config now owns Analytics/Data Sharing route, UI-text, scoring, and endpoint paths.
-For example, Analytics scoring code lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`; `studio_config.json` no longer supplies that runtime's policy values.
+For example, Analytics scoring code lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`; `studio_config.json` no longer supplies that runtime's policy values or `/analysis/` public route/search paths.
 
 ## What calls it
 

@@ -31,7 +31,6 @@ if str(STUDIO_DIR) not in sys.path:
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import (  # noqa: E402
     studio_app_bootstrap_view,
-    studio_home_view,
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
@@ -109,7 +108,7 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
         if path in {"/studio", "/studio/"}:
-            self.send_html(studio_home_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/audits", "/studio/audits/"}:
             self.send_html(studio_app_bootstrap_view(self.version))

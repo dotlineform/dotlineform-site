@@ -330,8 +330,8 @@ These are the known risks recorded at the end of each implementation slice, comp
 ### Slice 1
 
 - Local Studio still has Python-rendered route bodies, so route body markup duplication will only reduce once slices 2-5 migrate routes. Current status: resolved by slices 2-6.
-- `studio-config.js` still carries a fallback copy of the route registry for static/default config behavior; keep it aligned with checked-in JSON until a generated/default-config strategy replaces the copy. Current status: still relevant.
-- The static `/studio/` home link columns still duplicate route labels and paths. Leave that out of slice 2 unless the shell renderer needs home-link metadata. Current status: still relevant.
+- `studio-config.js` still carries a fallback copy of the route registry for static/default config behavior; keep it aligned with checked-in JSON until a generated/default-config strategy replaces the copy. Current status: resolved; the fallback copy and exported default config were removed, and Studio now treats the runtime config payload as authoritative.
+- The static `/studio/` home link columns still duplicate route labels and paths. Leave that out of slice 2 unless the shell renderer needs home-link metadata. Current status: resolved; the home page now runs through the JavaScript app shell, keeps dashboard grouping/order in `studio-home-shell.js`, and derives route labels and base paths from `app.routes`.
 
 ### Slice 2
 

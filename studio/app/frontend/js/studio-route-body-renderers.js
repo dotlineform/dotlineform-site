@@ -1,4 +1,8 @@
 const ROUTE_BODY_RENDERERS = {
+  studio_home: async (config, importModule) => {
+    const module = await importModule("./studio-home-shell.js");
+    return module.renderStudioHomeShell(config);
+  },
   activity: async (_config, importModule) => {
     const module = await importModule("./activity-log-shell.js");
     return module.renderActivityLogShell();

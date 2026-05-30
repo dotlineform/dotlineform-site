@@ -47,6 +47,7 @@ def main(argv: list[str] | None = None) -> int:
             console_errors: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
+            page.wait_for_selector("#studioHomeRoot[data-studio-ready='true']", timeout=10_000)
             result = page.evaluate(
                 """async () => {
                     const mod = await import("/studio/app/frontend/js/studio-navigation.js");
@@ -260,11 +261,13 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"Studio home exposed retired links: {result['homeLinks']!r}")
         expected_home_hrefs = {
             "/studio/catalogue-status/?mode=manage",
+            "/studio/catalogue-series/?mode=manage",
+            "/studio/studio-works/?mode=manage&sort=cat&dir=asc",
             "/studio/activity/?mode=manage",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")
-        if home_link_labels[:4] != ["drafts", "series editor", "work editor", "work detail editor"]:
+        if home_link_labels[:5] != ["drafts", "series editor", "work editor", "detail editor", "bulk add"]:
             raise AssertionError(f"Studio home has unexpected first links: {result['homeLinks']!r}")
         if result["homeReady"] != "true":
             raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")
