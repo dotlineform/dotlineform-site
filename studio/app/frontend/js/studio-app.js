@@ -1,53 +1,8 @@
 import { loadStudioConfig } from "./studio-config.js";
+import { buildDocsViewerDocUrl, buildDocsViewerUrl } from "./studio-navigation.js";
+import { hasStudioRouteBodyRenderer, renderStudioRouteBody } from "./studio-route-body-renderers.js";
 import { buildStudioShellContract, listStudioRoutes } from "./studio-route-registry.js";
 import { initStudioThemeToggle } from "./studio-theme.js";
-
-const ROUTE_BODY_RENDERERS = {
-  activity: async () => {
-    const module = await importVersioned("./activity-log-shell.js");
-    return module.renderActivityLogShell();
-  },
-  bulk_add_work: async (config) => {
-    const module = await importVersioned("./bulk-add-work-shell.js");
-    return module.renderBulkAddWorkShell(config);
-  },
-  catalogue_field_registry: async () => {
-    const module = await importVersioned("./catalogue-field-registry-shell.js");
-    return module.renderCatalogueFieldRegistryShell();
-  },
-  catalogue_moment_editor: async () => {
-    const module = await importVersioned("./catalogue-moment-shell.js");
-    return module.renderCatalogueMomentShell();
-  },
-  catalogue_series_editor: async () => {
-    const module = await importVersioned("./catalogue-series-shell.js");
-    return module.renderCatalogueSeriesShell();
-  },
-  catalogue_status: async () => {
-    const module = await importVersioned("./catalogue-status-shell.js");
-    return module.renderCatalogueStatusShell();
-  },
-  catalogue_work_detail_editor: async (config) => {
-    const module = await importVersioned("./catalogue-work-detail-shell.js");
-    return module.renderCatalogueWorkDetailShell(config);
-  },
-  catalogue_work_editor: async (config) => {
-    const module = await importVersioned("./catalogue-work-shell.js");
-    return module.renderCatalogueWorkShell(config);
-  },
-  project_state: async () => {
-    const module = await importVersioned("./project-state-shell.js");
-    return module.renderProjectStateShell();
-  },
-  studio_works: async () => {
-    const module = await importVersioned("./studio-works-shell.js");
-    return module.renderStudioWorksShell();
-  },
-  studio_audits: async () => {
-    const module = await importVersioned("./studio-audits-shell.js");
-    return module.renderStudioAuditsShell();
-  }
-};
 
 async function bootStudioApp() {
   const root = document.getElementById("studioApp");
@@ -61,14 +16,17 @@ async function bootStudioApp() {
       return;
     }
 
-    const bodyRenderer = ROUTE_BODY_RENDERERS[contract.route.id];
-    if (!bodyRenderer) {
+    if (!hasStudioRouteBodyRenderer(contract.route.id)) {
       renderAppError(root, `Studio route body is not registered: ${contract.route.id}`);
       return;
     }
 
     document.title = `${contract.route.title} | dotlineform Studio`;
-    root.innerHTML = renderStudioShell(config, contract.route, await bodyRenderer(config));
+    root.innerHTML = renderStudioShell(
+      config,
+      contract.route,
+      await renderStudioRouteBody(contract.route.id, config, { importModule: importVersioned })
+    );
     initStudioThemeToggle({ root: document });
     await importVersioned(contract.route.script);
   } catch (error) {
@@ -85,7 +43,7 @@ function renderStudioShell(config, activeRoute, bodyHtml) {
         <h2>${escapeHtml(activeRoute.title)}</h2>
         <a
           class="studioLayout__docLink"
-          href="${escapeHtml(buildDocsViewerDocUrl(config, activeRoute), true)}"
+          href="${escapeHtml(buildDocsViewerDocUrl(config, activeRoute.id), true)}"
           data-studio-doc-view="${escapeHtml(activeRoute.id, true)}"
           target="_blank"
           rel="noopener noreferrer"
@@ -152,37 +110,6 @@ function renderAppError(root, message) {
   </main>`;
 }
 
-function buildDocsViewerDocUrl(config, route) {
-  const link = getDocsViewerLinkConfig(config);
-  const params = {};
-  if (link.doc_scope) params.scope = link.doc_scope;
-  if (route.docId) params.doc = route.docId;
-  if (link.default_mode) params.mode = link.default_mode;
-  return buildDocsViewerUrl(config, link.docs_path || "/docs/", params);
-}
-
-function buildDocsViewerUrl(config, target = "/docs/", params = {}) {
-  const link = getDocsViewerLinkConfig(config);
-  const baseUrl = normalizeBaseUrl(link.base_url || currentOrigin());
-  const targetUrl = new URL(String(target || link.docs_path || "/docs/"), currentOrigin());
-  const output = new URL(targetUrl.pathname || "/docs/", ensureTrailingSlash(baseUrl));
-
-  targetUrl.searchParams.forEach((value, key) => {
-    output.searchParams.set(key, value);
-  });
-  for (const [key, value] of Object.entries(params || {})) {
-    if (!key || value == null || value === "") continue;
-    output.searchParams.set(key, String(value));
-  }
-  return output.href;
-}
-
-function getDocsViewerLinkConfig(config) {
-  const links = config && config.external_links;
-  const docsViewer = links && links.docs_viewer;
-  return docsViewer && typeof docsViewer === "object" && !Array.isArray(docsViewer) ? docsViewer : {};
-}
-
 function importVersioned(path) {
   const url = new URL(path, import.meta.url);
   const version = readAssetVersion();
@@ -199,22 +126,6 @@ function readAssetVersion() {
   }
   const meta = document.querySelector('meta[name="dlf-asset-version"]');
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
-}
-
-function ensureTrailingSlash(value) {
-  const text = String(value || "");
-  return text.endsWith("/") ? text : `${text}/`;
-}
-
-function normalizeBaseUrl(value) {
-  const text = String(value || "").trim();
-  return text ? text.replace(/\/+$/, "") : "";
-}
-
-function currentOrigin() {
-  return typeof window !== "undefined" && window.location && window.location.origin
-    ? window.location.origin
-    : "http://127.0.0.1";
 }
 
 function escapeHtml(value, attribute = false) {

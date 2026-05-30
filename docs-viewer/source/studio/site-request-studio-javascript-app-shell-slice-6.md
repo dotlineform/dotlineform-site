@@ -55,4 +55,4 @@ Generated payload status: docs watcher may regenerate Studio docs/search payload
 
 Known risks:
 
-- `studio-app.js` still owns an explicit body renderer mapping. This remains acceptable for the current route count, but a future route-family migration should move lookup into a focused registry helper if the mapping grows.
+- `studio-app.js` still owns an explicit body renderer mapping. This remains acceptable for the current route count, but a future route-family migration should move lookup into a focused registry helper if the mapping grows. Current status: resolved; route body lookup now lives in `studio-route-body-renderers.js`.

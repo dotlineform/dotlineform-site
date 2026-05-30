@@ -29,7 +29,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 ## Summary
 
 - Current local Analytics browser modules under `analytics-app/app/frontend/js/`: 58 files, 16,488 lines.
-- Current local Studio browser modules under `studio/app/frontend/js/`: 84 files, 17,773 lines.
+- Current local Studio browser modules under `studio/app/frontend/js/`: 85 files, 17,752 lines.
 - The table still includes public runtime, Docs Viewer runtime, UI Catalogue, and retired reference rows that are outside those two local app roots.
 - Files above target score 4, excluding `docs-viewer/runtime/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
@@ -41,7 +41,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 7 | 0 |
 | 6 | 17 |
 | 5 | 37 |
-| 4 | 134 |
+| 4 | 135 |
 
 ## Current Inventory
 
@@ -215,7 +215,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 168 | `studio/app/frontend/js/bulk-add-work-workflow.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Bulk Add Work preview/apply workflow owner for summary rendering, blocked-row details, run-state projection, and status/result shaping. |
 | 169 | `analytics-app/app/frontend/js/data-sharing-review-workflow.js` | Analytics Data Sharing | 1 | 1 | 1 | 1 | 4 | Data Sharing review workflow owner for scope/action normalization, apply-action menu state, selected preview state, control disabled projection, and result-button visibility. |
 | 170 | `assets/js/search/catalogue-search-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue search runtime owner for entry normalization, query matching, result ordering, result HTML projection, cache reuse, and query metric projection. |
-| 171 | `studio/app/frontend/js/studio-app.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Browser-owned Studio app shell for route resolution, common chrome, Docs Viewer links, route body renderer lookup, and side-effect controller import. |
+| 171 | `studio/app/frontend/js/studio-app.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Browser-owned Studio app shell for route resolution, common chrome, Docs Viewer links, and side-effect controller import after route body renderer lookup moved to `studio-route-body-renderers.js`. |
 | 172 | `studio/app/frontend/js/studio-route-registry.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio route registry normalizer and shell contract helper; active local shell route type is JavaScript. |
 | 173 | `studio/app/frontend/js/studio-navigation.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio route/public-link/navigation helper for local Studio routes, Docs Viewer links, public preview links, and modal event dispatch. |
 | 174 | `studio/app/frontend/js/studio-theme.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio theme toggle helper shared by the home/bootstrap and JavaScript app shell. |
@@ -234,6 +234,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 187 | `studio/app/frontend/js/catalogue-series-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Series editor before the side-effect controller boots. |
 | 188 | `studio/app/frontend/js/catalogue-moment-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Moment editor before the side-effect controller boots. |
 | 189 | `studio/app/frontend/js/analysis-tag-scoring.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Shared analysis tag scoring helper still served from the Studio app frontend root. |
+| 190 | `studio/app/frontend/js/studio-route-body-renderers.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Focused route body renderer registry that maps JavaScript-shell route IDs to route-local `*-shell.js` modules. |
 
 ## Rerun Notes
 

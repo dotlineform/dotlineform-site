@@ -121,7 +121,9 @@ Shared Studio runtime and wiring currently live in:
 - `studio/app/frontend/js/studio-config.js`
   loads the configured runtime URL from `meta[name="dlf-studio-config-url"]`, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state. Local Studio views use `/studio/runtime-config.json`, which the app server builds from checked-in Studio config plus local runtime endpoints.
 - `studio/app/frontend/js/studio-app.js`
-  owns the browser-rendered Studio shell, route body renderer lookup, Docs Viewer page links, and route script import for active Studio-local routes
+  owns the browser-rendered Studio shell, Docs Viewer page links, and route script import for active Studio-local routes
+- `studio/app/frontend/js/studio-route-body-renderers.js`
+  owns the route-id to route-body-renderer mapping for JavaScript-shell routes
 - `studio/app/frontend/js/studio-navigation.js`
   resolves local Studio route URLs, external Docs Viewer links, public preview links, and modal event dispatch
 - `studio/app/frontend/js/studio-data.js`

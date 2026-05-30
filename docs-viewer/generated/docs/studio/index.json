@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T21:26:11Z",
+  "generated_at": "2026-05-30T21:46:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -305,7 +305,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 32772,
+      "content_text_length": 33028,
       "ui_status": "review"
     },
     {
@@ -956,7 +956,7 @@
       "source_path": "site-request-studio-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
-      "content_text_length": 18056,
+      "content_text_length": 18255,
       "ui_status": "done"
     },
     {
@@ -1046,7 +1046,7 @@
       "source_path": "site-request-studio-javascript-app-shell-slice-6.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-6",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-6.json",
-      "content_text_length": 3028,
+      "content_text_length": 3118,
       "ui_status": "done"
     },
     {
@@ -2555,7 +2555,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 13687
+      "content_text_length": 13790
     },
     {
       "scope": "studio",

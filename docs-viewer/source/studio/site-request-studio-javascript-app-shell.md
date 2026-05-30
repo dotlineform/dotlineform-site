@@ -335,19 +335,19 @@ These are the known risks recorded at the end of each implementation slice, comp
 
 ### Slice 2
 
-- `studio-app.js` currently duplicates a small amount of Docs Viewer URL building and header rendering from the Python/legacy navigation path. Slice 3 should decide whether to extract a pure shared URL/header helper before migrating several operational routes. Current status: partly superseded by the retired Python shell path; browser-side Docs Viewer URL construction remains owned by `studio-app.js`.
-- Route body renderer registration is an explicit small map in `studio-app.js`. That is acceptable for one route; if slice 3 adds three more routes, keep the map simple or move route body lookup behind a focused registry helper. Current status: still relevant as the route count has grown.
+- `studio-app.js` currently duplicates a small amount of Docs Viewer URL building and header rendering from the Python/legacy navigation path. Slice 3 should decide whether to extract a pure shared URL/header helper before migrating several operational routes. Current status: resolved for Docs Viewer URL building; `studio-app.js` now uses the exported `studio-navigation.js` helpers.
+- Route body renderer registration is an explicit small map in `studio-app.js`. That is acceptable for one route; if slice 3 adds three more routes, keep the map simple or move route body lookup behind a focused registry helper. Current status: resolved; route body lookup now lives in `studio-route-body-renderers.js`.
 - Side-effect route boot worked for Project State. Revisit a `mount()` export only if slice 3 shows ordering or test isolation friction. Current status: still acceptable; later slices did not require `mount()`.
 
 ### Slice 3
 
-- `studio-app.js` still keeps an explicit route body renderer map. That is acceptable for four migrated routes, but slice 4 should extract lookup if catalogue support routes make the map carry more policy than module selection. Current status: still relevant; the map remains module selection only.
-- `studio-app.js` and `studio-navigation.js` still duplicate a small amount of Docs Viewer URL/header behavior. Leave it until the duplication becomes harder to reason about than a shared helper. Current status: still relevant.
+- `studio-app.js` still keeps an explicit route body renderer map. That is acceptable for four migrated routes, but slice 4 should extract lookup if catalogue support routes make the map carry more policy than module selection. Current status: resolved; route body lookup now lives in `studio-route-body-renderers.js`.
+- `studio-app.js` and `studio-navigation.js` still duplicate a small amount of Docs Viewer URL/header behavior. Leave it until the duplication becomes harder to reason about than a shared helper. Current status: resolved for Docs Viewer URL building; the remaining header markup is intentionally owned by `studio-app.js`.
 - Side-effect route boot remains workable. Revisit a `mount()` export only if route ordering or test isolation gets fragile in the catalogue support or editor slices. Current status: still acceptable; editor migration did not require `mount()`.
 
 ### Slice 4
 
-- `studio-app.js` now has explicit body renderer mappings for seven routes. Keep this until the editor family proves whether route body lookup needs a focused registry helper. Current status: superseded by the slice 6 version of the same risk.
+- `studio-app.js` now has explicit body renderer mappings for seven routes. Keep this until the editor family proves whether route body lookup needs a focused registry helper. Current status: resolved; route body lookup now lives in `studio-route-body-renderers.js`.
 - Catalogue editor routes still rely on Python-rendered body attributes for media config and form shells. Slice 5 should decide whether those attributes move into runtime config before editor bodies migrate. Current status: resolved by slice 5.
 - Side-effect route boot remains workable. The editor family is the first point where a `mount()` export may become materially cleaner. Current status: still acceptable; editor migration did not require `mount()`.
 
@@ -358,4 +358,4 @@ These are the known risks recorded at the end of each implementation slice, comp
 
 ### Slice 6
 
-- `studio-app.js` still owns an explicit body renderer mapping. This remains acceptable for the current route count, but a future route-family migration should move lookup into a focused registry helper if the mapping grows. Current status: still relevant.
+- `studio-app.js` still owns an explicit body renderer mapping. This remains acceptable for the current route count, but a future route-family migration should move lookup into a focused registry helper if the mapping grows. Current status: resolved; route body lookup now lives in `studio-route-body-renderers.js`.

@@ -235,6 +235,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-body-renderers.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
