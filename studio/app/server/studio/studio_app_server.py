@@ -41,7 +41,7 @@ from studio_catalogue_views import (  # noqa: E402
 from studio_app_views import (  # noqa: E402
     activity_view,
     bulk_add_work_view,
-    project_state_view,
+    studio_app_bootstrap_view,
     studio_audits_view,
     studio_home_view,
 )
@@ -127,7 +127,7 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_html(studio_audits_view(self.version))
             return
         if path in {"/studio/project-state", "/studio/project-state/"}:
-            self.send_html(project_state_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
             self.send_html(bulk_add_work_view(self.version, self.repo_root))

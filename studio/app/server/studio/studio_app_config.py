@@ -233,8 +233,10 @@ def studio_service_endpoints(_repo_root: Path) -> dict[str, object]:
 def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",

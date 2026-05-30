@@ -84,6 +84,11 @@ Docs Viewer page links are built from `external_links.docs_viewer` plus each rou
 `studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper for the migration.
 It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
 
+`studio/app/frontend/js/studio-app.js` is the first browser-owned Studio app shell.
+For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title/doc-link shell, asks the route-local body renderer for markup, and then imports the configured route script.
+Project State is the first route using this path.
+Its body markup lives in `studio/app/frontend/js/project-state-shell.js`, and its existing controller stays in `studio/app/frontend/js/project-state.js`.
+
 ## Studio Pages
 
 Operational Studio route shells are hosted by the local app.

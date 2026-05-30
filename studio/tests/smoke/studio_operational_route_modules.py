@@ -144,8 +144,8 @@ def assert_operational_route_helpers(page: Page) -> None:
     }
     assert result["resolvedRouteId"] == "project_state"
     assert result["resolvedRouteReadyId"] == "project-state"
-    assert result["contractShouldRenderShell"] is False
-    assert result["contractReason"] == "route_shell_not_migrated"
+    assert result["contractShouldRenderShell"] is True
+    assert result["contractReason"] == ""
     assert result["missingContractReason"] == "route_not_registered"
     assert result["workRoutePath"] == "/studio/catalogue-work/?mode=manage"
     assert result["workRouteNeedsScript"] is True

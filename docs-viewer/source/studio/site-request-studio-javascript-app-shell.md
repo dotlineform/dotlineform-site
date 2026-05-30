@@ -2,7 +2,7 @@
 doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: "2026-05-30 21:25"
+last_updated: "2026-05-30 22:00"
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -13,6 +13,7 @@ Status:
 
 - in progress
 - The first implementation tracker is [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1).
+- The second implementation tracker is [Studio JavaScript App Shell Slice 2 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-2).
 
 ## Summary
 
@@ -141,7 +142,7 @@ Selected shape:
         "script": "/studio/app/frontend/js/project-state.js",
         "doc_id": "project-state-page",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "project-state"
       }
     }
@@ -211,14 +212,16 @@ Add the smallest useful `studio-app.js` shell renderer and migrate one low-risk 
 Good candidates are compact operational routes such as Project State, Activity, or Audits.
 The route URL, backend API calls, and `data-studio-ready` contract must remain unchanged.
 
+Slice 2 migrated Project State.
+Python now serves a generic Studio app bootstrap for `/studio/project-state/`, while `studio-app.js` renders the shell chrome and `project-state-shell.js` renders the route body before importing the existing side-effect route controller.
+
 ### Slice 3: Operational routes batch
 
 Move compact non-catalogue route shells once the first route proves the pattern.
-Likely batch:
+Likely remaining batch after Project State:
 
 - Audits
 - Activity
-- Project State
 - Bulk Add Work
 
 ### Slice 4: Catalogue support routes
@@ -274,13 +277,13 @@ It should add the route registry shape, decide how the JS app shell will mount r
 
 The first slice is successful when the repo has a tested route-registry and shell-contract foundation for migrating one low-risk route in slice 2.
 
-## Open Questions
+## Resolved Questions
 
-- Should route metadata live under `app.routes`, `app.runtime.views`, or a new top-level `routes` key?
-- Should route modules export a standard `mount(root, config, context)` function, or should the shell continue loading scripts by side effect for the first phase?
-- Should there be separate shell types for normal Studio pages, full-page editor pages, and operational report pages?
-- How much route markup should be config-driven versus created by route modules?
-- What is the smallest route that proves the pattern without forcing a framework decision?
+- Route metadata lives under `app.routes`; `app.runtime.views` is a derived runtime view list for existing helpers and tests.
+- Early migrated routes may keep side-effect boot. A standard `mount(root, config, context)` export is deferred until side-effect boot creates ordering or test isolation friction.
+- Initial shell types are `external`, `python`, and `javascript`. More specific shell variants should wait until multiple route families prove a need.
+- Route metadata is config-driven; route body markup belongs in route-local browser modules rather than config.
+- Project State proved the first low-risk route migration without forcing a framework decision.
 
 ## Verification
 
@@ -294,7 +297,7 @@ node --check <new-or-changed-studio-shell-module>.js
 Contract expectations:
 
 - route registry validates required metadata
-- route doc links are resolvable from `external_links.docs_viewer`
+- route doc links are resolvable from `external_links.docs_viewer` plus route `doc_id`
 - route script paths and served route paths stay internally consistent
 - runtime config does not introduce Python-built page doc links
 - Python write/API endpoints are unchanged
@@ -303,6 +306,6 @@ Browser smoke expectations for slice 2 and later:
 
 - migrated route shell renders from JS
 - route-specific module reaches ready state
-- Docs Viewer doc link resolves from `external_links.docs_viewer`
+- Docs Viewer doc link resolves from `external_links.docs_viewer` plus route `doc_id`
 - runtime config does not publish Python-built page doc links
 - Python write/API endpoints behave unchanged

@@ -48,6 +48,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
     assert payload["app"]["routes"]["catalogue_work_editor"]["doc_id"] == "catalogue-work-editor"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "python"
+    assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "docs_page" not in payload["paths"]["routes"]
     assert "docs_html_import" not in payload["paths"]["routes"]

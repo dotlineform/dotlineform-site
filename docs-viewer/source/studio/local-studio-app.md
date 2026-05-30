@@ -95,9 +95,10 @@ It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/a
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
-It reuses `studio/app/frontend/js/project-state.js` and calls Local Studio for both catalogue report generation and local report opening.
+It is the first route rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/project-state-shell.js` renders the route body, and `studio/app/frontend/js/project-state.js` keeps the existing route boot and behavior.
+It calls Local Studio for both catalogue report generation and local report opening.
 `studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` and `POST /studio/api/catalogue/project-state-open-report` adapters and reuses `studio/services/catalogue/project_state_report.py`.
-The old Jekyll `/studio/project-state/` shell has been retired.
+The old Jekyll `/studio/project-state/` shell and Python-rendered Project State body have been retired.
 The Thumbnail Quality route shell is no longer an active Local Studio route.
 `/studio/thumbnail-quality/?mode=manage`, `POST /studio/api/catalogue/thumbnail-quality-preview`, and static thumbnail-quality preview data under `/studio/data/generated/thumbnail-quality/` are retired and intentionally have no Studio aliases, proxies, or static-serving shims.
 The retired implementation has been archived under `studio/retired/thumbnail-quality/` for reference outside public Jekyll output.

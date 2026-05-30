@@ -29,7 +29,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/project-state.js",
         "doc_id": "project-state-page",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "project-state"
       },
       "bulk_add_work": {
