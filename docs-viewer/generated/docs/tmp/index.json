@@ -1,11 +1,26 @@
 {
-  "generated_at": "2026-05-30T10:49:53Z",
+  "generated_at": "2026-05-30T17:03:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
     "show_updated_date": true
   },
   "docs": [
+    {
+      "scope": "tmp",
+      "doc_id": "analytics",
+      "title": "analytics",
+      "added_date": "2026-05-28",
+      "last_updated": "2026-05-28",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "analytics.md",
+      "viewer_url": "/docs/?scope=tmp&doc=analytics",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/analytics.json",
+      "content_text_length": 1105,
+      "ui_status": "draft"
+    },
     {
       "scope": "tmp",
       "doc_id": "azure",
@@ -34,6 +49,21 @@
       "viewer_url": "/docs/?scope=tmp&doc=plan",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/plan.json",
       "content_text_length": 19518,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "tmp",
+      "doc_id": "emoji",
+      "title": "emoji",
+      "added_date": "2026-05-28",
+      "last_updated": "2026-05-28",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "emoji.md",
+      "viewer_url": "/docs/?scope=tmp&doc=emoji",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
+      "content_text_length": 248,
       "ui_status": "draft"
     },
     {
@@ -91,7 +121,7 @@
       "source_path": "tmp.md",
       "viewer_url": "/docs/?scope=tmp&doc=tmp",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "content_text_length": 2185,
+      "content_text_length": 1936,
       "ui_status": "draft"
     },
     {

@@ -38,6 +38,7 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
 
 from docs_source_model import load_scope_docs, scope_doc_sort_key
 from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
+from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 from local_env import runtime_env
 
@@ -221,7 +222,11 @@ def rebuild_scope(
     docs_command = [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", scope, "--write"]
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
-        docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
+        fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids)
+        if fallback_reason:
+            log(f"{scope} targeted docs fallback: {fallback_reason}")
+        else:
+            docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
     if search_doc_ids is None:
         commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))

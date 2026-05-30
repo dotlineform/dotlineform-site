@@ -71,11 +71,60 @@ def test_watcher_formats_docs_builder_diagnostics_on_separate_lines() -> None:
     ]
 
 
+def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    calls: list[list[str]] = []
+    original_run = module.subprocess.run
+    original_fallback = module.targeted_docs_build_fallback_reason
+
+    class Completed:
+        returncode = 0
+        stdout = "ok\n"
+        stderr = ""
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    module.subprocess.run = fake_run
+    module.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: (
+        "full-scope fallback: existing payloads missing for unselected docs"
+    )
+    try:
+        assert module.rebuild_scope(
+            Path("/repo"),
+            "/tmp/bundle",
+            "tmp",
+            docs_doc_ids=["tmp"],
+            search_doc_ids=["tmp"],
+        )
+    finally:
+        module.subprocess.run = original_run
+        module.targeted_docs_build_fallback_reason = original_fallback
+
+    assert calls == [
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "tmp", "--write"],
+        [
+            "/tmp/bundle",
+            "exec",
+            "ruby",
+            "docs-viewer/build/build_search.rb",
+            "--scope",
+            "tmp",
+            "--write",
+            "--only-doc-ids",
+            "tmp",
+            "--remove-missing",
+        ],
+    ]
+
+
 def main() -> None:
     test_watcher_imports_source_model_helpers_directly()
     test_watcher_accumulates_changed_files_during_debounce()
     test_watcher_formats_affected_doc_ids_for_logs()
     test_watcher_formats_docs_builder_diagnostics_on_separate_lines()
+    test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing()
 
 
 if __name__ == "__main__":

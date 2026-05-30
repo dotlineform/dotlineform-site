@@ -2,11 +2,27 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-77f03ceb2515f7b96a9db06b6d90e9ef",
-    "generated_at_utc": "2026-05-30T10:49:53Z",
-    "count": 7
+    "version": "blake2b-bf81a348ba8c5651768d8133dcf6c0e5",
+    "generated_at_utc": "2026-05-30T17:03:45Z",
+    "count": 9
   },
   "entries": [
+    {
+      "id": "analytics",
+      "kind": "doc",
+      "title": "analytics",
+      "href": "/docs/?scope=tmp&doc=analytics",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "analytics",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "analytics 2026-05-28 2026 05 28"
+    },
     {
       "id": "azure",
       "kind": "doc",
@@ -43,6 +59,22 @@
         "27"
       ],
       "search_text": "plan docs viewer workstream priority plan docs viewer workstream priority 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "emoji",
+      "kind": "doc",
+      "title": "emoji",
+      "href": "/docs/?scope=tmp&doc=emoji",
+      "last_updated": "2026-05-28",
+      "display_meta": "2026-05-28",
+      "search_terms": [
+        "emoji",
+        "2026-05-28",
+        "2026",
+        "05",
+        "28"
+      ],
+      "search_text": "emoji 2026-05-28 2026 05 28"
     },
     {
       "id": "index-space",

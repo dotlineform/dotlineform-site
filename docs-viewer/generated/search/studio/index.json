@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d1ca746e95beabef21b58ecb10634ed5",
-    "generated_at_utc": "2026-05-30T16:56:37Z",
-    "count": 201
+    "version": "blake2b-b362e643c6c13029f00a8118a1fe8446",
+    "generated_at_utc": "2026-05-30T17:08:26Z",
+    "count": 202
   },
   "entries": [
     {
@@ -1187,6 +1187,36 @@
       "search_text": "site-request-analytics-app-split-tasks site request analytics app split tasks analytics app split tasks analytics app split request 2026-05-30 2026 05 30"
     },
     {
+      "id": "site-request-analytics-app-split-follow-on",
+      "kind": "doc",
+      "title": "Follow on work",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
+      "last_updated": "2026-05-30 17:24",
+      "parent_id": "site-request-analytics-app-split",
+      "parent_title": "Analytics App Split Request",
+      "display_meta": "2026-05-30 17:24 • Analytics App Split Request",
+      "search_terms": [
+        "site-request-analytics-app-split-follow-on",
+        "site",
+        "request",
+        "analytics",
+        "app",
+        "split",
+        "follow",
+        "on",
+        "follow on work",
+        "work",
+        "analytics app split request",
+        "2026-05-30 17:24",
+        "2026",
+        "05",
+        "30",
+        "17",
+        "24"
+      ],
+      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on follow on work work analytics app split request 2026-05-30 17:24 2026 05 30 17 24"
+    },
+    {
       "id": "site-request-catalogue-work-unified-editor",
       "kind": "doc",
       "title": "Catalogue Work Unified Editor Request",
@@ -2157,10 +2187,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -2171,12 +2201,12 @@
         "docs live rebuild watcher",
         "docs viewer",
         "viewer",
-        "2026-05-25",
+        "2026-05-30",
         "2026",
         "05",
-        "25"
+        "30"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-25 2026 05 25"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-docs-management-server",
