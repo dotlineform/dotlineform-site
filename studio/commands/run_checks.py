@@ -118,6 +118,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "analytics-app/app/server/analytics_app/tag_services/tag_assignment_service.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_promotion_mutations.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_registry_mutations.py",
+                "analytics-app/app/server/analytics_app/tag_services/tag_source_paths.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_source_model.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_write_transactions.py",
                 "docs-viewer/services/docs_import_source_service.py",

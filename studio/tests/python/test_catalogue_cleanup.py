@@ -11,10 +11,16 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
+for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 from catalogue import catalogue_cleanup  # noqa: E402
+from tag_services import tag_source_paths  # noqa: E402
+
+
+TAG_ASSIGNMENTS_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
 
 
 def write_json(path: Path, payload: dict) -> None:
@@ -47,7 +53,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         touch(root / "assets/data/recent_index.json")
         touch(root / "assets/series/index/009.json")
         touch(root / "studio/data/generated/activity/work-storage-index.json")
-        touch(root / "studio/data/canonical/analytics/tag-assignments.json")
+        touch(root / TAG_ASSIGNMENTS_PATH)
 
         preview = catalogue_cleanup.catalogue_delete_preview_cleanup(
             root,
@@ -68,7 +74,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
     ]
     assert preview["studio_json_updates"] == [
         "studio/data/generated/activity/work-storage-index.json",
-        "studio/data/canonical/analytics/tag-assignments.json",
+        TAG_ASSIGNMENTS_PATH.as_posix(),
     ]
     assert "assets/works/img/00001-thumb-800.jpg" in preview["delete_paths"]
     assert "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp" in preview["delete_paths"]
@@ -110,7 +116,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
             root / "assets/series/index/009.json",
             {"header": {"schema": "series_record_v1"}, "series": {"works": ["00001", "00002"], "primary_work_id": "00001"}},
         )
-        write_json(root / "studio/data/canonical/analytics/tag-assignments.json", {"series": {"009": {"works": {"00001": ["tag"], "00002": ["tag"]}}}})
+        write_json(root / TAG_ASSIGNMENTS_PATH, {"series": {"009": {"works": {"00001": ["tag"], "00002": ["tag"]}}}})
 
         payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(
             root,
@@ -124,7 +130,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         "assets/data/series_index.json",
         "assets/data/works_index.json",
         "assets/series/index/009.json",
-        "studio/data/canonical/analytics/tag-assignments.json",
+        TAG_ASSIGNMENTS_PATH.as_posix(),
         "studio/data/generated/activity/work-storage-index.json",
     ]
     assert "00001" not in payloads[(root / "assets/data/works_index.json").resolve()]["works"]
@@ -134,7 +140,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     ]
     assert "works" not in payloads[(root / "assets/series/index/009.json").resolve()]["series"]
     assert "primary_work_id" not in payloads[(root / "assets/series/index/009.json").resolve()]["series"]
-    assert "00001" not in payloads[(root / "studio/data/canonical/analytics/tag-assignments.json").resolve()]["series"]["009"]["works"]
+    assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 
 
 def test_moment_delete_generated_payloads_remove_moment_index_record() -> None:

@@ -24,6 +24,7 @@ Docs rebuilds belong to the Docs management API.
 Reusable analytics owners remain active:
 
 - `analytics-app/app/server/analytics_app/tag_services/tag_activity.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_source_paths.py`
 - `analytics-app/app/server/analytics_app/tag_services/tag_source_model.py`
 - `analytics-app/app/server/analytics_app/tag_services/tag_assignment_service.py`
 - `analytics-app/app/server/analytics_app/tag_services/tag_registry_mutations.py`

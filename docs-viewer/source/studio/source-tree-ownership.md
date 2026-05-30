@@ -60,7 +60,7 @@ Current Analytics-owned source homes:
 | Path | Owner / role |
 | --- | --- |
 | `analytics-app/app/server/analytics_app/` | Local Analytics app server, Analytics route views, runtime config projection, static serving, tag API dispatch, and Data Sharing API dispatch. |
-| `analytics-app/app/server/analytics_app/tag_services/` | Analytics tag-domain helper modules for validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection. |
+| `analytics-app/app/server/analytics_app/tag_services/` | Analytics tag-domain helper modules for source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection. |
 | `analytics-app/app/frontend/` | Analytics browser modules, route modules, shell helpers, UI text config, and Analytics runtime config source. |
 | `analytics-app/app/assets/` | Analytics-only CSS and static assets used by Local Analytics routes. |
 | `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |

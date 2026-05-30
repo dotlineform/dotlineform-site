@@ -81,6 +81,9 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
+ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
+if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
+    sys.path.insert(0, str(ANALYTICS_PACKAGE_DIR))
 
 try:
     from catalogue import catalogue_generation_indexes as indexes
@@ -88,6 +91,7 @@ try:
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
+    from tag_services import tag_source_paths
     from catalogue import catalogue_generation_writes as writes
     from catalogue.catalogue_generation_common import (
         coerce_int,
@@ -106,6 +110,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
+    from tag_services import tag_source_paths
     from catalogue import catalogue_generation_writes as writes
     from catalogue.catalogue_generation_common import (
         coerce_int,
@@ -580,7 +585,7 @@ def main() -> None:
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
 
-    tag_assignments_path = Path("studio/data/canonical/analytics/tag-assignments.json").expanduser()
+    tag_assignments_path = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH.expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
     series_index_json_path = Path(args.series_index_json_path).expanduser()
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)

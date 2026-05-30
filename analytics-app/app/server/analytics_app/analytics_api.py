@@ -34,7 +34,7 @@ from tag_services import tag_source_model as tag_source  # noqa: E402
 from tag_services import tag_write_transactions as tag_transactions  # noqa: E402
 
 
-ANALYTICS_DATA_DIR = Path("studio/data/canonical/analytics")
+ANALYTICS_DATA_DIR = tag_source.TAG_SOURCE_ROOT_REL_PATH
 BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 READ_ENDPOINTS = {

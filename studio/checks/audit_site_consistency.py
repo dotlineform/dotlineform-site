@@ -25,6 +25,7 @@ for path in (
     REPO_ROOT,
     REPO_ROOT / "studio" / "shared" / "python",
     REPO_ROOT / "studio" / "services",
+    REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app",
     REPO_ROOT / "scripts",
 ):
     if str(path) not in sys.path:
@@ -39,6 +40,8 @@ try:
     from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
+
+from tag_services import tag_source_paths
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -372,7 +375,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail page"}, max_samples)
 
     # tag_assignments -> series_index / works_index references
-    assignments_path = site_root / "studio/data/canonical/analytics/tag-assignments.json"
+    assignments_path = site_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
     if not assignments_path.exists():
         warnings += 1
         add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing tag assignments JSON"}, max_samples)
@@ -718,7 +721,7 @@ def check_json_schema(
                         errors += 1
                         add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
 
-    tag_assignments_path = site_root / "studio/data/canonical/analytics/tag-assignments.json"
+    tag_assignments_path = site_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
     try:
         tag_assignments_obj = json.loads(tag_assignments_path.read_text(encoding="utf-8"))
     except Exception as e:

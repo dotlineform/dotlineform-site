@@ -8,6 +8,8 @@ import re
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from tag_services import tag_source_paths
+
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WORK_ID_RE = re.compile(r"^\d{5}$")
@@ -24,10 +26,12 @@ DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
 
-ASSIGNMENTS_REL_PATH = Path("studio/data/canonical/analytics/tag-assignments.json")
-REGISTRY_REL_PATH = Path("studio/data/canonical/analytics/tag-registry.json")
-ALIASES_REL_PATH = Path("studio/data/canonical/analytics/tag-aliases.json")
-SERIES_INDEX_REL_PATH = Path("assets/data/series_index.json")
+TAG_SOURCE_ROOT_REL_PATH = tag_source_paths.TAG_SOURCE_ROOT_REL_PATH
+ASSIGNMENTS_REL_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
+REGISTRY_REL_PATH = tag_source_paths.TAG_REGISTRY_REL_PATH
+ALIASES_REL_PATH = tag_source_paths.TAG_ALIASES_REL_PATH
+GROUPS_REL_PATH = tag_source_paths.TAG_GROUPS_REL_PATH
+SERIES_INDEX_REL_PATH = tag_source_paths.SERIES_INDEX_REL_PATH
 
 
 def utc_now() -> str:

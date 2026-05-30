@@ -24,7 +24,7 @@ Retired Studio paths under `/studio/analytics/...`, `/studio/data-sharing/...`, 
 Current source boundary:
 
 - `analytics-app/app/server/analytics_app/` owns the Local Analytics HTTP server, route views, runtime config projection, static serving, tag APIs, and Data Sharing API dispatch.
-- `analytics-app/app/server/analytics_app/tag_services/` owns reusable tag-domain validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection.
+- `analytics-app/app/server/analytics_app/tag_services/` owns reusable tag-domain source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection.
 - `analytics-app/app/frontend/` owns Analytics browser modules, route modules, UI text, and runtime config.
 - `analytics-app/app/assets/` owns Analytics-only CSS and route assets.
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
