@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T22:37:04Z",
+  "generated_at": "2026-05-30T23:19:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -926,8 +926,8 @@
       "source_path": "site-request-rubyless-app-runtimes.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes.json",
-      "content_text_length": 8775,
-      "ui_status": "draft"
+      "content_text_length": 14188,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
