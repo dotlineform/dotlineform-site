@@ -346,7 +346,7 @@ async function init() {
         getStudioText(
           state.config,
           "data_sharing_review.no_files",
-          "No staged {scope_label} data files found under var/studio/data-sharing/{scope}/import-staging/.",
+          "No staged {scope_label} data files found under var/analytics/data-sharing/{scope}/import-staging/.",
           { scope_label: dataSharingReviewScopeLabel(state), scope: state.scope }
         )
       );

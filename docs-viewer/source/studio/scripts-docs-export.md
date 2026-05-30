@@ -17,7 +17,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py
 
 `docs_export.py` is the read-only package-preparation engine used by the documents Data Sharing adapter.
 
-It reads generated Docs Viewer artifacts and source-controlled Library sharing profiles, then writes an ephemeral share package under `var/studio/data-sharing/<scope>/exports/`.
+It reads generated Docs Viewer artifacts and source-controlled Library sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/<scope>/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -28,8 +28,8 @@ Current input paths:
 
 Current output pattern:
 
-- `var/studio/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
-- `var/studio/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
+- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
+- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
 
 The filename timestamp is formatted in the local runtime timezone.
 Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
@@ -205,7 +205,7 @@ The engine validates runtime concerns that the static config schema cannot know:
 - required mapped fields are present
 - source-text mappings use plain-text conversion rather than raw rendered HTML
 - truncating mappings have configured integer limits
-- output paths stay under `var/studio/data-sharing/` by default
+- output paths stay under `var/analytics/data-sharing/` by default
 - unsupported sources, transforms, target formats, and record shapes are reported before writing
 
 Warnings report non-blocking context:

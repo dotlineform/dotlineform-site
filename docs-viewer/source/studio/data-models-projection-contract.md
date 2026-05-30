@@ -53,7 +53,7 @@ That does not make the tag registry, aliases, assignments, or full Studio lookup
 | Scope | Canonical Source | Public Projection | Local Docs Viewer Projection | Owner |
 | --- | --- | --- | --- | --- |
 | Studio docs | `docs-viewer/source/studio/*.md` | none by default | `docs-viewer/generated/docs/studio/`, `docs-viewer/generated/search/studio/index.json`, `<DOCS_VIEWER_BASE_URL>/docs/` manage payload reads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
-| Library docs | `docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/studio/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
+| Library docs | `docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/analytics/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
 | Analysis docs | `docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
 
 Docs source files are the canonical authored content.

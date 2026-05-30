@@ -28,7 +28,7 @@ It does not cover:
 - automatic remote upload
 - raster-to-SVG conversion
 - catalogue media generation
-- Library returned-package Data Sharing imports under `var/studio/data-sharing/`
+- Library returned-package Data Sharing imports under `var/analytics/data-sharing/`
 - browser runtime asset loading outside generated Docs Viewer content
 
 ## Scope Configuration

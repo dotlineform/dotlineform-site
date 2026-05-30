@@ -92,7 +92,7 @@ The registry owns workflow paths that the shared Data Sharing shell needs for di
 The first Library mapping uses a data-domain-first workflow root:
 
 ```text
-var/studio/data-sharing/library/
+var/analytics/data-sharing/library/
 ```
 
 Under that root, Library currently uses:
@@ -103,16 +103,16 @@ Under that root, Library currently uses:
 
 The registry validator enforces this shape for every data domain:
 
-- `paths.outbound_package_root`: `var/studio/data-sharing/<data_domain>/exports`
-- `paths.returned_package_staging_root`: `var/studio/data-sharing/<data_domain>/import-staging`
-- `paths.review_output_root`: `var/studio/data-sharing/<data_domain>/import-preview`
+- `paths.outbound_package_root`: `var/analytics/data-sharing/<data_domain>/exports`
+- `paths.returned_package_staging_root`: `var/analytics/data-sharing/<data_domain>/import-staging`
+- `paths.review_output_root`: `var/analytics/data-sharing/<data_domain>/import-preview`
 
 Future folder changes should update the shared path contract deliberately instead of adding route-level folder decisions.
 
-The active tags prepare/review/apply workflow uses the same folder shape under `var/studio/data-sharing/tags/`.
-Tags package preparation writes outbound packages under `var/studio/data-sharing/tags/exports/`.
+The active tags prepare/review/apply workflow uses the same folder shape under `var/analytics/data-sharing/tags/`.
+Tags package preparation writes outbound packages under `var/analytics/data-sharing/tags/exports/`.
 
-Old disposable package roots under `var/studio/export-import/...` are outside the target compatibility contract.
+Old disposable package roots under `var/studio/data-sharing/...` and `var/studio/export-import/...` are outside the target compatibility contract.
 Do not add registry paths or adapter fallback reads that preserve those roots.
 
 ## Related Runtime
@@ -132,5 +132,5 @@ The active registry/config boundary is the top-level `data-sharing/config/` dire
 Analytics API handlers resolve adapters through the Data Sharing workflow dispatcher, and the documents and tags adapters are both Data Sharing-owned modules.
 Docs-domain helpers and Analytics tag helpers remain reusable domain helpers; they are not Data Sharing API hosts.
 
-Current runtime packages, returned-package staging, and review artifacts are expected under `var/studio/data-sharing/<data_domain>/...`.
-Old `var/studio/export-import/...` roots are disposable history and should not be restored through compatibility reads.
+Current runtime packages, returned-package staging, and review artifacts are expected under `var/analytics/data-sharing/<data_domain>/...`.
+Old `var/studio/data-sharing/...` and `var/studio/export-import/...` roots are disposable history and should not be restored through compatibility reads.

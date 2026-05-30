@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Analytics tags adapter for Studio Data Sharing workflows."""
+"""Analytics tags adapter for Data Sharing workflows."""
 
 from __future__ import annotations
 

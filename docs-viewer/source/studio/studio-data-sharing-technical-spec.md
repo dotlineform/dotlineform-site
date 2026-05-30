@@ -205,13 +205,13 @@ Current docs-domain helper package:
 
 Library workflow roots:
 
-- outbound packages: `var/studio/data-sharing/library/exports/`
-- returned package staging: `var/studio/data-sharing/library/import-staging/`
-- review artifacts: `var/studio/data-sharing/library/import-preview/`
+- outbound packages: `var/analytics/data-sharing/library/exports/`
+- returned package staging: `var/analytics/data-sharing/library/import-staging/`
+- review artifacts: `var/analytics/data-sharing/library/import-preview/`
 - source root: `docs-viewer/source/library/`
 - backup root: `var/docs/backups/`
 
-The adapter registry validates the first three roots against `var/studio/data-sharing/<data_domain>/...`; adapters should not add fallback reads for old disposable `var/studio/export-import/...` packages.
+The adapter registry validates the first three roots against `var/analytics/data-sharing/<data_domain>/...`; adapters should not add fallback reads for old disposable `var/studio/data-sharing/...` or `var/studio/export-import/...` packages.
 
 The documents adapter is Data Sharing-owned adapter code that a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
 It does not own the shared Data Sharing registry or non-document adapters.
@@ -244,11 +244,11 @@ The tags adapter owns:
 
 Tags workflow roots:
 
-- outbound packages: `var/studio/data-sharing/tags/exports/`
-- returned package staging: `var/studio/data-sharing/tags/import-staging/`
-- review output root: `var/studio/data-sharing/tags/import-preview/`
-- source root: `assets/studio/data/`
-- backup root: `var/studio/data-sharing/tags/backups/`
+- outbound packages: `var/analytics/data-sharing/tags/exports/`
+- returned package staging: `var/analytics/data-sharing/tags/import-staging/`
+- review output root: `var/analytics/data-sharing/tags/import-preview/`
+- source root: `analytics-app/data/canonical/`
+- backup root: `var/analytics/data-sharing/tags/backups/`
 
 Implemented sharing profiles:
 

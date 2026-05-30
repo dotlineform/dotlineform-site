@@ -390,7 +390,7 @@ def assert_fallback_write_behavior(page: Page) -> None:
                     "target_format": "jsonl",
                     "counts": {"selected": 2, "exported": 0, "failed": 2},
                     "errors": ["write unavailable"],
-                    "output_file": "var/studio/data-sharing/library/exports/fallback.jsonl",
+                    "output_file": "var/analytics/data-sharing/library/exports/fallback.jsonl",
                 }
             ),
         )

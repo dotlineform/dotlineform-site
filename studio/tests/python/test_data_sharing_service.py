@@ -133,9 +133,9 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
                                     "status": "active",
                                     "selection_model": "documents",
                                     "paths": {
-                                        "outbound_package_root": "var/studio/data-sharing/library/exports",
-                                        "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
-                                        "review_output_root": "var/studio/data-sharing/library/import-preview",
+                                        "outbound_package_root": "var/analytics/data-sharing/library/exports",
+                                        "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
+                                        "review_output_root": "var/analytics/data-sharing/library/import-preview",
                                     },
                                     "source_write_targets": {},
                                     "sources": {},

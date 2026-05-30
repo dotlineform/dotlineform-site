@@ -28,7 +28,7 @@ Default local APIs:
 - `POST /analytics/api/data-sharing/review`
 - `POST /analytics/api/data-sharing/apply`
 
-Runtime packages, returned-package staging, review artifacts, and backups continue to use `var/studio/data-sharing/<domain>/...` as the local artifact contract.
+Runtime packages, returned-package staging, review artifacts, and backups continue to use `var/analytics/data-sharing/<domain>/...` as the local artifact contract.
 Retired Studio paths under `/studio/data-sharing/...` and `/studio/api/data-sharing/...` should not be recreated.
 
 Current responsibility split:

@@ -74,7 +74,7 @@ def prepare_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/studio/data-sharing/library/exports/local-smoke.json",
+            "var/analytics/data-sharing/library/exports/local-smoke.json",
         ],
         "warnings": [],
         "summary_text": "Package prepared.",
@@ -85,11 +85,11 @@ def returned_packages_payload() -> dict[str, object]:
     return {
         "ok": True,
         "scope": "library",
-        "staging_root": "var/studio/data-sharing/library/import-staging",
+        "staging_root": "var/analytics/data-sharing/library/import-staging",
         "files": [
             {
                 "filename": "summaries.jsonl",
-                "path": "var/studio/data-sharing/library/import-staging/summaries.jsonl",
+                "path": "var/analytics/data-sharing/library/import-staging/summaries.jsonl",
                 "format": "jsonl",
                 "size_bytes": 512,
                 "modified_utc": "2026-05-04T12:00:00Z",

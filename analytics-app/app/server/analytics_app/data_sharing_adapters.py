@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Config-driven dispatch for Studio Data Sharing adapters."""
+"""Config-driven dispatch for Analytics Data Sharing adapters."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ REGISTRY_REL_PATH = Path("data-sharing/config/adapters.json")
 SCHEMA_VERSION = "data_sharing_adapters_v2"
 CANONICAL_OPERATIONS = {"prepare", "list_returned", "review", "apply"}
 STATUS_VALUES = {"active", "planned", "stub", "disabled"}
-RUNTIME_ARTIFACT_ROOT = Path("var/studio/data-sharing")
+RUNTIME_ARTIFACT_ROOT = Path("var/analytics/data-sharing")
 RUNTIME_PATH_KEYS = {
     "outbound_package_root": "exports",
     "returned_package_staging_root": "import-staging",

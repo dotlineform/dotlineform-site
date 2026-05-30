@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 
-RUNTIME_ARTIFACT_ROOT = Path("var/studio/data-sharing")
+RUNTIME_ARTIFACT_ROOT = Path("var/analytics/data-sharing")
 
 
 def normalize_domain(value: Any) -> str:

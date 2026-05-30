@@ -58,9 +58,9 @@
           "status": "active",
           "selection_model": "documents",
           "paths": {
-            "outbound_package_root": "var/studio/data-sharing/library/exports",
-            "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
-            "review_output_root": "var/studio/data-sharing/library/import-preview",
+            "outbound_package_root": "var/analytics/data-sharing/library/exports",
+            "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
+            "review_output_root": "var/analytics/data-sharing/library/import-preview",
             "source_root": "docs-viewer/source/library",
             "backup_root": "var/docs/backups"
           },
@@ -259,11 +259,11 @@
           "status": "active",
           "selection_model": "records",
           "paths": {
-            "outbound_package_root": "var/studio/data-sharing/tags/exports",
-            "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
-            "review_output_root": "var/studio/data-sharing/tags/import-preview",
+            "outbound_package_root": "var/analytics/data-sharing/tags/exports",
+            "returned_package_staging_root": "var/analytics/data-sharing/tags/import-staging",
+            "review_output_root": "var/analytics/data-sharing/tags/import-preview",
             "source_root": "analytics-app/data/canonical",
-            "backup_root": "var/studio/data-sharing/tags/backups"
+            "backup_root": "var/analytics/data-sharing/tags/backups"
           },
           "source_write_targets": {
             "tag_registry": "analytics-app/data/canonical/tag-registry.json",

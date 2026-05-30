@@ -88,9 +88,9 @@ def domain_payload(status: str = "active", data_domain: str = "library") -> dict
         "status": status,
         "selection_model": "documents",
         "paths": {
-            "outbound_package_root": f"var/studio/data-sharing/{data_domain}/exports",
-            "returned_package_staging_root": f"var/studio/data-sharing/{data_domain}/import-staging",
-            "review_output_root": f"var/studio/data-sharing/{data_domain}/import-preview",
+            "outbound_package_root": f"var/analytics/data-sharing/{data_domain}/exports",
+            "returned_package_staging_root": f"var/analytics/data-sharing/{data_domain}/import-staging",
+            "review_output_root": f"var/analytics/data-sharing/{data_domain}/import-preview",
             "source_root": f"docs-viewer/source/{data_domain}",
             "backup_root": "var/docs/backups",
         },
@@ -199,7 +199,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
 
         assert resolution.adapter_id == "documents"
         assert resolution.scope == "library"
-        assert resolution.path("outbound_package_root").as_posix() == "var/studio/data-sharing/library/exports"
+        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/library/exports"
         assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
@@ -254,7 +254,7 @@ def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "must be var/studio/data-sharing/library/import-staging",
+            "must be var/analytics/data-sharing/library/import-staging",
         )
 
 
@@ -288,7 +288,7 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
     document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="library", operation="apply")
     tags_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="tags", operation="review", require_active=False)
     for resolution in (document_resolution, tags_resolution):
-        domain_root = f"var/studio/data-sharing/{resolution.data_domain}"
+        domain_root = f"var/analytics/data-sharing/{resolution.data_domain}"
         assert resolution.path("outbound_package_root").as_posix() == f"{domain_root}/exports"
         assert resolution.path("returned_package_staging_root").as_posix() == f"{domain_root}/import-staging"
         assert resolution.path("review_output_root").as_posix() == f"{domain_root}/import-preview"

@@ -40,7 +40,7 @@ Those helpers are callable without routing through Docs Viewer HTTP endpoints.
 Runtime packages, returned-package staging, and review artifacts use:
 
 ```text
-var/studio/data-sharing/<domain>/
+var/analytics/data-sharing/<domain>/
 ```
 
 The adapter registry validates the domain-specific `exports/`, `import-staging/`, and `import-preview/` roots so active adapters cannot silently fall back to older package folders.
@@ -127,7 +127,7 @@ The 2026-05 split moved the durable Data Sharing boundary to:
 - Analytics-owned pages and `/analytics/api/data-sharing/...` endpoints
 - `data-sharing/` owned registry/config, path contracts, package I/O, workflow dispatch, and documents/tags adapters
 - Docs Viewer-owned docs-domain helpers under `docs-viewer/services/docs_data_sharing/`
-- runtime artifacts under `var/studio/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
+- runtime artifacts under `var/analytics/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
 
 The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config or Local Studio runtime config.
 Generated Docs Viewer payloads are not the source of this documentation slice; source docs and structured docs-log records are updated first.

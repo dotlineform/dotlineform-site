@@ -124,7 +124,7 @@ def prepare_result_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/studio/data-sharing/library/exports/modal-smoke.json",
+            "var/analytics/data-sharing/library/exports/modal-smoke.json",
         ],
         "warnings": ["Skipped 1 non-viewable document."],
         "summary_text": "Package prepared.",

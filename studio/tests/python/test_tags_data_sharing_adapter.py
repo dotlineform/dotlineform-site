@@ -54,11 +54,11 @@ def make_registry_payload() -> dict[str, object]:
                         "status": "active",
                         "selection_model": "records",
                         "paths": {
-                            "outbound_package_root": "var/studio/data-sharing/tags/exports",
-                            "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
-                            "review_output_root": "var/studio/data-sharing/tags/import-preview",
+                            "outbound_package_root": "var/analytics/data-sharing/tags/exports",
+                            "returned_package_staging_root": "var/analytics/data-sharing/tags/import-staging",
+                            "review_output_root": "var/analytics/data-sharing/tags/import-preview",
                             "source_root": "analytics-app/data/canonical",
-                            "backup_root": "var/studio/data-sharing/tags/backups",
+                            "backup_root": "var/analytics/data-sharing/tags/backups",
                         },
                         "source_write_targets": {
                             "tag_registry": "analytics-app/data/canonical/tag-registry.json",
@@ -269,7 +269,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_activity_contract(root)
-    (root / "var/studio/data-sharing/tags/import-staging").mkdir(parents=True, exist_ok=True)
+    (root / "var/analytics/data-sharing/tags/import-staging").mkdir(parents=True, exist_ok=True)
     return temp_dir
 
 
@@ -289,7 +289,7 @@ def resolve_tags_adapter(root: Path, operation: str = "prepare"):
 def test_list_returned_packages_finds_json_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_json(root / "var/studio/data-sharing/tags/import-staging/registry.json", {"import_registry": {"tags": []}})
+        write_json(root / "var/analytics/data-sharing/tags/import-staging/registry.json", {"import_registry": {"tags": []}})
 
         payload = adapter.list_returned_packages(
             root,
@@ -375,7 +375,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
 
     assert payload["ok"] is True
     assert payload["output_written"] is True
-    assert payload["output_file"].startswith("var/studio/data-sharing/tags/exports/tags-bundle-")
+    assert payload["output_file"].startswith("var/analytics/data-sharing/tags/exports/tags-bundle-")
     assert package["package_metadata"]["package_family"] == "bundle"
     assert set(package["families"]) == {"registry", "aliases", "assignments"}
     assert activity["record_groups"]["files"]["sample_ids"] == [payload["output_file"]]
@@ -386,7 +386,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/studio/data-sharing/tags/import-staging/registry.json",
+            root / "var/analytics/data-sharing/tags/import-staging/registry.json",
             {
                 "mode": "merge",
                 "import_registry": {
@@ -440,7 +440,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
     assert preflight["requires_confirmation"] is True
     assert preflight["written"] is False
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag-registry.json.bak-")
+    assert applied["backup_files"][0].startswith("var/analytics/data-sharing/tags/backups/tag-registry.json.bak-")
     assert {item["tag_id"] for item in registry["tags"]} == {"subject:trees", "subject:water", "subject:stone", "subject:sky"}
 
 
@@ -448,7 +448,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/studio/data-sharing/tags/import-staging/aliases.json",
+            root / "var/analytics/data-sharing/tags/import-staging/aliases.json",
             {
                 "mode": "merge",
                 "import_aliases": {
@@ -493,7 +493,7 @@ def test_assignments_review_reports_applicable_conflict_invalid_and_missing() ->
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/studio/data-sharing/tags/import-staging/assignments.json",
+            root / "var/analytics/data-sharing/tags/import-staging/assignments.json",
             {
                 "import_assignments": {
                     "series": {
@@ -545,7 +545,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/studio/data-sharing/tags/import-staging/assignments.json",
+            root / "var/analytics/data-sharing/tags/import-staging/assignments.json",
             {
                 "import_assignments": {
                     "series": {
@@ -604,7 +604,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
 
     assert preflight["requires_confirmation"] is True
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag-assignments.json.bak-")
+    assert applied["backup_files"][0].startswith("var/analytics/data-sharing/tags/backups/tag-assignments.json.bak-")
     assert assignments["series"]["series-a"]["tags"] == [{"tag_id": "subject:sky", "w_manual": 0.6}]
     assert activity["record_groups"]["series"]["sample_ids"] == ["series-a"]
     assert activity["record_groups"]["works"]["sample_ids"] == ["00001"]

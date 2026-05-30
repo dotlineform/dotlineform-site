@@ -17,8 +17,8 @@ parent_id: scripts-docs-management-server
   - `docs-viewer/source/library/*.md`
 - non-source write targets are allowlisted to:
   - `var/docs/backups/`
-  - `var/studio/data-sharing/<data-domain>/exports/`
-  - `var/studio/data-sharing/<data-domain>/import-preview/`
+  - `var/analytics/data-sharing/<data-domain>/exports/`
+  - `var/analytics/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion

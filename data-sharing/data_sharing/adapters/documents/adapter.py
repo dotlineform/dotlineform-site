@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Documents adapter for Studio Data Sharing workflows."""
+"""Documents adapter for Data Sharing workflows."""
 
 from __future__ import annotations
 

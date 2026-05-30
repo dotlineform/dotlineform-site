@@ -38,13 +38,13 @@ Current source and generated artifacts:
   - `data-sharing/config/adapters.json`
   - `data-sharing/config/adapters.schema.json`
 - local generated export artifacts:
-  - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
-  - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
+  - `var/analytics/data-sharing/library/exports/<export_id>-<timestamp>.json`
+  - `var/analytics/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
 - local import staging artifacts:
-  - `var/studio/data-sharing/library/import-staging/<filename>.json`
-  - `var/studio/data-sharing/library/import-staging/<filename>.jsonl`
+  - `var/analytics/data-sharing/library/import-staging/<filename>.json`
+  - `var/analytics/data-sharing/library/import-staging/<filename>.jsonl`
 - local import preview artifacts:
-  - `var/studio/data-sharing/library/import-preview/<filename>.md`
+  - `var/analytics/data-sharing/library/import-preview/<filename>.md`
 
 Current public route:
 
@@ -144,8 +144,8 @@ Config files:
 
 Generated output:
 
-- `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
-- `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
+- `var/analytics/data-sharing/library/exports/<export_id>-<timestamp>.json`
+- `var/analytics/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
 
 Current model:
 
@@ -175,12 +175,12 @@ Library import files are local working artifacts copied into a staging folder fo
 
 Staged input:
 
-- `var/studio/data-sharing/library/import-staging/<filename>.json`
-- `var/studio/data-sharing/library/import-staging/<filename>.jsonl`
+- `var/analytics/data-sharing/library/import-staging/<filename>.json`
+- `var/analytics/data-sharing/library/import-staging/<filename>.jsonl`
 
 Preview output:
 
-- `var/studio/data-sharing/library/import-preview/<filename>.md`
+- `var/analytics/data-sharing/library/import-preview/<filename>.md`
 
 Current model:
 

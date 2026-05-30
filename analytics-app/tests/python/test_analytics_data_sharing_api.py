@@ -83,9 +83,9 @@ def write_adapter_registry(root: Path) -> None:
                             "status": "active",
                             "selection_model": "documents",
                             "paths": {
-                                "outbound_package_root": "var/studio/data-sharing/library/exports",
-                                "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
-                                "review_output_root": "var/studio/data-sharing/library/import-preview",
+                                "outbound_package_root": "var/analytics/data-sharing/library/exports",
+                                "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
+                                "review_output_root": "var/analytics/data-sharing/library/import-preview",
                                 "source_root": "docs-viewer/source/library",
                                 "backup_root": "var/docs/backups",
                             },

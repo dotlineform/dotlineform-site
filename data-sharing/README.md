@@ -1,23 +1,23 @@
 # Data Sharing Subsystem
 
-This directory is the top-level headless owner for Studio Data Sharing workflow code.
+This directory is the top-level headless owner for Data Sharing workflow code.
 
 The subsystem owns shared Data Sharing concerns:
 
 - adapter registry and config loading
 - adapter implementations by data domain
 - workflow dispatch for `prepare`, `list_returned`, `review`, and `apply`
-- path contracts for `var/studio/data-sharing/<domain>/...`
+- path contracts for `var/analytics/data-sharing/<domain>/...`
 - package I/O and schema contracts
 
 It must not own:
 
 - servers or HTTP route mounting
-- Studio page shells or browser modules
+- local app page shells or browser modules
 - Docs Viewer UI routes
 - local app runtime config publication
 
-Studio remains the owner of Data Sharing UI pages and same-origin local API endpoints.
+Local Analytics owns the active Data Sharing UI pages and same-origin local API endpoints.
 Domain helpers, such as docs source read/write helpers, stay domain-aware and reusable.
 
 ## Python Package
@@ -29,4 +29,4 @@ The source-controlled registry, schemas, and Library sharing profiles live under
 `data-sharing/config/`.
 Current shared workflow dispatch and the implemented documents and tags adapters live under
 `data-sharing/data_sharing/`.
-Studio still owns the local API, browser routes, and adapter resolver gateway; Docs Viewer still supplies reusable docs-domain helpers for document workflows.
+Analytics owns the local API, browser routes, and adapter resolver gateway; Docs Viewer still supplies reusable docs-domain helpers for document workflows.

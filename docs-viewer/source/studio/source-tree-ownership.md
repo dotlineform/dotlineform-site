@@ -66,7 +66,7 @@ Current Analytics-owned source homes:
 | `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |
 | `analytics-app/data/canonical/` | Canonical tag registry, alias, assignment, and group source data used by Analytics. Raw local browser access, where needed, is served through `/analytics/data/canonical/...`. |
 | `data-sharing/` | Headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters used by Analytics. |
-| `var/studio/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. The path is intentionally preserved as a local artifact contract. |
+| `var/analytics/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. |
 
 Analytics routes and APIs live under `/analytics/...` and `/analytics/api/...`.
 Do not add aliases, proxies, dual-read paths, or static-serving shims for retired `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths.

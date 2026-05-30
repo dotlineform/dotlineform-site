@@ -121,8 +121,8 @@ Document-row configs may support JSONL and JSON when both are declared in `targe
 `output.path_pattern` must stay under:
 
 ```text
-var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.json
-var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl
+var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json
+var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl
 ```
 
 The placeholders are resolved by the export engine.
