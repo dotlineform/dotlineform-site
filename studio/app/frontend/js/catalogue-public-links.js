@@ -1,9 +1,6 @@
 import {
   getStudioRoute
 } from "./studio-config.js";
-import {
-  buildPublicSiteUrl
-} from "./studio-navigation.js";
 
 export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
   const normalizedPath = normalizePublicPath(path);
@@ -32,6 +29,30 @@ function buildPublicRecordUrl(config, routeKey, fallbackBase, recordId, params =
   return buildPublicCatalogueUrl(config, id ? `${routeBase}${encodeURIComponent(id)}/` : routeBase, params);
 }
 
+function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
+  const siteKey = options && options.site === "production" ? "production" : "public_preview";
+  const base = getStudioSiteBase(config, siteKey);
+  if (!base) {
+    throw new Error(`Missing Studio site base: ${siteKey}`);
+  }
+  const url = new URL(String(path || "/"), ensureTrailingSlash(base));
+  for (const [key, value] of Object.entries(params || {})) {
+    if (!key || value == null || value === "") continue;
+    url.searchParams.set(key, String(value));
+  }
+  return url.href;
+}
+
+function getStudioSiteBase(config, siteKey) {
+  const runtime = config && config.app && config.app.runtime;
+  const sites = runtime && runtime.sites && typeof runtime.sites === "object" && !Array.isArray(runtime.sites)
+    ? runtime.sites
+    : {};
+  const site = sites && sites[siteKey];
+  const value = site && site.base;
+  return typeof value === "string" && value.trim() ? value.trim().replace(/\/+$/, "") : "";
+}
+
 function normalizeRouteBase(value) {
   const text = normalizePublicPath(value || "/");
   return text.endsWith("/") ? text : `${text}/`;
@@ -49,4 +70,9 @@ function normalizePublicPath(value) {
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function ensureTrailingSlash(value) {
+  const text = String(value || "");
+  return text.endsWith("/") ? text : `${text}/`;
 }

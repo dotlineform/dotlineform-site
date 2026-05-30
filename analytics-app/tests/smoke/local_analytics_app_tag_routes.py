@@ -148,6 +148,19 @@ def main(argv: list[str] | None = None) -> int:
                         raise AssertionError(f"series link did not use public preview base: {series_href!r}")
                     if primary_work_href and not primary_work_href.startswith(f"{public_preview_base}/works/"):
                         raise AssertionError(f"primary work link did not use public preview base: {primary_work_href!r}")
+                    theme_toggle = page.locator("[data-studio-theme-toggle]")
+                    if theme_toggle.count() != 1:
+                        raise AssertionError("series tag editor did not expose exactly one theme toggle")
+                    if page.evaluate("document.documentElement.getAttribute('data-theme')") != "light":
+                        raise AssertionError("series tag editor did not start in light theme")
+                    theme_toggle.click()
+                    if page.evaluate("document.documentElement.getAttribute('data-theme')") != "dark":
+                        raise AssertionError("series tag editor theme toggle did not switch to dark")
+                    if theme_toggle.get_attribute("aria-pressed") != "true":
+                        raise AssertionError("series tag editor theme toggle did not update pressed state")
+                    theme_toggle.click()
+                    if page.evaluate("document.documentElement.getAttribute('data-theme')") != "light":
+                        raise AssertionError("series tag editor theme toggle did not switch back to light")
 
             browser.close()
 

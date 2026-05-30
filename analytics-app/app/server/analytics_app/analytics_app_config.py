@@ -58,14 +58,7 @@ ANALYTICS_VIEWS: dict[str, dict[str, str]] = {
     },
 }
 
-ANALYTICS_TOP_NAV_VIEW_IDS: tuple[str, ...] = (
-    "series_tags",
-    "tag_registry",
-    "tag_aliases",
-    "tag_groups",
-    "data_sharing_prepare",
-    "data_sharing_review",
-)
+ANALYTICS_TOP_NAV_VIEW_IDS: tuple[str, ...] = ()
 
 ANALYTICS_MEDIA: dict[str, object] = {
     "thumbs": {

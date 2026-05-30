@@ -20,6 +20,7 @@ else
 fi
 
 RUNNER_NAME="bin/local-all"
+PUBLIC_SITE_ENABLED="${PUBLIC_SITE_ENABLED:-1}"
 PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
 PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
@@ -211,7 +212,11 @@ trap handle_interrupt INT
 trap handle_term TERM
 
 echo "Starting local services from $ROOT_DIR"
-echo "Public site preview: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
+if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
+  echo "Public site preview: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
+else
+  echo "Public site preview: disabled by PUBLIC_SITE_ENABLED=0"
+fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Local Studio app: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/"
 else
@@ -230,7 +235,9 @@ fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 echo
 
-remember_binding "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT"
+if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
+  remember_binding "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT"
+fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   remember_binding "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT"
 fi
@@ -242,7 +249,9 @@ if [ "$UI_CATALOGUE_APP_ENABLED" != "0" ]; then
 fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
-require_open_port "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT" "PUBLIC_SITE_PORT"
+if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
+  require_open_port "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT" "PUBLIC_SITE_PORT"
+fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
 fi
@@ -257,7 +266,9 @@ require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VI
 echo "Press Ctrl+C to stop all processes."
 echo
 
-start_child "Public site preview" "$ROOT_DIR/bin/public-site-preview"
+if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
+  start_child "Public site preview" "$ROOT_DIR/bin/public-site-preview"
+fi
 start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
 if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
   start_child "Local Analytics runner" "$ROOT_DIR/bin/local-analytics"

@@ -156,12 +156,15 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `DOTLINEFORM_BACKUP_RETENTION`
   default: `on`
   set to `off` or `0` to skip the startup Studio backup retention cleanup
+- `PUBLIC_SITE_ENABLED`
+  default: `1`
+  used by `bin/local-all`; set to `0` to skip the public-site preview child process
 - `PUBLIC_SITE_HOST`
   default: `JEKYLL_HOST` when set, otherwise `127.0.0.1`
-  used by `bin/public-site-preview`
+  used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
 - `PUBLIC_SITE_PORT`
   default: `JEKYLL_PORT` when set, otherwise `4000`
-  used by `bin/public-site-preview`
+  used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
 - `PUBLIC_SITE_CONFIG`
   default: `_config.yml`
   used by `bin/public-site-preview` and `bin/public-site-build`
@@ -212,13 +215,13 @@ If a configured port is unavailable or two services are configured for the same 
 
 After preflight, `bin/local-all` starts:
 
-1. `bin/public-site-preview`
+1. `bin/public-site-preview` when `PUBLIC_SITE_ENABLED` is not `0`
 2. `bin/local-studio`
 3. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
 4. `bin/local-ui-catalogue` when `UI_CATALOGUE_APP_ENABLED` is not `0`
 5. `docs-viewer/bin/docs-viewer`
 
-The runner prints the public-site preview, Local Studio app, Local Analytics app, UI Catalogue app, and Docs Viewer web service URLs.
+The runner prints the public-site preview, Local Studio app, Local Analytics app, UI Catalogue app, and Docs Viewer web service URLs, or the disabled reason for skipped optional children.
 If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
 
 ### Local Studio
@@ -428,7 +431,7 @@ At startup the runner prints quick links for:
 
 `bin/local-all` and `bin/local-studio` both trap `EXIT`, `INT`, and `TERM`.
 
-When you press `Ctrl+C`, `bin/local-all` stops the public-site preview, Local Studio runner, Local Analytics runner, UI Catalogue runner, and Docs Viewer service before exiting.
+When you press `Ctrl+C`, `bin/local-all` stops the public-site preview when enabled, Local Studio runner, Local Analytics runner, UI Catalogue runner, and Docs Viewer service before exiting.
 
 When you press `Ctrl+C` in `bin/local-studio`, it:
 

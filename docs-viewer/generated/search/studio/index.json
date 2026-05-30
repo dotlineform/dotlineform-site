@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-944fedecfcbaa0b41222b40e42ab47f8",
-    "generated_at_utc": "2026-05-30T10:50:22Z",
+    "version": "blake2b-ff2b2b0b345f4b87cf3e7c91d27776bf",
+    "generated_at_utc": "2026-05-30T15:18:00Z",
     "count": 201
   },
   "entries": [
@@ -3107,10 +3107,10 @@
       "kind": "doc",
       "title": "Local Setup Environment",
       "href": "/docs/?scope=studio&doc=local-setup-environment",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-30",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-05-19 • Local Setup",
+      "display_meta": "2026-05-30 • Local Setup",
       "search_terms": [
         "local-setup-environment",
         "local",
@@ -3118,12 +3118,12 @@
         "environment",
         "local setup environment",
         "local setup",
-        "2026-05-19",
+        "2026-05-30",
         "2026",
         "05",
-        "19"
+        "30"
       ],
-      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-05-19 2026 05 19"
+      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-05-30 2026 05 30"
     },
     {
       "id": "local-setup-github-codex",
@@ -3923,10 +3923,10 @@
       "kind": "doc",
       "title": "Local Runners",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-30",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-25 • Servers",
+      "display_meta": "2026-05-30 • Servers",
       "search_terms": [
         "scripts-local-studio",
         "scripts",
@@ -3935,12 +3935,12 @@
         "local runners",
         "runners",
         "servers",
-        "2026-05-25",
+        "2026-05-30",
         "2026",
         "05",
-        "25"
+        "30"
       ],
-      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-05-25 2026 05 25"
+      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-05-30 2026 05 30"
     },
     {
       "id": "local-studio-server-architecture",

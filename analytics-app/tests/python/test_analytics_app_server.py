@@ -32,14 +32,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["routes"]["runtime_config"] == "/analytics/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
-    assert runtime["navigation"]["primary"] == [
-        "series_tags",
-        "tag_registry",
-        "tag_aliases",
-        "tag_groups",
-        "data_sharing_prepare",
-        "data_sharing_review",
-    ]
+    assert runtime["navigation"]["primary"] == []
     assert any(view["id"] == "tag_registry" and view["path"] == "/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/analytics/series-tags/" for view in runtime["views"])
