@@ -15,9 +15,25 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importVersioned("./catalogue-field-registry-shell.js");
     return module.renderCatalogueFieldRegistryShell();
   },
+  catalogue_moment_editor: async () => {
+    const module = await importVersioned("./catalogue-moment-shell.js");
+    return module.renderCatalogueMomentShell();
+  },
+  catalogue_series_editor: async () => {
+    const module = await importVersioned("./catalogue-series-shell.js");
+    return module.renderCatalogueSeriesShell();
+  },
   catalogue_status: async () => {
     const module = await importVersioned("./catalogue-status-shell.js");
     return module.renderCatalogueStatusShell();
+  },
+  catalogue_work_detail_editor: async (config) => {
+    const module = await importVersioned("./catalogue-work-detail-shell.js");
+    return module.renderCatalogueWorkDetailShell(config);
+  },
+  catalogue_work_editor: async (config) => {
+    const module = await importVersioned("./catalogue-work-shell.js");
+    return module.renderCatalogueWorkShell(config);
   },
   project_state: async () => {
     const module = await importVersioned("./project-state-shell.js");

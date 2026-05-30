@@ -238,8 +238,13 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-status-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-detail-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits-shell.js",
@@ -272,6 +277,9 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_variants = pipeline_payload.get("variants") if isinstance(pipeline_payload, dict) else {}
     if not isinstance(pipeline_variants, dict):
         pipeline_variants = {}
+    pipeline_encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload, dict) else {}
+    if not isinstance(pipeline_encoding, dict):
+        pipeline_encoding = {}
     pipeline_paths = pipeline_payload.get("paths") if isinstance(pipeline_payload, dict) else {}
     if not isinstance(pipeline_paths, dict):
         pipeline_paths = {}
@@ -297,6 +305,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "media": STUDIO_MEDIA,
         "pipeline": {
             "variants": pipeline_variants,
+            "encoding": pipeline_encoding,
             "workbooks": pipeline_workbooks,
         },
         "views": [

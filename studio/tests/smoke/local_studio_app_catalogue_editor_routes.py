@@ -75,43 +75,58 @@ def main(argv: list[str] | None = None) -> int:
             runtime_view = runtime_by_id.get(route["id"])
             if not runtime_view or runtime_view.get("path") != route["path"]:
                 raise AssertionError(f"runtime config missing {route['id']}: {runtime_views!r}")
+            if runtime_view.get("shell_type") != "javascript":
+                raise AssertionError(f"{route['id']} should be a JavaScript shell route: {runtime_view!r}")
+
+            with urllib.request.urlopen(f"{base_url}{route['path']}", timeout=10) as response:
+                bootstrap_html = response.read().decode("utf-8")
+            if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
+                raise AssertionError(f"{route['id']} should be served through the JavaScript Studio app bootstrap")
+            if route["root"].removeprefix("#") in bootstrap_html:
+                raise AssertionError(f"{route['id']} body should be rendered by JavaScript, not Python")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
-            page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
             legacy_catalogue_service_requests: list[str] = []
             local_catalogue_requests: list[str] = []
-            page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
-            page.on("pageerror", lambda error: page_errors.append(str(error)))
-            page.on(
-                "request",
-                lambda request: legacy_catalogue_service_requests.append(request.url)
-                if "127.0.0.1:8788" in request.url
-                else None,
+            viewports = (
+                ("desktop", {"width": 1280, "height": 900}),
+                ("mobile", {"width": 390, "height": 844}),
             )
-            page.on(
-                "request",
-                lambda request: local_catalogue_requests.append(request.url)
-                if "/studio/api/catalogue/" in request.url
-                else None,
-            )
+            for label, viewport in viewports:
+                page = browser.new_page(viewport=viewport)
+                page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
+                page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
+                page.on(
+                    "request",
+                    lambda request: legacy_catalogue_service_requests.append(request.url)
+                    if "127.0.0.1:8788" in request.url
+                    else None,
+                )
+                page.on(
+                    "request",
+                    lambda request: local_catalogue_requests.append(request.url)
+                    if "/studio/api/catalogue/" in request.url
+                    else None,
+                )
 
-            for route in ROUTES:
-                page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
-                root = page.locator(route["root"])
-                expect(root).to_be_visible(timeout=10_000)
-                expect(root).to_have_attribute("data-studio-route", route["route"], timeout=10_000)
-                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-                expect(root).to_have_attribute("data-studio-busy", "false", timeout=10_000)
-                expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
-                expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith(route["doc"]):
-                    raise AssertionError(f"{route['id']} doc link is not manage-mode: {doc_link!r}")
-                if page.locator(f'.site-nav [data-studio-navigate="{route["id"]}"]').count():
-                    raise AssertionError(f"{route['id']} should not appear as a top-nav item")
+                for route in ROUTES:
+                    page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
+                    root = page.locator(route["root"])
+                    expect(root).to_be_visible(timeout=10_000)
+                    expect(root).to_have_attribute("data-studio-route", route["route"], timeout=10_000)
+                    expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+                    expect(root).to_have_attribute("data-studio-busy", "false", timeout=10_000)
+                    expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
+                    expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
+                    doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                    if not str(doc_link).endswith(route["doc"]):
+                        raise AssertionError(f"{route['id']} doc link is not manage-mode: {doc_link!r}")
+                    if page.locator(f'.site-nav [data-studio-navigate="{route["id"]}"]').count():
+                        raise AssertionError(f"{route['id']} should not appear as a top-nav item")
+                page.close()
 
             public_link_checks = [
                 {
@@ -140,6 +155,7 @@ def main(argv: list[str] | None = None) -> int:
                 },
             ]
             for check in public_link_checks:
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
                 page.goto(f"{base_url}{check['url']}", wait_until="domcontentloaded")
                 root = page.locator(check["root"])
                 expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -147,6 +163,7 @@ def main(argv: list[str] | None = None) -> int:
                 public_href = page.locator(check["selector"]).first.get_attribute("href")
                 if not public_href or not public_href.startswith(check["prefix"]):
                     raise AssertionError(f"catalogue editor public link did not use public preview base: {public_href!r}")
+                page.close()
 
             browser.close()
 

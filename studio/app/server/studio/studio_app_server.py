@@ -29,12 +29,6 @@ if str(STUDIO_DIR) not in sys.path:
     sys.path.insert(0, str(STUDIO_DIR))
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
-from studio_catalogue_views import (  # noqa: E402
-    catalogue_moment_view,
-    catalogue_series_view,
-    catalogue_work_detail_view,
-    catalogue_work_view,
-)
 from studio_app_views import (  # noqa: E402
     studio_app_bootstrap_view,
     studio_home_view,
@@ -139,16 +133,16 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-series", "/studio/catalogue-series/"}:
-            self.send_html(catalogue_series_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-work", "/studio/catalogue-work/"}:
-            self.send_html(catalogue_work_view(self.version, self.repo_root))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-work-detail", "/studio/catalogue-work-detail/"}:
-            self.send_html(catalogue_work_detail_view(self.version, self.repo_root))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-moment", "/studio/catalogue-moment/"}:
-            self.send_html(catalogue_moment_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)

@@ -140,7 +140,7 @@ The endpoint exposes the local app runtime contract for migrated views:
 - plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
-- pipeline variant and workbook metadata from `_data/pipeline.json`
+- pipeline variant, encoding, and workbook metadata from `_data/pipeline.json`
 - modal event constants
 
 `studio/app/frontend/js/studio-navigation.js` provides the first helper layer over that contract.
@@ -172,8 +172,8 @@ The main management API workflow routes are covered through a fixture repo smoke
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
-New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns the shared HTML bootstrap/home shells, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+Ordinary Studio route body markup is owned by route-local browser shell modules that run inside `studio-app.js`; new route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:
 

@@ -16,6 +16,9 @@ Status:
 - The second implementation tracker is [Studio JavaScript App Shell Slice 2 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-2).
 - The third implementation tracker is [Studio JavaScript App Shell Slice 3 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-3).
 - The fourth implementation tracker is [Studio JavaScript App Shell Slice 4 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-4).
+- The fifth implementation tracker is [Studio JavaScript App Shell Slice 5 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-5).
+- Slice 5 migrated the catalogue editor family. All configured Studio-local routes now use the JavaScript app shell; the remaining `docs` view is an external Docs Viewer link.
+- Slice 6 remains as a cleanup/documentation slice for retired shell-rendering ownership and inventory follow-through.
 
 ## Summary
 
@@ -292,6 +295,7 @@ The first slice is successful when the repo has a tested route-registry and shel
 - Project State proved the first low-risk route migration without forcing a framework decision.
 - Audits, Activity, and Bulk Add Work fit the same browser-shell pattern without forcing a framework decision.
 - Catalogue Status, Catalogue Field Registry, and Studio Works fit the same browser-shell pattern without forcing a framework decision.
+- Catalogue Work, Work Detail, Series, and Moment editors fit the same browser-shell pattern without forcing a framework decision.
 
 ## Verification
 

@@ -54,7 +54,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["studio_works"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "python"
+    assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["catalogue_work_detail_editor"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["catalogue_moment_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "docs_page" not in payload["paths"]["routes"]
@@ -137,6 +140,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "tag_groups" not in runtime["data_paths"]["ui_text"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
+    assert runtime["pipeline"]["encoding"]["format"] == "webp"
     assert runtime["pipeline"]["workbooks"]["bulk_import"] == "data/works_bulk_import.xlsx"
     assert runtime["modals"]["event"] == "studio:open-modal"
 
