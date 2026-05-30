@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b362e643c6c13029f00a8118a1fe8446",
-    "generated_at_utc": "2026-05-30T17:08:26Z",
+    "version": "blake2b-bec6b9d7144f957c6b36efd7b53307a9",
+    "generated_at_utc": "2026-05-30T17:27:45Z",
     "count": 202
   },
   "entries": [
@@ -1161,6 +1161,36 @@
       "search_text": "site-request-analytics-app-split site request analytics app split analytics app split request change requests change requests 2026-05-30 2026 05 30"
     },
     {
+      "id": "site-request-analytics-app-split-follow-on",
+      "kind": "doc",
+      "title": "Analytics App Split Follow-On Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
+      "last_updated": "2026-05-30 18:26",
+      "parent_id": "site-request-analytics-app-split",
+      "parent_title": "Analytics App Split Request",
+      "display_meta": "2026-05-30 18:26 • Analytics App Split Request",
+      "search_terms": [
+        "site-request-analytics-app-split-follow-on",
+        "site",
+        "request",
+        "analytics",
+        "app",
+        "split",
+        "follow",
+        "on",
+        "analytics app split follow-on tasks",
+        "tasks",
+        "analytics app split request",
+        "2026-05-30 18:26",
+        "2026",
+        "05",
+        "30",
+        "18",
+        "26"
+      ],
+      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on analytics app split follow-on tasks tasks analytics app split request 2026-05-30 18:26 2026 05 30 18 26"
+    },
+    {
       "id": "site-request-analytics-app-split-tasks",
       "kind": "doc",
       "title": "Analytics App Split Tasks",
@@ -1185,36 +1215,6 @@
         "30"
       ],
       "search_text": "site-request-analytics-app-split-tasks site request analytics app split tasks analytics app split tasks analytics app split request 2026-05-30 2026 05 30"
-    },
-    {
-      "id": "site-request-analytics-app-split-follow-on",
-      "kind": "doc",
-      "title": "Follow on work",
-      "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
-      "last_updated": "2026-05-30 17:24",
-      "parent_id": "site-request-analytics-app-split",
-      "parent_title": "Analytics App Split Request",
-      "display_meta": "2026-05-30 17:24 • Analytics App Split Request",
-      "search_terms": [
-        "site-request-analytics-app-split-follow-on",
-        "site",
-        "request",
-        "analytics",
-        "app",
-        "split",
-        "follow",
-        "on",
-        "follow on work",
-        "work",
-        "analytics app split request",
-        "2026-05-30 17:24",
-        "2026",
-        "05",
-        "30",
-        "17",
-        "24"
-      ],
-      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on follow on work work analytics app split request 2026-05-30 17:24 2026 05 30 17 24"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",
