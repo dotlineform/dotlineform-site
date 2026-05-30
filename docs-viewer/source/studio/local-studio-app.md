@@ -28,8 +28,8 @@ Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to 
 Docs Viewer management is handled by the standalone Docs Viewer service.
 Active Local Studio browser routes use plain external Docs Viewer links from `external_links.docs_viewer` in `studio/app/frontend/config/studio-config.json`.
 Per-page Docs Viewer doc IDs live in `external_links.docs_viewer.doc_ids` so user-guidance targets can be changed without editing Python.
-Data Sharing prepare-page selectable records are read from `/studio/api/data-sharing/selectable-records`.
 Local Studio renders Docs Viewer links without probing service availability; when the Docs Viewer service is stopped, the links fail like normal external links.
+Analytics and Data Sharing routes are handled by the standalone Local Analytics app, not Local Studio.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
 Local Studio route shells load Studio-owned CSS from `/studio/app/assets/css/studio.css`.
@@ -38,17 +38,10 @@ They no longer depend on public `assets/css/main.css` for Studio base typography
 Current mounted views:
 
 - `/studio/`
-- `/studio/analytics/tag-groups/`
-- `/studio/analytics/tag-registry/`
-- `/studio/analytics/tag-aliases/`
-- `/studio/analytics/series-tags/`
-- `/studio/analytics/series-tag-editor/?series=<series_id>`
 - `/studio/audits/?mode=manage`
 - `/studio/project-state/?mode=manage`
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
-- `/studio/data-sharing/prepare/?mode=manage`
-- `/studio/data-sharing/review/?mode=manage`
 - `/studio/catalogue-field-registry/?mode=manage`
 - `/studio/catalogue-status/?mode=manage`
 - `/studio/studio-works/?mode=manage`
@@ -59,33 +52,15 @@ Current mounted views:
 
 The local app owns `/studio/`.
 Studio home navigation is a local-app owned grouped column-links layout, not Jekyll/Liquid page data.
-The local home exposes four centered columns for Catalogue, Analytics, Data Sharing, and Admin links, using static route targets so labels, order, and query-string defaults stay deliberate.
+The local home exposes Studio-owned Catalogue and Admin links using static route targets so labels, order, and query-string defaults stay deliberate.
 The shared Studio top navigation is separate from that home link list.
 Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
-The former Catalogue, Analytics, and Data Sharing dashboard pages are retired; their links now live on the `/studio/` home page, and metrics belong on the individual pages where they are relevant.
+The former Catalogue dashboard page is retired; its links now live on the `/studio/` home page, and metrics belong on the individual pages where they are relevant.
 
 Current app endpoints:
 
 - `/health`
 - `/studio/runtime-config.json`
-- `/studio/api/analytics/tag-registry`
-- `/studio/api/analytics/tag-aliases`
-- `/studio/api/analytics/tag-assignments`
-- `/studio/api/analytics/tag-groups`
-- `POST /studio/api/analytics/import-tag-assignments-preview`
-- `POST /studio/api/analytics/import-tag-assignments`
-- `POST /studio/api/analytics/import-tag-aliases`
-- `POST /studio/api/analytics/delete-tag-alias`
-- `POST /studio/api/analytics/mutate-tag-alias-preview`
-- `POST /studio/api/analytics/mutate-tag-alias`
-- `POST /studio/api/analytics/promote-tag-alias-preview`
-- `POST /studio/api/analytics/promote-tag-alias`
-- `POST /studio/api/analytics/demote-tag-preview`
-- `POST /studio/api/analytics/demote-tag`
-- `POST /studio/api/analytics/import-tag-registry`
-- `POST /studio/api/analytics/mutate-tag-preview`
-- `POST /studio/api/analytics/mutate-tag`
-- `POST /studio/api/analytics/save-tags`
 - `/studio/api/catalogue/health`
 - `/studio/api/catalogue/read`
 - `POST /studio/api/catalogue/import-preview`
@@ -111,18 +86,10 @@ Current app endpoints:
 - `POST /studio/api/catalogue/moment/preview`
 - `POST /studio/api/catalogue/moment/save`
 
-The Tag Groups view reuses the existing Studio CSS, `studio/app/frontend/js/tag-groups.js`, and the route-ready data attributes.
-In the local app it reads group-description data through `/studio/api/analytics/tag-groups`.
-The shared Studio data loader now requires local analytics read endpoints for tag groups, registry, aliases, and assignments on migrated local-only tag views; static `studio/data/canonical/analytics/tag_*.json` paths are source data, not runtime browser sources for those views, and `studio/app/frontend/config/studio-config.json` no longer advertises them as browser data sources.
-The old public `assets/studio/` source surface is gone; analytics tag source JSON now lives under `studio/data/canonical/analytics/`, and migrated local-only tag views read through Local Studio API endpoints.
-The analytics write routes now include `POST /studio/api/analytics/save-tags`, tag assignment import preview/apply, tag alias import/delete/edit preview/apply, tag registry import/edit/delete preview/apply, and cross-artifact promote/demote preview/apply.
-They reuse the existing tag assignment, alias mutation, registry mutation, promotion/demotion, alias rewrite, assignment rewrite, atomic JSON write, backups, compact script logging, and Studio activity helpers from the analytics tag domain modules.
-The legacy tag-server `POST /build-docs` route is deprecated and intentionally not migrated; Docs rebuilds belong to the Docs management API.
-The browser transport now requires these local runtime endpoints for `saveTags`, assignment import, alias import/delete/edit/promote/demote, registry import/edit/delete, demote, and analytics health.
-Tag registry, tag aliases, series-tags, and the per-series tag editor route shells are now also hosted by the local app with their existing browser modules and DOM contracts.
-They use local runtime config and local analytics API reads/writes when served from the local app.
-The old Jekyll analytics tag route files have been retired, and there is no standalone Analytics tag write service in normal local Studio startup.
-The standalone `studio/services/analytics/tag_write_server.py` HTTP entrypoint has been removed; `studio/app/server/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
+Analytics tag and Data Sharing routes moved out of Local Studio.
+The active route shells are served by `bin/local-analytics` under `/analytics/...`.
+The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs are under `/analytics/api/data-sharing/...`.
+Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
 The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
 It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
@@ -135,10 +102,6 @@ The Thumbnail Quality route shell is no longer an active Local Studio route.
 `/studio/thumbnail-quality/?mode=manage`, `POST /studio/api/catalogue/thumbnail-quality-preview`, and static thumbnail-quality preview data under `/studio/data/generated/thumbnail-quality/` are retired and intentionally have no Studio aliases, proxies, or static-serving shims.
 The retired implementation has been archived under `studio/retired/thumbnail-quality/` for reference outside public Jekyll output.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
-The Data Sharing package preparation and returned-package review route shells are hosted by the local app at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
-They reuse the existing Data Sharing browser modules.
-The prepare and review pages call the Studio Data Sharing API for service health, adapter-owned selectable records, package preparation, returned-package listing, review, and confirmed apply.
-The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
 The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.
@@ -164,7 +127,7 @@ Local app views declare the runtime config endpoint with `meta[name="dlf-studio-
 The endpoint exposes the local app runtime contract for migrated views:
 
 - view ids, labels, paths, docs links, home-list entries, and shell top-navigation groups
-- local service endpoints such as `/studio/api/analytics`
+- local service endpoints such as `/studio/api/catalogue`
 - plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
@@ -187,28 +150,26 @@ The contract is:
 
 The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `studio/app/frontend/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
 Studio route modules should use that helper when they touch public-content links.
-The migrated per-series tag editor, Catalogue editor summaries, and Studio Works now use this resolver through `studio/app/frontend/js/catalogue-public-links.js` for public catalogue links.
-Those links open on the configured public preview host during local Studio sessions.
+Catalogue editor summaries and Studio Works use this resolver through `studio/app/frontend/js/catalogue-public-links.js` for public catalogue links.
+Those links open on the configured public preview host during local Studio sessions; Local Analytics owns its own public-link helper for Analytics routes.
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route is no longer hosted by Local Studio.
 The runtime config exposes the plain Docs Viewer link target for the top-level `docs` view.
 Page implementation links render with `data-studio-doc-view`; the browser resolves those targets from the configured `external_links.docs_viewer.doc_ids` map.
 The browser builds external Docs Viewer URLs from `external_links.docs_viewer`.
-Studio-owned Data Sharing endpoints live under `app.runtime.services.data_sharing`.
+Data Sharing endpoints are no longer published by Local Studio runtime config.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:
 
 - `studio/tests/python/test_studio_app_server.py`
 - `studio/tests/smoke/local_studio_navigation_adapter.py`
-- `studio/tests/smoke/local_studio_app_tag_groups.py`
-- `studio/tests/smoke/local_studio_app_tag_routes.py`
 - `studio/tests/smoke/local_studio_app_audits_route.py`
 - `studio/tests/smoke/local_studio_app_project_state_route.py`
 - `studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
@@ -218,6 +179,10 @@ Current focused checks:
 - `studio/tests/smoke/local_studio_app_studio_works_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
 - `studio/tests/smoke/local_studio_app_docs_viewer.py`
+- `analytics-app/tests/python/test_analytics_app_server.py`
+- `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+- `analytics-app/tests/smoke/local_analytics_app_tag_routes.py`
+- `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
 - `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
 - `docs-viewer/tests/smoke/docs_viewer_management_ui.py`
 - `docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`

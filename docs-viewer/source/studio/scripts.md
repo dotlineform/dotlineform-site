@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: 2026-05-25
+last_updated: 2026-05-30
 parent_id: dev-home
 ---
 # Scripts
@@ -15,6 +15,8 @@ The current script surface is organized by owner:
 
 - catalogue-domain source, build, and write-service behavior
 - analytics-domain tag metadata behavior
+- Local Analytics app and Data Sharing route/API behavior
+- UI Catalogue demo app behavior
 - docs-domain builders for scope-owned docs artifacts
 - search builders for scope-owned search artifacts
 - Studio runtime services that are not domain-owned
@@ -35,11 +37,14 @@ The current script surface is organized by owner:
 ## Folder Rules
 
 - `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
-- `studio/services/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
+- `analytics-app/` owns the Local Analytics app server, Analytics route shells, Analytics runtime config, Analytics frontend modules, tag APIs, Data Sharing route/API dispatch, and Analytics tests.
+- `studio/services/analytics/` remains the current tag-domain helper layer over catalogue works and series. It is used by Analytics and should not imply Local Studio route/API ownership.
+- `data-sharing/` owns headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters. The active browser-facing Data Sharing HTTP endpoints are hosted by Local Analytics.
+- `ui-catalogue-app/` owns the standalone UI Catalogue demo app, demo source, static demo assets, and UI Catalogue tests.
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `docs-viewer/build/` owns Docs Viewer docs and search build implementations.
-- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
+- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Studio catalogue/admin route dispatch services.
 - `studio/checks/` owns standalone audits and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners when a wrapper is still intentionally supported.
@@ -103,7 +108,7 @@ Catalogue/runtime maintenance:
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`
-  - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/studio/data-sharing/<scope>/exports/`; also powers the Studio Library Data Sharing prepare service path
+  - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/studio/data-sharing/<scope>/exports/`; also powers the Library documents adapter used by Analytics Data Sharing
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
   - parses staged Library returned-package JSON/JSONL files under `var/studio/data-sharing/library/import-staging/` and returns a structured review report
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py`
@@ -124,7 +129,7 @@ Catalogue/runtime maintenance:
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
   Maintain the allowlisted audit runner used by `/studio/audits/?mode=manage`; the active HTTP endpoints are served by the local Studio app.
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-  Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
+  Run Local Studio, Local Analytics, UI Catalogue, public-site preview, and Docs Viewer either independently or through the sibling-service `bin/local-all` runner.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
@@ -152,7 +157,7 @@ Catalogue/runtime maintenance:
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
 - [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
-  Records the retired standalone tag write service and the active local Studio analytics API replacement.
+  Records the retired standalone tag write service and the current Analytics-owned tag API replacement.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
   Run the local Studio catalogue source save service with explicit write allowlists.
 - [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)

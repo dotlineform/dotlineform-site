@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: ""
 ---
 # Studio
@@ -11,12 +11,14 @@ This section documents the Local Studio app routes used to review and edit publi
 
 Studio is a local service-backed workspace. Editing and mutable review data require `bin/local-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
 
-The current Studio shell is organized around active admin entry points:
+The current Studio shell is organized around Studio-owned admin entry points:
 
 - `Catalogue`
-- `Analytics`
-- `Data Sharing`
 - `Docs`
+- `Admin`
+
+Analytics and Data Sharing now belong to the standalone Local Analytics app.
+Studio may link to those workflows, but it does not host their routes or APIs.
 
 Document management and Docs Import are inside the standalone Docs Viewer service's `/docs/` manage-mode.
 Local Studio keeps Docs as a navigation integration point, but does not serve the Docs Viewer shell or Docs Viewer runtime/static/config files.
@@ -28,7 +30,7 @@ Sharing profile definitions live in `data-sharing/config/library-export-configs.
 Studio landing and operational routes expose the shared route-ready contract:
 
 - `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- retired Catalogue, Analytics, and Data Sharing dashboard entry points should stay retired; their links live on the `/studio/` home page
+- retired Catalogue dashboard entry points should stay retired; their links live on the `/studio/` home page
 - page-local metrics should live on the individual workflow pages where they are relevant
 
 ## Key Documents
@@ -60,17 +62,11 @@ Technical route and workflow docs:
 - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
 - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
 - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
-- **[Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)**
-- **[Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)**
+- **[Data Sharing](/docs/?scope=studio&doc=data-sharing)**
 - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
 - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
 - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
 - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
-- **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
-- **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
-- **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
-- **[Series Tags](/docs/?scope=studio&doc=series-tags)**
-- **[Tag Editor](/docs/?scope=studio&doc=tag-editor)**
 - **[Studio Works](/docs/?scope=studio&doc=studio-works)**
 
 ## Practical page-use guides
@@ -85,7 +81,7 @@ Use the repo-local runner from `dotlineform-site/`:
 bin/local-studio
 ```
 
-Use the start-all runner when the same terminal should supervise public-site Live Preview, Local Studio, and Docs Viewer together:
+Use the start-all runner when the same terminal should supervise public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and Docs Viewer together:
 
 ```bash
 bin/local-all
@@ -94,8 +90,8 @@ bin/local-all
 Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
-- starts the local Studio app server for the Studio shell, Analytics tag APIs, Catalogue APIs, Data Sharing routes, and Studio audit APIs
-- does not start the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly or `bin/local-all` for the supervised all-services workflow
+- starts the local Studio app server for the Studio shell, Catalogue APIs, Studio audit APIs, activity, and admin routes
+- does not start Local Analytics, UI Catalogue, public-site preview, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for the supervised sibling-service workflow
 - has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
@@ -106,6 +102,7 @@ Current limits:
 
 - it does not enable `--livereload`
 - it does not serve `/docs/`; Docs Viewer manage mode belongs to the standalone Docs Viewer service
+- it does not serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
 - it does not rebuild docs or docs-search artifacts on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**

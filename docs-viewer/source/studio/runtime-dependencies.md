@@ -2,7 +2,7 @@
 doc_id: runtime-dependencies
 title: Runtime Dependencies
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-05-30
 parent_id: dev-home
 ---
 # Runtime Dependencies
@@ -36,12 +36,13 @@ Current checked-in dependency sources:
 
 ## Dependency Categories
 
-The repo currently has four practical dependency layers:
+The repo currently has five practical dependency layers:
 
 1. Python packages from `requirements.txt`
 2. Ruby/Jekyll packages from the GitHub Pages stack
 3. external command-line tools used by media/generation workflows
-4. local or cloud runtime bootstrap scripts that install or verify the above
+4. local app/service runners that consume the Python and Ruby toolchains
+5. local or cloud runtime bootstrap scripts that install or verify the above
 
 ## Python Packages
 
@@ -141,6 +142,23 @@ Reason:
 
 These matter only for workflows that actually generate or transform media.
 
+## Local App Runtime Boundaries
+
+The local apps use the existing Python runtime and checked-in source; the Analytics and UI Catalogue split did not add new package dependencies.
+
+Current local app boundaries:
+
+| Local app | Runner | Default URL | Dependency role |
+| --- | --- | --- | --- |
+| Public site preview | `bin/public-site-preview` | `http://127.0.0.1:4000/` | Ruby/Bundler/Jekyll stack from `Gemfile`, `Gemfile.lock`, and `.ruby-version`. |
+| Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, audit, activity, admin, docs watcher, and startup maintenance tasks. |
+| Local Analytics | `bin/local-analytics` | `http://127.0.0.1:8766/analytics/` | Python runtime plus Analytics app source, Analytics tag helpers, and Data Sharing workflow/adapters. |
+| UI Catalogue | `bin/local-ui-catalogue` | `http://127.0.0.1:8767/ui-catalogue/demos/` | Python runtime for the small local static/demo server; no Jekyll or Studio service dependency. |
+| Docs Viewer | `docs-viewer/bin/docs-viewer` | `http://127.0.0.1:8776/docs/` | Python runtime plus Docs Viewer services, generated-read helpers, docs management, import/export, and conversion helpers. |
+
+`bin/local-all` supervises these sibling services when a local session needs the full stack.
+The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue does not depend on Studio route config.
+
 ## Codespaces And Codex Cloud Expectations
 
 Current expectation:
@@ -199,6 +217,7 @@ For external command-line tools:
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
 - [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 - [Docs HTML Import Task](/docs/?scope=studio&doc=ui-request-docs-html-import-task)

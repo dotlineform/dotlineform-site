@@ -2,21 +2,22 @@
 doc_id: local-studio-server-architecture
 title: Local Studio Server Architecture
 added_date: 2026-04-17
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: servers
 ---
 # Local Studio Server Architecture
 
 ## Current Position
 
-Studio currently uses the local Studio app server as the normal HTTP owner for Studio routes and local APIs.
+Studio currently uses the local Studio app server as the normal HTTP owner for Studio catalogue, audit, activity, admin, and operational local APIs.
 `bin/local-studio` is the normal Studio runner and starts the local Studio app server:
 
 - `studio/app/server/studio/studio_app_server.py`
 
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
-Analytics tag APIs, Studio Data Sharing APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
+Analytics tag APIs and Data Sharing APIs are owned by the standalone Local Analytics app.
+Studio audit APIs, Project State report API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
 Docs Viewer management, generated reads, and Docs source opening are owned by the standalone Docs Viewer service.
 Local Studio links to Docs Viewer through plain external-link config; it does not publish Docs Viewer service endpoints.
 The old standalone tag write server has been retired.
@@ -28,7 +29,7 @@ When docs live watching is enabled, the same runner also starts:
 
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
 
-The current implementation is therefore a split local workflow: Local Studio and Docs Viewer are peer services.
+The current implementation is therefore a split local workflow: public preview, Local Studio, Local Analytics, UI Catalogue, and Docs Viewer are peer services.
 The important separation is service and module ownership.
 The local app server owns loopback HTTP, route dispatch, runtime config, static asset serving, and Studio route shells.
 Focused domain modules own write policy, validation, backups, activity rows, and result shaping.
@@ -38,18 +39,19 @@ Current boundaries:
 - `studio/app/server/studio/studio_app_server.py` owns the local HTTP process and request dispatch.
 - `studio/app/server/studio/studio_app_config.py` owns browser runtime config, service endpoint paths, and plain Docs Viewer link assembly from `external_links.docs_viewer`.
 - `studio/app/server/studio/studio_app_views.py` owns migrated Studio route shell rendering.
-- `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
+- `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, and import.
 - `studio/services/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
-- `studio/app/server/studio/studio_analytics_api.py` owns `/studio/api/analytics/...` for active tag read/write workflows.
-- `studio/app/server/studio/studio_data_sharing_api.py` owns `/studio/api/data-sharing/...` for Data Sharing health, selectable records, package preparation, returned-package listing, review, and apply.
 - `studio/app/server/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
+- `analytics-app/app/server/analytics_app/analytics_app_server.py` owns the Local Analytics HTTP process and request dispatch.
+- `analytics-app/app/server/analytics_app/analytics_api.py` owns `/analytics/api/...` for active tag read/write workflows.
+- `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` owns `/analytics/api/data-sharing/...` for Data Sharing health, selectable records, package preparation, returned-package listing, review, and apply.
 
-Some migration work remains, but it is no longer about moving endpoint ownership off sibling localhost services.
+Some migration work remains, but it is no longer about merging endpoint ownership into one localhost service.
 Remaining work is mostly route-family cleanup, projection contracts, public/local boundary hardening, and direct launcher cleanup.
 
 ## Current Direction
 
-The target shape is now mostly implemented: peer Local Studio and Docs Viewer services with separate domain modules.
+The target shape is now mostly implemented: peer public preview, Local Studio, Local Analytics, UI Catalogue, and Docs Viewer services with separate domain modules.
 
 The target is not one large mixed script.
 The intended shape is independent services with clear route modules and domain-specific write policies.
@@ -61,10 +63,11 @@ studio/app/server/studio/studio_app_server.py
 studio/app/server/studio/studio_app_config.py
 studio/app/server/studio/studio_app_views.py
 studio/app/server/studio/studio_catalogue_api.py
-studio/app/server/studio/studio_analytics_api.py
-studio/app/server/studio/studio_data_sharing_api.py
 studio/app/server/studio/studio_audit_api.py
 studio/services/catalogue/catalogue_write_service.py
+analytics-app/app/server/analytics_app/analytics_app_server.py
+analytics-app/app/server/analytics_app/analytics_api.py
+analytics-app/app/server/analytics_app/analytics_data_sharing_api.py
 docs-viewer/services/docs_viewer_service.py
 docs-viewer/services/docs_management_service.py
 ```
@@ -79,14 +82,19 @@ GET  /studio/<route>/?mode=manage
 GET  /studio/api/catalogue/health
 GET  /studio/api/catalogue/read
 POST /studio/api/catalogue/<workflow>
-GET  /studio/api/analytics/<workflow>
-POST /studio/api/analytics/<workflow>
-GET  /studio/api/data-sharing/health
-GET  /studio/api/data-sharing/selectable-records
-GET  /studio/api/data-sharing/returned-packages
-POST /studio/api/data-sharing/<workflow>
 GET  /studio/api/audits/<workflow>
 POST /studio/api/audits/<workflow>
+```
+
+Analytics routes are served by the external Analytics app, not Local Studio:
+
+```text
+GET  /analytics/
+GET  /analytics/<route>/
+GET  /analytics/api/<workflow>
+POST /analytics/api/<workflow>
+GET  /analytics/api/data-sharing/<workflow>
+POST /analytics/api/data-sharing/<workflow>
 ```
 
 Docs Viewer routes are served by the external Docs Viewer app, not Local Studio:
@@ -101,21 +109,22 @@ POST <docs_viewer.base_url>/docs/<workflow>
 
 The local Studio app server must keep write authority domain-specific.
 
-Analytics tag routes write only:
+Analytics tag routes are owned by Local Analytics and write only:
 
-- `assets/studio/data/tag_assignments.json`
-- `assets/studio/data/tag_registry.json`
-- `assets/studio/data/tag_aliases.json`
-- Studio analytics backup and log paths
+- `studio/data/canonical/analytics/tag-assignments.json`
+- `studio/data/canonical/analytics/tag-registry.json`
+- `studio/data/canonical/analytics/tag-aliases.json`
+- `studio/data/canonical/analytics/tag-groups.json`
+- Analytics backup and compact log paths
 
 Catalogue routes write only through explicit service allowlists:
 
-- canonical catalogue source JSON under `assets/studio/data/catalogue/`
+- canonical catalogue source JSON under `studio/data/canonical/catalogue/`
 - catalogue backup and log paths
-- focused generated/public outputs when a scoped build, publication, delete, import, Project State, or Thumbnail Quality workflow explicitly owns them
+- focused generated/public outputs when a scoped build, publication, delete, import, or Project State workflow explicitly owns them
 
 Docs routes write only through the Docs Viewer service and its management mutation/import/rebuild services.
-Data Sharing document writes are exposed through the Local Studio Data Sharing API and remain docs-aware by delegating to document-domain helpers for validation, backups, source writes, and rebuild follow-through.
+Data Sharing document writes are exposed through the Local Analytics Data Sharing API and remain docs-aware by delegating to document-domain helpers for validation, backups, source writes, and rebuild follow-through.
 
 Audit routes run only allowlisted local checks.
 
@@ -154,11 +163,11 @@ Each route module should still define its own allowed files, validation rules, a
 Implemented:
 
 - route families have been migrating into the local Studio app server by domain module
-- Docs management and Data Sharing use local Studio Docs APIs
-- active analytics tag writes use local Studio analytics APIs
+- Docs management uses the standalone Docs Viewer service
+- active analytics tag writes use Local Analytics APIs
 - Studio audit APIs are mounted in the local app
-- Studio Data Sharing API endpoints are mounted in the local app
-- catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, Project State, and Thumbnail Quality workflows use local Studio catalogue APIs
+- Analytics Data Sharing API endpoints are mounted in the Local Analytics app
+- catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, and Project State workflows use local Studio catalogue APIs
 - catalogue handler-owned behavior has been extracted into callable service functions
 - the standalone tag write, Docs management, and catalogue write servers have been retired
 - `bin/local-studio` starts only the local Studio app, optional Docs watcher, and optional startup rebuilds
@@ -168,9 +177,11 @@ Still in progress:
 - finish retiring or replacing remaining Jekyll Studio route files as local route families are verified
 - continue moving route state and cross-route data sharing from query-string compatibility toward explicit projection contracts
 - keep separating public-site preview/build commands from Local Studio workflows
+- keep retired Analytics/Data Sharing Studio paths unserved; do not add aliases, proxies, or dual-read/write fallbacks
 - extract shared localhost helpers only where contracts are identical across domains
 
-Future local features should be added as route modules or focused service modules under the local Studio app, not as new standalone localhost processes.
+Future Studio features should be added as Studio route modules or focused Studio service modules.
+Future Analytics, Docs Viewer, and UI Catalogue features should stay under their owning local app boundaries rather than being added back to Local Studio.
 
 ## Benefits
 

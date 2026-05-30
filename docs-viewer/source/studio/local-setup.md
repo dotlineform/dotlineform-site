@@ -2,7 +2,7 @@
 doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
-last_updated: 2026-05-23
+last_updated: 2026-05-30
 parent_id: ""
 viewable: true
 ---
@@ -14,6 +14,20 @@ For cloud-hosted development guidance, see [Cloud Environments](/docs/?scope=stu
 For dependency-role guidance across local and cloud environments, see [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies).
 
 All commands assume you are in `dotlineform-site/` unless stated otherwise.
+
+## Local App Boundaries
+
+The local development stack is split into sibling services:
+
+- `bin/public-site-preview` for the public Jekyll preview
+- `bin/local-studio` for Local Studio catalogue, audit, activity, admin, and docs-watcher workflows
+- `bin/local-analytics` for Analytics tag and Data Sharing routes/APIs
+- `bin/local-ui-catalogue` for isolated UI Catalogue demos
+- `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode and docs management APIs
+- `bin/local-all` when one terminal should supervise the sibling services together
+
+These services should stay separate.
+Do not make public preview part of Studio startup semantics, do not reintroduce Analytics or Data Sharing routes under `/studio/`, and do not serve UI Catalogue demos through Local Studio.
 
 ## Child References
 

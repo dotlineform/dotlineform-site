@@ -15,6 +15,13 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Updated source and launcher docs for the split boundaries:
+  - documented `analytics-app/`, `ui-catalogue-app/`, `data-sharing/`, preserved `studio/data/canonical/analytics/...`, preserved `var/studio/data-sharing/...`, and retired `studio/retired/thumbnail-quality/` ownership in Source Tree Ownership
+  - updated runtime dependency and local setup docs to describe sibling services rather than a combined Studio-owned surface
+  - updated Local Runners docs for `bin/local-analytics`, `bin/local-ui-catalogue`, expanded `bin/local-all`, default ports, service-specific env vars, and retired Studio path rules
+  - updated Local Studio/server docs so Studio no longer claims Analytics/Data Sharing routes or APIs
+  - added current Analytics/Data Sharing route summaries and updated the parent request with the implemented boundary snapshot
+  - did not rebuild generated docs payloads
 - Decoupled remaining obvious dead Studio helper/CSS surfaces from Analytics:
   - removed unrouted Studio audits, project state, thumbnail quality, bulk add work, and activity view functions from the Analytics app view module
   - trimmed the Analytics frontend fallback config to Analytics/Data Sharing routes, Analytics UI text, required public site data paths, Docs Viewer doc links, and analysis scoring defaults
@@ -71,7 +78,7 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue with task 13: update source ownership, runtime dependency, local setup, service launcher, and affected request docs for the split boundaries.
+- Continue with task 14: run the final focused verification set and confirm no compatibility layers remain.
 - Preserve the clean cutover: do not add aliases, redirects, proxy handlers, or static shims for retired Studio paths to make old tests pass.
 
 ### baseline verification set
@@ -126,7 +133,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 10 | done | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
 | 11 | done | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
 | 12 | done | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
-| 13 | planned | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
+| 13 | done | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
 | 14 | planned | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
 | 15 | planned | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |
 | 16 | planned | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, structured docs-log entries, and parent-request status updates. |

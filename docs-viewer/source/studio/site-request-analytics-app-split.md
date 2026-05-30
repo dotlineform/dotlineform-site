@@ -11,8 +11,8 @@ viewable: true
 
 Status:
 
-- proposed
-- urgent structural risk-reduction work
+- in progress
+- core split implemented; documentation and final verification remain
 
 ## Summary
 
@@ -162,7 +162,7 @@ Initial route shape:
 | `/studio/analytics/tag-groups/` | `/analytics/tag-groups/` |
 | `/studio/data-sharing/prepare/` | `/analytics/data-sharing/prepare/` |
 | `/studio/data-sharing/review/` | `/analytics/data-sharing/review/` |
-| `/studio/api/analytics/...` | `/analytics/api/...` or `/analytics/api/tags/...` |
+| `/studio/api/analytics/...` | `/analytics/api/...` |
 | `/studio/api/data-sharing/...` | `/analytics/api/data-sharing/...` |
 
 The exact API subpath shape can be chosen during implementation, but old Studio API paths should not remain as compatibility shims.
@@ -185,6 +185,19 @@ Use [Analytics App Split Tasks](/docs/?scope=studio&doc=site-request-analytics-a
 
 The implementation target is a clean split with no compatibility layers and no planned cleanup pass.
 Analytics may inherit some of the current structural problems in the first cutover, but those problems should become self-contained inside Analytics rather than remaining shared with Studio.
+
+## Implemented Boundary Snapshot
+
+As of the task 13 documentation slice:
+
+- Local Studio is started with `bin/local-studio` and owns `/studio/`, catalogue APIs, audit APIs, activity/admin routes, and docs-watcher startup behavior.
+- Local Analytics is started with `bin/local-analytics` and owns `/analytics/...`, `/analytics/api/...`, and `/analytics/api/data-sharing/...`.
+- Docs Viewer is started with `docs-viewer/bin/docs-viewer` and owns `/docs/` manage mode, Docs Viewer runtime/static assets, generated reads, and docs management APIs.
+- UI Catalogue is started with `bin/local-ui-catalogue` and owns `/ui-catalogue/demos/...`.
+- Public preview is started with `bin/public-site-preview` and remains an optional Jekyll preview service.
+- `bin/local-all` supervises those sibling services together without merging their ownership boundaries.
+- Retired Studio Analytics/Data Sharing paths, Studio UI Catalogue routes, and thumbnail-quality route/API/static mounts have no aliases, redirects, proxies, dual-read/write fallbacks, or static shims.
+- Current preserved data/artifact contracts include `studio/data/canonical/analytics/...` tag source data and `var/studio/data-sharing/...` package/review/backups output.
 
 ## Risks
 
@@ -215,18 +228,23 @@ Analytics may inherit some of the current structural problems in the first cutov
 - `studio/app/server/studio/studio_app_server.py`
 - `studio/app/server/studio/studio_app_config.py`
 - `studio/app/server/studio/studio_app_views.py`
-- `studio/app/server/studio/studio_analytics_api.py`
-- `studio/app/server/studio/studio_data_sharing_api.py`
+- `analytics-app/app/server/analytics_app/analytics_app_server.py`
+- `analytics-app/app/server/analytics_app/analytics_app_config.py`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
+- `analytics-app/app/server/analytics_app/analytics_api.py`
+- `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
 - `studio/services/analytics/`
 - `data-sharing/`
 - `ui-catalogue-app/`
+- `bin/local-analytics`
 - `bin/local-ui-catalogue`
+- `bin/local-all`
 - `studio/retired/thumbnail-quality/thumbnail-quality.js`
 - `studio/retired/thumbnail-quality/build_thumbnail_quality_preview.py`
-- `studio/app/frontend/js/tag-*.js`
-- `studio/app/frontend/js/series-tag*.js`
-- `studio/app/frontend/js/data-sharing-*.js`
-- `studio/app/frontend/config/ui-text/tag-*.json`
-- `studio/app/frontend/config/ui-text/series-tags.json`
-- `studio/app/frontend/config/ui-text/series-tag-editor.json`
-- `studio/app/frontend/config/ui-text/data-sharing-*.json`
+- `analytics-app/app/frontend/js/tag-*.js`
+- `analytics-app/app/frontend/js/series-tag*.js`
+- `analytics-app/app/frontend/js/data-sharing-*.js`
+- `analytics-app/app/frontend/config/ui-text/tag-*.json`
+- `analytics-app/app/frontend/config/ui-text/series-tags.json`
+- `analytics-app/app/frontend/config/ui-text/series-tag-editor.json`
+- `analytics-app/app/frontend/config/ui-text/data-sharing-*.json`

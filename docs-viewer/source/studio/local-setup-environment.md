@@ -2,7 +2,7 @@
 doc_id: local-setup-environment
 title: Local Setup Environment
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-30
 parent_id: local-setup
 ---
 # Local Setup Environment
@@ -30,7 +30,7 @@ export R2_BUCKET="..."
 export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
 ```
 
-Local repo scripts, `bin/local-studio`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
+Local repo scripts, `bin/local-studio`, `bin/local-analytics`, `bin/local-ui-catalogue`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
 Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
@@ -38,6 +38,16 @@ What the shared variables mean:
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
 - `DOCS_STARTUP_REBUILD_SCOPES`: optional `bin/local-studio` startup docs/docs-search rebuild scopes; keep it blank as an explicit reminder that startup rebuilds are off
+
+Common local app runner variables:
+
+- `STUDIO_APP_HOST`, `STUDIO_APP_PORT`, `STUDIO_APP_ACCESS_LOG`
+- `ANALYTICS_APP_HOST`, `ANALYTICS_APP_PORT`, `ANALYTICS_APP_ACCESS_LOG`
+- `UI_CATALOGUE_APP_HOST`, `UI_CATALOGUE_APP_PORT`, `UI_CATALOGUE_APP_ACCESS_LOG`
+- `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`
+- `PUBLIC_SITE_HOST`, `PUBLIC_SITE_PORT`, `PUBLIC_SITE_CONFIG`, `PUBLIC_SITE_LIVERELOAD`
+
+`bin/local-all` also reads `STUDIO_APP_ENABLED`, `ANALYTICS_APP_ENABLED`, and `UI_CATALOGUE_APP_ENABLED` so a full-stack session can skip one of the local app children without changing the independent runners.
 
 Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 
@@ -84,7 +94,7 @@ Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands,
 
 - Run project commands from `dotlineform-site/`.
 - Prefer the project-local script form: `./scripts/...`.
-- canonical catalogue metadata now lives under `assets/studio/data/catalogue/`.
+- canonical catalogue metadata now lives under `studio/data/canonical/catalogue/`.
 - `data/works_bulk_import.xlsx` is only used for the separate bulk-import workflow for new works and new work details.
 - Shared env var names and media subpaths are defined in `_data/pipeline.json`.
 - The pipeline currently generates primary image variants at `800`, `1200`, and `1600` widths.
@@ -100,6 +110,9 @@ Common commands:
 $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
 $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
-python3 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
+$HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 bin/local-studio
+bin/local-analytics
+bin/local-ui-catalogue
+docs-viewer/bin/docs-viewer
 ```

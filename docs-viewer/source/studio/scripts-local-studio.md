@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-05-25
+last_updated: 2026-05-30
 parent_id: servers
 ---
 # Local Runners
@@ -12,6 +12,8 @@ Scripts:
 ```bash
 bin/local-all
 bin/local-studio
+bin/local-analytics
+bin/local-ui-catalogue
 bin/public-site-preview
 bin/public-site-build
 docs-viewer/bin/docs-viewer
@@ -19,18 +21,23 @@ docs-viewer/bin/docs-viewer
 
 ## Purpose
 
-Local Studio, public Jekyll preview, and Docs Viewer have separate launcher commands.
-`bin/local-studio` starts the Local Studio app, Studio APIs, the docs live rebuild watcher, and optional startup maintenance tasks.
+Local Studio, Local Analytics, UI Catalogue, public Jekyll preview, and Docs Viewer have separate launcher commands.
+`bin/local-studio` starts the Local Studio app, Studio catalogue/audit/activity/admin APIs, the docs live rebuild watcher, and optional startup maintenance tasks.
 The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
-`bin/local-studio` does not start the Docs Viewer web service and no longer serves `/docs/`.
+`bin/local-studio` does not start the Docs Viewer web service, Local Analytics, UI Catalogue, or Jekyll preview.
+It no longer serves `/docs/`, `/analytics/`, or `/ui-catalogue/`.
+`bin/local-analytics` starts the standalone Local Analytics app for tag and Data Sharing routes/APIs.
+`bin/local-ui-catalogue` starts the standalone UI Catalogue demo app.
 `docs-viewer/bin/docs-viewer` starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
 `bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
-`bin/local-all` is the optional host-owned orchestration runner for starting Live Preview, Local Studio, and the Docs Viewer web service together.
+`bin/local-all` is the optional host-owned orchestration runner for starting public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and the Docs Viewer web service together.
 
 The old combined bridge command has been retired.
 Do not use a combined Studio-plus-Jekyll runner for normal single-service work.
 Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal when Studio links need a live public-site preview host.
-Run `bin/local-all` when a local session needs all three services supervised together.
+Run `bin/local-analytics` when working only on Analytics or Data Sharing.
+Run `bin/local-ui-catalogue` when working only on UI Catalogue demos.
+Run `bin/local-all` when a local session needs the sibling services supervised together.
 
 ## Explicit Commands
 
@@ -40,7 +47,7 @@ Run from `dotlineform-site/`:
 bin/local-all
 ```
 
-This starts public-site Live Preview, Local Studio, and the Docs Viewer web service as sibling child processes.
+This starts public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and the Docs Viewer web service as sibling child processes.
 Each underlying service can still be started independently with its own command.
 
 ```bash
@@ -48,6 +55,18 @@ bin/local-studio
 ```
 
 This starts the local Studio app without Jekyll.
+
+```bash
+bin/local-analytics
+```
+
+This starts the Local Analytics app without Studio, Jekyll, UI Catalogue, or Docs Viewer.
+
+```bash
+bin/local-ui-catalogue
+```
+
+This starts the UI Catalogue demo app without Studio, Analytics, Jekyll, or Docs Viewer.
 
 For public-site preview, run:
 
@@ -75,7 +94,7 @@ Each command:
 - otherwise falls back to the corresponding executable on `PATH`
 
 `bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
-`bin/local-studio` does not start Jekyll.
+`bin/local-studio` does not start Jekyll, Local Analytics, UI Catalogue, or Docs Viewer.
 Start the Docs Viewer web service separately with:
 
 ```bash
@@ -99,6 +118,26 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `STUDIO_APP_ACCESS_LOG`
   default: `0`
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Studio app request
+- `ANALYTICS_APP_ENABLED`
+  default: `1`
+  used by `bin/local-all`; set to `0` to skip the Local Analytics child process
+- `ANALYTICS_APP_HOST`
+  default: `127.0.0.1`
+- `ANALYTICS_APP_PORT`
+  default: `8766`
+- `ANALYTICS_APP_ACCESS_LOG`
+  default: `0`
+  set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Analytics app request
+- `UI_CATALOGUE_APP_ENABLED`
+  default: `1`
+  used by `bin/local-all`; set to `0` to skip the UI Catalogue child process
+- `UI_CATALOGUE_APP_HOST`
+  default: `127.0.0.1`
+- `UI_CATALOGUE_APP_PORT`
+  default: `8767`
+- `UI_CATALOGUE_APP_ACCESS_LOG`
+  default: `0`
+  set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each UI Catalogue app request
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: configured docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`, or comma-separated combinations
@@ -147,6 +186,10 @@ export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export STUDIO_APP_PORT=8765
 export STUDIO_APP_ACCESS_LOG=0
+export ANALYTICS_APP_PORT=8766
+export ANALYTICS_APP_ACCESS_LOG=0
+export UI_CATALOGUE_APP_PORT=8767
+export UI_CATALOGUE_APP_ACCESS_LOG=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
@@ -155,7 +198,7 @@ Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid remi
 To run a startup rebuild locally, edit that value to a configured docs scope id such as `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
 
 Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
-Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the local Studio app starts.
+Set it to `1`, `on`, `true`, or `yes` when startup should refresh `studio/data/generated/catalogue-lookup/` before the local Studio app starts.
 
 The runner reads valid docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`.
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing the runner.
@@ -164,16 +207,18 @@ Adding a new docs scope there makes it eligible for startup docs/docs-search reb
 
 ### Start All
 
-Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, and Docs Viewer web service host/port settings, and checks that those ports are both distinct and available.
+Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, Local Analytics, UI Catalogue, and Docs Viewer web service host/port settings, and checks that enabled service ports are both distinct and available.
 If a configured port is unavailable or two services are configured for the same binding, the runner exits before starting any service.
 
 After preflight, `bin/local-all` starts:
 
 1. `bin/public-site-preview`
 2. `bin/local-studio`
-3. `docs-viewer/bin/docs-viewer`
+3. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
+4. `bin/local-ui-catalogue` when `UI_CATALOGUE_APP_ENABLED` is not `0`
+5. `docs-viewer/bin/docs-viewer`
 
-The runner prints the public-site preview, Local Studio app, and Docs Viewer web service URLs.
+The runner prints the public-site preview, Local Studio app, Local Analytics app, UI Catalogue app, and Docs Viewer web service URLs.
 If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
 
 ### Local Studio
@@ -197,7 +242,7 @@ The local Studio app catalogue API refreshes derived lookup payloads after catal
 
 If `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, startup also updates:
 
-- derived catalogue lookup JSON under `assets/studio/data/catalogue_lookup/`
+- derived catalogue lookup JSON under `studio/data/generated/catalogue-lookup/`
 
 By default it also prunes local Studio backup files under `var/studio/backups/` and `var/studio/catalogue/backups/`.
 Backup retention keeps the newest backups per target file; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention).
@@ -222,8 +267,8 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 - default URL: `http://127.0.0.1:8765/studio/`
 
 - serves Local Studio views outside Jekyll
-- mounts `/studio/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local Analytics APIs, local audit APIs, and local catalogue APIs
-- does not serve `/docs/`, `/docs-viewer/...` assets, Docs Viewer generated reads, Docs Viewer management APIs, or Docs data-sharing document APIs
+- mounts `/studio/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local audit APIs, and local catalogue APIs
+- does not serve `/analytics/`, `/analytics/api/...`, `/docs/`, `/docs-viewer/...` assets, Docs Viewer generated reads, Docs Viewer management APIs, `/ui-catalogue/...`, or Data Sharing APIs
 - links to Docs Viewer manage mode through the configured Docs Viewer web service URL
 - can be disabled with `STUDIO_APP_ENABLED=0`
 - access logging is quiet by default; set `STUDIO_APP_ACCESS_LOG=1` or pass `--access-log` to the app server for detailed request logging
@@ -262,6 +307,49 @@ bundle exec jekyll build --config "$PUBLIC_SITE_CONFIG"
 ```
 
 Both public-site commands use `_config.yml` by default and do not start local Studio services.
+
+### Local Analytics App
+
+Explicit Local Analytics command:
+
+```bash
+bin/local-analytics
+```
+
+It runs:
+
+```bash
+$HOME/miniconda3/bin/python3 analytics-app/app/server/analytics_app/analytics_app_server.py --host "$ANALYTICS_APP_HOST" --port "$ANALYTICS_APP_PORT"
+```
+
+- default URL: `http://127.0.0.1:8766/analytics/`
+- owns Analytics tag routes under `/analytics/...`
+- owns Analytics tag APIs under `/analytics/api/...`
+- owns Data Sharing routes under `/analytics/data-sharing/...`
+- owns Data Sharing APIs under `/analytics/api/data-sharing/...`
+- uses `ANALYTICS_APP_HOST`, `ANALYTICS_APP_PORT`, and `ANALYTICS_APP_ACCESS_LOG`
+- stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
+- intentionally does not provide compatibility aliases for old `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths
+
+### UI Catalogue App
+
+Explicit UI Catalogue command:
+
+```bash
+bin/local-ui-catalogue
+```
+
+It runs:
+
+```bash
+$HOME/miniconda3/bin/python3 ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_server.py --host "$UI_CATALOGUE_APP_HOST" --port "$UI_CATALOGUE_APP_PORT"
+```
+
+- default URL: `http://127.0.0.1:8767/ui-catalogue/demos/`
+- owns isolated UI Catalogue demo pages and assets under `/ui-catalogue/...`
+- uses `UI_CATALOGUE_APP_HOST`, `UI_CATALOGUE_APP_PORT`, and `UI_CATALOGUE_APP_ACCESS_LOG`
+- stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
+- intentionally does not provide compatibility aliases for old `/studio/ui-catalogue/...` paths
 
 ### Docs Viewer Web Service
 
@@ -326,19 +414,21 @@ At startup the runner prints quick links for:
 
 - Start All service URLs when `bin/local-all` is used
 - Local Studio App
+- Local Analytics App
+- UI Catalogue App
 - local API ownership
 - startup docs rebuild scopes
 - startup catalogue lookup rebuild status
 - Docs Live Watcher status
 - Backup retention status
-- Series Tag Editor:
-  - `http://127.0.0.1:8765/studio/analytics/series-tag-editor/?series=<series_id>`
+- Series Tag Editor in Local Analytics:
+  - `http://127.0.0.1:8766/analytics/series-tag-editor/?series=<series_id>`
 
 ## Shutdown Behavior
 
 `bin/local-all` and `bin/local-studio` both trap `EXIT`, `INT`, and `TERM`.
 
-When you press `Ctrl+C`, `bin/local-all` stops the public-site preview, Local Studio runner, and Docs Viewer service before exiting.
+When you press `Ctrl+C`, `bin/local-all` stops the public-site preview, Local Studio runner, Local Analytics runner, UI Catalogue runner, and Docs Viewer service before exiting.
 
 When you press `Ctrl+C` in `bin/local-studio`, it:
 
@@ -354,8 +444,11 @@ If either `bin/local-studio` child process exits unexpectedly, that runner stops
 `bin/local-studio` does not currently:
 
 - start Jekyll
+- start Local Analytics
+- start UI Catalogue
 - start the Docs Viewer web service
 - serve `/docs/` or Docs Viewer management APIs
+- serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
 - run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled

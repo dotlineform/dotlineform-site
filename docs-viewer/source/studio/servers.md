@@ -2,12 +2,12 @@
 doc_id: servers
 title: Servers
 added_date: 2026-04-17
-last_updated: "2026-05-06 20:58"
+last_updated: 2026-05-30
 parent_id: ""
 ---
 # Servers
 
-This section documents local server processes used by Studio and build tooling.
+This section documents local server processes used by Studio, Analytics, Docs Viewer, UI Catalogue, public preview, and build tooling.
 
 Use this section for:
 
@@ -24,5 +24,9 @@ Read this section in this order:
 
 Current local server scripts:
 
-- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for Studio shell, Docs management, and Analytics tag APIs
+- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the Studio shell, catalogue APIs, audit APIs, activity/admin pages, and Studio operational routes
+- `bin/local-analytics` for Analytics tag routes/APIs and Data Sharing routes/APIs
+- `bin/local-ui-catalogue` for isolated UI Catalogue demos
+- `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode, generated reads, and docs management APIs
+- `bin/public-site-preview` for optional public Jekyll preview
 - **[Catalogue Write Services](/docs/?scope=studio&doc=scripts-catalogue-write-server)** for catalogue API service modules hosted by the Local Studio app

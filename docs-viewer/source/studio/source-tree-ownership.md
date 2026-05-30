@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-05-25
+last_updated: 2026-05-30
 parent_id: architecture
 viewable: true
 ---
@@ -12,15 +12,19 @@ This document is the maintained source-tree ownership contract after the Studio 
 
 ## Core Boundary
 
-Studio is the same-repo authoring and maintenance system for the site.
+Studio is the same-repo catalogue authoring and maintenance system for the site.
 It lives under `studio/`.
+Analytics, Docs Viewer, and UI Catalogue are separate local app boundaries in the same repository.
 
 The public Jekyll site remains the publishing surface.
 It lives outside `studio/` and should contain only public publishing source, public runtime files, public assets, and generated public output needed by GitHub Pages/Jekyll.
 
 The repo is intentionally one repository:
 
-- Studio owns canonical source, authoring workflows, local services, app UI, checks, tests, and developer commands.
+- Studio owns catalogue source, catalogue authoring workflows, Studio operational routes, Studio local services, app UI, checks, tests, and developer commands.
+- Analytics owns tag maintenance, Data Sharing route/API workflows, semantic-reference maintenance, and future analysis/visualisation workflows.
+- Docs Viewer owns docs viewing, docs source management, Docs Viewer payloads, docs conversion helpers, and the `/docs/` manage-mode service.
+- UI Catalogue owns isolated UI demos and reference assets outside Local Studio.
 - Jekyll owns public layouts, includes, route pages, public route JavaScript/CSS, public media, and generated public runtime payloads.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
 - Local working output, backups, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
@@ -34,18 +38,49 @@ The current Studio-owned source homes are:
 | `studio/app/server/` | Local Studio app server, API adapters, route views, runtime config projection, and local HTTP dispatch. |
 | `studio/app/frontend/` | Studio browser modules, route modules, shell helpers, UI text config, and Studio runtime config source. |
 | `studio/app/assets/` | Studio-only CSS and visual assets used by Local Studio routes. |
-| `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, analytics/tag data, and media-adjacent source records. |
-| `studio/data/config/` | Studio-owned checked-in config, including catalogue, data-sharing, and runtime data contracts. |
-| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup, activity, and thumbnail-quality preview data. |
-| `studio/services/` | Domain services for catalogue, analytics, media, data-sharing, generation, validation, mutation, publication, import/export, and preview/apply workflows. |
+| `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, media-adjacent source records, and the current Analytics-owned tag data under `studio/data/canonical/analytics/`. |
+| `studio/data/config/` | Studio-owned checked-in config, including catalogue and Studio runtime data contracts. |
+| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Retired thumbnail-quality preview output is not an active served contract. |
+| `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
 | `studio/shared/` | Shared Python/Ruby helpers used by Studio-owned commands and services. |
 | `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, and other verification checks. |
 | `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
 | `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
-| `ui-catalogue-app/` | UI Catalogue demos, notes, fixtures, and assets. |
+| `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
 | `studio/workflows/change-requests/` | Structured change-request workflow source, docs-log source entries, generated workflow projections, reports, and helper services. |
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
+
+## Analytics App
+
+Analytics is the local app boundary for tag and Data Sharing workflows.
+
+Current Analytics-owned source homes:
+
+| Path | Owner / role |
+| --- | --- |
+| `analytics-app/app/server/analytics_app/` | Local Analytics app server, Analytics route views, runtime config projection, static serving, tag API dispatch, and Data Sharing API dispatch. |
+| `analytics-app/app/frontend/` | Analytics browser modules, route modules, shell helpers, UI text config, and Analytics runtime config source. |
+| `analytics-app/app/assets/` | Analytics-only CSS and static assets used by Local Analytics routes. |
+| `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |
+| `studio/data/canonical/analytics/` | Current canonical tag registry, alias, assignment, and group source data used by Analytics. The path is intentionally preserved for this split; it is not a Studio route/API ownership claim. |
+| `studio/services/analytics/` | Current tag-domain helper modules for validation, planning, dry-run/write transactions, backups, and compact logging used by Analytics. |
+| `data-sharing/` | Headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters used by Analytics. |
+| `var/studio/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. The path is intentionally preserved as a local artifact contract. |
+
+Analytics routes and APIs live under `/analytics/...` and `/analytics/api/...`.
+Do not add aliases, proxies, dual-read paths, or static-serving shims for retired `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths.
+
+## UI Catalogue
+
+UI Catalogue is an isolated local demo system, not a Local Studio route family.
+
+| Path | Owner / role |
+| --- | --- |
+| `ui-catalogue-app/` | UI Catalogue demo source, demo app server, CSS, JavaScript helpers, reference assets, fixtures, and tests. |
+
+The active demo route namespace is `/ui-catalogue/demos/...`.
+Retired Studio-hosted UI Catalogue routes should not be recreated.
 
 ## Docs Viewer
 
