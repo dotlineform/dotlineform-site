@@ -3,7 +3,7 @@ doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
 last_updated: "2026-05-30 22:40"
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,14 +11,15 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 - The first implementation tracker is [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1).
 - The second implementation tracker is [Studio JavaScript App Shell Slice 2 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-2).
 - The third implementation tracker is [Studio JavaScript App Shell Slice 3 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-3).
 - The fourth implementation tracker is [Studio JavaScript App Shell Slice 4 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-4).
 - The fifth implementation tracker is [Studio JavaScript App Shell Slice 5 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-5).
+- The sixth implementation tracker is [Studio JavaScript App Shell Slice 6 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-6).
 - Slice 5 migrated the catalogue editor family. All configured Studio-local routes now use the JavaScript app shell; the remaining `docs` view is an external Docs Viewer link.
-- Slice 6 remains as a cleanup/documentation slice for retired shell-rendering ownership and inventory follow-through.
+- Slice 6 retired the obsolete Python route-shell contract and completed the source ownership and inventory follow-through.
 
 ## Summary
 
@@ -290,7 +291,7 @@ The first slice is successful when the repo has a tested route-registry and shel
 
 - Route metadata lives under `app.routes`; `app.runtime.views` is a derived runtime view list for existing helpers and tests.
 - Early migrated routes may keep side-effect boot. A standard `mount(root, config, context)` export is deferred until side-effect boot creates ordering or test isolation friction.
-- Initial shell types are `external`, `python`, and `javascript`. More specific shell variants should wait until multiple route families prove a need.
+- Active shell types are `external` and `javascript`. More specific shell variants should wait until multiple route families prove a need.
 - Route metadata is config-driven; route body markup belongs in route-local browser modules rather than config.
 - Project State proved the first low-risk route migration without forcing a framework decision.
 - Audits, Activity, and Bulk Add Work fit the same browser-shell pattern without forcing a framework decision.

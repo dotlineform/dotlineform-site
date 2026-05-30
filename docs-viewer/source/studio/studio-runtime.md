@@ -18,8 +18,7 @@ Legacy Jekyll-hosted Studio pages use:
 - `_layouts/studio.html`
 
 The local Studio app server owns active Studio route URLs directly.
-For Python-shell local app routes, `studio/app/server/studio/studio_app_views.py` renders the route-specific shell.
-For JavaScript-shell local app routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
+For active JavaScript-shell local app routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
 `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
@@ -74,8 +73,7 @@ Each registered route uses these fields:
 Current shell types are:
 
 - `external` for configured peer routes such as Docs Viewer
-- `python` for active Studio routes whose route-specific shell HTML is still rendered by Python
-- `javascript` for future routes rendered by the browser shell
+- `javascript` for active Studio routes rendered by the browser shell
 
 `studio/app/server/studio/studio_app_config.py` validates the registry before exposing runtime config.
 Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, missing `doc_id` values, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
@@ -88,7 +86,7 @@ It resolves the active route from `window.location.pathname`, normalizes route f
 
 `studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
 For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title/doc-link shell, asks the route-local body renderer for markup, and then imports the configured route script.
-Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, and Studio Works use this path.
+Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Studio Works, and the Catalogue editor family use this path.
 Their body markup lives in route-local `*-shell.js` modules, and their existing controllers stay in the configured route scripts.
 
 ## Studio Pages
@@ -120,57 +118,22 @@ Current page-level doc links:
 
 Shared Studio runtime and wiring currently live in:
 
-- `assets/studio/js/studio-config.js`
+- `studio/app/frontend/js/studio-config.js`
   loads the configured runtime URL from `meta[name="dlf-studio-config-url"]`, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state. Local Studio views use `/studio/runtime-config.json`, which the app server builds from checked-in Studio config plus local runtime endpoints.
-- `assets/studio/js/studio-data.js`
+- `studio/app/frontend/js/studio-app.js`
+  owns the browser-rendered Studio shell, route body renderer lookup, Docs Viewer page links, and route script import for active Studio-local routes
+- `studio/app/frontend/js/studio-navigation.js`
+  resolves local Studio route URLs, external Docs Viewer links, public preview links, and modal event dispatch
+- `studio/app/frontend/js/studio-data.js`
   provides shared JSON loading and common shaping helpers for Studio pages
-- `assets/studio/js/studio-transport.js`
+- `studio/app/frontend/js/studio-transport.js`
   provides local-write endpoint definitions, health probing, and shared JSON POST transport
-- `assets/studio/js/studio-route-state.js`
+- `studio/app/frontend/js/studio-route-state.js`
   provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
-- `assets/studio/js/studio-audits.js`
-  powers `/studio/audits/` by probing the local app audit API, listing allowlisted audits, running selected audits, and rendering structured findings
-- `assets/studio/js/docs-rebuild-button.js`
-  wires the docs rebuild action beside the Studio docs search input
-- `assets/studio/js/catalogue-work-fields.js`
-  provides shared work-editor field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers for work create/edit surfaces
-- `assets/studio/js/catalogue-work-form.js`
-  provides Catalogue Work Editor route-local form rendering, series picker behavior, field value synchronization, field availability, and field validation message rendering
-- `assets/studio/js/catalogue-work-sections.js`
-  provides Catalogue Work Editor route-local rendering for the current-record preview, readiness panel, detail sections, work-owned file/link sections, and summary rail
-- `assets/studio/js/catalogue-work-actions.js`
-  provides Catalogue Work Editor route-local save, create, build-preview, build, prose import, publication, media-refresh, and delete workflow orchestration
-- `assets/studio/js/catalogue-work-selection.js`
-  provides Catalogue Work Editor route-local work-id parsing, search matching, suggestion rendering, selection control binding, initial URL selection, and selected-record opening orchestration
-- `assets/studio/js/catalogue-series-fields.js`
-  provides Catalogue Series Editor route-local field definitions, id normalization, draft shaping, payload shaping, and validation
-- `assets/studio/js/catalogue-series-membership.js`
-  provides Catalogue Series Editor route-local member-list state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, member row/list rendering, and add/remove/make-primary mutations
-- `assets/studio/js/catalogue-moment-fields.js`
-  provides Catalogue Moment Editor route-local field definitions, id/filename normalization, draft shaping, source-record payload shaping, and validation
-- `assets/studio/js/catalogue-moment-actions.js`
-  provides Catalogue Moment Editor route-local save, build-preview, publication, delete, staged prose import, media refresh, public-update outcome, confirmation, and activity-context workflow sequencing
-- `assets/studio/js/catalogue-moment-selection.js`
-  provides Catalogue Moment Editor route-local search matching, suggestion rendering, selection control binding, Open button resolution, and initial route selection
-- `assets/studio/js/catalogue-moment-form.js`
-  provides Catalogue Moment Editor route-local field DOM construction, field value reads/writes, readonly value display, and validation message rendering
-- `assets/studio/js/catalogue-moment-sections.js`
-  provides Catalogue Moment Editor route-local normal edit summary rendering, readiness rendering, and build-impact text rendering
-- `assets/studio/js/catalogue-moment-import.js`
-  provides Catalogue Moment Editor route-local staged-file URL state, import metadata reads, preview seeding, import preview/apply sequencing, import detail rendering, and import control state
-
-Current page controllers:
-
-- `assets/studio/js/activity-log.js`
-- `assets/studio/js/studio-audits.js`
-- `docs-viewer/runtime/js/docs-html-import.js`
-- `assets/studio/js/bulk-add-work.js`
-- `assets/studio/js/catalogue-moment-editor.js`
-- `assets/studio/js/catalogue-status.js`
-- `assets/studio/js/catalogue-work-editor.js`
-- `assets/studio/js/catalogue-work-detail-editor.js`
-- `assets/studio/js/catalogue-series-editor.js`
-- `assets/studio/js/studio-works.js`
+- `studio/app/frontend/js/*-shell.js`
+  own static route body markup for the JavaScript shell before the existing side-effect route controllers boot
+- `studio/app/frontend/js/catalogue-*-editor.js` and focused sibling modules
+  own catalogue editor route orchestration, forms, selection flows, modals, actions, and section rendering
 
 Analytics and Data Sharing route controllers now live under `analytics-app/app/frontend/js/` and are served by the standalone Local Analytics app.
 
@@ -178,7 +141,7 @@ Retired catalogue create routes:
 
 - `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are no longer published Studio pages.
 - The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
-- Active create behavior now lives in `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `assets/studio/js/catalogue-series-editor.js`.
+- Active create behavior now lives in `studio/app/frontend/js/catalogue-work-editor.js`, `studio/app/frontend/js/catalogue-work-detail-editor.js`, and `studio/app/frontend/js/catalogue-series-editor.js`.
 
 Studio controller splits that are already live:
 
@@ -220,9 +183,9 @@ Optional route detail attributes:
 - `data-studio-service`
 - `data-studio-record-loaded`
 
-`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The current route inventory and implementation rules are documented in [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state).
+`studio/app/frontend/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The current route inventory and implementation rules are documented in [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state).
 
-Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
+Static landing and reference routes use `studio/app/frontend/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
 
 ## Relation to `/docs/`
 

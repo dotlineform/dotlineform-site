@@ -19,7 +19,7 @@ if str(REPO_ROOT) not in sys.path:
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
-from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view, studio_home_view, studio_route_view  # noqa: E402
+from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view, studio_home_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
@@ -59,6 +59,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["catalogue_work_detail_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_moment_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
+    assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "docs_page" not in payload["paths"]["routes"]
     assert "docs_html_import" not in payload["paths"]["routes"]
@@ -177,7 +178,7 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "script": "/studio/app/frontend/js/project-state.js",
         "doc_id": "project-state-page",
         "nav": False,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "obsolete",
     }
     with pytest.raises(RuntimeError, match="obsolete_route: no current Studio route serves this shell route"):
@@ -261,7 +262,6 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_app_bootstrap_view("test-version"),
         studio_home_view("test-version"),
-        studio_route_view("test-version", "studio_audits", "<p>Studio audits</p>"),
     ]
 
     for shell in html_shells:

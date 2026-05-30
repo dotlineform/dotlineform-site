@@ -17,7 +17,7 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "ready_state_route_id",
 )
 
-STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("python", "javascript"))
+STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("javascript",))
 STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES | frozenset(("external",))
 
 STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {

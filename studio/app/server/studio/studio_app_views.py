@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import html
-import json
 from pathlib import Path
 
 try:
@@ -121,53 +120,6 @@ def studio_home_column_links() -> str:
     return "\n          ".join(columns)
 
 
-def studio_route_view(version: str, view_id: str, body_html: str) -> str:
-    view = studio_views(REPO_ROOT)[view_id]
-    escaped_version = html.escape(version, quote=True)
-    escaped_view_id = html.escape(view_id, quote=True)
-    title = html.escape(view["title"])
-    script = html.escape(view["script"], quote=True)
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="dlf-asset-version" content="{escaped_version}">
-  <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
-  <title>{title} | dotlineform Studio</title>
-  {studio_theme_boot_script()}
-  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
-</head>
-<body class="studio-local-app">
-  {studio_header(view_id)}
-  <main class="container">
-    <div class="studio">
-      <div class="studio__headerRow">
-        <h2>{title}</h2>
-        <a
-          class="studioLayout__docLink"
-          href="/docs/"
-          data-studio-doc-view="{escaped_view_id}"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Open Studio page implementation notes"
-          aria-label="Open Studio page implementation notes"
-        >
-          <em>i</em>
-        </a>
-      </div>
-      <div class="studio__content">
-        {body_html}
-      </div>
-    </div>
-  </main>
-  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
-  <script type="module" src="{script}?v={escaped_version}"></script>
-</body>
-</html>
-"""
-
-
 def studio_app_bootstrap_view(version: str) -> str:
     escaped_version = html.escape(version, quote=True)
     return f"""<!doctype html>
@@ -187,15 +139,6 @@ def studio_app_bootstrap_view(version: str) -> str:
 </body>
 </html>
 """
-
-
-def load_pipeline(repo_root: Path) -> dict[str, object]:
-    path = repo_root / "_data" / "pipeline.json"
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return payload if isinstance(payload, dict) else {}
 
 
 def studio_home_view(version: str) -> str:

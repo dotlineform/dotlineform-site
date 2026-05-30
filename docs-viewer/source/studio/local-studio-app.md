@@ -126,8 +126,10 @@ The Python-rendered Studio Works body has been retired.
 The old Jekyll `/studio/studio-works/` shell has been retired.
 Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
+They are rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, route-local editor `*-shell.js` modules render the body markup, and the existing editor controllers keep the route boot and behavior.
+The editor shell media attributes are projected in the browser from `app.runtime.media` and `app.runtime.pipeline`.
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
-The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
+The old Jekyll shells and Python-rendered bodies for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
 The local app adapter routes editor save, bulk save, build, publication, delete, prose import, and moment import flows through focused catalogue service modules.
 `bin/local-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
 The local app is the only active Studio home surface.

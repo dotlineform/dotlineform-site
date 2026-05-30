@@ -19,6 +19,7 @@ Split refresh status:
 - active UI Catalogue demo modules now live under `ui-catalogue-app/app/assets/js/`
 - task 12 refreshed the table paths for the post-split app roots and moved Analytics tag/Data Sharing rows to their current `analytics-app/app/frontend/js/` owners
 - risk scores are carried forward from the current scored rows after the split cleanup; use the app-root path, family, and focus note as the ownership signal for future work
+- Slice 6 of the Studio JavaScript app shell work refreshed the active Studio module count, added the static shell/registry rows that were introduced during shell migration, and confirmed all configured Studio-local routes now use the JavaScript shell.
 
 Rescored on 2026-05-21 from the current filesystem inventory.
 Category scores may range from 0 to 3 under the current policy.
@@ -28,7 +29,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 ## Summary
 
 - Current local Analytics browser modules under `analytics-app/app/frontend/js/`: 58 files, 16,488 lines.
-- Current local Studio browser modules under `studio/app/frontend/js/`: 70 files, 16,642 lines.
+- Current local Studio browser modules under `studio/app/frontend/js/`: 84 files, 17,773 lines.
 - The table still includes public runtime, Docs Viewer runtime, UI Catalogue, and retired reference rows that are outside those two local app roots.
 - Files above target score 4, excluding `docs-viewer/runtime/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
@@ -40,7 +41,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 7 | 0 |
 | 6 | 17 |
 | 5 | 37 |
-| 4 | 115 |
+| 4 | 134 |
 
 ## Current Inventory
 
@@ -214,6 +215,25 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 168 | `studio/app/frontend/js/bulk-add-work-workflow.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Bulk Add Work preview/apply workflow owner for summary rendering, blocked-row details, run-state projection, and status/result shaping. |
 | 169 | `analytics-app/app/frontend/js/data-sharing-review-workflow.js` | Analytics Data Sharing | 1 | 1 | 1 | 1 | 4 | Data Sharing review workflow owner for scope/action normalization, apply-action menu state, selected preview state, control disabled projection, and result-button visibility. |
 | 170 | `assets/js/search/catalogue-search-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue search runtime owner for entry normalization, query matching, result ordering, result HTML projection, cache reuse, and query metric projection. |
+| 171 | `studio/app/frontend/js/studio-app.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Browser-owned Studio app shell for route resolution, common chrome, Docs Viewer links, route body renderer lookup, and side-effect controller import. |
+| 172 | `studio/app/frontend/js/studio-route-registry.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio route registry normalizer and shell contract helper; active local shell route type is JavaScript. |
+| 173 | `studio/app/frontend/js/studio-navigation.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio route/public-link/navigation helper for local Studio routes, Docs Viewer links, public preview links, and modal event dispatch. |
+| 174 | `studio/app/frontend/js/studio-theme.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio theme toggle helper shared by the home/bootstrap and JavaScript app shell. |
+| 175 | `studio/app/frontend/js/studio-save-utils.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Shared save/status helpers used by Studio route modules. |
+| 176 | `studio/app/frontend/js/catalogue-public-links.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Catalogue editor public-link resolver wrapper over Studio navigation helpers. |
+| 177 | `studio/app/frontend/js/activity-log-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Activity route before the side-effect controller boots. |
+| 178 | `studio/app/frontend/js/bulk-add-work-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Bulk Add Work route before the side-effect controller boots. |
+| 179 | `studio/app/frontend/js/project-state-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Project State route before the side-effect controller boots. |
+| 180 | `studio/app/frontend/js/studio-audits-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Studio Audits route before the side-effect controller boots. |
+| 181 | `studio/app/frontend/js/catalogue-field-registry-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Catalogue Field Registry route before the side-effect controller boots. |
+| 182 | `studio/app/frontend/js/catalogue-status-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Catalogue Drafts route before the side-effect controller boots. |
+| 183 | `studio/app/frontend/js/studio-works-shell.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Studio Works route before the side-effect controller boots. |
+| 184 | `studio/app/frontend/js/catalogue-editor-shell-media.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Catalogue editor shell media attribute projection helper backed by Studio runtime media and pipeline config. |
+| 185 | `studio/app/frontend/js/catalogue-work-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Work editor before the side-effect controller boots. |
+| 186 | `studio/app/frontend/js/catalogue-work-detail-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Work Detail editor before the side-effect controller boots. |
+| 187 | `studio/app/frontend/js/catalogue-series-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Series editor before the side-effect controller boots. |
+| 188 | `studio/app/frontend/js/catalogue-moment-shell.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Static JavaScript body renderer for the Moment editor before the side-effect controller boots. |
+| 189 | `studio/app/frontend/js/analysis-tag-scoring.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Shared analysis tag scoring helper still served from the Studio app frontend root. |
 
 ## Rerun Notes
 

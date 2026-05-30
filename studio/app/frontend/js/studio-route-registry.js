@@ -3,7 +3,7 @@ import {
   getStudioRouteRegistry
 } from "./studio-config.js";
 
-const SHELL_ROUTE_TYPES = new Set(["python", "javascript"]);
+const SHELL_ROUTE_TYPES = new Set(["javascript"]);
 
 export function listStudioRoutes(config) {
   return Object.entries(getStudioRouteRegistry(config))

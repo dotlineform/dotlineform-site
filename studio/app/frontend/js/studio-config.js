@@ -89,7 +89,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-series-editor.js",
         "doc_id": "catalogue-series-editor",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-series"
       },
       "catalogue_work_editor": {
@@ -99,7 +99,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-work-editor.js",
         "doc_id": "catalogue-work-editor",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-work"
       },
       "catalogue_work_detail_editor": {
@@ -109,7 +109,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-work-detail-editor.js",
         "doc_id": "catalogue-work-detail-editor",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-work-detail"
       },
       "catalogue_moment_editor": {
@@ -119,7 +119,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-moment-editor.js",
         "doc_id": "catalogue-moment-editor",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-moment"
       }
     }

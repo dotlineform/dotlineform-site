@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f8ddbb87a965ab29a6251c62bc561418",
-    "generated_at_utc": "2026-05-30T21:07:14Z",
-    "count": 207
+    "version": "blake2b-0cdcdae5322cd234e36079dc6939e35e",
+    "generated_at_utc": "2026-05-30T21:16:15Z",
+    "count": 208
   },
   "entries": [
     {
@@ -1797,6 +1797,37 @@
         "06"
       ],
       "search_text": "site-request-studio-javascript-app-shell-slice-5 site request studio javascript app shell slice 5 studio javascript app shell slice 5 tasks tasks studio javascript app shell request 2026-05-30 22:06 2026 05 30 22 06"
+    },
+    {
+      "id": "site-request-studio-javascript-app-shell-slice-6",
+      "kind": "doc",
+      "title": "Studio JavaScript App Shell Slice 6 Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-6",
+      "last_updated": "2026-05-30 22:15",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "parent_title": "Studio JavaScript App Shell Request",
+      "display_meta": "2026-05-30 22:15 • Studio JavaScript App Shell Request",
+      "search_terms": [
+        "site-request-studio-javascript-app-shell-slice-6",
+        "site",
+        "request",
+        "studio",
+        "javascript",
+        "app",
+        "shell",
+        "slice",
+        "6",
+        "studio javascript app shell slice 6 tasks",
+        "tasks",
+        "studio javascript app shell request",
+        "2026-05-30 22:15",
+        "2026",
+        "05",
+        "30",
+        "22",
+        "15"
+      ],
+      "search_text": "site-request-studio-javascript-app-shell-slice-6 site request studio javascript app shell slice 6 studio javascript app shell slice 6 tasks tasks studio javascript app shell request 2026-05-30 22:15 2026 05 30 22 15"
     },
     {
       "id": "config",
