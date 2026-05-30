@@ -3,7 +3,7 @@ doc_id: site-request-analytics-app-split
 title: Analytics App Split Request
 added_date: 2026-05-30
 last_updated: 2026-05-30
-ui_status: urgent
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,8 +11,8 @@ viewable: true
 
 Status:
 
-- in progress
-- core split implemented; documentation and final verification remain
+- done
+- clean split implemented, verified, documented, and logged
 
 ## Summary
 
@@ -188,7 +188,7 @@ Analytics may inherit some of the current structural problems in the first cutov
 
 ## Implemented Boundary Snapshot
 
-As of the task 13 documentation slice:
+As of the task 16 close-out:
 
 - Local Studio is started with `bin/local-studio` and owns `/studio/`, catalogue APIs, audit APIs, activity/admin routes, and docs-watcher startup behavior.
 - Local Analytics is started with `bin/local-analytics` and owns `/analytics/...`, `/analytics/api/...`, and `/analytics/api/data-sharing/...`.
@@ -198,6 +198,65 @@ As of the task 13 documentation slice:
 - `bin/local-all` supervises those sibling services together without merging their ownership boundaries.
 - Retired Studio Analytics/Data Sharing paths, Studio UI Catalogue routes, and thumbnail-quality route/API/static mounts have no aliases, redirects, proxies, dual-read/write fallbacks, or static shims.
 - Current preserved data/artifact contracts include `studio/data/canonical/analytics/...` tag source data and `var/studio/data-sharing/...` package/review/backups output.
+
+## Close-Out Summary
+
+Moved active ownership:
+
+- Analytics app server and views: `analytics-app/app/server/analytics_app/`
+- Analytics browser modules, runtime config, and UI text: `analytics-app/app/frontend/`
+- Analytics CSS/static assets: `analytics-app/app/assets/`
+- Analytics tests and smokes: `analytics-app/tests/`
+- UI Catalogue app, source, assets, and smokes: `ui-catalogue-app/`
+- UI Catalogue launcher: `bin/local-ui-catalogue`
+- Local Analytics launcher: `bin/local-analytics`
+- Start-all sibling-service orchestration: `bin/local-all`
+- Thumbnail-quality reference tooling: `studio/retired/thumbnail-quality/`
+
+Retired active Studio routes and endpoints:
+
+- `/studio/analytics/...`
+- `/studio/data-sharing/...`
+- `/studio/api/analytics/...`
+- `/studio/api/data-sharing/...`
+- `/studio/thumbnail-quality/`
+- `POST /studio/api/catalogue/thumbnail-quality-preview`
+- Studio-hosted UI Catalogue routes and static mounts
+
+Verification recorded during the split:
+
+- focused Python and JavaScript syntax/import checks
+- focused Analytics app and Data Sharing pytest
+- focused tag mutation/source/transaction and data-sharing adapter checks
+- full `analytics-smoke`
+- Local Studio navigation/catalogue smoke checks after removing Analytics/Data Sharing/UI Catalogue links
+- standalone `ui-catalogue-smoke`
+- thumbnail-quality absence checks
+- stale-reference scans for retired Studio route/API/static paths
+- `git diff --check`
+
+Generated-payload status:
+
+- source docs were updated as the durable documentation source
+- the local docs watcher regenerated affected `docs-viewer/generated/docs/studio/...` and `docs-viewer/generated/search/studio/index.json` payloads after source edits
+- docs-log generated indexes were rebuilt after structured log entries were written
+- no manual public Jekyll publication step was run as part of this close-out
+
+Remaining risks are self-contained inside the new ownership boundaries rather than deferred split cleanup:
+
+- Analytics still intentionally preserves `tagStudio*` frontend class/function naming from the lift-and-shift
+- canonical tag source data remains under `studio/data/canonical/analytics/...` as a preserved data contract
+- Data Sharing artifacts remain under `var/studio/data-sharing/...` as a preserved local artifact contract
+- Analytics still uses focused helper modules under `studio/services/analytics/`; those helpers are domain services, not Studio route/API ownership
+- the JavaScript inventory now records the post-split app boundaries, but a full rescored inventory refresh remains future maintenance work
+
+No split cleanup has been deferred.
+Old Studio routes, endpoint aliases, proxy handlers, dual-read/write fallbacks, static serving shims, and tests depending on retired Studio Analytics/Data Sharing paths were removed rather than preserved.
+
+## Change Log Entries
+
+- `change-2026-05-30-split-analytics-and-data-sharing-into-a-local-analytics-app`
+- `change-2026-05-30-separated-ui-catalogue-and-retired-thumbnail-quality-from-studio`
 
 ## Risks
 
