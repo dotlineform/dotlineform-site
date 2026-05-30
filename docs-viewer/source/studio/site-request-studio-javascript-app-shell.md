@@ -322,3 +322,40 @@ Browser smoke expectations for slice 2 and later:
 - Docs Viewer doc link resolves from `external_links.docs_viewer` plus route `doc_id`
 - runtime config does not publish Python-built page doc links
 - Python write/API endpoints behave unchanged
+
+## Closeout Known Risks
+
+These are the known risks recorded at the end of each implementation slice, compiled here for review.
+
+### Slice 1
+
+- Local Studio still has Python-rendered route bodies, so route body markup duplication will only reduce once slices 2-5 migrate routes. Current status: resolved by slices 2-6.
+- `studio-config.js` still carries a fallback copy of the route registry for static/default config behavior; keep it aligned with checked-in JSON until a generated/default-config strategy replaces the copy. Current status: still relevant.
+- The static `/studio/` home link columns still duplicate route labels and paths. Leave that out of slice 2 unless the shell renderer needs home-link metadata. Current status: still relevant.
+
+### Slice 2
+
+- `studio-app.js` currently duplicates a small amount of Docs Viewer URL building and header rendering from the Python/legacy navigation path. Slice 3 should decide whether to extract a pure shared URL/header helper before migrating several operational routes. Current status: partly superseded by the retired Python shell path; browser-side Docs Viewer URL construction remains owned by `studio-app.js`.
+- Route body renderer registration is an explicit small map in `studio-app.js`. That is acceptable for one route; if slice 3 adds three more routes, keep the map simple or move route body lookup behind a focused registry helper. Current status: still relevant as the route count has grown.
+- Side-effect route boot worked for Project State. Revisit a `mount()` export only if slice 3 shows ordering or test isolation friction. Current status: still acceptable; later slices did not require `mount()`.
+
+### Slice 3
+
+- `studio-app.js` still keeps an explicit route body renderer map. That is acceptable for four migrated routes, but slice 4 should extract lookup if catalogue support routes make the map carry more policy than module selection. Current status: still relevant; the map remains module selection only.
+- `studio-app.js` and `studio-navigation.js` still duplicate a small amount of Docs Viewer URL/header behavior. Leave it until the duplication becomes harder to reason about than a shared helper. Current status: still relevant.
+- Side-effect route boot remains workable. Revisit a `mount()` export only if route ordering or test isolation gets fragile in the catalogue support or editor slices. Current status: still acceptable; editor migration did not require `mount()`.
+
+### Slice 4
+
+- `studio-app.js` now has explicit body renderer mappings for seven routes. Keep this until the editor family proves whether route body lookup needs a focused registry helper. Current status: superseded by the slice 6 version of the same risk.
+- Catalogue editor routes still rely on Python-rendered body attributes for media config and form shells. Slice 5 should decide whether those attributes move into runtime config before editor bodies migrate. Current status: resolved by slice 5.
+- Side-effect route boot remains workable. The editor family is the first point where a `mount()` export may become materially cleaner. Current status: still acceptable; editor migration did not require `mount()`.
+
+### Slice 5
+
+- Editor shell body markup remains static HTML; future behavior should continue to live in the existing focused editor modules, not in shell renderers. Current status: still relevant.
+- Public media preview behavior depends on `app.runtime.media` and `app.runtime.pipeline` staying aligned with `_data/pipeline.json`. Current status: still relevant.
+
+### Slice 6
+
+- `studio-app.js` still owns an explicit body renderer mapping. This remains acceptable for the current route count, but a future route-family migration should move lookup into a focused registry helper if the mapping grows. Current status: still relevant.

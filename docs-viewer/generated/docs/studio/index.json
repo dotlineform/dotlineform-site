@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T21:18:35Z",
+  "generated_at": "2026-05-30T21:26:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -956,7 +956,7 @@
       "source_path": "site-request-studio-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
-      "content_text_length": 14351,
+      "content_text_length": 18056,
       "ui_status": "done"
     },
     {
