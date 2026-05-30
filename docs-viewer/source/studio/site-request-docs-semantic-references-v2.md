@@ -13,6 +13,7 @@ Status:
 
 - proposed
 - this needs to happen **before** [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+- now a module within Analytics
 
 ## Summary
 
@@ -87,19 +88,6 @@ Examples:
 - `[[ref:work-detail:00001-001|detail]]` is invalid when `work-detail` is not an allowed semantic type
 
 The semantic-reference editor should use generated/browser-safe Studio support data to help authors choose real targets, but that picker assistance is not the same as Docs Viewer treating target existence as a validity rule.
-
-## Relationship To Existing Requests
-
-This request builds on:
-
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
-- [Docs Viewer Workstream Priority Plan](/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan)
-- [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell)
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-
-V2 should supply the semantic-reference infrastructure that the editor and future panel modules need.
-The editor remains a separate implementation request.
 
 ## Proposed Implementation Steps
 
@@ -241,12 +229,3 @@ V2 implementation should add or update focused checks for:
 - generated relationship artifact stability after single-doc edits
 - browser-side semantic support data normalization
 - no service read added for browser-safe repo support data without a documented reason
-
-## Related References
-
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
-- [Docs Viewer Workstream Priority Plan](/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan)
-- [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell)
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-- [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)

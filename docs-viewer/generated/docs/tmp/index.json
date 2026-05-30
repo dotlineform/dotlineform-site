@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T10:47:13Z",
+  "generated_at": "2026-05-30T10:49:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -19,6 +19,21 @@
       "viewer_url": "/docs/?scope=tmp&doc=azure",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/azure.json",
       "content_text_length": 3577,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "tmp",
+      "doc_id": "plan",
+      "title": "Docs Viewer Workstream Priority Plan",
+      "added_date": "2026-05-27",
+      "last_updated": "2026-05-27",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "plan.md",
+      "viewer_url": "/docs/?scope=tmp&doc=plan",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/plan.json",
+      "content_text_length": 19518,
       "ui_status": "draft"
     },
     {

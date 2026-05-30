@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T08:26:57Z",
+  "generated_at": "2026-05-30T11:05:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -716,7 +716,7 @@
       "source_path": "site-request-analytics-app-split-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
-      "content_text_length": 7024,
+      "content_text_length": 6318,
       "ui_status": "urgent"
     },
     {
@@ -746,7 +746,7 @@
       "source_path": "site-request-docs-semantic-references-v2.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
-      "content_text_length": 11201,
+      "content_text_length": 10580,
       "ui_status": "draft"
     },
     {
@@ -822,21 +822,6 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workspace-mount-architecture.json",
       "content_text_length": 6612,
-      "ui_status": "draft"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-docs-viewer-workstream-priority-plan",
-      "title": "Docs Viewer Workstream Priority Plan",
-      "added_date": "2026-05-27",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-viewer-workstream-priority-plan.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workstream-priority-plan.json",
-      "content_text_length": 19518,
       "ui_status": "draft"
     },
     {

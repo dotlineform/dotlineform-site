@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dff6188158218523cba6bb86e333e083",
-    "generated_at_utc": "2026-05-30T08:26:41Z",
-    "count": 202
+    "version": "blake2b-944fedecfcbaa0b41222b40e42ab47f8",
+    "generated_at_utc": "2026-05-30T10:50:22Z",
+    "count": 201
   },
   "entries": [
     {
@@ -1392,35 +1392,6 @@
         "25"
       ],
       "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
-    },
-    {
-      "id": "site-request-docs-viewer-workstream-priority-plan",
-      "kind": "doc",
-      "title": "Docs Viewer Workstream Priority Plan",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workstream-priority-plan",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-workstream-priority-plan",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "workstream",
-        "priority",
-        "plan",
-        "docs viewer workstream priority plan",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-27",
-        "2026",
-        "05",
-        "27"
-      ],
-      "search_text": "site-request-docs-viewer-workstream-priority-plan site request docs viewer workstream priority plan docs viewer workstream priority plan change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-json-schema-adoption",

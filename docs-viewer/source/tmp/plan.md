@@ -1,10 +1,10 @@
 ---
-doc_id: site-request-docs-viewer-workstream-priority-plan
+doc_id: plan
 title: Docs Viewer Workstream Priority Plan
 added_date: 2026-05-27
 last_updated: 2026-05-27
 ui_status: draft
-parent_id: change-requests
+parent_id: ""
 viewable: true
 ---
 # Docs Viewer Workstream Priority Plan
