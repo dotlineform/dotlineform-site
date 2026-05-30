@@ -79,12 +79,8 @@ def main(argv: list[str] | None = None) -> int:
                 if "/studio/data/canonical/analytics/tag-groups.json" in request.url
                 else None,
             )
-            page.goto(f"{base_url}/analytics/", wait_until="domcontentloaded")
-            page.wait_for_selector('[data-studio-navigate="tag_groups"]', timeout=10000)
-            home_link = page.locator('[data-studio-navigate="tag_groups"]').get_attribute("href")
+            page.goto(f"{base_url}/analytics/tag-groups/", wait_until="domcontentloaded")
             nav_script_count = page.locator('script[src*="studio-navigation.js"]').count()
-            page.locator('[data-studio-navigate="tag_groups"]').click()
-            page.wait_for_url("**/analytics/tag-groups/", timeout=10000)
             page.wait_for_selector('#tag-groups[data-studio-ready="true"]', timeout=10000)
             mode = page.locator("#tag-groups").get_attribute("data-studio-mode")
             record_loaded = page.locator("#tag-groups").get_attribute("data-studio-record-loaded")
@@ -94,10 +90,8 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_groups = {"subject", "domain", "form", "theme"}
-        if home_link != "/analytics/tag-groups/":
-            raise AssertionError(f"unexpected home navigation href: {home_link!r}")
         if nav_script_count != 1:
-            raise AssertionError(f"expected one navigation script on Studio home, got {nav_script_count}")
+            raise AssertionError(f"expected one navigation script on Analytics route, got {nav_script_count}")
         if mode != "list":
             raise AssertionError(f"expected list mode, got {mode!r}")
         if record_loaded != "true":

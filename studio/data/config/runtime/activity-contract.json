@@ -751,7 +751,7 @@
     },
     "data-sharing-prepare": {
       "label": "data sharing prepare",
-      "route": "/studio/data-sharing/prepare/?mode=manage",
+      "route": "/analytics/data-sharing/prepare/?mode=manage",
       "actions": {
         "prepare-share-package": {
           "label": "prepare share package",
@@ -777,7 +777,7 @@
     },
     "data-sharing-review": {
       "label": "data sharing review",
-      "route": "/studio/data-sharing/review/?mode=manage",
+      "route": "/analytics/data-sharing/review/?mode=manage",
       "actions": {
         "apply-returned-summaries": {
           "label": "apply returned summaries",
@@ -935,7 +935,7 @@
     },
     "series-tags": {
       "label": "series tags",
-      "route": "/studio/analytics/series-tags/",
+      "route": "/analytics/series-tags/",
       "actions": {
         "import-series-tag-assignments": {
           "label": "import series tag assignments",
@@ -961,7 +961,7 @@
     },
     "series-tag-editor": {
       "label": "series tag editor",
-      "route": "/studio/analytics/series-tag-editor/",
+      "route": "/analytics/series-tag-editor/",
       "actions": {
         "save-series-tags": {
           "label": "save series tags",
@@ -987,7 +987,7 @@
     },
     "tag-registry": {
       "label": "tag registry",
-      "route": "/studio/analytics/tag-registry/",
+      "route": "/analytics/tag-registry/",
       "actions": {
         "import-tag-registry": {
           "label": "import tag registry",
@@ -1093,7 +1093,7 @@
     },
     "tag-aliases": {
       "label": "tag aliases",
-      "route": "/studio/analytics/tag-aliases/",
+      "route": "/analytics/tag-aliases/",
       "actions": {
         "import-tag-aliases": {
           "label": "import tag aliases",

@@ -1,21 +1,3 @@
-const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
-  deleteTagAlias: "delete_tag_alias",
-  demoteTag: "demote_tag",
-  demoteTagPreview: "demote_tag_preview",
-  health: "health",
-  importTagAssignments: "import_tag_assignments",
-  importTagAssignmentsPreview: "import_tag_assignments_preview",
-  importTagAliases: "import_tag_aliases",
-  importTagRegistry: "import_tag_registry",
-  mutateTagAlias: "mutate_tag_alias",
-  mutateTagAliasPreview: "mutate_tag_alias_preview",
-  mutateTag: "mutate_tag",
-  mutateTagPreview: "mutate_tag_preview",
-  promoteTagAlias: "promote_tag_alias",
-  promoteTagAliasPreview: "promote_tag_alias_preview",
-  saveTags: "save_tags"
-});
-
 const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   bulkSave: "/studio/api/catalogue/bulk-save",
   deletePreview: "/studio/api/catalogue/delete-preview",
@@ -42,15 +24,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   projectStateOpenReport: "/studio/api/catalogue/project-state-open-report",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
-});
-
-const DATA_SHARING_ENDPOINTS = Object.freeze({
-  health: "",
-  selectableRecords: "",
-  prepare: "",
-  returnedPackages: "",
-  review: "",
-  apply: ""
 });
 
 const AUDIT_API_ENDPOINTS = Object.freeze({
@@ -80,7 +53,6 @@ export {
   AUDIT_API_ENDPOINTS,
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
-  DATA_SHARING_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
   PROJECT_STATE_ENDPOINTS,
 };
@@ -89,25 +61,8 @@ export function configureStudioTransport(config) {
   void config;
 }
 
-export function getStudioWriteEndpoint(key, config = null) {
-  const runtimeKey = STUDIO_WRITE_RUNTIME_KEYS[key] || "";
-  const runtime = config && config.app && config.app.runtime;
-  const analytics = runtime && runtime.services && runtime.services.analytics;
-  const configured = runtimeKey && analytics && analytics[runtimeKey];
-  if (typeof configured === "string" && configured.trim()) return configured;
-  return "";
-}
-
-export async function probeStudioHealth(timeoutMs = 500, options = {}) {
-  return probeHealth(getStudioWriteEndpoint("health", options.config), timeoutMs);
-}
-
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeDataSharingHealth(timeoutMs = 500) {
-  return probeHealth(DATA_SHARING_ENDPOINTS.health, timeoutMs);
 }
 
 export async function probeAuditApiHealth(timeoutMs = 500) {

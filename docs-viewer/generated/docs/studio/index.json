@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T15:17:59Z",
+  "generated_at": "2026-05-30T15:39:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -20,7 +20,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 108
+      "content_text_length": 564
     },
     {
       "scope": "studio",
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 7842
+      "content_text_length": 10700
     },
     {
       "scope": "studio",
@@ -305,7 +305,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 26402,
+      "content_text_length": 26378,
       "ui_status": "review"
     },
     {
@@ -377,7 +377,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18046,
+      "content_text_length": 18088,
       "ui_status": "urgent"
     },
     {
@@ -673,7 +673,7 @@
       "source_path": "thumbnail-quality-page.md",
       "viewer_url": "/docs/?scope=studio&doc=thumbnail-quality-page",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/thumbnail-quality-page.json",
-      "content_text_length": 2478
+      "content_text_length": 2571
     },
     {
       "scope": "studio",
@@ -701,7 +701,7 @@
       "source_path": "site-request-analytics-app-split.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
-      "content_text_length": 10541,
+      "content_text_length": 12006,
       "ui_status": "urgent"
     },
     {
@@ -716,7 +716,7 @@
       "source_path": "site-request-analytics-app-split-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
-      "content_text_length": 6318,
+      "content_text_length": 13735,
       "ui_status": "urgent"
     },
     {
@@ -1012,7 +1012,7 @@
       "source_path": "data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json",
-      "content_text_length": 0
+      "content_text_length": 788
     },
     {
       "scope": "studio",
@@ -1198,7 +1198,7 @@
       "source_path": "runtime-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=runtime-dependencies",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/runtime-dependencies.json",
-      "content_text_length": 7443
+      "content_text_length": 8984
     },
     {
       "scope": "studio",
@@ -1212,7 +1212,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 8817
+      "content_text_length": 9529
     },
     {
       "scope": "studio",
@@ -1226,7 +1226,7 @@
       "source_path": "scripts-audit-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json",
-      "content_text_length": 2803
+      "content_text_length": 2854
     },
     {
       "scope": "studio",
@@ -1848,7 +1848,7 @@
       "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup.json",
-      "content_text_length": 943
+      "content_text_length": 1688
     },
     {
       "scope": "studio",
@@ -2254,7 +2254,7 @@
       "source_path": "servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/servers.json",
-      "content_text_length": 743
+      "content_text_length": 1141
     },
     {
       "scope": "studio",
@@ -2352,7 +2352,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 8750
+      "content_text_length": 9425
     },
     {
       "scope": "studio",
@@ -2380,7 +2380,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4583
+      "content_text_length": 4748
     },
     {
       "scope": "studio",
@@ -2394,7 +2394,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
-      "content_text_length": 17761
+      "content_text_length": 14312
     },
     {
       "scope": "studio",
@@ -2450,7 +2450,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 14773
+      "content_text_length": 14777
     },
     {
       "scope": "studio",
@@ -2562,7 +2562,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-audits.json",
-      "content_text_length": 2721
+      "content_text_length": 2715
     },
     {
       "scope": "studio",
@@ -2576,7 +2576,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6567
+      "content_text_length": 6293
     },
     {
       "scope": "studio",
@@ -2590,7 +2590,7 @@
       "source_path": "ui-pattern-action-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-action-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-action-menu.json",
-      "content_text_length": 8640
+      "content_text_length": 8647
     },
     {
       "scope": "studio",
@@ -2604,7 +2604,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 2044
+      "content_text_length": 2049
     },
     {
       "scope": "studio",
@@ -2618,7 +2618,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 2502
+      "content_text_length": 2507
     },
     {
       "scope": "studio",
@@ -2646,7 +2646,7 @@
       "source_path": "ui-primitive-input.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-input.json",
-      "content_text_length": 2068
+      "content_text_length": 2073
     },
     {
       "scope": "studio",
@@ -2660,7 +2660,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 3409
+      "content_text_length": 3414
     },
     {
       "scope": "studio",
@@ -2702,7 +2702,7 @@
       "source_path": "ui-primitive-modal-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 7560
+      "content_text_length": 7566
     },
     {
       "scope": "studio",
@@ -2716,7 +2716,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 2771
+      "content_text_length": 2776
     },
     {
       "scope": "studio",
@@ -2730,7 +2730,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3264
+      "content_text_length": 3270
     },
     {
       "scope": "studio",
@@ -2744,7 +2744,7 @@
       "source_path": "ui-pattern-select-menu.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-select-menu",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json",
-      "content_text_length": 9669
+      "content_text_length": 9676
     },
     {
       "scope": "studio",
@@ -2772,7 +2772,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 10646
+      "content_text_length": 10639
     },
     {
       "scope": "studio",
@@ -2786,7 +2786,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json",
-      "content_text_length": 11570
+      "content_text_length": 11563
     },
     {
       "scope": "studio",

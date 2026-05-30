@@ -15,6 +15,13 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Completed the final focused compatibility cleanup and verification pass:
+  - removed the dead Studio-owned Analytics/Data Sharing route JavaScript modules and route UI-text files now owned by `analytics-app/`
+  - trimmed Studio frontend transport/data helpers so they no longer expose Analytics write endpoints, Data Sharing endpoint defaults, or tag/data-sharing data loaders
+  - retargeted the activity contract and affected activity tests to Analytics-owned routes instead of retired `/studio/analytics/...` and `/studio/data-sharing/...` paths
+  - removed the remaining Studio smoke that imported a Data Sharing workflow module from the old Studio static path
+  - updated the Analytics Tag Groups smoke for the intentionally empty top nav
+  - verified focused Python/JS syntax, Studio activity/server pytest, Analytics app/data-sharing pytest, Local Studio navigation smoke, full `analytics-smoke`, stale-reference scans, and `git diff --check`
 - Updated source and launcher docs for the split boundaries:
   - documented `analytics-app/`, `ui-catalogue-app/`, `data-sharing/`, preserved `studio/data/canonical/analytics/...`, preserved `var/studio/data-sharing/...`, and retired `studio/retired/thumbnail-quality/` ownership in Source Tree Ownership
   - updated runtime dependency and local setup docs to describe sibling services rather than a combined Studio-owned surface
@@ -78,7 +85,7 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue with task 14: run the final focused verification set and confirm no compatibility layers remain.
+- Continue with task 15: ensure durable documents in `/docs/` explain the new service responsibilities, boundaries, and architecture.
 - Preserve the clean cutover: do not add aliases, redirects, proxy handlers, or static shims for retired Studio paths to make old tests pass.
 
 ### baseline verification set
@@ -134,7 +141,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 11 | done | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
 | 12 | done | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
 | 13 | done | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
-| 14 | planned | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
+| 14 | done | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
 | 15 | planned | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |
 | 16 | planned | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, structured docs-log entries, and parent-request status updates. |
 

@@ -3,11 +3,11 @@
   "doc_id": "data-sharing",
   "title": "Data Sharing",
   "added_date": "2026-05-13 17:16",
-  "last_updated": "2026-05-13 17:16",
+  "last_updated": "2026-05-30",
   "parent_id": "",
   "hidden": false,
   "viewable": true,
   "source_path": "data-sharing.md",
   "viewer_url": "/docs/?scope=studio&doc=data-sharing",
-  "content_html": "<h1 id=\"data-sharing\">Data Sharing</h1>\n"
+  "content_html": "<h1 id=\"data-sharing\">Data Sharing</h1>\n\n<p>Data Sharing is now hosted by the standalone Local Analytics app.\nRun it with:</p>\n\n<div class=\"language-bash highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>bin/local-analytics\n</code></pre></div></div>\n\n<p>Default local routes:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">http://127.0.0.1:8766/analytics/data-sharing/prepare/?mode=manage</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">http://127.0.0.1:8766/analytics/data-sharing/review/?mode=manage</code></li>\n</ul>\n\n<p>Default local APIs:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">/analytics/api/data-sharing/health</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">/analytics/api/data-sharing/selectable-records</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">/analytics/api/data-sharing/returned-packages</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">POST /analytics/api/data-sharing/prepare</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">POST /analytics/api/data-sharing/review</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">POST /analytics/api/data-sharing/apply</code></li>\n</ul>\n\n<p>Runtime packages, returned-package staging, review artifacts, and backups continue to use <code class=\"language-plaintext highlighter-rouge\">var/studio/data-sharing/&lt;domain&gt;/...</code> as the local artifact contract.\nRetired Studio paths under <code class=\"language-plaintext highlighter-rouge\">/studio/data-sharing/...</code> and <code class=\"language-plaintext highlighter-rouge\">/studio/api/data-sharing/...</code> should not be recreated.</p>\n"
 }

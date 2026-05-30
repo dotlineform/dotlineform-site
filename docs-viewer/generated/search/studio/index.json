@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff2b2b0b345f4b87cf3e7c91d27776bf",
-    "generated_at_utc": "2026-05-30T15:18:00Z",
+    "version": "blake2b-d8e73c1b87cb74423443ddfa5e2c12f3",
+    "generated_at_utc": "2026-05-30T15:23:40Z",
     "count": 201
   },
   "entries": [
@@ -12,18 +12,16 @@
       "kind": "doc",
       "title": "Analytics",
       "href": "/docs/?scope=studio&doc=analytics",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
       "search_terms": [
         "analytics",
-        "2026-05-06 20:49",
+        "2026-05-30",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "30"
       ],
-      "search_text": "analytics 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "dimension-visualisation-projection",
@@ -384,10 +382,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-30",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-25 • Architecture",
+      "display_meta": "2026-05-30 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -395,12 +393,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-05-25",
+        "2026-05-30",
         "2026",
         "05",
-        "25"
+        "30"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-25 2026 05 25"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-30 2026 05 30"
     },
     {
       "id": "audit",
@@ -1104,10 +1102,10 @@
       "kind": "doc",
       "title": "Thumbnail Quality Page",
       "href": "/docs/?scope=studio&doc=thumbnail-quality-page",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-30",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-22 • Catalogue",
+      "display_meta": "2026-05-30 • Catalogue",
       "search_terms": [
         "thumbnail-quality-page",
         "thumbnail",
@@ -1115,12 +1113,12 @@
         "page",
         "thumbnail quality page",
         "catalogue",
-        "2026-05-22",
+        "2026-05-30",
         "2026",
         "05",
-        "22"
+        "30"
       ],
-      "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-22 2026 05 22"
+      "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-30 2026 05 30"
     },
     {
       "id": "change-requests",
@@ -1714,21 +1712,19 @@
       "kind": "doc",
       "title": "Data Sharing",
       "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-05-13 17:16",
-      "display_meta": "2026-05-13 17:16",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
       "search_terms": [
         "data-sharing",
         "data",
         "sharing",
         "data sharing",
-        "2026-05-13 17:16",
+        "2026-05-30",
         "2026",
         "05",
-        "13",
-        "17",
-        "16"
+        "30"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-05-13 17:16 2026 05 13 17 16"
+      "search_text": "data-sharing data sharing data sharing 2026-05-30 2026 05 30"
     },
     {
       "id": "config-data-sharing-adapters",
@@ -1977,10 +1973,10 @@
       "kind": "doc",
       "title": "Runtime Dependencies",
       "href": "/docs/?scope=studio&doc=runtime-dependencies",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-30",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-04-23 • Dev Home",
+      "display_meta": "2026-05-30 • Dev Home",
       "search_terms": [
         "runtime-dependencies",
         "runtime",
@@ -1989,43 +1985,43 @@
         "dev home",
         "dev",
         "home",
-        "2026-04-23",
+        "2026-05-30",
         "2026",
-        "04",
-        "23"
+        "05",
+        "30"
       ],
-      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-04-23 2026 04 23"
+      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts",
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-30",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-25 • Dev Home",
+      "display_meta": "2026-05-30 • Dev Home",
       "search_terms": [
         "scripts",
         "dev home",
         "dev",
         "home",
-        "2026-05-25",
+        "2026-05-30",
         "2026",
         "05",
-        "25"
+        "30"
       ],
-      "search_text": "scripts dev home dev home 2026-05-25 2026 05 25"
+      "search_text": "scripts dev home dev home 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-audit-projection-contract",
       "kind": "doc",
       "title": "Projection Contract Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-30",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-23 • Scripts",
+      "display_meta": "2026-05-30 • Scripts",
       "search_terms": [
         "scripts-audit-projection-contract",
         "scripts",
@@ -2033,12 +2029,12 @@
         "projection",
         "contract",
         "projection contract audit",
-        "2026-05-23",
+        "2026-05-30",
         "2026",
         "05",
-        "23"
+        "30"
       ],
-      "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract audit 2026-05-23 2026 05 23"
+      "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract audit 2026-05-30 2026 05 30"
     },
     {
       "id": "tasks-template",
@@ -3088,19 +3084,19 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "2026-05-23",
+        "2026-05-30",
         "2026",
         "05",
-        "23"
+        "30"
       ],
-      "search_text": "local-setup local setup local setup 2026-05-23 2026 05 23"
+      "search_text": "local-setup local setup local setup 2026-05-30 2026 05 30"
     },
     {
       "id": "local-setup-environment",
@@ -3773,18 +3769,16 @@
       "kind": "doc",
       "title": "Servers",
       "href": "/docs/?scope=studio&doc=servers",
-      "last_updated": "2026-05-06 20:58",
-      "display_meta": "2026-05-06 20:58",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
       "search_terms": [
         "servers",
-        "2026-05-06 20:58",
+        "2026-05-30",
         "2026",
         "05",
-        "06",
-        "20",
-        "58"
+        "30"
       ],
-      "search_text": "servers 2026-05-06 20:58 2026 05 06 20 58"
+      "search_text": "servers 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-catalogue-write-server",
@@ -3947,10 +3941,10 @@
       "kind": "doc",
       "title": "Local Studio Server Architecture",
       "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-26 • Servers",
+      "display_meta": "2026-05-30 • Servers",
       "search_terms": [
         "local-studio-server-architecture",
         "local",
@@ -3959,12 +3953,12 @@
         "architecture",
         "local studio server architecture",
         "servers",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-26 2026 05 26"
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-tag-write-server",
@@ -3996,38 +3990,38 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-26",
-      "display_meta": "2026-05-26",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
       "search_terms": [
         "studio",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "studio 2026-05-26 2026 05 26"
+      "search_text": "studio 2026-05-30 2026 05 30"
     },
     {
       "id": "local-studio-app",
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-26 • Studio",
+      "display_meta": "2026-05-30 • Studio",
       "search_terms": [
         "local-studio-app",
         "local",
         "studio",
         "app",
         "local studio app",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "local-studio-app local studio app local studio app 2026-05-26 2026 05 26"
+      "search_text": "local-studio-app local studio app local studio app 2026-05-30 2026 05 30"
     },
     {
       "id": "studio-activity",
