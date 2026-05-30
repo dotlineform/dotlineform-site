@@ -179,53 +179,22 @@ The exact API subpath shape can be chosen during implementation, but old Studio 
 - Update tests and smokes to the new Analytics service rather than keeping Studio-named copies as active checks.
 - Keep implementation docs source-only in the split unless a separate generated-payload rebuild is intentionally run.
 
-## Implementation Tasks
+## Implementation Tracker
 
-Work through the table by ID order.
-Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
+Use [Analytics App Split Tasks](/docs/?scope=studio&doc=site-request-analytics-app-split-tasks) for the implementation sequence, baseline verification set, test split, post-basic-split decoupling activity, and close-out checklist.
 
-| ID | status | action |
-| --- | --- | --- |
-| 1 | planned | Confirm the cutover path and pause current local services before file moves or route changes. |
-| 2 | planned | Add a standalone Analytics app server and launcher using the current Studio analytics/data-sharing views, config, static serving, API adapters, CORS checks, and loopback-only behavior as the starting point. |
-| 3 | planned | Move or copy the current analytics and data-sharing frontend modules and UI text into Analytics-owned app paths with minimal code changes. Preserve UI behavior and current interface. |
-| 4 | planned | Move Analytics API ownership out of Studio, including tag health/read/write endpoints, while preserving current service behavior and write safeguards. |
-| 5 | planned | Move Data Sharing API ownership out of Studio, including prepare/review/apply, selectable records, returned packages, adapter dispatch, and current activity hooks. |
-| 6 | planned | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, and API dispatch. Old routes should fail clearly instead of redirecting or proxying. |
-| 7 | planned | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, and smokes. Archive its page/script code in a repo-local retired tooling location if preserving it is useful. |
-| 8 | planned | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
-| 9 | planned | Update tests and smoke checks to target the Analytics service and new routes. Keep focused checks for tags, data sharing, route readiness, and Studio catalogue route health. Remove active thumbnail-quality and Studio-hosted UI Catalogue smokes. |
-| 10 | planned | Update source ownership, runtime dependency, local setup, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. Reframe the semantic-reference editor request as Analytics-owned. |
-| 11 | planned | Run focused verification: Python syntax/import checks for moved files, tag/data-sharing pytest tests, Analytics route/API smokes, standalone UI Catalogue smoke, and a small Studio catalogue smoke to confirm removals did not regress Studio-owned routes. |
-| 12 | planned | Close out with moved-path summary, retired Studio routes/endpoints, verification results, remaining risks, and structured docs-log entries. |
-
-## Verification Plan
-
-The first cutover should use targeted checks rather than broad performance benchmarking.
-
-Minimum useful checks:
-
-- Python syntax/import checks for new Analytics app server files and moved API adapters
-- focused pytest for tag mutation/source/transaction modules
-- focused pytest for data-sharing service and adapter dispatch
-- Analytics health endpoint smoke
-- Analytics tag route smoke for registry, aliases, groups, series tags, and series tag editor
-- Analytics API smoke for tag reads and representative dry-run writes
-- Analytics data-sharing smoke for prepare/review route readiness and API health
-- Studio smoke for core catalogue routes after analytics/data-sharing removal
-- standalone UI Catalogue smoke if the UI Catalogue route/server is changed
-- check that thumbnail-quality is no longer exposed as an active Studio route
-
-Browser or localhost smokes may need elevated sandbox permissions in Codex runs.
+The implementation target is a clean split with no compatibility layers and no planned cleanup pass.
+Analytics may inherit some of the current structural problems in the first cutover, but those problems should become self-contained inside Analytics rather than remaining shared with Studio.
 
 ## Risks
 
 - The current frontend modules may import generic Studio helpers and CSS.
-  This is acceptable for the lift-and-shift if the helper ownership is made explicit or copied cleanly.
+  Decouple these during the split where it is cheap, obvious, and does not turn the cutover into a redesign.
+  If meaningful Studio helper or CSS coupling remains after the lift-and-shift, create a follow-on slice or request so Analytics owns its CSS, frontend helpers, UI text/config helpers, and route-shell primitives.
 - Data Sharing currently touches documents and tags.
   Analytics should own the workflow, but Docs Viewer can remain the focused owner for document conversion/source helpers.
 - Existing tests and docs use Studio naming for analytics checks.
-  Rename active checks to Analytics ownership rather than preserving old service names.
+  Rename active checks to Analytics ownership where they are purely Analytics checks, and split mixed Studio/Analytics checks where one test currently covers both future service responsibilities.
 - Removing old routes without compatibility aliases may break bookmarks.
   This is acceptable for the maintenance-risk goal; update visible navigation and docs in the same slice.
 - Activity/audit ownership may need a later service split.
@@ -242,6 +211,7 @@ Browser or localhost smokes may need elevated sandbox permissions in Codex runs.
 - [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+- [Analytics App Split Tasks](/docs/?scope=studio&doc=site-request-analytics-app-split-tasks)
 - `studio/app/server/studio/studio_app_server.py`
 - `studio/app/server/studio/studio_app_config.py`
 - `studio/app/server/studio/studio_app_views.py`

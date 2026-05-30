@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4134f349c78070c5e7e553eafb371c12",
-    "generated_at_utc": "2026-05-30T08:04:12Z",
-    "count": 201
+    "version": "blake2b-dff6188158218523cba6bb86e333e083",
+    "generated_at_utc": "2026-05-30T08:26:41Z",
+    "count": 202
   },
   "entries": [
     {
@@ -1167,6 +1167,32 @@
         "30"
       ],
       "search_text": "site-request-analytics-app-split site request analytics app split analytics app split request change requests change requests 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "site-request-analytics-app-split-tasks",
+      "kind": "doc",
+      "title": "Analytics App Split Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
+      "last_updated": "2026-05-30",
+      "parent_id": "site-request-analytics-app-split",
+      "parent_title": "Analytics App Split Request",
+      "display_meta": "2026-05-30 • Analytics App Split Request",
+      "search_terms": [
+        "site-request-analytics-app-split-tasks",
+        "site",
+        "request",
+        "analytics",
+        "app",
+        "split",
+        "tasks",
+        "analytics app split tasks",
+        "analytics app split request",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "site-request-analytics-app-split-tasks site request analytics app split tasks analytics app split tasks analytics app split request 2026-05-30 2026 05 30"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",

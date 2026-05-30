@@ -1,0 +1,86 @@
+---
+doc_id: site-request-analytics-app-split-tasks
+title: Analytics App Split Tasks
+added_date: 2026-05-30
+last_updated: 2026-05-30
+ui_status: urgent
+parent_id: site-request-analytics-app-split
+viewable: true
+---
+# Analytics App Split Tasks
+
+This is the tracker for implementing [Analytics App Split Request](/docs/?scope=studio&doc=site-request-analytics-app-split).
+
+## Status
+
+### just done
+
+- Created the parent Analytics App Split request with the target Studio, Analytics, Docs Viewer, UI Catalogue, thumbnail-quality, and public-preview ownership boundaries.
+- Confirmed the first cutover should be a works-as-is lift-and-shift, with no new Analytics features and no compatibility routes.
+
+### steer for next task
+
+- Start with the route/service cutover plan and pause current local services before moving files or changing routes.
+- The target is a clean split with no compatibility layers and no planned cleanup pass.
+- Analytics may inherit current structural problems if resolving them would slow the cutover, but those problems should be self-contained inside Analytics after the split.
+- Split tests as part of implementation, before final testing, so service-boundary checks exist before the verification pass.
+- After the basic Studio/Analytics split passes focused checks, decouple any remaining Studio helper/CSS dependencies that are cheap and obvious; record only the non-trivial leftovers as follow-up work.
+
+### baseline verification set
+
+Run only the checks warranted by the touched slice.
+The final cutover should include:
+
+- Python syntax/import checks for new Analytics app server files and moved API adapters.
+- Focused pytest for tag mutation/source/transaction modules.
+- Focused pytest for data-sharing service and adapter dispatch.
+- Analytics health endpoint smoke.
+- Analytics tag route smoke for registry, aliases, groups, series tags, and series tag editor.
+- Analytics API smoke for tag reads and representative dry-run writes.
+- Analytics data-sharing smoke for prepare/review route readiness and API health.
+- Studio smoke for core catalogue routes after analytics/data-sharing removal.
+- Split-service checks for tests that currently cover both future Studio and Analytics responsibilities.
+- Standalone UI Catalogue smoke if the UI Catalogue route/server changes.
+- Check that thumbnail-quality is no longer exposed as an active Studio route.
+
+Codex sandbox note: local service, browser, and temporary localhost checks will need elevated permissions even when the product code is healthy.
+
+### general steer
+
+- Preserve current UI, workflows, source data behavior, dry-run behavior, write allowlists, backup behavior, and compact logging.
+- No compatibility aliases, proxies, dual-read paths, dual-write paths, static mount shims, or import fallbacks for retired Studio analytics/data-sharing routes.
+- Do not keep old Studio paths working to make tests easier; update tests to the new owner.
+- No new Analytics features in the split.
+- No broad redesign, CSS class rename pass, or cosmetic cleanup.
+- Decouple Studio helpers/CSS during the split where it is cheap, obvious, and does not turn the cutover into a redesign.
+- If meaningful coupling remains after the basic split is tested, write a specific follow-on record before close-out.
+- UI Catalogue should become standalone, not Studio-hosted.
+- Thumbnail quality should become retired tooling, not an active Studio route.
+- Update source docs, not generated docs payloads, unless a separate rebuild is intentionally run.
+
+## Implementation Tasks
+
+Work through the table by ID order.
+A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
+Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
+
+| ID | status | action |
+| --- | --- | --- |
+| 1 | planned | Confirm the cutover path, identify currently running local services, and pause Studio, Docs Viewer, docs watcher, Analytics-related local routes, and public preview before file moves or route changes. |
+| 2 | planned | Inventory current analytics, data-sharing, UI Catalogue, thumbnail-quality, and mixed Studio/Analytics tests so the move list, retired routes, and test split are explicit before implementation starts. |
+| 3 | planned | Add a standalone Analytics app server and launcher using the current Studio analytics/data-sharing views, config, static serving, API adapters, CORS checks, and loopback-only behavior as the starting point. |
+| 4 | planned | Move or copy the current analytics and data-sharing frontend modules and UI text into Analytics-owned app paths with minimal code changes. Preserve UI behavior and current interface. |
+| 5 | planned | Move Analytics API ownership out of Studio, including tag health/read/write endpoints, while preserving current service behavior and write safeguards. |
+| 6 | planned | Move Data Sharing API ownership out of Studio, including prepare/review/apply, selectable records, returned packages, adapter dispatch, and current activity hooks. |
+| 7 | planned | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, API dispatch, and static serving assumptions. Old routes should fail clearly; do not add redirects, aliases, proxy handlers, static shims, or dual-path config. |
+| 8 | planned | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
+| 9 | planned | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, and smokes. Archive its page/script code in a repo-local retired tooling location if preserving it is useful. |
+| 10 | planned | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
+| 11 | planned | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
+| 12 | planned | Decouple remaining Studio helper/CSS dependencies in Analytics where the change is cheap and obvious after the basic split passes. If non-trivial coupling remains, create a named follow-on slice/request with exact owners, affected files, and removal criteria. |
+| 13 | planned | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. Reframe the semantic-reference editor request as Analytics-owned. |
+| 14 | planned | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
+| 15 | planned | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, structured docs-log entries, and parent-request status updates. |
+
+Close-out must confirm that cleanup is not intentionally deferred.
+If something cannot be completed cleanly in the split, name it as a specific follow-on with owner, scope, reason, and verification requirement rather than leaving an implicit cleanup bucket.

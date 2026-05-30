@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T08:04:12Z",
+  "generated_at": "2026-05-30T08:26:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -701,7 +701,22 @@
       "source_path": "site-request-analytics-app-split.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
-      "content_text_length": 13158,
+      "content_text_length": 10541,
+      "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-analytics-app-split-tasks",
+      "title": "Analytics App Split Tasks",
+      "added_date": "2026-05-30",
+      "last_updated": "2026-05-30",
+      "parent_id": "site-request-analytics-app-split",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-analytics-app-split-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
+      "content_text_length": 7024,
       "ui_status": "urgent"
     },
     {
