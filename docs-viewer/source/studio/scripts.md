@@ -90,8 +90,6 @@ Search builds:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
-    - `studio/data/canonical/analytics/tag-assignments.json`
-    - `studio/data/canonical/analytics/tag-registry.json`
   - outputs:
     - `assets/data/search/catalogue/index.json`
 

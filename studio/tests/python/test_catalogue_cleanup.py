@@ -126,11 +126,11 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         )
 
     assert rel_paths(root, payloads.keys()) == [
+        TAG_ASSIGNMENTS_PATH.as_posix(),
         "assets/data/recent_index.json",
         "assets/data/series_index.json",
         "assets/data/works_index.json",
         "assets/series/index/009.json",
-        TAG_ASSIGNMENTS_PATH.as_posix(),
         "studio/data/generated/activity/work-storage-index.json",
     ]
     assert "00001" not in payloads[(root / "assets/data/works_index.json").resolve()]["works"]

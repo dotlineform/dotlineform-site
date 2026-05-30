@@ -121,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on(
                 "request",
                 lambda request: static_tag_requests.append(request.url)
-                if "/studio/data/canonical/analytics/tag-" in request.url
+                if "/analytics/data/canonical/tag-" in request.url
                 else None,
             )
 

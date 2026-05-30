@@ -44,7 +44,7 @@ export function buildManualPatchForNewAliases(state, importAliases) {
     message: aliasesText(
       state.config,
       "patch_import_message",
-      "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for studio/data/canonical/analytics/tag-aliases.json aliases object.",
+      "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for analytics-app/data/canonical/tag-aliases.json aliases object.",
       {
         import_mode: state.importMode,
         imported_count: importRows.length,
@@ -113,7 +113,7 @@ export function buildManualPatchForAliasDelete(aliasKey) {
     message: aliasesText(
       null,
       "patch_delete_message",
-      "Patch mode: remove this alias key from studio/data/canonical/analytics/tag-aliases.json aliases object."
+      "Patch mode: remove this alias key from analytics-app/data/canonical/tag-aliases.json aliases object."
     ),
     snippet: JSON.stringify({ remove_alias_keys: [aliasKey] }, null, 2)
   };
@@ -145,7 +145,7 @@ export function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description,
     ? aliasesText(
         null,
         "patch_edit_rename_note",
-        " Also remove old alias key \"{alias_key}\" from studio/data/canonical/analytics/tag-aliases.json.",
+        " Also remove old alias key \"{alias_key}\" from analytics-app/data/canonical/tag-aliases.json.",
         { alias_key: normalizedOld }
       )
     : "";

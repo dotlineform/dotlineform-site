@@ -55,9 +55,9 @@ The Local Analytics app exposes these tag write endpoints under `/analytics/api`
 
 Tag writes remain allowlisted to:
 
-- `studio/data/canonical/analytics/tag-assignments.json`
-- `studio/data/canonical/analytics/tag-registry.json`
-- `studio/data/canonical/analytics/tag-aliases.json`
+- `analytics-app/data/canonical/tag-assignments.json`
+- `analytics-app/data/canonical/tag-registry.json`
+- `analytics-app/data/canonical/tag-aliases.json`
 
 Backups remain under `var/studio/backups/`.
 Unified activity rows are written through `scripts/studio_activity.py`.

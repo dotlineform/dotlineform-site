@@ -99,8 +99,10 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/analytics/app/assets/css/analytics.css") is True
     assert allowed("/data-sharing/config/adapters.json") is True
     assert allowed("/data-sharing/config/library-export-configs.json") is True
-    assert allowed("/studio/data/canonical/analytics/tag-registry.json") is True
+    assert allowed("/analytics/data/canonical/tag-registry.json") is True
 
+    retired_tag_path = "/studio/data/canonical" + "/analytics/tag-registry.json"
+    assert allowed(retired_tag_path) is False
     assert allowed("/studio/app/frontend/js/tag-registry.js") is False
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
@@ -109,7 +111,7 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
+        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
         assignments_path.parent.mkdir(parents=True)
         assignments_path.write_text(
             """{
@@ -145,7 +147,7 @@ def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
 def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
+        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
         series_index_path = repo_root / "assets" / "data" / "series_index.json"
         assignments_path.parent.mkdir(parents=True)
         series_index_path.parent.mkdir(parents=True)
@@ -220,9 +222,9 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
 def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
+        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
+        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
+        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
@@ -291,8 +293,8 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
 def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
+        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
+        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
         aliases_path.parent.mkdir(parents=True)
         aliases_path.write_text(
             """{
@@ -366,9 +368,9 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
 def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
+        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
+        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
+        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{

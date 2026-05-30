@@ -28,7 +28,7 @@ Current source boundary:
 - `analytics-app/app/frontend/` owns Analytics browser modules, route modules, UI text, and runtime config.
 - `analytics-app/app/assets/` owns Analytics-only CSS and route assets.
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
-- `studio/data/canonical/analytics/` remains the canonical tag source data path, but it is not a Studio route or API ownership claim.
+- `analytics-app/data/canonical/` owns canonical tag source data. Raw local browser access, where useful for diagnostics or smoke tests, is under `/analytics/data/canonical/...`.
 - `data-sharing/` owns the headless Data Sharing registry, config, workflow dispatch, package I/O, and domain adapters used by Analytics.
 
 [analysis](/analysis/) is the public-facing Docs Viewer for this data domain.

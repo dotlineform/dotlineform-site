@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T18:16:15Z",
+  "generated_at": "2026-05-30T18:22:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -20,7 +20,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 1503
+      "content_text_length": 1547
     },
     {
       "scope": "studio",
@@ -192,7 +192,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 11073
+      "content_text_length": 11040
     },
     {
       "scope": "studio",
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 10762
+      "content_text_length": 10665
     },
     {
       "scope": "studio",
@@ -709,14 +709,14 @@
       "doc_id": "site-request-analytics-app-split-follow-on",
       "title": "Analytics App Split Follow-On Tasks",
       "added_date": "2026-05-30 17:24",
-      "last_updated": "2026-05-30 19:13",
+      "last_updated": "2026-05-30 19:20",
       "parent_id": "site-request-analytics-app-split",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-analytics-app-split-follow-on.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 22346,
+      "content_text_length": 22204,
       "ui_status": "in-progress"
     },
     {
@@ -1227,7 +1227,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 9593
+      "content_text_length": 9490
     },
     {
       "scope": "studio",
@@ -2367,7 +2367,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 9425
+      "content_text_length": 9413
     },
     {
       "scope": "studio",
@@ -2381,7 +2381,7 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 2223
+      "content_text_length": 2214
     },
     {
       "scope": "studio",

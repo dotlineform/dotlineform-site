@@ -50,7 +50,7 @@ STATIC_PREFIXES = (
     "/assets/works/",
     "/data-sharing/config/",
     "/docs-viewer/generated/",
-    "/studio/data/",
+    "/analytics/data/",
     "/analytics/app/assets/",
     "/analytics/app/frontend/js/",
     "/analytics/app/frontend/config/",
@@ -285,6 +285,8 @@ class AnalyticsAppRequestHandler(BaseHTTPRequestHandler):
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/analytics/app/"):
             relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+        elif request_path.startswith("/analytics/data/"):
+            relative = f"analytics-app/data/{request_path.removeprefix('/analytics/data/')}"
         else:
             relative = request_path.lstrip("/")
         if not relative or ".." in Path(relative).parts:

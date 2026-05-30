@@ -111,10 +111,10 @@ The local Studio app server must keep write authority domain-specific.
 
 Analytics tag routes are owned by Local Analytics and write only:
 
-- `studio/data/canonical/analytics/tag-assignments.json`
-- `studio/data/canonical/analytics/tag-registry.json`
-- `studio/data/canonical/analytics/tag-aliases.json`
-- `studio/data/canonical/analytics/tag-groups.json`
+- `analytics-app/data/canonical/tag-assignments.json`
+- `analytics-app/data/canonical/tag-registry.json`
+- `analytics-app/data/canonical/tag-aliases.json`
+- `analytics-app/data/canonical/tag-groups.json`
 - Analytics backup and compact log paths
 
 Catalogue routes write only through explicit service allowlists:

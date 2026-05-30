@@ -1,5 +1,5 @@
 {
-  "load_failed_error": "Failed to load tag data from /studio/data/canonical/analytics/tag-registry.json and /studio/data/canonical/analytics/tag-aliases.json.",
+  "load_failed_error": "Failed to load tag data from /analytics/data/canonical/tag-registry.json and /analytics/data/canonical/tag-aliases.json.",
   "import_file_label": "import file",
   "import_mode_label": "mode",
   "import_mode_option_add": "add (no overwrite)",
@@ -95,7 +95,7 @@
   "choose_import_file_error": "Choose an import file first.",
   "server_import_failed": "Server import failed; switched to patch mode. {message}",
   "patch_demote_message": "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-  "patch_create_message": "Patch mode: new tag row prepared for studio/data/canonical/analytics/tag-registry.json tags[].",
+  "patch_create_message": "Patch mode: new tag row prepared for analytics-app/data/canonical/tag-registry.json tags[].",
   "patch_import_none_message": "Patch mode ({import_mode}): {imported_count} imported; 0 new tags to add.",
-  "patch_import_message": "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for studio/data/canonical/analytics/tag-registry.json tags[]."
+  "patch_import_message": "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for analytics-app/data/canonical/tag-registry.json tags[]."
 }

@@ -164,9 +164,9 @@ def registry_payload() -> dict[str, object]:
                     "scope": "tags",
                     "selection_model": "records",
                     "source_write_targets": {
-                        "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
-                        "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
-                        "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
+                        "tag_registry": "analytics-app/data/canonical/tag-registry.json",
+                        "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
+                        "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
                     },
                 },
                 capabilities=[capability("review", status="planned")],
@@ -211,7 +211,7 @@ def test_tags_adapter_definition_resolves_for_inspection() -> None:
 
         assert resolution.adapter_id == "analytics-tags"
         assert resolution.adapter["module"] == "analytics.tags"
-        assert resolution.domain["source_write_targets"]["tag_registry"] == "studio/data/canonical/analytics/tag-registry.json"
+        assert resolution.domain["source_write_targets"]["tag_registry"] == "analytics-app/data/canonical/tag-registry.json"
         assert resolution.capability["status"] == "planned"
 
 

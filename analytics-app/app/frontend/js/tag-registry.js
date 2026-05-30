@@ -204,7 +204,7 @@ async function initTagRegistryPage() {
       registryText(
         state.config,
         "load_failed_error",
-        "Failed to load tag data from /studio/data/canonical/analytics/tag-registry.json and /studio/data/canonical/analytics/tag-aliases.json."
+        "Failed to load tag data from /analytics/data/canonical/tag-registry.json and /analytics/data/canonical/tag-aliases.json."
       )
     );
     markRouteReady(state, true);

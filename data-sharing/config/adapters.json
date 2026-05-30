@@ -262,18 +262,18 @@
             "outbound_package_root": "var/studio/data-sharing/tags/exports",
             "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
             "review_output_root": "var/studio/data-sharing/tags/import-preview",
-            "source_root": "studio/data/canonical/analytics",
+            "source_root": "analytics-app/data/canonical",
             "backup_root": "var/studio/data-sharing/tags/backups"
           },
           "source_write_targets": {
-            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
-            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
-            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json"
+            "tag_registry": "analytics-app/data/canonical/tag-registry.json",
+            "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
+            "tag_assignments": "analytics-app/data/canonical/tag-assignments.json"
           },
           "sources": {
-            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
-            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
-            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
+            "tag_registry": "analytics-app/data/canonical/tag-registry.json",
+            "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
+            "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
             "series": "assets/data/series_index.json",
             "works": "assets/data/works_index.json"
           },

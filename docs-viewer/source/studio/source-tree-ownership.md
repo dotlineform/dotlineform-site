@@ -38,7 +38,7 @@ The current Studio-owned source homes are:
 | `studio/app/server/` | Local Studio app server, API adapters, route views, runtime config projection, and local HTTP dispatch. |
 | `studio/app/frontend/` | Studio browser modules, route modules, shell helpers, UI text config, and Studio runtime config source. |
 | `studio/app/assets/` | Studio-only CSS and visual assets used by Local Studio routes. |
-| `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, media-adjacent source records, and the current Analytics-owned tag data under `studio/data/canonical/analytics/`. |
+| `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, and media-adjacent source records. |
 | `studio/data/config/` | Studio-owned checked-in config, including catalogue and Studio runtime data contracts. |
 | `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Retired thumbnail-quality preview output is not an active served contract. |
 | `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
@@ -64,7 +64,7 @@ Current Analytics-owned source homes:
 | `analytics-app/app/frontend/` | Analytics browser modules, route modules, shell helpers, UI text config, and Analytics runtime config source. |
 | `analytics-app/app/assets/` | Analytics-only CSS and static assets used by Local Analytics routes. |
 | `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |
-| `studio/data/canonical/analytics/` | Current canonical tag registry, alias, assignment, and group source data used by Analytics. The path is intentionally preserved for this split; it is not a Studio route/API ownership claim. |
+| `analytics-app/data/canonical/` | Canonical tag registry, alias, assignment, and group source data used by Analytics. Raw local browser access, where needed, is served through `/analytics/data/canonical/...`. |
 | `data-sharing/` | Headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters used by Analytics. |
 | `var/studio/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. The path is intentionally preserved as a local artifact contract. |
 

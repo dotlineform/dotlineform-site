@@ -76,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on(
                 "request",
                 lambda request: static_group_requests.append(request.url)
-                if "/studio/data/canonical/analytics/tag-groups.json" in request.url
+                if "/analytics/data/canonical/tag-groups.json" in request.url
                 else None,
             )
             page.goto(f"{base_url}/analytics/tag-groups/", wait_until="domcontentloaded")

@@ -57,18 +57,18 @@ def make_registry_payload() -> dict[str, object]:
                             "outbound_package_root": "var/studio/data-sharing/tags/exports",
                             "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
                             "review_output_root": "var/studio/data-sharing/tags/import-preview",
-                            "source_root": "studio/data/canonical/analytics",
+                            "source_root": "analytics-app/data/canonical",
                             "backup_root": "var/studio/data-sharing/tags/backups",
                         },
                         "source_write_targets": {
-                            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
-                            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
-                            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
+                            "tag_registry": "analytics-app/data/canonical/tag-registry.json",
+                            "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
+                            "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
                         },
                         "sources": {
-                            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
-                            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
-                            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
+                            "tag_registry": "analytics-app/data/canonical/tag-registry.json",
+                            "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
+                            "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
                             "series": "assets/data/series_index.json",
                             "works": "assets/data/works_index.json",
                         },
@@ -223,7 +223,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     write_json(root / "data-sharing/config/adapters.json", make_registry_payload())
     write_json(
-        root / "studio/data/canonical/analytics/tag-registry.json",
+        root / "analytics-app/data/canonical/tag-registry.json",
         {
             "tag_registry_version": "tag_registry_v1",
             "policy": {"allowed_groups": ["subject", "domain", "form", "theme"]},
@@ -235,14 +235,14 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(
-        root / "studio/data/canonical/analytics/tag-aliases.json",
+        root / "analytics-app/data/canonical/tag-aliases.json",
         {
             "tag_aliases_version": "tag_aliases_v1",
             "aliases": {"woods": {"description": "", "tags": ["subject:trees"]}},
         },
     )
     write_json(
-        root / "studio/data/canonical/analytics/tag-assignments.json",
+        root / "analytics-app/data/canonical/tag-assignments.json",
         {
             "tag_assignments_version": "tag_assignments_v1",
             "series": {
@@ -433,7 +433,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
             adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
-        registry = read_json(root / "studio/data/canonical/analytics/tag-registry.json")
+        registry = read_json(root / "analytics-app/data/canonical/tag-registry.json")
 
     assert review["ok"] is True
     assert [row["title"] for row in review["review_rows"]] == ["subject:trees", "subject:sky"]
@@ -481,7 +481,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
             adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
-        aliases = read_json(root / "studio/data/canonical/analytics/tag-aliases.json")
+        aliases = read_json(root / "analytics-app/data/canonical/tag-aliases.json")
 
     assert review["counts"]["records"] == 2
     assert [row["type"] for row in review["review_rows"]] == ["alias", "alias"]
@@ -598,7 +598,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
             adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
-        assignments = read_json(root / "studio/data/canonical/analytics/tag-assignments.json")
+        assignments = read_json(root / "analytics-app/data/canonical/tag-assignments.json")
         activity_line = (root / "var/studio/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
         activity = json.loads(activity_line)
 

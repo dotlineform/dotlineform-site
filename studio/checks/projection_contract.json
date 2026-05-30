@@ -110,25 +110,25 @@
       "owner_doc": "data-models-catalogue"
     },
     {
-      "id": "studio_tag_source_data",
+      "id": "analytics_tag_source_data",
       "classification": "canonical_source",
       "repo_paths": [
-        "studio/data/canonical/analytics/tag-registry.json",
-        "studio/data/canonical/analytics/tag-aliases.json",
-        "studio/data/canonical/analytics/tag-assignments.json",
-        "studio/data/canonical/analytics/tag-groups.json"
+        "analytics-app/data/canonical/tag-registry.json",
+        "analytics-app/data/canonical/tag-aliases.json",
+        "analytics-app/data/canonical/tag-assignments.json",
+        "analytics-app/data/canonical/tag-groups.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/data/canonical/analytics/tag-registry.json",
-          "studio/data/canonical/analytics/tag-aliases.json",
-          "studio/data/canonical/analytics/tag-assignments.json",
-          "studio/data/canonical/analytics/tag-groups.json"
+          "analytics-app/data/canonical/tag-registry.json",
+          "analytics-app/data/canonical/tag-aliases.json",
+          "analytics-app/data/canonical/tag-assignments.json",
+          "analytics-app/data/canonical/tag-groups.json"
         ]
       },
       "jekyll_exclude_required": true,
-      "owner_doc": "data-models-studio"
+      "owner_doc": "analytics"
     },
     {
       "id": "studio_config_and_ui_text",
