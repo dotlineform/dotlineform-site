@@ -1,4 +1,4 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
   defaultFormatForPrepareConfig,
   prepareConfigSelection,
@@ -32,7 +32,7 @@ function escapeHtml(value) {
 
 function scopeLabel(state, scope = state.scope) {
   const item = (state.workflowScopes || []).find((candidate) => candidate.key === scope);
-  if (item && item.labelKey) return getStudioText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
+  if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
   return normalizeText(item && item.label) || normalizeText(item && item.fallback) || scope;
 }
 
@@ -173,7 +173,7 @@ export function updateDataSharingPrepareSelectionSummary(state) {
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     setText(
       state.selectionSummary,
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_prepare.selection_not_required",
         "No record selection required."
@@ -184,7 +184,7 @@ export function updateDataSharingPrepareSelectionSummary(state) {
   const count = state.selectedIds.size;
   setText(
     state.selectionSummary,
-    getStudioText(
+    getAnalyticsText(
       state.config,
       count === 1
         ? "data_sharing_prepare.selection_summary_one"
@@ -207,7 +207,7 @@ export function renderDataSharingPrepareListFilters(state) {
   state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
     const count = Number(counts[filter.key] || 0);
     const active = state.listFilter === filter.key;
-    const label = getStudioText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
+    const label = getAnalyticsText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
     return `
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
         ${escapeHtml(label)}
@@ -230,7 +230,7 @@ export function renderDataSharingPrepareFormatOptions(state) {
   state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.map((format) => {
     const supported = supportedFormats.includes(format.key);
     const checked = state.targetFormat === format.key;
-    const label = getStudioText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
+    const label = getAnalyticsText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
     return `
       <label class="dataSharingPreparePage__formatOption">
         <input type="radio" name="dataSharingPrepareFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
@@ -263,7 +263,7 @@ export function renderDataSharingPrepareConfigSelect(state) {
 
 export function renderDataSharingPrepareDocList(state) {
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getStudioText(
+    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getAnalyticsText(
       state.config,
       "data_sharing_prepare.profile_only_empty_state",
       "This profile packages the selected data family."
@@ -277,7 +277,7 @@ export function renderDataSharingPrepareDocList(state) {
     .map((doc) => renderDocRow(state, doc));
   state.listNode.innerHTML = rows.length
     ? `<ul class="tagStudioList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
-    : `<p class="tagStudio__status">${escapeHtml(getStudioText(
+    : `<p class="tagStudio__status">${escapeHtml(getAnalyticsText(
       state.config,
       "data_sharing_prepare.empty_state",
       "No matching {scope_label} documents.",
@@ -307,9 +307,9 @@ export function updateDataSharingPrepareSelectionFromChange(state, event) {
 export function renderDataSharingPrepareResultBody(state, payload) {
   const files = outputFiles(payload);
   const fileText = files.join("\n");
-  const fileLabel = getStudioText(state.config, "data_sharing_prepare.result_files_label", "files created");
-  const emptyFiles = getStudioText(state.config, "data_sharing_prepare.result_files_empty", "No files created.");
-  const formatLabel = getStudioText(state.config, "data_sharing_prepare.result_format_label", "format");
+  const fileLabel = getAnalyticsText(state.config, "data_sharing_prepare.result_files_label", "files created");
+  const emptyFiles = getAnalyticsText(state.config, "data_sharing_prepare.result_files_empty", "No files created.");
+  const formatLabel = getAnalyticsText(state.config, "data_sharing_prepare.result_format_label", "format");
   const targetFormat = normalizeText(payload && payload.target_format).toUpperCase();
   return `
     <dl class="dataSharingPrepareModal__details">
@@ -341,7 +341,7 @@ function countRows(state, counts, payload) {
   ];
   return rows.map(([key, textKey, fallback, count]) => `
     <div class="dataSharingPrepareModal__countRow" data-count-key="${escapeHtml(key)}">
-      <dt>${escapeHtml(getStudioText(state.config, textKey, fallback))}</dt>
+      <dt>${escapeHtml(getAnalyticsText(state.config, textKey, fallback))}</dt>
       <dd>${escapeHtml(countLabel(count, unit))}</dd>
     </div>
   `).join("");
@@ -352,7 +352,7 @@ function issueList(state, warnings, errors) {
   const warningItems = Array.isArray(warnings) ? warnings.map(normalizeText).filter(Boolean) : [];
   const items = [...errorItems, ...warningItems];
   if (!items.length) return "";
-  const heading = getStudioText(
+  const heading = getAnalyticsText(
     state.config,
     errorItems.length ? "data_sharing_prepare.issues_heading" : "data_sharing_prepare.warnings_heading",
     errorItems.length ? "Issues" : "Warnings"

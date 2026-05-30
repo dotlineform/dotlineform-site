@@ -47,7 +47,7 @@ Editor controller:
 
 Supporting modules:
 
-- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/analytics-ui.js`
 - `analytics-app/app/frontend/js/tag-studio-domain.js`
 - `analytics-app/app/frontend/js/tag-assignments-offline.js`
 - `analytics-app/app/frontend/js/tag-studio-render.js`
@@ -303,7 +303,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`, `tag-studio-render.js`, and `tag-studio-suggestions.js`.
+`analytics-app/app/frontend/js/analytics-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`, `tag-studio-render.js`, and `tag-studio-suggestions.js`.
 
 ### Status and save feedback
 
@@ -449,7 +449,7 @@ Editor data fetches:
 
 These are loaded through:
 
-- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/analytics-data.js`
 
 ## Business Logic
 

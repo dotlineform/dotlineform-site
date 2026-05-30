@@ -129,8 +129,8 @@ def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
 
 def asset_version(repo_root: Path) -> str:
     candidates = [
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "studio-theme.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "studio-navigation.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-theme.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-navigation.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-groups.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-registry.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-aliases.js",

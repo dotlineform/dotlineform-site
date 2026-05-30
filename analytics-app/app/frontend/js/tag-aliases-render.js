@@ -1,20 +1,20 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   countAliasesByGroup,
   getVisibleAliases
 } from "./tag-aliases-domain.js";
 import {
   tagAliasesUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = tagAliasesUi;
 const { className: UI_CLASS, state: UI_STATE } = UI;
 
 export function renderTagAliasesControls(state) {
-  const studioGroups = getStudioGroups(state);
+  const studioGroups = getAnalyticsGroups(state);
   const counts = countAliasesByGroup(state.aliases);
   const totalCount = state.aliases.length;
   const allTagsLabel = aliasesText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
@@ -137,7 +137,7 @@ function renderAliasTargetChip(state, target) {
   `;
 }
 
-function getStudioGroups(state) {
+function getAnalyticsGroups(state) {
   return Array.isArray(state && state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : DEFAULT_STUDIO_GROUPS;
@@ -172,7 +172,7 @@ function sortIndicator(state, key) {
 }
 
 function aliasesText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
 function classNames(...tokens) {

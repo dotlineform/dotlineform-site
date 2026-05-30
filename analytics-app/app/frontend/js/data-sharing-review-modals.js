@@ -1,5 +1,5 @@
-import { getStudioText } from "./studio-config.js";
-import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
+import { getAnalyticsText } from "./analytics-config.js";
+import { openConfirmDetailModal, openNoticeModal } from "./analytics-modal.js";
 
 export function showDataSharingReviewResultModal(state, { title, summary, countRows, issues }, options = {}) {
   const summaryHtml = normalizeText(summary)
@@ -15,7 +15,7 @@ export function showDataSharingReviewResultModal(state, { title, summary, countR
     title,
     bodyHtml,
     restoreFocus: options.restoreFocus,
-    closeLabel: getStudioText(state.config, "data_sharing_review.result_close_button", "Close")
+    closeLabel: getAnalyticsText(state.config, "data_sharing_review.result_close_button", "Close")
   }).catch((error) => console.warn("data_sharing_review: result modal failed", error));
 }
 
@@ -24,16 +24,16 @@ export function confirmDataSharingReviewApply(state, action, preflight, countsTe
   return openConfirmDetailModal({
     root: state.root,
     title: normalizeText(confirmation.title)
-      || getStudioText(state.config, "data_sharing_review.apply_confirm_title", "Apply returned changes?"),
+      || getAnalyticsText(state.config, "data_sharing_review.apply_confirm_title", "Apply returned changes?"),
     body: [
       normalizeText(preflight && preflight.summary_text) || normalizeText(countsTextValue),
       normalizeText(countsTextValue),
       normalizeText(confirmation.body)
     ].filter(Boolean),
     primaryLabel: normalizeText(confirmation.primary_label)
-      || getStudioText(state.config, "data_sharing_review.apply_confirm_ok", "OK"),
+      || getAnalyticsText(state.config, "data_sharing_review.apply_confirm_ok", "OK"),
     cancelLabel: normalizeText(confirmation.cancel_label)
-      || getStudioText(state.config, "data_sharing_review.apply_confirm_cancel", "Cancel")
+      || getAnalyticsText(state.config, "data_sharing_review.apply_confirm_cancel", "Cancel")
   });
 }
 
@@ -55,7 +55,7 @@ function countRowsHtml(rows) {
 function issuesHtml(state, issues) {
   const items = issueItems(issues);
   if (!items.length) return "";
-  const heading = getStudioText(state.config, "data_sharing_review.issues_heading", "Issues");
+  const heading = getAnalyticsText(state.config, "data_sharing_review.issues_heading", "Issues");
   return `
     <div class="dataSharingReviewResultModal__issues">
       <h4>${escapeHtml(heading)}</h4>

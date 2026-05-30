@@ -15,7 +15,7 @@ Config module:
 ## Scope
 
 `studio-config.js` is the shared browser-side loader and accessor layer for `assets/studio/data/studio_config.json` and Studio scoped UI-text bundles.
-Analytics/Data Sharing pages use `analytics-app/app/frontend/js/studio-config.js` with `analytics-app/app/frontend/config/analytics-config.json` instead of this Studio config surface.
+Analytics/Data Sharing pages use `analytics-app/app/frontend/js/analytics-config.js` with `analytics-app/app/frontend/config/analytics-config.json` instead of this Studio config surface.
 
 It is configuration code rather than a route controller. Its job is to fetch the bootstrap config once, merge defaults, resolve site-relative paths, load route-owned text bundles on demand, and expose stable helpers to the rest of the Studio browser runtime.
 

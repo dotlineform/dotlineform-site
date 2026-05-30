@@ -1,6 +1,6 @@
 import {
-  getStudioRoute
-} from "./studio-config.js";
+  getAnalyticsRoute
+} from "./analytics-config.js";
 
 export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
   const normalizedPath = normalizePublicPath(path);
@@ -17,15 +17,15 @@ export function buildPublicSeriesUrl(config, seriesId, params = {}) {
 
 function buildPublicRecordUrl(config, routeKey, fallbackBase, recordId, params = {}) {
   const id = normalizeText(recordId);
-  const routeBase = normalizeRouteBase(getStudioRoute(config, routeKey) || fallbackBase);
+  const routeBase = normalizeRouteBase(getAnalyticsRoute(config, routeKey) || fallbackBase);
   return buildPublicCatalogueUrl(config, id ? `${routeBase}${encodeURIComponent(id)}/` : routeBase, params);
 }
 
 function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
   const siteKey = options && options.site === "production" ? "production" : "public_preview";
-  const base = getStudioSiteBase(config, siteKey);
+  const base = getAnalyticsSiteBase(config, siteKey);
   if (!base) {
-    throw new Error(`Missing Studio site base: ${siteKey}`);
+    throw new Error(`Missing Analytics site base: ${siteKey}`);
   }
   const url = new URL(String(path || "/"), ensureTrailingSlash(base));
   for (const [key, value] of Object.entries(params || {})) {
@@ -35,7 +35,7 @@ function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
   return url.href;
 }
 
-function getStudioSiteBase(config, siteKey) {
+function getAnalyticsSiteBase(config, siteKey) {
   const runtime = config && config.app && config.app.runtime;
   const sites = runtime && runtime.sites && typeof runtime.sites === "object" && !Array.isArray(runtime.sites)
     ? runtime.sites

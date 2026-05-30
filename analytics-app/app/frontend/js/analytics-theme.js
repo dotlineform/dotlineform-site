@@ -46,7 +46,7 @@ function renderToggle(button, theme) {
   });
 }
 
-export function initStudioThemeToggle(options = {}) {
+export function initAnalyticsThemeToggle(options = {}) {
   const root = options.root || document;
   const documentRef = options.document || document;
   const storage = options.storage || window.localStorage;

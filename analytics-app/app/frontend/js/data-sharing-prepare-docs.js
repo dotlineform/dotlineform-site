@@ -1,6 +1,6 @@
 import {
   DATA_SHARING_ENDPOINTS
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 import {
   usesPrepareDocumentSelection
 } from "./data-sharing-prepare-workflow.js";

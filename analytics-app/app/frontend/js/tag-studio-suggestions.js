@@ -1,12 +1,12 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   normalize
 } from "./tag-studio-domain.js";
 import {
   seriesTagEditorUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 const POPUP_TAG_MATCH_CAP = 12;
 const POPUP_ALIAS_MATCH_CAP = 12;
@@ -201,5 +201,5 @@ function chipGroupClass(group) {
 }
 
 function studioText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

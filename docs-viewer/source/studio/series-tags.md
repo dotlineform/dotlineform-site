@@ -38,7 +38,7 @@ Page controller:
 
 Supporting modules:
 
-- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/analytics-ui.js`
 - `analytics-app/app/frontend/js/series-tags-render.js`
 
 Top-level structure:
@@ -278,7 +278,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors when the page needs them
 - `data-state` defines active filter state
 
-`analytics-app/app/frontend/js/studio-ui.js` holds the shared role/state/class tokens used by `series-tags.js`.
+`analytics-app/app/frontend/js/analytics-ui.js` holds the shared role/state/class tokens used by `series-tags.js`.
 
 ## State Handling
 
@@ -313,7 +313,7 @@ Primary data access:
 
 Loaded through:
 
-- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/analytics-data.js`
 
 ## Business Logic
 
@@ -332,7 +332,7 @@ These responsibilities live mainly in:
 - `analytics-app/app/frontend/js/series-tags.js`
 - report/table rendering in `analytics-app/app/frontend/js/series-tags-render.js`
 - shared scoring helpers in `analytics-app/app/frontend/js/analysis-tag-scoring.js`
-- shared config helpers in `analytics-app/app/frontend/js/studio-config.js`
+- shared config helpers in `analytics-app/app/frontend/js/analytics-config.js`
 
 ## Change Guidance
 

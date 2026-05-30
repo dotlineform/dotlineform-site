@@ -1,4 +1,4 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
   renderDataSharingReviewPreviewList,
   selectableDataSharingReviewPreviewIds,
@@ -42,7 +42,7 @@ export function dataSharingReviewScopeSupportsApply(state) {
 
 export function dataSharingReviewScopeLabel(state, scope = state.scope) {
   const item = workflowDomainForKey(state.workflowScopes, scope) || DATA_SHARING_REVIEW_SCOPES[0];
-  if (item.labelKey) return getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
+  if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
   return normalizeDataSharingReviewText(item.label) || item.fallback || scope;
 }
 
@@ -59,7 +59,7 @@ export function dataSharingReviewApplyActionsForCapability(capability) {
 export function renderDataSharingReviewScopeSelect(state) {
   state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
     const label = item.labelKey
-      ? getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
+      ? getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
       : (normalizeDataSharingReviewText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeDataSharingReviewHtml(item.key)}"${selected}>${escapeDataSharingReviewHtml(label)}</option>`;
@@ -142,7 +142,7 @@ export function updateDataSharingReviewScopeUrl(scope, domains = DATA_SHARING_RE
 export function dataSharingReviewScopeUnavailableMessage(state) {
   const domain = workflowDomainForKey(state.workflowScopes, state.scope);
   return normalizeDataSharingReviewText(domain && domain.message)
-    || getStudioText(
+    || getAnalyticsText(
       state.config,
       "data_sharing_review.scope_unsupported",
       "{scope_label} returned-package review is not implemented yet.",
@@ -210,7 +210,7 @@ export function setDataSharingReviewControlsDisabled(state, disabled) {
     const disabledForSelection = !selectedRecordCount;
     button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
     button.title = disabledForSelection
-      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      ? (action && action.selectionRequiredMessage) || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
       : normalizeDataSharingReviewText(action && action.title);
   });
 }
@@ -226,7 +226,7 @@ export function syncDataSharingReviewApplyActionState(state) {
     const disabledForSelection = !selectedRecordCount;
     button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
     button.title = disabledForSelection
-      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      ? (action && action.selectionRequiredMessage) || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
       : normalizeDataSharingReviewText(action && action.title);
   });
   if (state.applyActionMenu && !state.applyActionMenu.hidden) positionDataSharingReviewApplyActionsMenu(state);

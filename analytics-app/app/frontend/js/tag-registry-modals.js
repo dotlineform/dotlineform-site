@@ -1,8 +1,8 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
-  renderStudioModalActions,
-  renderStudioModalFrame
-} from "./studio-modal.js";
+  renderAnalyticsModalActions,
+  renderAnalyticsModalFrame
+} from "./analytics-modal.js";
 import {
   captureTagModalRestoreFocus,
   chipGroupClass as tagChipGroupClass,
@@ -17,7 +17,7 @@ import {
   syncTagModalFocusAfterOpen,
   trapTagModalFocus
 } from "./tag-modal-shell.js";
-import { tagRegistryUi } from "./studio-ui.js";
+import { tagRegistryUi } from "./analytics-ui.js";
 
 const UI = tagRegistryUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
@@ -140,7 +140,7 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
     const groupButton = event.target.closest("button[data-new-group]");
     if (!groupButton || !state.newTagState) return;
     const group = normalizeModalValue(groupButton.getAttribute("data-new-group"));
-    if (!getStudioGroups(state).includes(group)) return;
+    if (!getAnalyticsGroups(state).includes(group)) return;
     state.newTagState.group = group;
     callbacks.onNewTagInput?.();
   });
@@ -494,7 +494,7 @@ export function renderTagRegistryDeleteImpactPreview(state, options = {}) {
 }
 
 function renderPatchModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.patchModal,
     backdropRole: UI.role.patchModalClose,
     titleId: "tagRegistryPatchTitle",
@@ -504,7 +504,7 @@ function renderPatchModal(state) {
       <p class="${UI_CLASS.modalLabel}">${escapeHtml(registryText(state.config, "patch_modal_label", "Manual patch snippet"))}</p>
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.patchModalClose, label: registryText(state.config, "patch_modal_close_button", "Close") },
       { role: UI.role.copyPatch, label: registryText(state.config, "patch_modal_copy_button", "Copy"), primary: true }
     ])
@@ -512,7 +512,7 @@ function renderPatchModal(state) {
 }
 
 function renderImportModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.importModal,
     backdropRole: UI.role.importModalClose,
     titleId: "tagRegistryImportTitle",
@@ -535,14 +535,14 @@ function renderImportModal(state) {
         <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
       </div>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.importModalClose, label: registryText(state.config, "import_modal_close_button", "Close") }
     ])
   });
 }
 
 function renderEditModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.editModal,
     backdropRole: UI.role.editModalClose,
     titleId: "tagRegistryEditTitle",
@@ -560,7 +560,7 @@ function renderEditModal(state) {
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.editModalClose, label: registryText(state.config, "edit_close_button", "Close") },
       { role: UI.role.saveEdit, label: registryText(state.config, "edit_save_button", "Save"), primary: true }
     ])
@@ -568,7 +568,7 @@ function renderEditModal(state) {
 }
 
 function renderNewModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.newModal,
     backdropRole: UI.role.newModalClose,
     titleId: "tagRegistryNewTitle",
@@ -588,7 +588,7 @@ function renderNewModal(state) {
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.newModalClose, label: registryText(state.config, "new_cancel_button", "Cancel") },
       { role: UI.role.createTag, label: registryText(state.config, "new_create_button", "Create"), primary: true, disabled: true }
     ])
@@ -596,7 +596,7 @@ function renderNewModal(state) {
 }
 
 function renderDemoteModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.demoteModal,
     backdropRole: UI.role.demoteModalClose,
     titleId: "tagRegistryDemoteTitle",
@@ -616,7 +616,7 @@ function renderDemoteModal(state) {
       <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.demoteModalClose, label: registryText(state.config, "demote_close_button", "Close") },
       { role: UI.role.confirmDemote, label: registryText(state.config, "demote_confirm_button", "Demote"), primary: true, disabled: true }
     ])
@@ -624,7 +624,7 @@ function renderDemoteModal(state) {
 }
 
 function renderDeleteModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.deleteModal,
     backdropRole: UI.role.deleteModalClose,
     titleId: "tagRegistryDeleteTitle",
@@ -641,7 +641,7 @@ function renderDeleteModal(state) {
       <div class="${UI_CLASS.formImpact} tagRegistryDelete__impactPanel" data-role="${UI.role.deleteImpact}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.deleteModalClose, label: registryText(state.config, "delete_close_button", "Cancel") },
       { role: UI.role.confirmDeleteTag, label: registryText(state.config, "delete_confirm_button", "Delete"), primary: true }
     ])
@@ -715,7 +715,7 @@ function renderTagRegistryNewTagGroupKey(state) {
     state.refs.newGroupKey.innerHTML = "";
     return;
   }
-  state.refs.newGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+  state.refs.newGroupKey.innerHTML = getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `
       <button
@@ -737,7 +737,7 @@ function renderTagRegistryDemoteGroupKey(state, selectedItems) {
     return;
   }
   const selected = new Set(selectedItems.map((item) => item && item.group).filter(Boolean));
-  state.refs.demoteGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+  state.refs.demoteGroupKey.innerHTML = getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
   }).join("") + renderGroupInfoControl(state);
@@ -841,7 +841,7 @@ function groupTitleAttr(state, group) {
   return `title="${escapeHtml(description)}"`;
 }
 
-function getStudioGroups(state) {
+function getAnalyticsGroups(state) {
   return Array.isArray(state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : ["subject", "domain", "form", "theme"];
@@ -852,7 +852,7 @@ function normalizeModalValue(value) {
 }
 
 function registryText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_registry.${key}`, fallback, tokens);
 }
 
 function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {

@@ -1,6 +1,6 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   buildStudioTagScore
 } from "./analysis-tag-scoring.js";
@@ -9,7 +9,7 @@ import {
 } from "./tag-studio-domain.js";
 import {
   seriesTagsUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = seriesTagsUi;
@@ -140,7 +140,7 @@ function renderTagChip(input, tag) {
 }
 
 function renderFilters(input) {
-  const groupButtons = getStudioGroups(input).map((group) => {
+  const groupButtons = getAnalyticsGroups(input).map((group) => {
     const titleAttr = groupTitleAttr(input, group);
     return `
       <button
@@ -164,7 +164,7 @@ function renderFilters(input) {
   `;
 }
 
-function getStudioGroups(input) {
+function getAnalyticsGroups(input) {
   return Array.isArray(input && input.studioGroups) && input.studioGroups.length
     ? input.studioGroups
     : DEFAULT_STUDIO_GROUPS;
@@ -287,5 +287,5 @@ function normalize(value) {
 }
 
 function seriesTagsText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tags.${key}`, fallback, tokens);
 }

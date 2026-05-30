@@ -1,4 +1,4 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -15,7 +15,7 @@ function escapeHtml(value) {
 
 function scopeLabel(state, scope = state.scope) {
   const item = (state.workflowScopes || []).find((candidate) => candidate.key === scope);
-  if (item && item.labelKey) return getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
+  if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
   return normalizeText(item && item.label) || normalizeText(item && item.fallback) || scope;
 }
 
@@ -84,13 +84,13 @@ function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
   const parts = [];
   parts.push(
     docId
-      || getStudioText(state.config, "data_sharing_review.missing_doc_id", "missing doc_id")
+      || getAnalyticsText(state.config, "data_sharing_review.missing_doc_id", "missing doc_id")
   );
   if (duplicate) {
-    parts.push(getStudioText(state.config, "data_sharing_review.duplicate_doc_id", "duplicate doc_id"));
+    parts.push(getAnalyticsText(state.config, "data_sharing_review.duplicate_doc_id", "duplicate doc_id"));
   }
   if (currentLibrary && currentLibrary.exists === false) {
-    parts.push(getStudioText(
+    parts.push(getAnalyticsText(
       state.config,
       "data_sharing_review.not_current_scope",
       "not in current {scope_label}",
@@ -120,7 +120,7 @@ function buildDocumentRows(state, payload, previewLookup) {
       kind: normalizeText(previewFile && previewFile.kind) || "document",
       path,
       title: normalizeText(record && record.title)
-        || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
+        || getAnalyticsText(state.config, "data_sharing_review.missing_title", "missing title"),
       meta: rowMetaParts(state, { docId, duplicate, currentLibrary }).join(" \u00b7 "),
       depth: 0,
       selectable: true,
@@ -162,7 +162,7 @@ function buildTreeRows(state, previewLookup) {
   return previewLookup.treeFiles.map(({ item, index }) => {
     const path = normalizeText(item.path);
     const count = Number(item.record_count || 0);
-    const countText = getStudioText(
+    const countText = getAnalyticsText(
       state.config,
       "data_sharing_review.relationship_tree_count",
       "{count} records",
@@ -177,7 +177,7 @@ function buildTreeRows(state, previewLookup) {
       duplicate: false,
       kind: "relationship_tree",
       path,
-      title: getStudioText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
+      title: getAnalyticsText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
       meta: countText,
       depth: 0,
       selectable: false,
@@ -205,15 +205,15 @@ function normalizeReviewRow(state, row, index) {
     normalizeText(row.meta),
     recordIndex === null
       ? ""
-      : getStudioText(state.config, "data_sharing_review.record_index_meta", "row {record_index}", { record_index: recordIndex + 1 }),
+      : getAnalyticsText(state.config, "data_sharing_review.record_index_meta", "row {record_index}", { record_index: recordIndex + 1 }),
     issueTexts.length
-      ? getStudioText(state.config, "data_sharing_review.row_issues_meta", "{count} issue(s)", { count: issueTexts.length })
+      ? getAnalyticsText(state.config, "data_sharing_review.row_issues_meta", "{count} issue(s)", { count: issueTexts.length })
       : ""
   ].filter(Boolean);
   return {
     id: previewRowId(row, index),
-    type: normalizeText(row.type) || getStudioText(state.config, "data_sharing_review.row_type_record", "record"),
-    title: normalizeText(row.title) || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
+    type: normalizeText(row.type) || getAnalyticsText(state.config, "data_sharing_review.row_type_record", "record"),
+    title: normalizeText(row.title) || getAnalyticsText(state.config, "data_sharing_review.missing_title", "missing title"),
     meta: metaParts.join(" \u00b7 "),
     recordIndex,
     selectable: row.selectable !== false && Number.isInteger(recordIndex),
@@ -240,7 +240,7 @@ function renderPreviewRow(row) {
 
 export function renderDataSharingReviewPreviewList(state) {
   if (!state.previewRows.length) {
-    const emptyState = getStudioText(
+    const emptyState = getAnalyticsText(
       state.config,
       "data_sharing_review.empty_state",
       "Generate a preview to list staged documents."
@@ -277,7 +277,7 @@ export function syncDataSharingReviewPreviewCheckboxes(state) {
 export function updateDataSharingReviewSelectionSummary(state) {
   const count = state.selectedPreviewIds.size;
   if (!state.selectionSummary) return;
-  state.selectionSummary.textContent = normalizeText(getStudioText(
+  state.selectionSummary.textContent = normalizeText(getAnalyticsText(
     state.config,
     count === 1
       ? "data_sharing_review.selection_summary_one"

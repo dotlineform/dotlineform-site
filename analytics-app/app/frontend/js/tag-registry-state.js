@@ -5,10 +5,10 @@ import {
 } from "./tag-registry-domain.js";
 import {
   getSeriesAssignmentTagIds
-} from "./studio-data.js";
+} from "./analytics-data.js";
 import {
-  buildStudioRouteUrl
-} from "./studio-config.js";
+  buildAnalyticsRouteUrl
+} from "./analytics-config.js";
 
 export function applyTagRegistryEditProjection(state, options = {}) {
   const tagId = normalize(options.tagId);
@@ -115,5 +115,5 @@ function timestampMs(value) {
 
 function buildSeriesEditorUrl(config, seriesId) {
   const normalizedSeriesId = normalize(seriesId);
-  return normalizedSeriesId ? buildStudioRouteUrl(config, "series_tag_editor", { series: normalizedSeriesId }) : "";
+  return normalizedSeriesId ? buildAnalyticsRouteUrl(config, "series_tag_editor", { series: normalizedSeriesId }) : "";
 }

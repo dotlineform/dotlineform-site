@@ -1,5 +1,5 @@
-const DEFAULT_STUDIO_CONFIG = {
-  "studio_config_version": "analytics_config_v1",
+const DEFAULT_ANALYTICS_CONFIG = {
+  "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
   "paths": {
     "routes": {
@@ -16,7 +16,7 @@ const DEFAULT_STUDIO_CONFIG = {
       "works_page_base": "/works/"
     },
     "data": {
-      "studio": {
+      "analytics": {
         "data_sharing_adapters": "/data-sharing/config/adapters.json",
         "library_export_configs": "/data-sharing/config/library-export-configs.json"
       },
@@ -101,46 +101,46 @@ const DEFAULT_STUDIO_CONFIG = {
 };
 
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
-let studioConfigPromise = null;
+let analyticsConfigPromise = null;
 const scopedTextPromises = new Map();
 
 export {
-  DEFAULT_STUDIO_CONFIG
+  DEFAULT_ANALYTICS_CONFIG
 };
 
-export async function loadStudioConfig() {
-  if (!studioConfigPromise) {
-    studioConfigPromise = fetch(resolveStudioConfigUrl(), { cache: "default" })
+export async function loadAnalyticsConfig() {
+  if (!analyticsConfigPromise) {
+    analyticsConfigPromise = fetch(resolveAnalyticsConfigUrl(), { cache: "default" })
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
       })
-      .then((data) => mergeConfig(DEFAULT_STUDIO_CONFIG, data));
+      .then((data) => mergeConfig(DEFAULT_ANALYTICS_CONFIG, data));
   }
-  return studioConfigPromise;
+  return analyticsConfigPromise;
 }
 
-function resolveStudioConfigUrl() {
-  const configuredUrl = readConfiguredStudioConfigUrl();
+function resolveAnalyticsConfigUrl() {
+  const configuredUrl = readConfiguredAnalyticsConfigUrl();
   if (configuredUrl) {
     return buildAssetUrl(resolveSitePath(configuredUrl));
   }
-  throw new Error('Studio runtime config meta tag is required: meta[name="dlf-studio-config-url"]');
+  throw new Error('Analytics runtime config meta tag is required: meta[name="dlf-analytics-config-url"]');
 }
 
-function readConfiguredStudioConfigUrl() {
+function readConfiguredAnalyticsConfigUrl() {
   if (typeof document === "undefined") return "";
-  const meta = document.querySelector('meta[name="dlf-studio-config-url"]');
+  const meta = document.querySelector('meta[name="dlf-analytics-config-url"]');
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
 }
 
-export async function loadStudioConfigWithText(group) {
-  const config = await loadStudioConfig();
-  await loadScopedStudioText(config, group);
+export async function loadAnalyticsConfigWithText(group) {
+  const config = await loadAnalyticsConfig();
+  await loadScopedAnalyticsText(config, group);
   return config;
 }
 
-export async function loadScopedStudioText(config, group) {
+export async function loadScopedAnalyticsText(config, group) {
   const normalizedGroup = normalizeUiTextGroup(group);
   const targetConfig = config && typeof config === "object" ? config : {};
   if (!normalizedGroup) return targetConfig;
@@ -148,7 +148,7 @@ export async function loadScopedStudioText(config, group) {
     return targetConfig;
   }
 
-  const url = getStudioUiTextPath(targetConfig, normalizedGroup);
+  const url = getAnalyticsUiTextPath(targetConfig, normalizedGroup);
   if (!url) {
     warnScopedTextFallback(normalizedGroup, "missing scoped text path");
     return targetConfig;
@@ -180,18 +180,18 @@ export async function loadScopedStudioText(config, group) {
   return targetConfig;
 }
 
-export function getStudioGroups(config) {
-  const fallback = DEFAULT_STUDIO_CONFIG.analysis.groups.ordered;
+export function getAnalyticsGroups(config) {
+  const fallback = DEFAULT_ANALYTICS_CONFIG.analysis.groups.ordered;
   return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), fallback);
 }
 
-export function getStudioCoverageGroups(config) {
-  const fallback = getStudioGroups(config);
+export function getAnalyticsCoverageGroups(config) {
+  const fallback = getAnalyticsGroups(config);
   return sanitizeStringArray(pathValue(config, ["analysis", "groups", "coverage_groups"]), fallback);
 }
 
-export function getStudioDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "studio", key]);
+export function getAnalyticsDataPath(config, key) {
+  const path = pathValue(config, ["paths", "data", "analytics", key]);
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
@@ -200,24 +200,24 @@ export function getSiteDataPath(config, key) {
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getStudioUiTextPath(config, group) {
+export function getAnalyticsUiTextPath(config, group) {
   const normalizedGroup = normalizeUiTextGroup(group);
   const path = pathValue(config, ["paths", "data", "ui_text", normalizedGroup]);
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getStudioRoute(config, key) {
+export function getAnalyticsRoute(config, key) {
   const path = pathValue(config, ["paths", "routes", key]);
   return resolveSitePath(typeof path === "string" ? path : "");
 }
 
-export function buildStudioRouteUrl(config, key, params = {}) {
-  const route = getStudioRoute(config, key);
+export function buildAnalyticsRouteUrl(config, key, params = {}) {
+  const route = getAnalyticsRoute(config, key);
   if (!route) return "";
   return appendRouteParams(route, params);
 }
 
-export function getStudioText(config, key, fallback = "", tokens = null) {
+export function getAnalyticsText(config, key, fallback = "", tokens = null) {
   const pathKeys = ["ui_text", ...String(key || "").split(".").filter(Boolean)];
   const value = pathValue(config, pathKeys);
   const source = typeof value === "string" ? value : fallback;
@@ -233,7 +233,7 @@ function normalizeUiTextGroup(value) {
 
 function warnScopedTextFallback(group, detail) {
   if (typeof console === "undefined" || !console.warn) return;
-  console.warn(`studio_config: scoped ui_text.${group} unavailable; using caller fallback copy`, detail);
+  console.warn(`analytics_config: scoped ui_text.${group} unavailable; using caller fallback copy`, detail);
 }
 
 function deriveSiteBasePath(importUrl) {

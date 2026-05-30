@@ -1,18 +1,18 @@
 import {
-  getStudioGroups,
-  getStudioRoute,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  getAnalyticsGroups,
+  getAnalyticsRoute,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
-  buildStudioGroupDescriptionMap,
-  getStudioAssignmentsSeries,
+  buildAnalyticsGroupDescriptionMap,
+  getAnalyticsAssignmentsSeries,
   loadSiteSeriesIndexJson,
-  loadStudioAssignmentsJson,
-  loadStudioAliasesJson,
-  loadStudioGroupsJson,
-  loadStudioRegistryJson
-} from "./studio-data.js";
+  loadAnalyticsAssignmentsJson,
+  loadAnalyticsAliasesJson,
+  loadAnalyticsGroupsJson,
+  loadAnalyticsRegistryJson
+} from "./analytics-data.js";
 import {
   buildAliasKeySet,
   buildRegistryOptions,
@@ -44,7 +44,7 @@ import {
 } from "./tag-registry-workflow.js";
 import {
   openConfirmDetailModal
-} from "./studio-modal.js";
+} from "./analytics-modal.js";
 import {
   clearTagRegistryImportResult,
   collectTagRegistryModalRefs,
@@ -64,7 +64,7 @@ import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   bindTagSaveModeReprobe,
   tagRouteServiceState,
@@ -72,7 +72,7 @@ import {
 } from "./tag-route-save-session.js";
 import {
   tagRegistryUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 import {
   addTagRegistryDemoteTag,
   applyTagRegistryCreatePatchResult,
@@ -142,7 +142,7 @@ async function initTagRegistryPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfigWithText("tag_registry");
+    config = await loadAnalyticsConfigWithText("tag_registry");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag registry config.</div>`;
     setStudioRouteReady(mount, true, {
@@ -153,9 +153,9 @@ async function initTagRegistryPage() {
     });
     return;
   }
-  STUDIO_GROUPS = getStudioGroups(config);
+  STUDIO_GROUPS = getAnalyticsGroups(config);
   configureTagRegistryDomain({ groups: STUDIO_GROUPS });
-  GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+  GROUP_INFO_PAGE_PATH = getAnalyticsRoute(config, "tag_groups");
 
   const state = {
     mount,
@@ -366,16 +366,16 @@ function renderImportAvailability(state) {
 
 async function loadRegistry(state, options = {}) {
   const [registryData, aliasesData] = await Promise.all([
-    loadStudioRegistryJson(state.config, options),
-    loadStudioAliasesJson(state.config, options)
+    loadAnalyticsRegistryJson(state.config, options),
+    loadAnalyticsAliasesJson(state.config, options)
   ]);
   const [assignmentsResult, seriesIndexResult] = await Promise.allSettled([
-    loadStudioAssignmentsJson(state.config, options),
+    loadAnalyticsAssignmentsJson(state.config, options),
     loadSiteSeriesIndexJson(state.config, options)
   ]);
   let groupsData = null;
   try {
-    groupsData = await loadStudioGroupsJson(state.config, options);
+    groupsData = await loadAnalyticsGroupsJson(state.config, options);
   } catch (error) {
     groupsData = null;
   }
@@ -383,12 +383,12 @@ async function loadRegistry(state, options = {}) {
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
   state.aliasKeys = buildAliasKeySet(aliasesData);
   state.assignmentsSeries = assignmentsResult.status === "fulfilled"
-    ? getStudioAssignmentsSeries(assignmentsResult.value)
+    ? getAnalyticsAssignmentsSeries(assignmentsResult.value)
     : {};
   state.seriesMetaById = seriesIndexResult.status === "fulfilled"
     ? buildTagRegistrySeriesMetaById(state.config, seriesIndexResult.value)
     : new Map();
-  state.groupDescriptions = buildStudioGroupDescriptionMap(groupsData, STUDIO_GROUPS);
+  state.groupDescriptions = buildAnalyticsGroupDescriptionMap(groupsData, STUDIO_GROUPS);
   state.registryOptions = buildRegistryOptions(state.tags);
 }
 
@@ -757,7 +757,7 @@ async function copyPatchSnippet(state) {
 }
 
 function registryText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_registry.${key}`, fallback, tokens);
 }
 
 function renderError(state, message) {

@@ -1,8 +1,8 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
-  renderStudioModalActions,
-  renderStudioModalFrame
-} from "./studio-modal.js";
+  renderAnalyticsModalActions,
+  renderAnalyticsModalFrame
+} from "./analytics-modal.js";
 import {
   captureTagModalRestoreFocus,
   chipGroupClass as tagChipGroupClass,
@@ -17,7 +17,7 @@ import {
   syncTagModalFocusAfterOpen,
   trapTagModalFocus
 } from "./tag-modal-shell.js";
-import { tagAliasesUi } from "./studio-ui.js";
+import { tagAliasesUi } from "./analytics-ui.js";
 
 const UI = tagAliasesUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
@@ -124,7 +124,7 @@ export function wireTagAliasesModalEvents(state, callbacks = {}) {
     const groupButton = event.target.closest("button[data-promotion-group]");
     if (!groupButton || !state.promotionState) return;
     const group = normalizeModalValue(groupButton.getAttribute("data-promotion-group"));
-    if (!getStudioGroups(state).includes(group)) return;
+    if (!getAnalyticsGroups(state).includes(group)) return;
     state.promotionState.group = group;
     updateTagAliasesPromotionUi(state);
   });
@@ -308,7 +308,7 @@ export function openTagAliasesPromotionModal(state, aliasKey, suggestedGroup) {
   captureTagModalRestoreFocus(state, "promotion", modalConfigs());
   state.promotionState = {
     aliasKey,
-    group: getStudioGroups(state).includes(suggestedGroup) ? suggestedGroup : ""
+    group: getAnalyticsGroups(state).includes(suggestedGroup) ? suggestedGroup : ""
   };
   updateTagAliasesPromotionUi(state);
   state.refs.promotionModal.hidden = false;
@@ -528,7 +528,7 @@ export function hideTagAliasesEditTagPopup(state) {
 }
 
 function renderImportModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.importModal,
     backdropRole: UI.role.importModalClose,
     titleId: "tagAliasesImportTitle",
@@ -551,14 +551,14 @@ function renderImportModal(state) {
         <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
       </div>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.importModalClose, label: aliasesText(state.config, "import_modal_close_button", "Close") }
     ])
   });
 }
 
 function renderPatchModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.patchModal,
     backdropRole: UI.role.patchModalClose,
     titleId: "tagAliasesPatchTitle",
@@ -568,7 +568,7 @@ function renderPatchModal(state) {
       <p class="${UI_CLASS.modalLabel}">${escapeHtml(aliasesText(state.config, "patch_modal_label", "Manual patch snippet"))}</p>
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.patchModalClose, label: aliasesText(state.config, "patch_modal_close_button", "Close") },
       { role: UI.role.copyPatch, label: aliasesText(state.config, "patch_modal_copy_button", "Copy"), primary: true }
     ])
@@ -576,7 +576,7 @@ function renderPatchModal(state) {
 }
 
 function renderPromotionModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.promotionModal,
     backdropRole: UI.role.promotionModalClose,
     titleId: "tagAliasesPromotionTitle",
@@ -587,7 +587,7 @@ function renderPromotionModal(state) {
       <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.promotionGroupKey}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.promotionStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.promotionModalClose, label: aliasesText(state.config, "promotion_cancel_button", "Cancel") },
       { role: UI.role.confirmPromotion, label: aliasesText(state.config, "promotion_button", "Promote"), primary: true, disabled: true }
     ])
@@ -595,7 +595,7 @@ function renderPromotionModal(state) {
 }
 
 function renderDemoteModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.demoteModal,
     backdropRole: UI.role.demoteModalClose,
     titleId: "tagAliasesDemotionTitle",
@@ -614,7 +614,7 @@ function renderDemoteModal(state) {
       <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.demoteModalClose, label: aliasesText(state.config, "demotion_cancel_button", "Cancel") },
       { role: UI.role.confirmDemote, label: aliasesText(state.config, "demotion_confirm_button", "Demote"), primary: true, disabled: true }
     ])
@@ -622,7 +622,7 @@ function renderDemoteModal(state) {
 }
 
 function renderEditModal(state) {
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.editModal,
     backdropRole: UI.role.editModalClose,
     titleId: "tagAliasesEditTitle",
@@ -651,7 +651,7 @@ function renderEditModal(state) {
       <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.editModalClose, label: aliasesText(state.config, "edit_cancel_button", "Cancel") },
       { role: UI.role.saveEditAlias, label: aliasesText(state.config, "edit_save_button", "Save"), primary: true, disabled: true }
     ])
@@ -717,7 +717,7 @@ function renderPromotionGroupKey(state) {
     state.refs.promotionGroupKey.innerHTML = "";
     return;
   }
-  state.refs.promotionGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+  state.refs.promotionGroupKey.innerHTML = getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `
       <button
@@ -777,7 +777,7 @@ function renderEditTagList(state) {
 
 function renderSelectedGroupKey(state, tagIds) {
   const selected = new Set((Array.isArray(tagIds) ? tagIds : []).map((tagId) => String(tagId || "").split(":", 1)[0]));
-  return getStudioGroups(state).map((group) => {
+  return getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
   }).join("") + renderGroupInfoControl(state);
@@ -786,7 +786,7 @@ function renderSelectedGroupKey(state, tagIds) {
 function renderSelectedTagChips(state, tagIds, removeAttribute) {
   return (Array.isArray(tagIds) ? tagIds : []).map((tagId) => {
     const info = state.registryById.get(tagId);
-    const group = info && getStudioGroups(state).includes(info.group) ? info.group : "warning";
+    const group = info && getAnalyticsGroups(state).includes(info.group) ? info.group : "warning";
     const label = info ? info.label : tagId;
     return `
       <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
@@ -845,7 +845,7 @@ function groupTitleAttr(state, group) {
   return `title="${escapeHtml(description)}"`;
 }
 
-function getStudioGroups(state) {
+function getAnalyticsGroups(state) {
   return Array.isArray(state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : ["subject", "domain", "form", "theme"];
@@ -856,7 +856,7 @@ function normalizeModalValue(value) {
 }
 
 function aliasesText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
 function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {

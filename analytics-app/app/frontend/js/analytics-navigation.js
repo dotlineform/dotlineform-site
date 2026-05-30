@@ -1,44 +1,44 @@
-import { loadStudioConfig } from "./studio-config.js";
-import { initStudioThemeToggle } from "./studio-theme.js";
+import { loadAnalyticsConfig } from "./analytics-config.js";
+import { initAnalyticsThemeToggle } from "./analytics-theme.js";
 
-export const STUDIO_MODAL_EVENT = "studio:open-modal";
+export const ANALYTICS_MODAL_EVENT = "studio:open-modal";
 
-export function getStudioRuntime(config) {
+export function getAnalyticsRuntime(config) {
   const runtime = config && config.app && config.app.runtime;
   return runtime && typeof runtime === "object" && !Array.isArray(runtime) ? runtime : {};
 }
 
-export function getStudioServices(config) {
-  const services = getStudioRuntime(config).services;
+export function getAnalyticsServices(config) {
+  const services = getAnalyticsRuntime(config).services;
   return services && typeof services === "object" && !Array.isArray(services) ? services : {};
 }
 
-export function getStudioSites(config) {
-  const sites = getStudioRuntime(config).sites;
+export function getAnalyticsSites(config) {
+  const sites = getAnalyticsRuntime(config).sites;
   return sites && typeof sites === "object" && !Array.isArray(sites) ? sites : {};
 }
 
-export function getStudioExternalLinks(config) {
+export function getAnalyticsExternalLinks(config) {
   const links = config && config.external_links;
   return links && typeof links === "object" && !Array.isArray(links) ? links : {};
 }
 
-export function getStudioViews(config) {
-  const views = getStudioRuntime(config).views;
+export function getAnalyticsViews(config) {
+  const views = getAnalyticsRuntime(config).views;
   return Array.isArray(views)
     ? views.filter((view) => view && typeof view === "object" && typeof view.id === "string")
     : [];
 }
 
-export function getStudioView(config, viewId) {
+export function getAnalyticsView(config, viewId) {
   const normalizedViewId = normalizeViewId(viewId);
-  return getStudioViews(config).find((view) => normalizeViewId(view.id) === normalizedViewId) || null;
+  return getAnalyticsViews(config).find((view) => normalizeViewId(view.id) === normalizedViewId) || null;
 }
 
-export function buildStudioViewUrl(config, viewId, params = {}) {
-  const view = getStudioView(config, viewId);
+export function buildAnalyticsViewUrl(config, viewId, params = {}) {
+  const view = getAnalyticsView(config, viewId);
   if (!view || typeof view.path !== "string" || !view.path.trim()) {
-    throw new Error(`Unknown Studio view: ${viewId}`);
+    throw new Error(`Unknown Analytics view: ${viewId}`);
   }
 
   if (isDocsViewerPath(config, view.path)) {
@@ -57,9 +57,9 @@ export function buildStudioViewUrl(config, viewId, params = {}) {
 
 export function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
   const siteKey = options && options.site === "production" ? "production" : "public_preview";
-  const base = getStudioSiteBase(config, siteKey);
+  const base = getAnalyticsSiteBase(config, siteKey);
   if (!base) {
-    throw new Error(`Missing Studio site base: ${siteKey}`);
+    throw new Error(`Missing Analytics site base: ${siteKey}`);
   }
   const url = new URL(String(path || "/"), ensureTrailingSlash(base));
   for (const [key, value] of Object.entries(params || {})) {
@@ -105,16 +105,16 @@ export function buildDocsViewerDocUrl(config, viewId) {
   return buildDocsViewerUrl(config, link.docs_path || "/docs/", params);
 }
 
-export function getStudioSiteBase(config, siteKey) {
-  const sites = getStudioSites(config);
+export function getAnalyticsSiteBase(config, siteKey) {
+  const sites = getAnalyticsSites(config);
   const site = sites && sites[siteKey];
   const value = site && site.base;
   return typeof value === "string" && value.trim() ? value.trim().replace(/\/+$/, "") : "";
 }
 
 export async function navigateTo(viewId, params = {}) {
-  const config = await loadStudioConfig();
-  const url = buildStudioViewUrl(config, viewId, params);
+  const config = await loadAnalyticsConfig();
+  const url = buildAnalyticsViewUrl(config, viewId, params);
   window.location.assign(url);
   return url;
 }
@@ -122,7 +122,7 @@ export async function navigateTo(viewId, params = {}) {
 export function openModal(name, params = {}, options = {}) {
   const modalName = normalizeModalName(name);
   if (!modalName) {
-    throw new Error("Studio modal name is required");
+    throw new Error("Analytics modal name is required");
   }
   const detail = {
     name: modalName,
@@ -134,7 +134,7 @@ export function openModal(name, params = {}, options = {}) {
     return { detail, defaultPrevented: false };
   }
   const EventConstructor = currentCustomEvent();
-  const event = new EventConstructor(STUDIO_MODAL_EVENT, {
+  const event = new EventConstructor(ANALYTICS_MODAL_EVENT, {
     bubbles: true,
     cancelable: true,
     detail,
@@ -143,8 +143,8 @@ export function openModal(name, params = {}, options = {}) {
   return event;
 }
 
-export async function attachStudioNavigation(root = document) {
-  const config = await loadStudioConfig();
+export async function attachAnalyticsNavigation(root = document) {
+  const config = await loadAnalyticsConfig();
   const targetRoot = root && typeof root.addEventListener === "function" ? root : document;
   updateDocsViewerLinks(config, targetRoot);
   targetRoot.addEventListener("click", (event) => {
@@ -156,7 +156,7 @@ export async function attachStudioNavigation(root = document) {
       if (!viewId) return;
 
       event.preventDefault();
-      window.location.assign(buildStudioViewUrl(config, viewId, readNavigationParams(navigateTrigger)));
+      window.location.assign(buildAnalyticsViewUrl(config, viewId, readNavigationParams(navigateTrigger)));
       return;
     }
 
@@ -217,7 +217,7 @@ function normalizeModalName(value) {
 }
 
 function getDocsViewerLinkConfig(config) {
-  const links = getStudioExternalLinks(config);
+  const links = getAnalyticsExternalLinks(config);
   const docsViewer = links.docs_viewer;
   return docsViewer && typeof docsViewer === "object" && !Array.isArray(docsViewer) ? docsViewer : {};
 }
@@ -253,7 +253,7 @@ function currentCustomEvent() {
   if (typeof CustomEvent !== "undefined") {
     return CustomEvent;
   }
-  return class StudioCustomEvent extends Event {
+  return class AnalyticsCustomEvent extends Event {
     constructor(type, options = {}) {
       super(type, options);
       this.detail = options.detail;
@@ -278,8 +278,8 @@ function normalizePath(value) {
 }
 
 if (typeof document !== "undefined") {
-  initStudioThemeToggle();
-  attachStudioNavigation().catch((error) => {
-    console.warn("studio_navigation: unavailable", error);
+  initAnalyticsThemeToggle();
+  attachAnalyticsNavigation().catch((error) => {
+    console.warn("analytics_navigation: unavailable", error);
   });
 }

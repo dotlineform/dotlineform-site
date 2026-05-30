@@ -1,6 +1,6 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   compareEntries,
   makeResolvedEntry,
@@ -11,7 +11,7 @@ import {
 } from "./tag-studio-domain.js";
 import {
   seriesTagEditorUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const DEFAULT_WEIGHT = 0.6;
@@ -61,7 +61,7 @@ export function renderContextHint(state) {
 }
 
 export function renderGroups(state) {
-  const studioGroups = getStudioGroups(state);
+  const studioGroups = getAnalyticsGroups(state);
   const inheritedByGroup = new Map(studioGroups.map((group) => [group, []]));
   for (const entry of state.seriesEntries) {
     if (!inheritedByGroup.has(entry.group)) continue;
@@ -149,7 +149,7 @@ export function renderGroups(state) {
   state.refs.groups.innerHTML = `<div class="${UI_CLASS.groups}">${rowsHtml}</div>`;
 }
 
-function getStudioGroups(state) {
+function getAnalyticsGroups(state) {
   return Array.isArray(state && state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : DEFAULT_STUDIO_GROUPS;
@@ -363,5 +363,5 @@ function chipGroupClass(group) {
 }
 
 function studioText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

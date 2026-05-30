@@ -1,9 +1,9 @@
 import {
   fetchJson
-} from "./studio-data.js";
+} from "./analytics-data.js";
 import {
-  loadStudioConfig
-} from "./studio-config.js";
+  loadAnalyticsConfig
+} from "./analytics-config.js";
 import {
   buildPublicSeriesUrl,
   buildPublicWorkUrl
@@ -11,7 +11,7 @@ import {
 import {
   initializeStudioRouteState,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSeriesTagEditorPage);
@@ -25,7 +25,7 @@ async function initSeriesTagEditorPage() {
   const mount = document.getElementById("tag-studio");
   if (!root || !emptyEl || !mount) return;
   initializeStudioRouteState(root, { route: "series-tag-editor", mode: "single" });
-  const config = await loadStudioConfig();
+  const config = await loadAnalyticsConfig();
 
   const titleEl = document.getElementById("seriesTagEditorTitle");
   const catEl = document.getElementById("seriesTagEditorCat");

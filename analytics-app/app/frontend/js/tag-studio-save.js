@@ -1,7 +1,7 @@
 import {
-  getStudioWriteEndpoint,
+  getAnalyticsWriteEndpoint,
   postJson
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 
 export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal, activityContext = null, config = null) {
   const payload = {
@@ -16,7 +16,7 @@ export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn 
   if (activityContext) {
     payload.activity_context = activityContext;
   }
-  return postJson(getStudioWriteEndpoint("saveTags", config), payload, { signal });
+  return postJson(getAnalyticsWriteEndpoint("saveTags", config), payload, { signal });
 }
 
 export function buildPatchSnippet(seriesId, diff, timestamp) {

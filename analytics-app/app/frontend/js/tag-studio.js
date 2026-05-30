@@ -1,15 +1,15 @@
 import {
-  getStudioGroups,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  getAnalyticsGroups,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
   loadSiteSeriesIndexJson,
   loadSiteWorksIndexJson,
-  loadStudioAliasesJson,
-  loadStudioAssignmentsJson,
-  loadStudioRegistryJson
-} from "./studio-data.js";
+  loadAnalyticsAliasesJson,
+  loadAnalyticsAssignmentsJson,
+  loadAnalyticsRegistryJson
+} from "./analytics-data.js";
 import {
   configureTagStudioDomain,
   normalize,
@@ -69,10 +69,10 @@ import {
 } from "./tag-route-save-session.js";
 import {
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   seriesTagEditorUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const WEIGHT_VALUES = [0.3, 0.6, 0.9];
@@ -101,7 +101,7 @@ async function initTagStudio() {
 
   let config = null;
   try {
-    config = await loadStudioConfigWithText("series_tag_editor");
+    config = await loadAnalyticsConfigWithText("series_tag_editor");
   } catch (error) {
     renderFatalError(mount, "Failed to load tag editor config.");
     setStudioRouteReady(routeRoot, true, {
@@ -110,7 +110,7 @@ async function initTagStudio() {
     });
     return;
   }
-  STUDIO_GROUPS = getStudioGroups(config);
+  STUDIO_GROUPS = getAnalyticsGroups(config);
   configureTagStudioDomain({
     groups: STUDIO_GROUPS,
     weightValues: WEIGHT_VALUES,
@@ -125,9 +125,9 @@ async function initTagStudio() {
 
   try {
     const [registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson] = await Promise.all([
-      loadStudioRegistryJson(config),
-      loadStudioAliasesJson(config),
-      loadStudioAssignmentsJson(config),
+      loadAnalyticsRegistryJson(config),
+      loadAnalyticsAliasesJson(config),
+      loadAnalyticsAssignmentsJson(config),
       loadSiteSeriesIndexJson(config),
       loadSiteWorksIndexJson(config)
     ]);
@@ -479,5 +479,5 @@ function renderFatalError(mount, message) {
 }
 
 function studioText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

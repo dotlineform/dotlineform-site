@@ -1,4 +1,4 @@
-export function buildStudioActivityContext({
+export function buildAnalyticsActivityContext({
   pageId,
   actionId,
   route,

@@ -1,9 +1,9 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
+  probeAnalyticsHealth
+} from "./analytics-transport.js";
 import {
   buildSaveModeText as buildTagStudioSaveModeText,
   buildTagSaveSuccessMessage,
@@ -15,7 +15,7 @@ import {
   buildPersistedSeriesRow,
   buildStateDiff
 } from "./tag-studio-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 
 export function renderTagStudioSaveMode(state) {
   if (!state.refs || !state.refs.saveMode) return;
@@ -35,7 +35,7 @@ export function clearTagStudioOfflineAutosave(state) {
 export async function probeTagStudioSaveMode(state, callbacks = {}) {
   if (state.saveModeProbePending) return;
   state.saveModeProbePending = true;
-  const ok = await probeStudioHealth(500, { config: state.config });
+  const ok = await probeAnalyticsHealth(500, { config: state.config });
   state.saveModeProbePending = false;
   state.lastSaveModeHealthOk = ok;
   state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
@@ -138,7 +138,7 @@ async function handleTagStudioSaveInner(state, callbacks) {
   if (state.saveMode === "post") {
     try {
       const results = [];
-      const activityContext = buildStudioActivityContext({
+      const activityContext = buildAnalyticsActivityContext({
         pageId: "series-tag-editor",
         actionId: "save-series-tags",
         route: "/analytics/series-tag-editor/",
@@ -209,5 +209,5 @@ function syncRouteBusyState(callbacks, state) {
 }
 
 function studioText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

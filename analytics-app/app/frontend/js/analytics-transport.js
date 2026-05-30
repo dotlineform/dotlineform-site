@@ -1,4 +1,4 @@
-const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
+const ANALYTICS_WRITE_RUNTIME_KEYS = Object.freeze({
   deleteTagAlias: "delete_tag_alias",
   demoteTag: "demote_tag",
   demoteTagPreview: "demote_tag_preview",
@@ -29,7 +29,7 @@ export {
   DATA_SHARING_ENDPOINTS
 };
 
-export function configureStudioTransport(config) {
+export function configureAnalyticsTransport(config) {
   const services = config && config.app && config.app.runtime && config.app.runtime.services
     ? config.app.runtime.services
     : {};
@@ -57,8 +57,8 @@ function normalizeServiceEndpoints(service) {
   return normalized;
 }
 
-export function getStudioWriteEndpoint(key, config = null) {
-  const runtimeKey = STUDIO_WRITE_RUNTIME_KEYS[key] || "";
+export function getAnalyticsWriteEndpoint(key, config = null) {
+  const runtimeKey = ANALYTICS_WRITE_RUNTIME_KEYS[key] || "";
   const runtime = config && config.app && config.app.runtime;
   const analytics = runtime && runtime.services && runtime.services.analytics;
   const configured = runtimeKey && analytics && analytics[runtimeKey];
@@ -66,8 +66,8 @@ export function getStudioWriteEndpoint(key, config = null) {
   return "";
 }
 
-export async function probeStudioHealth(timeoutMs = 500, options = {}) {
-  return probeHealth(getStudioWriteEndpoint("health", options.config), timeoutMs);
+export async function probeAnalyticsHealth(timeoutMs = 500, options = {}) {
+  return probeHealth(getAnalyticsWriteEndpoint("health", options.config), timeoutMs);
 }
 
 export async function probeDataSharingHealth(timeoutMs = 500) {

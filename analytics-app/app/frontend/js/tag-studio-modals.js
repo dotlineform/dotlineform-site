@@ -1,14 +1,14 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import { workStateMapToObject } from "./tag-studio-domain.js";
 import {
   buildPatchSnippet,
   utcTimestamp
 } from "./tag-studio-save.js";
 import {
-  renderStudioModalActions,
-  renderStudioModalFrame
-} from "./studio-modal.js";
-import { seriesTagEditorUi } from "./studio-ui.js";
+  renderAnalyticsModalActions,
+  renderAnalyticsModalFrame
+} from "./analytics-modal.js";
+import { seriesTagEditorUi } from "./analytics-ui.js";
 
 const UI = seriesTagEditorUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
@@ -20,7 +20,7 @@ export function renderTagStudioSaveModal(state) {
   const modalCopyButton = tagStudioText(state.config, "modal_copy_button", "Copy");
   const modalCloseButton = tagStudioText(state.config, "modal_close_button", "Close");
 
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     modalRole: UI.role.modal,
     backdropRole: UI.role.modalClose,
     titleId: "tagStudioModalTitle",
@@ -31,7 +31,7 @@ export function renderTagStudioSaveModal(state) {
       <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalPatchGuidanceLabel)}</p>
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalSnippet}"></pre>
     `,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       { role: UI.role.modalClose, label: modalCloseButton },
       { role: UI.role.copySnippet, label: modalCopyButton }
     ])
@@ -109,7 +109,7 @@ export function closeTagStudioSaveModal(state) {
 }
 
 function tagStudioText(config, key, fallback, params) {
-  return getStudioText(config, `series_tag_editor.${key}`, fallback, params);
+  return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, params);
 }
 
 function escapeHtml(value) {

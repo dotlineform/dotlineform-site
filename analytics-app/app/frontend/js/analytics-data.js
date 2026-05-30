@@ -1,4 +1,4 @@
-let studioConfigModulePromise = null;
+let analyticsConfigModulePromise = null;
 
 export async function fetchJson(url, options = {}) {
   const cache = String(options.cache || "default");
@@ -9,36 +9,36 @@ export async function fetchJson(url, options = {}) {
   return response.json();
 }
 
-export async function loadStudioRegistryJson(config, options) {
-  return fetchJson(requiredStudioServicePath(config, "analytics", "tag_registry"), options);
+export async function loadAnalyticsRegistryJson(config, options) {
+  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_registry"), options);
 }
 
-export async function loadStudioAliasesJson(config, options) {
-  return fetchJson(requiredStudioServicePath(config, "analytics", "tag_aliases"), options);
+export async function loadAnalyticsAliasesJson(config, options) {
+  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_aliases"), options);
 }
 
-export async function loadStudioAssignmentsJson(config, options) {
+export async function loadAnalyticsAssignmentsJson(config, options) {
   return fetchJson(
-    requiredStudioServicePath(config, "analytics", "tag_assignments"),
+    requiredAnalyticsServicePath(config, "analytics", "tag_assignments"),
     { cache: "no-store", ...(options || {}) }
   );
 }
 
-export async function loadStudioGroupsJson(config, options) {
-  return fetchJson(requiredStudioServicePath(config, "analytics", "tag_groups"), options);
+export async function loadAnalyticsGroupsJson(config, options) {
+  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_groups"), options);
 }
 
 export async function loadSiteSeriesIndexJson(config, options) {
-  const { getSiteDataPath } = await loadStudioConfigModule();
+  const { getSiteDataPath } = await loadAnalyticsConfigModule();
   return fetchJson(getSiteDataPath(config, "series_index"), options);
 }
 
 export async function loadSiteWorksIndexJson(config, options) {
-  const { getSiteDataPath } = await loadStudioConfigModule();
+  const { getSiteDataPath } = await loadAnalyticsConfigModule();
   return fetchJson(getSiteDataPath(config, "works_index"), options);
 }
 
-function studioServicePath(config, serviceName, key) {
+function analyticsServicePath(config, serviceName, key) {
   const runtime = config && config.app && config.app.runtime;
   const services = runtime && runtime.services;
   const service = services && services[serviceName];
@@ -46,15 +46,15 @@ function studioServicePath(config, serviceName, key) {
   return typeof value === "string" && value.trim() ? value : "";
 }
 
-function requiredStudioServicePath(config, serviceName, key) {
-  const path = studioServicePath(config, serviceName, key);
+function requiredAnalyticsServicePath(config, serviceName, key) {
+  const path = analyticsServicePath(config, serviceName, key);
   if (!path) {
-    throw new Error(`Missing Studio ${serviceName} service endpoint: ${key}`);
+    throw new Error(`Missing Analytics ${serviceName} service endpoint: ${key}`);
   }
   return path;
 }
 
-export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {
+export function buildAnalyticsRegistryLookup(registryJson, studioGroups = [], options = {}) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const allowedGroups = sanitizeGroupSet(studioGroups);
   const requireLabel = Boolean(options && options.requireLabel);
@@ -62,10 +62,10 @@ export function buildStudioRegistryLookup(registryJson, studioGroups = [], optio
 
   for (const rawTag of tags) {
     if (!rawTag || typeof rawTag !== "object") continue;
-    const tagId = normalizeStudioValue(rawTag.tag_id);
-    const group = normalizeStudioValue(rawTag.group);
+    const tagId = normalizeAnalyticsValue(rawTag.tag_id);
+    const group = normalizeAnalyticsValue(rawTag.group);
     const label = String(rawTag.label || "").trim();
-    const status = normalizeStudioValue(rawTag.status || "active");
+    const status = normalizeAnalyticsValue(rawTag.status || "active");
     if (!tagId || !group) continue;
     if (allowedGroups && !allowedGroups.has(group)) continue;
     if (requireLabel && !label) continue;
@@ -79,14 +79,14 @@ export function buildStudioRegistryLookup(registryJson, studioGroups = [], optio
   return map;
 }
 
-export function buildStudioGroupDescriptionMap(groupsJson, studioGroups = []) {
+export function buildAnalyticsGroupDescriptionMap(groupsJson, studioGroups = []) {
   const rows = Array.isArray(groupsJson && groupsJson.groups) ? groupsJson.groups : [];
   const allowedGroups = sanitizeGroupSet(studioGroups);
   const out = new Map();
 
   for (const raw of rows) {
     if (!raw || typeof raw !== "object") continue;
-    const groupId = normalizeStudioValue(raw.group_id);
+    const groupId = normalizeAnalyticsValue(raw.group_id);
     const description = String(raw.description || "").trim();
     if (!groupId || !description) continue;
     if (allowedGroups && !allowedGroups.has(groupId)) continue;
@@ -96,15 +96,15 @@ export function buildStudioGroupDescriptionMap(groupsJson, studioGroups = []) {
   return out;
 }
 
-export function normalizeStudioGroups(groupsJson, studioGroups = []) {
+export function normalizeAnalyticsGroups(groupsJson, studioGroups = []) {
   const rows = Array.isArray(groupsJson && groupsJson.groups) ? groupsJson.groups : [];
-  const orderedGroups = Array.isArray(studioGroups) ? studioGroups.map((group) => normalizeStudioValue(group)).filter(Boolean) : [];
+  const orderedGroups = Array.isArray(studioGroups) ? studioGroups.map((group) => normalizeAnalyticsValue(group)).filter(Boolean) : [];
   const allowedGroups = sanitizeGroupSet(orderedGroups);
   const byId = new Map();
 
   for (const raw of rows) {
     if (!raw || typeof raw !== "object") continue;
-    const groupId = normalizeStudioValue(raw.group_id);
+    const groupId = normalizeAnalyticsValue(raw.group_id);
     if (!groupId) continue;
     if (allowedGroups && !allowedGroups.has(groupId)) continue;
     byId.set(groupId, {
@@ -120,7 +120,7 @@ export function normalizeStudioGroups(groupsJson, studioGroups = []) {
   return orderedGroups.map((groupId) => byId.get(groupId)).filter(Boolean);
 }
 
-export function getStudioAssignmentsSeries(assignmentsJson) {
+export function getAnalyticsAssignmentsSeries(assignmentsJson) {
   if (assignmentsJson && typeof assignmentsJson.series === "object" && assignmentsJson.series !== null) {
     return assignmentsJson.series;
   }
@@ -145,15 +145,15 @@ export function getSeriesAssignmentTagIds(assignmentsSeries, seriesId, options =
 
 export function normalizeAssignmentTagId(rawTag) {
   if (typeof rawTag === "string") {
-    return normalizeStudioValue(rawTag);
+    return normalizeAnalyticsValue(rawTag);
   }
   if (rawTag && typeof rawTag === "object") {
-    return normalizeStudioValue(rawTag.tag_id);
+    return normalizeAnalyticsValue(rawTag.tag_id);
   }
   return "";
 }
 
-export function normalizeStudioValue(value) {
+export function normalizeAnalyticsValue(value) {
   return String(value || "").trim().toLowerCase();
 }
 
@@ -162,30 +162,30 @@ function getAssignmentsSeriesRow(assignmentsSeries, seriesId, exactMatchOnly) {
   if (assignmentsSeries[seriesId]) return assignmentsSeries[seriesId];
   if (exactMatchOnly) return null;
 
-  const normalizedSeriesId = normalizeStudioValue(seriesId);
+  const normalizedSeriesId = normalizeAnalyticsValue(seriesId);
   for (const [key, value] of Object.entries(assignmentsSeries)) {
-    if (normalizeStudioValue(key) === normalizedSeriesId) return value;
+    if (normalizeAnalyticsValue(key) === normalizedSeriesId) return value;
   }
   return null;
 }
 
 function sanitizeGroupSet(studioGroups) {
   const groups = Array.isArray(studioGroups)
-    ? studioGroups.map((group) => normalizeStudioValue(group)).filter(Boolean)
+    ? studioGroups.map((group) => normalizeAnalyticsValue(group)).filter(Boolean)
     : [];
   return groups.length ? new Set(groups) : null;
 }
 
-async function loadStudioConfigModule() {
-  if (!studioConfigModulePromise) {
-    const url = new URL("./studio-config.js", import.meta.url);
+async function loadAnalyticsConfigModule() {
+  if (!analyticsConfigModulePromise) {
+    const url = new URL("./analytics-config.js", import.meta.url);
     const assetVersion = readAssetVersion(import.meta.url);
     if (assetVersion) {
       url.searchParams.set("v", assetVersion);
     }
-    studioConfigModulePromise = import(url.href);
+    analyticsConfigModulePromise = import(url.href);
   }
-  return studioConfigModulePromise;
+  return analyticsConfigModulePromise;
 }
 
 function readAssetVersion(importUrl = "") {

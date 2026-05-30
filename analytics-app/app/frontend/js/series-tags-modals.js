@@ -1,9 +1,9 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
-  renderStudioModalActions,
-  renderStudioModalFrame
-} from "./studio-modal.js";
-import { seriesTagsUi } from "./studio-ui.js";
+  renderAnalyticsModalActions,
+  renderAnalyticsModalFrame
+} from "./analytics-modal.js";
+import { seriesTagsUi } from "./analytics-ui.js";
 
 const UI = seriesTagsUi;
 const { className: UI_CLASS } = UI;
@@ -43,7 +43,7 @@ export function renderSessionModal(state) {
       </div>
     </div>
   `;
-  state.refs.sessionModalHost.innerHTML = renderStudioModalFrame({
+  state.refs.sessionModalHost.innerHTML = renderAnalyticsModalFrame({
     modalRole: UI.role.sessionModal,
     backdropRole: UI.role.closeSessionModal,
     titleId: "seriesTagsSessionModalTitle",
@@ -52,7 +52,7 @@ export function renderSessionModal(state) {
     bodyHtml,
     statusHtml: renderModalStatus(state, UI.role.sessionResult),
     hidden: !state.sessionModalOpen,
-    actionsHtml: renderStudioModalActions([{
+    actionsHtml: renderAnalyticsModalActions([{
       label: seriesTagsText(state.config, "modal_close_button", "Close"),
       role: UI.role.closeSessionModal
     }])
@@ -84,7 +84,7 @@ export function renderImportModal(state) {
       <div class="seriesTagsSession__review" data-role="${UI.role.sessionReview}">${renderImportReview(state)}</div>
     </div>
   `;
-  state.refs.importModalHost.innerHTML = renderStudioModalFrame({
+  state.refs.importModalHost.innerHTML = renderAnalyticsModalFrame({
     modalRole: UI.role.importModal,
     backdropRole: UI.role.closeImportModal,
     titleId: "seriesTagsImportModalTitle",
@@ -93,7 +93,7 @@ export function renderImportModal(state) {
     bodyHtml,
     statusHtml: renderModalStatus(state, UI.role.importResult),
     hidden: !state.importModalOpen,
-    actionsHtml: renderStudioModalActions([
+    actionsHtml: renderAnalyticsModalActions([
       {
         label: seriesTagsText(state.config, "modal_close_button", "Close"),
         role: UI.role.closeImportModal
@@ -328,7 +328,7 @@ function escapeHtml(value) {
 }
 
 function seriesTagsText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tags.${key}`, fallback, tokens);
 }
 
 function isFileInput(value) {

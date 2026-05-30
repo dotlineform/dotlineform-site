@@ -1,6 +1,6 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   labelFromSlug,
   labelFromTagId,
@@ -9,7 +9,7 @@ import {
 } from "./tag-registry-domain.js";
 
 function registryText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_registry.${key}`, fallback, tokens);
 }
 
 export function buildDeletePreviewPayload(tagId, utcTimestampFn = utcTimestamp) {

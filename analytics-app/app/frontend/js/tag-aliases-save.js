@@ -1,6 +1,6 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   normalize,
   normalizeImportAliasRows,
@@ -8,7 +8,7 @@ import {
 } from "./tag-aliases-domain.js";
 
 function aliasesText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
 export function buildManualPatchForNewAliases(state, importAliases) {

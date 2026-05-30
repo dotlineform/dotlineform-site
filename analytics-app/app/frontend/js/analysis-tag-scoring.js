@@ -1,8 +1,8 @@
 import {
-  DEFAULT_STUDIO_CONFIG,
-  getStudioCoverageGroups,
-  getStudioGroups
-} from "./studio-config.js";
+  DEFAULT_ANALYTICS_CONFIG,
+  getAnalyticsCoverageGroups,
+  getAnalyticsGroups
+} from "./analytics-config.js";
 
 const STUDIO_RAG_ORDER = Object.freeze({
   red: 0,
@@ -24,14 +24,14 @@ export function buildStudioTagScore(assignedTags, registry, config) {
 }
 
 export function computeStudioTagMetrics(assignedTags, registry, config) {
-  const groups = getStudioGroups(config);
-  const coverageGroups = getStudioCoverageGroups(config);
+  const groups = getAnalyticsGroups(config);
+  const coverageGroups = getAnalyticsCoverageGroups(config);
   const deprecatedStatuses = new Set(sanitizeStringArray(
     pathValue(config, ["analysis", "rag", "deprecated_statuses"]),
-    DEFAULT_STUDIO_CONFIG.analysis.rag.deprecated_statuses
+    DEFAULT_ANALYTICS_CONFIG.analysis.rag.deprecated_statuses
   ));
   const completenessCfg = mergeConfig(
-    DEFAULT_STUDIO_CONFIG.analysis.rag.completeness,
+    DEFAULT_ANALYTICS_CONFIG.analysis.rag.completeness,
     pathValue(config, ["analysis", "rag", "completeness"])
   );
   const counts = Object.fromEntries(groups.map((group) => [group, 0]));
@@ -83,7 +83,7 @@ export function computeStudioTagMetrics(assignedTags, registry, config) {
 
 export function computeStudioRag(metrics, config) {
   const rules = mergeConfig(
-    DEFAULT_STUDIO_CONFIG.analysis.rag.rules,
+    DEFAULT_ANALYTICS_CONFIG.analysis.rag.rules,
     pathValue(config, ["analysis", "rag", "rules"])
   );
   const redRule = rules.red || {};

@@ -1,9 +1,9 @@
-import { getStudioText } from "./studio-config.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+import { getAnalyticsText } from "./analytics-config.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 import {
   DATA_SHARING_ENDPOINTS,
   postJson
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 import {
   confirmDataSharingReviewApply,
   showDataSharingReviewResultModal
@@ -102,7 +102,7 @@ function renderApplyActionResult(state, action, payload) {
   const countsValue = actionCountsText(action, payload && payload.counts);
   const summary = normalizeText(payload && payload.summary_text);
   showDataSharingReviewResultModal(state, {
-    title: action.resultTitle || getStudioText(state.config, "data_sharing_review.apply_result_title", "Apply complete"),
+    title: action.resultTitle || getAnalyticsText(state.config, "data_sharing_review.apply_result_title", "Apply complete"),
     summary: `${summary} ${countsValue}`.trim(),
     countRows: actionCountRows(action, payload && payload.counts),
     issues: applyIssues(payload || {}, action.id)
@@ -113,7 +113,7 @@ function renderApplyActionResult(state, action, payload) {
 
 function actionActivityContext(state, action, stagedFilename) {
   const controlSelector = normalizeText(action.controlSelector) || `#${action.controlId}`;
-  return buildStudioActivityContext({
+  return buildAnalyticsActivityContext({
     pageId: "data-sharing-review",
     actionId: action.activityActionId,
     route: "/analytics/data-sharing/review/?mode=manage",
@@ -137,7 +137,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     setStatus(
       state.statusNode,
       "error",
-      action.selectionRequiredMessage || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      action.selectionRequiredMessage || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
     );
     return;
   }
@@ -148,7 +148,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
   setStatus(
     state.statusNode,
     "",
-    action.preflightStatus || getStudioText(state.config, "data_sharing_review.apply_preflight_status", "Checking selected rows...")
+    action.preflightStatus || getAnalyticsText(state.config, "data_sharing_review.apply_preflight_status", "Checking selected rows...")
   );
 
   try {
@@ -172,7 +172,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
       setStatus(
         state.statusNode,
         "",
-        action.cancelledStatus || getStudioText(state.config, "data_sharing_review.apply_cancelled", "Apply cancelled.")
+        action.cancelledStatus || getAnalyticsText(state.config, "data_sharing_review.apply_cancelled", "Apply cancelled.")
       );
       return;
     }
@@ -180,7 +180,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     setStatus(
       state.statusNode,
       "",
-      action.runningStatus || getStudioText(state.config, "data_sharing_review.apply_running_status", "Applying selected changes...")
+      action.runningStatus || getAnalyticsText(state.config, "data_sharing_review.apply_running_status", "Applying selected changes...")
     );
     const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
@@ -195,12 +195,12 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     setStatus(
       state.statusNode,
       "success",
-      applied.summary_text || action.successStatus || getStudioText(state.config, "data_sharing_review.apply_success", "Changes applied.")
+      applied.summary_text || action.successStatus || getAnalyticsText(state.config, "data_sharing_review.apply_success", "Changes applied.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
-      || action.failedStatus || getStudioText(state.config, "data_sharing_review.apply_failed", "Apply failed.");
+      || action.failedStatus || getAnalyticsText(state.config, "data_sharing_review.apply_failed", "Apply failed.");
     renderApplyActionResult(state, action, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {

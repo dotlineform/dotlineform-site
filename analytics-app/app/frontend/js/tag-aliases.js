@@ -1,14 +1,14 @@
 import {
-  getStudioGroups,
-  getStudioRoute,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  getAnalyticsGroups,
+  getAnalyticsRoute,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
-  loadStudioAliasesJson,
-  loadStudioGroupsJson,
-  loadStudioRegistryJson
-} from "./studio-data.js";
+  loadAnalyticsAliasesJson,
+  loadAnalyticsGroupsJson,
+  loadAnalyticsRegistryJson
+} from "./analytics-data.js";
 import {
   buildGroupDescriptionMap,
   buildRegistryLookup,
@@ -38,7 +38,7 @@ import {
 import {
   openConfirmDetailModal,
   openConfirmModal
-} from "./studio-modal.js";
+} from "./analytics-modal.js";
 import {
   clearTagAliasesImportResult,
   collectTagAliasesModalRefs,
@@ -86,7 +86,7 @@ import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   bindTagSaveModeReprobe,
   tagRouteServiceState,
@@ -94,7 +94,7 @@ import {
 } from "./tag-route-save-session.js";
 import {
   tagAliasesUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
@@ -137,7 +137,7 @@ async function initTagAliasesPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfigWithText("tag_aliases");
+    config = await loadAnalyticsConfigWithText("tag_aliases");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag aliases config.</div>`;
     setStudioRouteReady(mount, true, {
@@ -148,12 +148,12 @@ async function initTagAliasesPage() {
     });
     return;
   }
-  STUDIO_GROUPS = getStudioGroups(config);
+  STUDIO_GROUPS = getAnalyticsGroups(config);
   configureTagAliasesDomain({
     groups: STUDIO_GROUPS,
     maxAliasTags: MAX_ALIAS_TAGS
   });
-  const groupInfoPagePath = getStudioRoute(config, "tag_groups");
+  const groupInfoPagePath = getAnalyticsRoute(config, "tag_groups");
 
   const state = {
     mount,
@@ -353,12 +353,12 @@ function wireEvents(state) {
 
 async function loadData(state) {
   const [registryData, aliasesData] = await Promise.all([
-    loadStudioRegistryJson(state.config),
-    loadStudioAliasesJson(state.config)
+    loadAnalyticsRegistryJson(state.config),
+    loadAnalyticsAliasesJson(state.config)
   ]);
   let groupsData = null;
   try {
-    groupsData = await loadStudioGroupsJson(state.config);
+    groupsData = await loadAnalyticsGroupsJson(state.config);
   } catch (error) {
     groupsData = null;
   }
@@ -689,5 +689,5 @@ async function copyPatchSnippet(state) {
 }
 
 function aliasesText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_aliases.${key}`, fallback, tokens);
 }

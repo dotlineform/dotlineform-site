@@ -1,31 +1,31 @@
 import {
-  buildStudioRouteUrl,
-  getStudioGroups,
-  getStudioRoute,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  buildAnalyticsRouteUrl,
+  getAnalyticsGroups,
+  getAnalyticsRoute,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
-  buildStudioGroupDescriptionMap,
-  buildStudioRegistryLookup,
-  getStudioAssignmentsSeries,
+  buildAnalyticsGroupDescriptionMap,
+  buildAnalyticsRegistryLookup,
+  getAnalyticsAssignmentsSeries,
   loadSiteSeriesIndexJson,
-  loadStudioAssignmentsJson,
-  loadStudioGroupsJson,
-  loadStudioRegistryJson,
-  normalizeStudioValue as normalize
-} from "./studio-data.js";
+  loadAnalyticsAssignmentsJson,
+  loadAnalyticsGroupsJson,
+  loadAnalyticsRegistryJson,
+  normalizeAnalyticsValue as normalize
+} from "./analytics-data.js";
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
+  probeAnalyticsHealth
+} from "./analytics-transport.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   seriesTagsUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 import {
   renderSeriesTagsReport
 } from "./series-tags-render.js";
@@ -82,9 +82,9 @@ async function initSeriesTagsPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfigWithText("series_tags");
-    STUDIO_GROUPS = getStudioGroups(config);
-    GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+    config = await loadAnalyticsConfigWithText("series_tags");
+    STUDIO_GROUPS = getAnalyticsGroups(config);
+    GROUP_INFO_PAGE_PATH = getAnalyticsRoute(config, "tag_groups");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load series tag config.</div>`;
     markRouteReady({
@@ -140,12 +140,12 @@ async function initSeriesTagsPage() {
 
   try {
     const [assignmentsJson, registryJson] = await Promise.all([
-      loadStudioAssignmentsJson(config),
-      loadStudioRegistryJson(config)
+      loadAnalyticsAssignmentsJson(config),
+      loadAnalyticsRegistryJson(config)
     ]);
 
-    const assignmentsSeries = getStudioAssignmentsSeries(assignmentsJson);
-    const registry = buildStudioRegistryLookup(registryJson, STUDIO_GROUPS, { requireLabel: true });
+    const assignmentsSeries = getAnalyticsAssignmentsSeries(assignmentsJson);
+    const registry = buildAnalyticsRegistryLookup(registryJson, STUDIO_GROUPS, { requireLabel: true });
     const state = {
       refs,
       config,
@@ -176,8 +176,8 @@ async function initSeriesTagsPage() {
       resultText: ""
     };
     try {
-      const groupsJson = await loadStudioGroupsJson(config);
-      state.groupDescriptions = buildStudioGroupDescriptionMap(groupsJson, STUDIO_GROUPS);
+      const groupsJson = await loadAnalyticsGroupsJson(config);
+      state.groupDescriptions = buildAnalyticsGroupDescriptionMap(groupsJson, STUDIO_GROUPS);
     } catch (error) {
       state.groupDescriptions = new Map();
     }
@@ -254,7 +254,7 @@ function isPrimarySeriesEntry(entry) {
 
 function buildSeriesEditorUrl(config, seriesId) {
   const sid = normalize(seriesId);
-  return sid ? buildStudioRouteUrl(config, "series_tag_editor", { series: sid }) : "";
+  return sid ? buildAnalyticsRouteUrl(config, "series_tag_editor", { series: sid }) : "";
 }
 
 function wireEvents(state) {
@@ -476,7 +476,7 @@ async function handleClearSession(state) {
 }
 
 async function probeImportAvailability(state) {
-  state.importAvailable = await probeStudioHealth(500, { config: state.config });
+  state.importAvailable = await probeAnalyticsHealth(500, { config: state.config });
   renderChrome(state);
   syncRouteBusyState(state);
 }
@@ -545,5 +545,5 @@ function escapeHtml(value) {
 }
 
 function seriesTagsText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tags.${key}`, fallback, tokens);
 }

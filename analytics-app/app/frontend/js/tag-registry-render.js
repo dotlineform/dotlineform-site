@@ -1,20 +1,20 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
   countTagsByGroup,
   getVisibleSortedTags
 } from "./tag-registry-domain.js";
 import {
   tagRegistryUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = tagRegistryUi;
 const { className: UI_CLASS, state: UI_STATE } = UI;
 
 export function renderTagRegistryControls(state) {
-  const studioGroups = getStudioGroups(state);
+  const studioGroups = getAnalyticsGroups(state);
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
   const allTagsLabel = registryText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
@@ -110,7 +110,7 @@ function renderTagRow(state, tag) {
   `;
 }
 
-function getStudioGroups(state) {
+function getAnalyticsGroups(state) {
   return Array.isArray(state && state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : DEFAULT_STUDIO_GROUPS;
@@ -145,7 +145,7 @@ function sortIndicator(state, key) {
 }
 
 function registryText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_registry.${key}`, fallback, tokens);
 }
 
 function classNames(...tokens) {

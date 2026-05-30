@@ -1,8 +1,8 @@
-import { getStudioText } from "./studio-config.js";
+import { getAnalyticsText } from "./analytics-config.js";
 import {
   DATA_SHARING_ENDPOINTS,
   postJson
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 import {
   buildPreparePackageRequest,
   usesPrepareDocumentSelection
@@ -17,7 +17,7 @@ function prepareValidationError(state, stateKey, textKey, fallback) {
     ok: false,
     kind: "validation",
     statusState: stateKey,
-    statusMessage: getStudioText(state.config, textKey, fallback)
+    statusMessage: getAnalyticsText(state.config, textKey, fallback)
   };
 }
 
@@ -57,7 +57,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
 }
 
 export function dataSharingPrepareRunningMessage(state) {
-  return getStudioText(
+  return getAnalyticsText(
     state.config,
     "data_sharing_prepare.status_running",
     "Running Data Sharing prepare..."
@@ -74,7 +74,7 @@ export function dataSharingPrepareSuccessResult(state, payload) {
     payload,
     statusState: "success",
     statusMessage: normalizeText(payload && payload.summary_text)
-      || getStudioText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
+      || getAnalyticsText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
   };
 }
 
@@ -85,7 +85,7 @@ export function dataSharingPrepareFailureResult(state, error) {
     payload,
     statusState: "error",
     statusMessage: normalizeText(error && error.message)
-      || getStudioText(state.config, "data_sharing_prepare.status_failed", "Package preparation failed.")
+      || getAnalyticsText(state.config, "data_sharing_prepare.status_failed", "Package preparation failed.")
   };
 }
 

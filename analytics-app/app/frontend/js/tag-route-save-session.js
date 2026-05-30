@@ -1,6 +1,6 @@
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
+  probeAnalyticsHealth
+} from "./analytics-transport.js";
 
 export function tagRouteServiceState(state, options = {}) {
   const availableMode = options.availableMode || "post";
@@ -8,7 +8,7 @@ export function tagRouteServiceState(state, options = {}) {
 }
 
 export async function probeTagRouteSaveMode(state, options = {}) {
-  const healthProbe = options.healthProbe || probeStudioHealth;
+  const healthProbe = options.healthProbe || probeAnalyticsHealth;
   const timeoutMs = Number.isFinite(Number(options.timeoutMs)) ? Number(options.timeoutMs) : 500;
   const availableMode = options.availableMode || "post";
   const fallbackMode = options.fallbackMode || "patch";

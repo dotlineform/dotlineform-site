@@ -65,7 +65,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
         "apply": "/analytics/api/data-sharing/apply",
     }
 
-    assert runtime["data_paths"]["studio"]["data_sharing_adapters"] == "/data-sharing/config/adapters.json"
+    assert runtime["data_paths"]["analytics"]["data_sharing_adapters"] == "/data-sharing/config/adapters.json"
     assert runtime["data_paths"]["ui_text"]["tag_registry"] == "/analytics/app/frontend/config/ui-text/tag-registry.json"
     assert runtime["modals"]["event"] == "studio:open-modal"
 

@@ -1,18 +1,18 @@
 import {
-  loadStudioConfig
-} from "./studio-config.js";
+  loadAnalyticsConfig
+} from "./analytics-config.js";
 import {
   buildStudioRagTooltip,
   computeStudioRag,
   computeStudioTagMetrics
 } from "./analysis-tag-scoring.js";
 import {
-  buildStudioRegistryLookup,
+  buildAnalyticsRegistryLookup,
   getSeriesAssignmentTagIds,
-  getStudioAssignmentsSeries,
-  loadStudioAssignmentsJson,
-  loadStudioRegistryJson
-} from "./studio-data.js";
+  getAnalyticsAssignmentsSeries,
+  loadAnalyticsAssignmentsJson,
+  loadAnalyticsRegistryJson
+} from "./analytics-data.js";
 
 initTagStudioIndexRag();
 
@@ -24,14 +24,14 @@ async function initTagStudioIndexRag() {
   if (!rows.length) return;
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadAnalyticsConfig();
     const [assignmentsData, registryData] = await Promise.all([
-      loadStudioAssignmentsJson(config),
-      loadStudioRegistryJson(config),
+      loadAnalyticsAssignmentsJson(config),
+      loadAnalyticsRegistryJson(config),
     ]);
 
-    const registry = buildStudioRegistryLookup(registryData);
-    const assignmentsSeries = getStudioAssignmentsSeries(assignmentsData);
+    const registry = buildAnalyticsRegistryLookup(registryData);
+    const assignmentsSeries = getAnalyticsAssignmentsSeries(assignmentsData);
 
     for (const row of rows) {
       const seriesId = String(row.getAttribute("data-series-id") || "").trim();

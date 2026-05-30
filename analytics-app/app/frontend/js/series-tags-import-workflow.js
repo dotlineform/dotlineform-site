@@ -1,15 +1,15 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
-  getStudioAssignmentsSeries,
-  loadStudioAssignmentsJson
-} from "./studio-data.js";
+  getAnalyticsAssignmentsSeries,
+  loadAnalyticsAssignmentsJson
+} from "./analytics-data.js";
 import {
-  getStudioWriteEndpoint,
+  getAnalyticsWriteEndpoint,
   postJson,
-} from "./studio-transport.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+} from "./analytics-transport.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 
 export async function previewSeriesTagsImport(options = {}) {
   const { file, config } = options;
@@ -33,7 +33,7 @@ export async function previewSeriesTagsImport(options = {}) {
   }
 
   try {
-    const importPreview = await postJson(getStudioWriteEndpoint("importTagAssignmentsPreview", config), {
+    const importPreview = await postJson(getAnalyticsWriteEndpoint("importTagAssignmentsPreview", config), {
       import_assignments: importPayload,
       import_filename: file.name || "",
       client_time_utc: new Date().toISOString()
@@ -75,12 +75,12 @@ export async function applySeriesTagsImport(options = {}) {
 
   try {
     const filename = file && file.name ? file.name : "";
-    const response = await postJson(getStudioWriteEndpoint("importTagAssignments", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("importTagAssignments", config), {
       import_assignments: importPayload,
       import_filename: filename,
       resolutions: importResolutions || {},
       client_time_utc: new Date().toISOString(),
-      activity_context: buildStudioActivityContext({
+      activity_context: buildAnalyticsActivityContext({
         pageId: "series-tags",
         actionId: "import-series-tag-assignments",
         route: "/analytics/series-tags/",
@@ -93,7 +93,7 @@ export async function applySeriesTagsImport(options = {}) {
     return {
       ok: true,
       response,
-      assignmentsSeries: getStudioAssignmentsSeries(await loadStudioAssignmentsJson(config, { cache: "no-store" })),
+      assignmentsSeries: getAnalyticsAssignmentsSeries(await loadAnalyticsAssignmentsJson(config, { cache: "no-store" })),
       resultKind: "success",
       resultText: String(response.summary_text || seriesTagsText(config, "session_import_apply_success", "Import applied."))
     };
@@ -117,5 +117,5 @@ function defaultImportResolutions(importPreview) {
 }
 
 function seriesTagsText(config, key, fallback, tokens) {
-  return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `series_tags.${key}`, fallback, tokens);
 }

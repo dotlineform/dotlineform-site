@@ -1,16 +1,16 @@
-import { getStudioDataPath, getStudioText, loadStudioConfigWithText } from "./studio-config.js";
+import { getAnalyticsDataPath, getAnalyticsText, loadAnalyticsConfigWithText } from "./analytics-config.js";
 import {
   DATA_SHARING_ENDPOINTS,
-  configureStudioTransport,
+  configureAnalyticsTransport,
   getJson,
   postJson,
   probeDataSharingHealth
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   showDataSharingReviewResultModal
 } from "./data-sharing-review-modals.js";
@@ -82,7 +82,7 @@ async function loadJson(path) {
 }
 
 async function loadAdapterRegistry(config) {
-  const registryPath = getStudioDataPath(config, "data_sharing_adapters")
+  const registryPath = getAnalyticsDataPath(config, "data_sharing_adapters")
     || "/data-sharing/config/adapters.json";
   return loadJson(registryPath);
 }
@@ -116,23 +116,23 @@ function previewCountRows(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return [
     {
-      label: getStudioText(state.config, "data_sharing_review.count_records", "records"),
+      label: getAnalyticsText(state.config, "data_sharing_review.count_records", "records"),
       value: Number(safeCounts.records || 0)
     },
     {
-      label: getStudioText(state.config, "data_sharing_review.count_parsed", "parsed"),
+      label: getAnalyticsText(state.config, "data_sharing_review.count_parsed", "parsed"),
       value: Number(safeCounts.parsed_records || 0)
     },
     {
-      label: getStudioText(state.config, "data_sharing_review.count_malformed", "malformed"),
+      label: getAnalyticsText(state.config, "data_sharing_review.count_malformed", "malformed"),
       value: Number(safeCounts.malformed_records || 0)
     },
     {
-      label: getStudioText(state.config, "data_sharing_review.count_warnings", "warnings"),
+      label: getAnalyticsText(state.config, "data_sharing_review.count_warnings", "warnings"),
       value: Number(safeCounts.warnings || 0)
     },
     {
-      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
+      label: getAnalyticsText(state.config, "data_sharing_review.count_errors", "errors"),
       value: Number(safeCounts.errors || 0)
     }
   ];
@@ -140,7 +140,7 @@ function previewCountRows(state, counts) {
 
 function renderResult(state, payload, failed = false) {
   const result = {
-    title: getStudioText(
+    title: getAnalyticsText(
       state.config,
       failed ? "data_sharing_review.result_title_failed" : "data_sharing_review.result_title",
       failed ? "Returned package review failed" : "Returned package review"
@@ -171,7 +171,7 @@ async function runPreview(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_sharing_review.file_required", "Select a staged data file first.")
+      getAnalyticsText(state.config, "data_sharing_review.file_required", "Select a staged data file first.")
     );
     return;
   }
@@ -184,7 +184,7 @@ async function runPreview(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_sharing_review.running_status", "Generating returned package reviews...")
+    getAnalyticsText(state.config, "data_sharing_review.running_status", "Generating returned package reviews...")
   );
 
   try {
@@ -194,7 +194,7 @@ async function runPreview(state) {
       staged_filename: file.filename
     });
     renderResult(state, payload, false);
-    const successMessage = payload.summary_text || getStudioText(state.config, "data_sharing_review.status_success", "Returned package reviews generated.");
+    const successMessage = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.status_success", "Returned package reviews generated.");
     setStatus(
       state.statusNode,
       "success",
@@ -208,7 +208,7 @@ async function runPreview(state) {
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || getStudioText(state.config, "data_sharing_review.status_failed", "Returned package review failed.")
+      normalizeText(error && error.message) || getAnalyticsText(state.config, "data_sharing_review.status_failed", "Returned package review failed.")
     );
   } finally {
     state.isRunning = false;
@@ -274,8 +274,8 @@ async function init() {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadStudioConfigWithText("data_sharing_review");
-    configureStudioTransport(state.config);
+    state.config = await loadAnalyticsConfigWithText("data_sharing_review");
+    configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.adapterRegistry = adapterRegistry;
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_SCOPES);
@@ -287,15 +287,15 @@ async function init() {
     renderDataSharingReviewApplyActions(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
-    setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
-    setText(state.fileLabelNode, getStudioText(state.config, "data_sharing_review.file_label", "staged file"));
-    setText(state.previewButton, getStudioText(state.config, "data_sharing_review.preview_button", "Review package"));
-    setText(state.actionMenuButton, getStudioText(state.config, "data_sharing_review.actions_button", "Actions"));
-    setText(state.resultButton, getStudioText(state.config, "data_sharing_review.result_button", "results"));
-    setText(state.selectAllButton, getStudioText(state.config, "data_sharing_review.select_all", "select all"));
-    setText(state.clearButton, getStudioText(state.config, "data_sharing_review.clear", "clear"));
+    setText(state.scopeLabelNode, getAnalyticsText(state.config, "data_sharing_review.scope_label", "scope"));
+    setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
+    setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review package"));
+    setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
+    setText(state.resultButton, getAnalyticsText(state.config, "data_sharing_review.result_button", "results"));
+    setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
+    setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
     if (!dataSharingReviewScopeSupportsApply(state)) {
-      const unsupportedApplyTitle = getStudioText(
+      const unsupportedApplyTitle = getAnalyticsText(
         state.config,
         "data_sharing_review.apply_unsupported_title",
         "{scope_label} source apply actions are not implemented yet.",
@@ -326,7 +326,7 @@ async function init() {
       setStatus(
         state.statusNode,
         "error",
-        getStudioText(
+        getAnalyticsText(
           state.config,
           "data_sharing_review.service_unavailable",
           "Studio Data Sharing API unavailable. Restart Local Studio to review {scope_label} returned packages.",
@@ -343,7 +343,7 @@ async function init() {
       setStatus(
         state.statusNode,
         "warn",
-        getStudioText(
+        getAnalyticsText(
           state.config,
           "data_sharing_review.no_files",
           "No staged {scope_label} data files found under var/analytics/data-sharing/{scope}/import-staging/.",
@@ -362,7 +362,7 @@ async function init() {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_review.idle_status",
         "Select a staged {scope_label} data file and generate previews.",
@@ -379,7 +379,7 @@ async function init() {
       setStatus(
         state.statusNode,
         "",
-        getStudioText(
+        getAnalyticsText(
           state.config,
           "data_sharing_review.idle_status",
           "Select a staged {scope_label} data file and generate previews.",
@@ -432,7 +432,7 @@ async function init() {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(
+      getAnalyticsText(
         state.config || {},
         "data_sharing_review.load_failed",
         "Failed to load {scope_label} returned package data.",

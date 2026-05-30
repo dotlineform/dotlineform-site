@@ -40,7 +40,7 @@ Page controller:
 
 Supporting modules:
 
-- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/analytics-ui.js`
 - `analytics-app/app/frontend/js/tag-registry-domain.js`
 - `analytics-app/app/frontend/js/tag-registry-import-mode.js`
 - `analytics-app/app/frontend/js/tag-registry-render.js`
@@ -331,7 +331,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, `tag-registry-import-mode.js`, and the route-local modal module.
+`analytics-app/app/frontend/js/analytics-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, `tag-registry-import-mode.js`, and the route-local modal module.
 
 ## State Handling
 
@@ -367,12 +367,12 @@ Primary data access:
 
 Loaded through:
 
-- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/analytics-data.js`
 
 Mutation transport:
 
 - `analytics-app/app/frontend/js/tag-registry-service.js`
-- `analytics-app/app/frontend/js/studio-transport.js`
+- `analytics-app/app/frontend/js/analytics-transport.js`
 
 ## Business Logic
 

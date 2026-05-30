@@ -1,7 +1,7 @@
 import {
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 
 export function getTagStudioRouteRoot(state) {
   return state && state.routeRoot instanceof Element ? state.routeRoot : null;

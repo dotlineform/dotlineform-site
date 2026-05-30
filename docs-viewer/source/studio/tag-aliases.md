@@ -40,7 +40,7 @@ Page controller:
 
 Supporting modules:
 
-- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/analytics-ui.js`
 - `analytics-app/app/frontend/js/tag-aliases-domain.js`
 - `analytics-app/app/frontend/js/tag-aliases-save.js`
 - `analytics-app/app/frontend/js/tag-aliases-service.js`
@@ -271,7 +271,7 @@ User-facing name:
 
 DOM / CSS:
 
-- rendered by `analytics-app/app/frontend/js/studio-modal.js`
+- rendered by `analytics-app/app/frontend/js/analytics-modal.js`
 - mounted inside `.tagAliasesPage`
 
 Meaning:
@@ -332,7 +332,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-aliases.js`.
+`analytics-app/app/frontend/js/analytics-ui.js` holds the role selectors plus generated style class tokens used by `tag-aliases.js`.
 
 ## State Handling
 
@@ -368,12 +368,12 @@ Primary data access:
 
 Loaded through:
 
-- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/analytics-data.js`
 
 Mutation transport:
 
 - `analytics-app/app/frontend/js/tag-aliases-service.js`
-- `analytics-app/app/frontend/js/studio-transport.js`
+- `analytics-app/app/frontend/js/analytics-transport.js`
 
 ## Business Logic
 

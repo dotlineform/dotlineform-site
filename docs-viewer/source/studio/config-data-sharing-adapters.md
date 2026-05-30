@@ -122,7 +122,7 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 - `data-sharing/data_sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
 - `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Analytics app gateway.
 - `analytics-app/app/server/analytics_app/` owns the same-origin `/analytics/api/data-sharing/...` endpoints and local-origin enforcement.
-- `analytics-app/app/frontend/js/studio-transport.js` uses Analytics-owned same-origin Data Sharing endpoints.
+- `analytics-app/app/frontend/js/analytics-transport.js` uses Analytics-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
 - Local Studio must not reintroduce Data Sharing route/API aliases, proxy handlers, or static shims.
 

@@ -134,7 +134,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
-  <meta name="dlf-studio-config-url" content="/analytics/runtime-config.json">
+  <meta name="dlf-analytics-config-url" content="/analytics/runtime-config.json">
   <title>{title} | dotlineform Analytics</title>
   {studio_theme_boot_script()}
   <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
@@ -162,7 +162,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/analytics/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/analytics/app/frontend/js/analytics-navigation.js?v={escaped_version}"></script>
   <script type="module" src="{script}?v={escaped_version}"></script>
 </body>
 </html>
@@ -504,7 +504,7 @@ def studio_home_view(version: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
-  <meta name="dlf-studio-config-url" content="/analytics/runtime-config.json">
+  <meta name="dlf-analytics-config-url" content="/analytics/runtime-config.json">
   <title>dotlineform Analytics</title>
   {studio_theme_boot_script()}
   <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
@@ -520,7 +520,7 @@ def studio_home_view(version: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/analytics/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/analytics/app/frontend/js/analytics-navigation.js?v={escaped_version}"></script>
 </body>
 </html>
 """

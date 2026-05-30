@@ -1,4 +1,4 @@
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -69,7 +69,7 @@ export function prepareSelectsAllMatching(config, usesDocumentSelection) {
 export function buildPrepareActivityContext({ scope, configId } = {}) {
   const safeScope = normalizeText(scope);
   const safeConfigId = normalizeText(configId);
-  return buildStudioActivityContext({
+  return buildAnalyticsActivityContext({
     pageId: "data-sharing-prepare",
     actionId: "prepare-share-package",
     route: "/analytics/data-sharing/prepare/?mode=manage",

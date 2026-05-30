@@ -1,5 +1,5 @@
 {
-  "studio_config_version": "analytics_config_v1",
+  "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
   "paths": {
     "routes": {
@@ -16,7 +16,7 @@
       "works_page_base": "/works/"
     },
     "data": {
-      "studio": {
+      "analytics": {
         "data_sharing_adapters": "/data-sharing/config/adapters.json",
         "library_export_configs": "/data-sharing/config/library-export-configs.json"
       },

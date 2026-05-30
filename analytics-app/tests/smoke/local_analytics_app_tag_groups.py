@@ -42,7 +42,7 @@ def main(argv: list[str] | None = None) -> int:
         with urllib.request.urlopen(f"{base_url}/analytics/runtime-config.json", timeout=10) as response:
             runtime_config = json.loads(response.read().decode("utf-8"))
         runtime_routes = runtime_config.get("app", {}).get("runtime", {}).get("routes", {})
-        if runtime_config.get("studio_config_version") != "analytics_config_v1":
+        if runtime_config.get("analytics_config_version") != "analytics_config_v1":
             raise AssertionError("runtime config did not include the Analytics config payload")
         if runtime_config.get("app", {}).get("runtime", {}).get("host") != "local-analytics-app":
             raise AssertionError("runtime config did not include local app runtime metadata")
@@ -80,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
                 else None,
             )
             page.goto(f"{base_url}/analytics/tag-groups/", wait_until="domcontentloaded")
-            nav_script_count = page.locator('script[src*="studio-navigation.js"]').count()
+            nav_script_count = page.locator('script[src*="analytics-navigation.js"]').count()
             page.wait_for_selector('#tag-groups[data-studio-ready="true"]', timeout=10000)
             mode = page.locator("#tag-groups").get_attribute("data-studio-mode")
             record_loaded = page.locator("#tag-groups").get_attribute("data-studio-record-loaded")

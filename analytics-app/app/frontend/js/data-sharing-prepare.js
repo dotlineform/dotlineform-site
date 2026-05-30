@@ -1,20 +1,20 @@
 import {
-  configureStudioTransport,
+  configureAnalyticsTransport,
   probeDataSharingHealth
-} from "./studio-transport.js";
+} from "./analytics-transport.js";
 import {
-  getStudioDataPath,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  getAnalyticsDataPath,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
-  createStudioModalHost
-} from "./studio-modal.js";
+  createAnalyticsModalHost
+} from "./analytics-modal.js";
 import {
   clearDataSharingPrepareResultModal,
   showDataSharingPrepareResultModal
@@ -96,7 +96,7 @@ function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
 
 function scopeLabel(state, scope = state.scope) {
   const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
-  if (item.labelKey) return getStudioText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
+  if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
   return normalizeText(item.label) || item.fallback || scope;
 }
 
@@ -108,7 +108,7 @@ function scopeTitle(state, scope = state.scope) {
 function renderScopeSelect(state) {
   state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
     const label = item.labelKey
-      ? getStudioText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
+      ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
@@ -129,7 +129,7 @@ function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
 }
 
 async function loadAdapterRegistry(config) {
-  const registryPath = getStudioDataPath(config, "data_sharing_adapters")
+  const registryPath = getAnalyticsDataPath(config, "data_sharing_adapters")
     || "/data-sharing/config/adapters.json";
   return loadJson(registryPath);
 }
@@ -137,7 +137,7 @@ async function loadAdapterRegistry(config) {
 function scopeUnavailableMessage(state) {
   const domain = workflowDomainForKey(state.workflowScopes, state.scope);
   return normalizeText(domain && domain.message)
-    || getStudioText(
+    || getAnalyticsText(
       state.config,
       "data_sharing_prepare.scope_unsupported",
       "{scope_label} package preparation is not implemented yet.",
@@ -182,7 +182,7 @@ function updateStatus(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_prepare.no_config",
         "No enabled {scope_label} sharing profiles found.",
@@ -196,7 +196,7 @@ function updateStatus(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_prepare.service_unavailable",
         "Studio Data Sharing API unavailable. Restart Local Studio to prepare packages."
@@ -209,7 +209,7 @@ function updateStatus(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_prepare.docs_index_unavailable",
         "No generated {scope_label} data index is available for this sharing profile.",
@@ -223,7 +223,7 @@ function updateStatus(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(
+    getAnalyticsText(
       state.config,
       "data_sharing_prepare.idle_status",
       ""
@@ -334,12 +334,12 @@ async function init() {
     state.runButton
   ];
   if (requiredNodes.some((node) => !node)) return;
-  state.modalHost = createStudioModalHost({ root });
+  state.modalHost = createAnalyticsModalHost({ root });
 
   try {
     markBusy(state, true);
-    state.config = await loadStudioConfigWithText("data_sharing_prepare");
-    configureStudioTransport(state.config);
+    state.config = await loadAnalyticsConfigWithText("data_sharing_prepare");
+    configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
@@ -351,7 +351,7 @@ async function init() {
       const exportConfigPayload = capabilityProfiles.length
         ? { configs: capabilityProfiles }
         : await loadJson(
-          getStudioDataPath(state.config, "library_export_configs")
+          getAnalyticsDataPath(state.config, "library_export_configs")
             || "/data-sharing/config/library-export-configs.json"
         );
       state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
@@ -373,17 +373,17 @@ async function init() {
     state.depthById = docsState.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
-    setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_prepare.scope_label", "scope"));
-    setText(state.configLabelNode, getStudioText(state.config, "data_sharing_prepare.config_label", "sharing profile"));
+    setText(state.scopeLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.scope_label", "scope"));
+    setText(state.configLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.config_label", "sharing profile"));
     setText(
       state.missingSummaryLabelNode,
-      getStudioText(state.config, "data_sharing_prepare.missing_summary_label", "missing summaries only")
+      getAnalyticsText(state.config, "data_sharing_prepare.missing_summary_label", "missing summaries only")
     );
-    setText(state.formatLabelNode, getStudioText(state.config, "data_sharing_prepare.format_label", "format"));
-    setText(state.selectAllButton, getStudioText(state.config, "data_sharing_prepare.select_all", "Select all"));
-    setText(state.clearButton, getStudioText(state.config, "data_sharing_prepare.clear", "Clear"));
-    setText(state.runButton, getStudioText(state.config, "data_sharing_prepare.run_button", "Prepare package"));
-    state.runButton.title = getStudioText(
+    setText(state.formatLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.format_label", "format"));
+    setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_prepare.select_all", "Select all"));
+    setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_prepare.clear", "Clear"));
+    setText(state.runButton, getAnalyticsText(state.config, "data_sharing_prepare.run_button", "Prepare package"));
+    state.runButton.title = getAnalyticsText(
       state.config,
       "data_sharing_prepare.run_disabled_title",
       "Requires the Studio Data Sharing API."
@@ -452,7 +452,7 @@ async function init() {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(
+      getAnalyticsText(
         state.config,
         "data_sharing_prepare.load_failed",
         "Failed to load {scope_label} package data.",

@@ -1,11 +1,11 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
-  getStudioWriteEndpoint,
+  getAnalyticsWriteEndpoint,
   postJson
-} from "./studio-transport.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+} from "./analytics-transport.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 import {
   buildImportSummary,
   buildManualPatchForAliasCreate,
@@ -18,11 +18,11 @@ import {
 } from "./tag-aliases-save.js";
 
 function aliasesText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
 function aliasesActivityContext(actionId, controlId, controlSelector, recordIdField, recordId) {
-  return buildStudioActivityContext({
+  return buildAnalyticsActivityContext({
     pageId: "tag-aliases",
     actionId,
     route: "/analytics/tag-aliases/",
@@ -37,7 +37,7 @@ export async function submitAliasesImport(options) {
   const { saveMode, importMode, importAliases, filename, config, state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("importTagAliases", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("importTagAliases", config), {
         mode: importMode,
         import_aliases: importAliases,
         import_filename: filename || "",
@@ -77,7 +77,7 @@ export async function submitAliasDelete(options) {
   const { saveMode, aliasKey, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("deleteTagAlias", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("deleteTagAlias", config), {
         alias: aliasKey,
         client_time_utc: utcTimestamp(),
         activity_context: aliasesActivityContext("delete-tag-alias", "delete-alias", "[data-delete-alias]", "alias", aliasKey)
@@ -129,7 +129,7 @@ export async function submitAliasEdit(options) {
   if (isCreate) {
     if (saveMode === "post") {
       try {
-        const response = await postJson(getStudioWriteEndpoint("importTagAliases", config), {
+        const response = await postJson(getAnalyticsWriteEndpoint("importTagAliases", config), {
           mode: "add",
           import_aliases: {
             aliases: {
@@ -182,7 +182,7 @@ export async function submitAliasEdit(options) {
 
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("mutateTagAlias", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("mutateTagAlias", config), {
         alias: originalAlias,
         new_alias: validation.alias,
         description: validation.description,
@@ -231,7 +231,7 @@ export async function submitAliasEdit(options) {
 export async function previewAliasPromote(options) {
   const { aliasKey, group, config } = options || {};
   try {
-    const response = await postJson(getStudioWriteEndpoint("promoteTagAliasPreview", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("promoteTagAliasPreview", config), {
       alias: aliasKey,
       group,
       client_time_utc: utcTimestamp()
@@ -253,7 +253,7 @@ export async function submitAliasPromote(options) {
   const { saveMode, state, aliasKey, group } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("promoteTagAlias", state.config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("promoteTagAlias", state.config), {
         alias: aliasKey,
         group,
         client_time_utc: utcTimestamp(),
@@ -284,7 +284,7 @@ export async function submitAliasPromote(options) {
 export async function previewTagDemoteFromAliases(options) {
   const { canonicalTagId, aliasTargets, config } = options || {};
   try {
-    const response = await postJson(getStudioWriteEndpoint("demoteTagPreview", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("demoteTagPreview", config), {
       tag_id: canonicalTagId,
       alias_targets: aliasTargets,
       client_time_utc: utcTimestamp()
@@ -306,7 +306,7 @@ export async function submitTagDemoteFromAliases(options) {
   const { saveMode, canonicalTagId, aliasTargets, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("demoteTag", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("demoteTag", config), {
         tag_id: canonicalTagId,
         alias_targets: aliasTargets,
         client_time_utc: utcTimestamp(),

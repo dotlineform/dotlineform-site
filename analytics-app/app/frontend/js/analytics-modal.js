@@ -81,11 +81,11 @@ function renderActionList(actions = []) {
   }).join("");
 }
 
-export function renderStudioModalActions(actions = []) {
+export function renderAnalyticsModalActions(actions = []) {
   return `<div class="tagStudioModal__actions">${renderActionList(actions)}</div>`;
 }
 
-export function renderStudioModalFrame(options = {}) {
+export function renderAnalyticsModalFrame(options = {}) {
   const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
   const sizeClass = options.size ? ` tagStudioModal__dialog--${escapeHtml(options.size)}` : "";
@@ -97,7 +97,7 @@ export function renderStudioModalFrame(options = {}) {
   const meta = normalizeText(options.meta);
   const bodyHtml = String(options.bodyHtml || "");
   const statusHtml = options.statusHtml || (options.status || options.includeStatus ? renderStatus(options.status) : "");
-  const actionsHtml = options.actionsHtml || renderStudioModalActions(options.actions || []);
+  const actionsHtml = options.actionsHtml || renderAnalyticsModalActions(options.actions || []);
   const contentHtml = `
         <header class="tagStudioModal__header">
           <div class="tagStudioModal__headerCopy">
@@ -119,7 +119,7 @@ export function renderStudioModalFrame(options = {}) {
   `;
 }
 
-export function activateStudioModalFrame(host, options = {}) {
+export function activateAnalyticsModalFrame(host, options = {}) {
   const restoreFocus = options.restoreFocus || document.activeElement;
   const modal = host && host.querySelector('[data-role="studio-modal"], .tagStudioModal');
   const dialog = host && host.querySelector('[role="dialog"]');
@@ -270,7 +270,7 @@ function renderModal(type, options = {}) {
   const snippetHtml = type === "patch-preview" ? renderSnippet(options.snippet) : "";
   const actionsHtml = type === "notice" ? renderCloseAction(options) : renderActions(options);
 
-  return renderStudioModalFrame({
+  return renderAnalyticsModalFrame({
     hidden: false,
     modalRole: "studio-modal",
     backdropRole: "modal-cancel",
@@ -319,7 +319,7 @@ function openModal(type, options = {}) {
   closeActiveModal(host);
   host.innerHTML = renderModal(type, options);
 
-  const controller = activateStudioModalFrame(host, {
+  const controller = activateAnalyticsModalFrame(host, {
     ...options,
     restoreFocus,
     async onSubmit(api) {
@@ -372,7 +372,7 @@ function renderChoiceBody(options = {}) {
   `;
 }
 
-export function createStudioModalHost(options = {}) {
+export function createAnalyticsModalHost(options = {}) {
   return ensureHost(options);
 }
 

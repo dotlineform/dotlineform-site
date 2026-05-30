@@ -1,19 +1,19 @@
 import {
-  getStudioGroups,
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  getAnalyticsGroups,
+  getAnalyticsText,
+  loadAnalyticsConfigWithText
+} from "./analytics-config.js";
 import {
-  loadStudioGroupsJson,
-  normalizeStudioGroups
-} from "./studio-data.js";
+  loadAnalyticsGroupsJson,
+  normalizeAnalyticsGroups
+} from "./analytics-data.js";
 import {
   initializeStudioRouteState,
   setStudioRouteReady
-} from "./studio-route-state.js";
+} from "./analytics-route-state.js";
 import {
   tagGroupsUi
-} from "./studio-ui.js";
+} from "./analytics-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = tagGroupsUi;
@@ -33,10 +33,10 @@ async function initTagGroupsPage() {
   initializeStudioRouteState(root, { route: "tag-groups", mode: "list" });
 
   try {
-    const config = await loadStudioConfigWithText("tag_groups");
-    STUDIO_GROUPS = getStudioGroups(config);
-    const data = await loadStudioGroupsJson(config);
-    const groups = normalizeStudioGroups(data, STUDIO_GROUPS);
+    const config = await loadAnalyticsConfigWithText("tag_groups");
+    STUDIO_GROUPS = getAnalyticsGroups(config);
+    const data = await loadAnalyticsGroupsJson(config);
+    const groups = normalizeAnalyticsGroups(data, STUDIO_GROUPS);
     renderGroups(content, groups, config);
     setStudioRouteReady(root, true, {
       route: "tag-groups",
@@ -84,7 +84,7 @@ function escapeHtml(value) {
 }
 
 function tagGroupsText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_groups.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_groups.${key}`, fallback, tokens);
 }
 
 function classNames(...tokens) {

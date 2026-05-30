@@ -36,7 +36,7 @@ Page controller:
 
 Supporting modules:
 
-- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/analytics-ui.js`
 
 Top-level structure:
 
@@ -127,7 +127,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - classes define presentation
 - `data-role` defines JS selectors
 
-`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-groups.js`.
+`analytics-app/app/frontend/js/analytics-ui.js` holds the role selectors plus generated style class tokens used by `tag-groups.js`.
 
 ## Data Access
 
@@ -138,8 +138,8 @@ Primary data access:
 
 Loaded through:
 
-- `analytics-app/app/frontend/js/studio-data.js`
-- `analytics-app/app/frontend/js/studio-config.js`
+- `analytics-app/app/frontend/js/analytics-data.js`
+- `analytics-app/app/frontend/js/analytics-config.js`
 
 ## Change Guidance
 

@@ -1,11 +1,11 @@
 import {
-  getStudioText
-} from "./studio-config.js";
+  getAnalyticsText
+} from "./analytics-config.js";
 import {
-  getStudioWriteEndpoint,
+  getAnalyticsWriteEndpoint,
   postJson
-} from "./studio-transport.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+} from "./analytics-transport.js";
+import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 import {
   buildDeletePreviewPayload,
   buildImportSummary,
@@ -15,11 +15,11 @@ import {
 } from "./tag-registry-save.js";
 
 function registryText(config, key, fallback, tokens) {
-  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+  return getAnalyticsText(config, `tag_registry.${key}`, fallback, tokens);
 }
 
 function registryActivityContext(actionId, controlId, controlSelector, recordIdField, recordId) {
-  return buildStudioActivityContext({
+  return buildAnalyticsActivityContext({
     pageId: "tag-registry",
     actionId,
     route: "/analytics/tag-registry/",
@@ -49,7 +49,7 @@ export async function previewDeleteImpact(options) {
   }
 
   try {
-    const response = await postJson(getStudioWriteEndpoint("mutateTagPreview", config), payload);
+    const response = await postJson(getAnalyticsWriteEndpoint("mutateTagPreview", config), payload);
     const summary = buildMutationSummary(response);
     return {
       ok: true,
@@ -91,7 +91,7 @@ export async function submitTagEdit(options) {
   }
 
   try {
-    const response = await postJson(getStudioWriteEndpoint("mutateTag", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("mutateTag", config), {
       action: "edit",
       tag_id: tag.tagId,
       description,
@@ -118,7 +118,7 @@ export async function submitCreateTag(options) {
   const { saveMode, newTagRow, config, importMode = "add", state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("importTagRegistry", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("importTagRegistry", config), {
         mode: importMode,
         import_registry: {
           tags: [newTagRow]
@@ -173,7 +173,7 @@ export async function submitDeleteTag(options) {
   }
 
   try {
-    const response = await postJson(getStudioWriteEndpoint("mutateTag", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("mutateTag", config), {
       action: "delete",
       tag_id: tag.tagId,
       client_time_utc: utcTimestamp(),
@@ -196,7 +196,7 @@ export async function submitDeleteTag(options) {
 export async function previewTagDemote(options) {
   const { tagId, aliasTargets, config } = options || {};
   try {
-    const response = await postJson(getStudioWriteEndpoint("demoteTagPreview", config), {
+    const response = await postJson(getAnalyticsWriteEndpoint("demoteTagPreview", config), {
       tag_id: tagId,
       alias_targets: aliasTargets,
       client_time_utc: utcTimestamp()
@@ -218,7 +218,7 @@ export async function submitTagDemote(options) {
   const { saveMode, tagId, aliasTargets, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("demoteTag", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("demoteTag", config), {
         tag_id: tagId,
         alias_targets: aliasTargets,
         client_time_utc: utcTimestamp(),
@@ -249,7 +249,7 @@ export async function submitRegistryImport(options) {
   const { saveMode, importMode, importRegistry, filename, config, state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioWriteEndpoint("importTagRegistry", config), {
+      const response = await postJson(getAnalyticsWriteEndpoint("importTagRegistry", config), {
         mode: importMode,
         import_registry: importRegistry,
         import_filename: filename || "",
