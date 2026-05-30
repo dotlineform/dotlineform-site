@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4e2966ad1273e1a7ae91f7683099b7a1",
-    "generated_at_utc": "2026-05-29T19:05:09Z",
-    "count": 200
+    "version": "blake2b-4134f349c78070c5e7e553eafb371c12",
+    "generated_at_utc": "2026-05-30T08:04:12Z",
+    "count": 201
   },
   "entries": [
     {
@@ -1140,6 +1140,33 @@
         "25"
       ],
       "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-analytics-app-split",
+      "kind": "doc",
+      "title": "Analytics App Split Request",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-app-split",
+      "last_updated": "2026-05-30",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-30 • Change Requests",
+      "search_terms": [
+        "site-request-analytics-app-split",
+        "site",
+        "request",
+        "analytics",
+        "app",
+        "split",
+        "analytics app split request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "site-request-analytics-app-split site request analytics app split analytics app split request change requests change requests 2026-05-30 2026 05 30"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",
