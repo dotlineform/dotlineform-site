@@ -35,7 +35,7 @@ from studio_activity import append_studio_activity, normalize_activity_context_f
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
-TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/docs/logs/docs_management_service.log"}]
+TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/analytics/logs/analytics_data_sharing_api.log"}]
 SUPPORTED_PREPARE_FORMATS = {"json"}
 PREPARE_ACTIVITY_ENDPOINT = "/data-sharing/prepare"
 APPLY_ACTIVITY_ENDPOINT = "/data-sharing/apply"

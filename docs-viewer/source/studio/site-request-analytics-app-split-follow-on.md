@@ -2,7 +2,7 @@
 doc_id: site-request-analytics-app-split-follow-on
 title: Analytics App Split Follow-On Tasks
 added_date: "2026-05-30 17:24"
-last_updated: "2026-05-30 19:25"
+last_updated: "2026-05-30 20:10"
 ui_status: in-progress
 parent_id: site-request-analytics-app-split
 ---
@@ -29,18 +29,20 @@ Key boundary decisions:
 
 ### just done
 
-- Completed task 7 Data Sharing artifact root move:
-  - moved Data Sharing runtime artifact contracts from `var/studio/data-sharing/...` to `var/analytics/data-sharing/...`
-  - retargeted shared Data Sharing path constants, adapter config, Library export path patterns, schema validation, Analytics server adapter validation, UI text, tests, smokes, and durable docs
-  - preserved the existing domain folder shape: `exports/`, `import-staging/`, `import-preview/`, and tags `backups/`
-  - kept no fallback reads for old `var/studio/data-sharing/...` artifacts; docs now describe those roots as disposable history
-  - verified Python syntax, JSON config parsing, focused Analytics/Data Sharing pytest, stale-reference scans, `git diff --check`, and a changed-file sanitization scan
+- Completed task 8 Docs Viewer/Data Sharing boundary tightening:
+  - confirmed Analytics Data Sharing does not call Docs Viewer HTTP endpoints for selectable records or package workflows
+  - removed Analytics Data Sharing's direct import of `docs_management_context`
+  - moved document Data Sharing activity attachment to `docs_data_sharing.activity`
+  - moved document backup bundle creation to the document-domain `docs_data_sharing.write` helper
+  - kept docs/search rebuild follow-through as a narrow document-domain callable dependency
+  - pointed tags Data Sharing activity source refs at `var/analytics/logs/analytics_data_sharing_api.log`
+  - added a focused regression test for avoiding Docs Viewer management-context imports
 
 ### steer for next task
 
-- Start task 8 by verifying and tightening the Docs Viewer/Data Sharing boundary.
-- Data Sharing should call document-domain adapters/helpers in process, not Docs Viewer HTTP endpoints or broad management-service handles.
-- Keep this as a boundary audit and small cleanup slice unless a concrete cross-owner dependency needs a focused follow-up.
+- Start task 9 by renaming Analytics frontend helper modules and imports that still imply Studio ownership.
+- Keep this as a mechanical ownership-language slice: preserve UI behavior, route contracts, selectors, and smoke coverage unless task 10 owns the `tagStudio*`/`tag-studio-*` family separately.
+- Read the current Analytics frontend module graph first so import renames stay complete and do not affect legitimate Local Studio files under `studio/app/...`.
 
 ### baseline verification set
 
@@ -328,7 +330,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | done | Resolve the search ownership boundary. Public search does not need tag terms, so remove direct tag reads from Studio-owned catalogue search unless a concrete Analytics-specific search surface is identified. Update build/search code so Studio does not directly know Analytics tag source paths. |
 | 6 | done | Move canonical tag JSON from `studio/data/canonical/analytics/` to the chosen Analytics-owned source location, likely `analytics-app/data/canonical/`. Update Analytics static serving, read endpoints, runtime config/UI text, Data Sharing adapter config, projection contracts, catalogue/search consumers, tests, and docs. Old source paths should fail in active checks. |
 | 7 | done | Move Data Sharing runtime artifact roots from `var/studio/data-sharing/` to `var/analytics/data-sharing/`. Update `data-sharing/config/*.json`, schemas, `data_sharing.services.paths`, Analytics server constants, smoke fixtures, tests, docs, validation messages, and examples. Do not add fallback reads for existing old artifacts. |
-| 8 | planned | Verify and tighten the Docs Viewer/Data Sharing boundary. Data Sharing should call document-domain adapters or helper functions for conversion/source work, not Docs Viewer HTTP endpoints or broad management-service handles. Tags should flow through an Analytics tags adapter. Document the adapter contract in the Data Sharing technical spec. |
+| 8 | done | Verify and tighten the Docs Viewer/Data Sharing boundary. Data Sharing should call document-domain adapters or helper functions for conversion/source work, not Docs Viewer HTTP endpoints or broad management-service handles. Tags should flow through an Analytics tags adapter. Document the adapter contract in the Data Sharing technical spec. |
 | 9 | planned | Rename Analytics frontend helper modules and exported APIs that still imply Studio ownership, including `studio-config.js`, `studio-data.js`, `studio-transport.js`, `studio-ui.js`, `studio-modal.js`, `studio-route-state.js`, `studio-theme.js`, `studio-navigation.js`, and related imports. Use Analytics-owned names such as `analytics-config.js`, `analytics-ui.js`, and `analytics-modal.js`. |
 | 10 | planned | Rename tag UI/module naming from `tagStudio*` and `tag-studio-*` to Analytics-owned naming. Include CSS classes in `analytics.css`, JS class tokens/templates, modal selectors, smoke tests, and docs. Use one consistent family such as `analytics*`, `analyticsModal*`, `analyticsForm*`, `analyticsList*`, and `analyticsToolbar*`. |
 | 11 | planned | Rename remaining runtime event/state names that still imply Studio ownership, including `studio:open-modal`, `initializeStudioRouteState`, and Analytics-local activity-context helper names where appropriate. Preserve behavior; only change ownership language and route-local contracts. |

@@ -232,6 +232,14 @@ def test_selectable_records_returns_documents_without_docs_viewer_http() -> None
     assert payload["records"][1]["selectable"] is False
 
 
+def test_analytics_data_sharing_api_avoids_docs_management_context_imports() -> None:
+    source = (ANALYTICS_PACKAGE_DIR / "analytics_data_sharing_api.py").read_text(encoding="utf-8")
+
+    assert "docs_management_context" not in source
+    assert "docs_management_service" not in source
+    assert "docs_management_routes" not in source
+
+
 def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) -> None:
     calls: list[dict[str, object]] = []
 

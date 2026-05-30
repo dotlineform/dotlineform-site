@@ -19,11 +19,12 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
-import docs_activity  # noqa: E402
+import script_logging  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
-from docs_management_context import log_event, make_backup_bundle  # noqa: E402
+from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
+from docs_data_sharing.write import make_backup_bundle  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
 except ModuleNotFoundError:  # pragma: no cover - supports direct script imports.
@@ -37,6 +38,21 @@ RETURNED_PACKAGES_PATH = "/returned-packages"
 PREPARE_PATH = "/prepare"
 REVIEW_PATH = "/review"
 APPLY_PATH = "/apply"
+LOGS_REL_DIR = Path("var/analytics/logs")
+
+
+def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
+    try:
+        script_logging.append_script_log(
+            Path(__file__),
+            event,
+            details=details,
+            repo_root=repo_root,
+            log_dir_rel=LOGS_REL_DIR,
+        )
+    except Exception:
+        # Logging should not block local API requests.
+        pass
 
 
 def documents_data_sharing_dependencies() -> documents_data_sharing_adapter.DocumentsDataSharingDependencies:
@@ -111,13 +127,13 @@ def data_sharing_post_response(
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if api_path == PREPARE_PATH:
         payload = data_sharing_service.prepare_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
+        documents_data_sharing_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == REVIEW_PATH:
         payload = data_sharing_service.review_returned_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == APPLY_PATH:
         payload = data_sharing_service.apply_returned_changes(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        docs_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
+        documents_data_sharing_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     raise FileNotFoundError("Not found")

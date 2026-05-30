@@ -218,6 +218,17 @@ It does not own the shared Data Sharing registry or non-document adapters.
 Docs-domain helpers remain under the Docs Viewer ownership boundary unless a later implementation deliberately creates a new package boundary.
 They must be callable without Docs Viewer HTTP or UI/service wrapper modules.
 
+Document Data Sharing uses narrow in-process dependencies:
+
+- `docs_data_sharing.package` owns selectable document reads, package generation, and returned-package listing.
+- `docs_data_sharing.review` owns staged document package parsing and review-row shaping.
+- `docs_data_sharing.apply` owns summary and hierarchy apply planning.
+- `docs_data_sharing.write` owns document Data Sharing backup bundle creation and delegates source-write rebuild follow-through through an injected callable.
+- `docs_data_sharing.activity` owns document Data Sharing Studio Activity attachment for package creation and apply operations.
+
+The Analytics Data Sharing API injects these helpers into the documents adapter.
+It must not import `docs_management_context`, call Docs Viewer service HTTP endpoints, or route document Data Sharing work through broad Docs Viewer management-service handles.
+
 ## Analytics Tags Adapter
 
 Adapter id: `analytics-tags`
@@ -279,6 +290,7 @@ The implemented architecture moved Data Sharing-owned code and config out of Stu
 - Analytics local HTTP endpoints live under `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
 
 Do not reintroduce Data Sharing HTTP endpoints into Docs Viewer service modules.
+Do not reintroduce Analytics Data Sharing imports from `docs_management_context`, `docs_management_service`, or Docs Viewer management routes.
 Do not reintroduce Data Sharing HTTP endpoints, route shells, proxies, or static shims into Local Studio.
 Do not add browser, server, or route shell code under `data-sharing/`.
 
