@@ -65,8 +65,11 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("Local Studio did not expose the configured Docs Viewer mode")
         if docs_viewer_links.get("doc_scope") != "studio":
             raise AssertionError("Local Studio did not expose the configured Docs Viewer doc scope")
-        if docs_viewer_links.get("doc_ids", {}).get("docs") != "docs-viewer":
-            raise AssertionError("Local Studio did not expose the configured Docs Viewer external link")
+        if "doc_ids" in docs_viewer_links:
+            raise AssertionError("Local Studio duplicated route doc IDs under Docs Viewer external links")
+        docs_route = runtime_config.get("app", {}).get("routes", {}).get("docs", {})
+        if docs_route.get("doc_id") != "docs-viewer":
+            raise AssertionError("Local Studio did not expose the configured Docs route doc ID")
 
         print(f"local Studio Docs Viewer boundary OK: {base_url}/studio/")
         return 0

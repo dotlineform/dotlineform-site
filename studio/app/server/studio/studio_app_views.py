@@ -7,9 +7,9 @@ import json
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_TOP_NAV_VIEW_IDS, studio_views
+    from studio_app_config import studio_top_nav_view_ids, studio_views
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_TOP_NAV_VIEW_IDS, studio_views
+    from .studio_app_config import studio_top_nav_view_ids, studio_views
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -47,7 +47,7 @@ def studio_nav(active_view_id: str = "") -> str:
     items = []
     active_nav_id = STUDIO_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
     views = studio_views(REPO_ROOT)
-    for view_id in STUDIO_TOP_NAV_VIEW_IDS:
+    for view_id in studio_top_nav_view_ids(REPO_ROOT):
         view = views[view_id]
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)

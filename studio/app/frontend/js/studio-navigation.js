@@ -25,9 +25,15 @@ export function getStudioExternalLinks(config) {
 
 export function getStudioViews(config) {
   const views = getStudioRuntime(config).views;
-  return Array.isArray(views)
-    ? views.filter((view) => view && typeof view === "object" && typeof view.id === "string")
-    : [];
+  if (Array.isArray(views)) {
+    return views.filter((view) => view && typeof view === "object" && typeof view.id === "string");
+  }
+
+  const routes = config && config.app && config.app.routes;
+  if (!routes || typeof routes !== "object" || Array.isArray(routes)) return [];
+  return Object.entries(routes)
+    .filter(([routeId, route]) => routeId && route && typeof route === "object" && !Array.isArray(route))
+    .map(([routeId, route]) => ({ id: routeId, ...route }));
 }
 
 export function getStudioView(config, viewId) {
@@ -92,10 +98,8 @@ export function buildDocsViewerUrl(config, target = "/docs/", params = {}) {
 
 export function buildDocsViewerDocUrl(config, viewId) {
   const link = getDocsViewerLinkConfig(config);
-  const docIds = link.doc_ids && typeof link.doc_ids === "object" && !Array.isArray(link.doc_ids)
-    ? link.doc_ids
-    : {};
-  const docId = String(docIds[normalizeViewId(viewId)] || "").trim();
+  const view = getStudioView(config, viewId);
+  const docId = view && typeof view.doc_id === "string" ? view.doc_id.trim() : "";
   const docScope = String(link.doc_scope || "studio").trim();
   const defaultMode = String(link.default_mode || "manage").trim();
   const params = {};

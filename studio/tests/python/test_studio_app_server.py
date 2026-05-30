@@ -17,7 +17,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
-from studio.app.server.studio.studio_app_config import asset_version, runtime_config  # noqa: E402
+from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
 from studio.app.server.studio.studio_app_views import studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
@@ -45,11 +45,19 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["doc_id"] == "catalogue-work-editor"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "python"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "docs_page" not in payload["paths"]["routes"]
     assert "docs_html_import" not in payload["paths"]["routes"]
+    assert "catalogue_work_editor" not in payload["paths"]["routes"]
+    assert "catalogue_field_registry_review" not in payload["paths"]["routes"]
     assert any(
         view["id"] == "docs"
         and view["path"] == "/docs/?mode=manage"
+        and view["doc_id"] == "docs-viewer"
+        and view["shell_type"] == "external"
         and "doc_href" not in view
         and "script" not in view
         for view in runtime["views"]
@@ -81,11 +89,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert docs_viewer_links["docs_path"] == "/docs/"
     assert docs_viewer_links["default_mode"] == "manage"
     assert docs_viewer_links["doc_scope"] == "studio"
-    assert docs_viewer_links["doc_ids"]["docs"] == "docs-viewer"
-    assert docs_viewer_links["doc_ids"]["catalogue_work_editor"] == "catalogue-work-editor"
-    assert "tag_groups" not in docs_viewer_links["doc_ids"]
-    assert "data_sharing_prepare" not in docs_viewer_links["doc_ids"]
-    assert "ui_catalogue_demos" not in docs_viewer_links["doc_ids"]
+    assert "doc_ids" not in docs_viewer_links
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -126,6 +130,50 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["modals"]["event"] == "studio:open-modal"
+
+
+def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
+    payload = runtime_config(REPO_ROOT, "test-version")
+    routes = payload["app"]["routes"]
+
+    duplicate_path = json.loads(json.dumps(payload))
+    duplicate_path["app"]["routes"]["project_state"]["path"] = routes["studio_audits"]["path"]
+    with pytest.raises(RuntimeError, match="duplicate path"):
+        validate_studio_route_registry(REPO_ROOT, duplicate_path)
+
+    missing_script = json.loads(json.dumps(payload))
+    missing_script["app"]["routes"]["project_state"].pop("script")
+    with pytest.raises(RuntimeError, match="project_state: shell route is missing script"):
+        validate_studio_route_registry(REPO_ROOT, missing_script)
+
+    missing_doc = json.loads(json.dumps(payload))
+    missing_doc["app"]["routes"]["project_state"]["doc_id"] = ""
+    with pytest.raises(RuntimeError, match="project_state: missing doc_id"):
+        validate_studio_route_registry(REPO_ROOT, missing_doc)
+
+    unsupported_shell = json.loads(json.dumps(payload))
+    unsupported_shell["app"]["routes"]["project_state"]["shell_type"] = "server"
+    with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
+        validate_studio_route_registry(REPO_ROOT, unsupported_shell)
+
+    stale_route = json.loads(json.dumps(payload))
+    stale_route["app"]["routes"]["obsolete_route"] = {
+        "label": "obsolete",
+        "title": "Obsolete",
+        "path": "/studio/obsolete/?mode=manage",
+        "script": "/studio/app/frontend/js/project-state.js",
+        "doc_id": "project-state-page",
+        "nav": False,
+        "shell_type": "python",
+        "ready_state_route_id": "obsolete",
+    }
+    with pytest.raises(RuntimeError, match="obsolete_route: no current Studio route serves this shell route"):
+        validate_studio_route_registry(REPO_ROOT, stale_route)
+
+    duplicated_legacy_path = json.loads(json.dumps(payload))
+    duplicated_legacy_path["paths"]["routes"]["catalogue_field_registry_review"] = "/studio/catalogue-field-registry/?mode=manage"
+    with pytest.raises(RuntimeError, match="Studio route metadata must live in app.routes"):
+        validate_studio_route_registry(REPO_ROOT, duplicated_legacy_path)
 
 
 def test_access_log_is_opt_in(monkeypatch) -> None:

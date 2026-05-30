@@ -18,7 +18,7 @@ Legacy Jekyll-hosted Studio pages use:
 - `_layouts/studio.html`
 
 The local Studio app server owns active Studio route shells directly.
-For local app routes, `studio/app/server/studio/studio_app_views.py` renders the shell, `studio/app/server/studio/studio_app_config.py` advertises the runtime view registry, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
+For local app routes, `studio/app/server/studio/studio_app_views.py` renders the shell, `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
@@ -52,6 +52,37 @@ This keeps Studio implementation notes in the shared `/docs/` module rather than
 
 Legacy Jekyll Studio route entry modules no longer use a shared Liquid include.
 Operational Studio route shells are hosted by the local app, and remaining Studio-owned Jekyll-shaped demo pages are cleanup targets for the source-tree move.
+
+## Route Registry
+
+Studio route shell metadata lives in `studio/app/frontend/config/studio-config.json` under `app.routes`.
+`app.runtime.routes` is not the route registry; it is reserved for local runtime endpoints such as `/health` and `/studio/runtime-config.json`.
+
+Each registered route uses these fields:
+
+- `label`
+- `title`
+- `path`
+- `script` for shell-rendered routes
+- `doc_id`
+- `nav`
+- `shell_type`
+- `ready_state_route_id`
+
+Current shell types are:
+
+- `external` for configured peer routes such as Docs Viewer
+- `python` for active Studio routes whose route-specific shell HTML is still rendered by Python
+- `javascript` for future routes rendered by the browser shell
+
+`studio/app/server/studio/studio_app_config.py` validates the registry before exposing runtime config.
+Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, missing `doc_id` values, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
+
+The runtime config exposes the same records as `app.runtime.views` for existing navigation helpers and smoke tests.
+Docs Viewer page links are built from `external_links.docs_viewer` plus each route's `doc_id`; `external_links.docs_viewer` must not duplicate per-route doc IDs.
+
+`studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper for the migration.
+It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
 
 ## Studio Pages
 

@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-30-studio-route-registry-shell-contract",
+  "date": "2026-05-30",
+  "title": "Added Studio Route Registry Shell Contract",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "studio-ui",
+    "config"
+  ],
+  "summary": "Moved Local Studio route shell metadata into the checked-in app.routes registry, derived runtime views from that registry, added registry validation, and added a browser-side route-registry helper for the first JavaScript app shell migration slice.",
+  "effect": "Studio route labels, paths, scripts, doc IDs, shell types, and ready-state IDs now have a single config-owned contract that Python validates and browser helpers can consume before any route shell is migrated.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-studio-javascript-app-shell-slice-1.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "route-registry",
+    "javascript-app-shell",
+    "runtime-config"
+  ],
+  "change_request_doc_id": "site-request-studio-javascript-app-shell",
+  "related_docs": [
+    "site-request-studio-javascript-app-shell",
+    "site-request-studio-javascript-app-shell-slice-1",
+    "studio-runtime",
+    "local-studio-app"
+  ],
+  "related_files": [
+    "studio/app/frontend/config/studio-config.json",
+    "studio/app/frontend/js/studio-config.js",
+    "studio/app/frontend/js/studio-navigation.js",
+    "studio/app/frontend/js/studio-route-registry.js",
+    "studio/app/server/studio/studio_app_config.py",
+    "studio/app/server/studio/studio_app_views.py",
+    "studio/tests/python/test_studio_app_server.py",
+    "studio/tests/smoke/studio_operational_route_modules.py"
+  ]
+}

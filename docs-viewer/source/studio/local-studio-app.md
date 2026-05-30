@@ -27,7 +27,7 @@ HTTP access logging is quiet by default so normal browser use does not flood the
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs Viewer management is handled by the standalone Docs Viewer service.
 Active Local Studio browser routes use plain external Docs Viewer links from `external_links.docs_viewer` in `studio/app/frontend/config/studio-config.json`.
-Per-page Docs Viewer doc IDs live in `external_links.docs_viewer.doc_ids` so user-guidance targets can be changed without editing Python.
+Per-page Docs Viewer doc IDs live in `app.routes[*].doc_id` so user-guidance targets can be changed in the route registry without editing Python.
 Local Studio renders Docs Viewer links without probing service availability; when the Docs Viewer service is stopped, the links fail like normal external links.
 Analytics and Data Sharing routes are handled by the standalone Local Analytics app, not Local Studio.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
@@ -126,7 +126,8 @@ The local app is the only active Studio home surface.
 Local app views declare the runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
-- view ids, labels, paths, docs links, home-list entries, and shell top-navigation groups
+- `app.routes` route ids, labels, paths, scripts, doc IDs, shell types, ready-state route IDs, and navigation visibility
+- runtime view records derived from `app.routes`
 - local service endpoints such as `/studio/api/catalogue`
 - plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from the checked-in Studio config
@@ -156,8 +157,8 @@ The catalogue helper requires the configured public-site base for public links i
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route is no longer hosted by Local Studio.
 The runtime config exposes the plain Docs Viewer link target for the top-level `docs` view.
-Page implementation links render with `data-studio-doc-view`; the browser resolves those targets from the configured `external_links.docs_viewer.doc_ids` map.
-The browser builds external Docs Viewer URLs from `external_links.docs_viewer`.
+Page implementation links render with `data-studio-doc-view`; the browser resolves those targets from the matching route record's `doc_id`.
+The browser builds external Docs Viewer URLs from `external_links.docs_viewer` plus the route `doc_id`.
 Data Sharing endpoints are no longer published by Local Studio runtime config.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.

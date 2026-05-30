@@ -129,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
                         hasThumbnailQualityView: config.app.runtime.views.some((view) => view.id === "thumbnail_quality"),
                         hasThumbnailQualityService: Object.prototype.hasOwnProperty.call(config.app.runtime.services.catalogue || {}, "thumbnail_quality_preview"),
                         hasThumbnailQualityDataPath: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths.studio || {}, "thumbnail_quality_preview"),
-                        hasThumbnailQualityDocId: Object.prototype.hasOwnProperty.call(config.external_links.docs_viewer.doc_ids || {}, "thumbnail_quality"),
+                        hasThumbnailQualityDocId: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "thumbnail_quality"),
                         docsExternalLink: externalLinks.docs_viewer,
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
@@ -195,8 +195,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected Docs external link mode: {result['docsExternalLink']!r}")
         if result["docsExternalLink"]["doc_scope"] != "studio":
             raise AssertionError(f"unexpected Docs external link scope: {result['docsExternalLink']!r}")
-        if result["docsExternalLink"]["doc_ids"]["docs"] != "docs-viewer":
-            raise AssertionError(f"unexpected Docs external link config: {result['docsExternalLink']!r}")
+        if "doc_ids" in result["docsExternalLink"]:
+            raise AssertionError(f"Docs external link should not duplicate route doc IDs: {result['docsExternalLink']!r}")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":

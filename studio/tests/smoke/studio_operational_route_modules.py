@@ -87,6 +87,13 @@ def assert_operational_route_helpers(page: Page) -> None:
                 import('/studio/app/frontend/js/project-state.js'),
                 import('/studio/app/frontend/js/studio-audits.js'),
             ]);
+            const configModule = await import('/studio/app/frontend/js/studio-config.js');
+            const registry = await import('/studio/app/frontend/js/studio-route-registry.js');
+            const config = configModule.DEFAULT_STUDIO_CONFIG;
+            const route = registry.resolveStudioRoute(config, { pathname: '/studio/project-state/' });
+            const contract = registry.buildStudioShellContract(config, { pathname: '/studio/project-state/' });
+            const missing = registry.buildStudioShellContract(config, { pathname: '/studio/not-registered/' });
+            const workRoute = registry.findStudioRoute(config, 'catalogue-work-editor');
             return {
                 required,
                 unavailable,
@@ -102,7 +109,14 @@ def assert_operational_route_helpers(page: Page) -> None:
                 modeAfterBusy: root.dataset.studioMode,
                 serviceAfterBusy: root.dataset.studioService,
                 recordLoadedAfterBusy: root.dataset.studioRecordLoaded,
-                busyDetail
+                busyDetail,
+                resolvedRouteId: route && route.id,
+                resolvedRouteReadyId: route && route.readyStateRouteId,
+                contractShouldRenderShell: contract.shouldRenderShell,
+                contractReason: contract.reason,
+                missingContractReason: missing.reason,
+                workRoutePath: workRoute && workRoute.path,
+                workRouteNeedsScript: registry.routeRequiresShellScript(workRoute)
             };
         }"""
     )
@@ -128,6 +142,13 @@ def assert_operational_route_helpers(page: Page) -> None:
         "service": "available",
         "recordLoaded": True,
     }
+    assert result["resolvedRouteId"] == "project_state"
+    assert result["resolvedRouteReadyId"] == "project-state"
+    assert result["contractShouldRenderShell"] is False
+    assert result["contractReason"] == "route_shell_not_migrated"
+    assert result["missingContractReason"] == "route_not_registered"
+    assert result["workRoutePath"] == "/studio/catalogue-work/?mode=manage"
+    assert result["workRouteNeedsScript"] is True
 
 
 def run(site_root: Path) -> None:

@@ -2,7 +2,7 @@
 doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: "2026-05-30 20:30"
+last_updated: "2026-05-30 21:25"
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -30,7 +30,7 @@ This would replace the current mixed shell model where Python renders HTML route
 
 Recent Data Sharing and Docs Viewer boundary work made the direction clearer.
 
-Studio and Docs Viewer are separate concepts. Studio should not know how Docs Viewer works internally; it should only know the configured external Docs Viewer link target and the doc IDs it wants to open. The latest link cleanup moved Docs Viewer service endpoints out of Studio and moved page documentation targets into `external_links.docs_viewer.doc_ids`.
+Studio and Docs Viewer are separate concepts. Studio should not know how Docs Viewer works internally; it should only know the configured external Docs Viewer link target and the doc IDs it wants to open. Slice 1 moved page documentation targets into the Studio route registry as route `doc_id` values; `external_links.docs_viewer` now only carries the Docs Viewer base/path/scope/mode needed to build those URLs.
 
 However, the current implementation is still mixed:
 
@@ -125,7 +125,10 @@ The browser should never gain a generic "write this path" or "run this command" 
 
 Config should become the normal user-facing source for app shell metadata.
 
-Candidate shape:
+Slice 1 selected `app.routes` as the route-registry location.
+`app.runtime.routes` remains reserved for local runtime endpoints such as health and runtime-config URLs.
+
+Selected shape:
 
 ```json
 {
@@ -137,7 +140,9 @@ Candidate shape:
         "path": "/studio/project-state/?mode=manage",
         "script": "/studio/app/frontend/js/project-state.js",
         "doc_id": "project-state-page",
-        "nav": true
+        "nav": false,
+        "shell_type": "python",
+        "ready_state_route_id": "project-state"
       }
     }
   },
@@ -159,6 +164,7 @@ The exact schema can differ, but the principle should hold:
 - external bases are config data
 - Python should not hardcode page documentation targets
 - Python should not need to know which doc explains which Studio page
+- `external_links.docs_viewer` should not duplicate per-route doc IDs
 
 ## Benefits
 

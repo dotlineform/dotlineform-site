@@ -5,83 +5,50 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
 
-STUDIO_VIEWS: dict[str, dict[str, str]] = {
-    "docs": {
-        "label": "docs",
-        "title": "Docs",
-        "path": "/docs/?mode=manage",
-    },
-    "studio_audits": {
-        "label": "audits",
-        "title": "Studio Audits",
-        "path": "/studio/audits/?mode=manage",
-        "script": "/studio/app/frontend/js/studio-audits.js",
-    },
-    "project_state": {
-        "label": "project state",
-        "title": "Project State",
-        "path": "/studio/project-state/?mode=manage",
-        "script": "/studio/app/frontend/js/project-state.js",
-    },
-    "bulk_add_work": {
-        "label": "bulk add",
-        "title": "Bulk Add Work",
-        "path": "/studio/bulk-add-work/?mode=manage",
-        "script": "/studio/app/frontend/js/bulk-add-work.js",
-    },
-    "activity": {
-        "label": "activity",
-        "title": "Studio Activity",
-        "path": "/studio/activity/?mode=manage",
-        "script": "/studio/app/frontend/js/activity-log.js",
-    },
-    "catalogue_field_registry": {
-        "label": "field registry",
-        "title": "Catalogue Field Registry",
-        "path": "/studio/catalogue-field-registry/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
-    },
-    "catalogue_status": {
-        "label": "drafts",
-        "title": "Catalogue Drafts",
-        "path": "/studio/catalogue-status/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-status.js",
-    },
-    "studio_works": {
-        "label": "works",
-        "title": "Studio Works",
-        "path": "/studio/studio-works/?mode=manage",
-        "script": "/studio/app/frontend/js/studio-works.js",
-    },
-    "catalogue_series_editor": {
-        "label": "series editor",
-        "title": "Catalogue Series Editor",
-        "path": "/studio/catalogue-series/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-series-editor.js",
-    },
-    "catalogue_work_editor": {
-        "label": "work editor",
-        "title": "Catalogue Work Editor",
-        "path": "/studio/catalogue-work/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-work-editor.js",
-    },
-    "catalogue_work_detail_editor": {
-        "label": "detail editor",
-        "title": "Catalogue Work Detail Editor",
-        "path": "/studio/catalogue-work-detail/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-work-detail-editor.js",
-    },
-    "catalogue_moment_editor": {
-        "label": "moment editor",
-        "title": "Catalogue Moment Editor",
-        "path": "/studio/catalogue-moment/?mode=manage",
-        "script": "/studio/app/frontend/js/catalogue-moment-editor.js",
-    },
+STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
+    "label",
+    "title",
+    "path",
+    "doc_id",
+    "nav",
+    "shell_type",
+    "ready_state_route_id",
+)
+
+STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("python", "javascript"))
+STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES | frozenset(("external",))
+
+STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
+    "studio_audits": "/studio/audits/",
+    "project_state": "/studio/project-state/",
+    "bulk_add_work": "/studio/bulk-add-work/",
+    "activity": "/studio/activity/",
+    "catalogue_field_registry": "/studio/catalogue-field-registry/",
+    "catalogue_status": "/studio/catalogue-status/",
+    "studio_works": "/studio/studio-works/",
+    "catalogue_series_editor": "/studio/catalogue-series/",
+    "catalogue_work_editor": "/studio/catalogue-work/",
+    "catalogue_work_detail_editor": "/studio/catalogue-work-detail/",
+    "catalogue_moment_editor": "/studio/catalogue-moment/",
 }
 
-STUDIO_TOP_NAV_VIEW_IDS: tuple[str, ...] = (
-    "docs",
+STUDIO_ROUTE_PATHS_WITH_LEGACY_KEYS: dict[str, tuple[str, ...]] = {
+    "catalogue_field_registry": ("catalogue_field_registry_review",),
+}
+
+STUDIO_ROUTE_REGISTRY_PATH = ("app", "routes")
+
+STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
+    "label",
+    "title",
+    "path",
+    "script",
+    "doc_id",
+    "nav",
+    "shell_type",
+    "ready_state_route_id",
 )
 
 STUDIO_MEDIA: dict[str, object] = {
@@ -150,11 +117,112 @@ def load_studio_config(repo_root: Path) -> dict[str, object]:
         raise RuntimeError(f"Could not read Studio config: {config_path}") from error
     if not isinstance(payload, dict):
         raise RuntimeError(f"Studio config must be a JSON object: {config_path}")
+    validate_studio_route_registry(repo_root, payload)
     return payload
 
 
-def studio_views(_repo_root: Path) -> dict[str, dict[str, str]]:
-    return {view_id: dict(view) for view_id, view in STUDIO_VIEWS.items()}
+def studio_route_registry(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, dict[str, object]]:
+    source = payload if payload is not None else load_studio_config(repo_root)
+    raw_routes = source
+    for key in STUDIO_ROUTE_REGISTRY_PATH:
+        raw_routes = raw_routes.get(key) if isinstance(raw_routes, dict) else None  # type: ignore[assignment]
+    if not isinstance(raw_routes, dict):
+        raise RuntimeError("Studio config app.routes must be a JSON object")
+
+    return {
+        route_id: {field: route[field] for field in STUDIO_ROUTE_COPY_FIELDS if field in route}
+        for route_id, route in raw_routes.items()
+        if isinstance(route_id, str) and isinstance(route, dict)
+    }
+
+
+def studio_top_nav_view_ids(repo_root: Path, payload: dict[str, object] | None = None) -> tuple[str, ...]:
+    routes = studio_route_registry(repo_root, payload)
+    return tuple(route_id for route_id, route in routes.items() if route.get("nav") is True)
+
+
+def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) -> None:
+    raw_routes = payload
+    for key in STUDIO_ROUTE_REGISTRY_PATH:
+        raw_routes = raw_routes.get(key) if isinstance(raw_routes, dict) else None  # type: ignore[assignment]
+    if not isinstance(raw_routes, dict):
+        raise RuntimeError("Studio config app.routes must be a JSON object")
+
+    errors: list[str] = []
+    seen_paths: dict[str, str] = {}
+
+    for route_id, route in raw_routes.items():
+        if not isinstance(route_id, str) or not route_id.strip():
+            errors.append("route ids must be non-empty strings")
+            continue
+        if not isinstance(route, dict):
+            errors.append(f"{route_id}: route must be a JSON object")
+            continue
+
+        for field in STUDIO_ROUTE_REQUIRED_FIELDS:
+            if field not in route:
+                errors.append(f"{route_id}: missing required field {field}")
+
+        shell_type = route.get("shell_type")
+        if shell_type not in STUDIO_SUPPORTED_SHELL_TYPES:
+            errors.append(f"{route_id}: unsupported shell_type {shell_type!r}")
+
+        path = route.get("path")
+        normalized_path = normalize_route_path(str(path)) if isinstance(path, str) and path.strip() else ""
+        if not normalized_path:
+            errors.append(f"{route_id}: missing path")
+        elif normalized_path in seen_paths:
+            errors.append(f"{route_id}: duplicate path with {seen_paths[normalized_path]}: {path}")
+        else:
+            seen_paths[normalized_path] = route_id
+
+        if shell_type in STUDIO_SHELL_ROUTE_TYPES:
+            script = route.get("script")
+            if not isinstance(script, str) or not script.strip():
+                errors.append(f"{route_id}: shell route is missing script")
+            elif not (repo_root / script.strip().lstrip("/")).exists():
+                errors.append(f"{route_id}: script does not exist: {script}")
+
+            served_path = STUDIO_SERVED_ROUTE_PATHS.get(route_id)
+            if not served_path:
+                errors.append(f"{route_id}: no current Studio route serves this shell route")
+            elif normalize_route_path(served_path) != normalized_path:
+                errors.append(f"{route_id}: path {path} does not match served route {served_path}")
+
+        doc_id = route.get("doc_id")
+        if not isinstance(doc_id, str) or not doc_id.strip():
+            errors.append(f"{route_id}: missing doc_id")
+
+        if not isinstance(route.get("nav"), bool):
+            errors.append(f"{route_id}: nav must be boolean")
+
+    paths_routes = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
+    paths_routes = paths_routes.get("routes") if isinstance(paths_routes.get("routes"), dict) else {}
+    if isinstance(paths_routes, dict):
+        route_ids = set(raw_routes)
+        legacy_route_keys = {
+            legacy_key
+            for legacy_keys in STUDIO_ROUTE_PATHS_WITH_LEGACY_KEYS.values()
+            for legacy_key in legacy_keys
+        }
+        duplicate_keys = sorted((route_ids | legacy_route_keys) & set(paths_routes))
+        for key in duplicate_keys:
+            errors.append(f"{key}: Studio route metadata must live in app.routes, not paths.routes")
+
+    if errors:
+        raise RuntimeError("Invalid Studio route registry: " + "; ".join(errors))
+
+
+def normalize_route_path(path: str) -> str:
+    parsed = urlsplit(path)
+    normalized = parsed.path.strip() or "/"
+    if normalized != "/" and not normalized.endswith("/"):
+        normalized = f"{normalized}/"
+    return normalized
+
+
+def studio_views(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, dict[str, object]]:
+    return studio_route_registry(repo_root, payload)
 
 
 def studio_service_endpoints(_repo_root: Path) -> dict[str, object]:
@@ -166,6 +234,7 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
@@ -187,6 +256,7 @@ def asset_version(repo_root: Path) -> str:
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_studio_config(repo_root)
+    views = studio_views(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -218,10 +288,10 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
         "views": [
             {"id": view_id, **view}
-            for view_id, view in studio_views(repo_root).items()
+            for view_id, view in views.items()
         ],
         "navigation": {
-            "primary": list(STUDIO_TOP_NAV_VIEW_IDS),
+            "primary": list(studio_top_nav_view_ids(repo_root, payload)),
         },
         "modals": {
             "event": STUDIO_MODAL_EVENT,
