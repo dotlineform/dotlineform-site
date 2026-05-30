@@ -2,7 +2,7 @@
 doc_id: scripts-audit-projection-contract
 title: Projection Contract Audit
 added_date: 2026-05-23
-last_updated: 2026-05-23
+last_updated: 2026-05-30
 parent_id: scripts
 ---
 # Projection Contract Audit
@@ -62,7 +62,7 @@ The projection contract audit checks those systems at the public/local boundary.
 
 ## Update Rule
 
-When adding a source family, generated payload, local working output, public runtime asset, or Studio-only artifact, classify it in `studio/checks/projection_contract.json`.
+When adding a source family, generated payload, local working output, public runtime asset, Studio-only artifact, Analytics app artifact, or UI Catalogue app artifact, classify it in `studio/checks/projection_contract.json`.
 
 When a field becomes source-only, add it to a manifest `field_leak_rules` entry with the public paths that must not contain it.
 Do not add fields to leak rules if they are still intentionally present in current public runtime payloads.

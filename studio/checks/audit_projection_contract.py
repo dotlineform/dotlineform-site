@@ -19,6 +19,8 @@ VALID_CLASSIFICATIONS = {
     "local_working_output",
     "public_runtime_asset",
     "studio_app_asset",
+    "analytics_app_asset",
+    "ui_catalogue_app_asset",
 }
 VALID_PUBLIC_OUTPUT_POLICIES = {"required", "allowed", "forbidden", "ignored"}
 

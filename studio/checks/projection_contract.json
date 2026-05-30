@@ -378,6 +378,21 @@
       "owner_doc": "local-studio-app-public-surface"
     },
     {
+      "id": "analytics_app_assets",
+      "classification": "analytics_app_asset",
+      "repo_paths": [
+        "analytics-app/**"
+      ],
+      "public_output": {
+        "policy": "forbidden",
+        "paths": [
+          "analytics-app"
+        ]
+      },
+      "jekyll_exclude_required": true,
+      "owner_doc": "local-studio-app"
+    },
+    {
       "id": "ui_catalogue_demo_assets",
       "classification": "ui_catalogue_app_asset",
       "repo_paths": [

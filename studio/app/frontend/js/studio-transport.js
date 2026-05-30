@@ -44,14 +44,14 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   health: "/studio/api/catalogue/health"
 });
 
-const DATA_SHARING_ENDPOINTS = {
-  health: "/studio/api/data-sharing/health",
-  selectableRecords: "/studio/api/data-sharing/selectable-records",
-  prepare: "/studio/api/data-sharing/prepare",
-  returnedPackages: "/studio/api/data-sharing/returned-packages",
-  review: "/studio/api/data-sharing/review",
-  apply: "/studio/api/data-sharing/apply"
-};
+const DATA_SHARING_ENDPOINTS = Object.freeze({
+  health: "",
+  selectableRecords: "",
+  prepare: "",
+  returnedPackages: "",
+  review: "",
+  apply: ""
+});
 
 const AUDIT_API_ENDPOINTS = Object.freeze({
   health: "/studio/api/audits/health",
@@ -86,31 +86,7 @@ export {
 };
 
 export function configureStudioTransport(config) {
-  const services = config && config.app && config.app.runtime && config.app.runtime.services
-    ? config.app.runtime.services
-    : {};
-  const dataSharing = services && typeof services.data_sharing === "object" ? services.data_sharing : null;
-  if (dataSharing) {
-    const configuredDataSharing = normalizeServiceEndpoints(dataSharing);
-    Object.assign(DATA_SHARING_ENDPOINTS, {
-      health: configuredDataSharing.health || DATA_SHARING_ENDPOINTS.health,
-      selectableRecords: configuredDataSharing.selectable_records || DATA_SHARING_ENDPOINTS.selectableRecords,
-      prepare: configuredDataSharing.prepare || DATA_SHARING_ENDPOINTS.prepare,
-      returnedPackages: configuredDataSharing.returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
-      review: configuredDataSharing.review || DATA_SHARING_ENDPOINTS.review,
-      apply: configuredDataSharing.apply || DATA_SHARING_ENDPOINTS.apply
-    });
-  }
-}
-
-function normalizeServiceEndpoints(service) {
-  const normalized = {};
-  for (const [key, value] of Object.entries(service || {})) {
-    if (typeof value === "string" && value.trim()) {
-      normalized[key] = value.trim();
-    }
-  }
-  return normalized;
+  void config;
 }
 
 export function getStudioWriteEndpoint(key, config = null) {

@@ -173,6 +173,11 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
 
 
+def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
+    transport_source = (REPO_ROOT / "studio/app/frontend/js/studio-transport.js").read_text(encoding="utf-8")
+    assert "/studio/api/data-sharing" not in transport_source
+
+
 def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> None:
     excludes: set[str] = set()
     in_exclude = False
