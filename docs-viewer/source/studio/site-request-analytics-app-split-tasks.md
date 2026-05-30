@@ -15,6 +15,12 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Completed task 15 durable-docs pass:
+  - expanded the durable Analytics and Data Sharing docs with current Local Analytics, headless `data-sharing/`, Docs Viewer helper, tag-helper, and Local Studio non-ownership boundaries
+  - retargeted Data Sharing overview/spec/config docs to `/analytics/data-sharing/...` and `/analytics/api/data-sharing/...`
+  - updated tag route docs, readiness docs, config docs, docs import/export docs, runtime docs, and pattern docs that still described retired Studio Analytics/Data Sharing paths as active
+  - documented the post-split JavaScript inventory boundary so future inventory work uses `studio/app/frontend/js/`, `analytics-app/app/frontend/js/`, and `ui-catalogue-app/app/assets/js/` instead of retired `assets/studio/js/...` ownership
+  - did not manually rebuild docs payloads; the local docs watcher regenerated affected generated Studio docs/search payloads from the edited source docs
 - Completed the final focused compatibility cleanup and verification pass:
   - removed the dead Studio-owned Analytics/Data Sharing route JavaScript modules and route UI-text files now owned by `analytics-app/`
   - trimmed Studio frontend transport/data helpers so they no longer expose Analytics write endpoints, Data Sharing endpoint defaults, or tag/data-sharing data loaders
@@ -142,7 +148,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 12 | done | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
 | 13 | done | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
 | 14 | done | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
-| 15 | planned | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |
+| 15 | done | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |
 | 16 | planned | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, structured docs-log entries, and parent-request status updates. |
 
 Close-out must confirm that any cleanup has not been deferred.

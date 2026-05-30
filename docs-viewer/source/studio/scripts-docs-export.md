@@ -36,7 +36,7 @@ Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable 
 
 ## Runtime Contract
 
-The script is the documents-adapter package engine for both CLI runs and the Studio Data Sharing `prepare` endpoint.
+The script is the documents-adapter package engine for both CLI runs and the Analytics Data Sharing `prepare` endpoint.
 It is intentionally source-read-only: the only write it performs is the generated package artifact when `--write` is passed or when the local service calls it in write mode.
 
 Inputs:
@@ -218,6 +218,6 @@ Warnings report non-blocking context:
 
 The static sharing profile schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-The Studio page runs the same documents package engine through the Studio-owned same-origin endpoint `POST /studio/api/data-sharing/prepare`.
+The Analytics Data Sharing page runs the same documents package engine through the Analytics-owned same-origin endpoint `POST /analytics/api/data-sharing/prepare`.
 The local service first resolves `data_domain` and `operation` through `data-sharing/config/adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
 The response is annotated with `data_domain`, `adapter_id`, and service summary text, but it does not include `rebuild` or `rebuild.diagnostics` because package preparation does not mutate source docs or generated docs/search payloads.

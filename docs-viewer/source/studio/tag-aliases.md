@@ -2,14 +2,14 @@
 doc_id: tag-aliases
 title: Tag Aliases
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: 2026-05-30
 parent_id: analytics
 ---
 # Tag Aliases
 
 Route:
 
-- `/studio/analytics/tag-aliases/`
+- `/analytics/tag-aliases/`
 
 Purpose:
 
@@ -22,7 +22,7 @@ The page root `#tag-aliases` exposes the shared Studio route-ready contract:
 - `data-studio-ready` is `false` while config, alias, registry, and group data load, then `true` after the list or error state is rendered
 - `data-studio-busy` is `true` while import, edit/create, delete, promote, or demote work is running
 - `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
-- `data-studio-service` reports whether the local Studio analytics API is available for direct writes
+- `data-studio-service` reports whether the Local Analytics API is available for direct writes
 - `data-studio-record-loaded` is `true` when aliases are loaded
 
 Successful local-server alias writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
@@ -32,18 +32,18 @@ Covered write actions include alias import, create alias, edit alias, delete ali
 
 Primary shell:
 
-- `studio/app/server/studio/studio_app_views.py`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
 
 Page controller:
 
-- `assets/studio/js/tag-aliases.js`
+- `analytics-app/app/frontend/js/tag-aliases.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
-- `assets/studio/js/tag-aliases-domain.js`
-- `assets/studio/js/tag-aliases-save.js`
-- `assets/studio/js/tag-aliases-service.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/tag-aliases-domain.js`
+- `analytics-app/app/frontend/js/tag-aliases-save.js`
+- `analytics-app/app/frontend/js/tag-aliases-service.js`
 
 Top-level structure:
 
@@ -77,7 +77,7 @@ DOM / CSS:
 JS owner:
 
 - page template for shell markup
-- `renderShell(state)` in `assets/studio/js/tag-aliases.js` for dynamic labels, refs, and persistent modal DOM
+- `renderShell(state)` in `analytics-app/app/frontend/js/tag-aliases.js` for dynamic labels, refs, and persistent modal DOM
 
 Meaning:
 
@@ -101,7 +101,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderShell(state)` in `assets/studio/js/tag-aliases.js`
+- `renderShell(state)` in `analytics-app/app/frontend/js/tag-aliases.js`
 - import handlers in `wireEvents(state)`
 
 Meaning:
@@ -271,7 +271,7 @@ User-facing name:
 
 DOM / CSS:
 
-- rendered by `assets/studio/js/studio-modal.js`
+- rendered by `analytics-app/app/frontend/js/studio-modal.js`
 - mounted inside `.tagAliasesPage`
 
 Meaning:
@@ -332,13 +332,13 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-aliases.js`.
+`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-aliases.js`.
 
 ## State Handling
 
 Primary state lives in:
 
-- `state` object in `assets/studio/js/tag-aliases.js`
+- `state` object in `analytics-app/app/frontend/js/tag-aliases.js`
 
 Key state areas:
 
@@ -352,7 +352,7 @@ Key state areas:
 
 Domain helpers live in:
 
-- `assets/studio/js/tag-aliases-domain.js`
+- `analytics-app/app/frontend/js/tag-aliases-domain.js`
 
 ## Data Access / Query Params / JSON Parsing
 
@@ -368,12 +368,12 @@ Primary data access:
 
 Loaded through:
 
-- `assets/studio/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-data.js`
 
 Mutation transport:
 
-- `assets/studio/js/tag-aliases-service.js`
-- `assets/studio/js/studio-transport.js`
+- `analytics-app/app/frontend/js/tag-aliases-service.js`
+- `analytics-app/app/frontend/js/studio-transport.js`
 
 ## Business Logic
 

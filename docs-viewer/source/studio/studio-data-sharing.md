@@ -1,36 +1,37 @@
 ---
 doc_id: studio-data-sharing
-title: Studio Data Sharing
+title: Analytics Data Sharing Runtime
 added_date: 2026-05-06
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: data-sharing
 viewable: true
 ---
-# Studio Data Sharing
+# Analytics Data Sharing Runtime
 
 Routes:
 
-- `/studio/data-sharing/prepare/?mode=manage`
-- `/studio/data-sharing/review/?mode=manage`
+- `/analytics/data-sharing/prepare/?mode=manage`
+- `/analytics/data-sharing/review/?mode=manage`
 
-Studio Data Sharing is the shared shell for preparing outbound share packages and reviewing returned packages from supported Studio data domains.
+Analytics Data Sharing is the local shell for preparing outbound share packages and reviewing returned packages from supported local data domains.
 It defaults to the Library data domain and exposes Tags as a named workflow scope for package preparation, returned-package listing, review, and confirmed apply.
 
-The durable architecture contract is recorded in [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
+The durable architecture contract is recorded in [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
 
 ## Target Boundary
 
-Studio owns the Data Sharing pages and the same-origin local API used by those pages.
-The browser modules should call Studio-hosted endpoints, not `DOCS_VIEWER_BASE_URL`, for service health, adapter selectable records, package preparation, returned-package listing, review, and confirmed apply.
+The standalone Local Analytics app owns the Data Sharing pages and the same-origin local API used by those pages.
+The browser modules call Analytics-hosted endpoints, not `DOCS_VIEWER_BASE_URL` or Local Studio endpoints, for service health, adapter selectable records, package preparation, returned-package listing, review, and confirmed apply.
 Docs Viewer URLs remain valid for navigation and page/document implementation links only.
+Local Studio does not publish Data Sharing routes, API endpoints, runtime-service config, proxies, aliases, or static shims.
 
 The headless Data Sharing subsystem owns shared workflow code, adapter registry/config loading, schemas, package I/O, path contracts, operation dispatch, and domain adapters.
-That subsystem lives under `data-sharing/` and must not host servers, UI routes, browser modules, or Studio shell behavior.
-Studio calls it from local API handlers.
+That subsystem lives under `data-sharing/` and must not host servers, UI routes, browser modules, or app-shell behavior.
+The Analytics app calls it from local API handlers.
 
 Domain adapters own the records a prepare workflow can select.
-The prepare page asks the active adapter for selectable records instead of reading a generic generated-docs index from Studio shell code.
-For Library documents, that selectable-record response can still be backed by Docs Viewer generated data and docs-domain helpers; the shared Studio shell should not hard-code that implementation detail.
+The prepare page asks the active adapter for selectable records instead of reading a generic generated-docs index from app-shell code.
+For Library documents, that selectable-record response can still be backed by Docs Viewer generated data and docs-domain helpers; the shared Analytics shell should not hard-code that implementation detail.
 
 Document source writes remain docs-aware.
 The documents adapter calls reusable docs-domain helpers for generated reads, simplified HTML/package creation, returned JSON review, Markdown/front matter updates, backups, and docs/search rebuild follow-through.
@@ -54,10 +55,10 @@ The page scope selector presents this as Analytics; the internal data domain rem
 The prepare page:
 
 - loads enabled Library and Analytics tag sharing profiles from the Data Sharing config boundary
-- requests adapter-owned selectable records from the Studio Data Sharing API
+- requests adapter-owned selectable records from the Analytics Data Sharing API
 - renders the returned records using the active adapter's selection model
 - supports JSON and JSONL target formats according to each profile
-- posts the selected profile, format, and record ids to the Studio Data Sharing API
+- posts the selected profile, format, and record ids to the Analytics Data Sharing API
 - can prepare tag registry, tag aliases, tag assignments, or a combined tags bundle
 - displays the output package path, counts, warnings, and errors returned by the adapter workflow
 
@@ -72,31 +73,31 @@ The review page:
 - reports tag assignment applicable rows, conflicts, missing series, and invalid work rows
 - can apply selected tag registry, alias, or applicable assignment rows after confirmation
 
-The Studio API exposes same-origin Data Sharing endpoints:
+The Analytics API exposes same-origin Data Sharing endpoints:
 
-- `GET /studio/api/data-sharing/health`
-- `GET /studio/api/data-sharing/selectable-records`
-- `GET /studio/api/data-sharing/returned-packages`
-- `POST /studio/api/data-sharing/prepare`
-- `POST /studio/api/data-sharing/review`
-- `POST /studio/api/data-sharing/apply`
+- `GET /analytics/api/data-sharing/health`
+- `GET /analytics/api/data-sharing/selectable-records`
+- `GET /analytics/api/data-sharing/returned-packages`
+- `POST /analytics/api/data-sharing/prepare`
+- `POST /analytics/api/data-sharing/review`
+- `POST /analytics/api/data-sharing/apply`
 
-These endpoints are published in Local Studio runtime config under `app.runtime.services.data_sharing`.
+These endpoints are published in Local Analytics runtime config under `app.runtime.services.data_sharing`.
 Docs Viewer service endpoints are not published under `app.runtime.services.docs` for Data Sharing.
 
 ## Runtime
 
 The page shells load:
 
-- `studio/app/frontend/js/data-sharing-prepare.js`
-- `studio/app/frontend/js/data-sharing-prepare-render.js`
-- `studio/app/frontend/js/data-sharing-prepare-service.js`
-- `studio/app/frontend/js/data-sharing-prepare-workflow.js`
-- `studio/app/frontend/js/data-sharing-review.js`
-- `studio/app/frontend/js/data-sharing-adapters.js`
-- `studio/app/server/studio/data_sharing_routes.py`
-- `studio/app/server/studio/data_sharing_service.py`
-- `studio/app/server/studio/studio_data_sharing_api.py`
+- `analytics-app/app/frontend/js/data-sharing-prepare.js`
+- `analytics-app/app/frontend/js/data-sharing-prepare-render.js`
+- `analytics-app/app/frontend/js/data-sharing-prepare-service.js`
+- `analytics-app/app/frontend/js/data-sharing-prepare-workflow.js`
+- `analytics-app/app/frontend/js/data-sharing-review.js`
+- `analytics-app/app/frontend/js/data-sharing-adapters.js`
+- `analytics-app/app/server/analytics_app/data_sharing_routes.py`
+- `analytics-app/app/server/analytics_app/data_sharing_service.py`
+- `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
 - `data-sharing/data_sharing/services/dispatch.py`
 - `data-sharing/data_sharing/workflows/prepare.py`
 - `data-sharing/data_sharing/workflows/list_returned.py`
@@ -107,27 +108,28 @@ The page shells load:
 - `data-sharing/data_sharing/adapters/documents/`
 - `data-sharing/data_sharing/adapters/tags/`
 
-The dashboard, prepare, and review shells are hosted by the local Studio app server.
-The old Jekyll route files under `studio/data-sharing/` are retired; the browser modules and CSS contracts remain Studio-owned assets.
+The dashboard, prepare, and review shells are hosted by the Local Analytics app server.
+The old Jekyll route files under `studio/data-sharing/` and the old Local Studio route/API surfaces are retired.
+The browser modules and CSS contracts are Analytics-owned assets under `analytics-app/`.
 The documents adapter implementation lives at `data-sharing/data_sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 Those helpers are split by responsibility under the `docs-viewer/services/docs_data_sharing/` package.
 The Analytics tags adapter implementation lives at `data-sharing/data_sharing/adapters/tags/adapter.py` and owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
-The headless `data-sharing/` workflow modules own shared operation dispatch; the Studio server keeps a compatibility gateway only to provide the current Studio adapter resolver and HTTP activity timing.
+The headless `data-sharing/` workflow modules own shared operation dispatch; the Analytics server provides the local HTTP boundary, adapter resolver handoff, and activity timing.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
-The Studio app server hosts the loopback HTTP process for Data Sharing.
+The Analytics app server hosts the loopback HTTP process for Data Sharing.
 Docs Viewer supplies docs-domain helper behavior for document workflows, but does not own the Data Sharing HTTP endpoints.
 
 ## Architecture Trace
 
-The 2026-05 architecture slice moved the durable Data Sharing boundary to:
+The 2026-05 split moved the durable Data Sharing boundary to:
 
-- Studio-owned pages and `/studio/api/data-sharing/...` endpoints
+- Analytics-owned pages and `/analytics/api/data-sharing/...` endpoints
 - `data-sharing/` owned registry/config, path contracts, package I/O, workflow dispatch, and documents/tags adapters
 - Docs Viewer-owned docs-domain helpers under `docs-viewer/services/docs_data_sharing/`
 - runtime artifacts under `var/studio/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
 
-The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config.
+The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config or Local Studio runtime config.
 Generated Docs Viewer payloads are not the source of this documentation slice; source docs and structured docs-log records are updated first.
 Codex did not run a manual Docs Viewer payload rebuild for this slice, but the local docs watcher may regenerate the affected Studio JSON payloads after these source docs change.
 
@@ -147,12 +149,11 @@ Selection changes, filter changes, review-only previews, and unavailable-service
 
 The retained smoke entry points are:
 
-- `studio/tests/smoke/local_studio_app_data_sharing_routes.py`
-- `studio/tests/smoke/data_sharing_prepare.py`; starts a temporary Local Studio app by default
-- `studio/tests/smoke/data_sharing_review.py`; starts a temporary Local Studio app by default
-- `studio/tests/python/test_data_sharing_service.py`
+- `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
+- `analytics-app/tests/smoke/data_sharing_prepare.py`
+- `analytics-app/tests/smoke/data_sharing_review.py`
+- `analytics-app/tests/python/test_analytics_data_sharing_api.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
-- `studio/tests/python/test_tags_data_sharing_adapter.py`
 
-The architecture request tracker records the latest focused evidence for Studio API dispatch, Docs Management non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
-Remaining close-out risk belongs to the final request verification pass: rerun the focused checks after the documentation/log slice and then mark the request as 'done'.
+The architecture request tracker records the latest focused evidence for Analytics API dispatch, Docs Management and Local Studio non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
+Retired Studio routes and endpoints must remain absent rather than being restored as compatibility layers.

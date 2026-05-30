@@ -2,21 +2,21 @@
 doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: docs-viewer-scopes
 viewable: true
 ---
 # Library Scope
 
 - [Library](/library/?doc=library) is a Docs Viewer page on the public-facing site but it is a distinct data domain from Catalogue
-- Library administration is split across owning Studio and Docs Viewer surfaces rather than a standalone Studio Library dashboard.
+- Library administration is split across owning Docs Viewer, Studio, and Analytics Data Sharing surfaces rather than a standalone Studio Library dashboard.
 - [Library Documents](/docs/?scope=studio&doc=library-documents) lists generated Library document records for review.
-- Data import/export for Library records uses `/studio/data-sharing/review/?mode=manage&scope=library` and `/studio/data-sharing/prepare/?mode=manage&scope=library`.
+- Data import/export for Library records uses `/analytics/data-sharing/review/?mode=manage&scope=library` and `/analytics/data-sharing/prepare/?mode=manage&scope=library`.
 
 ## Dependencies
 
-- shared Studio navigation from **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)**
-- any shared write-service or activity conventions used across Studio domains
+- shared Docs Viewer management conventions
+- Analytics Data Sharing service conventions for package preparation, review, and confirmed apply
 
 ## Scope Boundary
 
@@ -95,7 +95,7 @@ Current site mapping:
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/docs/?scope=library&mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
-- `/studio/data-sharing/prepare/?mode=manage` receives adapter-owned selectable records from `/studio/api/data-sharing/selectable-records` and uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
+- `/analytics/data-sharing/prepare/?mode=manage` receives adapter-owned selectable records from `/analytics/api/data-sharing/selectable-records` and uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -157,9 +157,9 @@ Current model:
 
 Current consumers:
 
-- `/studio/data-sharing/prepare/?mode=manage`
-- `GET /studio/api/data-sharing/selectable-records` on the Local Studio app server
-- `POST /studio/api/data-sharing/prepare` on the Local Studio app server
+- `/analytics/data-sharing/prepare/?mode=manage`
+- `GET /analytics/api/data-sharing/selectable-records` on the Local Analytics app server
+- `POST /analytics/api/data-sharing/prepare` on the Local Analytics app server
 - `docs-viewer/services/docs_export.py`
 
 Current limits:
@@ -192,17 +192,17 @@ Current model:
 - Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
-- summary apply can update selected source `summary` values through the Studio Data Sharing API after preflight and confirmation
-- hierarchy apply can update selected source `parent_id` values through the Studio Data Sharing API after preflight and confirmation; retired `sort_order` front matter is removed when touched
+- summary apply can update selected source `summary` values through the Analytics Data Sharing API after preflight and confirmation
+- hierarchy apply can update selected source `parent_id` values through the Analytics Data Sharing API after preflight and confirmation; retired `sort_order` front matter is removed when touched
 - hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
 
 Current consumers:
 
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
-- `GET /studio/api/data-sharing/returned-packages`
-- `POST /studio/api/data-sharing/review`
-- `POST /studio/api/data-sharing/apply`
-- `/studio/data-sharing/review/?mode=manage`
+- `GET /analytics/api/data-sharing/returned-packages`
+- `POST /analytics/api/data-sharing/review`
+- `POST /analytics/api/data-sharing/apply`
+- `/analytics/data-sharing/review/?mode=manage`
 
 Current limits:
 

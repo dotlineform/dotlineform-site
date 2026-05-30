@@ -2,21 +2,22 @@
 doc_id: scripts-tag-write-server
 title: Retired Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-22"
+last_updated: 2026-05-30
 parent_id: servers
 ---
 # Retired Tag Write Server
 
 `studio/services/analytics/tag_write_server.py` has been retired.
 
-Tag write routes now run through the local Studio app server:
+Tag write routes now run through the standalone Local Analytics app server:
 
-- API module: `studio/app/server/studio/studio_analytics_api.py`
+- API module: `analytics-app/app/server/analytics_app/analytics_api.py`
 - route constants: `studio/services/analytics/tag_routes.py`
-- local API base: `/studio/api/analytics`
-- operational log: `var/studio/logs/studio_analytics_api.log`
+- local API base: `/analytics/api`
+- operational log: `var/studio/logs/analytics_app.log`
 
-The old standalone `127.0.0.1:8787` process is no longer started by `bin/local-studio`, and browser modules no longer include hardcoded fallback URLs for it.
+The old standalone `127.0.0.1:8787` process is no longer started by local runners, and browser modules no longer include hardcoded fallback URLs for it.
+Local Studio also no longer exposes tag write endpoints under `/studio/api/analytics`.
 The deprecated tag-server `/build-docs` route was not migrated.
 Docs rebuilds belong to the Docs management API.
 
@@ -32,7 +33,7 @@ Reusable analytics owners remain active:
 
 ## Active Endpoints
 
-The local Studio app exposes these tag write endpoints under `/studio/api/analytics`:
+The Local Analytics app exposes these tag write endpoints under `/analytics/api`:
 
 - `POST /save-tags`
 - `POST /import-tag-registry`

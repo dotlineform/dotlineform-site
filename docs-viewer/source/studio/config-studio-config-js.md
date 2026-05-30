@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-13 18:15"
+last_updated: 2026-05-30
 parent_id: config
 viewable: true
 ---
@@ -15,6 +15,7 @@ Config module:
 ## Scope
 
 `studio-config.js` is the shared browser-side loader and accessor layer for `assets/studio/data/studio_config.json` and Studio scoped UI-text bundles.
+Analytics/Data Sharing pages use `analytics-app/app/frontend/js/studio-config.js` with `analytics-app/app/frontend/config/analytics-config.json` instead of this Studio config surface.
 
 It is configuration code rather than a route controller. Its job is to fetch the bootstrap config once, merge defaults, resolve site-relative paths, load route-owned text bundles on demand, and expose stable helpers to the rest of the Studio browser runtime.
 
@@ -22,16 +23,8 @@ It is configuration code rather than a route controller. Its job is to fetch the
 
 Current direct importers include:
 
-- `assets/studio/js/tag-studio.js`
-- `assets/studio/js/tag-studio-index.js`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/series-tags.js`
-- `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
 - `assets/studio/js/activity.js`
-- `assets/studio/js/data-sharing-prepare.js`
-- `assets/studio/js/data-sharing-review.js`
 
 Its exported helpers are also used indirectly through:
 
@@ -61,10 +54,10 @@ Current responsibilities include:
   - scoped UI-text bundle paths
   - Studio route paths
   - Studio UI text from loaded scoped bundles
-- exposing Studio analysis group accessors used by tag-management routes
+- exposing Studio-owned config-backed accessors used by current Studio routes
 
-Analysis tag metric and RAG scoring now lives in `assets/studio/js/analysis-tag-scoring.js`.
-That module still reads analysis policy from the loaded Studio config, but the config loader no longer owns the scoring behavior.
+Analysis tag metric and RAG scoring now lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`.
+The Analytics config loader reads analysis policy for that runtime; the Studio config loader no longer owns or exposes Analytics scoring behavior.
 
 ## Current boundaries
 
@@ -73,12 +66,12 @@ What stays here:
 - defaulting and path-resolution logic shared by multiple browser modules
 - reusable config accessors
 - scoped UI-text loading, route-level caching, and fallback warnings
-- shared config-backed Studio analysis group accessors
+- shared config-backed Studio route accessors
 
 What does not stay here:
 
-- Studio tag metric and RAG scoring
-  that lives in `assets/studio/js/analysis-tag-scoring.js`
+- Analytics tag metric and RAG scoring
+  that lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`
 - dedicated `/catalogue/search/` policy parsing
   that lives in `assets/js/search/search-policy.js`
 - local write transport

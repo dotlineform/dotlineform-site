@@ -132,7 +132,7 @@ Current local save behavior:
 
 Current write-service implementation notes:
 
-- the local tag API owner is `studio/app/server/studio/studio_analytics_api.py`
+- the local tag API owner is `analytics-app/app/server/analytics_app/analytics_api.py`
 - writes are constrained to Studio-owned JSON files
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/studio_analytics_api.log`

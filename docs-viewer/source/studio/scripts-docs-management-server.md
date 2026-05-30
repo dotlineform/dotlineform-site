@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Service
 added_date: 2026-04-24
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: docs-viewer
 ---
 # Docs Management Service
@@ -20,7 +20,8 @@ It serves the built-in `/docs/` manage shell, Docs Viewer runtime/config/static 
 `docs-viewer/services/docs_management_service.py` owns the shared Docs Viewer management route dispatcher used by the standalone service.
 Local Studio no longer serves the Docs Viewer `/docs/` shell, Docs Viewer runtime/static/config files, or `/studio/api/docs/...` proxy routes.
 Studio links use the configured Docs Viewer service base URL from `var/local/site.env`.
-Studio Data Sharing calls use the Local Studio same-origin API under `/studio/api/data-sharing/...`.
+Data Sharing calls use the standalone Local Analytics same-origin API under `/analytics/api/data-sharing/...`.
+Docs Viewer and Local Studio do not provide Data Sharing API compatibility routes.
 
 The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
 Use `docs-viewer/services/docs_viewer_service.py` or `docs-viewer/bin/docs-viewer` for the standalone Docs Viewer service.

@@ -21,4 +21,14 @@ Default local route:
 Analytics owns tag groups, tag registry, tag aliases, series tags, series tag editing, Data Sharing routes/APIs, semantic-reference maintenance, document analysis, and future visualisation workflows.
 Retired Studio paths under `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` should not be recreated.
 
+Current source boundary:
+
+- `analytics-app/app/server/analytics_app/` owns the Local Analytics HTTP server, route views, runtime config projection, static serving, tag APIs, and Data Sharing API dispatch.
+- `analytics-app/app/frontend/` owns Analytics browser modules, route modules, UI text, and runtime config.
+- `analytics-app/app/assets/` owns Analytics-only CSS and route assets.
+- `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
+- `studio/data/canonical/analytics/` remains the canonical tag source data path, but it is not a Studio route or API ownership claim.
+- `studio/services/analytics/` remains the reusable tag-domain helper boundary for validation, planning, dry-run/write transactions, backups, and compact logging.
+- `data-sharing/` owns the headless Data Sharing registry, config, workflow dispatch, package I/O, and domain adapters used by Analytics.
+
 [analysis](/analysis/) is the public-facing Docs Viewer for this data domain.

@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: data-sharing
 viewable: true
 ---
@@ -18,11 +18,12 @@ Config files:
 `adapters.json` is the source-controlled dispatch registry for Data Sharing workflows.
 Requests provide a `data_domain` and canonical `operation`.
 The registry maps that pair to exactly one adapter id.
-The registry is owned by the headless `data-sharing/` subsystem, not by Studio route code or Docs Viewer service code.
+The registry is owned by the headless `data-sharing/` subsystem, not by Analytics app route code, Studio route code, or Docs Viewer service code.
 
-Studio reads this config through its same-origin Data Sharing API.
+Analytics reads this config through its same-origin Data Sharing API.
 Browser modules must not infer endpoint ownership or selectable-record behavior from the config file path.
-Local Studio may serve `data-sharing/config/` directly through its static allowlist for browser config reads, but public Jekyll builds exclude the directory because the configs are Studio/Data Sharing runtime inputs rather than public site assets.
+Local Studio does not serve Data Sharing config to browser routes.
+The Analytics app may serve the config it needs directly through its static allowlist, but public Jekyll builds exclude the directory because the configs are Analytics/Data Sharing runtime inputs rather than public site assets.
 
 ## Current Mapping
 
@@ -37,7 +38,7 @@ The first non-document adapter is:
 - `module: "analytics.tags"`
 
 The data domain stays `tags` so future Analytics workflows do not inherit tag-specific assumptions.
-The Studio Data Sharing scope selector presents that domain as Analytics because the user-facing Studio scope is Analytics, while the sharing profile selector names the tag-specific package families.
+The Analytics Data Sharing scope selector presents that domain as Analytics, while the sharing profile selector names the tag-specific package families.
 
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
@@ -72,8 +73,8 @@ Each capability declares:
 - `activity` metadata with script purpose and record groups
 
 The `prepare` capability also declares the adapter selectable-record model.
-Selectable records are returned by the active adapter through the Studio Data Sharing API.
-The Studio shell must not treat the Library generated-docs index as the shared contract for all domains.
+Selectable records are returned by the active adapter through the Analytics Data Sharing API.
+The Analytics shell must not treat the Library generated-docs index as the shared contract for all domains.
 
 The `review` capability also declares the shared review-row presentation fields.
 The `apply` capability declares confirmation requirements and per-action confirmation/activity metadata.
@@ -117,17 +118,18 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 ## Related Runtime
 
 - `data-sharing/data_sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
-- `studio/app/server/studio/data_sharing_adapters.py` still performs the current adapter validation and resolution during the transition.
+- `analytics-app/app/server/analytics_app/data_sharing_adapters.py` performs adapter validation and resolution for the Analytics HTTP boundary.
 - `data-sharing/data_sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
-- `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Studio compatibility gateway.
-- `studio/app/server/studio/` owns the same-origin `/studio/api/data-sharing/...` endpoints and local-origin enforcement.
-- `studio/app/frontend/js/studio-transport.js` should use Studio-owned same-origin Data Sharing endpoints.
+- `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Analytics app gateway.
+- `analytics-app/app/server/analytics_app/` owns the same-origin `/analytics/api/data-sharing/...` endpoints and local-origin enforcement.
+- `analytics-app/app/frontend/js/studio-transport.js` uses Analytics-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
+- Local Studio must not reintroduce Data Sharing route/API aliases, proxy handlers, or static shims.
 
 ## Architecture Status
 
 The active registry/config boundary is the top-level `data-sharing/config/` directory.
-Studio API handlers resolve adapters through the Data Sharing workflow dispatcher, and the documents and tags adapters are both Data Sharing-owned modules.
+Analytics API handlers resolve adapters through the Data Sharing workflow dispatcher, and the documents and tags adapters are both Data Sharing-owned modules.
 Docs-domain helpers and Analytics tag helpers remain reusable domain helpers; they are not Data Sharing API hosts.
 
 Current runtime packages, returned-package staging, and review artifacts are expected under `var/studio/data-sharing/<data_domain>/...`.

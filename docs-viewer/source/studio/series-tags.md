@@ -2,14 +2,14 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: 2026-05-15
+last_updated: 2026-05-30
 parent_id: analytics
 ---
 # Series Tags
 
 Route:
 
-- `/studio/analytics/series-tags/`
+- `/analytics/series-tags/`
 
 Purpose:
 
@@ -23,23 +23,23 @@ The page root `#series-tags` exposes the shared Studio route-ready contract:
 - `data-studio-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
 - `data-studio-busy` is `true` while assignment import preview or apply is running
 - `data-studio-mode` is `list`, `session`, or `import` depending on the active modal state
-- `data-studio-service` reports whether the local Studio analytics API is available for assignment import
+- `data-studio-service` reports whether the Local Analytics API is available for assignment import
 - `data-studio-record-loaded` is `true` when series rows are loaded
 
 ## Page / Template Structure
 
 Primary shell:
 
-- `studio/app/server/studio/studio_app_views.py`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
 
 Page controller:
 
-- `assets/studio/js/series-tags.js`
+- `analytics-app/app/frontend/js/series-tags.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
-- `assets/studio/js/series-tags-render.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/series-tags-render.js`
 
 Top-level structure:
 
@@ -73,7 +73,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderActionButtons(state)` in `assets/studio/js/series-tags.js`
+- `renderActionButtons(state)` in `analytics-app/app/frontend/js/series-tags.js`
 
 Meaning:
 
@@ -98,8 +98,8 @@ DOM / CSS:
 
 JS owner:
 
-- `renderSessionModal(state)` and modal lifecycle handling in `assets/studio/js/series-tags-modals.js`
-- session open state, local session writes, copy/download/clear callbacks, and route status in `assets/studio/js/series-tags.js`
+- `renderSessionModal(state)` and modal lifecycle handling in `analytics-app/app/frontend/js/series-tags-modals.js`
+- session open state, local session writes, copy/download/clear callbacks, and route status in `analytics-app/app/frontend/js/series-tags.js`
 
 Meaning:
 
@@ -124,8 +124,8 @@ DOM / CSS:
 
 JS owner:
 
-- `renderImportModal(state)` and modal lifecycle handling in `assets/studio/js/series-tags-modals.js`
-- import preview/apply service calls, conflict-resolution payloads, activity context, reloads, and route status in `assets/studio/js/series-tags.js`
+- `renderImportModal(state)` and modal lifecycle handling in `analytics-app/app/frontend/js/series-tags-modals.js`
+- import preview/apply service calls, conflict-resolution payloads, activity context, reloads, and route status in `analytics-app/app/frontend/js/series-tags.js`
 
 Meaning:
 
@@ -149,7 +149,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderSeriesTagsReport(input)` in `assets/studio/js/series-tags-render.js`
+- `renderSeriesTagsReport(input)` in `analytics-app/app/frontend/js/series-tags-render.js`
 
 Meaning:
 
@@ -278,7 +278,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors when the page needs them
 - `data-state` defines active filter state
 
-`assets/studio/js/studio-ui.js` holds the shared role/state/class tokens used by `series-tags.js`.
+`analytics-app/app/frontend/js/studio-ui.js` holds the shared role/state/class tokens used by `series-tags.js`.
 
 ## State Handling
 
@@ -313,14 +313,14 @@ Primary data access:
 
 Loaded through:
 
-- `assets/studio/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-data.js`
 
 ## Business Logic
 
 Primary business logic:
 
 - derive assigned tag ids for each series
-- compute tag metrics and RAG status through `assets/studio/js/analysis-tag-scoring.js`
+- compute tag metrics and RAG status through `analytics-app/app/frontend/js/analysis-tag-scoring.js`
 - overlay staged offline rows over repo rows for display
 - export/copy/clear the offline session
 - preview and apply assignment imports through the local server
@@ -329,10 +329,10 @@ Primary business logic:
 
 These responsibilities live mainly in:
 
-- `assets/studio/js/series-tags.js`
-- report/table rendering in `assets/studio/js/series-tags-render.js`
-- shared scoring helpers in `assets/studio/js/analysis-tag-scoring.js`
-- shared config helpers in `assets/studio/js/studio-config.js`
+- `analytics-app/app/frontend/js/series-tags.js`
+- report/table rendering in `analytics-app/app/frontend/js/series-tags-render.js`
+- shared scoring helpers in `analytics-app/app/frontend/js/analysis-tag-scoring.js`
+- shared config helpers in `analytics-app/app/frontend/js/studio-config.js`
 
 ## Change Guidance
 

@@ -2,18 +2,18 @@
 doc_id: tag-groups
 title: Tag Groups
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: 2026-05-30
 parent_id: analytics
 ---
 # Tag Groups
 
 Route:
 
-- `/studio/analytics/tag-groups/`
+- `/analytics/tag-groups/`
 
 Purpose:
 
-- review configured Studio tag groups and their short/long descriptions
+- review configured Analytics tag groups and their short/long descriptions
 
 ## Route Ready State
 
@@ -26,17 +26,17 @@ The page root `#tag-groups` exposes the shared Studio route-ready contract:
 
 ## Page / Template Structure
 
-Primary template:
+Primary shell:
 
-- `studio/analytics/tag-groups/index.md`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
 
 Page controller:
 
-- `assets/studio/js/tag-groups.js`
+- `analytics-app/app/frontend/js/tag-groups.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
 
 Top-level structure:
 
@@ -93,7 +93,7 @@ Meaning:
 
 Primary CSS:
 
-- `assets/studio/css/studio.css`
+- `analytics-app/app/assets/css/analytics.css`
 
 Shared primitives used:
 
@@ -127,19 +127,19 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - classes define presentation
 - `data-role` defines JS selectors
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-groups.js`.
+`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-groups.js`.
 
 ## Data Access
 
 Primary data access:
 
-- group descriptions from `/studio/api/analytics/tag-groups` in the local Studio app
-- group ordering from `studio_config.json`
+- group descriptions from `/analytics/api/tag-groups` in the Local Analytics app
+- group ordering from `analytics-app/app/frontend/config/analytics-config.json`
 
 Loaded through:
 
-- `assets/studio/js/studio-data.js`
-- `assets/studio/js/studio-config.js`
+- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-config.js`
 
 ## Change Guidance
 

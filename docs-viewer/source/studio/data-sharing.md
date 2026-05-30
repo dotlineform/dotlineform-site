@@ -30,3 +30,13 @@ Default local APIs:
 
 Runtime packages, returned-package staging, review artifacts, and backups continue to use `var/studio/data-sharing/<domain>/...` as the local artifact contract.
 Retired Studio paths under `/studio/data-sharing/...` and `/studio/api/data-sharing/...` should not be recreated.
+
+Current responsibility split:
+
+- Local Analytics owns Data Sharing pages, same-origin API endpoints, runtime config, browser modules, and route readiness.
+- `data-sharing/` stays headless and owns adapter registry/config loading, schemas, package path contracts, package I/O, operation dispatch, dry-run/confirmation gates, and domain adapters.
+- Docs Viewer owns docs-domain helpers for Library generated reads, returned-package review, source writes, backups, and docs/search rebuild follow-through.
+- Analytics tag helpers own tag validation, write planning, backup/write transactions, and activity metadata used by the tags adapter.
+- Local Studio does not serve Data Sharing pages, APIs, config, aliases, proxy handlers, or static shims.
+
+See [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec) for the detailed adapter and endpoint contract.

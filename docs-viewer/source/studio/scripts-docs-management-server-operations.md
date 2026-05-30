@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-operations
 title: Docs Management Service Operations
 added_date: 2026-05-19
-last_updated: 2026-05-23
+last_updated: 2026-05-30
 parent_id: scripts-docs-management-server
 ---
 # Docs Management Service Operations
@@ -32,7 +32,7 @@ parent_id: scripts-docs-management-server
 ## Operational Notes
 
 - normal `bin/local-studio` renders configured Docs Viewer links but does not host Docs Viewer management
-- shared Docs management dispatch lives in `docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
+- shared Docs management dispatch lives in `docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, source opening, and broken-links audit
 - the old standalone Docs Management HTTP server and `127.0.0.1:8789` fallback have been removed
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
@@ -47,12 +47,12 @@ Export/import adapter behavior is covered by focused checks:
 - `docs-viewer/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
 - `docs-viewer/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
 - `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
-- `studio/tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
 - `docs-viewer/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
-- `studio/tests/smoke/data_sharing_review.py` verifies the Studio Data Sharing review route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state. It starts a temporary Local Studio app by default.
+- `analytics-app/tests/python/test_analytics_data_sharing_api.py` verifies active adapter resolution, endpoint dispatch, and future stub rejection through the Analytics API boundary.
+- `analytics-app/tests/smoke/data_sharing_review.py` verifies the Analytics Data Sharing review route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
-The `docs` profile runs the parser, service, and adapter checks.
-The `studio-smoke` profile builds a temporary site for module checks and runs Studio Data Sharing route smokes against the Local Studio host.
+The `docs` profile runs the parser and docs service checks.
+The `analytics-smoke` profile runs Analytics Data Sharing route and API smokes against the Local Analytics host.
 
 ## Related References
 

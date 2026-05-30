@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T15:39:19Z",
+  "generated_at": "2026-05-30T16:05:46Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -20,7 +20,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 564
+      "content_text_length": 1452
     },
     {
       "scope": "studio",
@@ -72,70 +72,70 @@
       "doc_id": "series-tags",
       "title": "Series Tags",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "hidden": false,
       "viewable": true,
       "source_path": "series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json",
-      "content_text_length": 7864
+      "content_text_length": 8075
     },
     {
       "scope": "studio",
       "doc_id": "tag-aliases",
       "title": "Tag Aliases",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "hidden": false,
       "viewable": true,
       "source_path": "tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-aliases.json",
-      "content_text_length": 8190
+      "content_text_length": 8375
     },
     {
       "scope": "studio",
       "doc_id": "tag-editor",
       "title": "Tag Editor",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "hidden": false,
       "viewable": true,
       "source_path": "tag-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-editor.json",
-      "content_text_length": 10884
+      "content_text_length": 11270
     },
     {
       "scope": "studio",
       "doc_id": "tag-groups",
       "title": "Tag Groups",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "hidden": false,
       "viewable": true,
       "source_path": "tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-groups.json",
-      "content_text_length": 2620
+      "content_text_length": 2750
     },
     {
       "scope": "studio",
       "doc_id": "tag-registry",
       "title": "Tag Registry",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "hidden": false,
       "viewable": true,
       "source_path": "tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json",
-      "content_text_length": 8810
+      "content_text_length": 9216
     },
     {
       "scope": "studio",
@@ -220,7 +220,7 @@
       "source_path": "site-shell-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json",
-      "content_text_length": 4949
+      "content_text_length": 5020
     },
     {
       "scope": "studio",
@@ -269,14 +269,14 @@
       "doc_id": "studio-javascript-payload-inventory",
       "title": "JavaScript Inventory Policy",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "audit",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 9823
+      "content_text_length": 10250
     },
     {
       "scope": "studio",
@@ -298,14 +298,14 @@
       "doc_id": "javascript-inventory",
       "title": "Javascript Inventory",
       "added_date": "2026-05-20",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "studio-javascript-payload-inventory",
       "hidden": false,
       "viewable": true,
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 26378,
+      "content_text_length": 27070,
       "ui_status": "review"
     },
     {
@@ -392,7 +392,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 11997,
+      "content_text_length": 12011,
       "ui_status": "done"
     },
     {
@@ -716,7 +716,7 @@
       "source_path": "site-request-analytics-app-split-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
-      "content_text_length": 13735,
+      "content_text_length": 14633,
       "ui_status": "urgent"
     },
     {
@@ -970,35 +970,35 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 12220
+      "content_text_length": 12227
     },
     {
       "scope": "studio",
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "config",
       "hidden": false,
       "viewable": true,
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9341
+      "content_text_length": 6782
     },
     {
       "scope": "studio",
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-13 18:15",
+      "last_updated": "2026-05-30",
       "parent_id": "config",
       "hidden": false,
       "viewable": true,
       "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2611
+      "content_text_length": 2556
     },
     {
       "scope": "studio",
@@ -1012,21 +1012,49 @@
       "source_path": "data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json",
-      "content_text_length": 788
+      "content_text_length": 1608
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-data-sharing",
+      "title": "Analytics Data Sharing Runtime",
+      "added_date": "2026-05-06",
+      "last_updated": "2026-05-30",
+      "parent_id": "data-sharing",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-data-sharing.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
+      "content_text_length": 9301
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-data-sharing-technical-spec",
+      "title": "Analytics Data Sharing Technical Spec",
+      "added_date": "2026-05-13 18:15",
+      "last_updated": "2026-05-30",
+      "parent_id": "data-sharing",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-data-sharing-technical-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
+      "content_text_length": 13057
     },
     {
       "scope": "studio",
       "doc_id": "config-data-sharing-adapters",
       "title": "Data Sharing Adapters",
       "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "data-sharing",
       "hidden": false,
       "viewable": true,
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 6217
+      "content_text_length": 6377
     },
     {
       "scope": "studio",
@@ -1041,34 +1069,6 @@
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json",
       "content_text_length": 9437
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-data-sharing",
-      "title": "Studio Data Sharing",
-      "added_date": "2026-05-06",
-      "last_updated": "2026-05-26",
-      "parent_id": "data-sharing",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-data-sharing.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 9077
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-data-sharing-technical-spec",
-      "title": "Studio Data Sharing Technical Spec",
-      "added_date": "2026-05-13 18:15",
-      "last_updated": "2026-05-26",
-      "parent_id": "data-sharing",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-data-sharing-technical-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 12845
     },
     {
       "scope": "studio",
@@ -1320,28 +1320,28 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Service",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 4459
+      "content_text_length": 4552
     },
     {
       "scope": "studio",
       "doc_id": "scripts-docs-management-server-data-sharing",
       "title": "Docs Management Service Data Sharing (Retired)",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "scripts-docs-management-server",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-management-server-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-data-sharing.json",
-      "content_text_length": 977
+      "content_text_length": 1037
     },
     {
       "scope": "studio",
@@ -1376,14 +1376,14 @@
       "doc_id": "scripts-docs-management-server-operations",
       "title": "Docs Management Service Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-30",
       "parent_id": "scripts-docs-management-server",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 3972
+      "content_text_length": 3950
     },
     {
       "scope": "studio",
@@ -1627,21 +1627,21 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 7873
+      "content_text_length": 7898
     },
     {
       "scope": "studio",
       "doc_id": "scripts-docs-import",
       "title": "Documents Returned Package Script",
       "added_date": "2026-05-03 20:25",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 7617
+      "content_text_length": 7614
     },
     {
       "scope": "studio",
@@ -1723,14 +1723,14 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer-scopes",
       "hidden": false,
       "viewable": true,
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-library.json",
-      "content_text_length": 9947
+      "content_text_length": 10034
     },
     {
       "scope": "studio",
@@ -2359,14 +2359,14 @@
       "doc_id": "scripts-tag-write-server",
       "title": "Retired Tag Write Server",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-30",
       "parent_id": "servers",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 1819
+      "content_text_length": 1904
     },
     {
       "scope": "studio",
@@ -2436,21 +2436,21 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ready-state.json",
-      "content_text_length": 7638
+      "content_text_length": 7705
     },
     {
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-30",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 14777
+      "content_text_length": 14446
     },
     {
       "scope": "studio",
@@ -2611,14 +2611,14 @@
       "doc_id": "ui-pattern-column-links",
       "title": "Column Links Pattern",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-05-30",
       "parent_id": "ui-catalogue",
       "hidden": false,
       "viewable": true,
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 2507
+      "content_text_length": 2523
     },
     {
       "scope": "studio",
@@ -2723,14 +2723,14 @@
       "doc_id": "ui-pattern-reopenable-command-result",
       "title": "Reopenable Command Result Pattern",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-05-30",
       "parent_id": "ui-catalogue",
       "hidden": false,
       "viewable": true,
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3270
+      "content_text_length": 3273
     },
     {
       "scope": "studio",

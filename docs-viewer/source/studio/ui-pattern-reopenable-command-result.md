@@ -2,7 +2,7 @@
 doc_id: ui-pattern-reopenable-command-result
 title: Reopenable Command Result Pattern
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-05-30
 parent_id: ui-catalogue
 ---
 # Reopenable Command Result Pattern
@@ -11,7 +11,7 @@ This composition pattern covers command results that open in a modal and can be 
 
 Current live examples:
 
-- `/studio/data-sharing/review/?mode=manage`
+- `/analytics/data-sharing/review/?mode=manage`
 
 Demo reference:
 

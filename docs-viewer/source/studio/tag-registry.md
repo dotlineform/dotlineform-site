@@ -2,14 +2,14 @@
 doc_id: tag-registry
 title: Tag Registry
 added_date: 2026-03-31
-last_updated: "2026-05-21"
+last_updated: 2026-05-30
 parent_id: analytics
 ---
 # Tag Registry
 
 Route:
 
-- `/studio/analytics/tag-registry/`
+- `/analytics/tag-registry/`
 
 Purpose:
 
@@ -22,7 +22,7 @@ The page root `#tag-registry` exposes the shared Studio route-ready contract:
 - `data-studio-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
 - `data-studio-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
 - `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
-- `data-studio-service` reports whether the local Studio analytics API is available for direct writes
+- `data-studio-service` reports whether the Local Analytics API is available for direct writes
 - `data-studio-record-loaded` is `true` when registry tags are loaded
 
 Successful local-server registry writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
@@ -32,21 +32,21 @@ Covered write actions include registry import, create tag, edit tag, delete tag,
 
 Primary shell:
 
-- `studio/app/server/studio/studio_app_views.py`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
 
 Page controller:
 
-- `assets/studio/js/tag-registry.js`
+- `analytics-app/app/frontend/js/tag-registry.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
-- `assets/studio/js/tag-registry-domain.js`
-- `assets/studio/js/tag-registry-import-mode.js`
-- `assets/studio/js/tag-registry-render.js`
-- `assets/studio/js/tag-registry-save.js`
-- `assets/studio/js/tag-registry-service.js`
-- `assets/studio/js/tag-registry-workflow.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/tag-registry-domain.js`
+- `analytics-app/app/frontend/js/tag-registry-import-mode.js`
+- `analytics-app/app/frontend/js/tag-registry-render.js`
+- `analytics-app/app/frontend/js/tag-registry-save.js`
+- `analytics-app/app/frontend/js/tag-registry-service.js`
+- `analytics-app/app/frontend/js/tag-registry-workflow.js`
 
 Top-level structure:
 
@@ -80,7 +80,7 @@ DOM / CSS:
 JS owner:
 
 - page template for shell markup
-- `renderShell(state)` in `assets/studio/js/tag-registry.js` for dynamic labels, refs, and modal DOM
+- `renderShell(state)` in `analytics-app/app/frontend/js/tag-registry.js` for dynamic labels, refs, and modal DOM
 
 Meaning:
 
@@ -104,8 +104,8 @@ DOM / CSS:
 
 JS owner:
 
-- `renderShell(state)` in `assets/studio/js/tag-registry.js`
-- import-mode availability helpers in `assets/studio/js/tag-registry-import-mode.js`
+- `renderShell(state)` in `analytics-app/app/frontend/js/tag-registry.js`
+- import-mode availability helpers in `analytics-app/app/frontend/js/tag-registry-import-mode.js`
 - import submission handlers in `wireEvents(state)`
 
 Meaning:
@@ -132,7 +132,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderTagRegistryControls(state)` in `assets/studio/js/tag-registry-render.js`
+- `renderTagRegistryControls(state)` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - search/filter handlers in `wireEvents(state)`
 
 Meaning:
@@ -154,7 +154,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderTagRegistryList(state)` in `assets/studio/js/tag-registry-render.js`
+- `renderTagRegistryList(state)` in `analytics-app/app/frontend/js/tag-registry-render.js`
 
 Meaning:
 
@@ -299,14 +299,14 @@ Page boot:
 Main render functions:
 
 - `renderShell(state)`
-- `renderTagRegistryControls(state)` in `assets/studio/js/tag-registry-render.js`
-- `renderTagRegistryList(state)` in `assets/studio/js/tag-registry-render.js`
+- `renderTagRegistryControls(state)` in `analytics-app/app/frontend/js/tag-registry-render.js`
+- `renderTagRegistryList(state)` in `analytics-app/app/frontend/js/tag-registry-render.js`
 
 Import-mode helpers:
 
-- `syncTagRegistryImportModeFromControl(state)` in `assets/studio/js/tag-registry-import-mode.js`
-- `probeTagRegistryImportMode(state)` in `assets/studio/js/tag-registry-import-mode.js`
-- `renderTagRegistryImportAvailability(state)` in `assets/studio/js/tag-registry-import-mode.js`
+- `syncTagRegistryImportModeFromControl(state)` in `analytics-app/app/frontend/js/tag-registry-import-mode.js`
+- `probeTagRegistryImportMode(state)` in `analytics-app/app/frontend/js/tag-registry-import-mode.js`
+- `renderTagRegistryImportAvailability(state)` in `analytics-app/app/frontend/js/tag-registry-import-mode.js`
 
 Main event wiring:
 
@@ -319,9 +319,9 @@ The page controller owns:
 - search/filter/sort wiring
 - user-facing mutation result handling
 
-`assets/studio/js/tag-registry-render.js` owns the search/filter controls, group info control, list header, empty state, and registry row markup.
-`assets/studio/js/tag-registry-import-mode.js` owns import mode selection state, local write-service availability probing, and import button availability.
-`assets/studio/js/tag-registry-workflow.js` owns service-call orchestration, patch fallback result selection, and patch fallback state transitions.
+`analytics-app/app/frontend/js/tag-registry-render.js` owns the search/filter controls, group info control, list header, empty state, and registry row markup.
+`analytics-app/app/frontend/js/tag-registry-import-mode.js` owns import mode selection state, local write-service availability probing, and import button availability.
+`analytics-app/app/frontend/js/tag-registry-workflow.js` owns service-call orchestration, patch fallback result selection, and patch fallback state transitions.
 
 ## UI Contract
 
@@ -331,13 +331,13 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, `tag-registry-import-mode.js`, and the route-local modal module.
+`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, `tag-registry-import-mode.js`, and the route-local modal module.
 
 ## State Handling
 
 Primary state lives in:
 
-- `state` object in `assets/studio/js/tag-registry.js`
+- `state` object in `analytics-app/app/frontend/js/tag-registry.js`
 
 Key state areas:
 
@@ -351,7 +351,7 @@ Key state areas:
 
 Domain helpers live in:
 
-- `assets/studio/js/tag-registry-domain.js`
+- `analytics-app/app/frontend/js/tag-registry-domain.js`
 
 ## Data Access / Query Params / JSON Parsing
 
@@ -367,12 +367,12 @@ Primary data access:
 
 Loaded through:
 
-- `assets/studio/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-data.js`
 
 Mutation transport:
 
-- `assets/studio/js/tag-registry-service.js`
-- `assets/studio/js/studio-transport.js`
+- `analytics-app/app/frontend/js/tag-registry-service.js`
+- `analytics-app/app/frontend/js/studio-transport.js`
 
 ## Business Logic
 
@@ -404,13 +404,13 @@ If a request refers to:
 - “toolbar”
   - start with `.tagStudioToolbar` in `tag-registry.js`
 - “search”
-  - start with `.tagStudioFilters` in `assets/studio/js/tag-registry-render.js`
+  - start with `.tagStudioFilters` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “list header”
-  - start with `.tagStudioList__head.tagRegistry__head` in `assets/studio/js/tag-registry-render.js`
+  - start with `.tagStudioList__head.tagRegistry__head` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “tag row”
-  - start with `.tagStudioList__row.tagRegistry__row` in `assets/studio/js/tag-registry-render.js`
+  - start with `.tagStudioList__row.tagRegistry__row` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “description column”
-  - start with `.tagRegistry__descCol` in `assets/studio/js/tag-registry-render.js`
+  - start with `.tagRegistry__descCol` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “new tag modal”
   - start with `[data-role="new-modal"]`
 

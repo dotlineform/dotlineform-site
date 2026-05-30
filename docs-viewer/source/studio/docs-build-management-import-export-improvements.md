@@ -153,7 +153,7 @@ Implementation scope:
   - `docs-viewer/services/docs_import_source_service.py`
   - `data-sharing/data_sharing/adapters/documents/adapter.py`
   - `docs-viewer/services/docs_data_sharing/`
-  - `studio/app/server/studio/data_sharing_service.py`
+  - `analytics-app/app/server/analytics_app/data_sharing_service.py`
 - ensure Docs management service remains a transport/orchestration layer for Data Sharing and Docs Viewer management endpoints
 - update existing technical docs with final behavior:
   - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

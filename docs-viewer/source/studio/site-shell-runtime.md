@@ -122,10 +122,10 @@ Current public active-state rules:
 Current Studio-context nav inside `_layouts/default.html`:
 
 - `studio` -> `/studio/`
-- `series tags` -> `/studio/analytics/series-tags/`
 - `docs` -> `/docs/?scope=studio&doc=studio`
 
 The default layout switches to that Studio nav when the current page is in Studio docs context.
+Analytics routes are owned by the standalone Local Analytics app and are not part of the default Studio-context nav.
 
 ## Docs Viewer Shell Boundary
 

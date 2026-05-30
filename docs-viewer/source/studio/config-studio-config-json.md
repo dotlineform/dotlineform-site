@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: 2026-05-26
+last_updated: 2026-05-30
 parent_id: config
 viewable: true
 ---
@@ -24,16 +24,15 @@ Current responsibilities include:
 - scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio activity page
 - route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
-- route and data paths for the shared Studio package preparation/import pages
 - scoped Studio UI-text bundle paths under `paths.data.ui_text`; Docs Viewer copy belongs to `docs-viewer/config/ui-text/ui-text.json`
 - the Studio Audits route path and scoped UI-text bundle path
 - catalogue UI options such as the Studio series-type dropdown values
-- Studio analysis group and RAG settings
 
 The file is the root browser manifest.
 It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`, while Docs Viewer copy belongs under `docs-viewer/config/ui-text/ui-text.json`.
 Domain behavior should live with the domain runtime that uses the config.
-For example, Studio analysis scoring code lives in `assets/studio/js/analysis-tag-scoring.js`; `studio_config.json` only supplies the current scoring policy values.
+Analytics app config now owns Analytics/Data Sharing route, UI-text, scoring, and endpoint paths.
+For example, Analytics scoring code lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`; `studio_config.json` no longer supplies that runtime's policy values.
 
 ## What calls it
 
@@ -41,12 +40,6 @@ This file is fetched through **[Studio Config Loader JS](/docs/?scope=studio&doc
 
 Current direct consumers of that loader include:
 
-- `assets/studio/js/tag-studio.js`
-- `assets/studio/js/tag-studio-index.js`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/series-tags.js`
-- `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
 - `assets/studio/js/activity.js`
 - `assets/studio/js/catalogue-status.js`
@@ -54,8 +47,6 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`
-- `assets/studio/js/data-sharing-prepare.js`
-- `assets/studio/js/data-sharing-review.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -65,7 +56,8 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
-The active data-domain list and capability status come from `data-sharing/config/adapters.json`.
+Analytics/Data Sharing app config lives at `analytics-app/app/frontend/config/analytics-config.json`.
+The active Data Sharing domain list and capability status come from `data-sharing/config/adapters.json`.
 Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
 
 ## When it is read
@@ -81,8 +73,6 @@ What stays here:
 - shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
 - shared Docs Viewer status emoji config under `docs_viewer.ui_statuses_by_scope`
 - catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
-- shared Studio analysis policy values used by the analytics scoring runtime
-- the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
 - lookup paths for scoped Studio UI-text payloads
 
 Visible Studio UI copy must use scoped payloads under `assets/studio/data/ui_text/`.
@@ -96,58 +86,22 @@ Current bundles:
 - `catalogue-series-editor.json`
 - `catalogue-moment-editor.json`
 - `catalogue-status.json`
-- `data-sharing-review.json`
-- `data-sharing-prepare.json`
 - `docs-viewer.json`
 - `library-documents.json`
 - `project-state.json`
-- `series-tag-editor.json`
-- `series-tags.json`
 - `site-series-index.json`
 - `studio-audits.json`
 - `studio-works.json`
-- `tag-aliases.json`
-- `tag-groups.json`
-- `tag-registry.json`
 
 Do not add domain workflows, service endpoint contracts, generated payload schemas, or scoring implementations to `studio_config.json`.
 If a domain needs behavior, place that behavior in the owning runtime module and keep this file to paths, policy values, options, and scoped payload lookup.
 
-## Data export page
+## Data Sharing Pages
 
-The package preparation page reads:
-
-- `paths.routes.data_sharing_prepare`
-- `paths.data.studio.data_sharing_adapters`
-- `paths.data.studio.library_export_configs`
-- `paths.data.docs.scopes.library.index`
-- `paths.data.ui_text.data_sharing_prepare`
-
-The Library sharing profile config file owns document package pattern definitions.
-`studio_config.json` only owns browser-facing route, payload, and scoped UI-copy lookup for the Studio page.
-The page runs package preparation through the Studio-owned same-origin endpoint `POST /studio/api/data-sharing/prepare`, which is exposed under `app.runtime.services.data_sharing` and applied by `studio/app/frontend/js/studio-transport.js`.
-Adapter dispatch belongs in `data-sharing/config/adapters.json`.
-Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
-The scoped data-sharing-prepare payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
-The scoped data-sharing-prepare payload keys `filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
-The scoped data-sharing-prepare payload keys `result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an package preparation run.
-
-Do not add Data Sharing field mappings, output formats, or selection defaults to `studio_config.json`.
-Those belong in the active adapter or sharing profile config so the CLI, service endpoint, and Studio UI all run the same pattern.
-
-## Data Sharing review page
-
-The returned package review page reads:
-
-- `paths.routes.data_sharing_review`
-- `paths.data.studio.data_sharing_adapters`
-- `paths.data.ui_text.data_sharing_review`
-
-The scoped data-sharing-review payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
-The Studio-owned Data Sharing API endpoints for returned-package listing, review generation, and apply are exposed under `app.runtime.services.data_sharing` and applied by `studio/app/frontend/js/studio-transport.js`.
-Adapter dispatch belongs in `data-sharing/config/adapters.json`.
-Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
-Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the Data Sharing adapters and local service.
+Data Sharing prepare/review pages no longer read `studio_config.json`.
+They are owned by the standalone Local Analytics app and read `analytics-app/app/frontend/config/analytics-config.json`, route-scoped UI text under `analytics-app/app/frontend/config/ui-text/`, same-origin services under `/analytics/api/data-sharing/...`, and adapter config under `data-sharing/config/`.
+Do not restore Data Sharing route keys, endpoint keys, or scoped UI-text paths to `studio_config.json`.
+Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation belong in the Data Sharing adapters and local service.
 
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs in `assets/studio/data/ui_text/catalogue-series-editor.json` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 

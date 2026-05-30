@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-19 14:30"
+last_updated: 2026-05-30
 parent_id: docs-viewer
 ---
 # Documents Returned Package Script
@@ -20,7 +20,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py
 It reads local JSON or JSONL files manually copied under the Library returned-package staging root and returns a structured JSON report.
 It does not mutate source Markdown, generated docs payloads, share packages, or config files.
 When `--write-previews` is passed, it writes Markdown review artifacts under the Library review output root.
-The same engine is used by the documents adapter when `/studio/data-sharing/review/?mode=manage` calls `POST /studio/api/data-sharing/review`.
+The same engine is used by the documents adapter when `/analytics/data-sharing/review/?mode=manage` calls `POST /analytics/api/data-sharing/review`.
 
 Current input path:
 
@@ -60,7 +60,7 @@ Implemented now:
 - supports deterministic relationship-tree review filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through the documents Data Sharing adapter for returned-package listing and review generation
-- is exposed through the `/studio/data-sharing/review/?mode=manage` page for local returned-package review
+- is exposed through the `/analytics/data-sharing/review/?mode=manage` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, missing current payloads, missing parents, and parent records with missing payloads
 
@@ -105,7 +105,7 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
-The Data Sharing review endpoint returns this same report shape from `POST /studio/api/data-sharing/review` after documents-adapter dispatch.
+The Data Sharing review endpoint returns this same report shape from `POST /analytics/api/data-sharing/review` after documents-adapter dispatch.
 
 `counts` includes:
 
@@ -176,9 +176,9 @@ The parser and service checks run in the `docs` profile:
 $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
 ```
 
-The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `studio/tests/smoke/data_sharing_review.py`.
-That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
+The Analytics page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `analytics-app/tests/smoke/data_sharing_review.py`.
+That smoke check runs in the `analytics-smoke` profile:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile analytics-smoke
 ```

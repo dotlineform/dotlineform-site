@@ -2,7 +2,7 @@
 doc_id: studio-javascript-payload-inventory
 title: JavaScript Inventory Policy
 added_date: 2026-05-14
-last_updated: 2026-05-21
+last_updated: 2026-05-30
 parent_id: audit
 viewable: true
 ---
@@ -14,6 +14,15 @@ Current risk scores live in:
 
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
 - Docs Viewer-specific follow-up lives in [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+
+After the 2026-05-30 local-app split, browser JavaScript inventory work must classify active modules by app boundary:
+
+- Local Studio: `studio/app/frontend/js/`
+- Local Analytics and Data Sharing: `analytics-app/app/frontend/js/`
+- UI Catalogue: `ui-catalogue-app/app/assets/js/`
+- public site/shared assets: `assets/js/` and route-specific public assets
+
+Do not treat retired `assets/studio/js/...` paths as active owners when planning new work.
 
 ## Purpose
 

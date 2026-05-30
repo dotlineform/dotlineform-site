@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-05-24
+last_updated: 2026-05-30
 parent_id: studio
 ---
 # Studio Runtime
@@ -23,10 +23,11 @@ For local app routes, `studio/app/server/studio/studio_app_views.py` renders the
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
 - `Catalogue`
-- `Analytics`
 - `Docs`
 
-Search is no longer a standalone Studio navigation domain. Catalogue search administration should be reached from the Catalogue dashboard, while document search administration should stay inside Docs Viewer manage mode.
+Search is no longer a standalone Studio navigation domain.
+Analytics and Data Sharing are served by the standalone Local Analytics app, not by Local Studio navigation.
+Catalogue search administration should be reached from the Catalogue dashboard, while document search administration should stay inside Docs Viewer manage mode.
 
 The Studio page layout then renders:
 
@@ -55,18 +56,17 @@ Operational Studio route shells are hosted by the local app, and remaining Studi
 ## Studio Pages
 
 Operational Studio route shells are hosted by the local app.
-Active local shells include `/studio/`, `/docs/`, analytics tag routes, Data Sharing prepare/review routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Active local shells include `/studio/`, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps with their own route shells.
 
 Remaining Jekyll route inventory:
 
 - `ui-catalogue-app/source/demos/index.md`
 
-The remaining UI Catalogue demo route is not a retired workflow shell.
-It is an isolated Studio reference surface that should become visible from Local Studio while keeping demo CSS, JavaScript, and ready-state contracts separate from production Studio routes.
+UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
 
 Current page-level doc links:
 
-- Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
 - Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
@@ -74,10 +74,6 @@ Current page-level doc links:
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
-- Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
-- Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
-- Series Tags -> `/docs/?scope=studio&doc=series-tags`
-- Series Tag Editor -> `/docs/?scope=studio&doc=tag-editor`
 - Studio Works -> `/docs/?scope=studio&doc=studio-works`
 - Studio landing and dashboards -> phased-plan and domain-plan docs
 - Library Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
@@ -136,12 +132,9 @@ Current page controllers:
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
-- `assets/studio/js/tag-groups.js`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/series-tags.js`
-- `assets/studio/js/tag-studio.js`
 - `assets/studio/js/studio-works.js`
+
+Analytics and Data Sharing route controllers now live under `analytics-app/app/frontend/js/` and are served by the standalone Local Analytics app.
 
 Retired catalogue create routes:
 
@@ -270,7 +263,6 @@ Current catalogue integration surfaced through this runtime:
 - editor save/create/delete/publication/build/prose-import/moment API routes under `/studio/api/catalogue/...`
 - workbook import routes under `/studio/api/catalogue/import-preview` and `/studio/api/catalogue/import-apply`
 - `POST /studio/api/catalogue/project-state-report`
-- `POST /studio/api/catalogue/thumbnail-quality-preview`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
 

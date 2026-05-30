@@ -2,16 +2,16 @@
 doc_id: tag-editor
 title: Tag Editor
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: 2026-05-30
 parent_id: analytics
 ---
 # Tag Editor
 
 Route:
 
-- `/studio/analytics/series-tag-editor/`
+- `/analytics/series-tag-editor/`
 - required query param: `?series=<series_id>`
-- example: `/studio/analytics/series-tag-editor/?series=curve-poems`
+- example: `/analytics/series-tag-editor/?series=curve-poems`
 
 Purpose:
 
@@ -25,7 +25,7 @@ The page root `#seriesTagEditorRoot` exposes the shared Studio route-ready contr
 - `data-studio-ready` is `false` while the series header and editor data load, then `true` after the tag editor has rendered or a stable error state is shown
 - `data-studio-busy` is `true` while the editor save command is running
 - `data-studio-mode` is `single` when a work is selected, `edit` for the series-level editor state, and `empty` for missing or failed series loads
-- `data-studio-service` reports whether the local Studio analytics API is available for direct saves
+- `data-studio-service` reports whether the Local Analytics API is available for direct saves
 - `data-studio-record-loaded` is `true` after a valid series id is loaded
 
 Successful local-server saves send Studio activity context and append unified activity rows with script purpose `save tag data`.
@@ -35,25 +35,25 @@ Multiple row writes from one Save click share the same initiating action context
 
 Primary shell:
 
-- `studio/app/server/studio/studio_app_views.py`
+- `analytics-app/app/server/analytics_app/analytics_app_views.py`
 
 Page boot module:
 
-- `assets/studio/js/series-tag-editor-page.js`
+- `analytics-app/app/frontend/js/series-tag-editor-page.js`
 
 Editor controller:
 
-- `assets/studio/js/tag-studio.js`
+- `analytics-app/app/frontend/js/tag-studio.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
-- `assets/studio/js/tag-studio-domain.js`
-- `assets/studio/js/tag-assignments-offline.js`
-- `assets/studio/js/tag-studio-render.js`
-- `assets/studio/js/tag-studio-suggestions.js`
-- `assets/studio/js/tag-studio-state.js`
-- `assets/studio/js/tag-studio-save.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
+- `analytics-app/app/frontend/js/tag-studio-domain.js`
+- `analytics-app/app/frontend/js/tag-assignments-offline.js`
+- `analytics-app/app/frontend/js/tag-studio-render.js`
+- `analytics-app/app/frontend/js/tag-studio-suggestions.js`
+- `analytics-app/app/frontend/js/tag-studio-state.js`
+- `analytics-app/app/frontend/js/tag-studio-save.js`
 
 Top-level structure in the page template:
 
@@ -88,7 +88,7 @@ DOM / CSS:
 
 JS owner:
 
-- `assets/studio/js/series-tag-editor-page.js`
+- `analytics-app/app/frontend/js/series-tag-editor-page.js`
 
 This section contains:
 
@@ -112,7 +112,7 @@ JS owner:
 
 - `renderPrimaryMedia(...)`
 - `syncHeaderMediaForWork(...)`
-  in `assets/studio/js/series-tag-editor-page.js`
+  in `analytics-app/app/frontend/js/series-tag-editor-page.js`
 
 Meaning:
 
@@ -144,7 +144,7 @@ DOM / CSS:
 JS owner:
 
 - `initSeriesTagEditorPage()`
-  in `assets/studio/js/series-tag-editor-page.js`
+  in `analytics-app/app/frontend/js/series-tag-editor-page.js`
 
 Meaning:
 
@@ -166,7 +166,7 @@ DOM / CSS:
 JS owner:
 
 - page template for shell markup
-- `renderShell(state)` in `assets/studio/js/tag-studio.js` for dynamic labels, refs, and modal DOM
+- `renderShell(state)` in `analytics-app/app/frontend/js/tag-studio.js` for dynamic labels, refs, and modal DOM
 
 Meaning:
 
@@ -190,9 +190,9 @@ JS owner:
 
 - `renderShell(state)`
 - work-related handlers in `wireEvents(state)`
-  in `assets/studio/js/tag-studio.js`
-- selected-work rendering in `assets/studio/js/tag-studio-render.js`
-- work suggestion popup rendering in `assets/studio/js/tag-studio-suggestions.js`
+  in `analytics-app/app/frontend/js/tag-studio.js`
+- selected-work rendering in `analytics-app/app/frontend/js/tag-studio-render.js`
+- work suggestion popup rendering in `analytics-app/app/frontend/js/tag-studio-suggestions.js`
 
 Meaning:
 
@@ -215,7 +215,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderContextHint(state)` in `assets/studio/js/tag-studio-render.js`
+- `renderContextHint(state)` in `analytics-app/app/frontend/js/tag-studio-render.js`
 
 Meaning:
 
@@ -238,7 +238,7 @@ DOM / CSS:
 
 JS owner:
 
-- group rendering functions in `assets/studio/js/tag-studio-render.js`
+- group rendering functions in `analytics-app/app/frontend/js/tag-studio-render.js`
 
 Meaning:
 
@@ -289,7 +289,7 @@ DOM / CSS:
 
 JS owner:
 
-- popup rendering functions in `assets/studio/js/tag-studio-suggestions.js`
+- popup rendering functions in `analytics-app/app/frontend/js/tag-studio-suggestions.js`
 
 Meaning:
 
@@ -303,7 +303,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`, `tag-studio-render.js`, and `tag-studio-suggestions.js`.
+`analytics-app/app/frontend/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`, `tag-studio-render.js`, and `tag-studio-suggestions.js`.
 
 ### Status and save feedback
 
@@ -321,7 +321,7 @@ DOM / CSS:
 
 JS owner:
 
-- status rendering helpers in `assets/studio/js/tag-studio.js`
+- status rendering helpers in `analytics-app/app/frontend/js/tag-studio.js`
 
 ### Manual patch modal
 
@@ -340,8 +340,8 @@ DOM / CSS:
 JS owner:
 
 - modal shell in `renderShell(state)`
-- shell open/close/focus behavior in `assets/studio/js/tag-studio-modals.js`
-- copy/status handling in `assets/studio/js/tag-studio.js`
+- shell open/close/focus behavior in `analytics-app/app/frontend/js/tag-studio-modals.js`
+- copy/status handling in `analytics-app/app/frontend/js/tag-studio.js`
 
 Meaning:
 
@@ -376,11 +376,11 @@ Layout model:
 
 Page boot:
 
-- `initSeriesTagEditorPage()` in `assets/studio/js/series-tag-editor-page.js`
+- `initSeriesTagEditorPage()` in `analytics-app/app/frontend/js/series-tag-editor-page.js`
 
 Editor boot:
 
-- `initTagStudio()` in `assets/studio/js/tag-studio.js`
+- `initTagStudio()` in `analytics-app/app/frontend/js/tag-studio.js`
 
 Main render functions:
 
@@ -420,8 +420,8 @@ Key editor state areas:
 
 Business/state helpers live in:
 
-- `assets/studio/js/tag-studio-domain.js`
-- `assets/studio/js/tag-studio-state.js`
+- `analytics-app/app/frontend/js/tag-studio-domain.js`
+- `analytics-app/app/frontend/js/tag-studio-state.js`
 
 ## Data Access / Query Params / JSON Parsing
 
@@ -449,14 +449,14 @@ Editor data fetches:
 
 These are loaded through:
 
-- `assets/studio/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-data.js`
 
 ## Business Logic
 
 Primary business logic modules:
 
-- `assets/studio/js/tag-studio-domain.js`
-- `assets/studio/js/tag-studio-save.js`
+- `analytics-app/app/frontend/js/tag-studio-domain.js`
+- `analytics-app/app/frontend/js/tag-studio-save.js`
 
 Business responsibilities include:
 

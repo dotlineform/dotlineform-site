@@ -2,7 +2,7 @@
 doc_id: ui-pattern-column-links
 title: Column Links Pattern
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-05-30
 parent_id: ui-catalogue
 ---
 # Column Links Pattern
@@ -16,8 +16,6 @@ Demo reference:
 Current live examples:
 
 - `/studio/catalogue/`
-- `/studio/analytics/`
-- `/studio/data-sharing/`
 
 ## Scope
 
@@ -84,5 +82,5 @@ The UI Catalogue demo uses `uiCatalogueDemoColumnLinks*` classes. Treat those as
 
 ## Migration Notes
 
-This pattern was first reused by Catalogue and Library dashboards, then adopted by Analytics and Data Sharing dashboard routes. The Library dashboard has since been retired, but the pattern remains active on the other listed pages.
+This pattern was first reused by Catalogue and Library dashboards, then adopted by the former Studio Analytics and Data Sharing dashboard routes. The Library, Analytics, and Data Sharing Studio dashboards have since been retired, but the pattern remains active on the listed Studio pages.
 Future dashboard-like Studio entry pages should use this documented pattern instead of creating page-local route-card variants.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d8e73c1b87cb74423443ddfa5e2c12f3",
-    "generated_at_utc": "2026-05-30T15:23:40Z",
+    "version": "blake2b-d1ca746e95beabef21b58ecb10634ed5",
+    "generated_at_utc": "2026-05-30T16:05:23Z",
     "count": 201
   },
   "entries": [
@@ -105,116 +105,110 @@
       "kind": "doc",
       "title": "Series Tags",
       "href": "/docs/?scope=studio&doc=series-tags",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-15 • Analytics",
+      "display_meta": "2026-05-30 • Analytics",
       "search_terms": [
         "series-tags",
         "series",
         "tags",
         "series tags",
         "analytics",
-        "2026-05-15",
+        "2026-05-30",
         "2026",
         "05",
-        "15"
+        "30"
       ],
-      "search_text": "series-tags series tags series tags analytics 2026-05-15 2026 05 15"
+      "search_text": "series-tags series tags series tags analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "tag-aliases",
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=tag-aliases",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-09 16:00 • Analytics",
+      "display_meta": "2026-05-30 • Analytics",
       "search_terms": [
         "tag-aliases",
         "tag",
         "aliases",
         "tag aliases",
         "analytics",
-        "2026-05-09 16:00",
+        "2026-05-30",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "30"
       ],
-      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "tag-editor",
       "kind": "doc",
       "title": "Tag Editor",
       "href": "/docs/?scope=studio&doc=tag-editor",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-09 16:00 • Analytics",
+      "display_meta": "2026-05-30 • Analytics",
       "search_terms": [
         "tag-editor",
         "tag",
         "editor",
         "tag editor",
         "analytics",
-        "2026-05-09 16:00",
+        "2026-05-30",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "30"
       ],
-      "search_text": "tag-editor tag editor tag editor analytics 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "tag-editor tag editor tag editor analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "tag-groups",
       "kind": "doc",
       "title": "Tag Groups",
       "href": "/docs/?scope=studio&doc=tag-groups",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-09 16:00 • Analytics",
+      "display_meta": "2026-05-30 • Analytics",
       "search_terms": [
         "tag-groups",
         "tag",
         "groups",
         "tag groups",
         "analytics",
-        "2026-05-09 16:00",
+        "2026-05-30",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "30"
       ],
-      "search_text": "tag-groups tag groups tag groups analytics 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "tag-groups tag groups tag groups analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "tag-registry",
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=tag-registry",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-21 • Analytics",
+      "display_meta": "2026-05-30 • Analytics",
       "search_terms": [
         "tag-registry",
         "tag",
         "registry",
         "tag registry",
         "analytics",
-        "2026-05-21",
+        "2026-05-30",
         "2026",
         "05",
-        "21"
+        "30"
       ],
-      "search_text": "tag-registry tag registry tag registry analytics 2026-05-21 2026 05 21"
+      "search_text": "tag-registry tag registry tag registry analytics 2026-05-30 2026 05 30"
     },
     {
       "id": "tiered-dimension-policy",
@@ -421,10 +415,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory Policy",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-21 • Audit",
+      "display_meta": "2026-05-30 • Audit",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -434,12 +428,12 @@
         "javascript inventory policy",
         "policy",
         "audit",
-        "2026-05-21",
+        "2026-05-30",
         "2026",
         "05",
-        "21"
+        "30"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy audit 2026-05-21 2026 05 21"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy audit 2026-05-30 2026 05 30"
     },
     {
       "id": "docs-viewer-javascript-inventory",
@@ -471,10 +465,10 @@
       "kind": "doc",
       "title": "Javascript Inventory",
       "href": "/docs/?scope=studio&doc=javascript-inventory",
-      "last_updated": "2026-05-21",
+      "last_updated": "2026-05-30",
       "parent_id": "studio-javascript-payload-inventory",
       "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-21 • JavaScript Inventory Policy",
+      "display_meta": "2026-05-30 • JavaScript Inventory Policy",
       "search_terms": [
         "javascript-inventory",
         "javascript",
@@ -482,12 +476,12 @@
         "javascript inventory",
         "javascript inventory policy",
         "policy",
-        "2026-05-21",
+        "2026-05-30",
         "2026",
         "05",
-        "21"
+        "30"
       ],
-      "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory policy policy 2026-05-21 2026 05 21"
+      "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory policy policy 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -1665,32 +1659,32 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-26 • Config",
+      "display_meta": "2026-05-30 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-26 2026 05 26"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-30 2026 05 30"
     },
     {
       "id": "config-studio-config-js",
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-13 18:15",
+      "last_updated": "2026-05-30",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-13 18:15 • Config",
+      "display_meta": "2026-05-30 • Config",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -1698,14 +1692,12 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-05-13 18:15",
+        "2026-05-30",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "30"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-30 2026 05 30"
     },
     {
       "id": "data-sharing",
@@ -1727,14 +1719,65 @@
       "search_text": "data-sharing data sharing data sharing 2026-05-30 2026 05 30"
     },
     {
+      "id": "studio-data-sharing",
+      "kind": "doc",
+      "title": "Analytics Data Sharing Runtime",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing",
+      "last_updated": "2026-05-30",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-30 • Data Sharing",
+      "search_terms": [
+        "studio-data-sharing",
+        "studio",
+        "data",
+        "sharing",
+        "analytics data sharing runtime",
+        "analytics",
+        "runtime",
+        "data sharing",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "studio-data-sharing studio data sharing analytics data sharing runtime analytics runtime data sharing 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "studio-data-sharing-technical-spec",
+      "kind": "doc",
+      "title": "Analytics Data Sharing Technical Spec",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
+      "last_updated": "2026-05-30",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-30 • Data Sharing",
+      "search_terms": [
+        "studio-data-sharing-technical-spec",
+        "studio",
+        "data",
+        "sharing",
+        "technical",
+        "spec",
+        "analytics data sharing technical spec",
+        "analytics",
+        "data sharing",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec analytics data sharing technical spec analytics data sharing 2026-05-30 2026 05 30"
+    },
+    {
       "id": "config-data-sharing-adapters",
       "kind": "doc",
       "title": "Data Sharing Adapters",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-05-26 • Data Sharing",
+      "display_meta": "2026-05-30 • Data Sharing",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -1743,12 +1786,12 @@
         "adapters",
         "data sharing adapters",
         "data sharing",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-05-26 2026 05 26"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-05-30 2026 05 30"
     },
     {
       "id": "config-library-export-configs",
@@ -1775,54 +1818,6 @@
         "26"
       ],
       "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "studio-data-sharing",
-      "kind": "doc",
-      "title": "Studio Data Sharing",
-      "href": "/docs/?scope=studio&doc=studio-data-sharing",
-      "last_updated": "2026-05-26",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing",
-      "display_meta": "2026-05-26 • Data Sharing",
-      "search_terms": [
-        "studio-data-sharing",
-        "studio",
-        "data",
-        "sharing",
-        "studio data sharing",
-        "data sharing",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "studio-data-sharing studio data sharing studio data sharing data sharing 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "studio-data-sharing-technical-spec",
-      "kind": "doc",
-      "title": "Studio Data Sharing Technical Spec",
-      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
-      "last_updated": "2026-05-26",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing",
-      "display_meta": "2026-05-26 • Data Sharing",
-      "search_terms": [
-        "studio-data-sharing-technical-spec",
-        "studio",
-        "data",
-        "sharing",
-        "technical",
-        "spec",
-        "studio data sharing technical spec",
-        "data sharing",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec data sharing 2026-05-26 2026 05 26"
     },
     {
       "id": "dev-home",
@@ -2188,10 +2183,10 @@
       "kind": "doc",
       "title": "Docs Management Service",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-26 • Docs Viewer",
+      "display_meta": "2026-05-30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2202,22 +2197,22 @@
         "service",
         "docs viewer",
         "viewer",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management service service docs viewer viewer 2026-05-26 2026 05 26"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management service service docs viewer viewer 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-docs-management-server-data-sharing",
       "kind": "doc",
       "title": "Docs Management Service Data Sharing (Retired)",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Service",
-      "display_meta": "2026-05-26 • Docs Management Service",
+      "display_meta": "2026-05-30 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-data-sharing",
         "scripts",
@@ -2230,12 +2225,12 @@
         "service",
         "retired",
         "docs management service",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing (retired) service retired docs management service 2026-05-26 2026 05 26"
+      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing (retired) service retired docs management service 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-docs-management-server-generated-reads",
@@ -2297,10 +2292,10 @@
       "kind": "doc",
       "title": "Docs Management Service Operations",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-30",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Service",
-      "display_meta": "2026-05-23 • Docs Management Service",
+      "display_meta": "2026-05-30 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-operations",
         "scripts",
@@ -2311,12 +2306,12 @@
         "docs management service operations",
         "service",
         "docs management service",
-        "2026-05-23",
+        "2026-05-30",
         "2026",
         "05",
-        "23"
+        "30"
       ],
-      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service docs management service 2026-05-23 2026 05 23"
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service docs management service 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-docs-management-server-write-actions",
@@ -2747,10 +2742,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 14:30 • Docs Viewer",
+      "display_meta": "2026-05-30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
@@ -2763,14 +2758,12 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-19 14:30",
+        "2026-05-30",
         "2026",
         "05",
-        "19",
-        "14",
         "30"
       ],
-      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-30 2026 05 30"
     },
     {
       "id": "docs-viewer-new-scopes-builder",
@@ -2894,10 +2887,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-05-30",
       "parent_id": "docs-viewer-scopes",
       "parent_title": "Scopes",
-      "display_meta": "2026-05-26 • Scopes",
+      "display_meta": "2026-05-30 • Scopes",
       "search_terms": [
         "data-models-library",
         "data",
@@ -2906,12 +2899,12 @@
         "library scope",
         "scope",
         "scopes",
-        "2026-05-26",
+        "2026-05-30",
         "2026",
         "05",
-        "26"
+        "30"
       ],
-      "search_text": "data-models-library data models library library scope scope scopes 2026-05-26 2026 05 26"
+      "search_text": "data-models-library data models library library scope scope scopes 2026-05-30 2026 05 30"
     },
     {
       "id": "docs-viewer-semantic-references",
@@ -3965,10 +3958,10 @@
       "kind": "doc",
       "title": "Retired Tag Write Server",
       "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-30",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-22 • Servers",
+      "display_meta": "2026-05-30 • Servers",
       "search_terms": [
         "scripts-tag-write-server",
         "scripts",
@@ -3978,12 +3971,12 @@
         "retired tag write server",
         "retired",
         "servers",
-        "2026-05-22",
+        "2026-05-30",
         "2026",
         "05",
-        "22"
+        "30"
       ],
-      "search_text": "scripts-tag-write-server scripts tag write server retired tag write server retired servers 2026-05-22 2026 05 22"
+      "search_text": "scripts-tag-write-server scripts tag write server retired tag write server retired servers 2026-05-30 2026 05 30"
     },
     {
       "id": "studio",
@@ -4096,21 +4089,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-30",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-24 • Studio",
+      "display_meta": "2026-05-30 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-24",
+        "2026-05-30",
         "2026",
         "05",
-        "24"
+        "30"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-24 2026 05 24"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-30 2026 05 30"
     },
     {
       "id": "data-models-studio",
@@ -4359,10 +4352,10 @@
       "kind": "doc",
       "title": "Column Links Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-column-links",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-05-30",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-05-30 • UI Catalogue",
       "search_terms": [
         "ui-pattern-column-links",
         "ui",
@@ -4372,12 +4365,12 @@
         "column links pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-05-30",
         "2026",
         "05",
-        "29"
+        "30"
       ],
-      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-30 2026 05 30"
     },
     {
       "id": "css-primitives",
@@ -4557,10 +4550,10 @@
       "kind": "doc",
       "title": "Reopenable Command Result Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-05-30",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-05-30 • UI Catalogue",
       "search_terms": [
         "ui-pattern-reopenable-command-result",
         "ui",
@@ -4571,12 +4564,12 @@
         "reopenable command result pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-05-30",
         "2026",
         "05",
-        "29"
+        "30"
       ],
-      "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-30 2026 05 30"
     },
     {
       "id": "ui-pattern-select-menu",

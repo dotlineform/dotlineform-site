@@ -136,21 +136,25 @@ Route-specific Studio roots:
 - `/studio/catalogue-status/?mode=manage` with `#catalogueStatusRoot`
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
-- `/studio/data-sharing/prepare/?mode=manage` with `#dataSharingPrepareRoot`
-- `/studio/data-sharing/review/?mode=manage` with `#dataSharingReviewRoot`
 - `/studio/project-state/` with `#projectStateRoot`
-- `/studio/thumbnail-quality/` with `#thumbnailQualityRoot`
 - `/studio/studio-works/` with `#worksStudioRoot`
-- `/studio/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
-- `/studio/analytics/series-tags/` with `#series-tags`
-- `/studio/analytics/tag-aliases/` with `#tag-aliases`
-- `/studio/analytics/tag-groups/` with `#tag-groups`
-- `/studio/analytics/tag-registry/` with `#tag-registry`
 
 Static Studio roots:
 
 - `/studio/` with `#studioHomeRoot`
 The legacy UI catalogue reference routes have been retired. Isolated UI Catalogue demo routes now use `data-ui-catalogue-demo-ready` instead of the production `data-studio-ready` contract.
+
+Analytics app route roots:
+
+- `/analytics/data-sharing/prepare/?mode=manage` with `#dataSharingPrepareRoot`
+- `/analytics/data-sharing/review/?mode=manage` with `#dataSharingReviewRoot`
+- `/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
+- `/analytics/series-tags/` with `#series-tags`
+- `/analytics/tag-aliases/` with `#tag-aliases`
+- `/analytics/tag-groups/` with `#tag-groups`
+- `/analytics/tag-registry/` with `#tag-registry`
+
+Retired Studio Analytics, Data Sharing, UI Catalogue, and thumbnail-quality routes do not expose active ready-state roots.
 
 
 Docs Viewer ready root:

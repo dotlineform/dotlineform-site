@@ -2,14 +2,23 @@
 doc_id: javascript-inventory
 title: Javascript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-21
+last_updated: 2026-05-30
 ui_status: review
 parent_id: studio-javascript-payload-inventory
 viewable: true
 ---
 # Javascript Inventory
 
-This document lists all browser JavaScript files under `assets/`, scored with the four-risk model defined in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
+This document is the last full scored browser JavaScript inventory produced before the 2026-05-30 local-app split.
+The scoring policy is defined in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
+
+Split status:
+
+- active Studio browser modules now live under `studio/app/frontend/js/`
+- active Analytics and Data Sharing browser modules now live under `analytics-app/app/frontend/js/`
+- active UI Catalogue demo modules now live under `ui-catalogue-app/app/assets/js/`
+- rows below that still mention retired `assets/studio/js/tag-*`, `assets/studio/js/series-*`, `assets/studio/js/data-sharing-*`, or `assets/studio/js/analysis-tag-scoring.js` paths should be read as pre-split inventory history until the next full scored inventory refresh
+- do not use retired `assets/studio/js/...` inventory rows as an ownership claim for Analytics, Data Sharing, or UI Catalogue work
 
 Rescored on 2026-05-21 from the current filesystem inventory.
 Category scores may range from 0 to 3 under the current policy.
