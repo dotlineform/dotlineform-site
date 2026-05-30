@@ -15,6 +15,14 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Decoupled remaining obvious dead Studio helper/CSS surfaces from Analytics:
+  - removed unrouted Studio audits, project state, thumbnail quality, bulk add work, and activity view functions from the Analytics app view module
+  - trimmed the Analytics frontend fallback config to Analytics/Data Sharing routes, Analytics UI text, required public site data paths, Docs Viewer doc links, and analysis scoring defaults
+  - removed unused Studio catalogue read/write, audit, project-state, bulk-add, and thumbnail-quality endpoints/probes from the Analytics transport helper
+  - removed unused catalogue lookup/search read helpers from the Analytics data helper
+  - removed the unused Studio Works UI contract and dead CSS blocks for Studio audits, thumbnail quality, activity, catalogue status, and catalogue editor/bulk/project surfaces
+  - preserved intentional current contracts: `/studio/data/canonical/analytics/...` tag data, `var/studio/data-sharing/...` artifact paths, and existing `tagStudio*` frontend naming
+  - verified Python compile, JS syntax, focused Analytics app server pytest, `git diff --check`, stale-reference scans, and `analytics-smoke` all pass
 - Ran the basic split verification pass:
   - focused Analytics/tag/data-sharing pytest passed: 57 tests
   - `analytics-smoke` passed all 19 route/API/module/modal/ready-state/data-sharing checks
@@ -63,7 +71,7 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue with task 12: decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics.
+- Continue with task 13: update source ownership, runtime dependency, local setup, service launcher, and affected request docs for the split boundaries.
 - Preserve the clean cutover: do not add aliases, redirects, proxy handlers, or static shims for retired Studio paths to make old tests pass.
 
 ### baseline verification set
@@ -117,7 +125,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 9 | done | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, CSS, and smokes. Archive its page/script code in a repo-local retired tooling location, separate from the public Jekyll site |
 | 10 | done | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
 | 11 | done | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |
-| 12 | planned | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
+| 12 | done | Decouple any remaining Studio helper/CSS dependencies/paths/assets in Analytics. |
 | 13 | planned | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
 | 14 | planned | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
 | 15 | planned | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |

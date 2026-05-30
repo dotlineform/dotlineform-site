@@ -392,13 +392,3 @@ export const tagGroupsUi = createUiContract({
     text: "tagStudio__groupInfoText"
   }
 });
-
-export const studioWorksUi = createUiContract({
-  role: {
-    pageRoot: "studio-works",
-    sortButton: "sort-button"
-  },
-  state: {
-    active: "active"
-  }
-});
