@@ -258,23 +258,22 @@ Old Studio routes, endpoint aliases, proxy handlers, dual-read/write fallbacks, 
 - `change-2026-05-30-split-analytics-and-data-sharing-into-a-local-analytics-app`
 - `change-2026-05-30-separated-ui-catalogue-and-retired-thumbnail-quality-from-studio`
 
-## Risks
+## Original Risks And Resolution
 
-- The current frontend modules may import generic Studio helpers and CSS.
-  Decouple these during the split where it is cheap, obvious, and does not turn the cutover into a redesign.
-  If meaningful Studio helper or CSS coupling remains after the lift-and-shift, create a follow-on slice or request so Analytics owns its CSS, frontend helpers, UI text/config helpers, and route-shell primitives.
-- Data Sharing currently touches documents and tags.
-  Analytics should own the workflow, but Docs Viewer can remain the focused owner for document conversion/source helpers.
-- Existing tests and docs use Studio naming for analytics checks.
-  Rename active checks to Analytics ownership where they are purely Analytics checks, and split mixed Studio/Analytics checks where one test currently covers both future service responsibilities.
-- Removing old routes without compatibility aliases may break bookmarks.
-  This is acceptable for the maintenance-risk goal; update visible navigation and docs in the same slice.
-- Activity/audit ownership may need a later service split.
-  Keep them in Studio for now unless a moved Analytics workflow already has a natural Analytics activity record.
-- UI Catalogue may still depend on some Studio visual primitives.
-  Keep those dependencies explicit and static rather than making UI Catalogue a Studio route.
-- Thumbnail-quality archival can become busywork if it tries to preserve every historical runtime path.
-  Prefer a clear retired tooling location plus a short note about why it is not active.
+- Generic Studio helper and CSS coupling was reduced during the split.
+  Remaining `tagStudio*` naming, `studio/services/analytics/` helper use, and preserved tag source paths are documented as Analytics-local carryover rather than deferred split cleanup.
+- Data Sharing still touches documents and tags by design.
+  Analytics owns the browser/API workflow, `data-sharing/` owns headless dispatch and adapters, and Docs Viewer remains the focused owner for document conversion/source helpers.
+- Studio-named Analytics/Data Sharing tests and docs were retargeted or retired.
+  Active checks now live under Analytics ownership where they cover Analytics routes/APIs, and durable docs describe `/analytics/...` and `/analytics/api/...` as the active paths.
+- Old route bookmarks may break because compatibility aliases were intentionally not added.
+  Visible navigation, runtime config, docs, and tests now point at the new owner routes.
+- Activity and audit remain Studio-owned unless a moved Analytics workflow naturally appends activity rows.
+  A broader activity/audit service split is out of scope for this request.
+- UI Catalogue was moved to a standalone local app.
+  It no longer depends on Studio route config, Studio navigation, Studio APIs, or Studio service startup.
+- Thumbnail quality was retired into repo-local tooling.
+  It no longer has an active Studio route, API endpoint, runtime-config entry, static data mount, or smoke target.
 
 ## Related Docs And Files
 

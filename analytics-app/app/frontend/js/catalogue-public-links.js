@@ -15,14 +15,6 @@ export function buildPublicSeriesUrl(config, seriesId, params = {}) {
   return buildPublicRecordUrl(config, "series_page_base", "/series/", seriesId, params);
 }
 
-export function buildPublicWorkDetailUrl(config, detailUid, params = {}) {
-  return buildPublicRecordUrl(config, "work_details_page_base", "/work_details/", detailUid, params);
-}
-
-export function buildPublicMomentUrl(config, momentId, params = {}) {
-  return buildPublicRecordUrl(config, "moments_page_base", "/moments/", momentId, params);
-}
-
 function buildPublicRecordUrl(config, routeKey, fallbackBase, recordId, params = {}) {
   const id = normalizeText(recordId);
   const routeBase = normalizeRouteBase(getStudioRoute(config, routeKey) || fallbackBase);

@@ -13,9 +13,7 @@ const DEFAULT_STUDIO_CONFIG = {
       "series_page_base": "/series/",
       "library_page": "/library/",
       "analysis_page": "/analysis/",
-      "moments_page_base": "/moments/",
-      "works_page_base": "/works/",
-      "work_details_page_base": "/work_details/"
+      "works_page_base": "/works/"
     },
     "data": {
       "studio": {
