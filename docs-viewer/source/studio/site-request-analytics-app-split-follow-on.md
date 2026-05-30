@@ -2,7 +2,7 @@
 doc_id: site-request-analytics-app-split-follow-on
 title: Analytics App Split Follow-On Tasks
 added_date: "2026-05-30 17:24"
-last_updated: "2026-05-30 18:43"
+last_updated: "2026-05-30 18:59"
 ui_status: in-progress
 parent_id: site-request-analytics-app-split
 ---
@@ -22,29 +22,26 @@ Key boundary decisions:
 - Analytics may read catalogue/public-site generated data where needed, but it should do so through Analytics-owned helpers or app-specific adapters, not Studio helper imports.
 - Data Sharing is an Analytics-owned workflow. Shared package dispatch/path mechanics can stay under `data-sharing/`, and Docs Viewer can remain the focused owner for document conversion/source helpers.
 - Data Sharing should exchange document and tag data through adapters. It should not route through Docs Viewer HTTP endpoints, import broad Docs Viewer management authority, or depend on Studio tag helpers.
-- Search should be treated as app-specific. Studio should not keep tag awareness just because old search build code read tag paths directly; any tag-enriched public or Analytics search behavior needs an explicit adapter/owner decision.
+- Search should be treated as app-specific. Public-site search does not need tags, and Studio should not keep tag awareness just because old search build code read tag paths directly.
 - No old-path compatibility shims should be added for retired Studio Analytics routes, source-data paths, helper imports, or runtime artifact roots.
 
 ## Status
 
 ### just done
 
-- Completed task 1 contract confirmation:
-  - confirmed canonical tag source data should move to an Analytics-owned source path, currently targeted as `analytics-app/data/canonical/`
-  - confirmed browser reads should use the existing Analytics API endpoints such as `/analytics/api/tag-registry`, `/analytics/api/tag-aliases`, `/analytics/api/tag-assignments`, and `/analytics/api/tag-groups` rather than raw Studio source paths
-  - confirmed raw source-data static serving, if still needed for development tooling, must use an Analytics-owned route such as `/analytics/data/canonical/...`, not `/studio/data/canonical/analytics/...`
-  - confirmed Data Sharing runtime artifacts should move to `var/analytics/data-sharing/<domain>/...`
-  - confirmed search is an app-specific boundary question; Studio should not keep direct tag-source path knowledge as the default
-  - confirmed public-site search does not currently read tags and does not need tag terms in the target state
-  - confirmed existing files under `var/studio/data-sharing/` are disposable and the whole folder can be deleted when the runtime root moves
-  - confirmed old Studio source paths, artifact roots, helper imports, route aliases, fallback reads, proxy handlers, redirects, and static shims are not acceptable compatibility mechanisms
+- Completed task 2 inventory:
+  - found active tag source references across Analytics API/frontend text, Data Sharing config, catalogue cleanup/generation, public search build defaults, audit/projection checks, tests, smokes, and docs
+  - found active Data Sharing artifact-root references across `data-sharing/` config/path services, Analytics server/UI/tests/smokes, Data Sharing tests, and durable docs
+  - found Analytics Python helper coupling through `studio/services/analytics/`, `from analytics import ...` imports, and the shared `studio/services` path bootstrap
+  - found Analytics frontend carryover in `studio-*.js` helper module names, `tag-studio*.js` route/domain module names, `tagStudio*` CSS/selectors, runtime event names, smokes, and UI docs
+  - confirmed generated change-request indexes contain historical `var/studio/data-sharing/...` text but should not drive active cleanup
 
 ### steer for next task
 
-- Start task 2 with an inventory before moving files. The old names and paths are spread across Analytics frontend modules, Data Sharing config, Python helpers, catalogue/search/audit consumers, smoke fixtures, and durable docs.
-- Treat search as a first-class boundary question. Public search does not need tags, and Studio should not directly know Analytics tag source paths.
-- Preserve behavior while changing ownership. The task is decoupling, not redesign or feature work.
-- Do not add aliases, redirects, proxy handlers, fallback reads, import fallbacks, or static shims for old Studio paths to make tests easier.
+- Start task 3 by moving the Analytics tag-domain Python helpers out of `studio/services/analytics/`.
+- Keep imports explicit and Analytics-owned; do not solve the move by adding another broad `sys.path` alias or import fallback.
+- Preserve the current tag mutation/write behavior, dry-run behavior, backup behavior, compact logging, and tests while changing package ownership.
+- After the helper move, update run-check profiles and tag helper tests to point at the Analytics-owned package.
 
 ### baseline verification set
 
@@ -130,6 +127,184 @@ If a later inventory finds a stronger reason to change one, update this section 
   - `studio.services.analytics`
 - Tests and smoke fixtures should move to the current owner contracts instead of keeping old Studio paths alive.
 
+## Task 2 Inventory
+
+The inventory was gathered from active code, config, tests, smokes, and current source docs.
+Historical split request docs and change-log entries are not treated as active cleanup targets unless a later task explicitly updates request history.
+Generated change-request indexes contain historical `var/studio/data-sharing/...` text and should be ignored for this follow-on unless they are regenerated from source entries.
+
+### Tag Source Path References
+
+Current tag source path references to `studio/data/canonical/analytics/...` appear in these active groups:
+
+- Source data to move:
+  - `studio/data/canonical/analytics/tag-registry.json`
+  - `studio/data/canonical/analytics/tag-aliases.json`
+  - `studio/data/canonical/analytics/tag-assignments.json`
+  - `studio/data/canonical/analytics/tag-groups.json`
+- Analytics runtime and frontend:
+  - `analytics-app/app/server/analytics_app/analytics_api.py`
+  - `analytics-app/app/frontend/config/ui-text/series-tag-editor.json`
+  - `analytics-app/app/frontend/config/ui-text/tag-aliases.json`
+  - `analytics-app/app/frontend/config/ui-text/tag-groups.json`
+  - `analytics-app/app/frontend/config/ui-text/tag-registry.json`
+  - `analytics-app/app/frontend/js/tag-aliases.js`
+  - `analytics-app/app/frontend/js/tag-aliases-save.js`
+  - `analytics-app/app/frontend/js/tag-registry.js`
+  - `analytics-app/app/frontend/js/tag-registry-save.js`
+  - `analytics-app/app/frontend/js/tag-studio.js`
+- Data Sharing tag adapter config:
+  - `data-sharing/config/adapters.json`
+- Current Analytics helper owner:
+  - `studio/services/analytics/tag_source_model.py`
+- Studio/catalogue/search/audit consumers:
+  - `studio/services/catalogue/catalogue_cleanup.py`
+  - `studio/services/catalogue/generate_work_pages.py`
+  - `studio/services/catalogue/search/build_search.rb`
+  - `studio/checks/audit_site_consistency.py`
+  - `studio/checks/projection_contract.json`
+- Tests and smokes:
+  - `analytics-app/tests/python/test_analytics_app_server.py`
+  - `analytics-app/tests/smoke/local_analytics_app_tag_groups.py`
+  - `analytics-app/tests/smoke/local_analytics_app_tag_routes.py`
+  - `analytics-app/tests/smoke/tag_aliases_modal.py`
+  - `analytics-app/tests/smoke/tag_registry_modal.py`
+  - `studio/tests/python/test_catalogue_cleanup.py`
+  - `studio/tests/python/test_data_sharing_adapters.py`
+  - `studio/tests/python/test_tags_data_sharing_adapter.py`
+- Current docs to update during durable-docs follow-through:
+  - `docs-viewer/source/studio/analytics.md`
+  - `docs-viewer/source/studio/data-models-projection-contract.md`
+  - `docs-viewer/source/studio/local-studio-server-architecture.md`
+  - `docs-viewer/source/studio/scripts.md`
+  - `docs-viewer/source/studio/source-tree-ownership.md`
+
+### Search Coupling
+
+Public-site search does not need tag terms, but current catalogue search code still reads Analytics tag files directly:
+
+- `studio/services/catalogue/search/build_search.rb`
+  - defaults `tag_assignments_path` and `tag_registry_path` to `studio/data/canonical/analytics/...`
+  - exposes `--tag-assignments` and `--tag-registry`
+  - loads tag assignments and registry during catalogue search generation
+- `docs-viewer/source/studio/search-build-pipeline-catalogue.md`
+  - documents the tag path flags
+
+Task 5 should remove this Studio-owned direct tag dependency unless a concrete Analytics-owned search adapter need is identified.
+Given the confirmed target state, public-site search should not consume Analytics tags.
+
+### Data Sharing Artifact Root References
+
+Current references to `var/studio/data-sharing/...` appear in these active groups:
+
+- Data Sharing config and path contracts:
+  - `data-sharing/config/adapters.json`
+  - `data-sharing/config/library-export-configs.json`
+  - `data-sharing/config/library-export-configs.schema.json`
+  - `data-sharing/data_sharing/__init__.py`
+  - `data-sharing/data_sharing/services/paths.py`
+  - `data-sharing/README.md`
+- Analytics server/frontend/tests:
+  - `analytics-app/app/server/analytics_app/data_sharing_adapters.py`
+  - `analytics-app/app/frontend/config/ui-text/data-sharing-review.json`
+  - `analytics-app/app/frontend/js/data-sharing-review.js`
+  - `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+  - `analytics-app/tests/smoke/data_sharing_prepare.py`
+  - `analytics-app/tests/smoke/data_sharing_prepare_modules.py`
+  - `analytics-app/tests/smoke/data_sharing_review.py`
+  - `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
+- Data Sharing tests:
+  - `studio/tests/python/test_data_sharing_adapters.py`
+  - `studio/tests/python/test_data_sharing_service.py`
+  - `studio/tests/python/test_data_sharing_subsystem_scaffold.py`
+  - `studio/tests/python/test_tags_data_sharing_adapter.py`
+- Current docs to update during durable-docs follow-through:
+  - `docs-viewer/source/studio/config-data-sharing-adapters.md`
+  - `docs-viewer/source/studio/config-library-export-configs.md`
+  - `docs-viewer/source/studio/data-models-library.md`
+  - `docs-viewer/source/studio/data-models-projection-contract.md`
+  - `docs-viewer/source/studio/data-sharing.md`
+  - `docs-viewer/source/studio/docs-viewer-media-handling.md`
+  - `docs-viewer/source/studio/scripts-docs-export.md`
+  - `docs-viewer/source/studio/scripts-docs-import.md`
+  - `docs-viewer/source/studio/scripts-docs-management-server-operations.md`
+  - `docs-viewer/source/studio/scripts.md`
+  - `docs-viewer/source/studio/source-tree-ownership.md`
+  - `docs-viewer/source/studio/studio-data-sharing.md`
+  - `docs-viewer/source/studio/studio-data-sharing-technical-spec.md`
+
+The old `var/studio/data-sharing/` folder is disposable and can be deleted when the runtime root moves.
+Do not add runtime fallback reads for it.
+
+### Analytics Python Helper Coupling
+
+The current tag-domain helper package lives under `studio/services/analytics/`:
+
+- `studio/services/analytics/tag_activity.py`
+- `studio/services/analytics/tag_alias_mutations.py`
+- `studio/services/analytics/tag_assignment_service.py`
+- `studio/services/analytics/tag_promotion_mutations.py`
+- `studio/services/analytics/tag_registry_mutations.py`
+- `studio/services/analytics/tag_routes.py`
+- `studio/services/analytics/tag_source_model.py`
+- `studio/services/analytics/tag_write_transactions.py`
+
+Active consumers and check definitions include:
+
+- `analytics-app/app/server/analytics_app/analytics_api.py`
+- `data-sharing/data_sharing/adapters/tags/adapter.py`
+- `studio/commands/run_checks.py`
+- `analytics-app/tests/python/test_analytics_app_server.py`
+- `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+- tag helper tests under `studio/tests/python/test_tag_*.py`
+- current docs:
+  - `docs-viewer/source/studio/analytics.md`
+  - `docs-viewer/source/studio/scripts-tag-write-server.md`
+  - `docs-viewer/source/studio/scripts.md`
+  - `docs-viewer/source/studio/source-tree-ownership.md`
+  - `docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
+
+The shared path bootstrap in `studio/shared/python/studio_python_paths.py` currently places `studio/services` on `sys.path`, which is why `from analytics import ...` resolves to `studio/services/analytics`.
+Task 3 should remove that dependency for Analytics rather than adding a replacement compatibility import path.
+
+### Analytics Frontend Naming Carryover
+
+Analytics currently has nine `studio-*.js` helper modules:
+
+- `analytics-app/app/frontend/js/studio-activity-context.js`
+- `analytics-app/app/frontend/js/studio-config.js`
+- `analytics-app/app/frontend/js/studio-data.js`
+- `analytics-app/app/frontend/js/studio-modal.js`
+- `analytics-app/app/frontend/js/studio-navigation.js`
+- `analytics-app/app/frontend/js/studio-route-state.js`
+- `analytics-app/app/frontend/js/studio-theme.js`
+- `analytics-app/app/frontend/js/studio-transport.js`
+- `analytics-app/app/frontend/js/studio-ui.js`
+
+Analytics currently has eleven `tag-studio*.js` route/domain modules:
+
+- `analytics-app/app/frontend/js/tag-studio-domain.js`
+- `analytics-app/app/frontend/js/tag-studio-index.js`
+- `analytics-app/app/frontend/js/tag-studio-interactions.js`
+- `analytics-app/app/frontend/js/tag-studio-modals.js`
+- `analytics-app/app/frontend/js/tag-studio-render.js`
+- `analytics-app/app/frontend/js/tag-studio-route-state.js`
+- `analytics-app/app/frontend/js/tag-studio-save-controller.js`
+- `analytics-app/app/frontend/js/tag-studio-save.js`
+- `analytics-app/app/frontend/js/tag-studio-state.js`
+- `analytics-app/app/frontend/js/tag-studio-suggestions.js`
+- `analytics-app/app/frontend/js/tag-studio.js`
+
+`tagStudio*` selectors, CSS classes, and helper names appear across:
+
+- `analytics-app/app/assets/css/analytics.css`
+- Analytics route modules under `analytics-app/app/frontend/js/`
+- Analytics modal/module smokes under `analytics-app/tests/smoke/`
+- Analytics route docs and UI primitive docs under `docs-viewer/source/studio/`
+
+Legitimate Local Studio files under `studio/app/...` also use `studio-*` names and should not be renamed as part of Analytics frontend cleanup.
+Task 9 and task 10 should keep that distinction explicit.
+
 ## Implementation Tasks
 
 Work through the table by ID order.
@@ -139,10 +314,10 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 1 | done | Confirm target contracts before moving files: canonical tag data moves out of `studio/data/canonical/analytics/...`; browser access uses an Analytics-owned static/API path; Data Sharing artifacts move from `var/studio/data-sharing/...` to `var/analytics/data-sharing/...`; old Studio paths are not kept as aliases, fallback reads, redirects, or static shims. |
-| 2 | planned | Inventory all live references to `studio/data/canonical/analytics`, `/studio/data/canonical/analytics`, `var/studio/data-sharing`, `studio.services.analytics`, `studio/services/analytics`, `tagStudio*`, `tag-studio*`, and Analytics frontend `studio-*` helper names. Use the result as the pre-change move map and final stale-reference checklist. |
+| 2 | done | Inventory all live references to `studio/data/canonical/analytics`, `/studio/data/canonical/analytics`, `var/studio/data-sharing`, `studio.services.analytics`, `studio/services/analytics`, `tagStudio*`, `tag-studio*`, and Analytics frontend `studio-*` helper names. Use the result as the pre-change move map and final stale-reference checklist. |
 | 3 | planned | Move Analytics tag-domain Python helpers out of `studio/services/analytics/` into an Analytics-owned package, for example `analytics-app/app/server/analytics_app/tag_services/`. Update `analytics_api.py`, the tags Data Sharing adapter, check profiles, Python tests, smoke imports, and docs so Analytics no longer depends on Studio helper modules. |
 | 4 | planned | Add an Analytics-owned source path/helper contract for canonical tag data. Use it from Analytics APIs, Data Sharing tags adapter, and any catalogue/search/audit consumers that still need tag data. The helper should make Analytics the path owner and keep Studio from embedding tag source constants directly. |
-| 5 | planned | Resolve the search ownership boundary. Decide whether tag-enriched public search belongs to the public search builder through an Analytics tag adapter, to an Analytics-specific search surface, or should be removed from Studio-owned search work. Update build/search code so Studio does not directly know Analytics tag source paths. |
+| 5 | planned | Resolve the search ownership boundary. Public search does not need tag terms, so remove direct tag reads from Studio-owned catalogue search unless a concrete Analytics-specific search surface is identified. Update build/search code so Studio does not directly know Analytics tag source paths. |
 | 6 | planned | Move canonical tag JSON from `studio/data/canonical/analytics/` to the chosen Analytics-owned source location, likely `analytics-app/data/canonical/`. Update Analytics static serving, read endpoints, runtime config/UI text, Data Sharing adapter config, projection contracts, catalogue/search consumers, tests, and docs. Old source paths should fail in active checks. |
 | 7 | planned | Move Data Sharing runtime artifact roots from `var/studio/data-sharing/` to `var/analytics/data-sharing/`. Update `data-sharing/config/*.json`, schemas, `data_sharing.services.paths`, Analytics server constants, smoke fixtures, tests, docs, validation messages, and examples. Do not add fallback reads for existing old artifacts. |
 | 8 | planned | Verify and tighten the Docs Viewer/Data Sharing boundary. Data Sharing should call document-domain adapters or helper functions for conversion/source work, not Docs Viewer HTTP endpoints or broad management-service handles. Tags should flow through an Analytics tags adapter. Document the adapter contract in the Data Sharing technical spec. |
