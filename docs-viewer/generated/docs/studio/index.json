@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T17:39:36Z",
+  "generated_at": "2026-05-30T17:57:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -20,7 +20,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 1452
+      "content_text_length": 1480
     },
     {
       "scope": "studio",
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 10700
+      "content_text_length": 10739
     },
     {
       "scope": "studio",
@@ -377,7 +377,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18088,
+      "content_text_length": 18196,
       "ui_status": "urgent"
     },
     {
@@ -709,14 +709,14 @@
       "doc_id": "site-request-analytics-app-split-follow-on",
       "title": "Analytics App Split Follow-On Tasks",
       "added_date": "2026-05-30 17:24",
-      "last_updated": "2026-05-30 18:59",
+      "last_updated": "2026-05-30 19:00",
       "parent_id": "site-request-analytics-app-split",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-analytics-app-split-follow-on.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 21575,
+      "content_text_length": 21586,
       "ui_status": "in-progress"
     },
     {
@@ -1227,7 +1227,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 9529
+      "content_text_length": 9570
     },
     {
       "scope": "studio",
@@ -2381,7 +2381,7 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 1904
+      "content_text_length": 2151
     },
     {
       "scope": "studio",

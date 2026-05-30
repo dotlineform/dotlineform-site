@@ -17,7 +17,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR, ANALYTICS_S
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from analytics import tag_routes as routes  # noqa: E402
+from tag_services import tag_routes as routes  # noqa: E402
 import analytics_api  # noqa: E402
 
 

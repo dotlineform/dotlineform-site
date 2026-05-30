@@ -60,11 +60,11 @@ Current Analytics-owned source homes:
 | Path | Owner / role |
 | --- | --- |
 | `analytics-app/app/server/analytics_app/` | Local Analytics app server, Analytics route views, runtime config projection, static serving, tag API dispatch, and Data Sharing API dispatch. |
+| `analytics-app/app/server/analytics_app/tag_services/` | Analytics tag-domain helper modules for validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection. |
 | `analytics-app/app/frontend/` | Analytics browser modules, route modules, shell helpers, UI text config, and Analytics runtime config source. |
 | `analytics-app/app/assets/` | Analytics-only CSS and static assets used by Local Analytics routes. |
 | `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |
 | `studio/data/canonical/analytics/` | Current canonical tag registry, alias, assignment, and group source data used by Analytics. The path is intentionally preserved for this split; it is not a Studio route/API ownership claim. |
-| `studio/services/analytics/` | Current tag-domain helper modules for validation, planning, dry-run/write transactions, backups, and compact logging used by Analytics. |
 | `data-sharing/` | Headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters used by Analytics. |
 | `var/studio/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. The path is intentionally preserved as a local artifact contract. |
 

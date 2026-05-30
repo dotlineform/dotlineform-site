@@ -37,8 +37,8 @@ The current script surface is organized by owner:
 ## Folder Rules
 
 - `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
-- `analytics-app/` owns the Local Analytics app server, Analytics route shells, Analytics runtime config, Analytics frontend modules, tag APIs, Data Sharing route/API dispatch, and Analytics tests.
-- `studio/services/analytics/` remains the current tag-domain helper layer over catalogue works and series. It is used by Analytics and should not imply Local Studio route/API ownership.
+- `analytics-app/` owns the Local Analytics app server, Analytics route shells, Analytics runtime config, Analytics frontend modules, tag APIs, tag-domain helper services, Data Sharing route/API dispatch, and Analytics tests.
+- `analytics-app/app/server/analytics_app/tag_services/` owns tag-domain validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection used by Analytics.
 - `data-sharing/` owns headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters. The active browser-facing Data Sharing HTTP endpoints are hosted by Local Analytics.
 - `ui-catalogue-app/` owns the standalone UI Catalogue demo app, demo source, static demo assets, and UI Catalogue tests.
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.

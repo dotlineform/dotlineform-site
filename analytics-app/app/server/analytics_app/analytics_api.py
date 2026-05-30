@@ -24,14 +24,14 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import script_logging  # noqa: E402
 import studio_activity  # noqa: E402
-from analytics import tag_activity  # noqa: E402
-from analytics import tag_alias_mutations as tag_aliases  # noqa: E402
-from analytics import tag_assignment_service as tag_assignments  # noqa: E402
-from analytics import tag_promotion_mutations as tag_promotions  # noqa: E402
-from analytics import tag_registry_mutations as tag_registry  # noqa: E402
-from analytics import tag_routes  # noqa: E402
-from analytics import tag_source_model as tag_source  # noqa: E402
-from analytics import tag_write_transactions as tag_transactions  # noqa: E402
+from tag_services import tag_activity  # noqa: E402
+from tag_services import tag_alias_mutations as tag_aliases  # noqa: E402
+from tag_services import tag_assignment_service as tag_assignments  # noqa: E402
+from tag_services import tag_promotion_mutations as tag_promotions  # noqa: E402
+from tag_services import tag_registry_mutations as tag_registry  # noqa: E402
+from tag_services import tag_routes  # noqa: E402
+from tag_services import tag_source_model as tag_source  # noqa: E402
+from tag_services import tag_write_transactions as tag_transactions  # noqa: E402
 
 
 ANALYTICS_DATA_DIR = Path("studio/data/canonical/analytics")

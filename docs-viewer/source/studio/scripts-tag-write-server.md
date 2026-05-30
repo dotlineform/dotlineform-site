@@ -12,7 +12,7 @@ parent_id: servers
 Tag write routes now run through the standalone Local Analytics app server:
 
 - API module: `analytics-app/app/server/analytics_app/analytics_api.py`
-- route constants: `studio/services/analytics/tag_routes.py`
+- route constants: `analytics-app/app/server/analytics_app/tag_services/tag_routes.py`
 - local API base: `/analytics/api`
 - operational log: `var/studio/logs/analytics_app.log`
 
@@ -23,13 +23,13 @@ Docs rebuilds belong to the Docs management API.
 
 Reusable analytics owners remain active:
 
-- `studio/services/analytics/tag_activity.py`
-- `studio/services/analytics/tag_source_model.py`
-- `studio/services/analytics/tag_assignment_service.py`
-- `studio/services/analytics/tag_registry_mutations.py`
-- `studio/services/analytics/tag_alias_mutations.py`
-- `studio/services/analytics/tag_promotion_mutations.py`
-- `studio/services/analytics/tag_write_transactions.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_activity.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_source_model.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_assignment_service.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_registry_mutations.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_alias_mutations.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_promotion_mutations.py`
+- `analytics-app/app/server/analytics_app/tag_services/tag_write_transactions.py`
 
 ## Active Endpoints
 
@@ -54,9 +54,9 @@ The Local Analytics app exposes these tag write endpoints under `/analytics/api`
 
 Tag writes remain allowlisted to:
 
-- `assets/studio/data/tag_assignments.json`
-- `assets/studio/data/tag_registry.json`
-- `assets/studio/data/tag_aliases.json`
+- `studio/data/canonical/analytics/tag-assignments.json`
+- `studio/data/canonical/analytics/tag-registry.json`
+- `studio/data/canonical/analytics/tag-aliases.json`
 
 Backups remain under `var/studio/backups/`.
 Unified activity rows are written through `scripts/studio_activity.py`.

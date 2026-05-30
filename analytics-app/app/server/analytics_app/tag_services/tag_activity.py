@@ -7,7 +7,7 @@ import datetime as dt
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
-from analytics import tag_routes as routes
+from tag_services import tag_routes as routes
 from studio_activity import normalize_activity_context_from_contract, studio_activity_entry
 
 

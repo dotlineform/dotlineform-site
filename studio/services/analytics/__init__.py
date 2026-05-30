@@ -1,1 +1,0 @@
-"""Analytics metadata script helpers."""

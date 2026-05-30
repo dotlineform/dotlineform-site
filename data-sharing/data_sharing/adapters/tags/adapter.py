@@ -26,7 +26,7 @@ ANALYTICS_APP_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "ana
 if str(ANALYTICS_APP_SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(ANALYTICS_APP_SERVER_DIR))
 
-from analytics import tag_alias_mutations, tag_assignment_service, tag_registry_mutations, tag_source_model, tag_write_transactions
+from tag_services import tag_alias_mutations, tag_assignment_service, tag_registry_mutations, tag_source_model, tag_write_transactions
 from data_sharing_adapters import AdapterResolution, safe_relative_path
 from data_sharing.services.dispatch import DataSharingAdapterHandlers
 from studio_activity import append_studio_activity, normalize_activity_context_from_contract, studio_activity_entry
