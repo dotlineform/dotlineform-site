@@ -88,7 +88,7 @@ It resolves the active route from `window.location.pathname`, normalizes route f
 
 `studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
 For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title/doc-link shell, asks the route-local body renderer for markup, and then imports the configured route script.
-Project State, Studio Audits, Studio Activity, and Bulk Add Work use this path.
+Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, and Studio Works use this path.
 Their body markup lives in route-local `*-shell.js` modules, and their existing controllers stay in the configured route scripts.
 
 ## Studio Pages

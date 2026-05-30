@@ -59,7 +59,7 @@
         "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
         "doc_id": "catalogue-field-registry-review",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-field-registry"
       },
       "catalogue_status": {
@@ -69,7 +69,7 @@
         "script": "/studio/app/frontend/js/catalogue-status.js",
         "doc_id": "catalogue-status",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-status"
       },
       "studio_works": {
@@ -79,7 +79,7 @@
         "script": "/studio/app/frontend/js/studio-works.js",
         "doc_id": "studio-works",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "studio-works"
       },
       "catalogue_series_editor": {

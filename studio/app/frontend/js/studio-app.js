@@ -11,9 +11,21 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importVersioned("./bulk-add-work-shell.js");
     return module.renderBulkAddWorkShell(config);
   },
+  catalogue_field_registry: async () => {
+    const module = await importVersioned("./catalogue-field-registry-shell.js");
+    return module.renderCatalogueFieldRegistryShell();
+  },
+  catalogue_status: async () => {
+    const module = await importVersioned("./catalogue-status-shell.js");
+    return module.renderCatalogueStatusShell();
+  },
   project_state: async () => {
     const module = await importVersioned("./project-state-shell.js");
     return module.renderProjectStateShell();
+  },
+  studio_works: async () => {
+    const module = await importVersioned("./studio-works-shell.js");
+    return module.renderStudioWorksShell();
   },
   studio_audits: async () => {
     const module = await importVersioned("./studio-audits-shell.js");

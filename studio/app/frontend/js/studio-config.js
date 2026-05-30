@@ -19,7 +19,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/studio-audits.js",
         "doc_id": "studio-audits",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "studio-audits"
       },
       "project_state": {
@@ -39,7 +39,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/bulk-add-work.js",
         "doc_id": "bulk-add-work",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "bulk-add-work"
       },
       "activity": {
@@ -49,7 +49,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/activity-log.js",
         "doc_id": "studio-activity",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "studio-activity"
       },
       "catalogue_field_registry": {
@@ -59,7 +59,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
         "doc_id": "catalogue-field-registry-review",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-field-registry"
       },
       "catalogue_status": {
@@ -69,7 +69,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/catalogue-status.js",
         "doc_id": "catalogue-status",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "catalogue-status"
       },
       "studio_works": {
@@ -79,7 +79,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "script": "/studio/app/frontend/js/studio-works.js",
         "doc_id": "studio-works",
         "nav": false,
-        "shell_type": "python",
+        "shell_type": "javascript",
         "ready_state_route_id": "studio-works"
       },
       "catalogue_series_editor": {

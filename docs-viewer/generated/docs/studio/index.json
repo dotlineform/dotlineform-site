@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T20:33:43Z",
+  "generated_at": "2026-05-30T20:40:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -949,14 +949,14 @@
       "doc_id": "site-request-studio-javascript-app-shell",
       "title": "Studio JavaScript App Shell Request",
       "added_date": "2026-05-26",
-      "last_updated": "2026-05-30 22:30",
+      "last_updated": "2026-05-30 22:40",
       "parent_id": "change-requests",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-studio-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
-      "content_text_length": 13365,
+      "content_text_length": 13787,
       "ui_status": "in-progress"
     },
     {
@@ -1002,6 +1002,21 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-3",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-3.json",
       "content_text_length": 6110,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-javascript-app-shell-slice-4",
+      "title": "Studio JavaScript App Shell Slice 4 Tasks",
+      "added_date": "2026-05-30 22:40",
+      "last_updated": "2026-05-30 22:40",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-javascript-app-shell-slice-4.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-4",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-4.json",
+      "content_text_length": 6172,
       "ui_status": "done"
     },
     {
@@ -2454,7 +2469,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
-      "content_text_length": 15735
+      "content_text_length": 16763
     },
     {
       "scope": "studio",
@@ -2510,7 +2525,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 16563
+      "content_text_length": 16621
     },
     {
       "scope": "studio",

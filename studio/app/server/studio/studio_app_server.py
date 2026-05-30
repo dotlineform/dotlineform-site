@@ -30,13 +30,10 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_catalogue_views import (  # noqa: E402
-    catalogue_field_registry_view,
     catalogue_moment_view,
     catalogue_series_view,
-    catalogue_status_view,
     catalogue_work_detail_view,
     catalogue_work_view,
-    studio_works_view,
 )
 from studio_app_views import (  # noqa: E402
     studio_app_bootstrap_view,
@@ -133,13 +130,13 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
-            self.send_html(catalogue_field_registry_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-status", "/studio/catalogue-status/"}:
-            self.send_html(catalogue_status_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/studio-works", "/studio/studio-works/"}:
-            self.send_html(studio_works_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-series", "/studio/catalogue-series/"}:
             self.send_html(catalogue_series_view(self.version))

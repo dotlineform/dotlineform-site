@@ -112,13 +112,17 @@ It is rendered through the JavaScript Studio app shell: Python serves the generi
 It reuses `studio/app/frontend/js/activity-log-modals.js` and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
 The old Jekyll `/studio/activity/` shell and Python-rendered Studio Activity body have been retired.
 The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
-It reuses `studio/app/frontend/js/catalogue-field-registry-review.js` and the checked-in `studio/data/config/catalogue/catalogue-field-registry.json` read-only data source.
-The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/catalogue-field-registry-shell.js` renders the route body, and `studio/app/frontend/js/catalogue-field-registry-review.js` keeps the existing route boot and behavior.
+It reuses the checked-in `studio/data/config/catalogue/catalogue-field-registry.json` read-only data source.
+The old Jekyll `/studio/catalogue-field-registry/` shell and Python-rendered Catalogue Field Registry body have been retired.
 The Catalogue Drafts route shell is hosted by the local app at `/studio/catalogue-status/?mode=manage`.
-It reuses `studio/app/frontend/js/catalogue-status.js` and local-app catalogue read keys under `GET /studio/api/catalogue/read`.
-The old Jekyll `/studio/catalogue-status/` shell has been retired.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/catalogue-status-shell.js` renders the route body, and `studio/app/frontend/js/catalogue-status.js` keeps the existing route boot and behavior.
+It reuses local-app catalogue read keys under `GET /studio/api/catalogue/read`.
+The old Jekyll `/studio/catalogue-status/` shell and Python-rendered Catalogue Drafts body have been retired.
 The Studio Works route shell is hosted by the local app at `/studio/studio-works/?mode=manage`.
-It reuses `studio/app/frontend/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/studio-works-shell.js` renders the route body, and `studio/app/frontend/js/studio-works.js` keeps the existing route boot and behavior.
+It reuses checked-in works/series indexes and the Studio-only work storage index.
+The Python-rendered Studio Works body has been retired.
 The old Jekyll `/studio/studio-works/` shell has been retired.
 Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.

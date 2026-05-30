@@ -41,39 +41,52 @@ def main(argv: list[str] | None = None) -> int:
         if not runtime_view or runtime_view.get("path") != "/studio/catalogue-field-registry/?mode=manage":
             raise AssertionError(f"runtime config missing catalogue_field_registry: {runtime_views!r}")
 
+        with urllib.request.urlopen(f"{base_url}/studio/catalogue-field-registry/?mode=manage", timeout=10) as response:
+            bootstrap_html = response.read().decode("utf-8")
+        if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
+            raise AssertionError("catalogue-field-registry should be served through the JavaScript Studio app bootstrap")
+        if "fieldRegistryReviewRoot" in bootstrap_html:
+            raise AssertionError("catalogue-field-registry route body should be rendered by JavaScript, not Python")
+
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
-            page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
             registry_requests: list[str] = []
-            page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
-            page.on("pageerror", lambda error: page_errors.append(str(error)))
-            page.on(
-                "request",
-                lambda request: registry_requests.append(request.url)
-                if "/studio/data/config/catalogue/catalogue-field-registry.json" in request.url
-                else None,
+            viewports = (
+                ("desktop", {"width": 1280, "height": 900}),
+                ("mobile", {"width": 390, "height": 844}),
             )
+            for label, viewport in viewports:
+                page = browser.new_page(viewport=viewport)
+                page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
+                page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
+                page.on(
+                    "request",
+                    lambda request: registry_requests.append(request.url)
+                    if "/studio/data/config/catalogue/catalogue-field-registry.json" in request.url
+                    else None,
+                )
 
-            page.goto(f"{base_url}/studio/catalogue-field-registry/?mode=manage", wait_until="domcontentloaded")
-            root = page.locator("#fieldRegistryReviewRoot")
-            expect(root).to_be_visible(timeout=10_000)
-            expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-mode", "registry", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
-            expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("catalogue_field_registry_v1"), timeout=10_000)
+                page.goto(f"{base_url}/studio/catalogue-field-registry/?mode=manage", wait_until="domcontentloaded")
+                root = page.locator("#fieldRegistryReviewRoot")
+                expect(root).to_be_visible(timeout=10_000)
+                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-mode", "registry", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+                expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("catalogue_field_registry_v1"), timeout=10_000)
 
-            page.locator("#fieldRegistryReviewSearch").fill("details_subfolder")
-            expect(page.locator("#fieldRegistryReviewMeta")).to_contain_text("exact", timeout=10_000)
-            expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("details_subfolder"), timeout=10_000)
+                page.locator("#fieldRegistryReviewSearch").fill("details_subfolder")
+                expect(page.locator("#fieldRegistryReviewMeta")).to_contain_text("exact", timeout=10_000)
+                expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("details_subfolder"), timeout=10_000)
 
-            doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if not str(doc_link).endswith("/docs/?scope=studio&doc=catalogue-field-registry-review&mode=manage"):
-                raise AssertionError(f"catalogue-field-registry doc link is not manage-mode: {doc_link!r}")
-            if page.locator('.site-nav [data-studio-navigate="catalogue_field_registry"]').count():
-                raise AssertionError("catalogue-field-registry should not appear as a top-nav item")
+                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                if not str(doc_link).endswith("/docs/?scope=studio&doc=catalogue-field-registry-review&mode=manage"):
+                    raise AssertionError(f"catalogue-field-registry doc link is not manage-mode: {doc_link!r}")
+                if page.locator('.site-nav [data-studio-navigate="catalogue_field_registry"]').count():
+                    raise AssertionError("catalogue-field-registry should not appear as a top-nav item")
+                page.close()
             if not registry_requests:
                 raise AssertionError("catalogue-field-registry route did not request the registry data")
 
