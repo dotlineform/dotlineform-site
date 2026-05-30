@@ -90,8 +90,9 @@ Analytics tag and Data Sharing routes moved out of Local Studio.
 The active route shells are served by `bin/local-analytics` under `/analytics/...`.
 The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs are under `/analytics/api/data-sharing/...`.
 Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
-The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
-It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
+The Studio Audits route shell is hosted by the local app at `/studio/audits/?mode=manage`.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/studio-audits-shell.js` renders the route body, and `studio/app/frontend/js/studio-audits.js` keeps the existing route boot and behavior.
+It calls `/studio/api/audits/...` on the local app server.
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
@@ -103,11 +104,13 @@ The Thumbnail Quality route shell is no longer an active Local Studio route.
 `/studio/thumbnail-quality/?mode=manage`, `POST /studio/api/catalogue/thumbnail-quality-preview`, and static thumbnail-quality preview data under `/studio/data/generated/thumbnail-quality/` are retired and intentionally have no Studio aliases, proxies, or static-serving shims.
 The retired implementation has been archived under `studio/retired/thumbnail-quality/` for reference outside public Jekyll output.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
-It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
-The old Jekyll `/studio/bulk-add-work/` shell has been retired.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/bulk-add-work-shell.js` renders the route body, and `studio/app/frontend/js/bulk-add-work.js` keeps the existing route boot and behavior.
+It reuses the existing workflow helper module, the configured workbook path from `app.runtime.pipeline.workbooks.bulk_import` derived from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
+The old Jekyll `/studio/bulk-add-work/` shell and Python-rendered Bulk Add Work body have been retired.
 The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.
-It reuses `studio/app/frontend/js/activity-log.js`, `studio/app/frontend/js/activity-log-modals.js`, and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
-The old Jekyll `/studio/activity/` shell has been retired.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/activity-log-shell.js` renders the route body, and `studio/app/frontend/js/activity-log.js` keeps the existing route boot and behavior.
+It reuses `studio/app/frontend/js/activity-log-modals.js` and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
+The old Jekyll `/studio/activity/` shell and Python-rendered Studio Activity body have been retired.
 The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
 It reuses `studio/app/frontend/js/catalogue-field-registry-review.js` and the checked-in `studio/data/config/catalogue/catalogue-field-registry.json` read-only data source.
 The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
@@ -133,7 +136,7 @@ The endpoint exposes the local app runtime contract for migrated views:
 - plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
-- pipeline variant metadata from `_data/pipeline.json`
+- pipeline variant and workbook metadata from `_data/pipeline.json`
 - modal event constants
 
 `studio/app/frontend/js/studio-navigation.js` provides the first helper layer over that contract.

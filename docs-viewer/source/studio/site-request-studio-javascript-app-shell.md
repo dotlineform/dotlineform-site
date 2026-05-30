@@ -2,7 +2,7 @@
 doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: "2026-05-30 22:00"
+last_updated: "2026-05-30 22:30"
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -14,6 +14,7 @@ Status:
 - in progress
 - The first implementation tracker is [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1).
 - The second implementation tracker is [Studio JavaScript App Shell Slice 2 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-2).
+- The third implementation tracker is [Studio JavaScript App Shell Slice 3 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-3).
 
 ## Summary
 
@@ -218,11 +219,13 @@ Python now serves a generic Studio app bootstrap for `/studio/project-state/`, w
 ### Slice 3: Operational routes batch
 
 Move compact non-catalogue route shells once the first route proves the pattern.
-Likely remaining batch after Project State:
+Slice 3 migrates this batch:
 
 - Audits
 - Activity
 - Bulk Add Work
+
+Python serves the generic Studio app bootstrap for those routes, while route-local browser modules render the body markup and the existing side-effect route controllers keep current behavior.
 
 ### Slice 4: Catalogue support routes
 
@@ -284,6 +287,7 @@ The first slice is successful when the repo has a tested route-registry and shel
 - Initial shell types are `external`, `python`, and `javascript`. More specific shell variants should wait until multiple route families prove a need.
 - Route metadata is config-driven; route body markup belongs in route-local browser modules rather than config.
 - Project State proved the first low-risk route migration without forcing a framework decision.
+- Audits, Activity, and Bulk Add Work fit the same browser-shell pattern without forcing a framework decision.
 
 ## Verification
 

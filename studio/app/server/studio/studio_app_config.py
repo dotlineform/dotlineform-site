@@ -236,7 +236,10 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
@@ -266,6 +269,10 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_variants = pipeline_payload.get("variants") if isinstance(pipeline_payload, dict) else {}
     if not isinstance(pipeline_variants, dict):
         pipeline_variants = {}
+    pipeline_paths = pipeline_payload.get("paths") if isinstance(pipeline_payload, dict) else {}
+    if not isinstance(pipeline_paths, dict):
+        pipeline_paths = {}
+    pipeline_workbooks = pipeline_paths.get("workbooks") if isinstance(pipeline_paths.get("workbooks"), dict) else {}
 
     payload.setdefault("app", {})
     app_config = payload["app"]
@@ -287,6 +294,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "media": STUDIO_MEDIA,
         "pipeline": {
             "variants": pipeline_variants,
+            "workbooks": pipeline_workbooks,
         },
         "views": [
             {"id": view_id, **view}

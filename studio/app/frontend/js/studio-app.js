@@ -3,9 +3,21 @@ import { buildStudioShellContract, listStudioRoutes } from "./studio-route-regis
 import { initStudioThemeToggle } from "./studio-theme.js";
 
 const ROUTE_BODY_RENDERERS = {
+  activity: async () => {
+    const module = await importVersioned("./activity-log-shell.js");
+    return module.renderActivityLogShell();
+  },
+  bulk_add_work: async (config) => {
+    const module = await importVersioned("./bulk-add-work-shell.js");
+    return module.renderBulkAddWorkShell(config);
+  },
   project_state: async () => {
     const module = await importVersioned("./project-state-shell.js");
     return module.renderProjectStateShell();
+  },
+  studio_audits: async () => {
+    const module = await importVersioned("./studio-audits-shell.js");
+    return module.renderStudioAuditsShell();
   }
 };
 
@@ -28,7 +40,7 @@ async function bootStudioApp() {
     }
 
     document.title = `${contract.route.title} | dotlineform Studio`;
-    root.innerHTML = renderStudioShell(config, contract.route, await bodyRenderer());
+    root.innerHTML = renderStudioShell(config, contract.route, await bodyRenderer(config));
     initStudioThemeToggle({ root: document });
     await importVersioned(contract.route.script);
   } catch (error) {

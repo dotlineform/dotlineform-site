@@ -17,8 +17,10 @@ Legacy Jekyll-hosted Studio pages use:
 - `layout: studio`
 - `_layouts/studio.html`
 
-The local Studio app server owns active Studio route shells directly.
-For local app routes, `studio/app/server/studio/studio_app_views.py` renders the shell, `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
+The local Studio app server owns active Studio route URLs directly.
+For Python-shell local app routes, `studio/app/server/studio/studio_app_views.py` renders the route-specific shell.
+For JavaScript-shell local app routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
+`studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
@@ -84,10 +86,10 @@ Docs Viewer page links are built from `external_links.docs_viewer` plus each rou
 `studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper for the migration.
 It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
 
-`studio/app/frontend/js/studio-app.js` is the first browser-owned Studio app shell.
+`studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
 For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title/doc-link shell, asks the route-local body renderer for markup, and then imports the configured route script.
-Project State is the first route using this path.
-Its body markup lives in `studio/app/frontend/js/project-state-shell.js`, and its existing controller stays in `studio/app/frontend/js/project-state.js`.
+Project State, Studio Audits, Studio Activity, and Bulk Add Work use this path.
+Their body markup lives in route-local `*-shell.js` modules, and their existing controllers stay in the configured route scripts.
 
 ## Studio Pages
 

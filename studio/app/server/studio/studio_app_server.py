@@ -39,10 +39,7 @@ from studio_catalogue_views import (  # noqa: E402
     studio_works_view,
 )
 from studio_app_views import (  # noqa: E402
-    activity_view,
-    bulk_add_work_view,
     studio_app_bootstrap_view,
-    studio_audits_view,
     studio_home_view,
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
@@ -124,16 +121,16 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_html(studio_home_view(self.version))
             return
         if path in {"/studio/audits", "/studio/audits/"}:
-            self.send_html(studio_audits_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/project-state", "/studio/project-state/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
-            self.send_html(bulk_add_work_view(self.version, self.repo_root))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/activity", "/studio/activity/"}:
-            self.send_html(activity_view(self.version))
+            self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
             self.send_html(catalogue_field_registry_view(self.version))

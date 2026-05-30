@@ -71,57 +71,70 @@ def main(argv: list[str] | None = None) -> int:
         if not runtime_view or runtime_view.get("path") != "/studio/activity/?mode=manage":
             raise AssertionError(f"runtime config missing activity: {runtime_views!r}")
 
+        with urllib.request.urlopen(f"{base_url}/studio/activity/?mode=manage", timeout=10) as response:
+            bootstrap_html = response.read().decode("utf-8")
+        if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
+            raise AssertionError("activity should be served through the JavaScript Studio app bootstrap")
+        if "studioActivityRoot" in bootstrap_html:
+            raise AssertionError("activity route body should be rendered by JavaScript, not Python")
+
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
-            page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
             legacy_catalogue_service_requests: list[str] = []
             local_catalogue_requests: list[str] = []
-            page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
-            page.on("pageerror", lambda error: page_errors.append(str(error)))
-            page.on(
-                "request",
-                lambda request: legacy_catalogue_service_requests.append(request.url)
-                if "127.0.0.1:8788" in request.url
-                else None,
+            viewports = (
+                ("desktop", {"width": 1280, "height": 900}),
+                ("mobile", {"width": 390, "height": 844}),
             )
-            page.route(
-                "**/studio/api/catalogue/read**",
-                lambda route: route.fulfill(
-                    status=200,
-                    content_type="application/json",
-                    body=json.dumps(activity_feed()),
-                ),
-            )
-            page.on(
-                "request",
-                lambda request: local_catalogue_requests.append(request.url)
-                if "/studio/api/catalogue/read" in request.url
-                else None,
-            )
+            for label, viewport in viewports:
+                page = browser.new_page(viewport=viewport)
+                page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
+                page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
+                page.on(
+                    "request",
+                    lambda request: legacy_catalogue_service_requests.append(request.url)
+                    if "127.0.0.1:8788" in request.url
+                    else None,
+                )
+                page.route(
+                    "**/studio/api/catalogue/read**",
+                    lambda route: route.fulfill(
+                        status=200,
+                        content_type="application/json",
+                        body=json.dumps(activity_feed()),
+                    ),
+                )
+                page.on(
+                    "request",
+                    lambda request: local_catalogue_requests.append(request.url)
+                    if "/studio/api/catalogue/read" in request.url
+                    else None,
+                )
 
-            page.goto(f"{base_url}/studio/activity/?mode=manage", wait_until="domcontentloaded")
-            root = page.locator("#studioActivityRoot")
-            expect(root).to_be_visible(timeout=10_000)
-            expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
-            expect(page.locator("[data-activity-id='local-activity-smoke']")).to_be_visible(timeout=10_000)
+                page.goto(f"{base_url}/studio/activity/?mode=manage", wait_until="domcontentloaded")
+                root = page.locator("#studioActivityRoot")
+                expect(root).to_be_visible(timeout=10_000)
+                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+                expect(page.locator("[data-activity-id='local-activity-smoke']")).to_be_visible(timeout=10_000)
 
-            page.locator("[data-activity-id='local-activity-smoke']").click()
-            expect(page.locator("[data-role='studio-modal']")).to_be_visible(timeout=10_000)
-            modal_title = page.locator("[data-role='studio-modal'] .tagStudioModal__title").first.inner_text(timeout=10_000)
-            modal_body = page.locator("[data-role='studio-modal'] .tagStudioModal__label").all_inner_texts()
-            if modal_title != "Activity details" or modal_body != ["Wrote source JSON", "Updated Studio activity feed"]:
-                raise AssertionError(f"unexpected activity modal title: {modal_title!r}")
+                page.locator("[data-activity-id='local-activity-smoke']").click()
+                expect(page.locator("[data-role='studio-modal']")).to_be_visible(timeout=10_000)
+                modal_title = page.locator("[data-role='studio-modal'] .tagStudioModal__title").first.inner_text(timeout=10_000)
+                modal_body = page.locator("[data-role='studio-modal'] .tagStudioModal__label").all_inner_texts()
+                if modal_title != "Activity details" or modal_body != ["Wrote source JSON", "Updated Studio activity feed"]:
+                    raise AssertionError(f"unexpected activity modal title: {modal_title!r}")
 
-            doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-activity&mode=manage"):
-                raise AssertionError(f"activity doc link is not manage-mode: {doc_link!r}")
-            if page.locator('.site-nav [data-studio-navigate="activity"]').count():
-                raise AssertionError("activity should not appear as a top-nav item")
+                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-activity&mode=manage"):
+                    raise AssertionError(f"activity doc link is not manage-mode: {doc_link!r}")
+                if page.locator('.site-nav [data-studio-navigate="activity"]').count():
+                    raise AssertionError("activity should not appear as a top-nav item")
+                page.close()
             if not local_catalogue_requests:
                 raise AssertionError("activity route did not request the local catalogue read API")
             if legacy_catalogue_service_requests:
