@@ -2,8 +2,8 @@
 doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
-last_updated: 2026-05-26
-ui_status: paused
+last_updated: "2026-05-30 20:30"
+ui_status: planned
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,8 @@ viewable: true
 
 Status:
 
-- proposed, paused because doing docs viewer first, then revisit this.
+- planned after the Analytics app split follow-on.
+- The first implementation tracker is [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1).
 
 ## Summary
 
@@ -60,6 +61,7 @@ That mixed ownership adds conceptual overhead. When a feature changes, it is not
 - introducing a large framework before the ownership boundary is proven
 - rewriting every route in one implementation batch
 - changing catalogue, analytics, audit, or Data Sharing API semantics as part of the shell migration
+- moving Analytics, Data Sharing, Docs Viewer, or UI Catalogue routes back under Studio
 - removing server-side static-file policy, write allowlists, or backup behavior
 
 ## Target Architecture
@@ -107,13 +109,15 @@ Python remains necessary and useful for write services.
 Python should continue to own:
 
 - catalogue writes, imports, publication updates, delete/apply flows, and backups
-- Data Sharing package preparation, returned-package review, apply flows, and adapter execution
-- analytics tag writes and source JSON mutation
 - audit and report execution through allowlisted adapters
 - local file opening where browser security cannot do it directly
 - static path allowlists and local-service security boundaries
 - activity log writes
 - structured validation that protects source data
+
+Analytics tag writes and Data Sharing workflows are now owned by the standalone Local Analytics app.
+Docs Viewer management remains owned by the standalone Docs Viewer service.
+The Studio app shell should link to those peers through config when needed, not host or proxy their routes.
 
 The browser should never gain a generic "write this path" or "run this command" API. A JavaScript app shell changes UI ownership; it does not weaken the write boundary.
 
@@ -127,12 +131,12 @@ Candidate shape:
 {
   "app": {
     "routes": {
-      "tag_groups": {
-        "label": "tag groups",
-        "title": "Tag Groups",
-        "path": "/studio/analytics/tag-groups/",
-        "script": "/studio/app/frontend/js/tag-groups.js",
-        "doc_id": "tag-groups",
+      "project_state": {
+        "label": "project state",
+        "title": "Project State",
+        "path": "/studio/project-state/?mode=manage",
+        "script": "/studio/app/frontend/js/project-state.js",
+        "doc_id": "project-state-page",
         "nav": true
       }
     }
@@ -187,48 +191,70 @@ Mitigations:
 
 Do this incrementally rather than as a rewrite.
 
-1. Finish removing Python-owned link shaping.
-   Runtime views should not publish `doc_href`; page doc targets should remain in config and resolve in JS.
+### Slice 1: Route registry and shell contract
 
-2. Move route metadata out of Python view tables.
-   Introduce a config-owned route registry for labels, titles, paths, doc IDs, scripts, navigation visibility, and shell type.
+Define the config-owned Studio route registry shape and the browser-side shell contract.
+This slice should decide names, metadata fields, validation expectations, and testing surfaces before route markup moves.
+It should not migrate a route yet.
 
-3. Add a minimal JS app shell renderer.
-   It should render the shared Studio header, doc link, route heading, common content wrapper, and route mount point from config.
+Use [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1) as the task tracker.
 
-4. Migrate one low-risk route to the JS shell.
-   A good first candidate is a read-heavy or compact admin page with a stable route-ready contract. The goal is to prove the shell pattern, not to redesign the page.
+### Slice 2: Minimal JS shell and one low-risk route
 
-5. Migrate route families in batches.
-   Candidate batches:
-   - Analytics tag pages
-   - admin pages such as Audits, Activity, Project State, Thumbnail Quality
-   - Data Sharing prepare/review
-   - Catalogue editor pages
-   - UI Catalogue demo pages
+Add the smallest useful `studio-app.js` shell renderer and migrate one low-risk Studio route.
+Good candidates are compact operational routes such as Project State, Activity, or Audits.
+The route URL, backend API calls, and `data-studio-ready` contract must remain unchanged.
 
-6. Retire Python route shell helpers after the last migrated route no longer needs them.
+### Slice 3: Operational routes batch
+
+Move compact non-catalogue route shells once the first route proves the pattern.
+Likely batch:
+
+- Audits
+- Activity
+- Project State
+- Bulk Add Work
+
+### Slice 4: Catalogue support routes
+
+Move established catalogue support routes whose behavior is less form-heavy than the editor family.
+Likely batch:
+
+- Catalogue Status
+- Catalogue Field Registry
+- Studio Works
+
+### Slice 5: Catalogue editor family
+
+Move Work, Work Detail, Series, and Moment editor shells.
+This is the highest-risk batch because these routes have more state, modals, selection flows, and write workflows.
+Split this slice if the editor family proves too broad for one verified batch.
+
+### Slice 6: Retire Python shell rendering
+
+Remove route-specific Python shell helpers and view tables that are no longer needed.
+Tighten static/runtime config tests, update source ownership and runtime docs, and refresh JavaScript inventory rows.
+
+### Optional follow-up slices
+
+- Navigation/app polish if the migration exposes inconsistent grouping, page titles, or shell variants.
+- Analytics shell backport only after the Studio shell pattern is stable and clearly worth sharing.
+
+Ruby/Jekyll dependency retirement should stay separate.
+It affects public site generation, Docs Viewer Markdown rendering, docs rebuild/watch flows, import validation, and publish parity, so it needs its own inventory and target-contract request before implementation.
 
 ## First Slice
 
-The first implementation should be deliberately narrow.
+The first implementation slice is a contract slice, not a route migration.
+It should add the route registry shape, decide how the JS app shell will mount route modules, and prove the metadata can be validated and consumed without changing current route behavior.
 
-Suggested first slice:
-
-- add a config route registry for a small set of routes
-- add a JS shell renderer that can render one route from that registry
-- keep the existing Python app server and APIs unchanged
-- migrate one simple route to use the JS shell
-- prove that the route still exposes the same ready-state attributes
-- prove that the page doc link is built entirely from `external_links.docs_viewer`
-
-The first slice is successful when a route shell can be removed from Python without changing that route's URL or backend API.
+The first slice is successful when the repo has a tested route-registry and shell-contract foundation for migrating one low-risk route in slice 2.
 
 ## Open Questions
 
 - Should route metadata live under `app.routes`, `app.runtime.views`, or a new top-level `routes` key?
 - Should route modules export a standard `mount(root, config, context)` function, or should the shell continue loading scripts by side effect for the first phase?
-- Should there be separate shell types for normal Studio pages, full-page editor pages, and UI Catalogue demos?
+- Should there be separate shell types for normal Studio pages, full-page editor pages, and operational report pages?
 - How much route markup should be config-driven versus created by route modules?
 - What is the smallest route that proves the pattern without forcing a framework decision?
 
@@ -238,14 +264,21 @@ Focused checks for the first implementation should include:
 
 ```bash
 $HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py
-node --check studio/app/frontend/js/studio-app.js
-$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_navigation_adapter.py
+node --check <new-or-changed-studio-shell-module>.js
 ```
 
-Browser smoke expectations:
+Contract expectations:
 
-- route shell renders from JS
-- route-specific module still reaches ready state
+- route registry validates required metadata
+- route doc links are resolvable from `external_links.docs_viewer`
+- route script paths and served route paths stay internally consistent
+- runtime config does not introduce Python-built page doc links
+- Python write/API endpoints are unchanged
+
+Browser smoke expectations for slice 2 and later:
+
+- migrated route shell renders from JS
+- route-specific module reaches ready state
 - Docs Viewer doc link resolves from `external_links.docs_viewer`
 - runtime config does not publish Python-built page doc links
 - Python write/API endpoints behave unchanged
