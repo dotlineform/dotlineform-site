@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T19:53:24Z",
+  "generated_at": "2026-05-30T22:29:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -18,7 +18,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=tmp&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/analytics.json",
-      "content_text_length": 1105,
+      "content_text_length": 0,
       "ui_status": "draft"
     },
     {
@@ -150,7 +150,7 @@
       "source_path": "tmp.md",
       "viewer_url": "/docs/?scope=tmp&doc=tmp",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "content_text_length": 1936,
+      "content_text_length": 1947,
       "ui_status": "draft"
     },
     {

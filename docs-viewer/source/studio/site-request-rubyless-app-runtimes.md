@@ -12,92 +12,64 @@ viewable: true
 Status:
 
 - draft
-- This request defines the migration approach for removing Ruby/Jekyll from local app runtimes one app at a time.
-- The target is not to remove Ruby from the repository immediately. The target is to make Ruby/Jekyll a manual public-site preview/build tool only.
+- This request defines the path to a JavaScript + Python app/tooling stack.
+- Ruby/Jekyll stays only as a manual public-site preview/build layer until the public site itself is replaced.
 
 ## Summary
 
-Move every local management app to a Rubyless runtime contract.
+Move app runtimes and app-facing generators to JavaScript + Python.
 
-Ruby and Jekyll should remain available for manually previewing or building the public site, but normal app startup and app smoke tests should not require `ruby`, `bundle`, Bundler, or Jekyll.
+The target is direct:
 
-Target runtime ownership:
+- browser UI and route shells are JavaScript
+- local services, write APIs, generated-data builders, and app servers are Python
+- Ruby/Jekyll is not used to make Studio, Analytics, Docs Viewer management, UI Catalogue, docs payload generation, or app search generation work
+- Jekyll remains only for manual public-site preview/build, run explicitly by the user
 
-- Studio app: Python server plus browser JavaScript.
-- Analytics app: Python server plus browser JavaScript.
-- Docs Viewer management app: Python service plus browser JavaScript.
-- UI Catalogue app: static or non-Ruby local server plus browser JavaScript.
-- Public site preview/build: Jekyll/Ruby, run explicitly by the user when needed.
+This means replacing the Ruby builders and helpers that apps currently rely on, not merely proving that app startup can avoid Ruby.
 
-## Reason
+## Target Architecture
 
-The app split work has made the Ruby boundary more visible.
+```text
+Browser JavaScript
+  - Studio app shell and route bodies
+  - Analytics app shell and route bodies
+  - Docs Viewer runtime and management UI
+  - UI Catalogue demos
 
-Studio, Analytics, Docs Viewer management, and UI Catalogue are now local tools with app-like runtimes. Their correctness should not depend on the public Jekyll preview server. They may link to public preview URLs, read generated public assets, or trigger public-site build workflows, but their own startup and core routes should stay independent.
+Python
+  - local app servers
+  - local write/read APIs
+  - docs payload builder
+  - search index builders
+  - catalogue/public data builders needed by local apps
+  - live rebuild watchers
 
-Keeping Ruby inside app runtime assumptions creates practical friction:
+Ruby/Jekyll
+  - manual public site preview
+  - manual public site build
+```
 
-- app startup can fail because public preview tooling is unavailable
-- smoke tests conflate app regressions with Jekyll/Bundler setup problems
-- ownership is harder to reason about because app routes and public-site routes appear coupled
-- future replacement of the public site renderer becomes harder if app runtime checks already assume Jekyll
+Jekyll should consume generated assets; it should not be a dependency for generating app data or helping Docs Viewer function.
 
 ## Goals
 
-- make each local app pass a focused runtime smoke with Ruby/Jekyll unavailable
-- remove `ruby`, `bundle`, `bundler`, and `jekyll` checks from app startup paths
-- keep public preview links optional and config-driven
-- keep public-site preview/build commands documented as manual or explicit workflow actions
-- convert app-required Ruby scripts to Python or isolate them behind explicit public-site build adapters
-- preserve existing app URLs and app behavior while removing Ruby runtime coupling
-- document the final boundary in local setup, runtime dependency, command, and ownership docs
+- replace `docs-viewer/build/build_docs.rb` with a Python Docs Viewer payload builder
+- replace `docs-viewer/build/build_search.rb` with a Python Docs Viewer search builder
+- replace `studio/services/catalogue/search/build_search.rb` with a Python catalogue search builder
+- remove app-facing dependencies on `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and Jekyll server helper modules
+- make docs live rebuilds call Python builders
+- make local app launchers start Python/JS app runtimes only
+- keep `bin/public-site-build`, Bundler, and Jekyll documented as public-site preview/build tooling only
+- preserve current generated JSON contracts and browser behavior while changing the implementation language
 
 ## Non-Goals
 
-- removing Jekyll from the public site in this request
-- replacing public-site rendering
-- changing catalogue, analytics, Docs Viewer, or UI Catalogue product behavior
-- removing generated public assets that current apps legitimately read
-- requiring public preview to be running for app health
-- hiding failed public-build actions when the user explicitly runs a public build
-
-## Target Boundary
-
-Ruby is allowed in:
-
-- manual public-site preview, such as a user-run Jekyll localhost process
-- explicit public-site build commands
-- public-site projection checks that intentionally test Jekyll output
-- docs that explain public site infrastructure
-
-Ruby is not allowed in:
-
-- Local Studio startup
-- Local Analytics startup
-- Docs Viewer management startup
-- UI Catalogue startup
-- app route smoke tests unless the test is explicitly checking public-site integration
-- app health checks
-- app runtime config generation
-- app-only generated data rebuilds
-
-Public preview dependency rule:
-
-- App runtimes may expose `PUBLIC_SITE_PREVIEW_BASE` or equivalent configured links.
-- App runtimes must not fail health or route boot when the public preview server is not running.
-- Actions that intentionally build or open public output should report public-preview/build availability as that action's status, not as app startup status.
-
-## Implementation Strategy
-
-Work app by app. Each app gets a Rubyless runtime contract before moving to the next app.
-
-For each app:
-
-1. inventory Ruby/Jekyll touchpoints in startup scripts, app server code, runtime config, smoke tests, and docs
-2. classify each touchpoint as app-runtime, generated-data, public-preview, or public-build
-3. remove app-runtime touchpoints or move them behind explicit public-preview/public-build commands
-4. add a focused Rubyless smoke that blocks or hides Ruby/Jekyll commands and proves core routes still work
-5. update docs to make the runtime boundary durable
+- replacing the public site renderer in this request
+- removing `.ruby-version`, `Gemfile`, or Jekyll while the public site still uses them
+- changing app UI behavior as part of the language migration
+- moving local write services into JavaScript
+- making browser code write to the filesystem directly
 
 ## Implementation Tasks
 
@@ -105,53 +77,101 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Define the Rubyless test harness. Add a reusable way to run app startup/smoke checks with `ruby`, `bundle`, `bundler`, and `jekyll` unavailable or shadowed, without changing the user's normal shell. |
-| 2 | planned | Inventory Ruby/Jekyll touchpoints across app launchers, app servers, runtime config builders, smoke tests, command docs, and generated-data workflows. Classify each touchpoint by owner: app runtime, generated data, public preview, or public build. |
-| 3 | planned | Make Local Studio Rubyless. Confirm `bin/local-studio`, `/studio/`, `/studio/runtime-config.json`, catalogue editor routes, audits, activity, and Studio APIs start and pass focused smokes without Ruby/Jekyll. Move any remaining public-preview assumptions behind configured links or explicit public-build actions. |
-| 4 | planned | Make Local Analytics Rubyless. Confirm Analytics app routes, tag workflows, Data Sharing routes/APIs, runtime config, and focused browser smokes run without Ruby/Jekyll. Remove inherited Studio/Jekyll assumptions from Analytics startup and route tests. |
-| 5 | planned | Make Docs Viewer management Rubyless. Confirm local `/docs/` management service, scope config, source mutations, generated-data reads, and management browser smokes run without Ruby/Jekyll. Keep public `/library/` and `/analysis/` Jekyll checks separate as public-site checks. |
-| 6 | planned | Make UI Catalogue Rubyless. Serve UI Catalogue through static files or a small non-Ruby local server, and confirm route/demo smokes do not require Jekyll. |
-| 7 | planned | Convert or isolate app-required Ruby scripts. Any Ruby script required by app startup or app-only checks should move to Python; Ruby scripts that remain should be documented as public-site build/preview tooling only. |
-| 8 | planned | Split verification profiles. Add app-runtime profiles that are Rubyless, and keep Jekyll build/public preview profiles explicitly named as public-site checks. |
-| 9 | planned | Update docs and command references. Revise local setup, runtime dependencies, `bin/local-studio`, app runtime, source ownership, and script docs so Ruby is described only under public-site preview/build unless a specific public-site check is being run. |
-| 10 | planned | Final closeout. Run Rubyless app smoke set for each app, run explicit public-site build/preview checks separately, update this request with results, and record remaining risks. |
+| 1 | planned | Build the Python Docs Viewer payload builder that replaces `docs-viewer/build/build_docs.rb`. It should read Markdown source and scope config, parse front matter, render document HTML/text, write `index.json` and `by-id/*.json`, and preserve the current generated JSON contract. |
+| 2 | planned | Switch Docs Viewer docs generation callers to the Python builder. Update live rebuild watcher, local app commands, docs, and tests so Docs Viewer payloads no longer require Ruby or Jekyll rendering. |
+| 3 | planned | Build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`. It should consume generated docs payloads, preserve current search index schema/versioning behavior, and support scope-specific writes. |
+| 4 | planned | Switch Docs Viewer search generation callers to the Python builder. Update live rebuild watcher, local app commands, docs, and tests so docs search no longer requires Ruby. |
+| 5 | planned | Build the Python catalogue search builder that replaces `studio/services/catalogue/search/build_search.rb`. Preserve the current catalogue search index contract consumed by public search and local app links. |
+| 6 | planned | Retire app-facing Ruby markdown/Jekyll helpers. Remove or isolate `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb` from app/data-generation paths. Any remaining use must be public-preview-only. |
+| 7 | planned | Make `bin/local-studio` and related app launchers Python/JS only. They may expose configured public preview URLs, but they must not start, check, or require Jekyll for app health. |
+| 8 | planned | Confirm Studio is JavaScript + Python only. `/studio/`, route shells, runtime config, catalogue editors, audits, activity, Docs links, and APIs should run from Python server + JS frontend + Python builders. |
+| 9 | planned | Confirm Analytics is JavaScript + Python only. Analytics routes, tag workflows, Data Sharing flows, runtime config, generated app data, and APIs should not depend on Ruby/Jekyll. |
+| 10 | planned | Confirm Docs Viewer management is JavaScript + Python only. `/docs/` management, source mutations, scope config, generated docs payloads, and generated search should all be Python/JS. Public `/library/` and `/analysis/` remain public-site preview concerns. |
+| 11 | planned | Confirm UI Catalogue is JavaScript + Python/static only. Serve demos without Jekyll and keep public-site integration checks separate. |
+| 12 | planned | Update command docs and runtime docs. Describe Ruby only under manual public preview/build, and describe Docs Viewer generation, search generation, catalogue search generation, app servers, and live rebuilds as Python/JS. |
+| 13 | planned | Final closeout. Run app smoke checks, generated docs/search parity checks, catalogue search parity checks, and a separate manual-public-site/Jekyll build check. Record any remaining Ruby usage as public-preview-only or deferred public-site renderer work. |
 
-## Baseline Verification
+## Builder Replacement Details
 
-Minimum Rubyless app verification should include:
+### Python Docs Builder
 
-- Local Studio home and one representative route smoke.
+The Python replacement for `docs-viewer/build/build_docs.rb` should own:
+
+- source discovery for configured scopes
+- Markdown front matter parsing
+- Markdown to HTML rendering
+- plain-text extraction for search
+- `viewable`, `parent_id`, `ui_status`, source path, content URL, and viewer URL projection
+- writing `docs-viewer/generated/docs/<scope>/index.json`
+- writing `docs-viewer/generated/docs/<scope>/by-id/<doc_id>.json`
+- stable generated payload schema
+
+The first implementation should include parity fixtures against current generated Studio docs payloads before switching the watcher.
+
+### Python Docs Search Builder
+
+The Python replacement for `docs-viewer/build/build_search.rb` should own:
+
+- reading generated docs payloads
+- applying viewability rules
+- producing the current search index schema
+- scope-specific writes
+- stable version/hash calculation
+- `--write` and dry-run modes matching current command behavior
+
+### Python Catalogue Search Builder
+
+The Python replacement for `studio/services/catalogue/search/build_search.rb` should own:
+
+- reading canonical catalogue JSON
+- producing the current catalogue search index contract
+- preserving public search behavior
+- supporting dry-run and write modes
+- fitting the existing Python catalogue service/generator layout
+
+## Verification
+
+App/runtime verification:
+
+- Local Studio home smoke.
 - Local Studio catalogue editor route smoke.
-- Local Analytics route smoke for tag maintenance.
-- Local Analytics/Data Sharing route smoke for prepare/review flows.
-- Docs Viewer management smoke for `/docs/` with a fixture scope.
-- UI Catalogue load smoke.
-- Python syntax/import checks for changed app server and command modules.
-- JavaScript syntax checks for changed app frontend modules.
-- A command-path assertion that Ruby/Jekyll commands are not invoked during app startup.
+- Local Analytics tag route smoke.
+- Local Analytics/Data Sharing route smoke.
+- Docs Viewer management smoke for `/docs/`.
+- UI Catalogue smoke.
+- Syntax/import checks for changed Python and JavaScript.
 
-Public-site verification remains separate:
+Builder parity verification:
 
-- Jekyll build into a temporary destination.
-- Public preview route checks for catalogue pages and public Docs Viewer installs.
-- Public `/library/` and `/analysis/` read-only checks.
+- generated docs index parity for a fixture scope
+- generated docs by-id payload parity for representative docs
+- docs search index parity for a fixture scope
+- catalogue search index parity for representative catalogue records
+- dry-run/write behavior checks for each replacement builder
 
-## Concrete Acceptance Criteria
+Public-site verification, kept separate:
+
+- explicit Jekyll build into a temporary destination
+- public preview route checks for public pages
+- public `/library/` and `/analysis/` checks
+
+## Acceptance Criteria
 
 The request is complete when:
 
-- each local app has a documented Rubyless runtime contract
-- each local app has at least one focused Rubyless smoke in the standard check set
-- app startup docs do not instruct users to start Jekyll for app health
-- app startup scripts do not check for Bundler/Jekyll unless explicitly launching public preview
-- app runtime config generation does not shell out to Ruby
-- remaining Ruby commands are documented as public-site preview/build commands
-- public-site build checks still pass when explicitly run
+- app runtimes and app-facing generators use JavaScript + Python
+- Docs Viewer generated docs payloads are built by Python
+- Docs Viewer search indexes are built by Python
+- catalogue search indexes used by apps/public search are built by Python
+- local app startup does not use Ruby/Jekyll
+- live rebuild watchers call Python builders
+- remaining Ruby files and commands are documented as manual public-site preview/build only
+- public-site Jekyll preview/build still works when explicitly run
 
 ## Known Risks
 
-- Some app workflows may still read generated assets that are normally produced before public preview. These reads are acceptable only if the app does not require Jekyll to regenerate them during startup.
-- Rubyless app checks can create false confidence if they only hide Ruby binaries but still rely on stale generated public assets. The task work should distinguish app runtime health from public projection freshness.
-- Public-preview links may look broken when the user has not manually started Jekyll. The app should make this a link/action availability issue, not a runtime failure.
-- Converting app-required Ruby scripts to Python can duplicate logic if the public-site build still uses the Ruby version. Prefer one owner per generated artifact before rewriting large scripts.
-- Docs Viewer public installs under `/library/` and `/analysis/` are still public-site concerns until a separate public-site renderer migration exists.
+- Markdown rendering can differ when moving from Jekyll/Kramdown to Python. The migration needs fixture parity for the generated HTML/text that Docs Viewer actually consumes.
+- Search index parity depends on matching tokenization, visibility filtering, and version/hash rules. Treat this as a contract, not an incidental implementation detail.
+- Catalogue search affects public search behavior as well as local app links. Preserve the output schema before changing consumers.
+- Some generated assets are shared between app runtime and public preview. The owner should be Python if apps need the asset; Jekyll should only consume it.
+- Leaving Jekyll as manual preview means public-site checks remain Ruby-backed until a separate public renderer migration exists.
