@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T22:13:55Z",
+  "generated_at": "2026-05-30T22:26:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -913,6 +913,21 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
       "content_text_length": 8223,
       "ui_status": "paused"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-rubyless-app-runtimes",
+      "title": "Rubyless App Runtimes Request",
+      "added_date": "2026-05-30",
+      "last_updated": "2026-05-30",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-rubyless-app-runtimes.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes.json",
+      "content_text_length": 8886,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",
