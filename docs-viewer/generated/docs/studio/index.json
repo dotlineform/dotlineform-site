@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T18:41:16Z",
+  "generated_at": "2026-05-30T19:06:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -79,7 +79,7 @@
       "source_path": "series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json",
-      "content_text_length": 8087
+      "content_text_length": 8112
     },
     {
       "scope": "studio",
@@ -93,7 +93,7 @@
       "source_path": "tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-aliases.json",
-      "content_text_length": 8390
+      "content_text_length": 8412
     },
     {
       "scope": "studio",
@@ -107,7 +107,7 @@
       "source_path": "tag-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-editor.json",
-      "content_text_length": 11279
+      "content_text_length": 11654
     },
     {
       "scope": "studio",
@@ -121,7 +121,7 @@
       "source_path": "tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-groups.json",
-      "content_text_length": 2762
+      "content_text_length": 2764
     },
     {
       "scope": "studio",
@@ -135,7 +135,7 @@
       "source_path": "tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json",
-      "content_text_length": 9228
+      "content_text_length": 9250
     },
     {
       "scope": "studio",
@@ -305,7 +305,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 27070,
+      "content_text_length": 28925,
       "ui_status": "review"
     },
     {
@@ -370,14 +370,14 @@
       "doc_id": "studio-python-ruby-script-inventory",
       "title": "Studio Python And Ruby Script Inventory",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-30",
       "parent_id": "audit",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18220,
+      "content_text_length": 18275,
       "ui_status": "urgent"
     },
     {
@@ -709,14 +709,14 @@
       "doc_id": "site-request-analytics-app-split-follow-on",
       "title": "Analytics App Split Follow-On Tasks",
       "added_date": "2026-05-30 17:24",
-      "last_updated": "2026-05-30 20:35",
+      "last_updated": "2026-05-30 21:35",
       "parent_id": "site-request-analytics-app-split",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-analytics-app-split-follow-on.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 22125,
+      "content_text_length": 22465,
       "ui_status": "in-progress"
     },
     {

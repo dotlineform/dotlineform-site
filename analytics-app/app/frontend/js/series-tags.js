@@ -19,9 +19,9 @@ import {
   probeAnalyticsHealth
 } from "./analytics-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteBusy,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   seriesTagsUi
@@ -57,11 +57,11 @@ function routeStateDetail(state) {
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.refs && state.refs.mount, Boolean(state.isBusy), routeStateDetail(state));
+  setAnalyticsRouteBusy(state.refs && state.refs.mount, Boolean(state.isBusy), routeStateDetail(state));
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.refs && state.refs.mount, ready, routeStateDetail(state));
+  setAnalyticsRouteReady(state.refs && state.refs.mount, ready, routeStateDetail(state));
 }
 
 async function withRouteBusy(state, task) {
@@ -78,7 +78,7 @@ async function withRouteBusy(state, task) {
 async function initSeriesTagsPage() {
   const mount = document.getElementById("series-tags");
   if (!mount) return;
-  initializeStudioRouteState(mount, { route: "series-tags" });
+  initializeAnalyticsRouteState(mount, { route: "series-tags" });
 
   let config = null;
   try {

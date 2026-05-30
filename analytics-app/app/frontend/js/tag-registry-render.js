@@ -35,7 +35,7 @@ export function renderTagRegistryControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
+    <button type="button" class="analytics__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
     ${renderGroupInfoControl(state)}
   `;

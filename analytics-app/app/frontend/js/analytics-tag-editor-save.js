@@ -50,26 +50,26 @@ export function utcTimestamp() {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
-export function buildSaveModeText(config, mode, studioText) {
+export function buildSaveModeText(config, mode, analyticsTagEditorText) {
   const label = mode === "post"
-    ? studioText(config, "save_mode_local_server", "Local server")
-    : studioText(config, "save_mode_offline", "Offline session");
-  return studioText(config, "save_mode_template", "Save mode: {mode}", { mode: label });
+    ? analyticsTagEditorText(config, "save_mode_local_server", "Local server")
+    : analyticsTagEditorText(config, "save_mode_offline", "Offline session");
+  return analyticsTagEditorText(config, "save_mode_template", "Save mode: {mode}", { mode: label });
 }
 
-export function buildSaveSuccessMessage(config, savedCount, removedCount, savedAt, studioText) {
-  return buildTagSaveSuccessMessage(config, { seriesSaved: false, savedCount, removedCount, savedAt }, studioText);
+export function buildSaveSuccessMessage(config, savedCount, removedCount, savedAt, analyticsTagEditorText) {
+  return buildTagSaveSuccessMessage(config, { seriesSaved: false, savedCount, removedCount, savedAt }, analyticsTagEditorText);
 }
 
-export function buildTagSaveSuccessMessage(config, summary, studioText) {
+export function buildTagSaveSuccessMessage(config, summary, analyticsTagEditorText) {
   const seriesSaved = Boolean(summary && summary.seriesSaved);
   const savedCount = Number(summary && summary.savedCount) || 0;
   const removedCount = Number(summary && summary.removedCount) || 0;
   const savedAt = String(summary && summary.savedAt || "");
   const seriesPart = seriesSaved
-    ? studioText(config, "save_status_success_series", "Saved series tags")
+    ? analyticsTagEditorText(config, "save_status_success_series", "Saved series tags")
     : "";
-  const base = studioText(
+  const base = analyticsTagEditorText(
     config,
     "save_status_success_base",
     "Saved {saved_count} work row{saved_plural}",
@@ -79,7 +79,7 @@ export function buildTagSaveSuccessMessage(config, summary, studioText) {
     }
   );
   const removed = removedCount > 0
-    ? studioText(
+    ? analyticsTagEditorText(
         config,
         "save_status_success_removed_suffix",
         "; removed {removed_count} row{removed_plural}",
@@ -89,7 +89,7 @@ export function buildTagSaveSuccessMessage(config, summary, studioText) {
         }
       )
     : "";
-  const at = studioText(
+  const at = analyticsTagEditorText(
     config,
     "save_status_success_at_suffix",
     " at {saved_at}.",

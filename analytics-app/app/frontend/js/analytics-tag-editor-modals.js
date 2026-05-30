@@ -1,9 +1,9 @@
 import { getAnalyticsText } from "./analytics-config.js";
-import { workStateMapToObject } from "./tag-studio-domain.js";
+import { workStateMapToObject } from "./analytics-tag-editor-domain.js";
 import {
   buildPatchSnippet,
   utcTimestamp
-} from "./tag-studio-save.js";
+} from "./analytics-tag-editor-save.js";
 import {
   renderAnalyticsModalActions,
   renderAnalyticsModalFrame
@@ -13,17 +13,17 @@ import { seriesTagEditorUi } from "./analytics-ui.js";
 const UI = seriesTagEditorUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
-export function renderTagStudioSaveModal(state) {
-  const modalTitle = tagStudioText(state.config, "modal_title", "Tag Assignment Patch Preview");
-  const modalResolvedLabel = tagStudioText(state.config, "modal_resolved_label", "Resolved tag assignment payload");
-  const modalPatchGuidanceLabel = tagStudioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
-  const modalCopyButton = tagStudioText(state.config, "modal_copy_button", "Copy");
-  const modalCloseButton = tagStudioText(state.config, "modal_close_button", "Close");
+export function renderAnalyticsTagEditorSaveModal(state) {
+  const modalTitle = analyticsTagEditorText(state.config, "modal_title", "Tag Assignment Patch Preview");
+  const modalResolvedLabel = analyticsTagEditorText(state.config, "modal_resolved_label", "Resolved tag assignment payload");
+  const modalPatchGuidanceLabel = analyticsTagEditorText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
+  const modalCopyButton = analyticsTagEditorText(state.config, "modal_copy_button", "Copy");
+  const modalCloseButton = analyticsTagEditorText(state.config, "modal_close_button", "Close");
 
   return renderAnalyticsModalFrame({
     modalRole: UI.role.modal,
     backdropRole: UI.role.modalClose,
-    titleId: "tagStudioModalTitle",
+    titleId: "analyticsModalTitle",
     title: modalTitle,
     bodyHtml: `
       <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalResolvedLabel)}</p>
@@ -38,21 +38,21 @@ export function renderTagStudioSaveModal(state) {
   });
 }
 
-export function collectTagStudioSaveModalRefs(root) {
+export function collectAnalyticsTagEditorSaveModalRefs(root) {
   return {
     modal: root.querySelector(UI_SELECTOR.modal),
     modalDialog: root.querySelector(`${UI_SELECTOR.modal} [role="dialog"]`),
-    closeButton: root.querySelector(`${UI_SELECTOR.modal} .tagStudioModal__actions ${UI_SELECTOR.modalClose}`),
+    closeButton: root.querySelector(`${UI_SELECTOR.modal} .analyticsModal__actions ${UI_SELECTOR.modalClose}`),
     modalTags: root.querySelector(UI_SELECTOR.modalTags),
     modalSnippet: root.querySelector(UI_SELECTOR.modalSnippet),
     copyButton: root.querySelector(UI_SELECTOR.copySnippet)
   };
 }
 
-export function wireTagStudioSaveModalEvents(state, callbacks = {}) {
+export function wireAnalyticsTagEditorSaveModalEvents(state, callbacks = {}) {
   state.refs.modal.addEventListener("click", (event) => {
     if (!event.target.closest(UI_SELECTOR.modalClose)) return;
-    closeTagStudioSaveModal(state);
+    closeAnalyticsTagEditorSaveModal(state);
   });
 
   state.refs.copyButton.addEventListener("click", () => {
@@ -63,7 +63,7 @@ export function wireTagStudioSaveModalEvents(state, callbacks = {}) {
     if (!state.refs.modal || state.refs.modal.hidden) return;
     if (event.key === "Escape") {
       event.preventDefault();
-      closeTagStudioSaveModal(state);
+      closeAnalyticsTagEditorSaveModal(state);
       return;
     }
     if (event.key !== "Tab") return;
@@ -84,7 +84,7 @@ export function wireTagStudioSaveModalEvents(state, callbacks = {}) {
   });
 }
 
-export function openTagStudioSaveModal(state, diff) {
+export function openAnalyticsTagEditorSaveModal(state, diff) {
   const timestamp = utcTimestamp();
   const snippet = buildPatchSnippet(
     state.seriesId,
@@ -100,15 +100,15 @@ export function openTagStudioSaveModal(state, diff) {
   state.refs.modalSnippet.textContent = snippet;
   state.refs.modal.hidden = false;
   state.saveModalRestoreFocus = document.activeElement;
-  focusTagStudioSaveModal(state);
+  focusAnalyticsTagEditorSaveModal(state);
 }
 
-export function closeTagStudioSaveModal(state) {
+export function closeAnalyticsTagEditorSaveModal(state) {
   state.refs.modal.hidden = true;
-  restoreTagStudioSaveModalFocus(state);
+  restoreAnalyticsTagEditorSaveModalFocus(state);
 }
 
-function tagStudioText(config, key, fallback, params) {
+function analyticsTagEditorText(config, key, fallback, params) {
   return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, params);
 }
 
@@ -121,12 +121,12 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function focusTagStudioSaveModal(state) {
+function focusAnalyticsTagEditorSaveModal(state) {
   const target = state.refs.closeButton || state.refs.copyButton || state.refs.modalDialog;
   if (target && typeof target.focus === "function") target.focus();
 }
 
-function restoreTagStudioSaveModalFocus(state) {
+function restoreAnalyticsTagEditorSaveModalFocus(state) {
   const restoreTarget = state.saveModalRestoreFocus;
   state.saveModalRestoreFocus = null;
   try {

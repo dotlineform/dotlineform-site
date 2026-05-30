@@ -27,52 +27,52 @@ function setOptionalBooleanDatasetValue(root, key, value) {
 
 function applyRouteDetail(root, detail = {}) {
   if (Object.prototype.hasOwnProperty.call(detail, "route")) {
-    setOptionalDatasetValue(root, "studioRoute", detail.route);
+    setOptionalDatasetValue(root, "analyticsRoute", detail.route);
   }
   if (Object.prototype.hasOwnProperty.call(detail, "mode")) {
-    setOptionalDatasetValue(root, "studioMode", detail.mode);
+    setOptionalDatasetValue(root, "analyticsMode", detail.mode);
   }
   if (Object.prototype.hasOwnProperty.call(detail, "service")) {
-    setOptionalDatasetValue(root, "studioService", detail.service);
+    setOptionalDatasetValue(root, "analyticsService", detail.service);
   }
   if (Object.prototype.hasOwnProperty.call(detail, "recordLoaded")) {
-    setOptionalBooleanDatasetValue(root, "studioRecordLoaded", detail.recordLoaded);
+    setOptionalBooleanDatasetValue(root, "analyticsRecordLoaded", detail.recordLoaded);
   }
 }
 
 function buildEventDetail(root, ready) {
   return {
     ready,
-    busy: root.dataset.studioBusy === "true",
-    route: root.dataset.studioRoute || "",
-    mode: root.dataset.studioMode || "",
-    service: root.dataset.studioService || "",
-    recordLoaded: root.dataset.studioRecordLoaded === "true"
+    busy: root.dataset.analyticsBusy === "true",
+    route: root.dataset.analyticsRoute || "",
+    mode: root.dataset.analyticsMode || "",
+    service: root.dataset.analyticsService || "",
+    recordLoaded: root.dataset.analyticsRecordLoaded === "true"
   };
 }
 
-export function initializeStudioRouteState(target, detail = {}) {
+export function initializeAnalyticsRouteState(target, detail = {}) {
   const root = resolveRoot(target);
   if (!root) return;
   applyRouteDetail(root, detail);
-  root.dataset.studioReady = "false";
-  root.dataset.studioBusy = "false";
+  root.dataset.analyticsReady = "false";
+  root.dataset.analyticsBusy = "false";
 }
 
-export function setStudioRouteBusy(target, busy, detail = {}) {
+export function setAnalyticsRouteBusy(target, busy, detail = {}) {
   const root = resolveRoot(target);
   if (!root) return;
   applyRouteDetail(root, detail);
-  root.dataset.studioBusy = busy ? "true" : "false";
+  root.dataset.analyticsBusy = busy ? "true" : "false";
 }
 
-export function setStudioRouteReady(target, ready, detail = {}) {
+export function setAnalyticsRouteReady(target, ready, detail = {}) {
   const root = resolveRoot(target);
   if (!root) return;
   const nextReady = Boolean(ready);
   applyRouteDetail(root, detail);
-  root.dataset.studioReady = nextReady ? "true" : "false";
-  root.dispatchEvent(new CustomEvent("studio:ready", {
+  root.dataset.analyticsReady = nextReady ? "true" : "false";
+  root.dispatchEvent(new CustomEvent("analytics:ready", {
     bubbles: true,
     detail: buildEventDetail(root, nextReady)
   }));

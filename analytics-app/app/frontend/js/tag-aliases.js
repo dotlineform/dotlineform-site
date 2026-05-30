@@ -83,9 +83,9 @@ import {
   renderTagAliasesList as renderList
 } from "./tag-aliases-render.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteBusy,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   bindTagSaveModeReprobe,
@@ -119,11 +119,11 @@ function routeStateDetail(state) {
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
+  setAnalyticsRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.mount, ready, routeStateDetail(state));
+  setAnalyticsRouteReady(state.mount, ready, routeStateDetail(state));
 }
 
 async function withRouteBusy(state, task) {
@@ -133,14 +133,14 @@ async function withRouteBusy(state, task) {
 async function initTagAliasesPage() {
   const mount = document.getElementById("tag-aliases");
   if (!mount) return;
-  initializeStudioRouteState(mount, { route: "tag-aliases", mode: "list" });
+  initializeAnalyticsRouteState(mount, { route: "tag-aliases", mode: "list" });
 
   let config = null;
   try {
     config = await loadAnalyticsConfigWithText("tag_aliases");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag aliases config.</div>`;
-    setStudioRouteReady(mount, true, {
+    setAnalyticsRouteReady(mount, true, {
       route: "tag-aliases",
       mode: "empty",
       service: "unavailable",

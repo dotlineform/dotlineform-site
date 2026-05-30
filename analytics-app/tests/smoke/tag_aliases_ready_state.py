@@ -41,9 +41,9 @@ def run(base_url: str) -> None:
         page.goto(target, wait_until="domcontentloaded")
         root = page.locator("#tag-aliases")
         expect(root).to_be_visible(timeout=10_000)
-        expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-        expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
-        expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+        expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
+        expect(root).to_have_attribute("data-analytics-mode", "list", timeout=10_000)
+        expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
         if errors:
             raise AssertionError(f"page errors during Tag Aliases route smoke: {errors!r}")
         browser.close()

@@ -2,7 +2,7 @@
 doc_id: site-request-analytics-app-split-follow-on
 title: Analytics App Split Follow-On Tasks
 added_date: "2026-05-30 17:24"
-last_updated: "2026-05-30 20:35"
+last_updated: "2026-05-30 21:35"
 ui_status: in-progress
 parent_id: site-request-analytics-app-split
 ---
@@ -29,19 +29,17 @@ Key boundary decisions:
 
 ### just done
 
-- Completed task 9 Analytics frontend helper module rename:
-  - renamed Analytics-only helper modules from `studio-*.js` to `analytics-*.js`
-  - renamed generic helper exports such as config, data, transport, modal, theme, navigation, and activity-context APIs to Analytics-owned names
-  - changed Analytics pages to load `analytics-navigation.js`
-  - changed the Analytics runtime config meta tag to `dlf-analytics-config-url`
-  - changed Analytics config payload keys from `studio_config_version` / `paths.data.studio` to `analytics_config_version` / `paths.data.analytics`
-  - preserved route-ready dataset/event names and `tagStudio*` UI tokens for tasks 10 and 11
+- Completed task 12 inventory refresh:
+  - refreshed the JavaScript inventory table paths from retired `assets/studio/js/...` owners to the current `studio/app/frontend/js/` and `analytics-app/app/frontend/js/` app roots
+  - moved Analytics tag, Data Sharing, series-tag, and scoring rows to Analytics-owned inventory families
+  - refreshed the Python/Ruby inventory guardrail so tag helper work points at `analytics-app/app/server/analytics_app/tag_services/` and Analytics adapters, not Studio service scripts
+  - kept inventory scoring as the current scored row set after the split cleanup, with app-root paths and family names now acting as the ownership signal
 
 ### steer for next task
 
-- Start task 10 by renaming the tag UI/module naming family from `tagStudio*` / `tag-studio-*` to Analytics-owned names.
-- Include CSS class tokens, JS templates, modal selectors, smoke checks, and the tag-route docs in one coordinated slice.
-- Keep route-ready dataset/event names such as `data-studio-ready` and `studio:ready` for task 11 unless the task 10 rename requires touching a nearby selector safely.
+- Start task 13 by updating durable docs that still mention old Studio-owned Analytics paths, helper ownership, route-ready names, or Data Sharing roots.
+- Update source docs only. Let the docs watcher update generated payloads if it is running; do not manually rebuild docs payloads.
+- Keep historical change-request/log records out of the cleanup unless the active durable doc points to an obsolete current contract.
 
 ### baseline verification set
 
@@ -152,7 +150,7 @@ Current tag source path references to `studio/data/canonical/analytics/...` appe
   - `analytics-app/app/frontend/js/tag-aliases-save.js`
   - `analytics-app/app/frontend/js/tag-registry.js`
   - `analytics-app/app/frontend/js/tag-registry-save.js`
-  - `analytics-app/app/frontend/js/tag-studio.js`
+  - `analytics-app/app/frontend/js/analytics-tag-editor.js`
 - Data Sharing tag adapter config:
   - `data-sharing/config/adapters.json`
 - Current Analytics helper owner:
@@ -290,21 +288,31 @@ Task 9 moved the nine Analytics helper modules from `studio-*.js` to Analytics-o
 - `analytics-app/app/frontend/js/analytics-transport.js`
 - `analytics-app/app/frontend/js/analytics-ui.js`
 
-Analytics currently has eleven `tag-studio*.js` route/domain modules:
+Task 10 moved the former `tag-studio*.js` route/domain modules to Analytics-owned names:
 
-- `analytics-app/app/frontend/js/tag-studio-domain.js`
-- `analytics-app/app/frontend/js/tag-studio-index.js`
-- `analytics-app/app/frontend/js/tag-studio-interactions.js`
-- `analytics-app/app/frontend/js/tag-studio-modals.js`
-- `analytics-app/app/frontend/js/tag-studio-render.js`
-- `analytics-app/app/frontend/js/tag-studio-route-state.js`
-- `analytics-app/app/frontend/js/tag-studio-save-controller.js`
-- `analytics-app/app/frontend/js/tag-studio-save.js`
-- `analytics-app/app/frontend/js/tag-studio-state.js`
-- `analytics-app/app/frontend/js/tag-studio-suggestions.js`
-- `analytics-app/app/frontend/js/tag-studio.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-domain.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-index.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-interactions.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-modals.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-render.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-route-state.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-save-controller.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-save.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-state.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor-suggestions.js`
+- `analytics-app/app/frontend/js/analytics-tag-editor.js`
 
-`tagStudio*` selectors, CSS classes, and helper names appear across:
+Task 10 also moved shared UI tokens to Analytics-owned class families:
+
+- `analytics__*`
+- `analyticsPage*`
+- `analyticsModal*`
+- `analyticsForm*`
+- `analyticsList*`
+- `analyticsFilters*`
+- `analyticsToolbar*`
+
+The affected selectors, templates, and smoke checks live across:
 
 - `analytics-app/app/assets/css/analytics.css`
 - Analytics route modules under `analytics-app/app/frontend/js/`
@@ -331,9 +339,9 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 7 | done | Move Data Sharing runtime artifact roots from `var/studio/data-sharing/` to `var/analytics/data-sharing/`. Update `data-sharing/config/*.json`, schemas, `data_sharing.services.paths`, Analytics server constants, smoke fixtures, tests, docs, validation messages, and examples. Do not add fallback reads for existing old artifacts. |
 | 8 | done | Verify and tighten the Docs Viewer/Data Sharing boundary. Data Sharing should call document-domain adapters or helper functions for conversion/source work, not Docs Viewer HTTP endpoints or broad management-service handles. Tags should flow through an Analytics tags adapter. Document the adapter contract in the Data Sharing technical spec. |
 | 9 | done | Rename Analytics frontend helper modules and exported APIs that still imply Studio ownership. The old `studio-config.js`, `studio-data.js`, `studio-transport.js`, `studio-ui.js`, `studio-modal.js`, `studio-route-state.js`, `studio-theme.js`, `studio-navigation.js`, and `studio-activity-context.js` files are now Analytics-owned `analytics-*.js` modules with matching generic helper exports. |
-| 10 | planned | Rename tag UI/module naming from `tagStudio*` and `tag-studio-*` to Analytics-owned naming. Include CSS classes in `analytics.css`, JS class tokens/templates, modal selectors, smoke tests, and docs. Use one consistent family such as `analytics*`, `analyticsModal*`, `analyticsForm*`, `analyticsList*`, and `analyticsToolbar*`. |
-| 11 | planned | Rename remaining runtime event/state names that still imply Studio ownership, including `studio:open-modal`, `initializeStudioRouteState`, and Analytics-local activity-context helper names where appropriate. Preserve behavior; only change ownership language and route-local contracts. |
-| 12 | planned | Refresh JavaScript and Python inventory docs for the post-follow-on state. Replace stale pre-split `assets/studio/js/tag-*` and `data-sharing-*` inventory rows with actual `analytics-app/app/frontend/js/` rows and rescore maintenance risk. Update Python/Ruby inventory rows for the moved Analytics helper package. |
+| 10 | done | Rename tag UI/module naming from `tagStudio*` and `tag-studio-*` to Analytics-owned naming. Include CSS classes in `analytics.css`, JS class tokens/templates, modal selectors, smoke tests, and docs. Use one consistent family such as `analytics*`, `analyticsModal*`, `analyticsForm*`, `analyticsList*`, and `analyticsToolbar*`. |
+| 11 | done | Rename remaining runtime event/state names that still imply Studio ownership, including `studio:open-modal`, `initializeStudioRouteState`, and Analytics-local activity-context helper names where appropriate. Preserve behavior; only change ownership language and route-local contracts. |
+| 12 | done | Refresh JavaScript and Python inventory docs for the post-follow-on state. Replace stale pre-split `assets/studio/js/tag-*` and `data-sharing-*` inventory rows with actual `analytics-app/app/frontend/js/` rows and rescore maintenance risk. Update Python/Ruby inventory rows for the moved Analytics helper package. |
 | 13 | planned | Update durable docs: Analytics, Data Sharing, Data Sharing technical spec, Source Tree Ownership, Run Checks, local setup/runtime docs, projection/data-model docs, tag docs, search docs, and script docs that mention old Studio-owned paths or helper ownership. Update source docs only; do not manually rebuild generated docs payloads. |
 | 14 | planned | Run the final focused verification set: Python syntax/import checks, focused tag helper pytest, focused Data Sharing adapter/path pytest, affected catalogue/search/audit tests, `analytics-smoke`, stale-reference scans for retired Studio paths/names, and `git diff --check`. |
 | 15 | planned | Close out the follow-on request with moved-path summary, removed old paths, adapter/search ownership decisions, verification results, generated-payload status, remaining risks, and structured docs-log entry. |

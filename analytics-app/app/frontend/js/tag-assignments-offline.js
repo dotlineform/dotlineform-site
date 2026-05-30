@@ -2,7 +2,7 @@ import {
   normalize,
   normalizeAssignmentRows,
   normalizeWorkId
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 
 const STORAGE_KEY = "dotlineform.studio.tagAssignmentsOffline.v1";
 const SESSION_VERSION = "tag_assignments_offline_v1";

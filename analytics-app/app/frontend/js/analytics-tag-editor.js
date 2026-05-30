@@ -11,91 +11,91 @@ import {
   loadAnalyticsRegistryJson
 } from "./analytics-data.js";
 import {
-  configureTagStudioDomain,
+  configureAnalyticsTagEditorDomain,
   normalize,
   normalizeWorkId
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 import {
-  buildSaveModeText as buildTagStudioSaveModeText
-} from "./tag-studio-save.js";
+  buildSaveModeText as buildAnalyticsTagEditorSaveModeText
+} from "./analytics-tag-editor-save.js";
 import {
-  collectTagStudioSaveModalRefs,
-  openTagStudioSaveModal,
-  renderTagStudioSaveModal,
-  wireTagStudioSaveModalEvents
-} from "./tag-studio-modals.js";
+  collectAnalyticsTagEditorSaveModalRefs,
+  openAnalyticsTagEditorSaveModal,
+  renderAnalyticsTagEditorSaveModal,
+  wireAnalyticsTagEditorSaveModalEvents
+} from "./analytics-tag-editor-modals.js";
 import {
   renderContextHint,
   renderGroups,
   renderSelectedWork
-} from "./tag-studio-render.js";
+} from "./analytics-tag-editor-render.js";
 import {
   getMatchingWorkOptions,
   hidePopup,
   hideWorkPopup,
   renderPopup,
   renderWorkPopup
-} from "./tag-studio-suggestions.js";
+} from "./analytics-tag-editor-suggestions.js";
 import {
   buildStateDiff,
-  buildTagStudioState,
+  buildAnalyticsTagEditorState,
   restoreSelectionFromQuery
-} from "./tag-studio-state.js";
+} from "./analytics-tag-editor-state.js";
 import {
-  activateTagStudioSelectedWork,
-  addTagStudioResolvedTag,
-  addTagStudioTagFromInput,
-  addTagStudioWorkSelection,
-  applyTagStudioSaveState,
-  clearTagStudioSelectedWork,
-  cycleTagStudioEntryWeight,
-  removeTagStudioEditableEntry,
-  restoreTagStudioDeletedEntry,
-  selectTagStudioWorkFromInput
-} from "./tag-studio-interactions.js";
+  activateAnalyticsTagEditorSelectedWork,
+  addAnalyticsTagEditorResolvedTag,
+  addAnalyticsTagEditorTagFromInput,
+  addAnalyticsTagEditorWorkSelection,
+  applyAnalyticsTagEditorSaveState,
+  clearAnalyticsTagEditorSelectedWork,
+  cycleAnalyticsTagEditorEntryWeight,
+  removeAnalyticsTagEditorEditableEntry,
+  restoreAnalyticsTagEditorDeletedEntry,
+  selectAnalyticsTagEditorWorkFromInput
+} from "./analytics-tag-editor-interactions.js";
 import {
-  handleTagStudioSave,
-  probeTagStudioSaveMode,
-  renderTagStudioSaveMode,
-  syncTagStudioOfflineAutosave
-} from "./tag-studio-save-controller.js";
+  handleAnalyticsTagEditorSave,
+  probeAnalyticsTagEditorSaveMode,
+  renderAnalyticsTagEditorSaveMode,
+  syncAnalyticsTagEditorOfflineAutosave
+} from "./analytics-tag-editor-save-controller.js";
 import {
-  buildTagStudioRouteStateDetail,
-  markTagStudioRouteReady,
-  syncTagStudioRouteBusyState
-} from "./tag-studio-route-state.js";
+  buildAnalyticsTagEditorRouteStateDetail,
+  markAnalyticsTagEditorRouteReady,
+  syncAnalyticsTagEditorRouteBusyState
+} from "./analytics-tag-editor-route-state.js";
 import {
   bindTagSaveModeReprobe
 } from "./tag-route-save-session.js";
 import {
-  setStudioRouteReady
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   seriesTagEditorUi
 } from "./analytics-ui.js";
 
-let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
+let ANALYTICS_GROUPS = ["subject", "domain", "form", "theme"];
 const WEIGHT_VALUES = [0.3, 0.6, 0.9];
 const DEFAULT_WEIGHT = 0.6;
 const UI = seriesTagEditorUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initTagStudio);
+  document.addEventListener("DOMContentLoaded", initAnalyticsTagEditor);
 } else {
-  initTagStudio();
+  initAnalyticsTagEditor();
 }
 
 function syncRouteBusyState(state) {
-  syncTagStudioRouteBusyState(state);
+  syncAnalyticsTagEditorRouteBusyState(state);
 }
 
 function markRouteReady(state, ready) {
-  markTagStudioRouteReady(state, ready);
+  markAnalyticsTagEditorRouteReady(state, ready);
 }
 
-async function initTagStudio() {
-  const mount = document.getElementById("tag-studio");
+async function initAnalyticsTagEditor() {
+  const mount = document.getElementById("analytics-tag-editor");
   if (!mount) return;
   const routeRoot = document.getElementById("seriesTagEditorRoot");
 
@@ -104,22 +104,22 @@ async function initTagStudio() {
     config = await loadAnalyticsConfigWithText("series_tag_editor");
   } catch (error) {
     renderFatalError(mount, "Failed to load tag editor config.");
-    setStudioRouteReady(routeRoot, true, {
-      ...buildTagStudioRouteStateDetail(null),
+    setAnalyticsRouteReady(routeRoot, true, {
+      ...buildAnalyticsTagEditorRouteStateDetail(null),
       mode: "empty"
     });
     return;
   }
-  STUDIO_GROUPS = getAnalyticsGroups(config);
-  configureTagStudioDomain({
-    groups: STUDIO_GROUPS,
+  ANALYTICS_GROUPS = getAnalyticsGroups(config);
+  configureAnalyticsTagEditorDomain({
+    groups: ANALYTICS_GROUPS,
     weightValues: WEIGHT_VALUES,
     defaultWeight: DEFAULT_WEIGHT
   });
 
   const seriesId = String(mount.dataset.seriesId || "").trim();
   if (!seriesId) {
-    renderFatalError(mount, studioText(config, "missing_series_id_error", "Tag Studio error: missing series id."));
+    renderFatalError(mount, analyticsTagEditorText(config, "missing_series_id_error", "Tag editor error: missing series id."));
     return;
   }
 
@@ -131,7 +131,7 @@ async function initTagStudio() {
       loadSiteSeriesIndexJson(config),
       loadSiteWorksIndexJson(config)
     ]);
-    const state = buildTagStudioState({
+    const state = buildAnalyticsTagEditorState({
       mount,
       seriesId,
       registryJson,
@@ -141,7 +141,7 @@ async function initTagStudio() {
       worksIndexJson,
       config,
       offlineSession: null,
-      studioGroups: STUDIO_GROUPS,
+      studioGroups: ANALYTICS_GROUPS,
       defaultWeight: DEFAULT_WEIGHT
     });
     restoreSelectionFromQuery(state);
@@ -150,29 +150,29 @@ async function initTagStudio() {
     wireEvents(state);
     renderAll(state);
     markRouteReady(state, true);
-    void probeTagStudioSaveMode(state, saveControllerCallbacks());
+    void probeAnalyticsTagEditorSaveMode(state, saveControllerCallbacks());
   } catch (error) {
     renderFatalError(
       mount,
-      studioText(
+      analyticsTagEditorText(
         config,
         "load_failed_error",
         "Failed to load tag data. Check /analytics/data/canonical/tag-registry.json, /analytics/data/canonical/tag-aliases.json, /analytics/data/canonical/tag-assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
       )
     );
-    setStudioRouteReady(routeRoot, true, {
-      ...buildTagStudioRouteStateDetail(null),
+    setAnalyticsRouteReady(routeRoot, true, {
+      ...buildAnalyticsTagEditorRouteStateDetail(null),
       mode: "empty"
     });
   }
 }
 
 function renderShell(state) {
-  const workInputPlaceholder = studioText(state.config, "work_input_placeholder", "work_id(s) in this series");
-  const tagInputPlaceholder = studioText(state.config, "tag_input_placeholder", "tag slug or alias");
-  const addButtonLabel = studioText(state.config, "add_button", "Add");
-  const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
-  const saveModeLabel = buildTagStudioSaveModeText(state.config, "offline", studioText);
+  const workInputPlaceholder = analyticsTagEditorText(state.config, "work_input_placeholder", "work_id(s) in this series");
+  const tagInputPlaceholder = analyticsTagEditorText(state.config, "tag_input_placeholder", "tag slug or alias");
+  const addButtonLabel = analyticsTagEditorText(state.config, "add_button", "Add");
+  const saveButtonLabel = analyticsTagEditorText(state.config, "save_button", "Save Tags");
+  const saveModeLabel = buildAnalyticsTagEditorSaveModeText(state.config, "offline", analyticsTagEditorText);
   const refs = {
     workInput: state.mount.querySelector(UI_SELECTOR.workInput),
     selectedWork: state.mount.querySelector(UI_SELECTOR.workSelection),
@@ -196,7 +196,7 @@ function renderShell(state) {
   if (missingRef) {
     renderFatalError(
       state.mount,
-      studioText(state.config, "missing_template_shell_error", "Tag Studio error: missing template shell markup.")
+      analyticsTagEditorText(state.config, "missing_template_shell_error", "Tag editor error: missing template shell markup.")
     );
     return;
   }
@@ -206,17 +206,17 @@ function renderShell(state) {
   refs.addButton.textContent = addButtonLabel;
   refs.saveButton.textContent = saveButtonLabel;
   refs.saveMode.textContent = saveModeLabel;
-  refs.modalHost.innerHTML = renderTagStudioSaveModal(state);
+  refs.modalHost.innerHTML = renderAnalyticsTagEditorSaveModal(state);
 
   state.refs = {
     ...refs,
-    ...collectTagStudioSaveModalRefs(state.mount)
+    ...collectAnalyticsTagEditorSaveModalRefs(state.mount)
   };
 }
 
 function wireEvents(state) {
   bindTagSaveModeReprobe(() => {
-    void probeTagStudioSaveMode(state, saveControllerCallbacks());
+    void probeAnalyticsTagEditorSaveMode(state, saveControllerCallbacks());
   });
 
   state.refs.workInput.addEventListener("input", () => {
@@ -228,7 +228,7 @@ function wireEvents(state) {
   state.refs.workInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      selectTagStudioWorkFromInput(state, interactionCallbacks(state));
+      selectAnalyticsTagEditorWorkFromInput(state, interactionCallbacks(state));
     } else if (event.key === "Escape") {
       hideWorkPopup(state);
     }
@@ -243,7 +243,7 @@ function wireEvents(state) {
   state.refs.input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      addTagStudioTagFromInput(state, interactionCallbacks(state));
+      addAnalyticsTagEditorTagFromInput(state, interactionCallbacks(state));
     } else if (event.key === "Escape") {
       hidePopup(state);
     }
@@ -267,7 +267,7 @@ function wireEvents(state) {
   });
 
   state.refs.addButton.addEventListener("click", () => {
-    addTagStudioTagFromInput(state, interactionCallbacks(state));
+    addAnalyticsTagEditorTagFromInput(state, interactionCallbacks(state));
   });
 
   state.refs.workPopupList.addEventListener("click", (event) => {
@@ -275,7 +275,7 @@ function wireEvents(state) {
     if (!workButton) return;
     const workId = normalizeWorkId(workButton.getAttribute("data-popup-work-id"));
     if (!workId) return;
-    addTagStudioWorkSelection(state, workId, true, interactionCallbacks(state));
+    addAnalyticsTagEditorWorkSelection(state, workId, true, interactionCallbacks(state));
   });
 
   state.refs.selectedWork.addEventListener("click", (event) => {
@@ -284,17 +284,17 @@ function wireEvents(state) {
       const workId = normalizeWorkId(activateButton.getAttribute("data-activate-work-id"));
       if (!workId) return;
       if (state.selectedWorkId === workId) {
-        activateTagStudioSelectedWork(state, "", interactionCallbacks(state));
+        activateAnalyticsTagEditorSelectedWork(state, "", interactionCallbacks(state));
         return;
       }
-      activateTagStudioSelectedWork(state, workId, interactionCallbacks(state));
+      activateAnalyticsTagEditorSelectedWork(state, workId, interactionCallbacks(state));
       return;
     }
     const clearButton = event.target.closest("button[data-clear-selected-work]");
     if (!clearButton) return;
     const workId = normalizeWorkId(clearButton.getAttribute("data-clear-selected-work"));
     if (!workId) return;
-    clearTagStudioSelectedWork(state, workId, interactionCallbacks(state));
+    clearAnalyticsTagEditorSelectedWork(state, workId, interactionCallbacks(state));
   });
 
   state.refs.popupList.addEventListener("click", (event) => {
@@ -303,7 +303,7 @@ function wireEvents(state) {
       const tagId = normalize(tagButton.getAttribute("data-popup-tag-id"));
       const tag = state.tagsById.get(tagId);
       if (!tag) return;
-      addTagStudioResolvedTag(state, tag, { rawInput: tag.slug || tag.tag_id }, interactionCallbacks(state));
+      addAnalyticsTagEditorResolvedTag(state, tag, { rawInput: tag.slug || tag.tag_id }, interactionCallbacks(state));
       state.refs.input.value = "";
       hidePopup(state);
       renderAll(state);
@@ -316,7 +316,7 @@ function wireEvents(state) {
       const tag = state.tagsById.get(tagId);
       if (!tag) return;
       const aliasSource = normalize(aliasTargetButton.getAttribute("data-popup-alias-source"));
-      addTagStudioResolvedTag(state, tag, {
+      addAnalyticsTagEditorResolvedTag(state, tag, {
         rawInput: aliasSource || tag.tag_id,
         alias: aliasSource
       }, interactionCallbacks(state));
@@ -331,21 +331,21 @@ function wireEvents(state) {
     if (weightButton) {
       const entryId = Number(weightButton.getAttribute("data-cycle-weight-entry-id"));
       if (!Number.isFinite(entryId)) return;
-      cycleTagStudioEntryWeight(state, entryId, interactionCallbacks(state));
+      cycleAnalyticsTagEditorEntryWeight(state, entryId, interactionCallbacks(state));
       return;
     }
 
     const button = event.target.closest("button[data-remove-entry-id]");
     if (button) {
       const entryId = Number(button.getAttribute("data-remove-entry-id"));
-      removeTagStudioEditableEntry(state, entryId, interactionCallbacks(state));
+      removeAnalyticsTagEditorEditableEntry(state, entryId, interactionCallbacks(state));
       renderAll(state);
       return;
     }
 
     const restoreButton = event.target.closest("button[data-restore-tag-id]");
     if (!restoreButton) return;
-    restoreTagStudioDeletedEntry(
+    restoreAnalyticsTagEditorDeletedEntry(
       state,
       restoreButton.getAttribute("data-restore-tag-id"),
       restoreButton.getAttribute("data-restore-scope"),
@@ -355,10 +355,10 @@ function wireEvents(state) {
   });
 
   state.refs.saveButton.addEventListener("click", () => {
-    void handleTagStudioSave(state, saveControllerCallbacks());
+    void handleAnalyticsTagEditorSave(state, saveControllerCallbacks());
   });
 
-  wireTagStudioSaveModalEvents(state, {
+  wireAnalyticsTagEditorSaveModalEvents(state, {
     onCopySnippet: () => {
       void copySaveModalSnippet(state);
     }
@@ -369,9 +369,9 @@ async function copySaveModalSnippet(state) {
   if (!state.modalSnippet) return;
   try {
     await navigator.clipboard.writeText(state.modalSnippet);
-    setStatus(state, "success", studioText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
+    setStatus(state, "success", analyticsTagEditorText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
   } catch (error) {
-    setStatus(state, "error", studioText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
+    setStatus(state, "error", analyticsTagEditorText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
   }
   renderStatus(state);
 }
@@ -383,22 +383,22 @@ function renderAll(state) {
   renderGroups(state);
   renderWorkPopup(state);
   renderPopup(state);
-  renderTagStudioSaveMode(state);
-  applyTagStudioSaveState(state, interactionCallbacks(state));
+  renderAnalyticsTagEditorSaveMode(state);
+  applyAnalyticsTagEditorSaveState(state, interactionCallbacks(state));
   broadcastSelectedWorkChange(state);
-  syncTagStudioOfflineAutosave(state, saveControllerCallbacks());
+  syncAnalyticsTagEditorOfflineAutosave(state, saveControllerCallbacks());
   syncRouteBusyState(state);
 }
 
 function openSaveModal(state) {
   const diff = buildStateDiff(state);
   if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
+    setStatus(state, "warn", analyticsTagEditorText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
     return;
   }
 
-  openTagStudioSaveModal(state, diff);
+  openAnalyticsTagEditorSaveModal(state, diff);
 }
 
 function setStatus(state, kind, text) {
@@ -435,7 +435,7 @@ function interactionCallbacks(state) {
     renderWorkPopup,
     setSaveResult,
     setStatus,
-    text: (key, fallback, tokens) => studioText(state.config, key, fallback, tokens)
+    text: (key, fallback, tokens) => analyticsTagEditorText(state.config, key, fallback, tokens)
   };
 }
 
@@ -478,6 +478,6 @@ function renderFatalError(mount, message) {
   mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
 }
 
-function studioText(config, key, fallback, tokens) {
+function analyticsTagEditorText(config, key, fallback, tokens) {
   return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

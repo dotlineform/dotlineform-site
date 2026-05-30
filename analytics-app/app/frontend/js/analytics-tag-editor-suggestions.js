@@ -3,7 +3,7 @@ import {
 } from "./analytics-config.js";
 import {
   normalize
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 import {
   seriesTagEditorUi
 } from "./analytics-ui.js";
@@ -30,7 +30,7 @@ export function renderWorkPopup(state) {
   state.refs.workPopupList.innerHTML = `
     <div class="${UI_CLASS.suggest}">
       <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_works", "works"))}</p>
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(analyticsTagEditorText(state.config, "popup_heading_works", "works"))}</p>
         <div class="${UI_CLASS.suggestWorkRows}">
           ${matches.map((item) => `
             <button type="button" class="${UI_CLASS.suggestWorkButton}" data-popup-work-id="${escapeHtml(item.workId)}">
@@ -87,7 +87,7 @@ export function renderPopup(state) {
   const tagSection = tagMatches.length
     ? `
       <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_tags", "tags"))}</p>
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(analyticsTagEditorText(state.config, "popup_heading_tags", "tags"))}</p>
         <div class="${UI_CLASS.suggestTagRows}">
           ${tagMatches.map((tag) => `
             <button
@@ -107,7 +107,7 @@ export function renderPopup(state) {
   const aliasSection = aliasMatches.length
     ? `
       <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_aliases", "aliases"))}</p>
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(analyticsTagEditorText(state.config, "popup_heading_aliases", "aliases"))}</p>
         <div class="${UI_CLASS.suggestAliasRows}">
           ${aliasMatches.map((entry) => `
             <div class="${UI_CLASS.suggestAliasRow}">
@@ -200,6 +200,6 @@ function chipGroupClass(group) {
   return `${UI_CLASS.chipGroupPrefix}${group}`;
 }
 
-function studioText(config, key, fallback, tokens) {
+function analyticsTagEditorText(config, key, fallback, tokens) {
   return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

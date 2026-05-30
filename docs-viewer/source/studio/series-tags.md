@@ -18,13 +18,13 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#series-tags` exposes the shared Studio route-ready contract:
+The page root `#series-tags` exposes the Analytics route-ready contract:
 
-- `data-studio-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
-- `data-studio-busy` is `true` while assignment import preview or apply is running
-- `data-studio-mode` is `list`, `session`, or `import` depending on the active modal state
-- `data-studio-service` reports whether the Local Analytics API is available for assignment import
-- `data-studio-record-loaded` is `true` when series rows are loaded
+- `data-analytics-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
+- `data-analytics-busy` is `true` while assignment import preview or apply is running
+- `data-analytics-mode` is `list`, `session`, or `import` depending on the active modal state
+- `data-analytics-service` reports whether the Local Analytics API is available for assignment import
+- `data-analytics-record-loaded` is `true` when series rows are loaded
 
 ## Page / Template Structure
 
@@ -51,7 +51,7 @@ Top-level structure:
   - session modal host
 - `[data-role="series-tags-import-modal-host"]`
   - import modal host
-- `.tagStudio__panel`
+- `.analytics__panel`
   - shared Studio panel shell around the page
 - `#series-tags[data-role="series-tags"]`
   - page root / render target
@@ -131,7 +131,7 @@ Meaning:
 
 - modal flow for assignment import preview/apply
 - includes file choice, import preview, per-series overwrite/skip review, `Close`, and action-row `Apply import`
-- successful apply sends Studio activity context and appends a unified activity row with script purpose `save tag data`
+- successful apply sends Analytics activity context and appends a unified activity row with script purpose `save tag data`
 - uses the shared wide Studio modal shell with standard status placement, focus containment, Escape/backdrop/Close dismissal, and focus return to the opener
 
 ### Table shell
@@ -178,7 +178,7 @@ User-facing name:
 DOM / CSS:
 
 - `.seriesTags__col--count`
-- `.tagStudioIndex__statusWrap`
+- `.analyticsTagIndex__statusWrap`
 - `.rag`
 
 Meaning:
@@ -212,9 +212,9 @@ User-facing name:
 DOM / CSS:
 
 - `.seriesTags__filters`
-- `.tagStudioFilters__allBtn`
-- `.tagStudioFilters__groupBtn`
-- `.tagStudio__keyInfoBtn`
+- `.analyticsFilters__allBtn`
+- `.analyticsFilters__groupBtn`
+- `.analytics__keyInfoBtn`
 
 JS owner:
 
@@ -228,15 +228,15 @@ Meaning:
 
 Primary CSS:
 
-- `assets/studio/css/studio.css`
+- `analytics-app/app/assets/css/analytics.css`
 
 Shared primitives used:
 
-- `tagStudio__panel`
-- `tagStudio__chip`
-- `tagStudio__empty`
-- `tagStudioFilters__allBtn`
-- `tagStudioFilters__groupBtn`
+- `analytics__panel`
+- `analytics__chip`
+- `analytics__empty`
+- `analyticsFilters__allBtn`
+- `analyticsFilters__groupBtn`
 
 Page-specific classes retained:
 
@@ -244,7 +244,7 @@ Page-specific classes retained:
 
 Important note:
 
-- this page keeps a page-specific column grid, but now uses the shared `tagStudioList__*` header-row shell and sort-button treatment
+- this page keeps a page-specific column grid, but now uses the shared `analyticsList__*` header-row shell and sort-button treatment
 
 ## DOM Rendering and Event Wiring
 
@@ -272,7 +272,7 @@ Main event wiring:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
+This page follows the shared Analytics UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors when the page needs them

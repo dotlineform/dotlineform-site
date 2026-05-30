@@ -5,16 +5,16 @@ import {
   normalizeAssignmentRows,
   normalizeWorkId,
   splitWorkInputTokens
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 import {
   buildStateDiff,
   getOrderedSelectedWorkIds,
   writeSelectionToQuery
-} from "./tag-studio-state.js";
+} from "./analytics-tag-editor-state.js";
 
 const DEFAULT_WEIGHT = 0.6;
 
-export function selectTagStudioWorkFromInput(state, options = {}) {
+export function selectAnalyticsTagEditorWorkFromInput(state, options = {}) {
   const rawInput = String(state.refs.workInput.value || "").trim();
   if (!rawInput) {
     setInteractionStatus(state, options, "warn", text(options, "work_input_required", "Enter a work_id from this series."));
@@ -24,7 +24,7 @@ export function selectTagStudioWorkFromInput(state, options = {}) {
 
   const tokens = splitWorkInputTokens(rawInput);
   if (tokens.length > 1 || rawInput.includes(",")) {
-    addTagStudioWorksFromTokens(state, tokens, options);
+    addAnalyticsTagEditorWorksFromTokens(state, tokens, options);
     return;
   }
 
@@ -43,12 +43,12 @@ export function selectTagStudioWorkFromInput(state, options = {}) {
 
   const exact = normalizedWorkId ? matches.find((item) => item.workId === normalizedWorkId) : null;
   if (exact) {
-    addTagStudioWorkSelection(state, exact.workId, true, options);
+    addAnalyticsTagEditorWorkSelection(state, exact.workId, true, options);
     return;
   }
 
   if (matches.length === 1) {
-    addTagStudioWorkSelection(state, matches[0].workId, true, options);
+    addAnalyticsTagEditorWorkSelection(state, matches[0].workId, true, options);
     return;
   }
 
@@ -62,7 +62,7 @@ export function selectTagStudioWorkFromInput(state, options = {}) {
   renderWorkPopup(options, state);
 }
 
-export function addTagStudioWorksFromTokens(state, tokens, options = {}) {
+export function addAnalyticsTagEditorWorksFromTokens(state, tokens, options = {}) {
   if (!tokens.length) {
     setInteractionStatus(state, options, "warn", text(options, "work_input_required_multiple", "Enter at least one work_id from this series."));
     renderStatus(options, state);
@@ -83,13 +83,13 @@ export function addTagStudioWorksFromTokens(state, tokens, options = {}) {
       unknown.push(token);
       continue;
     }
-    if (addTagStudioWorkSelection(state, workId, false, options)) {
+    if (addAnalyticsTagEditorWorkSelection(state, workId, false, options)) {
       added.push(workId);
     }
   }
 
   if (added.length) {
-    activateTagStudioSelectedWork(state, added[added.length - 1], { ...options, render: false });
+    activateAnalyticsTagEditorSelectedWork(state, added[added.length - 1], { ...options, render: false });
   }
   state.refs.workInput.value = "";
   hideWorkPopup(options, state);
@@ -101,7 +101,7 @@ export function addTagStudioWorksFromTokens(state, tokens, options = {}) {
   renderAll(options, state);
 }
 
-export function addTagStudioWorkSelection(state, workId, activate = true, options = {}) {
+export function addAnalyticsTagEditorWorkSelection(state, workId, activate = true, options = {}) {
   if (!state.seriesWorkIds.has(workId)) {
     setInteractionStatus(state, options, "error", text(
       options,
@@ -120,7 +120,7 @@ export function addTagStudioWorkSelection(state, workId, activate = true, option
     state.workEntriesById.set(workId, []);
   }
   if (activate) {
-    activateTagStudioSelectedWork(state, workId, { ...options, render: false });
+    activateAnalyticsTagEditorSelectedWork(state, workId, { ...options, render: false });
     setInteractionStatus(state, options, "success", text(
       options,
       "work_selected_success",
@@ -136,14 +136,14 @@ export function addTagStudioWorkSelection(state, workId, activate = true, option
   return true;
 }
 
-export function activateTagStudioSelectedWork(state, workId, options = {}) {
+export function activateAnalyticsTagEditorSelectedWork(state, workId, options = {}) {
   if (workId && !state.selectedWorkIds.includes(workId)) return;
   state.selectedWorkId = workId;
   writeSelectionToQuery(state);
   if (options.render !== false) renderAll(options, state);
 }
 
-export function clearTagStudioSelectedWork(state, workId, options = {}) {
+export function clearAnalyticsTagEditorSelectedWork(state, workId, options = {}) {
   state.selectedWorkIds = state.selectedWorkIds.filter((item) => item !== workId);
   state.workEntriesById.delete(workId);
   if (state.selectedWorkId === workId) {
@@ -161,7 +161,7 @@ export function clearTagStudioSelectedWork(state, workId, options = {}) {
   renderAll(options, state);
 }
 
-export function addTagStudioTagFromInput(state, options = {}) {
+export function addAnalyticsTagEditorTagFromInput(state, options = {}) {
   const rawInput = String(state.refs.input.value || "").trim();
   if (!rawInput) {
     setInteractionStatus(state, options, "warn", text(options, "tag_input_required", "Enter a tag slug, tag id, or alias."));
@@ -169,9 +169,9 @@ export function addTagStudioTagFromInput(state, options = {}) {
     return;
   }
 
-  const resolved = resolveTagStudioInput(rawInput, state);
+  const resolved = resolveAnalyticsTagEditorInput(rawInput, state);
   if (resolved.type === "resolved") {
-    addTagStudioResolvedTag(state, resolved.tag, { rawInput }, options);
+    addAnalyticsTagEditorResolvedTag(state, resolved.tag, { rawInput }, options);
     state.refs.input.value = "";
     hidePopup(options, state);
     renderAll(options, state);
@@ -204,7 +204,7 @@ export function addTagStudioTagFromInput(state, options = {}) {
   renderStatus(options, state);
 }
 
-export function resolveTagStudioInput(rawInput, state) {
+export function resolveAnalyticsTagEditorInput(rawInput, state) {
   const raw = String(rawInput || "").trim();
   if (!raw) return { type: "empty" };
 
@@ -253,7 +253,7 @@ export function resolveTagStudioInput(rawInput, state) {
   return { type: "unresolved" };
 }
 
-export function addTagStudioResolvedTag(state, tag, inputOptions = {}, interactionOptions = {}) {
+export function addAnalyticsTagEditorResolvedTag(state, tag, inputOptions = {}, interactionOptions = {}) {
   if (!tag || !tag.tag_id) return;
   const rawInput = typeof inputOptions === "string"
     ? inputOptions
@@ -264,7 +264,7 @@ export function addTagStudioResolvedTag(state, tag, inputOptions = {}, interacti
 
   const tagId = normalize(tag.tag_id);
   const isSeriesScope = !state.selectedWorkId;
-  const inheritedTagIds = getTagStudioSeriesTagIdSet(state);
+  const inheritedTagIds = getAnalyticsTagEditorSeriesTagIdSet(state);
   if (!isSeriesScope && inheritedTagIds.has(tagId)) {
     setInteractionStatus(state, interactionOptions, "warn", text(
       interactionOptions,
@@ -275,7 +275,7 @@ export function addTagStudioResolvedTag(state, tag, inputOptions = {}, interacti
     return;
   }
 
-  const entries = getTagStudioEditableEntries(state);
+  const entries = getAnalyticsTagEditorEditableEntries(state);
   const alreadyExists = entries.some((entry) => entry.canonicalId === tagId);
   if (alreadyExists) {
     setInteractionStatus(state, interactionOptions, "warn", text(
@@ -290,7 +290,7 @@ export function addTagStudioResolvedTag(state, tag, inputOptions = {}, interacti
     return;
   }
 
-  entries.push(makeResolvedEntry(nextTagStudioEntryId(state), rawInput, tag, stateDefaultWeight(state), alias));
+  entries.push(makeResolvedEntry(nextAnalyticsTagEditorEntryId(state), rawInput, tag, stateDefaultWeight(state), alias));
   setInteractionStatus(state, interactionOptions, "success", text(
     interactionOptions,
     isSeriesScope ? "series_tag_added_success" : "tag_added_success",
@@ -303,8 +303,8 @@ export function addTagStudioResolvedTag(state, tag, inputOptions = {}, interacti
   setSaveResult(interactionOptions, state, "", "");
 }
 
-export function cycleTagStudioEntryWeight(state, entryId, options = {}) {
-  const entry = getTagStudioEditableEntries(state).find((item) => item.entryId === entryId);
+export function cycleAnalyticsTagEditorEntryWeight(state, entryId, options = {}) {
+  const entry = getAnalyticsTagEditorEditableEntries(state).find((item) => item.entryId === entryId);
   if (!entry) return false;
   entry.wManual = nextWeight(entry.wManual);
   setInteractionStatus(
@@ -326,8 +326,8 @@ export function cycleTagStudioEntryWeight(state, entryId, options = {}) {
   return true;
 }
 
-export function removeTagStudioEditableEntry(state, entryId, options = {}) {
-  const entries = getTagStudioEditableEntries(state);
+export function removeAnalyticsTagEditorEditableEntry(state, entryId, options = {}) {
+  const entries = getAnalyticsTagEditorEditableEntries(state);
   const sizeBefore = entries.length;
   const nextEntries = entries.filter((entry) => entry.entryId !== entryId);
   if (state.selectedWorkId) {
@@ -350,7 +350,7 @@ export function removeTagStudioEditableEntry(state, entryId, options = {}) {
   }
 }
 
-export function restoreTagStudioDeletedEntry(state, rawTagId, rawScope, options = {}) {
+export function restoreAnalyticsTagEditorDeletedEntry(state, rawTagId, rawScope, options = {}) {
   const tagId = normalize(rawTagId);
   const scope = String(rawScope || "").trim().toLowerCase();
   if (!tagId) return;
@@ -360,7 +360,7 @@ export function restoreTagStudioDeletedEntry(state, rawTagId, rawScope, options 
 
   if (scope === "work") {
     if (!state.selectedWorkId) return;
-    if (getTagStudioSeriesTagIdSet(state).has(tagId)) {
+    if (getAnalyticsTagEditorSeriesTagIdSet(state).has(tagId)) {
       setInteractionStatus(
         state,
         options,
@@ -376,11 +376,11 @@ export function restoreTagStudioDeletedEntry(state, rawTagId, rawScope, options 
       return;
     }
 
-    const entries = getSelectedTagStudioWorkEntries(state);
+    const entries = getSelectedAnalyticsTagEditorWorkEntries(state);
     if (entries.some((entry) => entry.canonicalId === tagId)) return;
     const baseRow = getOfflineBaseWorkRows(state, state.selectedWorkId).find((row) => row.tag_id === tagId);
     if (!baseRow) return;
-    entries.push(makeResolvedEntry(nextTagStudioEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
+    entries.push(makeResolvedEntry(nextAnalyticsTagEditorEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
     setInteractionStatus(
       state,
       options,
@@ -395,7 +395,7 @@ export function restoreTagStudioDeletedEntry(state, rawTagId, rawScope, options 
   const baseRow = normalizeAssignmentRows(state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.tags)
     .find((row) => row.tag_id === tagId);
   if (!baseRow) return;
-  state.seriesEntries.push(makeResolvedEntry(nextTagStudioEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
+  state.seriesEntries.push(makeResolvedEntry(nextAnalyticsTagEditorEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
   setInteractionStatus(
     state,
     options,
@@ -405,8 +405,8 @@ export function restoreTagStudioDeletedEntry(state, rawTagId, rawScope, options 
   setSaveResult(options, state, "", "");
 }
 
-export function applyTagStudioSaveState(state, options = {}) {
-  const projection = projectTagStudioSaveState(state, options);
+export function applyAnalyticsTagEditorSaveState(state, options = {}) {
+  const projection = projectAnalyticsTagEditorSaveState(state, options);
   state.refs.input.disabled = projection.inputDisabled;
   state.refs.addButton.disabled = projection.addButtonDisabled;
   state.refs.saveButton.disabled = projection.saveButtonDisabled;
@@ -414,8 +414,8 @@ export function applyTagStudioSaveState(state, options = {}) {
   return projection;
 }
 
-export function projectTagStudioSaveState(state, options = {}) {
-  const metrics = computeTagStudioMetrics(state);
+export function projectAnalyticsTagEditorSaveState(state, options = {}) {
+  const metrics = computeAnalyticsTagEditorMetrics(state);
   const hasSelectedWork = Boolean(state.selectedWorkId);
   const diff = buildStateDiff(state);
   const isDirty = diff.seriesChanged || diff.changedWorkIds.length > 0;
@@ -437,21 +437,21 @@ export function projectTagStudioSaveState(state, options = {}) {
   };
 }
 
-export function computeTagStudioMetrics(_state) {
+export function computeAnalyticsTagEditorMetrics(_state) {
   return { unresolvedCount: 0 };
 }
 
-export function getTagStudioEditableEntries(state) {
+export function getAnalyticsTagEditorEditableEntries(state) {
   if (!state.selectedWorkId) return state.seriesEntries;
-  return getSelectedTagStudioWorkEntries(state);
+  return getSelectedAnalyticsTagEditorWorkEntries(state);
 }
 
-export function getSelectedTagStudioWorkEntries(state) {
+export function getSelectedAnalyticsTagEditorWorkEntries(state) {
   if (!state.selectedWorkId) return [];
   return state.workEntriesById.get(state.selectedWorkId) || [];
 }
 
-export function getTagStudioSeriesTagIdSet(state) {
+export function getAnalyticsTagEditorSeriesTagIdSet(state) {
   const out = new Set();
   for (const entry of state.seriesEntries) {
     out.add(entry.canonicalId);
@@ -459,7 +459,7 @@ export function getTagStudioSeriesTagIdSet(state) {
   return out;
 }
 
-export function nextTagStudioEntryId(state) {
+export function nextAnalyticsTagEditorEntryId(state) {
   let maxId = 0;
   for (const entry of state.seriesEntries) {
     if (entry.entryId > maxId) maxId = entry.entryId;

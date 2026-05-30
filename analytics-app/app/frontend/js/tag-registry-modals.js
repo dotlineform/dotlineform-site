@@ -520,19 +520,19 @@ function renderImportModal(state) {
     size: "wide",
     hidden: !state.importModalOpen,
     bodyHtml: `
-      <div class="tagStudioToolbar tagStudioToolbar--modalImport">
-        <div class="tagStudioToolbar__row">
-          <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(registryText(state.config, "choose_file_button", "Choose file"))}</button>
+      <div class="analyticsToolbar analyticsToolbar--modalImport">
+        <div class="analyticsToolbar__row">
+          <button type="button" class="analytics__button" data-role="${UI.role.chooseFile}">${escapeHtml(registryText(state.config, "choose_file_button", "Choose file"))}</button>
           <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
+          <select class="analyticsToolbar__select" data-role="${UI.role.importMode}">
             <option value="add">${escapeHtml(registryText(state.config, "import_mode_option_add", "add (no overwrite)"))}</option>
             <option value="merge">${escapeHtml(registryText(state.config, "import_mode_option_merge", "add + overwrite"))}</option>
             <option value="replace">${escapeHtml(registryText(state.config, "import_mode_option_replace", "replace entire registry"))}</option>
           </select>
-          <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(registryText(state.config, "import_button", "Import"))}</button>
+          <button type="button" class="analytics__button" data-role="${UI.role.importButton}">${escapeHtml(registryText(state.config, "import_button", "Import"))}</button>
         </div>
-        <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
+        <p class="analyticsToolbar__selected" data-role="${UI.role.selectedFile}"></p>
+        <p class="analyticsToolbar__result" data-role="${UI.role.importResult}"></p>
       </div>
     `,
     actionsHtml: renderAnalyticsModalActions([
@@ -551,11 +551,11 @@ function renderEditModal(state) {
       <p class="${UI_CLASS.formMeta}" data-role="${UI.role.editTagId}"></p>
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField}">
-          <input type="text" class="tagStudio__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
+          <input type="text" class="analytics__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
         </label>
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_description_label", "description"))}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
+          <textarea class="analytics__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
         </label>
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
@@ -574,16 +574,16 @@ function renderNewModal(state) {
     titleId: "tagRegistryNewTitle",
     title: registryText(state.config, "new_modal_title", "New Tag"),
     bodyHtml: `
-      <div class="tagStudio__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.newGroupKey}"></div>
+      <div class="analytics__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.newGroupKey}"></div>
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "new_slug_label", "slug"))}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.newTagSlug}" autocomplete="off">
+          <input type="text" class="analytics__input" data-role="${UI.role.newTagSlug}" autocomplete="off">
         </label>
         <p class="${UI_CLASS.formWarning}" data-role="${UI.role.newTagWarning}"></p>
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "new_description_label", "description"))}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.newTagDescription}" rows="3" autocomplete="off"></textarea>
+          <textarea class="analytics__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.newTagDescription}" rows="3" autocomplete="off"></textarea>
         </label>
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
@@ -606,14 +606,14 @@ function renderDemoteModal(state) {
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "demote_search_label", "find target tags"))}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(registryText(state.config, "demote_search_placeholder", "search tags"))}">
+          <input type="text" class="analytics__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(registryText(state.config, "demote_search_placeholder", "search tags"))}">
           <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
             <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
+      <div class="analytics__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
+      <div class="analytics__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
     actionsHtml: renderAnalyticsModalActions([

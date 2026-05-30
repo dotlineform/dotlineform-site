@@ -8,9 +8,9 @@ import {
   loadAnalyticsConfigWithText
 } from "./analytics-config.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteBusy,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   createAnalyticsModalHost
@@ -146,7 +146,7 @@ function scopeUnavailableMessage(state) {
 }
 
 function routeStateDetail(state) {
-  if (state && state.root) state.root.dataset.studioScope = state.scope;
+  if (state && state.root) state.root.dataset.analyticsScope = state.scope;
   return {
     route: "data-sharing-prepare",
     mode: prepareSelectionModel(state.prepareCapability),
@@ -156,11 +156,11 @@ function routeStateDetail(state) {
 }
 
 function markBusy(state, busy) {
-  setStudioRouteBusy(state.root, busy, routeStateDetail(state));
+  setAnalyticsRouteBusy(state.root, busy, routeStateDetail(state));
 }
 
 function markReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  setAnalyticsRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 async function loadJson(path) {
@@ -276,7 +276,7 @@ async function init() {
   const bootStatus = document.getElementById("dataSharingPrepareBootStatus");
   const root = document.getElementById("dataSharingPrepareRoot");
   if (!bootStatus || !root) return;
-  initializeStudioRouteState(root, { route: "data-sharing-prepare", mode: "selection" });
+  initializeAnalyticsRouteState(root, { route: "data-sharing-prepare", mode: "selection" });
 
   const state = {
     bootStatus,

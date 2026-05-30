@@ -228,7 +228,7 @@ function renderPreviewRow(row) {
   const disabled = row.selectable === false ? " disabled" : "";
   const checkedValue = row.selectable === false ? " aria-disabled=\"true\"" : "";
   return `
-    <li class="tagStudioList__row tagStudioList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
+    <li class="analyticsList__row analyticsList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
       <label class="dataSharingReviewList__label">
         <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}"${disabled}${checkedValue}>
         <span class="dataSharingReviewList__title"><span class="dataSharingReviewList__type">${escapeHtml(row.type)}</span><span class="dataSharingReviewList__titleText">${escapeHtml(row.title)}</span></span>
@@ -245,10 +245,10 @@ export function renderDataSharingReviewPreviewList(state) {
       "data_sharing_review.empty_state",
       "Generate a preview to list staged documents."
     );
-    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(emptyState)}</p>`;
+    state.listNode.innerHTML = `<p class="analytics__status">${escapeHtml(emptyState)}</p>`;
     return;
   }
-  state.listNode.innerHTML = `<ul class="tagStudioList__rows dataSharingReviewList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
+  state.listNode.innerHTML = `<ul class="analyticsList__rows dataSharingReviewList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
   syncDataSharingReviewPreviewCheckboxes(state);
 }
 

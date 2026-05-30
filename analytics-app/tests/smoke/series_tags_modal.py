@@ -163,8 +163,8 @@ def modal_state(page, role: str) -> dict[str, object]:
     return page.locator(f'[data-role="{role}"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.analyticsModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.analyticsModal__actions button'));
             const active = document.activeElement;
             return {
                 hidden: modal.hidden,
@@ -180,8 +180,8 @@ def modal_state(page, role: str) -> dict[str, object]:
                 activeRole: active ? active.dataset.role || "" : "",
                 activeSessionAction: active ? active.dataset.sessionAction || "" : "",
                 activeImportAction: active ? active.dataset.importAction || "" : "",
-                statusRole: modal.querySelector('.tagStudioModal__status')?.dataset.role || "",
-                statusText: modal.querySelector('.tagStudioModal__status')?.textContent.trim() || "",
+                statusRole: modal.querySelector('.analyticsModal__status')?.dataset.role || "",
+                statusText: modal.querySelector('.analyticsModal__status')?.textContent.trim() || "",
                 bodyText: modal.textContent || ""
             };
         }"""
@@ -197,7 +197,7 @@ def assert_shell_basics(state: dict[str, object], title: str) -> None:
         raise AssertionError(f"modal is not labelled by its title: {state!r}")
     if state["title"] != title:
         raise AssertionError(f"unexpected modal title: {state!r}")
-    if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
+    if not all("analytics__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal action row is missing default-width buttons: {state!r}")
 
 
@@ -236,7 +236,7 @@ def main() -> int:
             open_session_modal(page)
             session_state = modal_state(page, "series-tags-session-modal")
             assert_shell_basics(session_state, "Offline session")
-            if "tagStudioModal__dialog--compact" not in session_state["dialogClass"]:
+            if "analyticsModal__dialog--compact" not in session_state["dialogClass"]:
                 raise AssertionError(f"session modal is not compact: {session_state!r}")
             if session_state["actionLabels"] != ["Close"] or session_state["actionRoles"] != ["close-session-modal"]:
                 raise AssertionError(f"unexpected session modal actions: {session_state!r}")
@@ -268,11 +268,11 @@ def main() -> int:
             open_import_modal(page)
             import_state = modal_state(page, "series-tags-import-modal")
             assert_shell_basics(import_state, "Import assignments")
-            if "tagStudioModal__dialog--wide" not in import_state["dialogClass"]:
+            if "analyticsModal__dialog--wide" not in import_state["dialogClass"]:
                 raise AssertionError(f"import modal is not wide: {import_state!r}")
             if import_state["actionLabels"] != ["Close", "Apply import"] or import_state["actionRoles"] != ["close-import-modal", "apply-import"]:
                 raise AssertionError(f"unexpected import modal actions: {import_state!r}")
-            if "tagStudio__button--defaultAction" not in import_state["actionClasses"][1]:
+            if "analytics__button--defaultAction" not in import_state["actionClasses"][1]:
                 raise AssertionError(f"import apply action is not primary: {import_state!r}")
             if import_state["activeImportAction"] != "choose-file":
                 raise AssertionError(f"import modal did not focus the file command: {import_state!r}")
@@ -302,7 +302,7 @@ def main() -> int:
             if import_wrap != "apply-import":
                 raise AssertionError(f"import modal did not wrap focus backward: {import_wrap!r}")
 
-            page.locator(".tagStudioModal__backdrop").last.click(position={"x": 4, "y": 4})
+            page.locator(".analyticsModal__backdrop").last.click(position={"x": 4, "y": 4})
             assert_focus_return(page, "series-tags-import-modal", "importOpener")
 
             print(json.dumps({"session": session_state, "import": import_state, "callbacks": callback_state}, sort_keys=True))

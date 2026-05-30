@@ -7,9 +7,9 @@ import {
   probeDataSharingHealth
 } from "./analytics-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteBusy,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   showDataSharingReviewResultModal
@@ -95,7 +95,7 @@ function routeModeForState(state) {
 }
 
 function routeStateDetail(state) {
-  if (state && state.root) state.root.dataset.studioScope = state.scope;
+  if (state && state.root) state.root.dataset.analyticsScope = state.scope;
   return {
     route: "data-sharing-review",
     mode: routeModeForState(state),
@@ -105,11 +105,11 @@ function routeStateDetail(state) {
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+  setAnalyticsRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  setAnalyticsRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function previewCountRows(state, counts) {
@@ -221,7 +221,7 @@ async function init() {
   const bootStatus = document.getElementById("dataSharingReviewBootStatus");
   const root = document.getElementById("dataSharingReviewRoot");
   if (!bootStatus || !root) return;
-  initializeStudioRouteState(root, { route: "data-sharing-review", mode: "selection" });
+  initializeAnalyticsRouteState(root, { route: "data-sharing-review", mode: "selection" });
 
   const state = {
     bootStatus,

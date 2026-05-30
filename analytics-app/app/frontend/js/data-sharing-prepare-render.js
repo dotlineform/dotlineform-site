@@ -105,7 +105,7 @@ function renderDocRow(state, doc) {
   const viewable = doc.viewable === true;
   const noContent = docHasNoContent(doc);
   return `
-    <li class="tagStudioList__row tagStudioList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-doc="${escapeHtml(docId)}" data-data-sharing-prepare-viewable="${viewable ? "true" : "false"}" data-data-sharing-prepare-no-content="${noContent ? "true" : "false"}" style="--data-sharing-prepare-depth: ${depth};">
+    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-doc="${escapeHtml(docId)}" data-data-sharing-prepare-viewable="${viewable ? "true" : "false"}" data-data-sharing-prepare-no-content="${noContent ? "true" : "false"}" style="--data-sharing-prepare-depth: ${depth};">
       <label class="dataSharingPrepareList__label">
         <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
         <span class="dataSharingPrepareList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
@@ -209,7 +209,7 @@ export function renderDataSharingPrepareListFilters(state) {
     const active = state.listFilter === filter.key;
     const label = getAnalyticsText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
     return `
-      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
+      <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
         ${escapeHtml(label)}
       </button>
     `;
@@ -234,7 +234,7 @@ export function renderDataSharingPrepareFormatOptions(state) {
     return `
       <label class="dataSharingPreparePage__formatOption">
         <input type="radio" name="dataSharingPrepareFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
-        <span class="tagStudio__keyPill tagStudioFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
+        <span class="analytics__keyPill analyticsFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
       </label>
     `;
   }).join("");
@@ -263,7 +263,7 @@ export function renderDataSharingPrepareConfigSelect(state) {
 
 export function renderDataSharingPrepareDocList(state) {
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getAnalyticsText(
+    state.listNode.innerHTML = `<p class="analytics__status">${escapeHtml(getAnalyticsText(
       state.config,
       "data_sharing_prepare.profile_only_empty_state",
       "This profile packages the selected data family."
@@ -276,8 +276,8 @@ export function renderDataSharingPrepareDocList(state) {
     .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
     .map((doc) => renderDocRow(state, doc));
   state.listNode.innerHTML = rows.length
-    ? `<ul class="tagStudioList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
-    : `<p class="tagStudio__status">${escapeHtml(getAnalyticsText(
+    ? `<ul class="analyticsList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
+    : `<p class="analytics__status">${escapeHtml(getAnalyticsText(
       state.config,
       "data_sharing_prepare.empty_state",
       "No matching {scope_label} documents.",
@@ -323,7 +323,7 @@ export function renderDataSharingPrepareResultBody(state, payload) {
     </dl>
     <label class="dataSharingPrepareModal__files">
       <span>${escapeHtml(fileLabel)}</span>
-      <textarea class="tagStudio__input dataSharingPrepareModal__fileList" readonly rows="${Math.max(1, files.length)}">${escapeHtml(fileText || emptyFiles)}</textarea>
+      <textarea class="analytics__input dataSharingPrepareModal__fileList" readonly rows="${Math.max(1, files.length)}">${escapeHtml(fileText || emptyFiles)}</textarea>
     </label>
     ${issueList(state, payload && payload.warnings, payload && payload.errors)}
   `;

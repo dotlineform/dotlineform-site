@@ -13,12 +13,12 @@ import {
   normalizeWorkId,
   pushMapList,
   sanitizeTag
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 
-const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
+const DEFAULT_ANALYTICS_GROUPS = ["subject", "domain", "form", "theme"];
 const DEFAULT_WEIGHT = 0.6;
 
-export function buildTagStudioState(options) {
+export function buildAnalyticsTagEditorState(options) {
   const mount = options.mount;
   const seriesId = options.seriesId;
   const registryJson = options.registryJson;
@@ -30,7 +30,7 @@ export function buildTagStudioState(options) {
   const offlineSession = options.offlineSession;
   const studioGroups = Array.isArray(options.studioGroups) && options.studioGroups.length
     ? options.studioGroups
-    : DEFAULT_STUDIO_GROUPS;
+    : DEFAULT_ANALYTICS_GROUPS;
   const defaultWeight = Number.isFinite(options.defaultWeight) ? options.defaultWeight : DEFAULT_WEIGHT;
 
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];

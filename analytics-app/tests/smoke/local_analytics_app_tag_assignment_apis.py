@@ -26,7 +26,7 @@ from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 
 def write_fixture_assignments(repo_root: Path) -> Path:
-    assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
+    assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
     assignments_path.parent.mkdir(parents=True)
     assignments_path.write_text(
         """{

@@ -131,19 +131,19 @@ def main() -> int:
                         ragClass: row.querySelector('.rag')?.className || '',
                         ragTitle: row.querySelector('.rag')?.getAttribute('title') || '',
                         ragLabel: row.querySelector('.rag')?.getAttribute('aria-label') || '',
-                        chips: Array.from(row.querySelectorAll('.tagStudio__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
+                        chips: Array.from(row.querySelectorAll('.analytics__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
                     }));
                     reportInput.filterGroup = 'theme';
                     render.renderSeriesTagsReport(reportInput);
                     const themeRows = Array.from(document.querySelectorAll('.seriesTags__row')).map(row => ({
                         title: row.querySelector('.seriesTags__col--title')?.textContent.trim() || '',
-                        chips: Array.from(row.querySelectorAll('.tagStudio__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
+                        chips: Array.from(row.querySelectorAll('.analytics__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
                     }));
                     return {
                         allRows,
                         themeRows,
                         activeFilter: document.querySelector('[data-group="theme"]')?.dataset.state || '',
-                        groupInfoHref: document.querySelector('.tagStudio__keyInfoBtn')?.getAttribute('href') || '',
+                        groupInfoHref: document.querySelector('.analytics__keyInfoBtn')?.getAttribute('href') || '',
                         subjectTitle: document.querySelector('[data-group="subject"]')?.getAttribute('title') || ''
                     };
                 }"""

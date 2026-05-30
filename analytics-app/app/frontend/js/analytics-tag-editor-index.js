@@ -14,10 +14,10 @@ import {
   loadAnalyticsRegistryJson
 } from "./analytics-data.js";
 
-initTagStudioIndexRag();
+initAnalyticsTagEditorIndexRag();
 
-async function initTagStudioIndexRag() {
-  const list = document.getElementById("tagStudioList");
+async function initAnalyticsTagEditorIndexRag() {
+  const list = document.getElementById("analyticsList");
   if (!list) return;
 
   const rows = Array.from(list.querySelectorAll(".worksList__item[data-series-id]"));

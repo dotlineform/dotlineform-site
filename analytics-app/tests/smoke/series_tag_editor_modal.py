@@ -42,11 +42,11 @@ def route_url(base_url: str, path: str) -> str:
 
 
 def assert_modal_state(page, expected_focus: str) -> dict[str, object]:
-    state = page.locator('[data-role="studio-modal"]').evaluate(
+    state = page.locator('[data-role="analytics-modal"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.analyticsModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.analyticsModal__actions button'));
             const active = document.activeElement;
             return {
                 hidden: modal.hidden,
@@ -57,7 +57,7 @@ def assert_modal_state(page, expected_focus: str) -> dict[str, object]:
                 title: title ? title.textContent.trim() : "",
                 actionLabels: actionButtons.map((button) => button.textContent.trim()),
                 actionRoles: actionButtons.map((button) => button.dataset.role || ""),
-                defaultWidthActions: actionButtons.every((button) => button.classList.contains('tagStudio__button--defaultWidth')),
+                defaultWidthActions: actionButtons.every((button) => button.classList.contains('analytics__button--defaultWidth')),
                 activeRole: active ? active.dataset.role || "" : "",
                 tagsText: modal.querySelector('[data-role="modal-tags"]')?.textContent || "",
                 snippetText: modal.querySelector('[data-role="modal-snippet"]')?.textContent || ""
@@ -98,16 +98,16 @@ def install_modal_fixture(page) -> None:
             document.head.appendChild(css);
             await cssLoaded;
             document.body.innerHTML = `
-              <main class="tagStudioPage">
+              <main class="analyticsPage">
                 <button id="opener" type="button" data-role="save">Save</button>
-                <section id="tag-studio" class="tagStudio" data-role="series-tag-editor">
-                  <p class="tagStudio__status" data-role="status"></p>
+                <section id="analytics-tag-editor" class="analyticsTagEditor" data-role="series-tag-editor">
+                  <p class="analytics__status" data-role="status"></p>
                   <div data-role="modal-host"></div>
                 </section>
               </main>
             `;
-            const module = await import('/analytics/app/frontend/js/tag-studio-modals.js');
-            const mount = document.querySelector('#tag-studio');
+            const module = await import('/analytics/app/frontend/js/analytics-tag-editor-modals.js');
+            const mount = document.querySelector('#analytics-tag-editor');
             const state = {
                 config: { ui_text: { series_tag_editor: {} } },
                 mount,
@@ -118,13 +118,13 @@ def install_modal_fixture(page) -> None:
                 },
                 modalSnippet: ''
             };
-            state.refs.modalHost.innerHTML = module.renderTagStudioSaveModal(state);
+            state.refs.modalHost.innerHTML = module.renderAnalyticsTagEditorSaveModal(state);
             state.refs = {
                 ...state.refs,
-                ...module.collectTagStudioSaveModalRefs(mount)
+                ...module.collectAnalyticsTagEditorSaveModalRefs(mount)
             };
             window.__seriesTagEditorSmoke = { state, module, copyCount: 0 };
-            module.wireTagStudioSaveModalEvents(state, {
+            module.wireAnalyticsTagEditorSaveModalEvents(state, {
                 onCopySnippet: () => {
                     window.__seriesTagEditorSmoke.copyCount += 1;
                     state.refs.status.textContent = 'copy callback ran';
@@ -139,7 +139,7 @@ def open_modal(page) -> None:
         """() => {
             const smoke = window.__seriesTagEditorSmoke;
             document.querySelector('#opener').focus();
-            smoke.module.openTagStudioSaveModal(smoke.state, {
+            smoke.module.openAnalyticsTagEditorSaveModal(smoke.state, {
                 seriesChanged: true,
                 changedWorkIds: ['00001'],
                 nextSeriesRows: [{ tag_id: 'subject:smoke', w_manual: 0.6 }],
@@ -203,7 +203,7 @@ def main() -> int:
 
             open_modal(page)
             assert_modal_state(page, "modal-cancel")
-            page.locator('.tagStudioModal__actions [data-role="modal-cancel"]').click()
+            page.locator('.analyticsModal__actions [data-role="modal-cancel"]').click()
             cancel_state = page.evaluate(
                 """() => ({
                     hidden: window.__seriesTagEditorSmoke.state.refs.modal.hidden,
@@ -215,7 +215,7 @@ def main() -> int:
 
             open_modal(page)
             assert_modal_state(page, "modal-cancel")
-            page.locator(".tagStudioModal__backdrop").click(position={"x": 4, "y": 4})
+            page.locator(".analyticsModal__backdrop").click(position={"x": 4, "y": 4})
             backdrop_state = page.evaluate(
                 """() => ({
                     hidden: window.__seriesTagEditorSmoke.state.refs.modal.hidden,

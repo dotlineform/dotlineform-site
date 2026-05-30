@@ -5,34 +5,34 @@ import {
   probeAnalyticsHealth
 } from "./analytics-transport.js";
 import {
-  buildSaveModeText as buildTagStudioSaveModeText,
+  buildSaveModeText as buildAnalyticsTagEditorSaveModeText,
   buildTagSaveSuccessMessage,
   postTags,
   utcTimestamp
-} from "./tag-studio-save.js";
+} from "./analytics-tag-editor-save.js";
 import {
   applyPersistedBaseline,
   buildPersistedSeriesRow,
   buildStateDiff
-} from "./tag-studio-state.js";
+} from "./analytics-tag-editor-state.js";
 import { buildAnalyticsActivityContext } from "./analytics-activity-context.js";
 
-export function renderTagStudioSaveMode(state) {
+export function renderAnalyticsTagEditorSaveMode(state) {
   if (!state.refs || !state.refs.saveMode) return;
-  state.refs.saveMode.textContent = buildTagStudioSaveModeText(state.config, state.saveMode, studioText);
+  state.refs.saveMode.textContent = buildAnalyticsTagEditorSaveModeText(state.config, state.saveMode, analyticsTagEditorText);
 }
 
-export function syncTagStudioOfflineAutosave(state, callbacks = {}) {
-  clearTagStudioOfflineAutosave(state);
+export function syncAnalyticsTagEditorOfflineAutosave(state, callbacks = {}) {
+  clearAnalyticsTagEditorOfflineAutosave(state);
 }
 
-export function clearTagStudioOfflineAutosave(state) {
+export function clearAnalyticsTagEditorOfflineAutosave(state) {
   if (!state.offlineAutosaveTimer) return;
   window.clearTimeout(state.offlineAutosaveTimer);
   state.offlineAutosaveTimer = 0;
 }
 
-export async function probeTagStudioSaveMode(state, callbacks = {}) {
+export async function probeAnalyticsTagEditorSaveMode(state, callbacks = {}) {
   if (state.saveModeProbePending) return;
   state.saveModeProbePending = true;
   const ok = await probeAnalyticsHealth(500, { config: state.config });
@@ -41,7 +41,7 @@ export async function probeTagStudioSaveMode(state, callbacks = {}) {
   state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
   state.saveModeResolved = true;
 
-  const importMessage = studioText(
+  const importMessage = analyticsTagEditorText(
     state.config,
     "save_result_server_available_import",
     "Local server now available. Apply offline changes using Series Tags > Import."
@@ -58,18 +58,18 @@ export async function probeTagStudioSaveMode(state, callbacks = {}) {
     state.serverAvailableWhileOfflineNotified = false;
   }
 
-  renderTagStudioSaveMode(state);
+  renderAnalyticsTagEditorSaveMode(state);
   renderAll(callbacks, state);
   syncRouteBusyState(callbacks, state);
 }
 
-export async function stageTagStudioOfflineState(state, options = {}, callbacks = {}) {
-  clearTagStudioOfflineAutosave(state);
+export async function stageAnalyticsTagEditorOfflineState(state, options = {}, callbacks = {}) {
+  clearAnalyticsTagEditorOfflineAutosave(state);
 
   const diff = buildStateDiff(state);
   if (!diff.seriesChanged && !diff.changedWorkIds.length) {
     if (options.manual) {
-      setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
+      setStatus(state, "warn", analyticsTagEditorText(state.config, "save_status_no_changes", "No changes to save."));
       renderStatus(callbacks, state);
     }
     return false;
@@ -99,7 +99,7 @@ export async function stageTagStudioOfflineState(state, options = {}, callbacks 
       buildTagSaveSuccessMessage(
         state.config,
         { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt: stagedAt },
-        studioText
+        analyticsTagEditorText
       )
     );
   }
@@ -109,28 +109,28 @@ export async function stageTagStudioOfflineState(state, options = {}, callbacks 
     state,
     "success",
     result.seriesCleared
-      ? studioText(state.config, "save_result_offline_cleared", "Series matches repo data. Offline session entry cleared.")
-      : studioText(state.config, "save_result_offline_staged", "Changes are staged in the offline session.")
+      ? analyticsTagEditorText(state.config, "save_result_offline_cleared", "Series matches repo data. Offline session entry cleared.")
+      : analyticsTagEditorText(state.config, "save_result_offline_staged", "Changes are staged in the offline session.")
   );
   renderAll(callbacks, state);
   return true;
 }
 
-export async function handleTagStudioSave(state, callbacks = {}) {
+export async function handleAnalyticsTagEditorSave(state, callbacks = {}) {
   state.isBusy = true;
   syncRouteBusyState(callbacks, state);
   try {
-    return await handleTagStudioSaveInner(state, callbacks);
+    return await handleAnalyticsTagEditorSaveInner(state, callbacks);
   } finally {
     state.isBusy = false;
     syncRouteBusyState(callbacks, state);
   }
 }
 
-async function handleTagStudioSaveInner(state, callbacks) {
+async function handleAnalyticsTagEditorSaveInner(state, callbacks) {
   const diff = buildStateDiff(state);
   if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
+    setStatus(state, "warn", analyticsTagEditorText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(callbacks, state);
     return;
   }
@@ -165,7 +165,7 @@ async function handleTagStudioSaveInner(state, callbacks) {
         buildTagSaveSuccessMessage(
           state.config,
           { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt },
-          studioText
+          analyticsTagEditorText
         )
       );
       setSaveResult(callbacks, state, "", "");
@@ -176,15 +176,15 @@ async function handleTagStudioSaveInner(state, callbacks) {
     } catch (error) {
       state.saveMode = "offline";
       state.saveModeResolved = true;
-      renderTagStudioSaveMode(state);
-      setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to offline mode."));
-      setSaveResult(callbacks, state, "warn", studioText(state.config, "save_result_local_failed", "Local server save failed. Press Save again to stage these changes in the offline session."));
+      renderAnalyticsTagEditorSaveMode(state);
+      setStatus(state, "error", analyticsTagEditorText(state.config, "save_status_local_failed", "Local save failed. Switched to offline mode."));
+      setSaveResult(callbacks, state, "warn", analyticsTagEditorText(state.config, "save_result_local_failed", "Local server save failed. Press Save again to stage these changes in the offline session."));
       renderAll(callbacks, state);
       return;
     }
   }
 
-  await stageTagStudioOfflineState(state, { manual: true }, callbacks);
+  await stageAnalyticsTagEditorOfflineState(state, { manual: true }, callbacks);
 }
 
 function setStatus(state, kind, text) {
@@ -208,6 +208,6 @@ function syncRouteBusyState(callbacks, state) {
   if (typeof callbacks.syncRouteBusyState === "function") callbacks.syncRouteBusyState(state);
 }
 
-function studioText(config, key, fallback, tokens) {
+function analyticsTagEditorText(config, key, fallback, tokens) {
   return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

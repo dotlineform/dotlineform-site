@@ -8,8 +8,8 @@ import {
   normalizeAnalyticsGroups
 } from "./analytics-data.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   tagGroupsUi
@@ -30,7 +30,7 @@ async function initTagGroupsPage() {
   if (!root) return;
   const content = root.querySelector(UI_SELECTOR.content);
   if (!content) return;
-  initializeStudioRouteState(root, { route: "tag-groups", mode: "list" });
+  initializeAnalyticsRouteState(root, { route: "tag-groups", mode: "list" });
 
   try {
     const config = await loadAnalyticsConfigWithText("tag_groups");
@@ -38,14 +38,14 @@ async function initTagGroupsPage() {
     const data = await loadAnalyticsGroupsJson(config);
     const groups = normalizeAnalyticsGroups(data, STUDIO_GROUPS);
     renderGroups(content, groups, config);
-    setStudioRouteReady(root, true, {
+    setAnalyticsRouteReady(root, true, {
       route: "tag-groups",
       mode: groups.length ? "list" : "empty",
       recordLoaded: groups.length > 0
     });
   } catch (error) {
     content.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from the local analytics API."))}</div>`;
-    setStudioRouteReady(root, true, {
+    setAnalyticsRouteReady(root, true, {
       route: "tag-groups",
       mode: "empty",
       recordLoaded: false

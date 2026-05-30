@@ -6,7 +6,7 @@ import {
 } from "./analysis-tag-scoring.js";
 import {
   normalizeAssignmentRows
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 import {
   seriesTagsUi
 } from "./analytics-ui.js";
@@ -22,12 +22,12 @@ export function renderSeriesTagsReport(input) {
       : "";
 
     return `
-      <li class="tagStudioList__row seriesTags__row">
+      <li class="analyticsList__row seriesTags__row">
         <div class="seriesTags__col seriesTags__col--title">
           <a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>
         </div>
         <div class="seriesTags__col seriesTags__col--count">
-          <span class="tagStudioIndex__statusWrap">
+          <span class="analyticsTagIndex__statusWrap">
             <span class="rag rag--${escapeHtml(row.rag)}" title="${escapeHtml(row.tooltip)}" aria-label="${escapeHtml(row.ragLabel)}"></span>
           </span>
         </div>
@@ -41,7 +41,7 @@ export function renderSeriesTagsReport(input) {
   input.mount.innerHTML = `
     <div class="seriesTags">
       ${renderFilters(input)}
-      <div class="tagStudioList__head seriesTags__head">
+      <div class="analyticsList__head seriesTags__head">
         <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="series"${stateAttr(input.sortKey === "series" ? UI_STATE.active : "")}>
           ${escapeHtml(seriesTagsText(input.config, "table_heading_series", "series"))}${sortIndicator(input, "series")}
         </button>
@@ -52,7 +52,7 @@ export function renderSeriesTagsReport(input) {
           ${escapeHtml(seriesTagsText(input.config, "table_heading_tags", "tags"))}${sortIndicator(input, "tags")}
         </button>
       </div>
-      <ul class="tagStudioList__rows seriesTags__rows">${rowsHtml}</ul>
+      <ul class="analyticsList__rows seriesTags__rows">${rowsHtml}</ul>
     </div>
   `;
 }
@@ -157,7 +157,7 @@ function renderFilters(input) {
 
   return `
     <div class="${UI_CLASS.filters}">
-      <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(input.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(input.config, "filter_all_tags", "All tags"))}</button>
+      <button type="button" class="analytics__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(input.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(input.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
       ${renderGroupInfoControl(input)}
     </div>

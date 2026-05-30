@@ -88,7 +88,7 @@ def assert_tag_save_session_helpers(page: Page) -> None:
                 }
             });
             await Promise.all([
-                import('/analytics/app/frontend/js/tag-studio.js'),
+                import('/analytics/app/frontend/js/analytics-tag-editor.js'),
                 import('/analytics/app/frontend/js/tag-registry.js'),
                 import('/analytics/app/frontend/js/tag-aliases.js'),
                 import('/analytics/app/frontend/js/tag-registry-import-mode.js'),
@@ -241,7 +241,7 @@ def assert_tag_registry_modal_workflow(page: Page) -> None:
     ]
 
 
-def assert_tag_studio_interactions(page: Page) -> None:
+def assert_analytics_tag_editor_interactions(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             document.body.innerHTML = `
@@ -253,7 +253,7 @@ def assert_tag_studio_interactions(page: Page) -> None:
               <p id="status"></p>
               <p id="saveResult"></p>
             `;
-            const module = await import('/analytics/app/frontend/js/tag-studio-interactions.js');
+            const module = await import('/analytics/app/frontend/js/analytics-tag-editor-interactions.js');
             const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
             const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
             const gamma = { tag_id: 'theme:gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
@@ -338,19 +338,19 @@ def assert_tag_studio_interactions(page: Page) -> None:
                     return state.seriesWorkOptions.filter((item) => item.workId === normalized);
                 }
             };
-            module.addTagStudioWorkSelection(state, '00001', true, callbacks);
-            module.addTagStudioResolvedTag(state, beta, { rawInput: 'alias-beta', alias: 'alias-beta' }, callbacks);
+            module.addAnalyticsTagEditorWorkSelection(state, '00001', true, callbacks);
+            module.addAnalyticsTagEditorResolvedTag(state, beta, { rawInput: 'alias-beta', alias: 'alias-beta' }, callbacks);
             const workEntryAfterAdd = state.workEntriesById.get('00001')[0];
-            const workProjection = module.projectTagStudioSaveState(state, { text });
-            module.cycleTagStudioEntryWeight(state, workEntryAfterAdd.entryId, callbacks);
+            const workProjection = module.projectAnalyticsTagEditorSaveState(state, { text });
+            module.cycleAnalyticsTagEditorEntryWeight(state, workEntryAfterAdd.entryId, callbacks);
             const cycledWeight = state.workEntriesById.get('00001')[0].wManual;
-            module.removeTagStudioEditableEntry(state, workEntryAfterAdd.entryId, callbacks);
+            module.removeAnalyticsTagEditorEditableEntry(state, workEntryAfterAdd.entryId, callbacks);
             const workEntriesAfterRemove = state.workEntriesById.get('00001').length;
-            module.restoreTagStudioDeletedEntry(state, 'theme:gamma', 'work', callbacks);
+            module.restoreAnalyticsTagEditorDeletedEntry(state, 'theme:gamma', 'work', callbacks);
             const restoredWorkEntry = state.workEntriesById.get('00001')[0];
-            module.clearTagStudioSelectedWork(state, '00001', callbacks);
-            module.addTagStudioResolvedTag(state, beta, { rawInput: 'beta' }, callbacks);
-            const seriesProjection = module.applyTagStudioSaveState(state, { text });
+            module.clearAnalyticsTagEditorSelectedWork(state, '00001', callbacks);
+            module.addAnalyticsTagEditorResolvedTag(state, beta, { rawInput: 'beta' }, callbacks);
+            const seriesProjection = module.applyAnalyticsTagEditorSaveState(state, { text });
             return {
                 selectedAfterClear: state.selectedWorkId,
                 selectedIdsAfterClear: state.selectedWorkIds.slice(),
@@ -567,7 +567,7 @@ def run(site_root: Path) -> None:
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_tag_save_session_helpers(page)
             assert_tag_registry_modal_workflow(page)
-            assert_tag_studio_interactions(page)
+            assert_analytics_tag_editor_interactions(page)
             assert_tag_aliases_modal_workflow(page)
             browser.close()
             if errors:

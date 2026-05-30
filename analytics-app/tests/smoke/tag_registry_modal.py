@@ -140,8 +140,8 @@ def modal_state(page, role: str) -> dict[str, object]:
     return page.locator(f'[data-role="{role}"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.analyticsModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.analyticsModal__actions button'));
             const active = document.activeElement;
             return {
                 hidden: modal.hidden,
@@ -184,7 +184,7 @@ def assert_shell(
         raise AssertionError(f"modal size mismatch: {state!r}")
     if state["actionLabels"] != actions or state["actionRoles"] != action_roles:
         raise AssertionError(f"unexpected modal actions: {state!r}")
-    if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
+    if not all("analytics__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal action buttons are missing default-width class: {state!r}")
     if active_role and state["activeRole"] != active_role:
         raise AssertionError(f"modal focus did not enter expected control: {state!r}")
@@ -249,12 +249,12 @@ def main() -> int:
                 ["Close"],
                 ["close-import-modal"],
                 "choose-file",
-                "tagStudioModal__dialog--wide",
+                "analyticsModal__dialog--wide",
             )
             page.locator('[data-role="import-btn"]').click()
             if focus_wrap_role(page, '[data-role="choose-file"]', "Shift+Tab") != "close-import-modal":
                 raise AssertionError("import modal did not wrap focus backward to Close")
-            page.locator('[data-role="import-modal"] .tagStudioModal__backdrop').click(position={"x": 4, "y": 4})
+            page.locator('[data-role="import-modal"] .analyticsModal__backdrop').click(position={"x": 4, "y": 4})
             assert_focus_return(page, "import-modal", "importOpener")
 
             open_direct_modal(page, "newOpener", "smoke.module.openTagRegistryNewModal(smoke.state);")
@@ -334,7 +334,7 @@ def main() -> int:
                 ["Close", "Copy"],
                 ["close-patch-modal", "copy-patch"],
                 "copy-patch",
-                "tagStudioModal__dialog--wide",
+                "analyticsModal__dialog--wide",
             )
             if "diff --git" not in patch_state["bodyText"]:
                 raise AssertionError(f"patch snippet did not render: {patch_state!r}")

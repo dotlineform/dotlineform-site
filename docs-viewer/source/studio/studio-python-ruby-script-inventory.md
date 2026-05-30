@@ -2,7 +2,7 @@
 doc_id: studio-python-ruby-script-inventory
 title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
-last_updated: 2026-05-28
+last_updated: 2026-05-30
 ui_status: urgent
 parent_id: audit
 viewable: true
@@ -28,7 +28,7 @@ The useful sequence is visibility first, then targeted reductions in generated a
 
 - New catalogue generated payload behavior belongs in `studio/services/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
 - New docs source mutation behavior belongs in `docs_management_mutations.py`, source config/settings modules, or import-source services, not directly in the HTTP server.
-- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules and local Studio analytics API adapter, not in standalone service scripts.
+- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in `analytics-app/app/server/analytics_app/tag_services/` and the Analytics API/Data Sharing adapters, not in Studio service scripts or standalone service scripts.
 - New local-service behavior should preserve explicit write allowlists, dry-run semantics, backup paths, and compact logging.
 - New rebuild performance work should first expose counts and fallback reasons, then optimize the path with the highest measured cost.
 - New command examples in docs should use project-local script paths from `dotlineform-site/`.

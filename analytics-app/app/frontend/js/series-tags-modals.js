@@ -14,8 +14,8 @@ export function renderSessionModal(state) {
   const stagedSeriesIds = Object.keys(exportPayload.series || {}).sort();
   const hasStaged = stagedSeriesIds.length > 0;
   const bodyHtml = `
-    <div class="tagStudioToolbar seriesTagsSession">
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionSummary}">
+    <div class="analyticsToolbar seriesTagsSession">
+      <div class="analyticsToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionSummary}">
         <span class="${UI_CLASS.sessionLabel}">${escapeHtml(seriesTagsText(state.config, "session_summary_label", "Offline session"))}</span>
         <span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(
           state.config,
@@ -30,14 +30,14 @@ export function renderSessionModal(state) {
           { updated_at: exportPayload.updated_at_utc || seriesTagsText(state.config, "session_updated_empty", "not yet") }
         ))}</span>
       </div>
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionActions}">
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="copy"${hasStaged ? "" : " disabled"}>
+      <div class="analyticsToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionActions}">
+        <button type="button" class="analytics__button analytics__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="copy"${hasStaged ? "" : " disabled"}>
           ${escapeHtml(seriesTagsText(state.config, "session_copy_button", "Copy JSON"))}
         </button>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="download"${hasStaged ? "" : " disabled"}>
+        <button type="button" class="analytics__button analytics__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="download"${hasStaged ? "" : " disabled"}>
           ${escapeHtml(seriesTagsText(state.config, "session_download_button", "Download JSON"))}
         </button>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="clear"${hasStaged ? "" : " disabled"}>
+        <button type="button" class="analytics__button analytics__button--defaultWidth ${UI_CLASS.sessionAction}" data-session-action="clear"${hasStaged ? "" : " disabled"}>
           ${escapeHtml(seriesTagsText(state.config, "session_clear_button", "Clear session"))}
         </button>
       </div>
@@ -66,13 +66,13 @@ export function renderImportModal(state) {
   const hasFile = Boolean(state.importFile);
   const canApply = Boolean(preview && (Number(preview.applicable_count) > 0 || Number(preview.conflict_count) > 0));
   const bodyHtml = `
-    <div class="tagStudioToolbar tagStudioToolbar--modalImport seriesTagsSession">
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionImport}">
+    <div class="analyticsToolbar analyticsToolbar--modalImport seriesTagsSession">
+      <div class="analyticsToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionImport}">
         <input type="file" accept="application/json,.json" hidden>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth ${UI_CLASS.sessionAction}" data-import-action="choose-file">
+        <button type="button" class="analytics__button analytics__button--defaultWidth ${UI_CLASS.sessionAction}" data-import-action="choose-file">
           ${escapeHtml(seriesTagsText(state.config, "session_import_choose_button", "Choose file"))}
         </button>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth ${UI_CLASS.sessionAction}" data-import-action="preview-import"${hasFile ? "" : " disabled"}>
+        <button type="button" class="analytics__button analytics__button--defaultWidth ${UI_CLASS.sessionAction}" data-import-action="preview-import"${hasFile ? "" : " disabled"}>
           ${escapeHtml(seriesTagsText(state.config, "session_import_preview_button", "Preview import"))}
         </button>
         <span class="${UI_CLASS.sessionValue}">${escapeHtml(
@@ -219,7 +219,7 @@ function renderModalStatus(state, role) {
   const message = String(state.resultText || "");
   const stateAttr = state.resultKind ? ` data-state="${escapeHtml(state.resultKind)}"` : "";
   const hiddenAttr = message ? "" : " hidden";
-  return `<p class="tagStudioForm__status tagStudioModal__status" data-role="${escapeHtml(role)}"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
+  return `<p class="analyticsForm__status analyticsModal__status" data-role="${escapeHtml(role)}"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
 }
 
 function closeSeriesTagsModal(state, modalKind, callbacks = {}) {

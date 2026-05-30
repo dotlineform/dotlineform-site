@@ -17,15 +17,15 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-registry` exposes the shared Studio route-ready contract:
+The page root `#tag-registry` exposes the Analytics route-ready contract:
 
-- `data-studio-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
-- `data-studio-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
-- `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
-- `data-studio-service` reports whether the Local Analytics API is available for direct writes
-- `data-studio-record-loaded` is `true` when registry tags are loaded
+- `data-analytics-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
+- `data-analytics-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
+- `data-analytics-mode` is `list`, `import`, or `edit` depending on active modal state
+- `data-analytics-service` reports whether the Local Analytics API is available for direct writes
+- `data-analytics-record-loaded` is `true` when registry tags are loaded
 
-Successful local-server registry writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
+Successful local-server registry writes send Analytics activity context and append unified activity rows with script purpose `save tag data`.
 Covered write actions include registry import, create tag, edit tag, delete tag, and demote tag.
 
 ## Page / Template Structure
@@ -121,14 +121,14 @@ User-facing name:
 DOM / CSS:
 
 - `[data-role="filters"]`
-- `.tagStudioFilters`
+- `.analyticsFilters`
 - `[data-role="key"]`
 - `[data-role="search"]`
-- `.tagStudioFilters__key`
-- `.tagStudioFilters__searchWrap`
-- `.tagStudioFilters__searchInput`
-- `.tagStudioFilters__allBtn`
-- `.tagStudioFilters__groupBtn`
+- `.analyticsFilters__key`
+- `.analyticsFilters__searchWrap`
+- `.analyticsFilters__searchInput`
+- `.analyticsFilters__allBtn`
+- `.analyticsFilters__groupBtn`
 
 JS owner:
 
@@ -148,9 +148,9 @@ User-facing name:
 DOM / CSS:
 
 - `[data-role="list"]`
-- `.tagStudioList__head.tagRegistry__head`
-- `.tagStudioList__rows.tagRegistry__rows`
-- `.tagStudioList__row.tagRegistry__row`
+- `.analyticsList__head.tagRegistry__head`
+- `.analyticsList__rows.tagRegistry__rows`
+- `.analyticsList__row.tagRegistry__row`
 
 JS owner:
 
@@ -276,15 +276,15 @@ Meaning:
 
 Primary CSS:
 
-- `assets/studio/css/studio.css`
+- `analytics-app/app/assets/css/analytics.css`
 
 Shared primitives used:
 
-- `tagStudioToolbar__*`
-- `tagStudioFilters__*`
-- `tagStudioList__*`
-- `tagStudioForm__*`
-- `tagStudioModal*`
+- `analyticsToolbar__*`
+- `analyticsFilters__*`
+- `analyticsList__*`
+- `analyticsForm__*`
+- `analyticsModal*`
 
 Page-specific classes retained:
 
@@ -325,7 +325,7 @@ The page controller owns:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
+This page follows the shared Analytics UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors
@@ -402,13 +402,13 @@ These responsibilities are split across:
 If a request refers to:
 
 - “toolbar”
-  - start with `.tagStudioToolbar` in `tag-registry.js`
+  - start with `.analyticsToolbar` in `tag-registry.js`
 - “search”
-  - start with `.tagStudioFilters` in `analytics-app/app/frontend/js/tag-registry-render.js`
+  - start with `.analyticsFilters` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “list header”
-  - start with `.tagStudioList__head.tagRegistry__head` in `analytics-app/app/frontend/js/tag-registry-render.js`
+  - start with `.analyticsList__head.tagRegistry__head` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “tag row”
-  - start with `.tagStudioList__row.tagRegistry__row` in `analytics-app/app/frontend/js/tag-registry-render.js`
+  - start with `.analyticsList__row.tagRegistry__row` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “description column”
   - start with `.tagRegistry__descCol` in `analytics-app/app/frontend/js/tag-registry-render.js`
 - “new tag modal”

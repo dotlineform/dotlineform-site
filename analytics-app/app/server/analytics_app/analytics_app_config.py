@@ -102,7 +102,7 @@ ANALYTICS_SERVICE_ENDPOINTS: dict[str, object] = {
     "data_sharing": {},
 }
 
-ANALYTICS_MODAL_EVENT = "studio:open-modal"
+ANALYTICS_MODAL_EVENT = "analytics:open-modal"
 PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
 
@@ -139,7 +139,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-prepare.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-review.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "catalogue-public-links.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-studio.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-tag-editor.js",
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
     ]

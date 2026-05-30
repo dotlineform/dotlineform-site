@@ -1,14 +1,14 @@
-let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-let GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
+let ANALYTICS_GROUPS = ["subject", "domain", "form", "theme"];
+let GROUP_INDEX = new Map(ANALYTICS_GROUPS.map((group, index) => [group, index]));
 let WEIGHT_VALUES = [0.3, 0.6, 0.9];
 let DEFAULT_WEIGHT = 0.6;
 
-export function configureTagStudioDomain(options = {}) {
+export function configureAnalyticsTagEditorDomain(options = {}) {
   const groups = Array.isArray(options.groups) && options.groups.length
     ? options.groups.map((group) => normalize(group)).filter(Boolean)
-    : STUDIO_GROUPS.slice();
-  STUDIO_GROUPS = groups;
-  GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
+    : ANALYTICS_GROUPS.slice();
+  ANALYTICS_GROUPS = groups;
+  GROUP_INDEX = new Map(ANALYTICS_GROUPS.map((group, index) => [group, index]));
 
   const weightValues = Array.isArray(options.weightValues) && options.weightValues.length
     ? options.weightValues.map((value) => Number(value)).filter((value) => Number.isFinite(value))

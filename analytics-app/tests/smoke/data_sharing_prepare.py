@@ -191,20 +191,20 @@ def block_data_sharing_api(route) -> None:
 
 def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> dict[str, str]:
     page.wait_for_selector(f"{root_selector}:not([hidden])", timeout=timeout_ms)
-    page.wait_for_selector(f"{root_selector}[data-studio-ready='true']", timeout=timeout_ms)
+    page.wait_for_selector(f"{root_selector}[data-analytics-ready='true']", timeout=timeout_ms)
     page.wait_for_function(
-        "selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'",
+        "selector => document.querySelector(selector)?.dataset.analyticsBusy !== 'true'",
         arg=root_selector,
         timeout=timeout_ms,
     )
     return page.locator(root_selector).evaluate(
         """root => ({
-            route: root.dataset.studioRoute || "",
-            ready: root.dataset.studioReady || "",
-            busy: root.dataset.studioBusy || "",
-            mode: root.dataset.studioMode || "",
-            service: root.dataset.studioService || "",
-            recordLoaded: root.dataset.studioRecordLoaded || ""
+            route: root.dataset.analyticsRoute || "",
+            ready: root.dataset.analyticsReady || "",
+            busy: root.dataset.analyticsBusy || "",
+            mode: root.dataset.analyticsMode || "",
+            service: root.dataset.analyticsService || "",
+            recordLoaded: root.dataset.analyticsRecordLoaded || ""
         })"""
     )
 
@@ -378,13 +378,13 @@ def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
 def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]], timeout_ms: int) -> dict[str, object]:
     page.locator("#dataSharingPrepareSelectAll").click()
     page.locator("#dataSharingPrepareRun").click()
-    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
+    page.wait_for_selector('[data-role="analytics-modal"]', timeout=timeout_ms)
 
-    modal_state = page.locator('[data-role="studio-modal"]').evaluate(
+    modal_state = page.locator('[data-role="analytics-modal"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.analyticsModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.analyticsModal__actions button'));
             const rows = Array.from(modal.querySelectorAll('.dataSharingPrepareModal__countRow'))
                 .map(row => Array.from(row.children).map(node => node.textContent.trim()));
             const issues = Array.from(modal.querySelectorAll('.dataSharingPrepareModal__issues li'))
@@ -411,13 +411,13 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
         raise AssertionError(f"prepare result modal lacks dialog semantics: {modal_state!r}")
     if not modal_state["labelledBy"] or modal_state["labelledBy"] != modal_state["titleId"]:
         raise AssertionError(f"prepare result modal is not labelled by its title: {modal_state!r}")
-    if "tagStudioModal__dialog--" in modal_state["dialogClass"]:
+    if "analyticsModal__dialog--" in modal_state["dialogClass"]:
         raise AssertionError(f"prepare result modal should use the default size contract: {modal_state!r}")
     if modal_state["title"] != "Package result":
         raise AssertionError(f"prepare result modal title mismatch: {modal_state!r}")
     if modal_state["actionLabels"] != ["Close"]:
         raise AssertionError(f"prepare result modal close action mismatch: {modal_state!r}")
-    if not modal_state["actionClasses"] or "tagStudio__button--defaultWidth" not in modal_state["actionClasses"][0]:
+    if not modal_state["actionClasses"] or "analytics__button--defaultWidth" not in modal_state["actionClasses"][0]:
         raise AssertionError(f"prepare result modal action is missing the default-width button contract: {modal_state!r}")
     if ["format", "JSON"] not in modal_state["rows"]:
         raise AssertionError(f"prepare result modal did not render the target format row: {modal_state!r}")
@@ -435,20 +435,20 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
         raise AssertionError(f"prepare request ownership changed unexpectedly: {prepare_requests[-1]!r}")
 
     page.keyboard.press("Escape")
-    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+    page.wait_for_selector('[data-role="analytics-modal"]', state="detached", timeout=timeout_ms)
     focus_returned = page.evaluate("() => document.activeElement && document.activeElement.id")
     if focus_returned != "dataSharingPrepareRun":
         raise AssertionError(f"prepare result modal did not return focus to opener: {focus_returned!r}")
 
     page.locator("#dataSharingPrepareRun").click()
-    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
-    page.locator(".tagStudioModal__backdrop").click(position={"x": 8, "y": 8})
-    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+    page.wait_for_selector('[data-role="analytics-modal"]', timeout=timeout_ms)
+    page.locator(".analyticsModal__backdrop").click(position={"x": 8, "y": 8})
+    page.wait_for_selector('[data-role="analytics-modal"]', state="detached", timeout=timeout_ms)
 
     page.locator("#dataSharingPrepareRun").click()
-    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
+    page.wait_for_selector('[data-role="analytics-modal"]', timeout=timeout_ms)
     page.locator('[data-role="modal-cancel"]').last.click()
-    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+    page.wait_for_selector('[data-role="analytics-modal"]', state="detached", timeout=timeout_ms)
 
     return modal_state
 

@@ -3,7 +3,7 @@ import { openConfirmDetailModal, openNoticeModal } from "./analytics-modal.js";
 
 export function showDataSharingReviewResultModal(state, { title, summary, countRows, issues }, options = {}) {
   const summaryHtml = normalizeText(summary)
-    ? `<p class="tagStudioModal__label dataSharingReviewResultModal__summary">${escapeHtml(summary)}</p>`
+    ? `<p class="analyticsModal__label dataSharingReviewResultModal__summary">${escapeHtml(summary)}</p>`
     : "";
   const bodyHtml = `
     ${summaryHtml}

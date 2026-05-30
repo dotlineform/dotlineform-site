@@ -17,15 +17,15 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-aliases` exposes the shared Studio route-ready contract:
+The page root `#tag-aliases` exposes the Analytics route-ready contract:
 
-- `data-studio-ready` is `false` while config, alias, registry, and group data load, then `true` after the list or error state is rendered
-- `data-studio-busy` is `true` while import, edit/create, delete, promote, or demote work is running
-- `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
-- `data-studio-service` reports whether the Local Analytics API is available for direct writes
-- `data-studio-record-loaded` is `true` when aliases are loaded
+- `data-analytics-ready` is `false` while config, alias, registry, and group data load, then `true` after the list or error state is rendered
+- `data-analytics-busy` is `true` while import, edit/create, delete, promote, or demote work is running
+- `data-analytics-mode` is `list`, `import`, or `edit` depending on active modal state
+- `data-analytics-service` reports whether the Local Analytics API is available for direct writes
+- `data-analytics-record-loaded` is `true` when aliases are loaded
 
-Successful local-server alias writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
+Successful local-server alias writes send Analytics activity context and append unified activity rows with script purpose `save tag data`.
 Covered write actions include alias import, create alias, edit alias, delete alias, promote alias, and demote tag.
 
 ## Page / Template Structure
@@ -117,14 +117,14 @@ User-facing name:
 DOM / CSS:
 
 - `[data-role="filters"]`
-- `.tagStudioFilters`
+- `.analyticsFilters`
 - `[data-role="key"]`
 - `[data-role="search"]`
-- `.tagStudioFilters__key`
-- `.tagStudioFilters__searchWrap`
-- `.tagStudioFilters__searchInput`
-- `.tagStudioFilters__allBtn`
-- `.tagStudioFilters__groupBtn`
+- `.analyticsFilters__key`
+- `.analyticsFilters__searchWrap`
+- `.analyticsFilters__searchInput`
+- `.analyticsFilters__allBtn`
+- `.analyticsFilters__groupBtn`
 
 JS owner:
 
@@ -140,9 +140,9 @@ User-facing name:
 DOM / CSS:
 
 - `[data-role="list"]`
-- `.tagStudioList__head.tagAliases__head`
-- `.tagStudioList__rows.tagAliases__rows`
-- `.tagStudioList__row.tagAliases__row`
+- `.analyticsList__head.tagAliases__head`
+- `.analyticsList__rows.tagAliases__rows`
+- `.analyticsList__row.tagAliases__row`
 
 JS owner:
 
@@ -282,15 +282,15 @@ Meaning:
 
 Primary CSS:
 
-- `assets/studio/css/studio.css`
+- `analytics-app/app/assets/css/analytics.css`
 
 Shared primitives used:
 
-- `tagStudioToolbar__*`
-- `tagStudioFilters__*`
-- `tagStudioList__*`
-- `tagStudioForm__*`
-- `tagStudioModal*`
+- `analyticsToolbar__*`
+- `analyticsFilters__*`
+- `analyticsList__*`
+- `analyticsForm__*`
+- `analyticsModal*`
 
 Page-specific classes retained:
 
@@ -299,7 +299,7 @@ Page-specific classes retained:
 
 Important note:
 
-- this page uses the shared `tagStudioList__*` row/header spacing and line treatment; `tagAliases__*` should stay focused on column grids and alias-specific cell content
+- this page uses the shared `analyticsList__*` row/header spacing and line treatment; `tagAliases__*` should stay focused on column grids and alias-specific cell content
 
 ## DOM Rendering and Event Wiring
 
@@ -326,7 +326,7 @@ The page controller owns:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
+This page follows the shared Analytics UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors
@@ -402,13 +402,13 @@ These responsibilities are split across:
 If a request refers to:
 
 - “toolbar”
-  - start with `.tagStudioToolbar`
+  - start with `.analyticsToolbar`
 - “search”
-  - start with `.tagStudioFilters`
+  - start with `.analyticsFilters`
 - “alias list header”
-  - start with `.tagStudioList__head.tagAliases__head`
+  - start with `.analyticsList__head.tagAliases__head`
 - “alias row”
-  - start with `.tagStudioList__row.tagAliases__row`
+  - start with `.analyticsList__row.tagAliases__row`
 - “target tags”
   - start with `.tagAliases__tagsCol` / `.tagAliases__tagList`
 - “new alias modal”

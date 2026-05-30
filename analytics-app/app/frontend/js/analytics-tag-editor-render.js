@@ -8,12 +8,12 @@ import {
   normalizeAssignmentRows,
   normalizeManualWeight,
   normalizeWorkId
-} from "./tag-studio-domain.js";
+} from "./analytics-tag-editor-domain.js";
 import {
   seriesTagEditorUi
 } from "./analytics-ui.js";
 
-const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
+const DEFAULT_ANALYTICS_GROUPS = ["subject", "domain", "form", "theme"];
 const DEFAULT_WEIGHT = 0.6;
 const UI = seriesTagEditorUi;
 const { className: UI_CLASS, state: UI_STATE } = UI;
@@ -36,7 +36,7 @@ export function renderSelectedWork(state) {
           type="button"
           class="${UI_CLASS.chipRemove}"
           data-clear-selected-work="${escapeHtml(item.workId)}"
-          aria-label="${escapeHtml(studioText(state.config, "remove_selected_work_aria_label", "Remove selected work {work_id}", { work_id: item.workId }))}"
+          aria-label="${escapeHtml(analyticsTagEditorText(state.config, "remove_selected_work_aria_label", "Remove selected work {work_id}", { work_id: item.workId }))}"
         >x</button>
       </span>
     `;
@@ -46,14 +46,14 @@ export function renderSelectedWork(state) {
 export function renderContextHint(state) {
   if (!state.refs.contextHint) return;
   if (!state.selectedWorkId) {
-    state.refs.contextHint.textContent = studioText(
+    state.refs.contextHint.textContent = analyticsTagEditorText(
       state.config,
       "context_hint_default",
       "No work selected: edit series tags directly. Select a work to switch to work-only overrides."
     );
     return;
   }
-  state.refs.contextHint.textContent = studioText(
+  state.refs.contextHint.textContent = analyticsTagEditorText(
     state.config,
     "context_hint_selected",
     "Monochrome pills are inherited from the series. Colored pills are saved as work-only overrides."
@@ -130,7 +130,7 @@ export function renderGroups(state) {
       titleFallback: "Work override {tag_id}"
     })).join("");
     const emptyHtml = (!inheritedHtml && !inheritedDeletedHtml && !overrideHtml && !overrideDeletedHtml)
-      ? `<span class="${UI_CLASS.empty}">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
+      ? `<span class="${UI_CLASS.empty}">${escapeHtml(analyticsTagEditorText(state.config, "empty_state", "none"))}</span>`
       : "";
     return `
       <div class="${UI_CLASS.groupRow}">
@@ -152,7 +152,7 @@ export function renderGroups(state) {
 function getAnalyticsGroups(state) {
   return Array.isArray(state && state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
-    : DEFAULT_STUDIO_GROUPS;
+    : DEFAULT_ANALYTICS_GROUPS;
 }
 
 function createEmptyMarkerState() {
@@ -229,7 +229,7 @@ function renderChipCaption(state, marker) {
   const key = marker === "delete" ? "chip_caption_delete" : "chip_caption_local";
   const fallback = marker === "delete" ? "delete" : "local";
   const className = marker === "delete" ? UI_CLASS.chipCaptionDelete : UI_CLASS.chipCaptionLocal;
-  return `<span class="${classNames(UI_CLASS.chipCaption, className)}">${escapeHtml(studioText(state.config, key, fallback))}</span>`;
+  return `<span class="${classNames(UI_CLASS.chipCaption, className)}">${escapeHtml(analyticsTagEditorText(state.config, key, fallback))}</span>`;
 }
 
 function renderChipLabel(state, entry, marker) {
@@ -247,20 +247,20 @@ function renderChipLabel(state, entry, marker) {
 
 function renderSeriesEditableChip(state, entry, marker = "") {
   return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(analyticsTagEditorText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
         class="${classNames(UI_CLASS.weightDot, weightDotClass(state, entry.wManual))}"
         data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        title="${escapeHtml(analyticsTagEditorText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(analyticsTagEditorText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
       ${renderChipLabel(state, entry, marker)}
       <button
         type="button"
         class="${UI_CLASS.chipRemove}"
         data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(state.config, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+        aria-label="${escapeHtml(analyticsTagEditorText(state.config, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
       >x</button>
     </span>
   `;
@@ -269,14 +269,14 @@ function renderSeriesEditableChip(state, entry, marker = "") {
 function renderInheritedChip(state, entry, useColorChip, marker = "") {
   if (useColorChip) {
     return `
-      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(analyticsTagEditorText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
         <span class="${classNames(UI_CLASS.weightDot, weightDotClass(state, entry.wManual))}" aria-hidden="true"></span>
         ${renderChipLabel(state, entry, marker)}
       </span>
     `;
   }
   return `
-    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(studioText(state.config, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(analyticsTagEditorText(state.config, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
       <span class="${classNames(UI_CLASS.weightDot, weightDotClass(state, entry.wManual))}" aria-hidden="true"></span>
       ${renderChipLabel(state, entry, marker)}
     </span>
@@ -285,20 +285,20 @@ function renderInheritedChip(state, entry, useColorChip, marker = "") {
 
 function renderOverrideChip(state, entry, marker = "") {
   return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(analyticsTagEditorText(state.config, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
         class="${classNames(UI_CLASS.weightDot, weightDotClass(state, entry.wManual))}"
         data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        title="${escapeHtml(analyticsTagEditorText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(analyticsTagEditorText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
       ${renderChipLabel(state, entry, marker)}
       <button
         type="button"
         class="${UI_CLASS.chipRemove}"
         data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(state.config, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+        aria-label="${escapeHtml(analyticsTagEditorText(state.config, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
       >x</button>
     </span>
   `;
@@ -310,7 +310,7 @@ function renderDeletedChip(state, entry, options = {}) {
   const titleFallback = options.titleFallback || "Series tag {tag_id}";
   const restoreScope = options.scope || "series";
   return `
-    <span class="${classNames(UI_CLASS.chip, inherited ? UI_CLASS.chipInherited : chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, titleKey, titleFallback, { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, inherited ? UI_CLASS.chipInherited : chipGroupClass(entry.group))}" title="${escapeHtml(analyticsTagEditorText(state.config, titleKey, titleFallback, { tag_id: entry.canonicalId }))}">
       <span class="${classNames(UI_CLASS.weightDot, weightDotClass(state, entry.wManual))}" aria-hidden="true"></span>
       ${renderChipLabel(state, entry, "delete")}
       <button
@@ -318,7 +318,7 @@ function renderDeletedChip(state, entry, options = {}) {
         class="${UI_CLASS.chipRemove}"
         data-restore-tag-id="${escapeHtml(entry.canonicalId)}"
         data-restore-scope="${escapeHtml(restoreScope)}"
-        aria-label="${escapeHtml(studioText(state.config, "restore_deleted_tag_aria_label", "Restore {tag_id}", { tag_id: entry.canonicalId }))}"
+        aria-label="${escapeHtml(analyticsTagEditorText(state.config, "restore_deleted_tag_aria_label", "Restore {tag_id}", { tag_id: entry.canonicalId }))}"
       >⤺</button>
     </span>
   `;
@@ -362,6 +362,6 @@ function chipGroupClass(group) {
   return `${UI_CLASS.chipGroupPrefix}${group}`;
 }
 
-function studioText(config, key, fallback, tokens) {
+function analyticsTagEditorText(config, key, fallback, tokens) {
   return getAnalyticsText(config, `series_tag_editor.${key}`, fallback, tokens);
 }

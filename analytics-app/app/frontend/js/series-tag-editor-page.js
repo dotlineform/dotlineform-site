@@ -9,8 +9,8 @@ import {
   buildPublicWorkUrl
 } from "./catalogue-public-links.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 
 if (document.readyState === "loading") {
@@ -22,9 +22,9 @@ if (document.readyState === "loading") {
 async function initSeriesTagEditorPage() {
   const root = document.getElementById("seriesTagEditorRoot");
   const emptyEl = document.getElementById("seriesTagEditorEmpty");
-  const mount = document.getElementById("tag-studio");
+  const mount = document.getElementById("analytics-tag-editor");
   if (!root || !emptyEl || !mount) return;
-  initializeStudioRouteState(root, { route: "series-tag-editor", mode: "single" });
+  initializeAnalyticsRouteState(root, { route: "series-tag-editor", mode: "single" });
   const config = await loadAnalyticsConfig();
 
   const titleEl = document.getElementById("seriesTagEditorTitle");
@@ -56,7 +56,7 @@ async function initSeriesTagEditorPage() {
   }).filter((value) => value > 0) : [];
   if (!primaryRenderWidths.length) primaryRenderWidths = [800, 1200, 1600];
   const seriesIndexUrl = String(root.dataset.seriesIndexUrl || "");
-  const tagStudioModuleUrl = String(root.dataset.tagStudioModuleUrl || "");
+  const analyticsTagEditorModuleUrl = String(root.dataset.analyticsTagEditorModuleUrl || "");
   const params = new URLSearchParams(window.location.search);
   const seriesIdQuery = String(params.get("series") || "").trim().toLowerCase();
   let defaultMediaWorkId = "";
@@ -67,7 +67,7 @@ async function initSeriesTagEditorPage() {
     root.hidden = true;
     emptyEl.hidden = false;
     emptyEl.textContent = message;
-    setStudioRouteReady(root, true, {
+    setAnalyticsRouteReady(root, true, {
       route: "series-tag-editor",
       mode: "empty",
       recordLoaded: false
@@ -227,13 +227,13 @@ async function initSeriesTagEditorPage() {
       mount.setAttribute("data-series-id", seriesIdQuery);
       root.hidden = false;
       emptyEl.hidden = true;
-      setStudioRouteReady(root, false, {
+      setAnalyticsRouteReady(root, false, {
         route: "series-tag-editor",
         mode: "single",
         recordLoaded: true
       });
-      import(tagStudioModuleUrl).catch((err) => {
-        console.error("series_tag_editor: failed to load tag-studio.js", err);
+      import(analyticsTagEditorModuleUrl).catch((err) => {
+        console.error("series_tag_editor: failed to load analytics-tag-editor.js", err);
         showError("Failed to load tag editor module.");
       });
     })

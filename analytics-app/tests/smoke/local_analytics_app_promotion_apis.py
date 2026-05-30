@@ -26,7 +26,7 @@ from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 
 def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
-    data_root = repo_root / "studio" / "data" / "canonical" / "analytics"
+    data_root = repo_root / "analytics-app" / "data" / "canonical"
     data_root.mkdir(parents=True)
     registry_path = data_root / "tag-registry.json"
     aliases_path = data_root / "tag-aliases.json"

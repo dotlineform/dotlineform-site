@@ -61,9 +61,9 @@ import {
   syncTagRegistryImportModeFromControl as syncImportModeFromControl
 } from "./tag-registry-import-mode.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeAnalyticsRouteState,
+  setAnalyticsRouteBusy,
+  setAnalyticsRouteReady
 } from "./analytics-route-state.js";
 import {
   bindTagSaveModeReprobe,
@@ -124,11 +124,11 @@ function routeStateDetail(state) {
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
+  setAnalyticsRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.mount, ready, routeStateDetail(state));
+  setAnalyticsRouteReady(state.mount, ready, routeStateDetail(state));
 }
 
 async function withRouteBusy(state, task) {
@@ -138,14 +138,14 @@ async function withRouteBusy(state, task) {
 async function initTagRegistryPage() {
   const mount = document.getElementById("tag-registry");
   if (!mount) return;
-  initializeStudioRouteState(mount, { route: "tag-registry", mode: "list" });
+  initializeAnalyticsRouteState(mount, { route: "tag-registry", mode: "list" });
 
   let config = null;
   try {
     config = await loadAnalyticsConfigWithText("tag_registry");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag registry config.</div>`;
-    setStudioRouteReady(mount, true, {
+    setAnalyticsRouteReady(mount, true, {
       route: "tag-registry",
       mode: "empty",
       service: "unavailable",

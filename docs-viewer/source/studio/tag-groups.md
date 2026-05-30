@@ -17,12 +17,12 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-groups` exposes the shared Studio route-ready contract:
+The page root `#tag-groups` exposes the Analytics route-ready contract:
 
-- `data-studio-ready` is `false` while config and group descriptions load, then `true` after the list or error state is rendered
-- `data-studio-busy` remains `false`; this route has no route-level commands
-- `data-studio-mode` is `list` when groups are shown and `empty` for empty or failed loads
-- `data-studio-record-loaded` is `true` when group descriptions are loaded
+- `data-analytics-ready` is `false` while config and group descriptions load, then `true` after the list or error state is rendered
+- `data-analytics-busy` remains `false`; this route has no route-level commands
+- `data-analytics-mode` is `list` when groups are shown and `empty` for empty or failed loads
+- `data-analytics-record-loaded` is `true` when group descriptions are loaded
 
 ## Page / Template Structure
 
@@ -58,9 +58,9 @@ User-facing name:
 DOM / CSS:
 
 - `.tagGroups__sections`
-- `.tagStudio__groupInfoSection.tagGroups__section`
-- `.tagStudio__groupInfoHead`
-- `.tagStudio__groupInfoText`
+- `.analytics__groupInfoSection.tagGroups__section`
+- `.analytics__groupInfoHead`
+- `.analytics__groupInfoText`
 - `.tagGroups__short`
 
 JS owner:
@@ -79,11 +79,11 @@ User-facing name:
 
 DOM / CSS:
 
-- `.tagStudio__keyPill`
-- `.tagStudio__chip--subject`
-- `.tagStudio__chip--domain`
-- `.tagStudio__chip--form`
-- `.tagStudio__chip--theme`
+- `.analytics__keyPill`
+- `.analytics__chip--subject`
+- `.analytics__chip--domain`
+- `.analytics__chip--form`
+- `.analytics__chip--theme`
 
 Meaning:
 
@@ -97,10 +97,10 @@ Primary CSS:
 
 Shared primitives used:
 
-- `tagStudio__panel`
-- `tagStudio__keyPill`
-- `tagStudio__empty`
-- `tagStudio__groupInfo*`
+- `analytics__panel`
+- `analytics__keyPill`
+- `analytics__empty`
+- `analytics__groupInfo*`
 
 Page-specific classes retained:
 
@@ -122,7 +122,7 @@ Event wiring:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
+This page follows the shared Analytics UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors
@@ -146,8 +146,8 @@ Loaded through:
 If a request refers to:
 
 - “group section”
-  - start with `.tagStudio__groupInfoSection.tagGroups__section`
+  - start with `.analytics__groupInfoSection.tagGroups__section`
 - “group chip”
-  - start with `.tagStudio__keyPill`
+  - start with `.analytics__keyPill`
 - “long description”
-  - start with `.tagStudio__groupInfoText`
+  - start with `.analytics__groupInfoText`

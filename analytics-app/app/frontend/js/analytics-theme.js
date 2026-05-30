@@ -37,8 +37,8 @@ function renderToggle(button, theme) {
   button.setAttribute("aria-label", nextLabel);
   button.setAttribute("aria-pressed", isDark ? "true" : "false");
   button.title = nextLabel;
-  button.querySelectorAll("[data-studio-theme-icon]").forEach((icon) => {
-    if (icon.dataset.studioThemeIcon === activeTheme) {
+  button.querySelectorAll("[data-analytics-theme-icon]").forEach((icon) => {
+    if (icon.dataset.analyticsThemeIcon === activeTheme) {
       icon.removeAttribute("hidden");
     } else {
       icon.setAttribute("hidden", "");
@@ -53,7 +53,7 @@ export function initAnalyticsThemeToggle(options = {}) {
   const documentElement = documentRef.documentElement;
   if (!root || !documentElement) return null;
 
-  const buttons = Array.from(root.querySelectorAll("[data-studio-theme-toggle]"));
+  const buttons = Array.from(root.querySelectorAll("[data-analytics-theme-toggle]"));
   if (!buttons.length) return null;
 
   function setTheme(theme) {

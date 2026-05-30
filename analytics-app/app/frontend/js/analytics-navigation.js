@@ -1,7 +1,7 @@
 import { loadAnalyticsConfig } from "./analytics-config.js";
 import { initAnalyticsThemeToggle } from "./analytics-theme.js";
 
-export const ANALYTICS_MODAL_EVENT = "studio:open-modal";
+export const ANALYTICS_MODAL_EVENT = "analytics:open-modal";
 
 export function getAnalyticsRuntime(config) {
   const runtime = config && config.app && config.app.runtime;
@@ -149,10 +149,10 @@ export async function attachAnalyticsNavigation(root = document) {
   updateDocsViewerLinks(config, targetRoot);
   targetRoot.addEventListener("click", (event) => {
     const navigateTrigger = event.target && event.target.closest
-      ? event.target.closest("[data-studio-navigate]")
+      ? event.target.closest("[data-analytics-navigate]")
       : null;
     if (navigateTrigger && targetRoot.contains(navigateTrigger) && !shouldUseNativeNavigation(event, navigateTrigger)) {
-      const viewId = navigateTrigger.getAttribute("data-studio-navigate");
+      const viewId = navigateTrigger.getAttribute("data-analytics-navigate");
       if (!viewId) return;
 
       event.preventDefault();
@@ -161,11 +161,11 @@ export async function attachAnalyticsNavigation(root = document) {
     }
 
     const modalTrigger = event.target && event.target.closest
-      ? event.target.closest("[data-studio-modal]")
+      ? event.target.closest("[data-analytics-modal]")
       : null;
     if (!modalTrigger || !targetRoot.contains(modalTrigger) || shouldUseNativeNavigation(event, modalTrigger)) return;
 
-    const modalName = modalTrigger.getAttribute("data-studio-modal");
+    const modalName = modalTrigger.getAttribute("data-analytics-modal");
     if (!modalName) return;
 
     event.preventDefault();
@@ -178,7 +178,7 @@ export function updateDocsViewerLinks(config, root = document) {
   const targetRoot = root && typeof root.querySelectorAll === "function" ? root : document;
   if (!targetRoot || typeof targetRoot.querySelectorAll !== "function") return;
   targetRoot.querySelectorAll("a[href]").forEach((link) => {
-    const docViewId = link.getAttribute("data-studio-doc-view") || "";
+    const docViewId = link.getAttribute("data-analytics-doc-view") || "";
     if (docViewId.trim()) {
       link.setAttribute("href", buildDocsViewerDocUrl(config, docViewId));
       return;
@@ -190,7 +190,7 @@ export function updateDocsViewerLinks(config, root = document) {
 }
 
 function readNavigationParams(trigger) {
-  const rawParams = trigger.getAttribute("data-studio-params");
+  const rawParams = trigger.getAttribute("data-analytics-params");
   if (!rawParams) return {};
   try {
     const parsed = JSON.parse(rawParams);

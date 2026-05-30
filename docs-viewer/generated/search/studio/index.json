@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-be89f346108b04fbbc2533f750c00b1d",
-    "generated_at_utc": "2026-05-30T18:41:16Z",
+    "version": "blake2b-a03e8169dc66ea6c9dfdb9509eebe4ce",
+    "generated_at_utc": "2026-05-30T19:06:44Z",
     "count": 202
   },
   "entries": [
@@ -580,10 +580,10 @@
       "kind": "doc",
       "title": "Studio Python And Ruby Script Inventory",
       "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-30",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-28 • Audit",
+      "display_meta": "2026-05-30 • Audit",
       "search_terms": [
         "studio-python-ruby-script-inventory",
         "studio",
@@ -594,12 +594,12 @@
         "studio python and ruby script inventory",
         "and",
         "audit",
-        "2026-05-28",
+        "2026-05-30",
         "2026",
         "05",
-        "28"
+        "30"
       ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-28 2026 05 28"
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-30 2026 05 30"
     },
     {
       "id": "docs-build-management-import-export-improvements",
@@ -1165,10 +1165,10 @@
       "kind": "doc",
       "title": "Analytics App Split Follow-On Tasks",
       "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
-      "last_updated": "2026-05-30 20:35",
+      "last_updated": "2026-05-30 21:35",
       "parent_id": "site-request-analytics-app-split",
       "parent_title": "Analytics App Split Request",
-      "display_meta": "2026-05-30 20:35 • Analytics App Split Request",
+      "display_meta": "2026-05-30 21:35 • Analytics App Split Request",
       "search_terms": [
         "site-request-analytics-app-split-follow-on",
         "site",
@@ -1181,14 +1181,14 @@
         "analytics app split follow-on tasks",
         "tasks",
         "analytics app split request",
-        "2026-05-30 20:35",
+        "2026-05-30 21:35",
         "2026",
         "05",
         "30",
-        "20",
+        "21",
         "35"
       ],
-      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on analytics app split follow-on tasks tasks analytics app split request 2026-05-30 20:35 2026 05 30 20 35"
+      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on analytics app split follow-on tasks tasks analytics app split request 2026-05-30 21:35 2026 05 30 21 35"
     },
     {
       "id": "site-request-analytics-app-split-tasks",

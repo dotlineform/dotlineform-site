@@ -536,19 +536,19 @@ function renderImportModal(state) {
     size: "wide",
     hidden: !state.importModalOpen,
     bodyHtml: `
-      <div class="tagStudioToolbar tagStudioToolbar--modalImport">
-        <div class="tagStudioToolbar__row">
-          <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(aliasesText(state.config, "choose_file_button", "Choose file"))}</button>
+      <div class="analyticsToolbar analyticsToolbar--modalImport">
+        <div class="analyticsToolbar__row">
+          <button type="button" class="analytics__button" data-role="${UI.role.chooseFile}">${escapeHtml(aliasesText(state.config, "choose_file_button", "Choose file"))}</button>
           <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
+          <select class="analyticsToolbar__select" data-role="${UI.role.importMode}">
             <option value="add">${escapeHtml(aliasesText(state.config, "import_mode_option_add", "add (no overwrite)"))}</option>
             <option value="merge">${escapeHtml(aliasesText(state.config, "import_mode_option_merge", "add + overwrite"))}</option>
             <option value="replace">${escapeHtml(aliasesText(state.config, "import_mode_option_replace", "replace entire aliases"))}</option>
           </select>
-          <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(aliasesText(state.config, "import_button", "Import"))}</button>
+          <button type="button" class="analytics__button" data-role="${UI.role.importButton}">${escapeHtml(aliasesText(state.config, "import_button", "Import"))}</button>
         </div>
-        <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
+        <p class="analyticsToolbar__selected" data-role="${UI.role.selectedFile}"></p>
+        <p class="analyticsToolbar__result" data-role="${UI.role.importResult}"></p>
       </div>
     `,
     actionsHtml: renderAnalyticsModalActions([
@@ -584,7 +584,7 @@ function renderPromotionModal(state) {
     bodyHtml: `
       <p class="${UI_CLASS.formMeta}" data-role="${UI.role.promotionAliasMeta}"></p>
       <p class="${UI_CLASS.formStatus}">${escapeHtml(aliasesText(state.config, "promotion_modal_prompt", "Choose the canonical tag group for this alias."))}</p>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.promotionGroupKey}"></div>
+      <div class="analytics__key ${UI_CLASS.formKey}" data-role="${UI.role.promotionGroupKey}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.promotionStatus}"></p>
     `,
     actionsHtml: renderAnalyticsModalActions([
@@ -602,16 +602,16 @@ function renderDemoteModal(state) {
     title: aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias"),
     bodyHtml: `
       <p class="${UI_CLASS.formMeta}" data-role="${UI.role.demoteTagMeta}">${escapeHtml(aliasesText(state.config, "demotion_modal_meta", "tag: {tag_id} -> alias \"{alias_key}\""))}</p>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
+      <div class="analytics__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(aliasesText(state.config, "demotion_search_placeholder", "search tags"))}">
+          <input type="text" class="analytics__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(aliasesText(state.config, "demotion_search_placeholder", "search tags"))}">
           <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
             <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
+      <div class="analytics__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
     actionsHtml: renderAnalyticsModalActions([
@@ -633,22 +633,22 @@ function renderEditModal(state) {
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(aliasesText(state.config, "edit_alias_label", "alias"))}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.editAliasName}" autocomplete="off">
+          <input type="text" class="analytics__input" data-role="${UI.role.editAliasName}" autocomplete="off">
         </label>
         <p class="${UI_CLASS.formWarning}" data-role="${UI.role.editAliasWarning}"></p>
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(aliasesText(state.config, "edit_description_label", "description"))}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.editDescription}" data-role="${UI.role.editAliasDescription}" rows="2"></textarea>
+          <textarea class="analytics__input ${UI_CLASS.editDescription}" data-role="${UI.role.editAliasDescription}" rows="2"></textarea>
         </label>
-        <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
+        <div class="analytics__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
         <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <input type="text" class="tagStudio__input" data-role="${UI.role.editTagSearch}" autocomplete="off" placeholder="${escapeHtml(aliasesText(state.config, "edit_search_placeholder", "search tags"))}">
+          <input type="text" class="analytics__input" data-role="${UI.role.editTagSearch}" autocomplete="off" placeholder="${escapeHtml(aliasesText(state.config, "edit_search_placeholder", "search tags"))}">
           <div class="${UI_CLASS.popup}" data-role="${UI.role.editTagPopupWrap}" hidden>
             <div class="${UI_CLASS.popupInner}" data-role="${UI.role.editTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
+      <div class="analytics__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderAnalyticsModalActions([

@@ -1,5 +1,5 @@
 {
-  "missing_series_id_error": "Tag Studio error: missing series id.",
+  "missing_series_id_error": "Tag editor error: missing series id.",
   "load_failed_error": "Failed to load tag data. Check /analytics/data/canonical/tag-registry.json, /analytics/data/canonical/tag-aliases.json, /analytics/data/canonical/tag-assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json.",
   "work_input_placeholder": "add works in this series",
   "tag_input_placeholder": "tag or alias",

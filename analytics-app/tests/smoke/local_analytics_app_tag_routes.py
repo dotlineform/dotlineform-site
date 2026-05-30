@@ -127,10 +127,10 @@ def main(argv: list[str] | None = None) -> int:
 
             for route in ROUTES:
                 page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
-                page.wait_for_selector(f'{route["root"]}[data-studio-ready="true"]', timeout=10_000)
+                page.wait_for_selector(f'{route["root"]}[data-analytics-ready="true"]', timeout=10_000)
                 root = page.locator(route["root"])
-                mode = root.get_attribute("data-studio-mode")
-                record_loaded = root.get_attribute("data-studio-record-loaded")
+                mode = root.get_attribute("data-analytics-mode")
+                record_loaded = root.get_attribute("data-analytics-record-loaded")
                 doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
                 if mode != route["mode"]:
                     raise AssertionError(f"{route['path']} expected {route['mode']} mode, got {mode!r}")
@@ -139,7 +139,7 @@ def main(argv: list[str] | None = None) -> int:
                 if "mode=manage" not in str(doc_link or ""):
                     raise AssertionError(f"{route['path']} doc link is not manage-mode: {doc_link!r}")
                 if route["view_id"] == "series_tag_editor":
-                    series_id = page.locator("#tag-studio").get_attribute("data-series-id")
+                    series_id = page.locator("#analytics-tag-editor").get_attribute("data-series-id")
                     if series_id != "036":
                         raise AssertionError(f"series tag editor did not load series 036: {series_id!r}")
                     series_href = page.locator("#seriesTagEditorCat a").get_attribute("href")
@@ -148,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
                         raise AssertionError(f"series link did not use public preview base: {series_href!r}")
                     if primary_work_href and not primary_work_href.startswith(f"{public_preview_base}/works/"):
                         raise AssertionError(f"primary work link did not use public preview base: {primary_work_href!r}")
-                    theme_toggle = page.locator("[data-studio-theme-toggle]")
+                    theme_toggle = page.locator("[data-analytics-theme-toggle]")
                     if theme_toggle.count() != 1:
                         raise AssertionError("series tag editor did not expose exactly one theme toggle")
                     if page.evaluate("document.documentElement.getAttribute('data-theme')") != "light":

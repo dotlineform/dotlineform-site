@@ -1,12 +1,12 @@
 function ensureHost(options = {}) {
   const root = options.root
-    || document.querySelector(".tagStudioPage, .tagRegistryPage, .tagAliasesPage, .seriesTagsPage")
+    || document.querySelector(".analyticsPage, .tagRegistryPage, .tagAliasesPage, .seriesTagsPage")
     || document.body;
-  let host = root.querySelector('[data-studio-modal-host="true"]');
+  let host = root.querySelector('[data-analytics-modal-host="true"]');
   if (host) return host;
 
   host = document.createElement("div");
-  host.setAttribute("data-studio-modal-host", "true");
+  host.setAttribute("data-analytics-modal-host", "true");
   root.appendChild(host);
   return host;
 }
@@ -30,7 +30,7 @@ function renderBodyText(body) {
   return lines
     .map((line) => String(line || "").trim())
     .filter(Boolean)
-    .map((line) => `<p class="tagStudioModal__label">${escapeHtml(line)}</p>`)
+    .map((line) => `<p class="analyticsModal__label">${escapeHtml(line)}</p>`)
     .join("");
 }
 
@@ -38,12 +38,12 @@ function renderStatus(status) {
   const message = normalizeText(status && status.message);
   const stateAttr = status && status.kind ? ` data-state="${escapeHtml(status.kind)}"` : "";
   const hiddenAttr = message ? "" : " hidden";
-  return `<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
+  return `<p class="analyticsForm__status analyticsModal__status" data-role="modal-status"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
 }
 
 function renderSnippet(snippet) {
   if (!snippet) return "";
-  return `<pre class="tagStudioModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
+  return `<pre class="analyticsModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
 }
 
 function renderActions(options = {}) {
@@ -51,9 +51,9 @@ function renderActions(options = {}) {
   const cancelLabel = String(options.cancelLabel || "Cancel");
   const primaryAttrs = options.primaryDisabled ? " disabled" : "";
   return `
-    <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth tagStudio__button--defaultAction" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
+    <div class="analyticsModal__actions">
+      <button type="button" class="analytics__button analytics__button--defaultWidth" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
+      <button type="button" class="analytics__button analytics__button--defaultWidth analytics__button--defaultAction" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
     </div>
   `;
 }
@@ -61,8 +61,8 @@ function renderActions(options = {}) {
 function renderCloseAction(options = {}) {
   const closeLabel = String(options.closeLabel || options.cancelLabel || "Close");
   return `
-    <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
+    <div class="analyticsModal__actions">
+      <button type="button" class="analytics__button analytics__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
     </div>
   `;
 }
@@ -71,8 +71,8 @@ function renderActionList(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
   return actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
-    const classes = ["tagStudio__button", "tagStudio__button--defaultWidth"];
-    if (action && action.primary) classes.push("tagStudio__button--defaultAction");
+    const classes = ["analytics__button", "analytics__button--defaultWidth"];
+    if (action && action.primary) classes.push("analytics__button--defaultAction");
     if (action && action.className) classes.push(String(action.className));
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
     const disabledAttr = action && action.disabled ? " disabled" : "";
@@ -82,16 +82,16 @@ function renderActionList(actions = []) {
 }
 
 export function renderAnalyticsModalActions(actions = []) {
-  return `<div class="tagStudioModal__actions">${renderActionList(actions)}</div>`;
+  return `<div class="analyticsModal__actions">${renderActionList(actions)}</div>`;
 }
 
 export function renderAnalyticsModalFrame(options = {}) {
   const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
-  const sizeClass = options.size ? ` tagStudioModal__dialog--${escapeHtml(options.size)}` : "";
+  const sizeClass = options.size ? ` analyticsModal__dialog--${escapeHtml(options.size)}` : "";
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
-  const titleId = String(options.titleId || "studioModalTitle");
+  const titleId = String(options.titleId || "analyticsModalTitle");
   const titleRole = options.titleRole ? ` data-role="${escapeHtml(options.titleRole)}"` : "";
   const title = String(options.title || "");
   const meta = normalizeText(options.meta);
@@ -99,10 +99,10 @@ export function renderAnalyticsModalFrame(options = {}) {
   const statusHtml = options.statusHtml || (options.status || options.includeStatus ? renderStatus(options.status) : "");
   const actionsHtml = options.actionsHtml || renderAnalyticsModalActions(options.actions || []);
   const contentHtml = `
-        <header class="tagStudioModal__header">
-          <div class="tagStudioModal__headerCopy">
-            <h3 class="tagStudioModal__title" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
-            ${meta ? `<p class="tagStudioModal__meta">${escapeHtml(meta)}</p>` : ""}
+        <header class="analyticsModal__header">
+          <div class="analyticsModal__headerCopy">
+            <h3 class="analyticsModal__title" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
+            ${meta ? `<p class="analyticsModal__meta">${escapeHtml(meta)}</p>` : ""}
           </div>
         </header>
         ${bodyHtml}
@@ -110,10 +110,10 @@ export function renderAnalyticsModalFrame(options = {}) {
         ${actionsHtml}
   `;
   return `
-    <div class="tagStudioModal"${modalRole}${hiddenAttr}>
-      <div class="tagStudioModal__backdrop"${backdropRole}></div>
-      <div class="tagStudioModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}" tabindex="-1">
-        ${options.form ? `<form class="tagStudioModal__form" data-role="modal-form">${contentHtml}</form>` : contentHtml}
+    <div class="analyticsModal"${modalRole}${hiddenAttr}>
+      <div class="analyticsModal__backdrop"${backdropRole}></div>
+      <div class="analyticsModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}" tabindex="-1">
+        ${options.form ? `<form class="analyticsModal__form" data-role="modal-form">${contentHtml}</form>` : contentHtml}
       </div>
     </div>
   `;
@@ -121,7 +121,7 @@ export function renderAnalyticsModalFrame(options = {}) {
 
 export function activateAnalyticsModalFrame(host, options = {}) {
   const restoreFocus = options.restoreFocus || document.activeElement;
-  const modal = host && host.querySelector('[data-role="studio-modal"], .tagStudioModal');
+  const modal = host && host.querySelector('[data-role="analytics-modal"], .analyticsModal');
   const dialog = host && host.querySelector('[role="dialog"]');
   const form = host && host.querySelector('[data-role="modal-form"]');
   const cancelRoles = Array.isArray(options.cancelRoles) && options.cancelRoles.length
@@ -164,7 +164,7 @@ export function activateAnalyticsModalFrame(host, options = {}) {
     modal,
     dialog,
     setStatus(kind, message) {
-      setRoleMessage(host, "modal-status", "tagStudioForm__status tagStudioModal__status", kind, message);
+      setRoleMessage(host, "modal-status", "analyticsForm__status analyticsModal__status", kind, message);
     },
     cancel(settleOptions = {}) {
       settle({ confirmed: false }, settleOptions);
@@ -265,17 +265,17 @@ function renderModal(type, options = {}) {
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   const statusHtml = type === "confirm-detail" || options.includeStatus ? renderStatus(options.status) : "";
   const impactHtml = type === "confirm-detail" && options.impact
-    ? `<p class="tagStudioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
+    ? `<p class="analyticsForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
     : "";
   const snippetHtml = type === "patch-preview" ? renderSnippet(options.snippet) : "";
   const actionsHtml = type === "notice" ? renderCloseAction(options) : renderActions(options);
 
   return renderAnalyticsModalFrame({
     hidden: false,
-    modalRole: "studio-modal",
+    modalRole: "analytics-modal",
     backdropRole: "modal-cancel",
     closeLabel: options.closeLabel || options.cancelLabel || "Close",
-    titleId: options.titleId || "studioModalTitle",
+    titleId: options.titleId || "analyticsModalTitle",
     title,
     meta: options.meta,
     size: options.size,
@@ -338,31 +338,31 @@ function fieldId(options, fallback) {
 }
 
 function renderTextInputBody(options = {}) {
-  const inputId = fieldId(options, "studioModalInput");
+  const inputId = fieldId(options, "analyticsModalInput");
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   return `
     ${bodyHtml}
-    <label class="tagStudioForm__field" for="${inputId}">
-      <span class="tagStudioForm__label">${escapeHtml(options.label || "Title")}</span>
-      <input class="tagStudio__input" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(options.initialValue || "")}">
+    <label class="analyticsForm__field" for="${inputId}">
+      <span class="analyticsForm__label">${escapeHtml(options.label || "Title")}</span>
+      <input class="analytics__input" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(options.initialValue || "")}">
     </label>
   `;
 }
 
 function renderChoiceBody(options = {}) {
-  const name = escapeHtml(normalizeText(options.name) || "studioModalChoice");
+  const name = escapeHtml(normalizeText(options.name) || "analyticsModalChoice");
   const selected = normalizeText(options.value);
   const choices = Array.isArray(options.choices) ? options.choices : [];
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   return `
     ${bodyHtml}
-    <div class="tagStudioModal__choices">
+    <div class="analyticsModal__choices">
       ${choices.map((choice) => {
         const value = normalizeText(choice && choice.value);
         const label = normalizeText(choice && choice.label) || value;
         const checkedAttr = value === selected ? " checked" : "";
         return `
-          <label class="tagStudioForm__field tagStudioModal__choice">
+          <label class="analyticsForm__field analyticsModal__choice">
             <input type="radio" name="${name}" value="${escapeHtml(value)}"${checkedAttr}>
             <span>${escapeHtml(label)}</span>
           </label>
@@ -393,7 +393,7 @@ export function openNoticeModal(options = {}) {
 }
 
 export function openTextInputModal(options = {}) {
-  const inputId = normalizeText(options.inputId) || "studioModalInput";
+  const inputId = normalizeText(options.inputId) || "analyticsModalInput";
   return openModal("text-input", {
     ...options,
     title: options.title,
@@ -419,7 +419,7 @@ export function openTextInputModal(options = {}) {
 }
 
 export function openChoiceModal(options = {}) {
-  const name = normalizeText(options.name) || "studioModalChoice";
+  const name = normalizeText(options.name) || "analyticsModalChoice";
   return openModal("choice", {
     ...options,
     bodyHtml: renderChoiceBody({ ...options, name }),

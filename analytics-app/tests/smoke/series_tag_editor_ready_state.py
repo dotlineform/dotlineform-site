@@ -41,9 +41,9 @@ def run(base_url: str, series_id: str) -> None:
         page.goto(target, wait_until="domcontentloaded")
         root = page.locator("#seriesTagEditorRoot")
         expect(root).to_be_visible(timeout=10_000)
-        expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-        expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
-        expect(page.locator("#tag-studio")).to_have_attribute("data-series-id", series_id, timeout=10_000)
+        expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
+        expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
+        expect(page.locator("#analytics-tag-editor")).to_have_attribute("data-series-id", series_id, timeout=10_000)
         if errors:
             raise AssertionError(f"page errors during Series Tag Editor route smoke: {errors!r}")
         browser.close()
