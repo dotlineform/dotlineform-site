@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T18:09:43Z",
+  "generated_at": "2026-05-30T18:16:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -709,14 +709,14 @@
       "doc_id": "site-request-analytics-app-split-follow-on",
       "title": "Analytics App Split Follow-On Tasks",
       "added_date": "2026-05-30 17:24",
-      "last_updated": "2026-05-30 19:09",
+      "last_updated": "2026-05-30 19:13",
       "parent_id": "site-request-analytics-app-split",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-analytics-app-split-follow-on.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 22205,
+      "content_text_length": 22346,
       "ui_status": "in-progress"
     },
     {
@@ -2052,14 +2052,14 @@
       "doc_id": "search-build-pipeline-catalogue",
       "title": "Search Build Pipeline Catalogue Scope",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-30",
       "parent_id": "search-build-pipeline",
       "hidden": false,
       "viewable": true,
       "source_path": "search-build-pipeline-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-catalogue.json",
-      "content_text_length": 3636
+      "content_text_length": 3407
     },
     {
       "scope": "studio",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b94e6343ffc73364ab0f3d7a0e6077b6",
-    "generated_at_utc": "2026-05-30T18:09:43Z",
+    "version": "blake2b-aa414b2d5269ad0fd4b738aa3e7b321d",
+    "generated_at_utc": "2026-05-30T18:14:13Z",
     "count": 202
   },
   "entries": [
@@ -1165,10 +1165,10 @@
       "kind": "doc",
       "title": "Analytics App Split Follow-On Tasks",
       "href": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
-      "last_updated": "2026-05-30 19:09",
+      "last_updated": "2026-05-30 19:13",
       "parent_id": "site-request-analytics-app-split",
       "parent_title": "Analytics App Split Request",
-      "display_meta": "2026-05-30 19:09 • Analytics App Split Request",
+      "display_meta": "2026-05-30 19:13 • Analytics App Split Request",
       "search_terms": [
         "site-request-analytics-app-split-follow-on",
         "site",
@@ -1181,14 +1181,14 @@
         "analytics app split follow-on tasks",
         "tasks",
         "analytics app split request",
-        "2026-05-30 19:09",
+        "2026-05-30 19:13",
         "2026",
         "05",
         "30",
         "19",
-        "09"
+        "13"
       ],
-      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on analytics app split follow-on tasks tasks analytics app split request 2026-05-30 19:09 2026 05 30 19 09"
+      "search_text": "site-request-analytics-app-split-follow-on site request analytics app split follow on analytics app split follow-on tasks tasks analytics app split request 2026-05-30 19:13 2026 05 30 19 13"
     },
     {
       "id": "site-request-analytics-app-split-tasks",
@@ -3436,10 +3436,10 @@
       "kind": "doc",
       "title": "Search Build Pipeline Catalogue Scope",
       "href": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-30",
       "parent_id": "search-build-pipeline",
       "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "display_meta": "2026-05-30 • Search Build Pipeline",
       "search_terms": [
         "search-build-pipeline-catalogue",
         "search",
@@ -3449,12 +3449,12 @@
         "search build pipeline catalogue scope",
         "scope",
         "search build pipeline",
-        "2026-05-19",
+        "2026-05-30",
         "2026",
         "05",
-        "19"
+        "30"
       ],
-      "search_text": "search-build-pipeline-catalogue search build pipeline catalogue search build pipeline catalogue scope scope search build pipeline 2026-05-19 2026 05 19"
+      "search_text": "search-build-pipeline-catalogue search build pipeline catalogue search build pipeline catalogue scope scope search build pipeline 2026-05-30 2026 05 30"
     },
     {
       "id": "search-build-pipeline-library",

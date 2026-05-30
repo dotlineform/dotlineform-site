@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-catalogue
 title: Search Build Pipeline Catalogue Scope
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-30
 parent_id: search-build-pipeline
 ---
 # Search Build Pipeline Catalogue Scope
@@ -25,28 +25,23 @@ Canonical catalogue source artifacts:
 - `assets/data/works_index.json`
 - `assets/data/moments_index.json`
 
-Current Studio-owned tag metadata inputs:
-
-- `assets/studio/data/tag_registry.json`
-- `assets/studio/data/tag_assignments.json`
-
 Important boundary:
 
 - the search builder treats these checked-in JSON artifacts as canonical from the site’s point of view
 - drift between those JSON artifacts and workbook or non-repo source systems is outside search’s responsibility
+- public catalogue search is catalogue-owned and does not consume Analytics tag source data
 
 ### Current Build Path
 
 The current catalogue build path is:
 
 1. load the canonical catalogue indexes
-2. load Studio tag registry and assignment data
-3. derive `series` entries
-4. derive `work` entries, including effective tag metadata by combining series tags with work overrides
-5. derive `moment` entries
-6. sort the flat entry list by kind, title, and id
-7. compute header metadata and version hash
-8. write `assets/data/search/catalogue/index.json` if changed or forced
+2. derive `series` entries
+3. derive `work` entries from catalogue indexes and per-work JSON enrichment
+4. derive `moment` entries
+5. sort the flat entry list by kind, title, and id
+6. compute header metadata and version hash
+7. write `assets/data/search/catalogue/index.json` if changed or forced
 
 Current integration facts:
 
@@ -73,8 +68,6 @@ Current supported overrides:
 - `--series-index PATH`
 - `--works-index PATH`
 - `--moments-index PATH`
-- `--tag-assignments PATH`
-- `--tag-registry PATH`
 - `--output PATH`
 - `--only-records RECORDS`
 - `--write`
@@ -123,8 +116,6 @@ Current display and structured support fields may include:
 - `series_titles`
 - `medium_type`
 - `series_type`
-- `tag_ids`
-- `tag_labels`
 
 Current derived search fields:
 
@@ -152,8 +143,7 @@ Current examples:
 
 - missing titles fall back to item id
 - optional scalar fields may be omitted when empty
-- array-valued relationship and tag fields are still serialized as arrays
-- partial tag-label lookup does not block record generation
+- array-valued relationship fields are still serialized as arrays
 
 Current safeguards include:
 

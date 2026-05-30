@@ -2,7 +2,7 @@
 doc_id: site-request-analytics-app-split-follow-on
 title: Analytics App Split Follow-On Tasks
 added_date: "2026-05-30 17:24"
-last_updated: "2026-05-30 19:09"
+last_updated: "2026-05-30 19:13"
 ui_status: in-progress
 parent_id: site-request-analytics-app-split
 ---
@@ -29,20 +29,21 @@ Key boundary decisions:
 
 ### just done
 
-- Completed task 4 Analytics tag source path contract:
-  - added `analytics-app/app/server/analytics_app/tag_services/tag_source_paths.py` as the Analytics-owned source path contract
-  - retargeted `tag_source_model.py` and `analytics_api.py` to use the contract instead of local tag source constants
-  - retargeted catalogue cleanup, catalogue generation, and site consistency audit Python consumers to import the Analytics path contract
-  - updated focused catalogue cleanup tests to use the contract for tag assignment paths
-  - left JSON files in `studio/data/canonical/analytics/` until task 6 and left catalogue search/projection direct paths for task 5/task 6
-  - verified focused pytest and the `quick` profile
+- Completed task 5 search ownership cleanup:
+  - removed direct tag assignment and tag registry reads from `studio/services/catalogue/search/build_search.rb`
+  - removed catalogue search CLI flags for `--tag-assignments` and `--tag-registry`
+  - removed `tag_ids` and `tag_labels` from generated catalogue search entries
+  - removed tag source families from `studio/services/catalogue/search/build_config.json`
+  - updated `docs-viewer/source/studio/search-build-pipeline-catalogue.md` so public catalogue search is documented as catalogue-owned and tag-free
+  - rebuilt `assets/data/search/catalogue/index.json` so the checked-in public search artifact no longer carries tag fields
+  - left JSON files in `studio/data/canonical/analytics/` until task 6 and left projection contract direct paths for task 6
+  - verified Ruby syntax, search config JSON parsing, temp and checked-in catalogue search rebuilds, focused catalogue command pytest, stale-reference scans, `git diff --check`, and a changed-file sanitization scan
 
 ### steer for next task
 
-- Start task 5 by removing direct tag reads from Studio-owned catalogue search.
-- Public search does not need tag terms, so remove tag path defaults and flags unless a concrete Analytics-specific search surface is identified first.
-- Keep task 5 scoped to search ownership; do not move the tag JSON files until task 6.
-- After search no longer reads tags directly, task 6 can move canonical tag JSON by changing the Analytics path contract and affected config/tests/docs.
+- Start task 6 by moving canonical tag JSON to the Analytics-owned source location.
+- Change the Analytics tag source path contract first, then move the files and retarget config/tests/docs against that contract.
+- Old `studio/data/canonical/analytics/...` source paths should not remain as compatibility shims or fallback reads.
 
 ### baseline verification set
 
@@ -327,7 +328,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | done | Inventory all live references to `studio/data/canonical/analytics`, `/studio/data/canonical/analytics`, `var/studio/data-sharing`, `studio.services.analytics`, `studio/services/analytics`, `tagStudio*`, `tag-studio*`, and Analytics frontend `studio-*` helper names. Use the result as the pre-change move map and final stale-reference checklist. |
 | 3 | done | Move Analytics tag-domain Python helpers out of `studio/services/analytics/` into an Analytics-owned package, for example `analytics-app/app/server/analytics_app/tag_services/`. Update `analytics_api.py`, the tags Data Sharing adapter, check profiles, Python tests, smoke imports, and docs so Analytics no longer depends on Studio helper modules. |
 | 4 | done | Add an Analytics-owned source path/helper contract for canonical tag data. Use it from Analytics APIs, Data Sharing tags adapter, and any catalogue/search/audit consumers that still need tag data. The helper should make Analytics the path owner and keep Studio from embedding tag source constants directly. |
-| 5 | planned | Resolve the search ownership boundary. Public search does not need tag terms, so remove direct tag reads from Studio-owned catalogue search unless a concrete Analytics-specific search surface is identified. Update build/search code so Studio does not directly know Analytics tag source paths. |
+| 5 | done | Resolve the search ownership boundary. Public search does not need tag terms, so remove direct tag reads from Studio-owned catalogue search unless a concrete Analytics-specific search surface is identified. Update build/search code so Studio does not directly know Analytics tag source paths. |
 | 6 | planned | Move canonical tag JSON from `studio/data/canonical/analytics/` to the chosen Analytics-owned source location, likely `analytics-app/data/canonical/`. Update Analytics static serving, read endpoints, runtime config/UI text, Data Sharing adapter config, projection contracts, catalogue/search consumers, tests, and docs. Old source paths should fail in active checks. |
 | 7 | planned | Move Data Sharing runtime artifact roots from `var/studio/data-sharing/` to `var/analytics/data-sharing/`. Update `data-sharing/config/*.json`, schemas, `data_sharing.services.paths`, Analytics server constants, smoke fixtures, tests, docs, validation messages, and examples. Do not add fallback reads for existing old artifacts. |
 | 8 | planned | Verify and tighten the Docs Viewer/Data Sharing boundary. Data Sharing should call document-domain adapters or helper functions for conversion/source work, not Docs Viewer HTTP endpoints or broad management-service handles. Tags should flow through an Analytics tags adapter. Document the adapter contract in the Data Sharing technical spec. |

@@ -21,9 +21,7 @@ CATALOGUE_DEFAULTS = {
   output_path: "assets/data/search/catalogue/index.json",
   series_index_path: "assets/data/series_index.json",
   works_index_path: "assets/data/works_index.json",
-  moments_index_path: "assets/data/moments_index.json",
-  tag_assignments_path: "studio/data/canonical/analytics/tag-assignments.json",
-  tag_registry_path: "studio/data/canonical/analytics/tag-registry.json"
+  moments_index_path: "assets/data/moments_index.json"
 }.freeze
 
 CatalogueSearchTarget = Struct.new(
@@ -38,9 +36,7 @@ class CatalogueSearchDataBuilder
     output_path: nil,
     series_index_path: nil,
     works_index_path: nil,
-    moments_index_path: nil,
-    tag_assignments_path: nil,
-    tag_registry_path: nil
+    moments_index_path: nil
   )
     @scope = normalize(scope)
     @repo_root = Pathname(__dir__).join("../../../..").realpath
@@ -49,8 +45,6 @@ class CatalogueSearchDataBuilder
     @series_index_path = resolve_path(series_index_path || CATALOGUE_DEFAULTS.fetch(:series_index_path))
     @works_index_path = resolve_path(works_index_path || CATALOGUE_DEFAULTS.fetch(:works_index_path))
     @moments_index_path = resolve_path(moments_index_path || CATALOGUE_DEFAULTS.fetch(:moments_index_path))
-    @tag_assignments_path = resolve_path(tag_assignments_path || CATALOGUE_DEFAULTS.fetch(:tag_assignments_path))
-    @tag_registry_path = resolve_path(tag_registry_path || CATALOGUE_DEFAULTS.fetch(:tag_registry_path))
     @works_json_dir = resolve_path("assets/works/index")
     @work_search_metadata_by_id = {}
   end
@@ -189,17 +183,12 @@ class CatalogueSearchDataBuilder
     series_payload = load_index_hash(@series_index_path, "series")
     works_payload = load_index_hash(@works_index_path, "works")
     moments_payload = load_index_hash(@moments_index_path, "moments")
-    assignments_series = load_assignments_series
-    tag_label_by_id = load_tag_label_by_id
     series_title_by_id = series_payload.to_h { |series_id, row| [series_id, normalize_text(row["title"])] }
 
     entries = []
 
     series_payload.keys.sort.each do |series_id|
       series_record = series_payload[series_id]
-      assignment_row = assignments_series.fetch(series_id, {})
-      series_tag_ids = assignment_tag_ids_from_rows(assignment_row["tags"])
-      series_tag_labels = series_tag_ids.filter_map { |tag_id| tag_label_by_id[tag_id] }
 
       entries << build_catalogue_entry(
         kind: "series",
@@ -208,9 +197,7 @@ class CatalogueSearchDataBuilder
         href: "/series/#{series_id}/",
         year: series_record["year"],
         display_meta: normalize_text(series_record["year_display"]),
-        series_type: normalize_text(series_record["series_type"]),
-        tag_ids: series_tag_ids,
-        tag_labels: series_tag_labels
+        series_type: normalize_text(series_record["series_type"])
       )
     end
 
@@ -219,8 +206,6 @@ class CatalogueSearchDataBuilder
       work_search_metadata = resolve_work_search_metadata(work_id)
       series_ids = normalize_string_array(work_record["series_ids"])
       series_titles = series_ids.map { |series_id| series_title_by_id.fetch(series_id, series_id) }
-      work_tag_ids = collect_work_tag_ids(assignments_series, series_ids, work_id)
-      work_tag_labels = work_tag_ids.filter_map { |tag_id| tag_label_by_id[tag_id] }
 
       entries << build_catalogue_entry(
         kind: "work",
@@ -232,9 +217,7 @@ class CatalogueSearchDataBuilder
         series_ids: series_ids,
         series_titles: series_titles,
         medium_type: work_search_metadata["medium_type"],
-        medium_caption: work_search_metadata["medium_caption"],
-        tag_ids: work_tag_ids,
-        tag_labels: work_tag_labels
+        medium_caption: work_search_metadata["medium_caption"]
       )
     end
 
@@ -329,30 +312,6 @@ class CatalogueSearchDataBuilder
     end
 
     rows.transform_values { |value| value.is_a?(Hash) ? value : {} }
-  end
-
-  def load_assignments_series
-    payload = load_json(@tag_assignments_path)
-    series_rows = payload.is_a?(Hash) ? payload["series"] : nil
-    return {} unless series_rows.is_a?(Hash)
-
-    series_rows.transform_values { |value| value.is_a?(Hash) ? value : {} }
-  end
-
-  def load_tag_label_by_id
-    payload = load_json(@tag_registry_path)
-    tags = payload.is_a?(Hash) ? payload["tags"] : nil
-    return {} unless tags.is_a?(Array)
-
-    tags.each_with_object({}) do |raw_tag, acc|
-      next unless raw_tag.is_a?(Hash)
-
-      tag_id = normalize_search_text(raw_tag["tag_id"])
-      label = normalize_text(raw_tag["label"])
-      next if tag_id.empty? || label.empty?
-
-      acc[tag_id] = label
-    end
   end
 
   def load_json(path)
@@ -469,14 +428,10 @@ class CatalogueSearchDataBuilder
     series_titles: [],
     medium_type: nil,
     medium_caption: nil,
-    series_type: nil,
-    tag_ids: [],
-    tag_labels: []
+    series_type: nil
   )
     normalized_series_ids = normalize_string_array(series_ids)
     normalized_series_titles = normalize_string_array(series_titles)
-    normalized_tag_ids = normalize_string_array(tag_ids)
-    normalized_tag_labels = normalize_string_array(tag_labels)
     search_terms = build_search_tokens(
       item_id,
       title,
@@ -502,54 +457,9 @@ class CatalogueSearchDataBuilder
       "series_titles" => normalized_series_titles,
       "medium_type" => normalize_text(medium_type),
       "series_type" => normalize_text(series_type),
-      "tag_ids" => normalized_tag_ids,
-      "tag_labels" => normalized_tag_labels,
       "search_terms" => search_terms,
       "search_text" => search_terms.join(" ")
     }.reject { |key, value| compact_catalogue_field?(key, value) }
-  end
-
-  def collect_work_tag_ids(assignments_series, series_ids, work_id)
-    tag_ids = []
-    seen = {}
-
-    series_ids.each do |series_id|
-      assignment_row = assignments_series.fetch(series_id, {})
-      append_unique_tags(tag_ids, seen, assignment_tag_ids_from_rows(assignment_row["tags"]))
-      work_rows = assignment_row["works"]
-      next unless work_rows.is_a?(Hash)
-
-      work_row = work_rows.fetch(work_id, {})
-      append_unique_tags(tag_ids, seen, assignment_tag_ids_from_rows(work_row["tags"]))
-    end
-
-    tag_ids
-  end
-
-  def append_unique_tags(out, seen, tag_ids)
-    tag_ids.each do |tag_id|
-      next if seen[tag_id]
-
-      seen[tag_id] = true
-      out << tag_id
-    end
-  end
-
-  def assignment_tag_ids_from_rows(tags_value)
-    return [] unless tags_value.is_a?(Array)
-
-    tags_value.each_with_object([]) do |raw_tag, out|
-      tag_id =
-        if raw_tag.is_a?(Hash)
-          normalize_search_text(raw_tag["tag_id"])
-        else
-          normalize_search_text(raw_tag)
-        end
-
-      next if tag_id.empty? || out.include?(tag_id)
-
-      out << tag_id
-    end
   end
 
   def build_search_tokens(*values)
@@ -700,7 +610,7 @@ class CatalogueSearchDataBuilder
   end
 
   def compact_catalogue_field?(key, value)
-    return false if %w[series_ids series_titles tag_ids tag_labels].include?(key)
+    return false if %w[series_ids series_titles].include?(key)
 
     empty_scalar?(value)
   end
@@ -724,8 +634,6 @@ options = {
   series_index_path: nil,
   works_index_path: nil,
   moments_index_path: nil,
-  tag_assignments_path: nil,
-  tag_registry_path: nil,
   only_records: [],
   write: false,
   force: false
@@ -752,14 +660,6 @@ OptionParser.new do |parser|
 
   parser.on("--moments-index PATH", "Canonical moments index JSON path for catalogue scope") do |value|
     options[:moments_index_path] = value
-  end
-
-  parser.on("--tag-assignments PATH", "Tag assignments JSON path for catalogue scope") do |value|
-    options[:tag_assignments_path] = value
-  end
-
-  parser.on("--tag-registry PATH", "Tag registry JSON path for catalogue scope") do |value|
-    options[:tag_registry_path] = value
   end
 
   parser.on("--output PATH", "Generated search index output path") do |value|
@@ -792,9 +692,7 @@ CatalogueSearchDataBuilder.new(
   output_path: options[:output_path],
   series_index_path: options[:series_index_path],
   works_index_path: options[:works_index_path],
-  moments_index_path: options[:moments_index_path],
-  tag_assignments_path: options[:tag_assignments_path],
-  tag_registry_path: options[:tag_registry_path]
+  moments_index_path: options[:moments_index_path]
 ).run(
   write: options[:write],
   force: options[:force],

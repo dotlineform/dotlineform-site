@@ -16,20 +16,6 @@
       "targeted_operations": ["create"],
       "id_field": "work_id",
       "fallback": "full_rebuild"
-    },
-    "tag_assignments": {
-      "description": "Studio tag assignment metadata that contributes catalogue search tag ids.",
-      "scopes": ["catalogue"],
-      "targeted_policy": "full_rebuild",
-      "id_field": "tag_id",
-      "fallback": "full_rebuild"
-    },
-    "tag_registry": {
-      "description": "Studio tag registry metadata that contributes catalogue search tag labels.",
-      "scopes": ["catalogue"],
-      "targeted_policy": "full_rebuild",
-      "id_field": "tag_id",
-      "fallback": "full_rebuild"
     }
   },
   "scopes": {
@@ -50,8 +36,6 @@
         "medium_type": { "source_families": ["catalogue_work_payloads"] },
         "medium_caption": { "source_families": ["catalogue_work_payloads"] },
         "series_type": { "source_families": ["catalogue_indexes"] },
-        "tag_ids": { "source_families": ["tag_assignments"] },
-        "tag_labels": { "source_families": ["tag_registry"] },
         "search_terms": {
           "source_families": [
             "catalogue_indexes",
