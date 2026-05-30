@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 try:
@@ -109,6 +110,7 @@ ANALYTICS_SERVICE_ENDPOINTS: dict[str, object] = {
 }
 
 ANALYTICS_MODAL_EVENT = "studio:open-modal"
+PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
 
 def load_analytics_config(repo_root: Path) -> dict[str, object]:
@@ -143,6 +145,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "series-tag-editor-page.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-prepare.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-review.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "catalogue-public-links.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-studio.js",
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
@@ -177,6 +180,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "runtime_config": "/analytics/runtime-config.json",
         },
         "services": analytics_service_endpoints(repo_root),
+        "sites": runtime_site_bases(),
         "data_paths": data_paths,
         "media": ANALYTICS_MEDIA,
         "pipeline": {
@@ -195,3 +199,26 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
     }
     return payload
+
+
+def runtime_site_bases() -> dict[str, object]:
+    jekyll_host = os.environ.get("JEKYLL_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    jekyll_port = os.environ.get("JEKYLL_PORT", "4000").strip() or "4000"
+    public_preview_base = os.environ.get("PUBLIC_SITE_PREVIEW_BASE", "").strip()
+    if not public_preview_base:
+        public_preview_base = f"http://{jekyll_host}:{jekyll_port}"
+    production_base = os.environ.get("PRODUCTION_SITE_BASE", PRODUCTION_SITE_BASE).strip() or PRODUCTION_SITE_BASE
+
+    return {
+        "public_preview": {
+            "base": normalize_base_url(public_preview_base),
+        },
+        "production": {
+            "base": normalize_base_url(production_base),
+        },
+    }
+
+
+def normalize_base_url(value: str) -> str:
+    normalized = value.strip().rstrip("/")
+    return normalized or "/"

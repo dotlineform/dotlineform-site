@@ -9,6 +9,8 @@ sort_order: 100
 
 # tmp
 
+- some helpers had to be copied from studio to support tags, e.g. series-tag-editor-page.js imports catalogue-public-links.js
+those helpers may contain more than analytics actually needs. should rename them as well, so that they aren't mistaken for the studio-owned ones.
 
 
 

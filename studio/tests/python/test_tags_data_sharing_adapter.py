@@ -11,11 +11,15 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
 from data_sharing.adapters.tags import adapter  # noqa: E402
-from studio import data_sharing_service  # noqa: E402
+import data_sharing_service  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:

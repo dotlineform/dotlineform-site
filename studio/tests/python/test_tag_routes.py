@@ -11,12 +11,14 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 STUDIO_SCRIPTS_DIR = SCRIPTS_DIR / "studio"
 ANALYTICS_SCRIPTS_DIR = SCRIPTS_DIR / "analytics"
-for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
 from analytics import tag_routes as routes  # noqa: E402
-import studio_analytics_api  # noqa: E402
+import analytics_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -42,8 +44,8 @@ def test_options_routes_cover_each_post_route() -> None:
 
 
 def test_local_analytics_adapter_covers_each_post_route() -> None:
-    assert_equal(set(studio_analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
-    if "/build-docs" in studio_analytics_api.ANALYTICS_POST_PATHS:
+    assert_equal(set(analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
+    if "/build-docs" in analytics_api.ANALYTICS_POST_PATHS:
         raise AssertionError("deprecated /build-docs route should not be exposed by local analytics API")
 
 

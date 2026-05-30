@@ -16,7 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
@@ -58,10 +57,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     )
     assert not any("doc_href" in view for view in runtime["views"])
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
-    assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
-    assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
-    assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])
-    assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/analytics/series-tag-editor/" for view in runtime["views"])
+    assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
+    assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert any(view["id"] == "studio_audits" and view["path"] == "/studio/audits/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "thumbnail_quality" and view["path"] == "/studio/thumbnail-quality/?mode=manage" for view in runtime["views"])
@@ -76,31 +73,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/?mode=manage" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == ["docs"]
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
-    assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
-    assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"
-    assert runtime["services"]["analytics"]["tag_aliases"] == "/studio/api/analytics/tag-aliases"
-    assert runtime["services"]["analytics"]["tag_assignments"] == "/studio/api/analytics/tag-assignments"
-    assert runtime["services"]["analytics"]["delete_tag_alias"] == "/studio/api/analytics/delete-tag-alias"
-    assert runtime["services"]["analytics"]["demote_tag_preview"] == "/studio/api/analytics/demote-tag-preview"
-    assert runtime["services"]["analytics"]["demote_tag"] == "/studio/api/analytics/demote-tag"
-    assert runtime["services"]["analytics"]["save_tags"] == "/studio/api/analytics/save-tags"
-    assert runtime["services"]["analytics"]["import_tag_assignments_preview"] == "/studio/api/analytics/import-tag-assignments-preview"
-    assert runtime["services"]["analytics"]["import_tag_assignments"] == "/studio/api/analytics/import-tag-assignments"
-    assert runtime["services"]["analytics"]["import_tag_aliases"] == "/studio/api/analytics/import-tag-aliases"
-    assert runtime["services"]["analytics"]["import_tag_registry"] == "/studio/api/analytics/import-tag-registry"
-    assert runtime["services"]["analytics"]["mutate_tag_alias_preview"] == "/studio/api/analytics/mutate-tag-alias-preview"
-    assert runtime["services"]["analytics"]["mutate_tag_alias"] == "/studio/api/analytics/mutate-tag-alias"
-    assert runtime["services"]["analytics"]["mutate_tag_preview"] == "/studio/api/analytics/mutate-tag-preview"
-    assert runtime["services"]["analytics"]["mutate_tag"] == "/studio/api/analytics/mutate-tag"
-    assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
-    assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
-    assert runtime["services"]["data_sharing"]["base"] == "/studio/api/data-sharing"
-    assert runtime["services"]["data_sharing"]["health"] == "/studio/api/data-sharing/health"
-    assert runtime["services"]["data_sharing"]["selectable_records"] == "/studio/api/data-sharing/selectable-records"
-    assert runtime["services"]["data_sharing"]["returned_packages"] == "/studio/api/data-sharing/returned-packages"
-    assert runtime["services"]["data_sharing"]["prepare"] == "/studio/api/data-sharing/prepare"
-    assert runtime["services"]["data_sharing"]["review"] == "/studio/api/data-sharing/review"
-    assert runtime["services"]["data_sharing"]["apply"] == "/studio/api/data-sharing/apply"
+    assert "analytics" not in runtime["services"]
+    assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
     docs_viewer_links = payload["external_links"]["docs_viewer"]
     assert docs_viewer_links["base_url"] == "http://127.0.0.1:8776"
@@ -108,9 +82,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert docs_viewer_links["default_mode"] == "manage"
     assert docs_viewer_links["doc_scope"] == "studio"
     assert docs_viewer_links["doc_ids"]["docs"] == "docs-viewer"
-    assert docs_viewer_links["doc_ids"]["tag_groups"] == "tag-groups"
     assert docs_viewer_links["doc_ids"]["catalogue_work_editor"] == "catalogue-work-editor"
-    assert docs_viewer_links["doc_ids"]["data_sharing_prepare"] == "studio-data-sharing"
+    assert "tag_groups" not in docs_viewer_links["doc_ids"]
+    assert "data_sharing_prepare" not in docs_viewer_links["doc_ids"]
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -144,9 +118,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
-    assert runtime["data_paths"]["studio"]["data_sharing_adapters"] == "/data-sharing/config/adapters.json"
-    assert runtime["data_paths"]["studio"]["library_export_configs"] == "/data-sharing/config/library-export-configs.json"
-    assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/studio/app/frontend/config/ui-text/tag-groups.json"
+    assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
+    assert "library_export_configs" not in runtime["data_paths"]["studio"]
+    assert "tag_groups" not in runtime["data_paths"]["ui_text"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["modals"]["event"] == "studio:open-modal"
@@ -175,8 +149,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/studio/app/assets/css/studio.css") is True
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
-    assert allowed("/data-sharing/config/adapters.json") is True
-    assert allowed("/data-sharing/config/library-export-configs.json") is True
+    assert allowed("/data-sharing/config/adapters.json") is False
+    assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
     assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is True
@@ -195,7 +169,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
 
 
-def test_public_jekyll_build_excludes_data_sharing_config_while_studio_serves_it() -> None:
+def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> None:
     excludes: set[str] = set()
     in_exclude = False
     for line in (REPO_ROOT / "_config.yml").read_text(encoding="utf-8").splitlines():
@@ -208,14 +182,14 @@ def test_public_jekyll_build_excludes_data_sharing_config_while_studio_serves_it
             excludes.add(line.removeprefix("  - ").strip())
 
     assert "data-sharing/config/" in excludes
-    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is True
-    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is True
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_home_view("test-version"),
-        studio_route_view("test-version", "tag_groups", "<p>Tag groups</p>"),
+        studio_route_view("test-version", "studio_audits", "<p>Studio audits</p>"),
         ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos"),
     ]
 
@@ -238,26 +212,6 @@ def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
         os.utime(public_css, (300, 300))
 
         assert asset_version(repo_root) == "200"
-
-
-def test_analytics_tag_groups_route_returns_existing_payload() -> None:
-    groups_payload = analytics_get_payload(REPO_ROOT, "/tag-groups")
-    registry_payload = analytics_get_payload(REPO_ROOT, "/tag-registry")
-    aliases_payload = analytics_get_payload(REPO_ROOT, "/tag-aliases")
-    assignments_payload = analytics_get_payload(REPO_ROOT, "/tag-assignments")
-
-    assert groups_payload["ok"] is True
-    assert groups_payload["tag_groups_version"] == "tag_groups_v1"
-    assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
-    assert registry_payload["ok"] is True
-    assert registry_payload["tag_registry_version"] == "tag_registry_v1"
-    assert any(tag["tag_id"] == "subject:flower" for tag in registry_payload["tags"])
-    assert aliases_payload["ok"] is True
-    assert aliases_payload["tag_aliases_version"] == "tag_aliases_v1"
-    assert "floral" in aliases_payload["aliases"]
-    assert assignments_payload["ok"] is True
-    assert assignments_payload["tag_assignments_version"] == "tag_assignments_v1"
-    assert "001" in assignments_payload["series"]
 
 
 def test_audit_api_routes_return_registry_and_validate_runs() -> None:
@@ -920,428 +874,9 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
         assert json.loads((source_dir / "series.json").read_text(encoding="utf-8"))["series"]["009"]["title"] == "Original Series"
 
 
-def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
-        assignments_path.parent.mkdir(parents=True)
-        assignments_path.write_text(
-            """{
-  "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {}
-}
-""",
-            encoding="utf-8",
-        )
-
-        status, payload = analytics_post_response(
-            repo_root,
-            "/save-tags",
-            {
-                "series_id": "series-a",
-                "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}],
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-
-        persisted = assignments_path.read_text(encoding="utf-8")
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["series_id"] == "series-a"
-        assert payload["tag_count"] == 1
-        assert payload["dry_run"] is True
-        assert payload["would_write"]["tags"] == [{"tag_id": "subject:trees", "w_manual": 0.9}]
-        assert "subject:trees" not in persisted
-
-
-def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
-        series_index_path = repo_root / "assets" / "data" / "series_index.json"
-        assignments_path.parent.mkdir(parents=True)
-        series_index_path.parent.mkdir(parents=True)
-        assignments_path.write_text(
-            """{
-  "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {
-    "series-a": {
-      "tags": []
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-        series_index_path.write_text(
-            """{
-  "series": {
-    "series-a": {
-      "works": []
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-        import_assignments = {
-            "version": "tag_assignments_export_v1",
-            "series": {
-                "series-a": {
-                    "base_row_snapshot": {"tags": []},
-                    "staged_row": {"tags": [{"tag_id": "theme:growth", "w_manual": 0.6}]},
-                }
-            },
-        }
-
-        preview_status, preview_payload = analytics_post_response(
-            repo_root,
-            "/import-tag-assignments-preview",
-            {
-                "import_assignments": import_assignments,
-                "import_filename": "import.json",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-        apply_status, apply_payload = analytics_post_response(
-            repo_root,
-            "/import-tag-assignments",
-            {
-                "import_assignments": import_assignments,
-                "import_filename": "import.json",
-                "resolutions": {},
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-
-        persisted = assignments_path.read_text(encoding="utf-8")
-        assert preview_status == HTTPStatus.OK
-        assert preview_payload["ok"] is True
-        assert preview_payload["applicable_count"] == 1
-        assert apply_status == HTTPStatus.OK
-        assert apply_payload["ok"] is True
-        assert apply_payload["applied_series"] == 1
-        assert apply_payload["dry_run"] is True
-        assert apply_payload["would_write"]["applied_series"] == 1
-        assert "theme:growth" not in persisted
-
-
-def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir)
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
-        registry_path.parent.mkdir(parents=True)
-        registry_path.write_text(
-            """{
-  "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "policy": {
-    "allowed_groups": ["subject", "theme"]
-  },
-  "tags": [
-    {
-      "tag_id": "subject:trees",
-      "group": "subject",
-      "label": "trees",
-      "status": "active",
-      "description": "Old trees"
-    }
-  ]
-}
-""",
-            encoding="utf-8",
-        )
-        aliases_path.write_text(
-            """{
-  "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {
-    "woodland": {
-      "description": "Woodland",
-      "tags": ["subject:trees"]
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-        assignments_path.write_text(
-            """{
-  "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {
-    "series-a": {
-      "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}]
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-
-        import_status, import_payload = analytics_post_response(
-            repo_root,
-            "/import-tag-registry",
-            {
-                "mode": "add",
-                "import_registry": {
-                    "tags": [
-                        {
-                            "tag_id": "theme:growth",
-                            "group": "theme",
-                            "label": "growth",
-                            "status": "active",
-                            "description": "Growth",
-                        }
-                    ]
-                },
-                "import_filename": "registry.json",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-        preview_status, preview_payload = analytics_post_response(
-            repo_root,
-            "/mutate-tag-preview",
-            {
-                "action": "delete",
-                "tag_id": "subject:trees",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-
-        persisted = registry_path.read_text(encoding="utf-8")
-        assert import_status == HTTPStatus.OK
-        assert import_payload["ok"] is True
-        assert import_payload["added"] == 1
-        assert import_payload["dry_run"] is True
-        assert preview_status == HTTPStatus.OK
-        assert preview_payload["ok"] is True
-        assert preview_payload["preview"] is True
-        assert preview_payload["action"] == "delete"
-        assert preview_payload["series_tag_refs_rewritten"] == 1
-        assert "theme:growth" not in persisted
-
-
-def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir)
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
-        aliases_path.parent.mkdir(parents=True)
-        aliases_path.write_text(
-            """{
-  "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {
-    "foliage": {
-      "description": "Old foliage",
-      "tags": ["subject:trees"]
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-        registry_path.write_text(
-            """{
-  "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "policy": {
-    "allowed_groups": ["subject", "theme"]
-  },
-  "tags": [
-    {
-      "tag_id": "subject:trees",
-      "group": "subject",
-      "label": "trees",
-      "status": "active",
-      "description": "Trees"
-    },
-    {
-      "tag_id": "theme:growth",
-      "group": "theme",
-      "label": "growth",
-      "status": "active",
-      "description": "Growth"
-    }
-  ]
-}
-""",
-            encoding="utf-8",
-        )
-
-        import_status, import_payload = analytics_post_response(
-            repo_root,
-            "/import-tag-aliases",
-            {
-                "mode": "add",
-                "import_aliases": {
-                    "aliases": {
-                        "growth": {
-                            "description": "Growth",
-                            "tags": ["theme:growth"],
-                        }
-                    }
-                },
-                "import_filename": "aliases.json",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-        delete_status, delete_payload = analytics_post_response(
-            repo_root,
-            "/delete-tag-alias",
-            {
-                "alias": "foliage",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-        preview_status, preview_payload = analytics_post_response(
-            repo_root,
-            "/mutate-tag-alias-preview",
-            {
-                "alias": "foliage",
-                "new_alias": "canopy",
-                "description": "Canopy",
-                "tags": ["subject:trees", "theme:growth"],
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-
-        persisted = aliases_path.read_text(encoding="utf-8")
-        assert import_status == HTTPStatus.OK
-        assert import_payload["ok"] is True
-        assert import_payload["added"] == 1
-        assert import_payload["dry_run"] is True
-        assert delete_status == HTTPStatus.OK
-        assert delete_payload["ok"] is True
-        assert delete_payload["alias"] == "foliage"
-        assert delete_payload["dry_run"] is True
-        assert preview_status == HTTPStatus.OK
-        assert preview_payload["ok"] is True
-        assert preview_payload["preview"] is True
-        assert preview_payload["renamed"] is True
-        assert "canopy" not in persisted
-
-
-def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir)
-        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
-        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
-        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
-        registry_path.parent.mkdir(parents=True)
-        registry_path.write_text(
-            """{
-  "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "policy": {
-    "allowed_groups": ["subject", "theme"]
-  },
-  "tags": [
-    {
-      "tag_id": "subject:trees",
-      "group": "subject",
-      "label": "trees",
-      "status": "active",
-      "description": "Trees"
-    },
-    {
-      "tag_id": "theme:growth",
-      "group": "theme",
-      "label": "growth",
-      "status": "active",
-      "description": "Growth"
-    }
-  ]
-}
-""",
-            encoding="utf-8",
-        )
-        aliases_path.write_text(
-            """{
-  "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {
-    "foliage": {
-      "description": "Foliage",
-      "tags": ["subject:trees"]
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-        assignments_path.write_text(
-            """{
-  "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {
-    "series-a": {
-      "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}]
-    }
-  }
-}
-""",
-            encoding="utf-8",
-        )
-
-        promote_status, promote_payload = analytics_post_response(
-            repo_root,
-            "/promote-tag-alias-preview",
-            {
-                "alias": "foliage",
-                "group": "theme",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-        demote_status, demote_payload = analytics_post_response(
-            repo_root,
-            "/demote-tag-preview",
-            {
-                "tag_id": "subject:trees",
-                "alias_targets": ["theme:growth"],
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
-
-        registry_persisted = registry_path.read_text(encoding="utf-8")
-        aliases_persisted = json.loads(aliases_path.read_text(encoding="utf-8"))
-        assert promote_status == HTTPStatus.OK
-        assert promote_payload["ok"] is True
-        assert promote_payload["preview"] is True
-        assert promote_payload["new_tag_id"] == "theme:foliage"
-        assert demote_status == HTTPStatus.OK
-        assert demote_payload["ok"] is True
-        assert demote_payload["preview"] is True
-        assert demote_payload["alias_key"] == "trees"
-        assert demote_payload["series_tag_refs_rewritten"] == 1
-        assert "theme:foliage" not in registry_persisted
-        assert "trees" not in aliases_persisted["aliases"]
-
-
 if __name__ == "__main__":
     test_runtime_config_exposes_adapter_contract()
     test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots()
     test_local_studio_shells_load_studio_css_without_public_main_css()
     test_local_studio_asset_version_does_not_follow_public_main_css()
-    test_analytics_tag_groups_route_returns_existing_payload()
-    test_analytics_save_tags_dry_run_route_uses_assignment_contract()
-    test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract()
-    test_analytics_tag_registry_dry_run_routes_use_registry_contract()
-    test_analytics_tag_alias_dry_run_routes_use_alias_contract()
-    test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract()
     print("studio app server tests OK")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check local Studio tag route shells."""
+"""Smoke-check local Analytics tag route shells."""
 
 from __future__ import annotations
 
@@ -16,66 +16,73 @@ from playwright.sync_api import sync_playwright
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 
 ROUTES = [
     {
         "view_id": "tag_registry",
-        "runtime_path": "/studio/analytics/tag-registry/",
-        "path": "/studio/analytics/tag-registry/",
+        "runtime_path": "/analytics/tag-registry/",
+        "path": "/analytics/tag-registry/",
         "root": "#tag-registry",
         "mode": "list",
         "expected_requests": [
-            "/studio/api/analytics/tag-registry",
-            "/studio/api/analytics/tag-aliases",
-            "/studio/api/analytics/tag-assignments",
-            "/studio/api/analytics/tag-groups",
+            "/analytics/api/tag-registry",
+            "/analytics/api/tag-aliases",
+            "/analytics/api/tag-assignments",
+            "/analytics/api/tag-groups",
         ],
     },
     {
         "view_id": "tag_aliases",
-        "runtime_path": "/studio/analytics/tag-aliases/",
-        "path": "/studio/analytics/tag-aliases/",
+        "runtime_path": "/analytics/tag-aliases/",
+        "path": "/analytics/tag-aliases/",
         "root": "#tag-aliases",
         "mode": "list",
         "expected_requests": [
-            "/studio/api/analytics/tag-aliases",
-            "/studio/api/analytics/tag-registry",
-            "/studio/api/analytics/tag-groups",
+            "/analytics/api/tag-aliases",
+            "/analytics/api/tag-registry",
+            "/analytics/api/tag-groups",
         ],
     },
     {
         "view_id": "series_tags",
-        "runtime_path": "/studio/analytics/series-tags/",
-        "path": "/studio/analytics/series-tags/",
+        "runtime_path": "/analytics/series-tags/",
+        "path": "/analytics/series-tags/",
         "root": "#series-tags",
         "mode": "list",
         "expected_requests": [
-            "/studio/api/analytics/tag-assignments",
-            "/studio/api/analytics/tag-registry",
-            "/studio/api/analytics/tag-groups",
-            "/studio/api/analytics/health",
+            "/analytics/api/tag-assignments",
+            "/analytics/api/tag-registry",
+            "/analytics/api/tag-groups",
+            "/analytics/api/health",
         ],
     },
     {
         "view_id": "series_tag_editor",
-        "runtime_path": "/studio/analytics/series-tag-editor/",
-        "path": "/studio/analytics/series-tag-editor/?series=036",
+        "runtime_path": "/analytics/series-tag-editor/",
+        "path": "/analytics/series-tag-editor/?series=036",
         "root": "#seriesTagEditorRoot",
         "mode": "edit",
         "expected_requests": [
-            "/studio/api/analytics/tag-registry",
-            "/studio/api/analytics/tag-aliases",
-            "/studio/api/analytics/tag-assignments",
-            "/studio/api/analytics/health",
+            "/analytics/api/tag-registry",
+            "/analytics/api/tag-aliases",
+            "/analytics/api/tag-assignments",
+            "/analytics/api/health",
         ],
     },
 ]
 
 
-def start_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_server() -> tuple[AnalyticsAppServer, str]:
+    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -87,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
 
     server, base_url = start_server()
     try:
-        with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
+        with urllib.request.urlopen(f"{base_url}/analytics/runtime-config.json", timeout=10) as response:
             runtime_config = json.loads(response.read().decode("utf-8"))
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         public_preview_base = runtime_config.get("app", {}).get("runtime", {}).get("sites", {}).get("public_preview", {}).get("base", "")
@@ -160,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio tag routes OK: {base_url}/studio/analytics/tag-registry/")
+        print(f"local Analytics tag routes OK: {base_url}/analytics/tag-registry/")
         return 0
     finally:
         server.shutdown()

@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-ADAPTERS_PATH = REPO_ROOT / "studio" / "app" / "server" / "studio" / "data_sharing_adapters.py"
+ADAPTERS_PATH = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app" / "data_sharing_adapters.py"
 
 
 def load_adapters_module():

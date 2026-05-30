@@ -11,10 +11,14 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-if str(DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(DOCS_DIR))
+for path in (DOCS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
 
 import docs_import_source_service as import_source_service  # noqa: E402
@@ -22,51 +26,51 @@ import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_import_service import import_source_dependencies  # noqa: E402
-from studio.app.server.studio import studio_data_sharing_api  # noqa: E402
+import analytics_data_sharing_api  # noqa: E402
 
-documents_data_sharing_adapter = studio_data_sharing_api.documents_data_sharing_adapter
+documents_data_sharing_adapter = analytics_data_sharing_api.documents_data_sharing_adapter
 
 
 def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
-    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
+    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
     return documents_data_sharing_adapter.list_returned_packages(
         root,
         data_domain,
         adapter=adapter,
-        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
+        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
+    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
     return documents_data_sharing_adapter.review_returned_package(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
+        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
+    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
     return documents_data_sharing_adapter.apply_returned_changes(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
+        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
+    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
     return documents_data_sharing_adapter.prepare_package(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
+        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 

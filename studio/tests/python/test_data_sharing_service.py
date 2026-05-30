@@ -12,11 +12,16 @@ from types import SimpleNamespace
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
-from studio import data_sharing_routes, data_sharing_service  # noqa: E402
-from studio import data_sharing_adapters  # noqa: E402
+import data_sharing_adapters  # noqa: E402
+import data_sharing_routes  # noqa: E402
+import data_sharing_service  # noqa: E402
 from data_sharing.services.dispatch import DataSharingAdapterHandlers  # noqa: E402
 from data_sharing.workflows.prepare import prepare_package as data_sharing_prepare_package  # noqa: E402
 

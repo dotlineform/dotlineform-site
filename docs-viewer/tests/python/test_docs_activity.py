@@ -19,7 +19,6 @@ for path in (DOCS_SERVICES_DIR, STUDIO_SERVER_DIR, STUDIO_SHARED_PYTHON_DIR):
 
 import docs_activity  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-from studio import data_sharing_routes  # noqa: E402
 import studio_activity  # noqa: E402
 
 
@@ -32,13 +31,13 @@ def write_activity_contract(repo_root: Path) -> None:
                 "pages": {
                     "data-sharing-prepare": {
                         "label": "data sharing prepare",
-                        "route": "/studio/data-sharing/prepare/?mode=manage",
+                        "route": "/analytics/data-sharing/prepare/?mode=manage",
                         "actions": {
                             "prepare-share-package": {
                                 "label": "prepare share package",
                                 "control_id": "dataSharingPrepareRun",
                                 "control_selector": "#dataSharingPrepareRun",
-                                "endpoint": data_sharing_routes.PREPARE_PATH,
+                                "endpoint": docs_activity.DATA_SHARING_PREPARE_PATH,
                                 "record_id_field": "export_id",
                             }
                         },
@@ -58,13 +57,13 @@ def write_activity_contract(repo_root: Path) -> None:
                     },
                     "data-sharing-review": {
                         "label": "data sharing review",
-                        "route": "/studio/data-sharing/review/?mode=manage",
+                        "route": "/analytics/data-sharing/review/?mode=manage",
                         "actions": {
                             "apply-returned-summaries": {
                                 "label": "apply returned summaries",
                                 "control_id": "dataSharingReviewUpdateSummary",
                                 "control_selector": "#dataSharingReviewUpdateSummary",
-                                "endpoint": data_sharing_routes.APPLY_PATH,
+                                "endpoint": docs_activity.DATA_SHARING_APPLY_PATH,
                                 "record_id_field": "staged_filename",
                             }
                         },
@@ -111,7 +110,7 @@ def export_body() -> dict[str, object]:
         "activity_context": {
             "page_id": "data-sharing-prepare",
             "action_id": "prepare-share-package",
-            "route": "/studio/data-sharing/prepare/?mode=manage",
+            "route": "/analytics/data-sharing/prepare/?mode=manage",
             "control_id": "dataSharingPrepareRun",
             "control_selector": "#dataSharingPrepareRun",
             "correlation_id": "export:library",
@@ -204,7 +203,7 @@ def import_apply_body(confirm: bool) -> dict[str, object]:
         "activity_context": {
             "page_id": "data-sharing-review",
             "action_id": "apply-returned-summaries",
-            "route": "/studio/data-sharing/review/?mode=manage",
+            "route": "/analytics/data-sharing/review/?mode=manage",
             "control_id": "dataSharingReviewUpdateSummary",
             "control_selector": "#dataSharingReviewUpdateSummary",
             "correlation_id": "import-apply:summaries",

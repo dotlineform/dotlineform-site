@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for Studio-owned Data Sharing API dispatch."""
+"""Focused checks for Analytics-owned Data Sharing API dispatch."""
 
 from __future__ import annotations
 
@@ -13,11 +13,15 @@ import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (REPO_ROOT, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
-from studio.app.server.studio import studio_data_sharing_api  # noqa: E402
-from studio.app.server.studio.studio_app_config import runtime_config  # noqa: E402
+import analytics_data_sharing_api  # noqa: E402
+from analytics_app_config import runtime_config  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -181,33 +185,33 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     return temp_dir
 
 
-def test_runtime_config_publishes_studio_owned_data_sharing_endpoints() -> None:
+def test_runtime_config_publishes_analytics_owned_data_sharing_endpoints() -> None:
     payload = runtime_config(REPO_ROOT, "test-version")
     endpoints = payload["app"]["runtime"]["services"]["data_sharing"]
 
     assert endpoints == {
-        "base": "/studio/api/data-sharing",
-        "health": "/studio/api/data-sharing/health",
-        "selectable_records": "/studio/api/data-sharing/selectable-records",
-        "returned_packages": "/studio/api/data-sharing/returned-packages",
-        "prepare": "/studio/api/data-sharing/prepare",
-        "review": "/studio/api/data-sharing/review",
-        "apply": "/studio/api/data-sharing/apply",
+        "base": "/analytics/api/data-sharing",
+        "health": "/analytics/api/data-sharing/health",
+        "selectable_records": "/analytics/api/data-sharing/selectable-records",
+        "returned_packages": "/analytics/api/data-sharing/returned-packages",
+        "prepare": "/analytics/api/data-sharing/prepare",
+        "review": "/analytics/api/data-sharing/review",
+        "apply": "/analytics/api/data-sharing/apply",
     }
 
 
-def test_health_payload_identifies_studio_data_sharing_service() -> None:
-    payload = studio_data_sharing_api.data_sharing_get_payload(REPO_ROOT, "/health", {})
+def test_health_payload_identifies_analytics_data_sharing_service() -> None:
+    payload = analytics_data_sharing_api.data_sharing_get_payload(REPO_ROOT, "/health", {})
 
     assert payload["ok"] is True
-    assert payload["service"] == "studio_data_sharing"
-    assert payload["endpoints"]["prepare"] == "/studio/api/data-sharing/prepare"
+    assert payload["service"] == "analytics_data_sharing"
+    assert payload["endpoints"]["prepare"] == "/analytics/api/data-sharing/prepare"
 
 
 def test_selectable_records_returns_documents_without_docs_viewer_http() -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
-        payload = studio_data_sharing_api.data_sharing_get_payload(
+        payload = analytics_data_sharing_api.data_sharing_get_payload(
             root,
             "/selectable-records",
             {"data_domain": ["library"]},
@@ -236,14 +240,14 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
         return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation}
 
     handlers = {
-        "documents": studio_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
+        "documents": analytics_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
             module="documents",
             prepare=fake_prepare,
         )
     }
-    monkeypatch.setattr(studio_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
+    monkeypatch.setattr(analytics_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
 
-    status, payload = studio_data_sharing_api.data_sharing_post_response(
+    status, payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/prepare",
         {"data_domain": "library", "config_id": "library-document-summaries"},
@@ -263,14 +267,14 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
         return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation, "files": []}
 
     handlers = {
-        "documents": studio_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
+        "documents": analytics_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
             module="documents",
             list_returned=fake_list_returned,
         )
     }
-    monkeypatch.setattr(studio_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
+    monkeypatch.setattr(analytics_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
 
-    payload = studio_data_sharing_api.data_sharing_get_payload(
+    payload = analytics_data_sharing_api.data_sharing_get_payload(
         REPO_ROOT,
         "/returned-packages",
         {"data_domain": ["library"]},
@@ -292,21 +296,21 @@ def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeyp
         return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation, "applied_count": 0}
 
     handlers = {
-        "documents": studio_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
+        "documents": analytics_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
             module="documents",
             review=fake_review,
             apply=fake_apply,
         )
     }
-    monkeypatch.setattr(studio_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
+    monkeypatch.setattr(analytics_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
 
-    review_status, review_payload = studio_data_sharing_api.data_sharing_post_response(
+    review_status, review_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/review",
         {"data_domain": "library", "staged_filename": "summaries.jsonl"},
         dry_run=True,
     )
-    apply_status, apply_payload = studio_data_sharing_api.data_sharing_post_response(
+    apply_status, apply_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/apply",
         {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl"},
@@ -322,4 +326,4 @@ def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeyp
 
 def test_unknown_endpoint_fails_closed() -> None:
     with pytest.raises(FileNotFoundError):
-        studio_data_sharing_api.data_sharing_get_payload(REPO_ROOT, "/missing", {})
+        analytics_data_sharing_api.data_sharing_get_payload(REPO_ROOT, "/missing", {})

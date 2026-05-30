@@ -15,6 +15,16 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Split the first Analytics/Data Sharing test boundary slice:
+  - moved the Studio Data Sharing API pytest to `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+  - added `analytics-app/tests/python/test_analytics_app_server.py` for Analytics runtime, tag read, tag write dry-run, data-sharing endpoint, and static policy checks
+  - moved the active tag route and data-sharing route browser smokes to `analytics-app/tests/smoke/`
+  - added an `analytics-smoke` check profile and removed Analytics/Data Sharing smokes from the `studio-smoke` profile
+  - retargeted Docs Viewer/Data Sharing tests away from deleted Studio data-sharing API modules
+  - retargeted the shared tags data-sharing adapter away from deleted `studio.data_sharing_adapters`
+- Added the missing Analytics-owned `catalogue-public-links.js` helper used by the series tag editor route.
+- Added public-preview/production site bases to the Analytics runtime config so Analytics routes can build public catalogue links without depending on Studio runtime config.
+- Verified `quick` and the new `analytics-smoke` profile pass.
 - Paused the running `bin/local-all` stack before file moves: public preview, Local Studio, Docs Viewer service, and docs live rebuild watcher were stopped.
 - Inventoried the current Analytics/Data Sharing/UI Catalogue/thumbnail-quality route, API, frontend, config, test, and docs surfaces.
 - Added a standalone Local Analytics app under `analytics-app/` with `/analytics/` routes, `/analytics/api/...` tag endpoints, `/analytics/api/data-sharing/...` endpoints, copied frontend modules/UI text, copied CSS, and `bin/local-analytics`.
@@ -25,9 +35,17 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue with the test split. There are still active tests and smokes named `local_studio_*` or importing deleted `studio_data_sharing_api`/`studio_analytics_api` modules; move or retarget those to Analytics ownership before running broad checks.
+- Continue task 8 with the remaining unprofiled Studio-location Analytics/Data Sharing smokes:
+  - `studio/tests/smoke/local_studio_analytics_*`
+  - `studio/tests/smoke/local_studio_app_tag_groups.py`
+  - `studio/tests/smoke/data_sharing_prepare.py`
+  - `studio/tests/smoke/data_sharing_review.py`
+  - `studio/tests/smoke/data_sharing_prepare_modules.py`
+  - `studio/tests/smoke/tag_registry_modules.py`
+  - ready-state/modal/render smokes that still hardcode `/studio/analytics/...`
+- Keep the preserved `var/studio/data-sharing/...` artifact path assertions; those remain data artifact contracts, not active Studio routes.
+- Continue the smoke split before running broad checks; do not treat unprofiled old-route smokes as proof of active Studio compatibility.
 - Preserve the clean cutover: do not add aliases or proxy handlers for the retired Studio paths to make old tests pass.
-- Keep the preserved `var/studio/data-sharing/...` artifact paths for now; those are data artifact path contracts, not active Studio routes.
 
 ### baseline verification set
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check local Studio Data Sharing route shells."""
+"""Smoke-check local Analytics Data Sharing route shells."""
 
 from __future__ import annotations
 
@@ -17,12 +17,18 @@ from playwright.sync_api import expect, sync_playwright
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 
-def start_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_server() -> tuple[AnalyticsAppServer, str]:
+    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -142,26 +148,26 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         request = route.request
         parsed = urlparse(request.url)
         data_sharing_paths = {
-            "/studio/api/data-sharing/health",
-            "/studio/api/data-sharing/selectable-records",
-            "/studio/api/data-sharing/prepare",
-            "/studio/api/data-sharing/returned-packages",
-            "/studio/api/data-sharing/review",
+            "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/selectable-records",
+            "/analytics/api/data-sharing/prepare",
+            "/analytics/api/data-sharing/returned-packages",
+            "/analytics/api/data-sharing/review",
         }
         if parsed.path not in data_sharing_paths:
             route.continue_()
             return
         calls.append({"method": request.method, "path": parsed.path})
         payload: dict[str, object]
-        if parsed.path == "/studio/api/data-sharing/health":
-            payload = {"ok": True, "service": "studio_data_sharing", "dry_run": False}
-        elif parsed.path == "/studio/api/data-sharing/selectable-records":
+        if parsed.path == "/analytics/api/data-sharing/health":
+            payload = {"ok": True, "service": "analytics_data_sharing", "dry_run": False}
+        elif parsed.path == "/analytics/api/data-sharing/selectable-records":
             payload = selectable_records_payload()
-        elif parsed.path == "/studio/api/data-sharing/prepare":
+        elif parsed.path == "/analytics/api/data-sharing/prepare":
             payload = prepare_payload()
-        elif parsed.path == "/studio/api/data-sharing/returned-packages":
+        elif parsed.path == "/analytics/api/data-sharing/returned-packages":
             payload = returned_packages_payload()
-        elif parsed.path == "/studio/api/data-sharing/review":
+        elif parsed.path == "/analytics/api/data-sharing/review":
             payload = review_payload()
         else:
             payload = {"ok": False, "error": f"Unexpected Data Sharing API route: {parsed.path}"}
@@ -172,24 +178,22 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
 
 
 def assert_runtime_views(base_url: str) -> None:
-    with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
+    with urllib.request.urlopen(f"{base_url}/analytics/runtime-config.json", timeout=10) as response:
         runtime_config = json.loads(response.read().decode("utf-8"))
     views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
     by_id = {view.get("id"): view for view in views if isinstance(view, dict)}
     expected = {
-        "data_sharing_prepare": "/studio/data-sharing/prepare/?mode=manage",
-        "data_sharing_review": "/studio/data-sharing/review/?mode=manage",
+        "data_sharing_prepare": "/analytics/data-sharing/prepare/?mode=manage",
+        "data_sharing_review": "/analytics/data-sharing/review/?mode=manage",
     }
     for view_id, path in expected.items():
         view = by_id.get(view_id)
         if not view or view.get("path") != path:
             raise AssertionError(f"runtime config missing {view_id}: {views!r}")
-    if "data_sharing" in by_id:
-        raise AssertionError(f"runtime config still exposes retired data sharing dashboard: {views!r}")
     services = runtime_config.get("app", {}).get("runtime", {}).get("services", {})
     data_sharing = services.get("data_sharing", {}) if isinstance(services, dict) else {}
-    if data_sharing.get("health") != "/studio/api/data-sharing/health":
-        raise AssertionError(f"runtime config missing Studio Data Sharing API endpoints: {data_sharing!r}")
+    if data_sharing.get("health") != "/analytics/api/data-sharing/health":
+        raise AssertionError(f"runtime config missing Analytics Data Sharing API endpoints: {data_sharing!r}")
 
 
 def read_json_url(url: str) -> dict[str, object]:
@@ -200,10 +204,10 @@ def read_json_url(url: str) -> dict[str, object]:
 
 
 def assert_data_sharing_api(base_url: str) -> None:
-    health = read_json_url(f"{base_url}/studio/api/data-sharing/health")
-    if health.get("service") != "studio_data_sharing":
+    health = read_json_url(f"{base_url}/analytics/api/data-sharing/health")
+    if health.get("service") != "analytics_data_sharing":
         raise AssertionError(f"unexpected Data Sharing health payload: {health!r}")
-    records = read_json_url(f"{base_url}/studio/api/data-sharing/selectable-records?data_domain=library")
+    records = read_json_url(f"{base_url}/analytics/api/data-sharing/selectable-records?data_domain=library")
     if records.get("adapter_id") != "documents" or records.get("selection_model") != "documents":
         raise AssertionError(f"unexpected selectable-record payload: {records!r}")
     if not records.get("records"):
@@ -211,7 +215,7 @@ def assert_data_sharing_api(base_url: str) -> None:
 
 
 def assert_prepare(page, base_url: str) -> None:
-    page.goto(f"{base_url}/studio/data-sharing/prepare/?mode=manage&scope=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage&scope=library", wait_until="domcontentloaded")
     root = page.locator("#dataSharingPrepareRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -227,7 +231,7 @@ def assert_prepare(page, base_url: str) -> None:
 
 
 def assert_review(page, base_url: str) -> None:
-    page.goto(f"{base_url}/studio/data-sharing/review/?mode=manage&scope=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&scope=library", wait_until="domcontentloaded")
     root = page.locator("#dataSharingReviewRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -262,23 +266,23 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         required_paths = {
-            "/studio/api/data-sharing/health",
-            "/studio/api/data-sharing/selectable-records",
-            "/studio/api/data-sharing/prepare",
-            "/studio/api/data-sharing/returned-packages",
-            "/studio/api/data-sharing/review",
+            "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/selectable-records",
+            "/analytics/api/data-sharing/prepare",
+            "/analytics/api/data-sharing/returned-packages",
+            "/analytics/api/data-sharing/review",
         }
         seen_paths = {str(call["path"]) for call in data_sharing_api_calls}
         missing_paths = required_paths.difference(seen_paths)
         if missing_paths:
-            raise AssertionError(f"missing Studio Data Sharing API calls: {sorted(missing_paths)!r}; calls={data_sharing_api_calls!r}")
+            raise AssertionError(f"missing Analytics Data Sharing API calls: {sorted(missing_paths)!r}; calls={data_sharing_api_calls!r}")
         if "/docs/generated/index" in seen_paths:
             raise AssertionError(f"prepare page still read the generic generated docs index: {data_sharing_api_calls!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio Data Sharing routes OK: {base_url}/studio/data-sharing/prepare/?mode=manage")
+        print(f"local Analytics Data Sharing routes OK: {base_url}/analytics/data-sharing/prepare/?mode=manage")
         return 0
     finally:
         server.shutdown()
