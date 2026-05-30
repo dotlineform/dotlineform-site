@@ -54,6 +54,7 @@ Codex sandbox note: browser/module smokes that start a temporary localhost serve
 - Do not add compatibility aliases for old Studio Analytics/Data Sharing routes.
 - Do not move write authority into the browser.
 - Avoid introducing a framework; the shell should be plain JavaScript until the ownership boundary is proven.
+- Capture evidence for a later framework checkpoint, but do not choose or install a framework in slice 1.
 
 ## Target Contract To Decide
 
@@ -66,6 +67,7 @@ The slice should answer these questions before route migration starts:
 - Which shell types are needed initially?
 - How are Docs Viewer doc links built from `external_links.docs_viewer` and route `doc_id`?
 - What validation catches missing route metadata, duplicate paths, missing scripts, or missing doc IDs?
+- What evidence should slices 2 and 3 collect to decide whether vanilla JavaScript remains sufficient or a framework evaluation is warranted?
 
 ## Implementation Tasks
 
@@ -79,9 +81,10 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | planned | Choose the route-registry location and schema. The registry should cover route id, label, title, path, script, doc id, navigation visibility, shell type, and ready-state route id without moving route behavior yet. |
 | 3 | planned | Add validation for the registry shape. Validation should catch duplicate route ids/paths, missing scripts for shell-routed pages, missing Docs Viewer doc ids, unsupported shell types, and stale route ids that no current Studio route serves. |
 | 4 | planned | Add the smallest browser-side shell contract module or design stub needed for slice 2. It should define expected inputs/outputs and helper responsibilities without taking over an active route yet. |
-| 5 | planned | Update owning docs for the decided route-registry and shell-contract boundary, including this tracker and the parent request. Do not rebuild docs payloads manually; let the watcher update generated payloads if running. |
-| 6 | planned | Run slice verification: focused Python config tests, JavaScript syntax/module checks if new JS is added, stale-reference scan for duplicated route metadata, and `git diff --check`. |
-| 7 | planned | Close slice 1 with a handoff to slice 2: selected first route candidate, migration prerequisites, acceptance checks, generated-payload status, known risks, and whether a structured docs-log entry is warranted. |
+| 5 | planned | Define the framework checkpoint evidence to collect in slices 2 and 3, including route-module lifecycle complexity, duplicated render/state helpers, modal/form orchestration pressure, build-step need, and smoke-test impact. |
+| 6 | planned | Update owning docs for the decided route-registry and shell-contract boundary, including this tracker and the parent request. Do not rebuild docs payloads manually; let the watcher update generated payloads if running. |
+| 7 | planned | Run slice verification: focused Python config tests, JavaScript syntax/module checks if new JS is added, stale-reference scan for duplicated route metadata, and `git diff --check`. |
+| 8 | planned | Close slice 1 with a handoff to slice 2: selected first route candidate, migration prerequisites, acceptance checks, framework-checkpoint evidence to collect, generated-payload status, known risks, and whether a structured docs-log entry is warranted. |
 
 ## Slice 2 Handoff Requirements
 
@@ -92,4 +95,5 @@ Before slice 2 starts, this doc should identify:
 - the Python shell code expected to be removed in that slice
 - the route module boot contract to preserve
 - the smoke test that proves the migrated route reaches ready state
+- the framework-checkpoint evidence slice 2 should collect
 - the fallback plan if the route requires server-rendered markup that should not move yet

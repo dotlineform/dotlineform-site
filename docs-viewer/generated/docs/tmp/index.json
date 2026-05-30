@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T19:31:01Z",
+  "generated_at": "2026-05-30T19:53:24Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -34,6 +34,21 @@
       "viewer_url": "/docs/?scope=tmp&doc=azure",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/azure.json",
       "content_text_length": 3577,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "tmp",
+      "doc_id": "docs-viewer",
+      "title": "docs viewer",
+      "added_date": "2026-05-30",
+      "last_updated": "2026-05-30",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer.md",
+      "viewer_url": "/docs/?scope=tmp&doc=docs-viewer",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/docs-viewer.json",
+      "content_text_length": 1257,
       "ui_status": "draft"
     },
     {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T19:42:43Z",
+  "generated_at": "2026-05-30T19:49:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -956,8 +956,8 @@
       "source_path": "site-request-studio-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
-      "content_text_length": 11191,
-      "ui_status": "planned"
+      "content_text_length": 12135,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -971,7 +971,7 @@
       "source_path": "site-request-studio-javascript-app-shell-slice-1.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-1.json",
-      "content_text_length": 4858,
+      "content_text_length": 5435,
       "ui_status": "planned"
     },
     {

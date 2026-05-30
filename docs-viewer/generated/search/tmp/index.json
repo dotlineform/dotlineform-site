@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-338c94ecf56814d502dc01da9b368758",
-    "generated_at_utc": "2026-05-30T19:31:01Z",
-    "count": 10
+    "version": "blake2b-decd5d320269b24ee824d8c8686ba8e5",
+    "generated_at_utc": "2026-05-30T19:53:25Z",
+    "count": 11
   },
   "entries": [
     {
@@ -38,6 +38,25 @@
         "28"
       ],
       "search_text": "azure 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "docs-viewer",
+      "kind": "doc",
+      "title": "docs viewer",
+      "href": "/docs/?scope=tmp&doc=docs-viewer",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
+      "search_terms": [
+        "docs-viewer",
+        "docs",
+        "viewer",
+        "docs viewer",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-30 2026 05 30"
     },
     {
       "id": "plan",

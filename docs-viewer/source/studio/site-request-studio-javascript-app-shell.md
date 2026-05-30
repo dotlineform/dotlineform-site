@@ -3,7 +3,7 @@ doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
 last_updated: "2026-05-30 20:30"
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- planned after the Analytics app split follow-on.
+- in progress
 - The first implementation tracker is [Studio JavaScript App Shell Slice 1 Tasks](/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1).
 
 ## Summary
@@ -230,6 +230,23 @@ Move Work, Work Detail, Series, and Moment editor shells.
 This is the highest-risk batch because these routes have more state, modals, selection flows, and write workflows.
 Split this slice if the editor family proves too broad for one verified batch.
 
+### Framework evaluation checkpoint
+
+Consider a frontend framework only after slices 2 or 3 prove the JavaScript shell boundary.
+The decision should be evidence-led:
+
+- keep vanilla JavaScript if the shell remains small and route modules mount cleanly
+- evaluate a framework if the migration starts recreating framework-like responsibilities such as component lifecycle, routed layout state, nested view composition, render diffing, modal orchestration, or repeated form-state machinery
+- use the catalogue editor family as the main complexity signal before committing to a framework
+
+Any candidate framework must:
+
+- work with local static/module serving or justify its build step clearly
+- preserve Python as the write/API authority
+- coexist incrementally with existing route modules
+- keep route-ready smoke testing straightforward
+- avoid making simple operational Studio pages materially heavier
+
 ### Slice 6: Retire Python shell rendering
 
 Remove route-specific Python shell helpers and view tables that are no longer needed.
@@ -238,6 +255,7 @@ Tighten static/runtime config tests, update source ownership and runtime docs, a
 ### Optional follow-up slices
 
 - Navigation/app polish if the migration exposes inconsistent grouping, page titles, or shell variants.
+- Framework adoption, only if the checkpoint shows vanilla JS is becoming a local framework by accident.
 - Analytics shell backport only after the Studio shell pattern is stable and clearly worth sharing.
 
 Ruby/Jekyll dependency retirement should stay separate.

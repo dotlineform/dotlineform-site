@@ -1,0 +1,14 @@
+{
+  "scope": "tmp",
+  "doc_id": "docs-viewer",
+  "title": "docs viewer",
+  "added_date": "2026-05-30",
+  "last_updated": "2026-05-30",
+  "parent_id": "",
+  "hidden": false,
+  "viewable": true,
+  "source_path": "docs-viewer.md",
+  "viewer_url": "/docs/?scope=tmp&doc=docs-viewer",
+  "content_html": "<blockquote>\n  <p>we didn’t discuss the framework question for docs viewer</p>\n</blockquote>\n\n<p>Correct. We only framed the framework checkpoint for <strong>Studio</strong>.</p>\n\n<p>For <strong>Docs Viewer</strong>, I would treat it as a separate decision with a higher bar. Docs Viewer already has more established app architecture work around app session, state domains, controllers, hosted views, public/manage mode, and service adapters. Introducing a framework there would risk disturbing a boundary that has recently been tightened.</p>\n\n<p>My recommendation:</p>\n\n<ul>\n  <li>Do <strong>not</strong> fold Docs Viewer framework evaluation into the Studio app-shell request.</li>\n  <li>Add a separate Docs Viewer framework checkpoint only after current Docs Viewer architecture cleanup is stable.</li>\n  <li>Use different evidence than Studio:\n    <ul>\n      <li>repeated controller/view lifecycle boilerplate</li>\n      <li>growing hosted-view composition complexity</li>\n      <li>public/manage mode branching becoming hard to verify</li>\n      <li>state-domain updates becoming too manual</li>\n      <li>modal/action workflow duplication</li>\n      <li>browser smoke burden increasing because behavior is too hand-wired</li>\n    </ul>\n  </li>\n  <li>Keep public read-only Docs Viewer weight as a hard constraint.</li>\n</ul>\n\n<p>For now: Studio can collect framework evidence during its shell migration. Docs Viewer should stay vanilla unless its own architecture docs or future task tracker shows repeated framework-like machinery.</p>\n",
+  "ui_status": "draft"
+}
