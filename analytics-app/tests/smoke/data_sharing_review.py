@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the data sharing review Studio route."""
+"""Smoke-check the data sharing review Analytics route."""
 
 from __future__ import annotations
 
@@ -18,7 +18,14 @@ from playwright.sync_api import sync_playwright
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 ROOT_SELECTOR = "#dataSharingReviewRoot"
 
@@ -39,8 +46,8 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def start_local_app_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_local_app_server() -> tuple[AnalyticsAppServer, str]:
+    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -97,7 +104,7 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if not list_exists:
         raise AssertionError("preview list shell is missing")
     if expect_unavailable_service and not preview_disabled:
-        raise AssertionError("preview button should be disabled when the Studio Data Sharing API is unavailable")
+        raise AssertionError("preview button should be disabled when the Analytics Data Sharing API is unavailable")
     if any(not disabled for disabled in apply_action_disabled):
         raise AssertionError("apply actions should stay disabled until review rows are selected")
     return {
@@ -139,17 +146,17 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
     def handle(route):
         parsed = urlparse(route.request.url)
         data_sharing_paths = {
-            "/studio/api/data-sharing/health",
-            "/studio/api/data-sharing/returned-packages",
-            "/studio/api/data-sharing/review",
-            "/studio/api/data-sharing/apply",
+            "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/returned-packages",
+            "/analytics/api/data-sharing/review",
+            "/analytics/api/data-sharing/apply",
         }
         if parsed.path not in data_sharing_paths:
             route.continue_()
             return
-        if parsed.path == "/studio/api/data-sharing/health":
+        if parsed.path == "/analytics/api/data-sharing/health":
             payload = {"ok": True}
-        elif parsed.path == "/studio/api/data-sharing/returned-packages":
+        elif parsed.path == "/analytics/api/data-sharing/returned-packages":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -164,7 +171,7 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
                     }
                 ],
             }
-        elif parsed.path == "/studio/api/data-sharing/review":
+        elif parsed.path == "/analytics/api/data-sharing/review":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -281,7 +288,7 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
                     },
                 ],
             }
-        elif parsed.path == "/studio/api/data-sharing/apply":
+        elif parsed.path == "/analytics/api/data-sharing/apply":
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json
@@ -369,10 +376,10 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
 def block_data_sharing_api(route) -> None:
     parsed = urlparse(route.request.url)
     if parsed.path in {
-        "/studio/api/data-sharing/health",
-        "/studio/api/data-sharing/returned-packages",
-        "/studio/api/data-sharing/review",
-        "/studio/api/data-sharing/apply",
+        "/analytics/api/data-sharing/health",
+        "/analytics/api/data-sharing/returned-packages",
+        "/analytics/api/data-sharing/review",
+        "/analytics/api/data-sharing/apply",
     }:
         route.abort()
         return
@@ -639,17 +646,17 @@ def assert_mock_preview_flow(page, apply_requests: list[dict[str, object]]) -> d
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Smoke-check the Local Studio Data Sharing review route. "
-            "By default, this starts a temporary Local Studio app server."
+            "Smoke-check the Local Analytics Data Sharing review route. "
+            "By default, this starts a temporary Local Analytics app server."
         )
     )
     host_group = parser.add_mutually_exclusive_group()
-    host_group.add_argument("--base-url", help="Use an already running Local Studio base URL.")
+    host_group.add_argument("--base-url", help="Use an already running Local Analytics base URL.")
     host_group.add_argument("--site-root", help="Serve a built static site root on a temporary local HTTP server.")
-    host_group.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
+    host_group.add_argument("--local-app", action="store_true", help="Serve the local Analytics app on a temporary local HTTP server.")
     parser.add_argument("--block-data-sharing-api", action="store_true")
     parser.add_argument("--mock-data-sharing-api", action="store_true")
-    parser.add_argument("--route-path", default="/studio/data-sharing/review/?mode=manage")
+    parser.add_argument("--route-path", default="/analytics/data-sharing/review/?mode=manage")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()

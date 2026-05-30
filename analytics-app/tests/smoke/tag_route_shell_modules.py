@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import Page, sync_playwright
 
@@ -15,6 +16,13 @@ from playwright.sync_api import Page, sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -31,7 +39,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_tag_save_session_helpers(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/studio/app/frontend/js/tag-route-save-session.js');
+            const module = await import('/analytics/app/frontend/js/tag-route-save-session.js');
             const state = {
                 saveMode: 'patch',
                 importAvailable: false,
@@ -80,13 +88,13 @@ def assert_tag_save_session_helpers(page: Page) -> None:
                 }
             });
             await Promise.all([
-                import('/studio/app/frontend/js/tag-studio.js'),
-                import('/studio/app/frontend/js/tag-registry.js'),
-                import('/studio/app/frontend/js/tag-aliases.js'),
-                import('/studio/app/frontend/js/tag-registry-import-mode.js'),
-                import('/studio/app/frontend/js/tag-aliases-import-mode.js'),
-                import('/studio/app/frontend/js/tag-registry-workflow.js'),
-                import('/studio/app/frontend/js/tag-aliases-workflow.js')
+                import('/analytics/app/frontend/js/tag-studio.js'),
+                import('/analytics/app/frontend/js/tag-registry.js'),
+                import('/analytics/app/frontend/js/tag-aliases.js'),
+                import('/analytics/app/frontend/js/tag-registry-import-mode.js'),
+                import('/analytics/app/frontend/js/tag-aliases-import-mode.js'),
+                import('/analytics/app/frontend/js/tag-registry-workflow.js'),
+                import('/analytics/app/frontend/js/tag-aliases-workflow.js')
             ]);
             return {
                 availableProbe,
@@ -146,7 +154,7 @@ def assert_tag_registry_modal_workflow(page: Page) -> None:
                 <button id="confirmDemote"></button>
               </section>
             `;
-            const module = await import('/studio/app/frontend/js/tag-registry-modal-workflow.js');
+            const module = await import('/analytics/app/frontend/js/tag-registry-modal-workflow.js');
             const state = {
                 config: { ui_text: {} },
                 registryUpdatedAt: '2026-05-21T10:00:00Z',
@@ -245,7 +253,7 @@ def assert_tag_studio_interactions(page: Page) -> None:
               <p id="status"></p>
               <p id="saveResult"></p>
             `;
-            const module = await import('/studio/app/frontend/js/tag-studio-interactions.js');
+            const module = await import('/analytics/app/frontend/js/tag-studio-interactions.js');
             const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
             const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
             const gamma = { tag_id: 'theme:gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
@@ -427,7 +435,7 @@ def assert_tag_aliases_modal_workflow(page: Page) -> None:
                 <button id="saveEditAlias"></button>
               </section>
             `;
-            const module = await import('/studio/app/frontend/js/tag-aliases-modal-workflow.js');
+            const module = await import('/analytics/app/frontend/js/tag-aliases-modal-workflow.js');
             const calls = [];
             const state = {
                 mount: document.getElementById('aliases'),
@@ -449,7 +457,7 @@ def assert_tag_aliases_modal_workflow(page: Page) -> None:
                     { tagId: 'form:gamma', group: 'form', label: 'gamma' }
                 ],
                 groupDescriptions: new Map(),
-                groupInfoPagePath: '/studio/analytics/tag-groups/',
+                groupInfoPagePath: '/analytics/tag-groups/',
                 studioGroups: ['subject', 'domain', 'form', 'theme'],
                 promotionState: null,
                 demoteState: null,

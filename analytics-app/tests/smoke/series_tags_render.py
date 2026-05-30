@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import sync_playwright
 
@@ -15,6 +16,13 @@ from playwright.sync_api import sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -53,7 +61,7 @@ def main() -> int:
             result = page.evaluate(
                 """async () => {
                     document.body.innerHTML = '<main><div id="mount"></div></main>';
-                    const render = await import('/studio/app/frontend/js/series-tags-render.js');
+                    const render = await import('/analytics/app/frontend/js/series-tags-render.js');
                     const registry = new Map([
                         ['subject:trees', { group: 'subject', label: 'trees', status: 'active' }],
                         ['domain:studio', { group: 'domain', label: 'studio', status: 'active' }],
@@ -78,7 +86,7 @@ def main() -> int:
                             }
                         },
                         studioGroups: ['subject', 'domain', 'form', 'theme'],
-                        groupInfoPagePath: '/studio/analytics/tag-groups/',
+                        groupInfoPagePath: '/analytics/tag-groups/',
                         groupDescriptions: new Map([
                             ['subject', 'Subject group'],
                             ['domain', 'Domain group']
@@ -158,7 +166,7 @@ def main() -> int:
         raise AssertionError(f"local chip output mismatch: {result!r}")
     if result["themeRows"][1]["chips"] != ["old local"] or result["themeRows"][0]["chips"] != []:
         raise AssertionError(f"theme filter output mismatch: {result!r}")
-    if result["activeFilter"] != "active" or result["groupInfoHref"] != "/studio/analytics/tag-groups/":
+    if result["activeFilter"] != "active" or result["groupInfoHref"] != "/analytics/tag-groups/":
         raise AssertionError(f"filter controls mismatch: {result!r}")
     if result["subjectTitle"] != "Subject group":
         raise AssertionError(f"group description title mismatch: {result!r}")

@@ -9,6 +9,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import sync_playwright
 
@@ -16,6 +17,13 @@ from playwright.sync_api import sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -82,7 +90,7 @@ def install_modal_fixture(page) -> None:
         """async () => {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = '/studio/app/assets/css/studio.css';
+            css.href = '/analytics/app/assets/css/analytics.css';
             const cssLoaded = new Promise((resolve, reject) => {
                 css.addEventListener('load', resolve, { once: true });
                 css.addEventListener('error', reject, { once: true });
@@ -98,7 +106,7 @@ def install_modal_fixture(page) -> None:
                 </section>
               </main>
             `;
-            const module = await import('/studio/app/frontend/js/tag-studio-modals.js');
+            const module = await import('/analytics/app/frontend/js/tag-studio-modals.js');
             const mount = document.querySelector('#tag-studio');
             const state = {
                 config: { ui_text: { series_tag_editor: {} } },

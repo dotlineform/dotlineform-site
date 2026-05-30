@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the Tag Aliases route-owned modals."""
+"""Smoke-check the Tag Registry route-owned modals."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import sync_playwright
 
@@ -16,6 +17,13 @@ from playwright.sync_api import sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -38,7 +46,7 @@ def install_modal_fixture(page) -> None:
         """async () => {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = '/studio/app/assets/css/studio.css';
+            css.href = '/analytics/app/assets/css/analytics.css';
             const cssLoaded = new Promise((resolve, reject) => {
                 css.addEventListener('load', resolve, { once: true });
                 css.addEventListener('error', reject, { once: true });
@@ -46,17 +54,17 @@ def install_modal_fixture(page) -> None:
             document.head.appendChild(css);
             await cssLoaded;
             document.body.innerHTML = `
-              <main class="tagAliasesPage">
+              <main class="tagRegistryPage">
                 <button id="importOpener" type="button" data-role="open-import-modal">Import</button>
-                <button id="promotionOpener" type="button">Promote</button>
-                <button id="demoteOpener" type="button">Demote</button>
-                <button id="editOpener" type="button">Edit</button>
                 <button id="newOpener" type="button">New</button>
+                <button id="editOpener" type="button">Edit</button>
+                <button id="demoteOpener" type="button">Demote</button>
+                <button id="deleteOpener" type="button">Delete</button>
                 <button id="patchOpener" type="button">Patch</button>
                 <div data-role="modal-host"></div>
               </main>
             `;
-            const module = await import('/studio/app/frontend/js/tag-aliases-modals.js');
+            const module = await import('/analytics/app/frontend/js/tag-registry-modals.js');
             const host = document.querySelector('[data-role="modal-host"]');
             const state = {
                 refs: {
@@ -64,65 +72,65 @@ def install_modal_fixture(page) -> None:
                 },
                 config: {
                     ui_text: {
-                        tag_aliases: {
+                        tag_registry: {
                             patch_modal_label: 'Manual patch snippet',
-                            promotion_modal_prompt: 'Choose the canonical tag group for this alias.',
-                            edit_alias_label: 'alias',
                             edit_description_label: 'description',
-                            edit_search_placeholder: 'search tags',
-                            demotion_search_placeholder: 'search tags'
+                            new_slug_label: 'tag',
+                            new_description_label: 'description',
+                            demote_search_label: 'find target tags',
+                            demote_search_placeholder: 'search tags',
+                            delete_impact_intro: 'Delete impact copy.'
                         }
                     }
                 },
                 studioGroups: ['subject', 'domain', 'form', 'theme'],
-                groupInfoPagePath: '/studio/analytics/tag-groups/',
+                groupInfoPagePath: '/analytics/tag-groups/',
                 groupDescriptions: new Map([
                     ['subject', 'Subject group'],
                     ['domain', 'Domain group'],
                     ['form', 'Form group'],
                     ['theme', 'Theme group']
                 ]),
-                registryById: new Map([
-                    ['subject:smoke', { group: 'subject', label: 'smoke' }],
-                    ['domain:target', { group: 'domain', label: 'target' }],
-                    ['form:study', { group: 'form', label: 'study' }]
-                ]),
                 importAvailable: true,
                 importModalOpen: false,
                 selectedFile: null,
                 patchSnippet: '',
                 saveMode: 'post',
-                promotionState: null,
+                newTagState: null,
                 demoteState: null,
-                editState: null
+                deleteTagId: '',
+                deletePreview: '',
+                deletePreviewSeq: 0,
+                refsHost: host
             };
-            host.innerHTML = module.renderTagAliasesModals(state);
+            host.innerHTML = module.renderTagRegistryModals(state);
             state.refs = {
                 ...state.refs,
-                ...module.collectTagAliasesModalRefs(document)
+                ...module.collectTagRegistryModalRefs(document)
             };
-            window.__tagAliasesModalSmoke = {
+            window.__tagRegistryModalSmoke = {
                 module,
                 state,
                 callbacks: {
                     importSubmit: 0,
-                    patchCopy: 0,
-                    promotionSubmit: 0,
-                    demoteSubmit: 0,
                     editSave: 0,
+                    createTag: 0,
+                    demoteSubmit: 0,
+                    deleteConfirm: 0,
+                    patchCopy: 0,
                     modalStateChanges: 0
                 }
             };
-            module.wireTagAliasesModalEvents(state, {
-                onModalStateChange: () => window.__tagAliasesModalSmoke.callbacks.modalStateChanges += 1,
-                onImportSubmit: () => window.__tagAliasesModalSmoke.callbacks.importSubmit += 1,
-                onPatchCopy: () => window.__tagAliasesModalSmoke.callbacks.patchCopy += 1,
-                onPromotionSubmit: () => window.__tagAliasesModalSmoke.callbacks.promotionSubmit += 1,
+            module.wireTagRegistryModalEvents(state, {
+                onModalStateChange: () => window.__tagRegistryModalSmoke.callbacks.modalStateChanges += 1,
+                onImportSubmit: () => window.__tagRegistryModalSmoke.callbacks.importSubmit += 1,
+                onPatchCopy: () => window.__tagRegistryModalSmoke.callbacks.patchCopy += 1,
+                onEditSave: () => window.__tagRegistryModalSmoke.callbacks.editSave += 1,
+                onCreateTag: () => window.__tagRegistryModalSmoke.callbacks.createTag += 1,
+                onNewTagInput: () => {},
                 onDemoteSearch: () => {},
-                onDemoteSubmit: () => window.__tagAliasesModalSmoke.callbacks.demoteSubmit += 1,
-                onEditInput: () => {},
-                onEditSearch: () => {},
-                onEditSave: () => window.__tagAliasesModalSmoke.callbacks.editSave += 1
+                onDemoteSubmit: () => window.__tagRegistryModalSmoke.callbacks.demoteSubmit += 1,
+                onDeleteConfirm: () => window.__tagRegistryModalSmoke.callbacks.deleteConfirm += 1
             });
         }"""
     )
@@ -205,7 +213,7 @@ def focus_wrap_role(page, selector: str, key: str) -> str:
 def open_direct_modal(page, opener_id: str, expression: str) -> None:
     page.evaluate(
         """([openerId, expression]) => {
-            const smoke = window.__tagAliasesModalSmoke;
+            const smoke = window.__tagRegistryModalSmoke;
             const opener = document.querySelector(`#${openerId}`);
             opener.focus();
             Function('smoke', expression)(smoke);
@@ -237,7 +245,7 @@ def main() -> int:
             import_state = assert_shell(
                 page,
                 "import-modal",
-                "Import Aliases",
+                "Import Registry",
                 ["Close"],
                 ["close-import-modal"],
                 "choose-file",
@@ -249,33 +257,47 @@ def main() -> int:
             page.locator('[data-role="import-modal"] .tagStudioModal__backdrop').click(position={"x": 4, "y": 4})
             assert_focus_return(page, "import-modal", "importOpener")
 
+            open_direct_modal(page, "newOpener", "smoke.module.openTagRegistryNewModal(smoke.state);")
+            new_state = assert_shell(
+                page,
+                "new-modal",
+                "New Tag",
+                ["Cancel", "Create"],
+                ["close-new-modal", "create-tag"],
+                "new-tag-slug",
+            )
+            if focus_wrap_role(page, 'button[data-new-group="subject"]', "Shift+Tab") != "close-new-modal":
+                raise AssertionError("new modal did not wrap focus backward to Cancel")
+            page.keyboard.press("Escape")
+            assert_focus_return(page, "new-modal", "newOpener")
+
             open_direct_modal(
                 page,
-                "promotionOpener",
-                "smoke.module.openTagAliasesPromotionModal(smoke.state, 'smoke-alias', 'subject');",
+                "editOpener",
+                "smoke.module.openTagRegistryEditModal(smoke.state, { tagId: 'subject:smoke', group: 'subject', description: 'Old copy' });",
             )
-            promotion_state = assert_shell(
+            edit_state = assert_shell(
                 page,
-                "promotion-modal",
-                "Promote Alias",
-                ["Cancel", "Promote"],
-                ["close-promotion-modal", "confirm-promotion"],
-                "confirm-promotion",
+                "edit-modal",
+                "Edit Tag",
+                ["Close", "Save"],
+                ["close-edit-modal", "save-edit"],
+                "edit-description",
             )
-            page.locator('[data-role="confirm-promotion"]').click()
-            page.keyboard.press("Escape")
-            assert_focus_return(page, "promotion-modal", "promotionOpener")
+            page.locator('[data-role="save-edit"]').click()
+            page.locator('button[data-role="close-edit-modal"]').click()
+            assert_focus_return(page, "edit-modal", "editOpener")
 
             open_direct_modal(
                 page,
                 "demoteOpener",
-                "smoke.module.openTagAliasesDemoteModal(smoke.state, { canonicalTagId: 'subject:smoke', aliasKey: 'smoke' }); smoke.state.demoteState.tags = ['domain:target']; smoke.module.renderTagAliasesDemoteSelectionState(smoke.state, { canConfirm: true, statusKind: '', statusMessage: '' });",
+                "smoke.module.openTagRegistryDemoteModal(smoke.state, { tag: { tagId: 'subject:smoke', group: 'subject' }, aliasKey: 'smoke' }); smoke.module.renderTagRegistryDemoteSelectionState(smoke.state, { selectedItems: [{ tagId: 'domain:target', group: 'domain', label: 'target' }], canConfirm: true, statusKind: '', statusMessage: '' });",
             )
             demote_state = assert_shell(
                 page,
                 "demote-modal",
                 "Demote Tag to Alias",
-                ["Cancel", "Demote"],
+                ["Close", "Demote"],
                 ["close-demote-modal", "confirm-demote"],
                 "demote-tag-search",
             )
@@ -285,48 +307,30 @@ def main() -> int:
 
             open_direct_modal(
                 page,
-                "editOpener",
-                "smoke.module.openTagAliasesEditModal(smoke.state, { alias: 'smoke-alias', description: 'Old copy', targets: ['subject:smoke'] }); smoke.module.renderTagAliasesEditModalState(smoke.state, { canSave: true, statusKind: '', statusMessage: '' });",
+                "deleteOpener",
+                "smoke.module.openTagRegistryDeleteModal(smoke.state, { tagId: 'subject:smoke', group: 'subject', label: 'smoke' });",
             )
-            edit_state = assert_shell(
+            delete_state = assert_shell(
                 page,
-                "edit-modal",
-                "Edit Alias",
-                ["Cancel", "Save"],
-                ["close-edit-modal", "save-edit-alias"],
-                "edit-alias-name",
+                "delete-modal",
+                "Delete Tag",
+                ["Cancel", "Delete"],
+                ["close-delete-modal", "confirm-delete-tag"],
+                "confirm-delete-tag",
             )
-            page.locator('[data-role="save-edit-alias"]').click()
-            page.locator('[data-role="edit-modal"] .tagStudioModal__backdrop').click(position={"x": 4, "y": 4})
-            assert_focus_return(page, "edit-modal", "editOpener")
-
-            open_direct_modal(
-                page,
-                "newOpener",
-                "smoke.module.openTagAliasesCreateModal(smoke.state); smoke.module.renderTagAliasesEditModalState(smoke.state, { canSave: true, statusKind: '', statusMessage: '' });",
-            )
-            new_state = assert_shell(
-                page,
-                "edit-modal",
-                "New Alias",
-                ["Cancel", "Create"],
-                ["close-edit-modal", "save-edit-alias"],
-                "edit-alias-name",
-            )
-            if focus_wrap_role(page, '[data-role="edit-alias-name"]', "Shift+Tab") != "save-edit-alias":
-                raise AssertionError("edit modal did not wrap focus backward to Save/Create")
-            page.keyboard.press("Escape")
-            assert_focus_return(page, "edit-modal", "newOpener")
+            page.locator('[data-role="confirm-delete-tag"]').click()
+            page.locator('button[data-role="close-delete-modal"]').click()
+            assert_focus_return(page, "delete-modal", "deleteOpener")
 
             open_direct_modal(
                 page,
                 "patchOpener",
-                "smoke.module.showTagAliasesPatchModal(smoke.state, 'diff --git a/studio/data/canonical/analytics/tag-aliases.json b/studio/data/canonical/analytics/tag-aliases.json');",
+                "smoke.module.showTagRegistryPatchModal(smoke.state, 'diff --git a/studio/data/canonical/analytics/tag-registry.json b/studio/data/canonical/analytics/tag-registry.json');",
             )
             patch_state = assert_shell(
                 page,
                 "patch-modal",
-                "Aliases Patch Preview",
+                "Registry Patch Preview",
                 ["Close", "Copy"],
                 ["close-patch-modal", "copy-patch"],
                 "copy-patch",
@@ -338,23 +342,24 @@ def main() -> int:
             page.keyboard.press("Escape")
             assert_focus_return(page, "patch-modal", "patchOpener")
 
-            callbacks = page.evaluate("window.__tagAliasesModalSmoke.callbacks")
+            callbacks = page.evaluate("window.__tagRegistryModalSmoke.callbacks")
             expected_callbacks = {
                 "importSubmit": 1,
-                "patchCopy": 1,
-                "promotionSubmit": 1,
-                "demoteSubmit": 1,
                 "editSave": 1,
+                "createTag": 0,
+                "demoteSubmit": 1,
+                "deleteConfirm": 1,
+                "patchCopy": 1,
             }
-            if {key: callbacks[key] for key in expected_callbacks} != expected_callbacks or callbacks["modalStateChanges"] < 4:
+            if {key: callbacks[key] for key in expected_callbacks} != expected_callbacks or callbacks["modalStateChanges"] < 3:
                 raise AssertionError(f"modal route callbacks changed unexpectedly: {callbacks!r}")
 
             print(json.dumps({
                 "import": import_state,
-                "promotion": promotion_state,
-                "demote": demote_state,
-                "edit": edit_state,
                 "new": new_state,
+                "edit": edit_state,
+                "demote": demote_state,
+                "delete": delete_state,
                 "patch": patch_state,
                 "callbacks": callbacks,
             }, sort_keys=True))

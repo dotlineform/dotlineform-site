@@ -9,6 +9,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import Page, sync_playwright
 
@@ -16,6 +17,13 @@ from playwright.sync_api import Page, sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -44,10 +52,10 @@ def install_fixture(page: Page) -> None:
                 <div id="dataSharingPrepareRenderTarget"></div>
               </main>
             `;
-            const workflow = await import('/studio/app/frontend/js/data-sharing-prepare-workflow.js');
-            const docs = await import('/studio/app/frontend/js/data-sharing-prepare-docs.js');
-            const render = await import('/studio/app/frontend/js/data-sharing-prepare-render.js');
-            const service = await import('/studio/app/frontend/js/data-sharing-prepare-service.js');
+            const workflow = await import('/analytics/app/frontend/js/data-sharing-prepare-workflow.js');
+            const docs = await import('/analytics/app/frontend/js/data-sharing-prepare-docs.js');
+            const render = await import('/analytics/app/frontend/js/data-sharing-prepare-render.js');
+            const service = await import('/analytics/app/frontend/js/data-sharing-prepare-service.js');
             const docCapability = {
                 capability: {
                     selection_model: 'documents',
@@ -292,8 +300,8 @@ def assert_selectable_records_loading(page: Page) -> None:
     )
     if len(result["requested"]) != 1:
         raise AssertionError(f"selectable-records loader should make one request: {result!r}")
-    if "/studio/api/data-sharing/selectable-records" not in result["requested"][0]:
-        raise AssertionError(f"prepare docs loader did not use the Studio selectable-records API: {result!r}")
+    if "/analytics/api/data-sharing/selectable-records" not in result["requested"][0]:
+        raise AssertionError(f"prepare docs loader did not use the Analytics selectable-records API: {result!r}")
     if "data_domain=library" not in result["requested"][0]:
         raise AssertionError(f"selectable-records loader did not pass data_domain: {result!r}")
     if result["docIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
@@ -387,7 +395,7 @@ def assert_fallback_write_behavior(page: Page) -> None:
             ),
         )
 
-    page.route("**/studio/api/data-sharing/prepare", handle)
+    page.route("**/analytics/api/data-sharing/prepare", handle)
     result = page.evaluate(
         """async () => {
             const smoke = window.__dataSharingPrepareModuleSmoke;

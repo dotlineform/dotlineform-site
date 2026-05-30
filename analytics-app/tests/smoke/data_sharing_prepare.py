@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the data sharing prepare Studio route."""
+"""Smoke-check the data sharing prepare Analytics route."""
 
 from __future__ import annotations
 
@@ -18,7 +18,14 @@ from playwright.sync_api import sync_playwright
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 ROOT_SELECTOR = "#dataSharingPrepareRoot"
 EXPECTED_CONFIG_IDS = {
@@ -44,8 +51,8 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def start_local_app_server() -> tuple[StudioAppServer, str]:
-    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+def start_local_app_server() -> tuple[AnalyticsAppServer, str]:
+    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -131,27 +138,27 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         request = route.request
         parsed = urlparse(request.url)
         if parsed.path not in {
-            "/studio/api/data-sharing/health",
-            "/studio/api/data-sharing/selectable-records",
-            "/studio/api/data-sharing/prepare",
+            "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/selectable-records",
+            "/analytics/api/data-sharing/prepare",
         }:
             route.continue_()
             return
-        if parsed.path == "/studio/api/data-sharing/health":
+        if parsed.path == "/analytics/api/data-sharing/health":
             route.fulfill(
                 status=200,
                 content_type="application/json",
-                body=json.dumps({"ok": True, "service": "studio_data_sharing", "dry_run": True}),
+                body=json.dumps({"ok": True, "service": "analytics_data_sharing", "dry_run": True}),
             )
             return
-        if parsed.path == "/studio/api/data-sharing/selectable-records":
+        if parsed.path == "/analytics/api/data-sharing/selectable-records":
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps(selectable_records_payload()),
             )
             return
-        if parsed.path == "/studio/api/data-sharing/prepare":
+        if parsed.path == "/analytics/api/data-sharing/prepare":
             post_data_json = request.post_data_json
             prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
             route.fulfill(
@@ -173,9 +180,9 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
 def block_data_sharing_api(route) -> None:
     parsed = urlparse(route.request.url)
     if parsed.path in {
-        "/studio/api/data-sharing/health",
-        "/studio/api/data-sharing/selectable-records",
-        "/studio/api/data-sharing/prepare",
+        "/analytics/api/data-sharing/health",
+        "/analytics/api/data-sharing/selectable-records",
+        "/analytics/api/data-sharing/prepare",
     }:
         route.abort()
         return
@@ -235,9 +242,9 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
     if expect_unavailable_service:
         if not run_disabled:
-            raise AssertionError("run button should be disabled when the Studio Data Sharing API is unavailable")
+            raise AssertionError("run button should be disabled when the Analytics Data Sharing API is unavailable")
         status_text = page.locator("#dataSharingPrepareStatus").inner_text(timeout=5000)
-        if "Studio Data Sharing API unavailable" not in status_text:
+        if "Analytics Data Sharing API unavailable" not in status_text:
             raise AssertionError(f"unexpected unavailable status text: {status_text!r}")
         return {
             "config_ids": sorted(config_ids),
@@ -449,14 +456,14 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Smoke-check the Local Studio Data Sharing prepare route. "
-            "By default, this starts a temporary Local Studio app server."
+            "Smoke-check the Local Analytics Data Sharing prepare route. "
+            "By default, this starts a temporary Local Analytics app server."
         )
     )
     host_group = parser.add_mutually_exclusive_group()
-    host_group.add_argument("--base-url", help="Use an already running Local Studio base URL.")
+    host_group.add_argument("--base-url", help="Use an already running Local Analytics base URL.")
     host_group.add_argument("--site-root", help="Serve a built static site root on a temporary local HTTP server.")
-    host_group.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
+    host_group.add_argument("--local-app", action="store_true", help="Serve the local Analytics app on a temporary local HTTP server.")
     parser.add_argument("--block-data-sharing-api", action="store_true")
     parser.add_argument("--mock-data-sharing-api", action="store_true")
     parser.add_argument("--timeout-ms", type=int, default=15000)
@@ -482,7 +489,7 @@ def main() -> int:
                     prepare_requests = install_mock_data_sharing_api(page)
                 elif block_api:
                     page.route("**/*", block_data_sharing_api)
-                page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
+                page.goto(route_url(base_url, "/analytics/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
                 attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
                 assert_ready_contract(attrs, block_api)
                 if block_api and attrs["service"] != "unavailable":

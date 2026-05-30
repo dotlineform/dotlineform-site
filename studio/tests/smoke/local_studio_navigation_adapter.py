@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
                     mod.updateDocsViewerLinks(config, document);
                     const services = mod.getStudioServices(config);
                     const externalLinks = mod.getStudioExternalLinks(config);
-                    const url = mod.buildStudioViewUrl(config, "tag-groups", {
+                    const url = mod.buildStudioViewUrl(config, "catalogue_status", {
                         scope: "studio",
                         empty: "",
                         zero: 0
@@ -98,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
                     const docsLink = document.createElement("a");
                     docsLink.setAttribute("href", "/docs/");
-                    docsLink.setAttribute("data-studio-doc-view", "tag_groups");
+                    docsLink.setAttribute("data-studio-doc-view", "docs");
                     document.body.append(docsLink);
                     mod.updateDocsViewerLinks(config, document);
 
@@ -122,7 +122,7 @@ def main(argv: list[str] | None = None) -> int:
                         docsViewUrl,
                         docsDocUrl,
                         rewrittenDocsHref: docsLink.getAttribute("href"),
-                        dataPath: config.app.runtime.data_paths.ui_text.tag_groups,
+                        dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
                         modalEventName: config.app.runtime.modals.event,
@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             browser.close()
 
-        expected_url = "/studio/analytics/tag-groups/?scope=studio&zero=0"
+        expected_url = "/studio/catalogue-status/?mode=manage&scope=studio&zero=0"
         if result["hasDocsService"]:
             raise AssertionError("runtime services unexpectedly exposed a Docs Viewer service")
         if result["docsExternalLink"]["base_url"] != "http://127.0.0.1:8776":
@@ -158,7 +158,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected Docs external link mode: {result['docsExternalLink']!r}")
         if result["docsExternalLink"]["doc_scope"] != "studio":
             raise AssertionError(f"unexpected Docs external link scope: {result['docsExternalLink']!r}")
-        if result["docsExternalLink"]["doc_ids"]["tag_groups"] != "tag-groups":
+        if result["docsExternalLink"]["doc_ids"]["docs"] != "docs-viewer":
             raise AssertionError(f"unexpected Docs external link config: {result['docsExternalLink']!r}")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected Docs view URL: {result['docsViewUrl']!r}")
         if result["docsDocUrl"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=docs-viewer&mode=manage":
             raise AssertionError(f"unexpected Docs doc URL: {result['docsDocUrl']!r}")
-        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=tag-groups&mode=manage":
+        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=docs-viewer&mode=manage":
             raise AssertionError(f"unexpected rewritten Docs link: {result['rewrittenDocsHref']!r}")
         expected_top_nav = ["docs"]
         if result["runtimePrimaryNav"] != expected_top_nav:
@@ -183,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
         if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
             raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")
-        if result["dataPath"] != "/studio/app/frontend/config/ui-text/tag-groups.json":
+        if result["dataPath"] != "/studio/app/frontend/config/ui-text/catalogue-status.json":
             raise AssertionError(f"unexpected UI text path: {result['dataPath']!r}")
         if result["mediaThumbWorks"] != "/assets/works/img":
             raise AssertionError(f"unexpected thumb works path: {result['mediaThumbWorks']!r}")
@@ -211,13 +211,16 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("openModal event was unexpectedly prevented")
         home_link_hrefs = {link["href"] for link in result["homeLinks"]}
         home_link_labels = [link["label"] for link in result["homeLinks"]]
-        if "/studio/analytics/series-tag-editor/" in home_link_hrefs:
-            raise AssertionError(f"Studio home exposed hidden editor link: {result['homeLinks']!r}")
+        retired_home_hrefs = {
+            href
+            for href in home_link_hrefs
+            if href.startswith("/studio/analytics/") or href.startswith("/studio/data-sharing/")
+        }
+        if retired_home_hrefs:
+            raise AssertionError(f"Studio home exposed retired Analytics/Data Sharing links: {result['homeLinks']!r}")
         expected_home_hrefs = {
             "/studio/catalogue-status/?mode=manage",
-            "/studio/analytics/tag-groups/",
             "/studio/activity/?mode=manage",
-            "/studio/data-sharing/prepare/?mode=manage&scope=library",
             "/studio/ui-catalogue/demos/",
         }
         if expected_home_hrefs - home_link_hrefs:

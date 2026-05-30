@@ -15,6 +15,14 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### just done
 
+- Finished the remaining Analytics/Data Sharing smoke ownership split:
+  - moved `local_studio_analytics_*` API smokes to `analytics-app/tests/smoke/local_analytics_app_*_apis.py`
+  - moved the Tag Groups, Data Sharing prepare/review, prepare module, tag registry module, modal, render, route-shell, and ready-state smokes to `analytics-app/tests/smoke/`
+  - retargeted moved smokes to `/analytics/...`, `/analytics/api/...`, and `/analytics/app/...` paths
+  - expanded the `analytics-smoke` profile to own the moved API, route, module, modal, render, and ready-state checks
+  - updated the Studio navigation adapter smoke to assert retired Analytics/Data Sharing home links are not exposed
+  - preserved `var/studio/data-sharing/...` artifact path assertions as data artifact contracts
+  - verified the expanded `analytics-smoke` profile passes
 - Split the first Analytics/Data Sharing test boundary slice:
   - moved the Studio Data Sharing API pytest to `analytics-app/tests/python/test_analytics_data_sharing_api.py`
   - added `analytics-app/tests/python/test_analytics_app_server.py` for Analytics runtime, tag read, tag write dry-run, data-sharing endpoint, and static policy checks
@@ -35,17 +43,9 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 
 ### steer for next task
 
-- Continue task 8 with the remaining unprofiled Studio-location Analytics/Data Sharing smokes:
-  - `studio/tests/smoke/local_studio_analytics_*`
-  - `studio/tests/smoke/local_studio_app_tag_groups.py`
-  - `studio/tests/smoke/data_sharing_prepare.py`
-  - `studio/tests/smoke/data_sharing_review.py`
-  - `studio/tests/smoke/data_sharing_prepare_modules.py`
-  - `studio/tests/smoke/tag_registry_modules.py`
-  - ready-state/modal/render smokes that still hardcode `/studio/analytics/...`
-- Keep the preserved `var/studio/data-sharing/...` artifact path assertions; those remain data artifact contracts, not active Studio routes.
-- Continue the smoke split before running broad checks; do not treat unprofiled old-route smokes as proof of active Studio compatibility.
-- Preserve the clean cutover: do not add aliases or proxy handlers for the retired Studio paths to make old tests pass.
+- Continue with task 9: remove the thumbnail-quality page from active Studio routing, navigation, runtime config, and smokes.
+- Archive thumbnail-quality page/script code in a repo-local retired tooling location outside the public Jekyll site.
+- Preserve the clean cutover: do not add aliases, redirects, proxy handlers, or static shims for retired Studio paths to make old tests pass.
 
 ### baseline verification set
 
@@ -94,7 +94,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | done | Move Analytics API ownership out of Studio, including tag health/read/write endpoints, while preserving current service behavior and write safeguards. |
 | 6 | done | Move Data Sharing API ownership out of Studio, including prepare/review/apply, selectable records, returned packages, adapter dispatch, and current activity hooks. |
 | 7 | done | Remove Studio analytics/data-sharing routes, nav/home links, runtime-config service endpoints, API dispatch, and static serving assumptions. Old routes should fail clearly; do not add redirects, aliases, proxy handlers, static shims, or dual-path config. |
-| 8 | in progress | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
+| 8 | done | Split mixed Studio/Analytics tests into separate service-boundary checks before final verification. Keep Analytics checks for tags/data sharing and Studio checks for catalogue/admin route health. Rename purely Analytics checks to Analytics ownership. |
 | 9 | planned | Remove the thumbnail-quality page from active Studio routes, navigation, runtime config, and smokes. Archive its page/script code in a repo-local retired tooling location, separate from the public Jekyll site |
 | 10 | planned | Move UI Catalogue out of Studio routing and service startup. Keep it available as a standalone local static page or simple local HTML-server surface with its isolated CSS and JS helpers. |
 | 11 | planned | Run a basic split verification pass: Analytics route/API smoke checks, tag/data-sharing pytest checks, and a small Studio catalogue/admin smoke to prove the primary split works before decoupling helper/CSS dependencies. |

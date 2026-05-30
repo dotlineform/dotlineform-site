@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke local Studio analytics tag alias APIs against a fixture repo."""
+"""Smoke local Analytics tag alias APIs against a fixture repo."""
 
 from __future__ import annotations
 
@@ -15,14 +15,21 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
+ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
+for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from analytics_app_server import AnalyticsAppServer  # noqa: E402
 
 
 def write_fixture_data(repo_root: Path) -> tuple[Path, Path]:
-    data_root = repo_root / "assets" / "studio" / "data"
+    data_root = repo_root / "studio" / "data" / "canonical" / "analytics"
     data_root.mkdir(parents=True)
-    aliases_path = data_root / "tag_aliases.json"
-    registry_path = data_root / "tag_registry.json"
+    aliases_path = data_root / "tag-aliases.json"
+    registry_path = data_root / "tag-registry.json"
     aliases_path.write_text(
         """{
   "tag_aliases_version": "tag_aliases_v1",
@@ -81,12 +88,12 @@ def run() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         fixture_root = Path(tmp_dir)
         aliases_path, _registry_path = write_fixture_data(fixture_root)
-        server = StudioAppServer(("127.0.0.1", 0), fixture_root)
+        server = AnalyticsAppServer(("127.0.0.1", 0), fixture_root)
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
             port = server.server_address[1]
-            base_url = f"http://127.0.0.1:{port}/studio/api/analytics"
+            base_url = f"http://127.0.0.1:{port}/analytics/api"
             imported = post_json(
                 f"{base_url}/import-tag-aliases",
                 {
@@ -150,7 +157,7 @@ def run() -> None:
         if aliases["aliases"]["canopy"]["tags"] != ["subject:trees", "theme:growth"]:
             raise AssertionError(f"final alias tags were unexpected: {aliases!r}")
 
-    print("local Studio analytics tag alias APIs OK")
+    print("local Analytics tag alias APIs OK")
 
 
 if __name__ == "__main__":

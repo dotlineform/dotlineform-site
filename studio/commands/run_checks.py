@@ -156,9 +156,25 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_management_action_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_html_import_modules.py",
-                "studio/tests/smoke/data_sharing_prepare_modules.py",
+                "analytics-app/tests/smoke/data_sharing_prepare_modules.py",
+                "analytics-app/tests/smoke/data_sharing_prepare.py",
+                "analytics-app/tests/smoke/data_sharing_review.py",
+                "analytics-app/tests/smoke/local_analytics_app_alias_apis.py",
+                "analytics-app/tests/smoke/local_analytics_app_promotion_apis.py",
+                "analytics-app/tests/smoke/local_analytics_app_registry_apis.py",
+                "analytics-app/tests/smoke/local_analytics_app_tag_assignment_apis.py",
+                "analytics-app/tests/smoke/local_analytics_app_tag_groups.py",
+                "analytics-app/tests/smoke/series_tag_editor_modal.py",
+                "analytics-app/tests/smoke/series_tag_editor_ready_state.py",
+                "analytics-app/tests/smoke/series_tags_modal.py",
+                "analytics-app/tests/smoke/series_tags_render.py",
+                "analytics-app/tests/smoke/tag_aliases_modal.py",
+                "analytics-app/tests/smoke/tag_aliases_ready_state.py",
                 "analytics-app/tests/smoke/local_analytics_app_tag_routes.py",
                 "analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py",
+                "analytics-app/tests/smoke/tag_registry_modal.py",
+                "analytics-app/tests/smoke/tag_registry_modules.py",
+                "analytics-app/tests/smoke/tag_route_shell_modules.py",
                 "studio/tests/smoke/ui_catalogue_modal_demo.py",
                 "studio/tests/smoke/public_site_theme_toggle.py",
                 "studio/tests/python/test_studio_app_server.py",
@@ -435,12 +451,166 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "analytics-smoke": (
         CheckCommand(
+            "local-analytics-registry-api-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/local_analytics_app_registry_apis.py",
+            ),
+            "Smoke-check local Analytics tag registry write APIs against a fixture repo.",
+        ),
+        CheckCommand(
+            "local-analytics-alias-api-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/local_analytics_app_alias_apis.py",
+            ),
+            "Smoke-check local Analytics tag alias write APIs against a fixture repo.",
+        ),
+        CheckCommand(
+            "local-analytics-tag-assignment-api-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/local_analytics_app_tag_assignment_apis.py",
+            ),
+            "Smoke-check local Analytics tag assignment write APIs against a fixture repo.",
+        ),
+        CheckCommand(
+            "local-analytics-promotion-api-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/local_analytics_app_promotion_apis.py",
+            ),
+            "Smoke-check local Analytics tag promote/demote APIs against a fixture repo.",
+        ),
+        CheckCommand(
             "local-analytics-tag-routes-smoke",
             (
                 sys.executable,
                 "analytics-app/tests/smoke/local_analytics_app_tag_routes.py",
             ),
             "Smoke-check the local Analytics tag route shells and API reads.",
+        ),
+        CheckCommand(
+            "local-analytics-tag-groups-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/local_analytics_app_tag_groups.py",
+            ),
+            "Smoke-check the local Analytics Tag Groups shell and API read path.",
+        ),
+        CheckCommand(
+            "analytics-data-sharing-prepare-module-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/data_sharing_prepare_modules.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics Data Sharing prepare module contracts.",
+        ),
+        CheckCommand(
+            "analytics-tag-registry-module-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/tag_registry_modules.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics tag registry module contracts.",
+        ),
+        CheckCommand(
+            "analytics-tag-registry-modal-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/tag_registry_modal.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics tag registry modal contracts.",
+        ),
+        CheckCommand(
+            "analytics-tag-aliases-modal-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/tag_aliases_modal.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics tag aliases modal contracts.",
+        ),
+        CheckCommand(
+            "analytics-series-tags-render-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/series_tags_render.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics series tags render contracts.",
+        ),
+        CheckCommand(
+            "analytics-series-tags-modal-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/series_tags_modal.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics series tags modal contracts.",
+        ),
+        CheckCommand(
+            "analytics-series-tag-editor-modal-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/series_tag_editor_modal.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics series tag editor modal contracts.",
+        ),
+        CheckCommand(
+            "analytics-tag-route-shell-module-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/tag_route_shell_modules.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check Analytics shared tag route shell modules.",
+        ),
+        CheckCommand(
+            "analytics-tag-aliases-ready-state-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/tag_aliases_ready_state.py",
+            ),
+            "Smoke-check Analytics tag aliases route readiness.",
+        ),
+        CheckCommand(
+            "analytics-series-tag-editor-ready-state-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/series_tag_editor_ready_state.py",
+            ),
+            "Smoke-check Analytics series tag editor route readiness.",
+        ),
+        CheckCommand(
+            "local-analytics-data-sharing-prepare-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/data_sharing_prepare.py",
+                "--mock-data-sharing-api",
+            ),
+            "Smoke-check the local Analytics Data Sharing prepare route shell and result modal.",
+        ),
+        CheckCommand(
+            "local-analytics-data-sharing-review-smoke",
+            (
+                sys.executable,
+                "analytics-app/tests/smoke/data_sharing_review.py",
+                "--mock-data-sharing-api",
+            ),
+            "Smoke-check the local Analytics Data Sharing review route shell and apply modals.",
         ),
         CheckCommand(
             "local-analytics-data-sharing-routes-smoke",

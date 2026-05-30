@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import Page, sync_playwright
 
@@ -15,6 +16,13 @@ from playwright.sync_api import Page, sync_playwright
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/analytics/app/"):
+            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            return str(Path(self.directory) / relative)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -45,18 +53,18 @@ def install_fixture(page: Page) -> None:
                 <div data-role="modal-host"></div>
               </main>
             `;
-            const render = await import('/studio/app/frontend/js/tag-registry-render.js');
-            const importMode = await import('/studio/app/frontend/js/tag-registry-import-mode.js');
-            const modals = await import('/studio/app/frontend/js/tag-registry-modals.js');
-            const workflow = await import('/studio/app/frontend/js/tag-registry-workflow.js');
+            const render = await import('/analytics/app/frontend/js/tag-registry-render.js');
+            const importMode = await import('/analytics/app/frontend/js/tag-registry-import-mode.js');
+            const modals = await import('/analytics/app/frontend/js/tag-registry-modals.js');
+            const workflow = await import('/analytics/app/frontend/js/tag-registry-workflow.js');
             const host = document.querySelector('[data-role="modal-host"]');
             const config = {
                 app: {
                     runtime: {
                         services: {
                             analytics: {
-                                health: '/studio/api/analytics/health',
-                                import_tag_registry: '/studio/api/analytics/import-tag-registry'
+                                health: '/analytics/api/health',
+                                import_tag_registry: '/analytics/api/import-tag-registry'
                             }
                         }
                     }
@@ -85,7 +93,7 @@ def install_fixture(page: Page) -> None:
                 },
                 config,
                 studioGroups: ['subject', 'domain', 'form', 'theme'],
-                groupInfoPagePath: '/studio/analytics/tag-groups/',
+                groupInfoPagePath: '/analytics/tag-groups/',
                 groupDescriptions: new Map([
                     ['subject', 'Subject group'],
                     ['domain', 'Domain group']
@@ -172,7 +180,7 @@ def assert_render_output(page: Page) -> None:
         raise AssertionError(f"unexpected group labels: {result!r}")
     if result["subjectTitle"] != "Subject group":
         raise AssertionError(f"group title was not rendered: {result!r}")
-    if result["infoHref"] != "/studio/analytics/tag-groups/":
+    if result["infoHref"] != "/analytics/tag-groups/":
         raise AssertionError(f"group info link mismatch: {result!r}")
     if result["sortHeadings"] != ["tag ↑", "description"]:
         raise AssertionError(f"sort headings mismatch: {result!r}")
@@ -212,7 +220,7 @@ def assert_render_output(page: Page) -> None:
 
 def assert_import_mode_availability(page: Page) -> None:
     page.route(
-        "**/studio/api/analytics/health",
+        "**/analytics/api/health",
         lambda route: route.fulfill(
             status=503,
             headers={
@@ -303,7 +311,7 @@ def assert_import_mode_availability(page: Page) -> None:
 
 def assert_patch_save_behavior(page: Page) -> None:
     page.route(
-        "**/studio/api/analytics/import-tag-registry",
+        "**/analytics/api/import-tag-registry",
         lambda route: route.fulfill(
             status=503,
             headers={
