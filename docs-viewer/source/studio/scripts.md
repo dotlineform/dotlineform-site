@@ -45,9 +45,12 @@ The current script surface is organized by owner:
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `docs-viewer/build/` owns Docs Viewer docs and search build implementations.
 - `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Studio catalogue/admin route dispatch services.
-- `studio/checks/` owns standalone audits and verification commands.
+- `studio/checks/` owns standalone audits, risk checks, and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners when a wrapper is still intentionally supported.
+
+Risk operations use the Local Studio app server.
+Do not add a separate risk server for risk dashboards, app inventories, audit launching, unified activity review, or local risk artifacts; see [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
 
 Top-level survivors are intentional:
 

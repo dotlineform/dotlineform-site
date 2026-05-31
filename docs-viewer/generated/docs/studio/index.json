@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T17:37:15Z",
+  "generated_at": "2026-05-31T18:56:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 10602
+      "content_text_length": 11137
     },
     {
       "scope": "studio",
@@ -290,7 +290,7 @@
       "source_path": "scripts-studio-audit-service.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-studio-audit-service",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-studio-audit-service.json",
-      "content_text_length": 2455
+      "content_text_length": 2623
     },
     {
       "scope": "studio",
@@ -304,7 +304,7 @@
       "source_path": "studio-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-audits",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json",
-      "content_text_length": 1836
+      "content_text_length": 2095
     },
     {
       "scope": "studio",
@@ -333,7 +333,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18362,
+      "content_text_length": 18375,
       "ui_status": "urgent"
     },
     {
@@ -377,7 +377,7 @@
       "source_path": "studio-risk-analysis-policy.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-analysis-policy",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
-      "content_text_length": 15828,
+      "content_text_length": 21752,
       "ui_status": "review"
     },
     {
@@ -437,7 +437,7 @@
       "source_path": "studio-risk-priority-dashboard.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-priority-dashboard",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
-      "content_text_length": 2800,
+      "content_text_length": 3038,
       "ui_status": "review"
     },
     {
@@ -452,7 +452,7 @@
       "source_path": "analytics-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
-      "content_text_length": 1249,
+      "content_text_length": 1465,
       "ui_status": "draft"
     },
     {
@@ -467,7 +467,7 @@
       "source_path": "docs-viewer-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
-      "content_text_length": 1537,
+      "content_text_length": 1753,
       "ui_status": "draft"
     },
     {
@@ -482,7 +482,7 @@
       "source_path": "public-site-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=public-site-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
-      "content_text_length": 1274,
+      "content_text_length": 1490,
       "ui_status": "draft"
     },
     {
@@ -497,7 +497,37 @@
       "source_path": "studio-app-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-app-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
-      "content_text_length": 1274,
+      "content_text_length": 1490,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-risk-operations",
+      "title": "Studio Risk Operations",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-risk-operations.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-risk-operations",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-operations.json",
+      "content_text_length": 4811,
+      "ui_status": "review"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-risk-evidence-pack",
+      "title": "Studio Risk Evidence Pack",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-operations",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-risk-evidence-pack.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
+      "content_text_length": 6714,
       "ui_status": "draft"
     },
     {
@@ -1017,8 +1047,23 @@
       "source_path": "site-request-risk-analysis-inventory-redesign.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-analysis-inventory-redesign.json",
-      "content_text_length": 2099,
+      "content_text_length": 3054,
       "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-risk-route",
+      "title": "Studio Risk Route Request",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "site-request-risk-analysis-inventory-redesign",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-risk-route.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-risk-route",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-risk-route.json",
+      "content_text_length": 5810,
+      "ui_status": "paused"
     },
     {
       "scope": "studio",
@@ -1063,7 +1108,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-audits-page",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-audits-page.json",
       "content_text_length": 8604,
-      "ui_status": "deferred"
+      "ui_status": "paused"
     },
     {
       "scope": "studio",
@@ -1438,7 +1483,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 9496
+      "content_text_length": 9727
     },
     {
       "scope": "studio",
@@ -2494,7 +2539,7 @@
       "source_path": "servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/servers.json",
-      "content_text_length": 1141
+      "content_text_length": 1379
     },
     {
       "scope": "studio",
@@ -2606,7 +2651,7 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 2214
+      "content_text_length": 2227
     },
     {
       "scope": "studio",
@@ -2634,7 +2679,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
-      "content_text_length": 17428
+      "content_text_length": 17723
     },
     {
       "scope": "studio",
@@ -2648,7 +2693,7 @@
       "source_path": "studio-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-activity",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json",
-      "content_text_length": 2680
+      "content_text_length": 2901
     },
     {
       "scope": "studio",

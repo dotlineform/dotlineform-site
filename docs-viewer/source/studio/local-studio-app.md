@@ -13,6 +13,10 @@ Local Studio is intentionally separate from the public dotlineform.com site.
 Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll preview/build work.
 The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
+Risk operations are Local Studio-owned.
+Risk dashboards, app inventories, audit launching, unified activity review, and risk-related local artifacts use the Local Studio app server and should not introduce a separate risk server.
+The ownership decision is documented in [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
+
 ## Current App Server
 
 The Python local Studio app server can be started directly:

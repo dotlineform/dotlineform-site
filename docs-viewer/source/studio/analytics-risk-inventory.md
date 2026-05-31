@@ -22,6 +22,11 @@ Dashboard: [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-
 4. Planning / evidence
 5. Performance / cost
 
+## Evidence Intake
+
+Record deterministic evidence with the command, source, or report that produced it.
+Record subjective review and user feedback with the source, symptom, confidence level, and proposed change request.
+
 ## Current Evidence
 
 | Area | Indicator | Evidence | Current action |

@@ -60,7 +60,7 @@ Tag writes remain allowlisted to:
 - `analytics-app/data/canonical/tag-aliases.json`
 
 Backups remain under `var/studio/backups/`.
-Unified activity rows are written through `scripts/studio_activity.py`.
+Unified activity rows are written through `studio/shared/python/studio_activity.py`.
 
 ## Related References
 

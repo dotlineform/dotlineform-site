@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5a2fb14c6c7cec0d9b66e837dbd02da2",
-    "generated_at_utc": "2026-05-31T17:36:50Z",
-    "count": 217
+    "version": "blake2b-51c0df9154b10e8832ef03089cf396e0",
+    "generated_at_utc": "2026-05-31T18:37:32Z",
+    "count": 220
   },
   "entries": [
     {
@@ -819,6 +819,56 @@
         "31"
       ],
       "search_text": "studio-app-risk-inventory studio app risk inventory studio app risk inventory studio risk priority dashboard priority dashboard 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-risk-operations",
+      "kind": "doc",
+      "title": "Studio Risk Operations",
+      "href": "/docs/?scope=studio&doc=studio-risk-operations",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "parent_title": "Studio Risk Priority Dashboard",
+      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
+      "search_terms": [
+        "studio-risk-operations",
+        "studio",
+        "risk",
+        "operations",
+        "studio risk operations",
+        "studio risk priority dashboard",
+        "priority",
+        "dashboard",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-operations studio risk operations studio risk operations studio risk priority dashboard priority dashboard 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-risk-evidence-pack",
+      "kind": "doc",
+      "title": "Studio Risk Evidence Pack",
+      "href": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-operations",
+      "parent_title": "Studio Risk Operations",
+      "display_meta": "2026-05-31 • Studio Risk Operations",
+      "search_terms": [
+        "studio-risk-evidence-pack",
+        "studio",
+        "risk",
+        "evidence",
+        "pack",
+        "studio risk evidence pack",
+        "studio risk operations",
+        "operations",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack studio risk operations operations 2026-05-31 2026 05 31"
     },
     {
       "id": "catalogue",
@@ -1747,6 +1797,34 @@
         "31"
       ],
       "search_text": "site-request-risk-analysis-inventory-redesign site request risk analysis inventory redesign risk analysis inventory redesign request change requests change requests 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "site-request-studio-risk-route",
+      "kind": "doc",
+      "title": "Studio Risk Route Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-risk-route",
+      "last_updated": "2026-05-31",
+      "parent_id": "site-request-risk-analysis-inventory-redesign",
+      "parent_title": "Risk Analysis Inventory Redesign Request",
+      "display_meta": "2026-05-31 • Risk Analysis Inventory Redesign Request",
+      "search_terms": [
+        "site-request-studio-risk-route",
+        "site",
+        "request",
+        "studio",
+        "risk",
+        "route",
+        "studio risk route request",
+        "risk analysis inventory redesign request",
+        "analysis",
+        "inventory",
+        "redesign",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-studio-risk-route site request studio risk route studio risk route request risk analysis inventory redesign request analysis inventory redesign 2026-05-31 2026 05 31"
     },
     {
       "id": "site-request-rubyless-app-runtimes",

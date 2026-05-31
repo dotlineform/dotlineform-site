@@ -14,6 +14,7 @@ The route shell is served by the local Studio app, not by a Jekyll Studio page.
 
 The page is the v1 unified activity report for local authoring actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
+It is also the activity surface for user-initiated risk operations that produce meaningful local side effects or reports.
 
 Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, Data Sharing package/apply actions, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
 Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `assets/studio/data/activity_contract.json`.
@@ -69,6 +70,7 @@ Clicking the status marker opens the detail modal for that row.
 What this page is for:
 
 - correlated Studio activity reporting
+- risk-operation activity rows for user-initiated audits or generated reports
 - reviewing the downstream effects of a button click
 - serving as the unified replacement for the retired split activity surfaces
 
@@ -83,3 +85,4 @@ What it is not for:
 
 - **[Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)**
 - **[Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)**
+- **[Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)**

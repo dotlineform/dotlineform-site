@@ -205,7 +205,7 @@ Relevant files:
 - `studio/app/server/studio/studio_audit_api.py`
 - `studio/app/server/studio/audit_runner.py`
 - `scripts/script_logging.py`
-- `scripts/studio_activity.py`
+- `studio/shared/python/studio_activity.py`
 
 The local services share a pattern: loopback-only HTTP, CORS checks, JSON request parsing, write allowlists, backups, local logs, dry-run responses, and Studio Activity rows.
 Studio audit execution is now a direct runner plus local app API adapter rather than a sibling HTTP service.

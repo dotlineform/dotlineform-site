@@ -44,13 +44,21 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 1 | done | Replace the old maintenance-oriented risk policy with actual risks, observable indicators, and app priority order. |
 | 2 | done | Reshape the dashboard around app, area, risk summary, and change request ownership. |
 | 3 | done | Add app inventory child documents under the dashboard. |
-| 4 | planned | Reconcile the older JavaScript and Python/Ruby inventories into the app inventories without losing current useful evidence. |
-| 5 | planned | Open or refresh change requests for dashboard priorities that still say `Needs change request`. |
-| 6 | planned | Retire or reduce the old technical inventory pages once the app inventories carry the active evidence. |
+| 4 | done | Document how inventories are produced from deterministic observations, static analysis, runtime/external tooling, subjective review, and user feedback. |
+| 5 | done | Finalise risk operations ownership: risk dashboards, app inventories, audit launching, unified activity review, and local risk artifacts belong in Local Studio rather than a new server. |
+| 6 | done | Define the repeatable risk evidence pack contract for deterministic commands, central `var/studio/risk/` artifacts, summaries, and inventory citations. |
+| 7 | planned | Implement the risk evidence pack runner under `studio/checks/`. |
+| 8 | planned | Implement [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route) after the evidence-pack runner can write useful summaries. |
+| 9 | planned | Reconcile the older JavaScript and Python/Ruby inventories into the app inventories without losing current useful evidence. |
+| 10 | planned | Open or refresh change requests for dashboard priorities that still say `Needs change request`. |
+| 11 | planned | Retire or reduce the old technical inventory pages once the app inventories carry the active evidence. |
 
 ## Close-Out Evidence
 
 - dashboard priorities point to active change requests or explicitly say that a change request is needed
 - each app has a child risk inventory under the dashboard
+- deterministic, runtime, external-tooling, subjective, and user-feedback evidence has clear handling in the policy
+- risk operations ownership is documented without introducing a new server
+- repeatable evidence artifacts have a documented central run-directory contract
 - old technical inventories no longer act as the primary priority surface
 - policy, dashboard, and app inventories use the same indicator vocabulary

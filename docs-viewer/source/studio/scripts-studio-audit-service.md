@@ -16,6 +16,7 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --audit-id
 
 Normal Studio sessions do not start a standalone audit service because the local Studio app server owns the active audit HTTP surface through `studio/app/server/studio/studio_audit_api.py`.
 For Codex automation, call `studio/app/server/studio/audit_runner.py` directly instead of starting a sibling localhost service.
+Risk-related audits follow the same rule: use the Local Studio app server and allowlisted audit runner, not a separate risk server.
 
 ## Purpose
 
@@ -68,10 +69,11 @@ When the request includes valid Studio activity context from `/studio/audits/?mo
 - does not accept browser-controlled paths, flags, environment, or working directories
 - runs commands without a shell
 - writes only minimal local logs under `var/studio/audits/logs/`
-- writes unified activity rows only through the fixed local activity feed paths owned by `scripts/studio_activity.py`
+- writes unified activity rows only through the fixed local activity feed paths owned by `studio/shared/python/studio_activity.py`
 
 ## Related References
 
 - [Studio Audits](/docs/?scope=studio&doc=studio-audits)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
+- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)

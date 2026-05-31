@@ -3,7 +3,7 @@ doc_id: site-request-studio-audits-page
 title: Studio Audits Page Request
 added_date: 2026-05-03
 last_updated: 2026-05-03
-ui_status: deferred
+ui_status: paused
 parent_id: change-requests
 viewable: true
 ---

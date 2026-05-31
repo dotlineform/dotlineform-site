@@ -63,6 +63,113 @@ Choose the smallest unit that matches the risk evidence.
 Frontend and backend evidence should be reviewed together when they belong to the same app.
 The action should improve the app, not send the work into a technical rabbit hole because one layer has a convenient table.
 
+## Inventory Production Method
+
+Risk inventories combine deterministic observations with subjective review.
+Neither type of evidence is sufficient on its own.
+
+Deterministic observations show what exists, changed, loaded, or ran.
+Subjective review decides what that means for the app and whether it should become a priority.
+
+Concrete deterministic evidence should be produced as a repeatable evidence pack.
+The target artifact contract is [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+
+### Deterministic Inputs
+
+Local scripts and command-line checks contribute repeatable observations.
+They do not decide priorities by themselves.
+
+Useful deterministic inputs include:
+
+- file line counts and file-family totals
+- import/export counts and dependency direction
+- static code searches for ownership smells, stale paths, broad state handoffs, retired modules, service endpoints, config keys, generated paths, and TODO-like follow-up markers
+- route exposure and public/local/runtime inclusion checks
+- generated payload counts, index sizes, changed/removed records, and schema/version checks
+- write-path diagnostics such as elapsed time, skipped work, fallback reasons, generated artifact groups, search updates, lookup refreshes, backup paths, and media work
+- git history signals such as repeated recent touches to the same app surface
+- syntax and contract checks such as `node --check`, Python `py_compile`, Ruby syntax checks where relevant, JSON validation, and focused pytest checks
+- app smoke checks, especially Playwright/browser smokes for route readiness, public read-only behavior, and user-facing interactions
+
+Current local inventory helpers are transition evidence.
+For example, `studio/checks/javascript_inventory_guardrail.py` validates the old JavaScript inventory table and highlights legacy concentration patterns, but it should not remain the final app-priority mechanism.
+
+When adding deterministic evidence to an app inventory, record the command, source, or report that produced it.
+Avoid anonymous metrics such as "large", "slow", or "complex" when a local count, timing, path list, or diagnostic payload is available.
+If the evidence came from a risk evidence pack, cite the run summary path and the specific artifact used.
+
+### Static Analysis
+
+Static analysis means reading checked-in files without exercising the app.
+It is useful for finding surfaces that need review, not for proving user impact.
+
+Typical static analysis includes:
+
+- `rg` searches over app roots, scripts, docs, config, and tests
+- file and line-count summaries grouped by app, route, service, or workflow family
+- import/export scans for dependency direction and cross-app coupling
+- checks for retired paths, stale route names, old endpoints, duplicated config keys, and generated-output assumptions
+- table validation for inventory rows, parent/child docs, front matter, generated indexes, and source-tree ownership
+- manual source reading to classify responsibilities, ownership boundaries, and architectural fit
+
+Static analysis should be followed by either app-context review or runtime verification before it becomes a high-priority action.
+
+### Runtime And External Tooling
+
+Runtime tooling is used when the risk depends on route behavior, browser cost, local services, or public-route performance.
+
+Available or appropriate tools include:
+
+- browser dev tools for network, performance, console errors, layout inspection, and accessibility inspection
+- Playwright for repeatable browser smoke checks and route interaction checks
+- Node for JavaScript syntax and local helper execution
+- Python test and smoke runners for local services, generated payload checks, and app contracts
+- Ruby/Jekyll build checks where the public-site preview/build layer is directly relevant
+- Lighthouse or equivalent browser performance tooling for public-facing pages when route payload, load, layout shift, accessibility, or best-practice evidence is needed
+
+External tooling should be used to answer a specific app question.
+Do not run Lighthouse, broad browser profiling, or large smoke profiles merely because a file is large.
+
+### Subjective And User Evidence
+
+Subjective evidence is allowed and important.
+It should be clearly labelled so it does not look like deterministic measurement.
+
+Useful subjective inputs include:
+
+- user feedback about confusing workflows, slow interactions, hard-to-read UI, or unexpected behavior
+- reviewer judgement that a design choice no longer fits the app direction
+- repeated difficulty explaining where a change belongs
+- code-reading notes that a file or family is hard to navigate even when it has not failed
+- uncertainty about whether generated files, logs, backups, or local state are still needed
+
+When incorporating subjective evidence, record:
+
+- source of the feedback or review
+- affected app and area
+- observed symptom or concern
+- whether it is confirmed, plausible, or speculative
+- what deterministic check or change request would turn it into actionable work
+
+Subjective evidence can raise a planning/evidence priority by itself.
+It should only trigger implementation work directly when the user-facing problem is clear enough to define a concrete change request.
+
+### Priority Establishment
+
+Priorities are established in this order:
+
+1. Select the app.
+2. Apply that app's priority order.
+3. Gather deterministic and subjective evidence for the highest relevant indicator categories.
+4. Prefer actions with concrete close-out evidence.
+5. Open or link the change request that owns the work.
+
+A deterministic metric can move a priority up only when it matters for that app.
+For example, high local-service elapsed time is not automatically a top Studio priority unless it affects development speed, hides repeated broad work, or blocks a higher-priority structural/workflow concern.
+
+Likewise, subjective feedback can move a priority up when it describes an app-level problem, even before there is a perfect metric.
+The next action should then be either a diagnostic slice or a focused change request, not an open-ended refactor.
+
 ## Observable Risk Indicators
 
 ### Architectural Fit Risk

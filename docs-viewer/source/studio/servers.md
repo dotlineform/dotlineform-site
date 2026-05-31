@@ -30,3 +30,6 @@ Current local server scripts:
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode, generated reads, and docs management APIs
 - `bin/public-site-preview` for optional public Jekyll preview
 - **[Catalogue Write Services](/docs/?scope=studio&doc=scripts-catalogue-write-server)** for catalogue API service modules hosted by the Local Studio app
+
+Risk operations do not have a separate server.
+[Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations) records the decision that risk dashboards, app inventories, audit launching, unified activity review, and risk-related local artifacts use the Local Studio app server.

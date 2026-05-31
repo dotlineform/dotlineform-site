@@ -13,6 +13,7 @@ This dashboard is the short app-level decision surface for risk-reduction work.
 Use it before reading the inventories.
 
 The policy is [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
+Operational ownership is [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations): risk dashboards, app inventories, audits, activity, and risk-related local artifacts belong in Local Studio rather than a separate server.
 
 ## Current Message
 
@@ -41,6 +42,8 @@ They should contain both frontend and backend evidence where that evidence affec
 - [Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory)
 - [Analytics Risk Inventory](/docs/?scope=studio&doc=analytics-risk-inventory)
 - [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory)
+- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)
+- [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack)
 
 Transition evidence:
 

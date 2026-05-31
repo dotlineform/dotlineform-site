@@ -40,14 +40,17 @@ The current Studio-owned source homes are:
 | `studio/app/assets/` | Studio-only CSS and visual assets used by Local Studio routes. |
 | `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, and media-adjacent source records. |
 | `studio/data/config/` | Studio-owned checked-in config, including catalogue and Studio runtime data contracts. |
-| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Retired thumbnail-quality preview output is not an active served contract. |
+| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Risk summaries belong here only when they are intentionally served by Local Studio; ordinary local risk artifacts belong under `var/studio/risk/`. Retired thumbnail-quality preview output is not an active served contract. |
 | `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
 | `studio/shared/` | Shared Python/Ruby helpers used by Studio-owned commands and services. |
-| `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, and other verification checks. |
+| `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, and other verification checks. |
 | `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
 | `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
 | `studio/workflows/change-requests/` | Structured change-request workflow source, docs-log source entries, generated workflow projections, reports, and helper services. |
+
+Risk operations are Studio-owned.
+Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `studio/checks/`; ignored local risk reports and snapshots should default to `var/studio/risk/`; and any Studio-readable generated risk summaries should use `studio/data/generated/risk/` only when they are deliberately served by Local Studio.
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
 

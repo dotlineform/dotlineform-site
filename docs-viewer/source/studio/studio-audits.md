@@ -13,6 +13,8 @@ Route:
 - `/studio/audits/?mode=manage`
 
 The Studio Audits page surfaces local maintenance audits inside Studio.
+This is the central audit-launching surface for risk operations.
+Do not add a separate risk or audit server for normal Studio risk work; add allowlisted audits through the Local Studio app boundary described in [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
 
 The first version lists the Studio ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
 
@@ -60,3 +62,4 @@ Running the audit posts only the audit ID to `/studio/api/audits/audits/run`. Th
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Studio Audits Page Request](/docs/?scope=studio&doc=site-request-studio-audits-page)
+- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)
