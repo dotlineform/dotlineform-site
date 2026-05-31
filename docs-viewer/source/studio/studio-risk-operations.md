@@ -33,8 +33,10 @@ Risk work is operational maintenance for the whole repo, but the active user sur
 The current Studio app already hosts:
 
 - `/studio/audits/?mode=manage`
+- `/studio/risk/?mode=manage`
 - `/studio/activity/?mode=manage`
 - `/studio/api/audits/...`
+- `/studio/api/risk/...`
 - Studio catalogue/admin read APIs used by operational pages
 
 The Studio app shell also provides the correct boundary:
@@ -53,6 +55,8 @@ This is the same boundary risk operations need.
 | Risk/audit/check scripts | `studio/checks/` | Deterministic checks and standalone audits live here unless a domain-specific service already owns the behavior. |
 | Audit runner and API adapter | `studio/app/server/studio/` | `audit_runner.py` owns the allowlist; `studio_audit_api.py` exposes the Local Studio browser API. |
 | Audit UI | Local Studio app shell | `/studio/audits/?mode=manage` remains the launch/read surface. |
+| Risk evidence API adapter | `studio/app/server/studio/` | `studio_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, and Activity rows. |
+| Risk evidence UI | Local Studio app shell | `/studio/risk/?mode=manage` is the run/review surface for risk evidence packs. |
 | Activity UI | Local Studio app shell | `/studio/activity/?mode=manage` remains the unified activity review surface. |
 | Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/studio/activity/activity_log.jsonl`, `var/studio/activity/activity_log.json`, and the checked-in activity contract path. |
 | Local risk reports/artifacts | `var/studio/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
@@ -94,13 +98,12 @@ Examples:
 
 Background watchers and purely informational route loads should not produce activity rows unless a future workflow needs an explicit review trail.
 
-## Future Route Shape
+## Route Shape
 
-The current `/studio/audits/` and `/studio/activity/` routes remain in Studio.
+The current `/studio/audits/`, `/studio/risk/`, and `/studio/activity/` routes remain in Studio.
 
-If risk operations need a richer UI later, add a Studio route such as `/studio/risk/` rather than adding another server.
-That route is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route).
-That route should still use:
+The risk route is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route).
+It uses:
 
 - route-local shell/body modules
 - focused frontend modules for rendering and filtering

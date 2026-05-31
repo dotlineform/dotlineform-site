@@ -1500,6 +1500,111 @@ span.tagStudio__input--readonlyDisplay {
   line-height: 1.45;
 }
 
+.studioRiskPage__panel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.studioRiskPage__intro,
+.studioRiskRun__meta,
+.studioRiskRun__path,
+.studioRiskSummaryCard__path {
+  margin: 0;
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.studioRiskForm {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 820px) {
+  .studioRiskForm {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+  }
+}
+
+.studioRiskField,
+.studioRiskCheck {
+  display: grid;
+  gap: 0.3rem;
+  font-size: var(--font-small);
+}
+
+.studioRiskCheck {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  min-height: var(--studio-control-height);
+}
+
+.studioRiskCheck > input {
+  margin: 0;
+}
+
+.studioRiskActions {
+  display: flex;
+}
+
+.studioRiskRuns {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.studioRiskRun {
+  display: grid;
+  gap: 0.2rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: var(--studio-radius-sm);
+  background: var(--surface, var(--studio-surface));
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.studioRiskRun:hover,
+.studioRiskRun:focus-visible {
+  border-color: var(--studio-accent);
+  outline: none;
+}
+
+.studioRiskRun__id,
+.studioRiskRun__path {
+  font-family: var(--font-mono, monospace);
+  word-break: break-word;
+}
+
+.studioRiskSummary {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.studioRiskSummaryCard {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.studioRiskSummaryCard__status {
+  margin: 0;
+}
+
+.studioRiskSummaryCard__markdown {
+  overflow: auto;
+  max-block-size: 28rem;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: var(--studio-radius-md);
+  background: var(--studio-surface-subtle);
+  font-size: var(--font-small);
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
 .docsHtmlImportPage__panel {
   display: grid;
   gap: 0.8rem;

@@ -21,10 +21,12 @@ The goal is that every deterministic bullet in [Studio Risk Analysis Policy](/do
 
 ## Current Status
 
-Status: target contract.
+Status: command-line runner and Local Studio route implemented.
 
 The current repo already has some evidence producers, such as `studio/checks/javascript_inventory_guardrail.py`, `studio/commands/run_checks.py`, app smokes, builder diagnostics, and generated payload indexes.
-The next implementation step is to collect those existing producers behind a consistent risk evidence run.
+The first runner now collects static metrics, static search evidence, generated payload evidence, git touch counts, the JavaScript inventory guardrail, optional subjective notes, and allowlisted runtime check profiles into a consistent local run directory.
+The Local Studio app server exposes a narrow risk API for listing producers, creating validated runs, listing recent runs, reading run summaries, and appending Activity rows for user-initiated write runs.
+The Local Studio route at `/studio/risk/?mode=manage` provides the first UI for dry runs, write runs, recent runs, and summary review.
 
 ## Output Location
 
@@ -118,6 +120,7 @@ Optional flags:
 --include-runtime
 --include-lighthouse
 --include-subjective-notes <path>
+--runtime-profile <studio-smoke|ui-catalogue-smoke|analytics-smoke|docs-viewer-smoke>
 --write
 ```
 
@@ -127,6 +130,9 @@ Dry-run behavior:
 - with `--write`, create the run directory and write artifacts
 - never mutate source files
 - never run arbitrary browser-provided commands
+
+Runtime profiles are allowlisted and execute through `studio/commands/run_checks.py`.
+`--include-lighthouse` is accepted as a deferred hook but does not run Lighthouse until a safe URL contract is defined.
 
 ## Inventory Integration
 
@@ -140,6 +146,22 @@ Evidence pack: `var/studio/risk/runs/20260531-143000-docs-viewer-runtime/summary
 
 If a compact current summary is exposed through Local Studio later, the inventory may link to the Studio route or generated read model as well.
 The ignored run directory remains the source of detailed evidence.
+
+## Local Studio API
+
+The initial Local Studio adapter lives in `studio/app/server/studio/studio_risk_api.py`.
+It exposes:
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/studio/api/risk/health` | risk API availability |
+| `GET` | `/studio/api/risk/producers` | allowlisted evidence producers and safe options |
+| `GET` | `/studio/api/risk/runs` | recent risk evidence runs with compact metadata |
+| `POST` | `/studio/api/risk/runs` | start one validated evidence run through `studio/checks/risk_evidence_pack.py` |
+| `GET` | `/studio/api/risk/runs/<run-id>/summary` | read `summary.md` and `summary.json` for a completed run |
+
+The browser may choose app id, area slug, run id, dry-run mode, and allowlisted runtime options.
+The browser may not provide command text, shell flags, environment values, arbitrary paths, or subjective-notes file paths.
 
 ## Activity Integration
 
@@ -171,9 +193,9 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 1 | done | Define the risk evidence run directory and artifact contract. |
-| 2 | planned | Implement `studio/checks/risk_evidence_pack.py` with dry-run and write modes. |
-| 3 | planned | Add static file metrics, import/export scan, static searches, generated payload scan, and git touch-count producers. |
-| 4 | planned | Wrap existing JavaScript inventory guardrail output as transition evidence. |
-| 5 | planned | Add optional runtime producer hooks for existing smokes, Playwright, and Lighthouse when a targeted question requires them. |
-| 6 | planned | Define the compact `studio/data/generated/risk/` summary shape only if a Studio route needs to read current risk evidence. |
-| 7 | planned | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. Track the route work in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route). |
+| 2 | done | Implement `studio/checks/risk_evidence_pack.py` with dry-run and write modes. |
+| 3 | done | Add static file metrics, import/export scan, static searches, generated payload scan, and git touch-count producers. |
+| 4 | done | Wrap existing JavaScript inventory guardrail output as transition evidence. |
+| 5 | in progress | Add optional runtime producer hooks for existing smokes, Playwright, and Lighthouse when a targeted question requires them. Existing smoke profiles are allowlisted through `studio/commands/run_checks.py`; Lighthouse remains deferred until a safe URL contract exists. |
+| 6 | deferred | Define the compact `studio/data/generated/risk/` summary shape only if a Studio route needs to read current risk evidence. The first route reads summaries through the narrow Local Studio API, so no checked-in generated read model is needed yet. |
+| 7 | done | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. The route work is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route). |

@@ -67,6 +67,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/checks/audit_public_build_surface.py",
                 "studio/checks/css_token_audit.py",
                 "studio/checks/javascript_inventory_guardrail.py",
+                "studio/checks/risk_evidence_pack.py",
                 "studio/services/media/publish_media_to_r2.py",
                 "studio/services/media/build_palette_data.py",
                 "studio/services/catalogue/catalogue_json_build.py",
@@ -99,6 +100,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_app_config.py",
                 "studio/app/server/studio/studio_app_views.py",
                 "studio/app/server/studio/studio_app_server.py",
+                "studio/app/server/studio/studio_risk_api.py",
                 "analytics-app/app/server/analytics_app/analytics_api.py",
                 "analytics-app/app/server/analytics_app/analytics_app_config.py",
                 "analytics-app/app/server/analytics_app/analytics_app_views.py",
@@ -182,6 +184,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "ui-catalogue-app/tests/smoke/ui_catalogue_modal_demo.py",
                 "ui-catalogue-app/tests/smoke/ui_catalogue_routes.py",
                 "studio/tests/smoke/public_site_theme_toggle.py",
+                "studio/tests/smoke/local_studio_app_risk_route.py",
                 "studio/tests/python/test_studio_app_server.py",
                 "analytics-app/tests/python/test_analytics_app_server.py",
                 "analytics-app/tests/python/test_analytics_data_sharing_api.py",
@@ -235,6 +238,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             pytest_argv(
                 "studio/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
+                "studio/tests/python/test_risk_evidence_pack.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
                 "studio/tests/python/test_catalogue_invalidation.py",
                 "studio/tests/python/test_catalogue_lookup_refresh.py",
@@ -469,6 +473,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check shared Catalogue editor route boot, readiness, and lookup helpers.",
+        ),
+        CheckCommand(
+            "local-studio-risk-route-smoke",
+            (
+                sys.executable,
+                "studio/tests/smoke/local_studio_app_risk_route.py",
+            ),
+            "Smoke-check the local Studio Risk route shell and dry-run flow.",
         ),
     ),
     "analytics-smoke": (

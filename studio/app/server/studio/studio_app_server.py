@@ -34,6 +34,7 @@ from studio_app_views import (  # noqa: E402
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
+from studio_risk_api import risk_get_payload, risk_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -107,10 +108,16 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/studio/api/catalogue/"):
             self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
+        if path.startswith("/studio/api/risk/"):
+            self.send_risk_api_json(path.removeprefix("/studio/api/risk"), query)
+            return
         if path in {"/studio", "/studio/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/audits", "/studio/audits/"}:
+            self.send_html(studio_app_bootstrap_view(self.version))
+            return
+        if path in {"/studio/risk", "/studio/risk/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/project-state", "/studio/project-state/"}:
@@ -164,13 +171,19 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
                 return
             self.send_catalogue_api_post_json(path.removeprefix("/studio/api/catalogue"))
             return
+        if path.startswith("/studio/api/risk/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_risk_api_post_json(path.removeprefix("/studio/api/risk"))
+            return
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith(("/studio/api/audits/", "/studio/api/catalogue/")):
+        if not path.startswith(("/studio/api/audits/", "/studio/api/catalogue/", "/studio/api/risk/")):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -245,6 +258,16 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
+    def send_risk_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+        try:
+            self.send_json(risk_get_payload(self.repo_root, api_path, query))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
     def send_audit_api_post_json(self, api_path: str) -> None:
         try:
             body = self.read_json_body()
@@ -261,6 +284,18 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         try:
             body = self.read_json_body()
             status, payload = catalogue_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_risk_api_post_json(self, api_path: str) -> None:
+        try:
+            body = self.read_json_body()
+            status, payload = risk_post_response(self.repo_root, api_path, body)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

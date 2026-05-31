@@ -46,6 +46,10 @@ const ROUTE_BODY_RENDERERS = {
   studio_audits: async (_config, importModule) => {
     const module = await importModule("./studio-audits-shell.js");
     return module.renderStudioAuditsShell();
+  },
+  studio_risk: async (_config, importModule) => {
+    const module = await importModule("./studio-risk-shell.js");
+    return module.renderStudioRiskShell();
   }
 };
 

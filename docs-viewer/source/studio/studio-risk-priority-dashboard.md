@@ -14,6 +14,7 @@ Use it before reading the inventories.
 
 The policy is [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
 Operational ownership is [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations): risk dashboards, app inventories, audits, activity, and risk-related local artifacts belong in Local Studio rather than a separate server.
+Risk evidence packs can be run and reviewed from `/studio/risk/?mode=manage` in Local Studio.
 
 ## Current Message
 

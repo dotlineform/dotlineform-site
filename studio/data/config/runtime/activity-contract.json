@@ -1,7 +1,7 @@
 {
   "schema": "activity_contract_v1",
   "status": "v1_initial_contract",
-  "last_updated": "2026-05-08",
+  "last_updated": "2026-05-31",
   "source_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
   "inventory_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
   "description": "Registry for Studio user actions and the script-purpose rows that may appear in the unified activity log.",
@@ -928,6 +928,32 @@
               "id": "run-audit",
               "optional": false,
               "when": "an allowlisted Studio audit completes"
+            }
+          ]
+        }
+      }
+    },
+    "studio-risk": {
+      "label": "studio risk",
+      "route": "/studio/risk/?mode=manage",
+      "actions": {
+        "run-risk-evidence": {
+          "label": "run risk evidence",
+          "status": "v1-target",
+          "control_id": "studioRiskRun",
+          "control_selector": "#studioRiskRun",
+          "control_label": "Run evidence",
+          "endpoint": "/studio/api/risk/runs",
+          "record_family": "risk-run",
+          "record_id_field": "run_id",
+          "no_change_activity": "report",
+          "report_forced_rewrites": true,
+          "notes": "Covers user-triggered risk evidence pack runs from Local Studio.",
+          "script_purposes": [
+            {
+              "id": "generate-report",
+              "optional": false,
+              "when": "a risk evidence run writes a summary"
             }
           ]
         }

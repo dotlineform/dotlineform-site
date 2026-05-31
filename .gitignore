@@ -45,6 +45,7 @@ var/studio/activity/
 var/studio/backups/
 var/studio/catalogue/backups/
 var/studio/reports/
+var/studio/risk/
 var/docs/
 
 # staging

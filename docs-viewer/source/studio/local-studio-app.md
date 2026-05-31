@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-05-30
+last_updated: 2026-05-31
 parent_id: studio
 ---
 # Local Studio App
@@ -43,6 +43,7 @@ Current mounted views:
 
 - `/studio/`
 - `/studio/audits/?mode=manage`
+- `/studio/risk/?mode=manage`
 - `/studio/project-state/?mode=manage`
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
@@ -89,6 +90,11 @@ Current app endpoints:
 - `POST /studio/api/catalogue/moment/import-apply`
 - `POST /studio/api/catalogue/moment/preview`
 - `POST /studio/api/catalogue/moment/save`
+- `/studio/api/risk/health`
+- `/studio/api/risk/producers`
+- `/studio/api/risk/runs`
+- `POST /studio/api/risk/runs`
+- `/studio/api/risk/runs/<run-id>/summary`
 
 Analytics tag and Data Sharing routes moved out of Local Studio.
 The active route shells are served by `bin/local-analytics` under `/analytics/...`.
@@ -99,6 +105,12 @@ It is rendered through the JavaScript Studio app shell: Python serves the generi
 It calls `/studio/api/audits/...` on the local app server.
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
+The Local Studio risk API is hosted under `/studio/api/risk/...`.
+`studio/app/server/studio/studio_risk_api.py` owns producer listing, validated risk evidence run creation, recent-run listing, and summary reads for output under `var/studio/risk/runs/`.
+It builds server-owned commands for `studio/checks/risk_evidence_pack.py`; browser requests cannot provide command text, arbitrary flags, environment values, or unchecked file paths.
+The Studio Risk route shell is hosted by the local app at `/studio/risk/?mode=manage`.
+It is rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/studio-risk-shell.js` renders the route body, and `studio/app/frontend/js/studio-risk.js` owns the route behavior.
+The route can run dry-run previews, submit write runs, list recent runs, read summaries, and append unified Activity rows for user-initiated write runs.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
 It is the first route rendered through the JavaScript Studio app shell: Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/project-state-shell.js` renders the route body, and `studio/app/frontend/js/project-state.js` keeps the existing route boot and behavior.
 It calls Local Studio for both catalogue report generation and local report opening.
@@ -178,14 +190,16 @@ The main management API workflow routes are covered through a fixture repo smoke
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns the shared HTML bootstrap, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns the shared HTML bootstrap, `studio_audit_api.py` owns the Studio audit API adapter, `studio_risk_api.py` owns the risk evidence API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
 Ordinary Studio route body markup is owned by route-local browser shell modules that run inside `studio-app.js`; new route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:
 
 - `studio/tests/python/test_studio_app_server.py`
+- `studio/tests/python/test_risk_evidence_pack.py`
 - `studio/tests/smoke/local_studio_navigation_adapter.py`
 - `studio/tests/smoke/local_studio_app_audits_route.py`
+- `studio/tests/smoke/local_studio_app_risk_route.py`
 - `studio/tests/smoke/local_studio_app_project_state_route.py`
 - `studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
 - `studio/tests/smoke/local_studio_app_activity_route.py`

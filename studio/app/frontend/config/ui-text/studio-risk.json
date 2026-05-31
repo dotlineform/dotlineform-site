@@ -1,0 +1,20 @@
+{
+  "intro": "Run and review local risk evidence packs.",
+  "idle_status": "Choose an app and area.",
+  "service_unavailable": "Risk API unavailable. Start bin/local-studio to run risk evidence.",
+  "app_label": "app",
+  "area_label": "area",
+  "run_id_label": "run id",
+  "dry_run_label": "dry run",
+  "runtime_label": "runtime checks",
+  "lighthouse_label": "Lighthouse hook",
+  "run_button": "Run evidence",
+  "running_button": "Running...",
+  "status_running": "Running risk evidence...",
+  "status_passed": "Risk evidence run completed.",
+  "status_failed": "Risk evidence run failed.",
+  "status_request_failed": "Risk evidence request failed.",
+  "latest_runs_label": "recent runs",
+  "summary_label": "summary",
+  "no_runs": "No risk evidence runs found."
+}

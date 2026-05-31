@@ -3,7 +3,7 @@ doc_id: site-request-studio-risk-route
 title: Studio Risk Route Request
 added_date: 2026-05-31
 last_updated: 2026-05-31
-ui_status: paused
+ui_status: done
 parent_id: site-request-risk-analysis-inventory-redesign
 viewable: true
 ---
@@ -11,8 +11,7 @@ viewable: true
 
 Status:
 
-- planned
-- depends on [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) command-line runner becoming useful first
+- done
 
 ## Summary
 
@@ -105,7 +104,8 @@ All endpoints are hosted by the Local Studio app server.
 | `POST` | `/studio/api/risk/runs` | start one allowlisted evidence run |
 | `GET` | `/studio/api/risk/runs/<run-id>/summary` | read `summary.md` or `summary.json` for a completed run |
 
-The implementation may narrow this endpoint list if the first slice only needs one producer and one summary view.
+The first implementation exposes this endpoint list in `studio/app/server/studio/studio_risk_api.py`.
+The route UI uses it for producer discovery, validated dry runs and write runs, recent-run listing, and summary reads.
 
 ## Proposed UI
 
@@ -160,13 +160,13 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Implement the command-line evidence pack runner from [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack). Do not start the route before the runner can write a useful `summary.md` and `summary.json`. |
-| 2 | planned | Add a Local Studio risk API adapter with allowlisted producer listing, run creation, recent-run listing, and summary read behavior. Keep command and path resolution server-owned. |
-| 3 | planned | Add the `/studio/risk/?mode=manage` route registry entry, shell module, route controller, UI text, and Studio home/admin navigation link. |
-| 4 | planned | Render service state, producer controls, safe options, latest run status, and summary display. |
-| 5 | planned | Append unified Studio Activity rows for user-initiated write runs that produce reports. |
-| 6 | planned | Add focused Python tests for the risk API adapter and module/browser smoke checks for the route ready state and run-summary flow. |
-| 7 | planned | Update [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations), [Local Studio App](/docs/?scope=studio&doc=local-studio-app), and [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) after implementation. |
+| 1 | done | Implement the command-line evidence pack runner from [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack). The runner can write a useful `summary.md` and `summary.json`. |
+| 2 | done | Add a Local Studio risk API adapter with allowlisted producer listing, run creation, recent-run listing, and summary read behavior. Keep command and path resolution server-owned. |
+| 3 | done | Add the `/studio/risk/?mode=manage` route registry entry, shell module, route controller, UI text, and Studio home/admin navigation link. |
+| 4 | done | Render service state, producer controls, safe options, latest run status, and summary display. |
+| 5 | done | Append unified Studio Activity rows for user-initiated write runs that produce reports. |
+| 6 | done | Add focused Python tests for the risk API adapter and module/browser smoke checks for the route ready state and run-summary flow. |
+| 7 | done | Update [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations), [Local Studio App](/docs/?scope=studio&doc=local-studio-app), and [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) after implementation. |
 
 ## Acceptance Criteria
 

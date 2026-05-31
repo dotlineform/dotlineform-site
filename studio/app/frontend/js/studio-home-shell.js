@@ -18,6 +18,7 @@ const HOME_COLUMNS = Object.freeze([
     label: "admin",
     links: Object.freeze([
       Object.freeze({ routeId: "studio_audits" }),
+      Object.freeze({ routeId: "studio_risk" }),
       Object.freeze({ routeId: "activity" }),
       Object.freeze({ routeId: "catalogue_field_registry" })
     ])

@@ -23,6 +23,7 @@ STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES | frozen
 STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "studio_home": "/studio/",
     "studio_audits": "/studio/audits/",
+    "studio_risk": "/studio/risk/",
     "project_state": "/studio/project-state/",
     "bulk_add_work": "/studio/bulk-add-work/",
     "activity": "/studio/activity/",
@@ -102,6 +103,12 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_moment": "/studio/api/catalogue/moment/save",
         "project_state_report": "/studio/api/catalogue/project-state-report",
         "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
+    },
+    "risk": {
+        "base": "/studio/api/risk",
+        "health": "/studio/api/risk/health",
+        "producers": "/studio/api/risk/producers",
+        "runs": "/studio/api/risk/runs",
     },
 }
 
@@ -253,6 +260,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-risk-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-risk.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "activity-log.js",

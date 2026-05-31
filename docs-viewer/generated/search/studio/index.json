@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-51c0df9154b10e8832ef03089cf396e0",
-    "generated_at_utc": "2026-05-31T18:37:32Z",
+    "version": "blake2b-b2503f9c673eac3378bbed6d8a4e05df",
+    "generated_at_utc": "2026-05-31T19:40:27Z",
     "count": 220
   },
   "entries": [
@@ -4534,22 +4534,22 @@
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-30 • Studio",
+      "display_meta": "2026-05-31 • Studio",
       "search_terms": [
         "local-studio-app",
         "local",
         "studio",
         "app",
         "local studio app",
-        "2026-05-30",
+        "2026-05-31",
         "2026",
         "05",
-        "30"
+        "31"
       ],
-      "search_text": "local-studio-app local studio app local studio app 2026-05-30 2026 05 30"
+      "search_text": "local-studio-app local studio app local studio app 2026-05-31 2026 05 31"
     },
     {
       "id": "studio-activity",

@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-12T00:00:00Z",
+  "updated_at_utc": "2026-05-31T00:00:00Z",
   "app": {
     "routes": {
       "studio_home": {
@@ -31,6 +31,16 @@
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-audits"
+      },
+      "studio_risk": {
+        "label": "risk",
+        "title": "Studio Risk",
+        "path": "/studio/risk/?mode=manage",
+        "script": "/studio/app/frontend/js/studio-risk.js",
+        "doc_id": "site-request-studio-risk-route",
+        "nav": false,
+        "shell_type": "javascript",
+        "ready_state_route_id": "studio-risk"
       },
       "project_state": {
         "label": "project state",
@@ -200,6 +210,7 @@
         "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
         "site_series_index": "/studio/app/frontend/config/ui-text/site-series-index.json",
         "studio_audits": "/studio/app/frontend/config/ui-text/studio-audits.json",
+        "studio_risk": "/studio/app/frontend/config/ui-text/studio-risk.json",
         "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
       }
     }
