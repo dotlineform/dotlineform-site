@@ -1,0 +1,14 @@
+{
+  "scope": "studio",
+  "doc_id": "public-site-risk-inventory",
+  "title": "Public Site Risk Inventory",
+  "added_date": "2026-05-31",
+  "last_updated": "2026-05-31",
+  "parent_id": "studio-risk-priority-dashboard",
+  "hidden": false,
+  "viewable": true,
+  "source_path": "public-site-risk-inventory.md",
+  "viewer_url": "/docs/?scope=studio&doc=public-site-risk-inventory",
+  "content_html": "<h1 id=\"public-site-risk-inventory\">Public Site Risk Inventory</h1>\n\n<p>This inventory records risk evidence for the public site as a user-facing catalogue of artwork and text hosted on GitHub Pages.</p>\n\n<p>Policy: <a href=\"/docs/?scope=studio&doc=studio-risk-analysis-policy\">Studio Risk Analysis Policy</a>.\nDashboard: <a href=\"/docs/?scope=studio&doc=studio-risk-priority-dashboard\">Studio Risk Priority Dashboard</a>.</p>\n\n<h2 id=\"priority-order\">Priority Order</h2>\n\n<ol>\n  <li>Performance / cost</li>\n  <li>Architectural fit</li>\n  <li>Structural</li>\n  <li>Workflow</li>\n  <li>Planning / evidence</li>\n</ol>\n\n<h2 id=\"current-evidence\">Current Evidence</h2>\n\n<table>\n  <thead>\n    <tr>\n      <th>Area</th>\n      <th>Indicator</th>\n      <th>Evidence</th>\n      <th>Current action</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Public route and media payloads</td>\n      <td>Performance / cost</td>\n      <td>Public pages are media-heavy and user-facing, so route payload, image derivation, and runtime responsiveness are more important here than in local-only tools.</td>\n      <td>Use this inventory to collect public-route performance evidence before opening optimisation work.</td>\n    </tr>\n    <tr>\n      <td>Jekyll/public-build boundary</td>\n      <td>Architectural fit</td>\n      <td>Jekyll remains the public preview/build layer, while app-facing runtimes are moving toward Python and JavaScript.</td>\n      <td>Track app-facing Ruby removal in <a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">Rubyless App Runtimes Request</a>.</td>\n    </tr>\n    <tr>\n      <td>Catalogue taxonomy</td>\n      <td>Structural</td>\n      <td>Catalogue structure is complex but relatively stable, with modest record growth.</td>\n      <td>Treat taxonomy changes as deliberate app-level changes rather than opportunistic refactors.</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2 id=\"transition-notes\">Transition Notes</h2>\n\n<p>Older frontend and script inventories contain public-site evidence but are not the priority surface.\nMove only actionable public-site evidence into this document.</p>\n",
+  "ui_status": "draft"
+}

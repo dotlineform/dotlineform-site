@@ -1,0 +1,14 @@
+{
+  "scope": "studio",
+  "doc_id": "analytics-risk-inventory",
+  "title": "Analytics Risk Inventory",
+  "added_date": "2026-05-31",
+  "last_updated": "2026-05-31",
+  "parent_id": "studio-risk-priority-dashboard",
+  "hidden": false,
+  "viewable": true,
+  "source_path": "analytics-risk-inventory.md",
+  "viewer_url": "/docs/?scope=studio&doc=analytics-risk-inventory",
+  "content_html": "<h1 id=\"analytics-risk-inventory\">Analytics Risk Inventory</h1>\n\n<p>This inventory records risk evidence for the Analytics app, analytical dimensions, and Data Sharing workflows.</p>\n\n<p>Policy: <a href=\"/docs/?scope=studio&doc=studio-risk-analysis-policy\">Studio Risk Analysis Policy</a>.\nDashboard: <a href=\"/docs/?scope=studio&doc=studio-risk-priority-dashboard\">Studio Risk Priority Dashboard</a>.</p>\n\n<h2 id=\"priority-order\">Priority Order</h2>\n\n<ol>\n  <li>Architectural fit</li>\n  <li>Structural</li>\n  <li>Workflow</li>\n  <li>Planning / evidence</li>\n  <li>Performance / cost</li>\n</ol>\n\n<h2 id=\"current-evidence\">Current Evidence</h2>\n\n<table>\n  <thead>\n    <tr>\n      <th>Area</th>\n      <th>Indicator</th>\n      <th>Evidence</th>\n      <th>Current action</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Analytics growth path</td>\n      <td>Architectural fit</td>\n      <td>Future work is likely to include richer analytical dimensions, third-party visualisation libraries, and LLM-oriented data-sharing flows.</td>\n      <td>Open a change request before adding another broad route family.</td>\n    </tr>\n    <tr>\n      <td>Analytics/Data Sharing route families</td>\n      <td>Structural</td>\n      <td>Analytics has been decoupled from Studio, but future features need app-owned boundaries so tag, scoring, visualisation, and sharing work do not drift back into Studio-owned surfaces.</td>\n      <td>Reconcile active Analytics rows from <a href=\"/docs/?scope=studio&doc=javascript-inventory\">Javascript Inventory</a>.</td>\n    </tr>\n    <tr>\n      <td>Data Sharing packages</td>\n      <td>Workflow</td>\n      <td>Data Sharing workflows cross app data, exported packages, review/apply steps, and source writes.</td>\n      <td>Keep workflow evidence app-owned rather than treating it as a generic backend queue.</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2 id=\"transition-notes\">Transition Notes</h2>\n\n<p>Local performance is lower priority until visualisation, data volume, or package workflow behavior makes it user-visible or development-blocking.</p>\n",
+  "ui_status": "draft"
+}

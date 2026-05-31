@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-55ab18a4d9dc38f066ce7148da85c2f4",
-    "generated_at_utc": "2026-05-31T15:34:57Z",
-    "count": 212
+    "version": "blake2b-5a2fb14c6c7cec0d9b66e837dbd02da2",
+    "generated_at_utc": "2026-05-31T17:36:50Z",
+    "count": 217
   },
   "entries": [
     {
@@ -713,6 +713,112 @@
         "31"
       ],
       "search_text": "studio-risk-priority-dashboard studio risk priority dashboard studio risk priority dashboard audit 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "analytics-risk-inventory",
+      "kind": "doc",
+      "title": "Analytics Risk Inventory",
+      "href": "/docs/?scope=studio&doc=analytics-risk-inventory",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "parent_title": "Studio Risk Priority Dashboard",
+      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
+      "search_terms": [
+        "analytics-risk-inventory",
+        "analytics",
+        "risk",
+        "inventory",
+        "analytics risk inventory",
+        "studio risk priority dashboard",
+        "studio",
+        "priority",
+        "dashboard",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "analytics-risk-inventory analytics risk inventory analytics risk inventory studio risk priority dashboard studio priority dashboard 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "docs-viewer-risk-inventory",
+      "kind": "doc",
+      "title": "Docs Viewer Risk Inventory",
+      "href": "/docs/?scope=studio&doc=docs-viewer-risk-inventory",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "parent_title": "Studio Risk Priority Dashboard",
+      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
+      "search_terms": [
+        "docs-viewer-risk-inventory",
+        "docs",
+        "viewer",
+        "risk",
+        "inventory",
+        "docs viewer risk inventory",
+        "studio risk priority dashboard",
+        "studio",
+        "priority",
+        "dashboard",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "docs-viewer-risk-inventory docs viewer risk inventory docs viewer risk inventory studio risk priority dashboard studio priority dashboard 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "public-site-risk-inventory",
+      "kind": "doc",
+      "title": "Public Site Risk Inventory",
+      "href": "/docs/?scope=studio&doc=public-site-risk-inventory",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "parent_title": "Studio Risk Priority Dashboard",
+      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
+      "search_terms": [
+        "public-site-risk-inventory",
+        "public",
+        "site",
+        "risk",
+        "inventory",
+        "public site risk inventory",
+        "studio risk priority dashboard",
+        "studio",
+        "priority",
+        "dashboard",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "public-site-risk-inventory public site risk inventory public site risk inventory studio risk priority dashboard studio priority dashboard 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-app-risk-inventory",
+      "kind": "doc",
+      "title": "Studio App Risk Inventory",
+      "href": "/docs/?scope=studio&doc=studio-app-risk-inventory",
+      "last_updated": "2026-05-31",
+      "parent_id": "studio-risk-priority-dashboard",
+      "parent_title": "Studio Risk Priority Dashboard",
+      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
+      "search_terms": [
+        "studio-app-risk-inventory",
+        "studio",
+        "app",
+        "risk",
+        "inventory",
+        "studio app risk inventory",
+        "studio risk priority dashboard",
+        "priority",
+        "dashboard",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-app-risk-inventory studio app risk inventory studio app risk inventory studio risk priority dashboard priority dashboard 2026-05-31 2026 05 31"
     },
     {
       "id": "catalogue",
@@ -1613,6 +1719,34 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
+    },
+    {
+      "id": "site-request-risk-analysis-inventory-redesign",
+      "kind": "doc",
+      "title": "Risk Analysis Inventory Redesign Request",
+      "href": "/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-31 • Change Requests",
+      "search_terms": [
+        "site-request-risk-analysis-inventory-redesign",
+        "site",
+        "request",
+        "risk",
+        "analysis",
+        "inventory",
+        "redesign",
+        "risk analysis inventory redesign request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-risk-analysis-inventory-redesign site request risk analysis inventory redesign risk analysis inventory redesign request change requests change requests 2026-05-31 2026 05 31"
     },
     {
       "id": "site-request-rubyless-app-runtimes",

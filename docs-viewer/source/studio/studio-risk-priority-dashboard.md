@@ -9,156 +9,53 @@ viewable: true
 ---
 # Studio Risk Priority Dashboard
 
-This dashboard is the short decision surface for Studio maintenance-risk work.
-Use it before reading the full inventories.
+This dashboard is the short app-level decision surface for risk-reduction work.
+Use it before reading the inventories.
 
-The policy and source inventories remain the evidence:
-
-- [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
-- [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
-- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
-- [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
+The policy is [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
 
 ## Current Message
 
-The next risk-reduction work should start with visibility and decision clarity, not another broad split.
+Risk work should now be organised by app.
+Frontend, backend, docs, generated-data, and workflow evidence can all support the same priority, but the action must improve the app rather than follow a separate technical queue.
 
-The highest-value improvement is catalogue save/build diagnostics: make repeated write, generated artifact, lookup, search, and media costs visible, then reduce the measured broad fallbacks.
-For JavaScript, the near-term priority is to reconcile stale or conflicting inventory rows before selecting a new score-reduction batch, then work by route family rather than by one long file table.
+The current transition work is to replace technical inventory tables with app-owned inventories under this dashboard.
+The older JavaScript and Python/Ruby inventories remain evidence during that transition.
 
 ## Current Priorities
 
-| Priority | Area | Unit | Main risk | Next action | Evidence of improvement |
-| ---: | --- | --- | --- | --- | --- |
-| 1 | Catalogue save/build path | Script family | Maintenance and performance | Add save/build diagnostics for source writes, lookup refreshes, generated artifacts, search updates, media work, elapsed time, and fallback reasons. | Local save/build responses or logs show per-step counts, elapsed time, and fallback reasons. |
-| 2 | Catalogue generated/search/media rebuild scope | Script family | Performance | Use the diagnostics from priority 1 to reduce repeated broad generated artifact, lookup, search, or media work where field-aware metadata can safely narrow the scope. | A measured repeated broad path becomes a narrower path with the same dry-run/write behavior and focused verification. |
-| 3 | JavaScript inventory reconciliation | Inventory quality | Planning risk | Reconcile the full JavaScript inventory with the Docs Viewer-specific inventory before starting another browser-JS batch. | Current scores, active paths, and Docs Viewer entry/runtime rows agree across the dashboard and source inventories. |
-| 4 | Docs Viewer browser-JS controller boundaries | File family | Ownership boundary | Pick one complete controller family, such as management, bookmarks, search, or config, and narrow one remaining broad handoff to explicit owner inputs. | One above-target Docs Viewer row moves toward score 4 because a complete responsibility has a focused owner and tests or smoke coverage. |
-| 5 | Media derivation and publishing path | Script family | Performance | Add batch-level media timing and counts, then evaluate bounded parallelism or batched freshness checks only for the measured slow path. | Media reports identify source count, derivative count, skipped count, elapsed time, and the slowest stage. |
-| 6 | Cross-service local server mechanics | Cross-cutting family | Structure and consistency | Standardize only identical local-service mechanics: request-size limits, JSON parse errors, CORS headers, compact log fields, and response envelopes. | Shared mechanics are consistent without hiding service-specific write allowlists or domain behavior. |
-| 7 | Audit and check scripts | Script family | Maintenance and structure | Group broad checks by source family and report section before adding more unrelated checks. | `audit_site_consistency.py` remains readable by source family and emits machine-readable sections. |
+| # | App | Area | Risk summary | Change request |
+| ---: | --- | --- | --- | --- |
+| 1 | All apps | Risk analysis inventory redesign | Planning / evidence: current evidence is split across technical inventories, making app-level action selection harder than it should be. | [Risk Analysis Inventory Redesign Request](/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign) |
+| 2 | Public Site and app runtimes | Rubyless app runtime boundary | Architectural fit: Ruby/Jekyll should remain public-site preview/build tooling only; app-facing builders and local runtimes should consolidate around Python and JavaScript. | [Rubyless App Runtimes Request](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes) |
+| 3 | Studio | Catalogue save/build path | Workflow and performance / cost: catalogue saves can touch source JSON, backups, lookup refreshes, generated public data, search, media, publication state, and activity rows. Diagnostics are needed before scope-reduction work becomes actionable. | Needs change request |
+| 4 | Docs Viewer | Runtime, public read-only installs, and management UI | Structural and performance / cost: Docs Viewer is both a frequently used local tool and a public read-only runtime, so controller boundaries, payload cost, and UI structure should be prioritised together. | Needs refreshed change request |
+| 5 | Analytics | Analytics and Data Sharing growth path | Architectural fit and structural: future visualisation, analytical dimensions, and LLM data-sharing work need an app-owned inventory before new feature work creates another broad route family. | Needs change request |
 
-## Action Cards
+## App Inventories
 
-### Catalogue save/build diagnostics
+The app inventories are child documents of this dashboard.
+They should contain both frontend and backend evidence where that evidence affects the app.
 
-Priority: 1
+- [Public Site Risk Inventory](/docs/?scope=studio&doc=public-site-risk-inventory)
+- [Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory)
+- [Analytics Risk Inventory](/docs/?scope=studio&doc=analytics-risk-inventory)
+- [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory)
 
-Unit: script family.
+Transition evidence:
 
-Primary risk: maintenance and performance.
-
-Why it matters: a single save can touch canonical source JSON, backups, lookup refreshes, generated public JSON, route stubs, search rebuilds, media derivatives, publication state, and Studio Activity rows.
-
-Recommended next slice: add diagnostics to catalogue save/build responses and logs for elapsed time, counts, skipped work, generated artifact groups, media work, search updates, lookup refreshes, and fallback reasons.
-
-Evidence required before closing: a local save or dry-run build can show which steps ran, which fell back to broad work, and which steps consumed meaningful time.
-
-### Catalogue rebuild scope reduction
-
-Priority: 2
-
-Unit: script family.
-
-Primary risk: performance.
-
-Why it matters: conservative full-fallback behavior can hide repeated generated artifact, lookup, search, or media work.
-
-Recommended next slice: after diagnostics are available, choose the most repeated broad path and narrow it using field-aware build metadata.
-
-Evidence required before closing: the narrowed path preserves source writes, backups, dry-run behavior, generated output correctness, search consistency, and media freshness rules.
-
-### JavaScript inventory reconciliation
-
-Priority: 3
-
-Unit: inventory quality.
-
-Primary risk: planning risk.
-
-Why it matters: the full JavaScript table and the Docs Viewer-focused table should not disagree about active Docs Viewer entry/runtime risk.
-When they diverge, the inventory becomes harder to use for priority decisions.
-
-Recommended next slice: refresh active paths and scores across [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), then record the current above-target rows by family.
-
-Evidence required before closing: the same active files have the same score and focus note in both reports, or a deliberate reason for separate treatment is documented.
-
-### Docs Viewer browser-JS controller boundaries
-
-Priority: 4
-
-Unit: file family, with file-level score movement.
-
-Primary risk: ownership boundary.
-
-Why it matters: the Docs Viewer runtime has useful focused owners, but management, bookmark, search, config, and controller handoffs still need active guardrails so new features do not drift back into broad runtime coordination.
-
-Recommended next slice: choose one complete responsibility inside one above-target controller family and move it behind explicit owner inputs, without adding behavior back to the app runtime coordinator.
-
-Evidence required before closing: the target row can be rescored because future related changes have a clearer destination, broad state handoff was narrowed, or focused checks cover behavior that previously required full route boot.
-
-### Media derivation diagnostics
-
-Priority: 5
-
-Unit: script family.
-
-Primary risk: performance.
-
-Why it matters: media work is external-command and file-I/O heavy, so a small script surface can still dominate local build time when batches grow.
-
-Recommended next slice: add batch-level timing, source counts, derivative counts, skipped counts, and slow-stage reporting before considering parallelism.
-
-Evidence required before closing: media reports show enough detail to decide whether parallel derivative generation, batched freshness checks, or no action is justified.
-
-## Category View
-
-Use these category views to avoid mixing unrelated risks in one table.
-
-### Maintenance Risk
-
-| Priority | Area | Unit | Improvement direction |
-| ---: | --- | --- | --- |
-| 1 | Catalogue save/build path | Script family | Make save/build side effects visible before narrowing rebuild behavior. |
-| 2 | Docs build, management, import, and export | Script family | Keep cross-language contracts documented together; revisit full fallbacks only when diagnostics show repeated cost. |
-| 3 | Audit and check scripts | Script family | Group checks and shared output contracts before adding more broad checks. |
-
-### Ownership Boundary Risk
-
-| Priority | Area | Unit | Improvement direction |
-| ---: | --- | --- | --- |
-| 1 | Docs Viewer browser-JS controllers | File family | Continue narrowing broad runtime handoffs into explicit owner contracts. |
-| 2 | Cross-service local server mechanics | Cross-cutting family | Standardize identical mechanics without creating a broad service framework. |
-| 3 | Catalogue write server | File within family | Keep HTTP orchestration separate from generated artifact, lookup, media, and source-model behavior. |
-
-Architectural drift is tracked inside this category at dashboard level.
-Use separate structural and architectural scores only in detailed frontend inventory rows where the difference is measurable.
-
-### Performance Risk
-
-| Priority | Area | Unit | Improvement direction |
-| ---: | --- | --- | --- |
-| 1 | Catalogue generated/search/media work | Script family | Use diagnostics to reduce repeated broad rebuilds and media work. |
-| 2 | Media derivation | Script family | Measure batch cost, then consider bounded parallelism or batched freshness checks. |
-| 3 | Docs rebuilds | Script family | Monitor targeted-build diagnostics; avoid optimization work until repeated full fallbacks are visible. |
-
-## Not Current Priorities
-
-- Do not split the largest files only because they are large.
-- Do not start another broad script-structure split before catalogue diagnostics exist.
-- Do not create a broad shared local-service framework; extract only mechanics with identical contracts.
-- Do not optimize docs rebuild fallbacks until diagnostics show repeated cost.
-- Do not pick browser-JS work from the full table alone when a route-family batch would give clearer ownership movement.
+- [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
+- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
 
 ## Update Rules
 
 Update this dashboard when:
 
-- a source inventory is refreshed
-- an above-target JavaScript family changes score
-- script-family risk classifications change
-- diagnostics change the priority order
-- a priority action is completed or replaced
+- an app inventory changes its top priority
+- a change request is opened, paused, completed, or replaced
+- diagnostics change whether a performance or workflow concern is actionable
+- a technical inventory row changes app-level priority
 
 Keep this page short.
-Detailed evidence belongs in the inventory, category report, implementation plan, or task document that owns the work.
+Detailed evidence belongs in the app inventory or the change-request document that owns the work.
