@@ -21,8 +21,8 @@ Risk evidence packs can be run and reviewed from `/studio/risk/?mode=manage` in 
 Risk work should now be organised by app.
 Frontend, backend, docs, generated-data, and workflow evidence can all support the same priority, but the action must improve the app rather than follow a separate technical queue.
 
-The current transition work is to replace technical inventory tables with app-owned inventories under this dashboard.
-The older JavaScript and Python/Ruby inventories remain evidence during that transition.
+The first reconciliation pass has moved the active technical-inventory evidence into app-owned inventories under this dashboard.
+The older JavaScript and Python/Ruby inventories remain detailed transition evidence until the retirement/reduction task decides their final shape.
 
 ## Current Priorities
 

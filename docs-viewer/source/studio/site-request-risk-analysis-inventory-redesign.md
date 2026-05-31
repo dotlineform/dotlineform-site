@@ -48,10 +48,18 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | done | Finalise risk operations ownership: risk dashboards, app inventories, audit launching, unified activity review, and local risk artifacts belong in Local Studio rather than a new server. |
 | 6 | done | Define the repeatable risk evidence pack contract for deterministic commands, central `var/studio/risk/` artifacts, summaries, and inventory citations. |
 | 7 | done | Implement the risk evidence pack runner under `studio/checks/`. |
-| 8 | planned | Implement [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route) after the evidence-pack runner can write useful summaries. |
-| 9 | planned | Reconcile the older JavaScript and Python/Ruby inventories into the app inventories without losing current useful evidence. |
+| 8 | done | Implement [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route) after the evidence-pack runner can write useful summaries. |
+| 9 | done | Reconcile the older JavaScript and Python/Ruby inventories into the app inventories without losing current useful evidence. |
 | 10 | planned | Open or refresh change requests for dashboard priorities that still say `Needs change request`. |
 | 11 | planned | Retire or reduce the old technical inventory pages once the app inventories carry the active evidence. |
+
+## Reconciliation Notes
+
+Task 9 completed the first reconciliation pass by moving the useful current evidence from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), and [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) into the app inventories.
+
+The old technical inventories still hold detailed row-level evidence and rerun instructions.
+They are no longer the priority surface.
+Task 11 should decide whether to retire, shrink, or keep them as transition evidence after task 10 creates or refreshes the missing change requests.
 
 ## Close-Out Evidence
 

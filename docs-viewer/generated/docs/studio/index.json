@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T19:40:26Z",
+  "generated_at": "2026-05-31T19:54:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -437,7 +437,7 @@
       "source_path": "studio-risk-priority-dashboard.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-priority-dashboard",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
-      "content_text_length": 3130,
+      "content_text_length": 3200,
       "ui_status": "review"
     },
     {
@@ -452,7 +452,7 @@
       "source_path": "analytics-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
-      "content_text_length": 1465,
+      "content_text_length": 2822,
       "ui_status": "draft"
     },
     {
@@ -467,7 +467,7 @@
       "source_path": "docs-viewer-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
-      "content_text_length": 1753,
+      "content_text_length": 3420,
       "ui_status": "draft"
     },
     {
@@ -482,7 +482,7 @@
       "source_path": "public-site-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=public-site-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
-      "content_text_length": 1490,
+      "content_text_length": 2733,
       "ui_status": "draft"
     },
     {
@@ -497,7 +497,7 @@
       "source_path": "studio-app-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-app-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
-      "content_text_length": 1490,
+      "content_text_length": 3197,
       "ui_status": "draft"
     },
     {
@@ -1047,7 +1047,7 @@
       "source_path": "site-request-risk-analysis-inventory-redesign.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-analysis-inventory-redesign.json",
-      "content_text_length": 3051,
+      "content_text_length": 3567,
       "ui_status": "in-progress"
     },
     {

@@ -31,11 +31,13 @@ Record subjective review and user feedback with the source, symptom, confidence 
 
 | Area | Indicator | Evidence | Current action |
 | --- | --- | --- | --- |
-| Public route and media payloads | Performance / cost | Public pages are media-heavy and user-facing, so route payload, image derivation, and runtime responsiveness are more important here than in local-only tools. | Use this inventory to collect public-route performance evidence before opening optimisation work. |
-| Jekyll/public-build boundary | Architectural fit | Jekyll remains the public preview/build layer, while app-facing runtimes are moving toward Python and JavaScript. | Track app-facing Ruby removal in [Rubyless App Runtimes Request](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes). |
+| Public route and media payloads | Performance / cost | Public pages are media-heavy and user-facing, so route payload, image derivation, and runtime responsiveness are more important here than in local-only tools. [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) keeps public runtime rows for `assets/js/catalogue-search.js`, `assets/js/work.js`, `assets/js/moment.js`, and shared public catalogue helpers. | Use this inventory to collect public-route performance evidence before opening optimisation work. |
+| Public catalogue search runtime | Structural | The old JavaScript inventory identifies `assets/js/catalogue-search.js` as the only public-runtime row above target score 4 after query normalization, ordering, HTML projection, and metric view-model work moved into `assets/js/search/catalogue-search-runtime.js`. | Keep future public search behavior in the focused runtime/helper split; open a public-site optimisation request only after route-cost evidence shows user-visible impact. |
+| Media derivation and remote publishing | Performance / cost | [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) classifies `scripts/media/` as medium maintenance and high performance risk, and flags `studio/services/catalogue/catalogue_build_media.py` as a concrete performance candidate because media work is file-system and subprocess heavy. | Add batch timing and count evidence before changing media derivation or publishing behavior. |
+| Jekyll/public-build boundary | Architectural fit | Jekyll remains the public preview/build layer, while app-facing runtimes are moving toward Python and JavaScript. The Python/Ruby inventory treats app-facing Ruby builder use as transition evidence rather than a public-site priority by itself. | Track app-facing Ruby removal in [Rubyless App Runtimes Request](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes). |
 | Catalogue taxonomy | Structural | Catalogue structure is complex but relatively stable, with modest record growth. | Treat taxonomy changes as deliberate app-level changes rather than opportunistic refactors. |
 
 ## Transition Notes
 
-Older frontend and script inventories contain public-site evidence but are not the priority surface.
-Move only actionable public-site evidence into this document.
+Older frontend and script inventories now remain detailed evidence for public runtime and media rows, not the public-site priority surface.
+Only actionable public-site evidence should continue to move into this document.
