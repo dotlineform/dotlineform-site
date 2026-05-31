@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b2503f9c673eac3378bbed6d8a4e05df",
-    "generated_at_utc": "2026-05-31T19:40:27Z",
-    "count": 220
+    "version": "blake2b-c0029501b97863b55e6720ea0fb993ec",
+    "generated_at_utc": "2026-05-31T19:59:24Z",
+    "count": 223
   },
   "entries": [
     {
@@ -507,10 +507,10 @@
       "kind": "doc",
       "title": "Studio Python And Ruby Script Inventory",
       "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-30 • Audit",
+      "display_meta": "2026-05-31 • Audit",
       "search_terms": [
         "studio-python-ruby-script-inventory",
         "studio",
@@ -521,12 +521,12 @@
         "studio python and ruby script inventory",
         "and",
         "audit",
-        "2026-05-30",
+        "2026-05-31",
         "2026",
         "05",
-        "30"
+        "31"
       ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-30 2026 05 30"
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-31 2026 05 31"
     },
     {
       "id": "docs-build-management-import-export-improvements",
@@ -613,10 +613,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-31",
       "parent_id": "studio-risk-analysis-policy",
       "parent_title": "Studio Risk Analysis Policy",
-      "display_meta": "2026-05-28 • Studio Risk Analysis Policy",
+      "display_meta": "2026-05-31 • Studio Risk Analysis Policy",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -629,22 +629,22 @@
         "risk",
         "analysis",
         "policy",
-        "2026-05-28",
+        "2026-05-31",
         "2026",
         "05",
-        "28"
+        "31"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-31 2026 05 31"
     },
     {
       "id": "javascript-inventory",
       "kind": "doc",
       "title": "Javascript Inventory",
       "href": "/docs/?scope=studio&doc=javascript-inventory",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "studio-risk-analysis-policy",
       "parent_title": "Studio Risk Analysis Policy",
-      "display_meta": "2026-05-30 • Studio Risk Analysis Policy",
+      "display_meta": "2026-05-31 • Studio Risk Analysis Policy",
       "search_terms": [
         "javascript-inventory",
         "javascript",
@@ -655,12 +655,12 @@
         "risk",
         "analysis",
         "policy",
-        "2026-05-30",
+        "2026-05-31",
         "2026",
         "05",
-        "30"
+        "31"
       ],
-      "search_text": "javascript-inventory javascript inventory javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-30 2026 05 30"
+      "search_text": "javascript-inventory javascript inventory javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-31 2026 05 31"
     },
     {
       "id": "studio-javascript-payload-inventory",
@@ -1430,6 +1430,63 @@
       "search_text": "site-request-analytics-app-split-tasks site request analytics app split tasks analytics app split tasks analytics app split request 2026-05-30 2026 05 30"
     },
     {
+      "id": "site-request-analytics-data-sharing-growth-path",
+      "kind": "doc",
+      "title": "Analytics Data Sharing Growth Path Request",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-data-sharing-growth-path",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-31 • Change Requests",
+      "search_terms": [
+        "site-request-analytics-data-sharing-growth-path",
+        "site",
+        "request",
+        "analytics",
+        "data",
+        "sharing",
+        "growth",
+        "path",
+        "analytics data sharing growth path request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-analytics-data-sharing-growth-path site request analytics data sharing growth path analytics data sharing growth path request change requests change requests 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "site-request-catalogue-save-build-diagnostics",
+      "kind": "doc",
+      "title": "Catalogue Save Build Diagnostics Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-save-build-diagnostics",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-31 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-save-build-diagnostics",
+        "site",
+        "request",
+        "catalogue",
+        "save",
+        "build",
+        "diagnostics",
+        "catalogue save build diagnostics request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-catalogue-save-build-diagnostics site request catalogue save build diagnostics catalogue save build diagnostics request change requests change requests 2026-05-31 2026 05 31"
+    },
+    {
       "id": "site-request-catalogue-work-unified-editor",
       "kind": "doc",
       "title": "Catalogue Work Unified Editor Request",
@@ -1569,6 +1626,35 @@
         "28"
       ],
       "search_text": "site-request-docs-viewer-multi-panel-app-shell site request docs viewer multi panel app shell docs viewer multi-panel app shell request change requests change requests 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "site-request-docs-viewer-runtime-risk-reduction",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime Risk Reduction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-31 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-runtime-risk-reduction",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "runtime",
+        "risk",
+        "reduction",
+        "docs viewer runtime risk reduction request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-docs-viewer-runtime-risk-reduction site request docs viewer runtime risk reduction docs viewer runtime risk reduction request change requests change requests 2026-05-31 2026 05 31"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

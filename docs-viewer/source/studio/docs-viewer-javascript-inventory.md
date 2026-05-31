@@ -2,15 +2,23 @@
 doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-28
-ui_status: review
+last_updated: 2026-05-31
+ui_status: reference
 parent_id: studio-risk-analysis-policy
 viewable: true
 ---
 # Docs Viewer JavaScript Inventory
 
-This document is the Docs Viewer-specific review slice of [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
+This document is the Docs Viewer-specific transition-evidence slice of [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
 It uses the same four-risk scoring model as the parent inventory, but limits the table and follow-up notes to browser JavaScript under `docs-viewer/runtime/js/`.
+
+## Transition Status
+
+Use [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory) and [Docs Viewer Runtime Risk Reduction Request](/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction) for current priority and implementation ownership.
+This page remains as row-level browser JavaScript evidence, owner notes, and score history for Docs Viewer runtime work.
+
+Do not use this table as a separate frontend priority queue.
+When a Docs Viewer row becomes actionable, move the app-level evidence into the app inventory or the focused runtime request before implementation.
 
 ## Current Summary
 

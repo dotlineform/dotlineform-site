@@ -88,6 +88,12 @@ def risk_producers_payload() -> dict[str, Any]:
                 "default": True,
             },
             {
+                "producer_id": "script-family-inventory",
+                "label": "Script family inventory",
+                "description": "Python/Ruby file counts, line counts, family totals, and largest-file observations.",
+                "default": True,
+            },
+            {
                 "producer_id": "git-history",
                 "label": "Git touch counts",
                 "description": "Recent edit concentration grouped by family and file.",

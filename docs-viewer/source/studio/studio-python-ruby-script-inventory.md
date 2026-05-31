@@ -2,17 +2,33 @@
 doc_id: studio-python-ruby-script-inventory
 title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
-last_updated: 2026-05-30
-ui_status: urgent
+last_updated: 2026-05-31
+ui_status: reference
 parent_id: audit
 viewable: true
 ---
 # Studio Python And Ruby Script Inventory
 
-This document records the current maintenance, structure/consistency, and performance risk inventory for Python and Ruby scripts under `scripts/`.
+This document records detailed transition evidence for maintenance, structure/consistency, and performance risk in Python and Ruby script families.
 
 It follows [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy), but uses script-family ownership rather than browser payload size as the primary review unit.
 Use [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) for the current short priority order before reading the full inventory.
+
+## Transition Status
+
+Use the app inventories and active change requests for current priority and implementation ownership:
+
+- [Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory)
+- [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory)
+- [Analytics Risk Inventory](/docs/?scope=studio&doc=analytics-risk-inventory)
+- [Public Site Risk Inventory](/docs/?scope=studio&doc=public-site-risk-inventory)
+- [Catalogue Save Build Diagnostics Request](/docs/?scope=studio&doc=site-request-catalogue-save-build-diagnostics)
+- [Docs Viewer Runtime Risk Reduction Request](/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction)
+- [Analytics Data Sharing Growth Path Request](/docs/?scope=studio&doc=site-request-analytics-data-sharing-growth-path)
+
+This page remains as script-family evidence, guardrails, rerun instructions, and largest-file watch context.
+Do not use it as a separate backend/script priority queue.
+When a family becomes actionable, move the app-level evidence into the owning app inventory or change request.
 
 ## Current Priority
 
@@ -264,47 +280,22 @@ Immediate work signal: medium.
 
 ## How To Rerun
 
-Run this from `dotlineform-site/` to refresh the family and largest-file inventory:
+Use [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) for current deterministic reruns.
+The old ad hoc `find`, `wc`, and inline Python snippets have been replaced by the `script-family-inventory.json` producer.
+
+Run this from `dotlineform-site/`:
 
 ```bash
-find scripts -type f \( -name '*.py' -o -name '*.rb' \) -print | sort
+$HOME/miniconda3/bin/python3 studio/checks/risk_evidence_pack.py --app all --area script-family-inventory --write
 ```
 
-Use this for line counts:
+Read:
 
-```bash
-find scripts -type f \( -name '*.py' -o -name '*.rb' \) -print | sort | xargs wc -l | sort -nr
+```text
+var/studio/risk/runs/<run-id>/script-family-inventory.json
 ```
 
-Use this for the family summary:
-
-```bash
-python3 - <<'PY'
-from pathlib import Path
-from collections import defaultdict
-
-rows = defaultdict(lambda: {"files": 0, "lines": 0, "py": 0, "rb": 0, "max": ("", 0)})
-for path in sorted(Path("scripts").rglob("*")):
-    if path.suffix not in {".py", ".rb"}:
-        continue
-    family = path.parts[1] if len(path.parts) > 2 else "root"
-    lines = len(path.read_text(errors="replace").splitlines())
-    row = rows[family]
-    row["files"] += 1
-    row["lines"] += lines
-    row[path.suffix[1:]] += 1
-    if lines > row["max"][1]:
-        row["max"] = (str(path), lines)
-
-for family, row in sorted(rows.items(), key=lambda item: item[1]["lines"], reverse=True):
-    print(
-        f"{family}\tfiles={row['files']}\tpy={row['py']}\trb={row['rb']}"
-        f"\tlines={row['lines']}\tmax={row['max'][1]} {row['max'][0]}"
-    )
-PY
-```
-
-When updating this doc, keep the three risk classifications separate.
+When updating this doc from an evidence pack, keep the three risk classifications separate.
 A large file can be low performance risk if it is rarely run, and a small file can be high performance risk if it sits on a repeated save or rebuild path.
 
 ## Related References

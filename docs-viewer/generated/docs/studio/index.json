@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T19:54:26Z",
+  "generated_at": "2026-05-31T20:06:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -326,15 +326,15 @@
       "doc_id": "studio-python-ruby-script-inventory",
       "title": "Studio Python And Ruby Script Inventory",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "audit",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18375,
-      "ui_status": "urgent"
+      "content_text_length": 18357,
+      "ui_status": "reference"
     },
     {
       "scope": "studio",
@@ -385,30 +385,30 @@
       "doc_id": "docs-viewer-javascript-inventory",
       "title": "Docs Viewer JavaScript Inventory",
       "added_date": "2026-05-20",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-05-31",
       "parent_id": "studio-risk-analysis-policy",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 47584,
-      "ui_status": "review"
+      "content_text_length": 48074,
+      "ui_status": "reference"
     },
     {
       "scope": "studio",
       "doc_id": "javascript-inventory",
       "title": "Javascript Inventory",
       "added_date": "2026-05-20",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "studio-risk-analysis-policy",
       "hidden": false,
       "viewable": true,
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 33338,
-      "ui_status": "review"
+      "content_text_length": 33870,
+      "ui_status": "reference"
     },
     {
       "scope": "studio",
@@ -437,7 +437,7 @@
       "source_path": "studio-risk-priority-dashboard.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-priority-dashboard",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
-      "content_text_length": 3200,
+      "content_text_length": 3262,
       "ui_status": "review"
     },
     {
@@ -452,7 +452,7 @@
       "source_path": "analytics-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
-      "content_text_length": 2822,
+      "content_text_length": 2836,
       "ui_status": "draft"
     },
     {
@@ -467,7 +467,7 @@
       "source_path": "docs-viewer-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
-      "content_text_length": 3420,
+      "content_text_length": 3392,
       "ui_status": "draft"
     },
     {
@@ -497,7 +497,7 @@
       "source_path": "studio-app-risk-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-app-risk-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
-      "content_text_length": 3197,
+      "content_text_length": 3180,
       "ui_status": "draft"
     },
     {
@@ -527,7 +527,7 @@
       "source_path": "studio-risk-evidence-pack.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-      "content_text_length": 8553,
+      "content_text_length": 9080,
       "ui_status": "draft"
     },
     {
@@ -857,6 +857,36 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-analytics-data-sharing-growth-path",
+      "title": "Analytics Data Sharing Growth Path Request",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-analytics-data-sharing-growth-path.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-data-sharing-growth-path",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-data-sharing-growth-path.json",
+      "content_text_length": 3055,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-save-build-diagnostics",
+      "title": "Catalogue Save Build Diagnostics Request",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-catalogue-save-build-diagnostics.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-save-build-diagnostics",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-save-build-diagnostics.json",
+      "content_text_length": 3025,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-catalogue-work-unified-editor",
       "title": "Catalogue Work Unified Editor Request",
       "added_date": "2026-04-28",
@@ -928,6 +958,21 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
       "content_text_length": 4892,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-runtime-risk-reduction",
+      "title": "Docs Viewer Runtime Risk Reduction Request",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-runtime-risk-reduction.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-risk-reduction.json",
+      "content_text_length": 3300,
       "ui_status": "draft"
     },
     {
@@ -1047,8 +1092,8 @@
       "source_path": "site-request-risk-analysis-inventory-redesign.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-analysis-inventory-redesign.json",
-      "content_text_length": 3567,
-      "ui_status": "in-progress"
+      "content_text_length": 3491,
+      "ui_status": "done"
     },
     {
       "scope": "studio",

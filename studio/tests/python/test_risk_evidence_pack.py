@@ -63,6 +63,26 @@ def test_collect_generated_payloads_summarizes_json_shapes(tmp_path: Path) -> No
     assert shapes["assets/data/list.json"] == "array"
 
 
+def test_collect_script_family_inventory_groups_active_python_ruby_roots(tmp_path: Path) -> None:
+    catalogue_root = tmp_path / "studio" / "services" / "catalogue"
+    catalogue_root.mkdir(parents=True)
+    (catalogue_root / "catalogue_write_server.py").write_text("print('one')\nprint('two')\n", encoding="utf-8")
+    docs_root = tmp_path / "docs-viewer" / "build"
+    docs_root.mkdir(parents=True)
+    (docs_root / "build_docs.rb").write_text("puts 'docs'\n", encoding="utf-8")
+    test_root = tmp_path / "docs-viewer" / "tests"
+    test_root.mkdir(parents=True)
+    (test_root / "test_docs.py").write_text("print('skip')\n", encoding="utf-8")
+
+    inventory = risk_pack.collect_script_family_inventory(tmp_path)
+
+    assert inventory["totals"] == {"files": 2, "lines": 3, "python": 1, "ruby": 1}
+    families = {item["family"]: item for item in inventory["by_family"]}
+    assert families["studio/services/catalogue"]["files"] == 1
+    assert families["docs-viewer"]["ruby"] == 1
+    assert "docs-viewer/tests/test_docs.py" not in {item["path"] for item in inventory["largest_files"]}
+
+
 def test_runtime_lighthouse_hook_is_deferred_without_marking_passed() -> None:
     args = Namespace(
         app="docs-viewer",

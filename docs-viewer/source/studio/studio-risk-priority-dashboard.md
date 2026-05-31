@@ -30,9 +30,9 @@ The older JavaScript and Python/Ruby inventories remain detailed transition evid
 | ---: | --- | --- | --- | --- |
 | 1 | All apps | Risk analysis inventory redesign | Planning / evidence: current evidence is split across technical inventories, making app-level action selection harder than it should be. | [Risk Analysis Inventory Redesign Request](/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign) |
 | 2 | Public Site and app runtimes | Rubyless app runtime boundary | Architectural fit: Ruby/Jekyll should remain public-site preview/build tooling only; app-facing builders and local runtimes should consolidate around Python and JavaScript. | [Rubyless App Runtimes Request](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes) |
-| 3 | Studio | Catalogue save/build path | Workflow and performance / cost: catalogue saves can touch source JSON, backups, lookup refreshes, generated public data, search, media, publication state, and activity rows. Diagnostics are needed before scope-reduction work becomes actionable. | Needs change request |
-| 4 | Docs Viewer | Runtime, public read-only installs, and management UI | Structural and performance / cost: Docs Viewer is both a frequently used local tool and a public read-only runtime, so controller boundaries, payload cost, and UI structure should be prioritised together. | Needs refreshed change request |
-| 5 | Analytics | Analytics and Data Sharing growth path | Architectural fit and structural: future visualisation, analytical dimensions, and LLM data-sharing work need an app-owned inventory before new feature work creates another broad route family. | Needs change request |
+| 3 | Studio | Catalogue save/build path | Workflow and performance / cost: catalogue saves can touch source JSON, backups, lookup refreshes, generated public data, search, media, publication state, and activity rows. Diagnostics are needed before scope-reduction work becomes actionable. | [Catalogue Save Build Diagnostics Request](/docs/?scope=studio&doc=site-request-catalogue-save-build-diagnostics) |
+| 4 | Docs Viewer | Runtime, public read-only installs, and management UI | Structural and performance / cost: Docs Viewer is both a frequently used local tool and a public read-only runtime, so controller boundaries, payload cost, and UI structure should be prioritised together. | [Docs Viewer Runtime Risk Reduction Request](/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction) |
+| 5 | Analytics | Analytics and Data Sharing growth path | Architectural fit and structural: future visualisation, analytical dimensions, and LLM data-sharing work need an app-owned inventory before new feature work creates another broad route family. | [Analytics Data Sharing Growth Path Request](/docs/?scope=studio&doc=site-request-analytics-data-sharing-growth-path) |
 
 ## App Inventories
 
@@ -46,7 +46,7 @@ They should contain both frontend and backend evidence where that evidence affec
 - [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)
 - [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack)
 
-Transition evidence:
+Reduced transition evidence:
 
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)

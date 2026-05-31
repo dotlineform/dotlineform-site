@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-31-closed-risk-analysis-inventory-redesign",
+  "date": "2026-05-31",
+  "title": "Closed Risk Analysis Inventory Redesign",
+  "status": "completed",
+  "type": "documentation",
+  "domains": [
+    "workflow",
+    "studio",
+    "docs-viewer",
+    "analytics"
+  ],
+  "summary": "Closed the risk analysis inventory redesign by moving active evidence into app-owned inventories, opening request owners for remaining priorities, and reducing old technical inventories to transition evidence.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-risk-analysis-inventory-redesign.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "risk-analysis",
+    "inventory-redesign",
+    "change-requests"
+  ],
+  "change_request_doc_id": "site-request-risk-analysis-inventory-redesign",
+  "related_docs": [
+    "studio-risk-priority-dashboard",
+    "studio-app-risk-inventory",
+    "docs-viewer-risk-inventory",
+    "analytics-risk-inventory",
+    "public-site-risk-inventory",
+    "site-request-catalogue-save-build-diagnostics",
+    "site-request-docs-viewer-runtime-risk-reduction",
+    "site-request-analytics-data-sharing-growth-path",
+    "site-request-risk-analysis-inventory-redesign"
+  ],
+  "related_files": [
+    "docs-viewer/source/studio/site-request-risk-analysis-inventory-redesign.md",
+    "docs-viewer/source/studio/studio-risk-priority-dashboard.md"
+  ],
+  "effect": "Risk priorities now use the app-level dashboard and app inventories as the decision surface, with detailed JavaScript and Python/Ruby inventories preserved as supporting evidence instead of separate queues.",
+  "verification": [
+    "git diff --check passed"
+  ]
+}

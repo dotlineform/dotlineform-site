@@ -3,7 +3,7 @@ doc_id: site-request-risk-analysis-inventory-redesign
 title: Risk Analysis Inventory Redesign Request
 added_date: 2026-05-31
 last_updated: 2026-05-31
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 
 ## Summary
 
@@ -50,8 +50,8 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 7 | done | Implement the risk evidence pack runner under `studio/checks/`. |
 | 8 | done | Implement [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route) after the evidence-pack runner can write useful summaries. |
 | 9 | done | Reconcile the older JavaScript and Python/Ruby inventories into the app inventories without losing current useful evidence. |
-| 10 | planned | Open or refresh change requests for dashboard priorities that still say `Needs change request`. |
-| 11 | planned | Retire or reduce the old technical inventory pages once the app inventories carry the active evidence. |
+| 10 | done | Open or refresh change requests for dashboard priorities that lacked owners. |
+| 11 | done | Retire or reduce the old technical inventory pages once the app inventories carry the active evidence. |
 
 ## Reconciliation Notes
 
@@ -59,7 +59,7 @@ Task 9 completed the first reconciliation pass by moving the useful current evid
 
 The old technical inventories still hold detailed row-level evidence and rerun instructions.
 They are no longer the priority surface.
-Task 11 should decide whether to retire, shrink, or keep them as transition evidence after task 10 creates or refreshes the missing change requests.
+Task 11 reduced them to explicit transition evidence after task 10 created the missing change requests.
 
 ## Close-Out Evidence
 

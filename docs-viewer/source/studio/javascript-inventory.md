@@ -2,15 +2,30 @@
 doc_id: javascript-inventory
 title: Javascript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-30
-ui_status: review
+last_updated: 2026-05-31
+ui_status: reference
 parent_id: studio-risk-analysis-policy
 viewable: true
 ---
 # Javascript Inventory
 
-This document is the current browser JavaScript inventory.
+This document is the detailed browser JavaScript transition inventory.
 The scoring policy is defined in [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
+
+## Transition Status
+
+Use [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) and its app inventories for current priority decisions.
+This page remains as row-level JavaScript evidence, rerun context, and maintenance-gate support.
+
+Current app-owned action is tracked in:
+
+- [Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory)
+- [Analytics Risk Inventory](/docs/?scope=studio&doc=analytics-risk-inventory)
+- [Public Site Risk Inventory](/docs/?scope=studio&doc=public-site-risk-inventory)
+- [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory)
+
+Do not use this table as a separate frontend priority queue.
+When a row becomes actionable, move the app-level evidence into the owning app inventory or change request.
 
 Split refresh status:
 

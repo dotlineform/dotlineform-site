@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-31-added-script-family-risk-evidence-producer",
+  "date": "2026-05-31",
+  "title": "Added Script Family Risk Evidence Producer",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "workflow"
+  ],
+  "summary": "Added a script-family-inventory producer to the Studio risk evidence pack, replacing the legacy Python/Ruby inventory rerun snippet with a persistent artifact.",
+  "source": {
+    "file": "docs-viewer/source/studio/studio-risk-evidence-pack.md"
+  },
+  "subjects": [
+    "risk-analysis",
+    "evidence-pack",
+    "script-inventory"
+  ],
+  "related_docs": [
+    "studio-risk-evidence-pack",
+    "studio-python-ruby-script-inventory",
+    "site-request-risk-analysis-inventory-redesign"
+  ],
+  "related_files": [
+    "studio/checks/risk_evidence_pack.py",
+    "studio/tests/python/test_risk_evidence_pack.py",
+    "docs-viewer/source/studio/studio-risk-evidence-pack.md"
+  ],
+  "effect": "Python/Ruby script-family metrics now come from the repeatable risk evidence pack run directory, so old technical inventories can stay as reference evidence instead of owning rerun commands.",
+  "verification": [
+    "pytest studio/tests/python/test_risk_evidence_pack.py passed",
+    "pytest studio/tests/python/test_studio_app_server.py passed",
+    "risk_evidence_pack.py --app all --area script-family-inventory --run-id codex-script-family-inventory --write passed"
+  ]
+}

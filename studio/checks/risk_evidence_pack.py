@@ -54,6 +54,7 @@ METRIC_EXTENSIONS = {
     ".yml",
 }
 GENERATED_PAYLOAD_ROOTS = ("assets/data", "docs-viewer/generated", "studio/data/generated")
+SCRIPT_INVENTORY_ROOTS = ("studio", "docs-viewer", "analytics-app", "data-sharing")
 EXCLUDED_DIRS = {
     ".git",
     ".jekyll-cache",
@@ -64,6 +65,7 @@ EXCLUDED_DIRS = {
     "vendor",
     "var",
 }
+SCRIPT_INVENTORY_EXCLUDED_PARTS = {"tests", "test", "smoke", "__pycache__"}
 STATIC_SEARCH_PATTERNS: tuple[tuple[str, str], ...] = (
     ("todo_markers", r"\b(TODO|FIXME|HACK|XXX)\b"),
     ("broad_browser_state", r"\b(window|document)\.[A-Za-z0-9_$]*State\b|\bwindow\.[A-Za-z0-9_$]*Config\b"),
@@ -323,6 +325,84 @@ def collect_generated_payloads(app: str, repo_root: Path = REPO_ROOT) -> dict[st
     }
 
 
+def script_family(path: Path, repo_root: Path = REPO_ROOT) -> str:
+    rel = Path(repo_relative(path, repo_root))
+    parts = rel.parts
+    if not parts:
+        return "root"
+    if parts[:3] == ("studio", "services", "catalogue"):
+        return "studio/services/catalogue"
+    if parts[:2] == ("studio", "checks"):
+        return "studio/checks"
+    if parts[:4] == ("studio", "app", "server", "studio"):
+        return "studio/app/server/studio"
+    if parts[:4] == ("analytics-app", "app", "server", "analytics_app"):
+        if len(parts) > 4 and parts[4] == "tag_services":
+            return "analytics-app/app/server/analytics_app/tag_services"
+        return "analytics-app/app/server/analytics_app"
+    if parts and parts[0] == "docs-viewer":
+        return "docs-viewer"
+    if parts and parts[0] == "data-sharing":
+        return "data-sharing"
+    return parts[0]
+
+
+def iter_script_inventory_files(repo_root: Path = REPO_ROOT) -> Iterable[Path]:
+    roots = [repo_root / root for root in SCRIPT_INVENTORY_ROOTS if (repo_root / root).exists()]
+    for root in roots:
+        for path in root.rglob("*"):
+            if path.is_dir():
+                continue
+            if path.suffix not in {".py", ".rb"}:
+                continue
+            parts = set(relative_parts(path, repo_root))
+            if EXCLUDED_DIRS.intersection(parts) or SCRIPT_INVENTORY_EXCLUDED_PARTS.intersection(parts):
+                continue
+            yield path
+
+
+def collect_script_family_inventory(repo_root: Path = REPO_ROOT) -> dict[str, object]:
+    files = sorted(iter_script_inventory_files(repo_root))
+    by_family: dict[str, dict[str, object]] = collections.defaultdict(
+        lambda: {"files": 0, "lines": 0, "python": 0, "ruby": 0, "largest_file": None}
+    )
+    largest_files: list[dict[str, object]] = []
+    by_extension: collections.Counter[str] = collections.Counter()
+
+    for path in files:
+        lines = count_lines(path)
+        family_name = script_family(path, repo_root)
+        row = by_family[family_name]
+        row["files"] = int(row["files"]) + 1
+        row["lines"] = int(row["lines"]) + lines
+        if path.suffix == ".py":
+            row["python"] = int(row["python"]) + 1
+        elif path.suffix == ".rb":
+            row["ruby"] = int(row["ruby"]) + 1
+        largest = row["largest_file"]
+        largest_lines = int(largest["lines"]) if isinstance(largest, dict) else -1
+        if lines > largest_lines:
+            row["largest_file"] = {"path": repo_relative(path, repo_root), "lines": lines}
+        by_extension[path.suffix] += 1
+        largest_files.append({"path": repo_relative(path, repo_root), "family": family_name, "lines": lines})
+
+    return {
+        "roots": [root for root in SCRIPT_INVENTORY_ROOTS if (repo_root / root).exists()],
+        "excluded_path_parts": sorted(SCRIPT_INVENTORY_EXCLUDED_PARTS),
+        "totals": {
+            "files": len(files),
+            "lines": sum(int(item["lines"]) for item in largest_files),
+            "python": by_extension.get(".py", 0),
+            "ruby": by_extension.get(".rb", 0),
+        },
+        "by_family": [
+            {"family": family, **values}
+            for family, values in sorted(by_family.items(), key=lambda item: (-int(item[1]["lines"]), item[0]))
+        ],
+        "largest_files": sorted(largest_files, key=lambda item: (-int(item["lines"]), str(item["path"])))[:30],
+    }
+
+
 def git_output(argv: tuple[str, ...], repo_root: Path) -> tuple[int, str]:
     result = subprocess.run(argv, cwd=repo_root, check=False, capture_output=True, text=True)
     return result.returncode, result.stdout.strip()
@@ -476,6 +556,11 @@ def planned_artifacts(run_dir: Path, include_runtime: bool, include_subjective: 
         PlannedArtifact("static-metrics.json", repo_relative(run_dir / "static-metrics.json"), "static-metrics"),
         PlannedArtifact("static-searches.json", repo_relative(run_dir / "static-searches.json"), "static-searches"),
         PlannedArtifact("generated-payloads.json", repo_relative(run_dir / "generated-payloads.json"), "generated-payloads"),
+        PlannedArtifact(
+            "script-family-inventory.json",
+            repo_relative(run_dir / "script-family-inventory.json"),
+            "script-family-inventory",
+        ),
         PlannedArtifact("git-history.json", repo_relative(run_dir / "git-history.json"), "git-history"),
         PlannedArtifact(
             "javascript-inventory-guardrail.json",
@@ -561,6 +646,17 @@ def summarize_evidence(
             "summary": f"{payloads['files']} JSON payloads, {payloads['bytes']} bytes in generated payload roots.",
         }
     )
+    script_inventory = artifacts["script-family-inventory"]["totals"]
+    evidence.append(
+        {
+            "artifact": "script-family-inventory.json",
+            "status": "collected",
+            "summary": (
+                f"{script_inventory['files']} Python/Ruby files, {script_inventory['lines']} lines "
+                "across active script-family roots."
+            ),
+        }
+    )
     history = artifacts["git-history"]
     evidence.append(
         {
@@ -623,6 +719,7 @@ def dry_run(args: argparse.Namespace, run_id: str, run_dir: Path) -> int:
         "import/export scan",
         "static searches",
         "generated payload scan",
+        "script family inventory",
         "git touch counts",
         "JavaScript inventory guardrail",
     ]
@@ -657,6 +754,9 @@ def write_run(args: argparse.Namespace, run_id: str, run_dir: Path) -> int:
 
     artifacts["generated-payloads"] = collect_generated_payloads(args.app)
     write_json(run_dir / "generated-payloads.json", artifacts["generated-payloads"])
+
+    artifacts["script-family-inventory"] = collect_script_family_inventory()
+    write_json(run_dir / "script-family-inventory.json", artifacts["script-family-inventory"])
 
     artifacts["git-history"] = collect_git_history(args.app, args.since)
     write_json(run_dir / "git-history.json", artifacts["git-history"])

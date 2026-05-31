@@ -77,6 +77,7 @@ Each run directory should contain:
 | `static-searches.json` | Repeatable search patterns, matched paths, counts, and excerpts where useful. |
 | `route-exposure.json` | Public/local/runtime route exposure, app ownership, loaded script/config surfaces, and retired-path findings. |
 | `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, and relevant builder diagnostics. |
+| `script-family-inventory.json` | Python/Ruby script-family counts, line counts, family totals, and largest-file observations migrated from the legacy script inventory rerun block. |
 | `git-history.json` | Recent touch counts grouped by app, area, file family, and file. |
 | `runtime-checks.json` | Node, Python, Ruby/Jekyll, pytest, smoke, Playwright, Lighthouse, or browser-devtools-derived results used by the run. |
 | `subjective-notes.jsonl` | User feedback, reviewer notes, confidence, affected app/area, and proposed follow-up. |
@@ -99,6 +100,7 @@ Initial producers:
 | Import/export scan | new risk runner helper | Dependency direction and cross-app coupling evidence. |
 | Static searches | new risk runner helper | Configurable `rg` patterns for stale paths, broad state, retired modules, endpoints, generated paths, and ownership smells. |
 | Generated payload scan | new risk runner helper | Payload sizes, counts, schemas, index sizes, and changed/removed diagnostics where available. |
+| Script family inventory | new risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc `find`, `wc`, and inline Python rerun commands from the legacy script inventory. |
 | Git touch counts | new risk runner helper | Recent edit concentration grouped by app, area, family, and file. |
 | Runtime/browser checks | existing smoke scripts, Playwright, Lighthouse when targeted | Runtime evidence only when the risk question needs it. |
 | Subjective notes | manually maintained JSONL or command option | User feedback and reviewer judgement as labelled non-deterministic evidence. |
@@ -199,3 +201,4 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | in progress | Add optional runtime producer hooks for existing smokes, Playwright, and Lighthouse when a targeted question requires them. Existing smoke profiles are allowlisted through `studio/commands/run_checks.py`; Lighthouse remains deferred until a safe URL contract exists. |
 | 6 | deferred | Define the compact `studio/data/generated/risk/` summary shape only if a Studio route needs to read current risk evidence. The first route reads summaries through the narrow Local Studio API, so no checked-in generated read model is needed yet. |
 | 7 | done | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. The route work is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route). |
+| 8 | done | Migrate legacy inventory rerun instructions into evidence-pack producers, starting with Python/Ruby script-family metrics in `script-family-inventory.json`. |
