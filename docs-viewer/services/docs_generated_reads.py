@@ -17,11 +17,6 @@ SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
 DOCS_LOG_PROJECTIONS = {
-    "by-date": "by-date.json",
-    "by-domain": "by-domain.json",
-    "by-related-doc": "by-related-doc.json",
-    "by-related-file": "by-related-file.json",
-    "by-change-request": "by-change-request.json",
     "search-index": "search-index.json",
 }
 

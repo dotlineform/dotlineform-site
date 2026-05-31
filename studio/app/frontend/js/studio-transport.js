@@ -36,7 +36,8 @@ const RISK_API_ENDPOINTS = Object.freeze({
   health: "/studio/api/risk/health",
   producers: "/studio/api/risk/producers",
   runs: "/studio/api/risk/runs",
-  runSummary: (runId) => `/studio/api/risk/runs/${encodeURIComponent(String(runId || ""))}/summary`
+  run: (runId) => `/studio/api/risk/runs/${encodeURIComponent(String(runId || ""))}`,
+  runSummary: (runId) => `${RISK_API_ENDPOINTS.run(runId)}/summary`
 });
 
 const PROJECT_STATE_ENDPOINTS = Object.freeze({
@@ -152,6 +153,35 @@ export async function getJson(url, options = {}) {
   }
 
   const response = await fetch(url, {
+    cache: "no-store",
+    signal: options.signal
+  });
+
+  let responsePayload = null;
+  try {
+    responsePayload = await response.json();
+  } catch (error) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  if (!response.ok || !responsePayload || !responsePayload.ok) {
+    const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
+    const error = new Error(message);
+    error.status = response.status;
+    error.payload = responsePayload;
+    throw error;
+  }
+
+  return responsePayload;
+}
+
+export async function deleteJson(url, options = {}) {
+  if (!url) {
+    throw new Error("Missing service endpoint");
+  }
+
+  const response = await fetch(url, {
+    method: "DELETE",
     cache: "no-store",
     signal: options.signal
   });

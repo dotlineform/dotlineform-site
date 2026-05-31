@@ -1,6 +1,7 @@
 import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   RISK_API_ENDPOINTS,
+  deleteJson,
   getJson,
   postJson,
   probeRiskApiHealth
@@ -108,12 +109,28 @@ function renderRuns(state, runs) {
     const app = normalizeText(run && run.app);
     const area = normalizeText(run && run.area);
     const summaryPath = normalizeText(run && run.summary_path);
-    return `<button type="button" class="studioRiskRun" data-risk-run-id="${escapeHtml(runId, true)}">
-      <span class="studioRiskRun__id">${escapeHtml(runId)}</span>
-      <span class="studioRiskRun__meta">${escapeHtml(status)} · ${escapeHtml(app)} / ${escapeHtml(area)}</span>
-      ${summaryPath ? `<span class="studioRiskRun__path">${escapeHtml(summaryPath)}</span>` : ""}
-    </button>`;
+    const deleteLabel = getStudioText(state.config, "studio_risk.delete_run_button", "Delete");
+    return `<div class="studioRiskRun" data-risk-run-row="${escapeHtml(runId, true)}">
+      <button type="button" class="studioRiskRun__open" data-risk-run-open="${escapeHtml(runId, true)}">
+        <span class="studioRiskRun__id">${escapeHtml(runId)}</span>
+        <span class="studioRiskRun__meta">${escapeHtml(status)} · ${escapeHtml(app)} / ${escapeHtml(area)}</span>
+        ${summaryPath ? `<span class="studioRiskRun__path">${escapeHtml(summaryPath)}</span>` : ""}
+      </button>
+      <button
+        type="button"
+        class="tagStudio__button studioRiskRun__delete"
+        data-risk-run-delete="${escapeHtml(runId, true)}"
+        aria-label="${escapeHtml(`${deleteLabel} ${runId}`, true)}"
+      >${escapeHtml(deleteLabel)}</button>
+    </div>`;
   }).join("");
+}
+
+function clearSummary(state) {
+  state.summaryLoaded = false;
+  state.loadedRunId = "";
+  state.summaryNode.innerHTML = "";
+  syncBusy(state);
 }
 
 function renderSummary(state, payload) {
@@ -121,13 +138,13 @@ function renderSummary(state, payload) {
   const markdown = normalizeText(payload && payload.summary_markdown);
   state.summaryLoaded = Boolean(summary || markdown);
   if (!state.summaryLoaded) {
-    state.summaryNode.innerHTML = "";
-    syncBusy(state);
+    clearSummary(state);
     return;
   }
   const status = normalizeText(summary && summary.status) || "unknown";
-  const runId = normalizeText(summary && summary.run_id);
+  const runId = normalizeText(summary && summary.run_id) || normalizeText(payload && payload.run && payload.run.run_id);
   const summaryPath = normalizeText(payload && payload.summary_path);
+  state.loadedRunId = runId;
   state.summaryNode.innerHTML = `
     <div class="studioRiskSummaryCard">
       <p class="tagStudio__status studioRiskSummaryCard__status" data-state="${status === "passed" ? "success" : ""}">
@@ -150,6 +167,35 @@ async function loadRunSummary(state, runId) {
   if (!runId || !state.serviceAvailable) return;
   const payload = await getJson(RISK_API_ENDPOINTS.runSummary(runId));
   renderSummary(state, payload);
+}
+
+async function deleteRunSnapshot(state, runId) {
+  if (state.isRunning || !runId || !state.serviceAvailable) return;
+  const confirmTemplate = getStudioText(
+    state.config,
+    "studio_risk.delete_confirm",
+    "Delete risk evidence snapshot {run_id}?"
+  );
+  if (!window.confirm(confirmTemplate.replace("{run_id}", runId))) {
+    return;
+  }
+  state.isRunning = true;
+  syncBusy(state);
+  setStatus(state.statusNode, "", getStudioText(state.config, "studio_risk.delete_status_running", "Deleting snapshot..."));
+  try {
+    await deleteJson(RISK_API_ENDPOINTS.run(runId));
+    if (state.loadedRunId === runId) {
+      clearSummary(state);
+    }
+    setStatus(state.statusNode, "success", getStudioText(state.config, "studio_risk.delete_status_deleted", "Risk evidence snapshot deleted."));
+    await refreshRuns(state);
+  } catch (error) {
+    console.warn("studio_risk: snapshot delete failed", error);
+    setStatus(state.statusNode, "error", getStudioText(state.config, "studio_risk.delete_status_failed", "Risk evidence snapshot delete failed."));
+  } finally {
+    state.isRunning = false;
+    syncBusy(state);
+  }
 }
 
 function buildRunPayload(state) {
@@ -268,7 +314,8 @@ async function init() {
       runsNode,
       serviceAvailable,
       isRunning: false,
-      summaryLoaded: false
+      summaryLoaded: false,
+      loadedRunId: ""
     };
 
     setText(introNode, getStudioText(config, "studio_risk.intro", "Run and review local risk evidence packs."));
@@ -305,9 +352,16 @@ async function init() {
       });
     }
     runsNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-risk-run-id]") : null;
-      if (!button) return;
-      loadRunSummary(state, normalizeText(button.getAttribute("data-risk-run-id"))).catch((error) => {
+      const deleteButton = event.target && event.target.closest ? event.target.closest("[data-risk-run-delete]") : null;
+      if (deleteButton) {
+        deleteRunSnapshot(state, normalizeText(deleteButton.getAttribute("data-risk-run-delete"))).catch((error) => {
+          console.warn("studio_risk: unexpected snapshot delete failure", error);
+        });
+        return;
+      }
+      const openButton = event.target && event.target.closest ? event.target.closest("[data-risk-run-open]") : null;
+      if (!openButton) return;
+      loadRunSummary(state, normalizeText(openButton.getAttribute("data-risk-run-open"))).catch((error) => {
         console.warn("studio_risk: summary load failed", error);
       });
     });

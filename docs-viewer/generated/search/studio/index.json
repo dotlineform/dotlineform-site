@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c0029501b97863b55e6720ea0fb993ec",
-    "generated_at_utc": "2026-05-31T19:59:24Z",
-    "count": 223
+    "version": "blake2b-4a4f5da77ab9b3016861080e61353bf2",
+    "generated_at_utc": "2026-05-31T21:22:19Z",
+    "count": 227
   },
   "entries": [
     {
@@ -376,10 +376,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-05-31",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-30 • Architecture",
+      "display_meta": "2026-05-31 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -387,12 +387,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-05-30",
+        "2026-05-31",
         "2026",
         "05",
-        "30"
+        "31"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-30 2026 05 30"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-31 2026 05 31"
     },
     {
       "id": "audit",
@@ -1913,6 +1913,114 @@
       "search_text": "site-request-studio-risk-route site request studio risk route studio risk route request risk analysis inventory redesign request analysis inventory redesign 2026-05-31 2026 05 31"
     },
     {
+      "id": "site-request-risk-evidence-producers",
+      "kind": "doc",
+      "title": "Risk Evidence Producers Request",
+      "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers",
+      "last_updated": "2026-05-31",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-31 • Change Requests",
+      "search_terms": [
+        "site-request-risk-evidence-producers",
+        "site",
+        "request",
+        "risk",
+        "evidence",
+        "producers",
+        "risk evidence producers request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "site-request-risk-evidence-producers site request risk evidence producers risk evidence producers request change requests change requests 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-risk-evidence-producer-roadmap",
+      "kind": "doc",
+      "title": "Studio Risk Evidence Producer Roadmap",
+      "href": "/docs/?scope=studio&doc=studio-risk-evidence-producer-roadmap",
+      "last_updated": "2026-05-31",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-05-31 • Risk Evidence Producers Request",
+      "search_terms": [
+        "studio-risk-evidence-producer-roadmap",
+        "studio",
+        "risk",
+        "evidence",
+        "producer",
+        "roadmap",
+        "studio risk evidence producer roadmap",
+        "risk evidence producers request",
+        "producers",
+        "request",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-evidence-producer-roadmap studio risk evidence producer roadmap studio risk evidence producer roadmap risk evidence producers request producers request 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-risk-route-exposure-evidence",
+      "kind": "doc",
+      "title": "Studio Risk Route Exposure Evidence",
+      "href": "/docs/?scope=studio&doc=studio-risk-route-exposure-evidence",
+      "last_updated": "2026-05-31",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-05-31 • Risk Evidence Producers Request",
+      "search_terms": [
+        "studio-risk-route-exposure-evidence",
+        "studio",
+        "risk",
+        "route",
+        "exposure",
+        "evidence",
+        "studio risk route exposure evidence",
+        "risk evidence producers request",
+        "producers",
+        "request",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-route-exposure-evidence studio risk route exposure evidence studio risk route exposure evidence risk evidence producers request producers request 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "studio-risk-runtime-browser-evidence",
+      "kind": "doc",
+      "title": "Studio Risk Runtime Browser Evidence",
+      "href": "/docs/?scope=studio&doc=studio-risk-runtime-browser-evidence",
+      "last_updated": "2026-05-31",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-05-31 • Risk Evidence Producers Request",
+      "search_terms": [
+        "studio-risk-runtime-browser-evidence",
+        "studio",
+        "risk",
+        "runtime",
+        "browser",
+        "evidence",
+        "studio risk runtime browser evidence",
+        "risk evidence producers request",
+        "producers",
+        "request",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-runtime-browser-evidence studio risk runtime browser evidence studio risk runtime browser evidence risk evidence producers request producers request 2026-05-31 2026 05 31"
+    },
+    {
       "id": "site-request-rubyless-app-runtimes",
       "kind": "doc",
       "title": "Rubyless App Runtimes Request",
@@ -2999,10 +3107,10 @@
       "kind": "doc",
       "title": "Docs Viewer Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-31",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-31 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
@@ -3010,12 +3118,12 @@
         "reports",
         "docs viewer reports",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-31",
         "2026",
         "05",
-        "25"
+        "31"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-31 2026 05 31"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -4604,16 +4712,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "last_updated": "2026-05-31",
+      "display_meta": "2026-05-31",
       "search_terms": [
         "studio",
-        "2026-05-30",
+        "2026-05-31",
         "2026",
         "05",
-        "30"
+        "31"
       ],
-      "search_text": "studio 2026-05-30 2026 05 30"
+      "search_text": "studio 2026-05-31 2026 05 31"
     },
     {
       "id": "local-studio-app",

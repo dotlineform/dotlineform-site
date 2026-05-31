@@ -9,4 +9,4 @@ Each filename must match the entry `id`:
 change-YYYY-MM-DD-entry-slug.json
 ```
 
-Validate every entry against `_docs_logs/schema.json`.
+Validate every entry against `studio/workflows/change-requests/schema.json`.

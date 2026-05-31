@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Docs Viewer Reports
 added_date: 2026-05-13
-last_updated: 2026-05-25
+last_updated: 2026-05-31
 parent_id: docs-viewer
 viewer_report: reports_list
 viewer_report_access: public
@@ -107,7 +107,7 @@ This document uses it so the list of configured reports stays visible from the D
 It reads through the standalone Docs Viewer service and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
 `change_history` renders structured docs-log entries in manage mode.
-It reads ignored local projections under `studio/workflows/change-requests/generated/` through the Docs management API and provides domain filtering for migrated change history.
+It reads the local `studio/workflows/change-requests/generated/search-index.json` projection through the Docs management API and provides domain filtering for migrated change history.
 
 `semantic_references` renders generated semantic-reference targets and source docs in manage mode.
 It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.

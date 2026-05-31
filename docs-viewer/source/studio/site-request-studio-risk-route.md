@@ -103,9 +103,10 @@ All endpoints are hosted by the Local Studio app server.
 | `GET` | `/studio/api/risk/runs` | list recent risk evidence runs with compact metadata |
 | `POST` | `/studio/api/risk/runs` | start one allowlisted evidence run |
 | `GET` | `/studio/api/risk/runs/<run-id>/summary` | read `summary.md` or `summary.json` for a completed run |
+| `DELETE` | `/studio/api/risk/runs/<run-id>` | delete one local run snapshot directory |
 
 The first implementation exposes this endpoint list in `studio/app/server/studio/studio_risk_api.py`.
-The route UI uses it for producer discovery, validated dry runs and write runs, recent-run listing, and summary reads.
+The route UI uses it for producer discovery, validated dry runs and write runs, recent-run listing, summary reads, and local snapshot deletion.
 
 ## Proposed UI
 

@@ -171,7 +171,7 @@ Review diagnostics live in `studio/workflows/change-requests/reports/migration-r
 
 ## Generated Indexes
 
-Use `studio/workflows/change-requests/services/docs_logs/build_indexes.py` to rebuild generated projections from JSON source records.
+Use `studio/workflows/change-requests/services/docs_logs/build_indexes.py` to rebuild the generated search payload from JSON source records.
 The script previews by default and writes only with `--write`.
 
 ```bash
@@ -183,14 +183,11 @@ $HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs
 Files under `generated/` are rebuilt from JSON source records.
 They should update automatically when log entries change, but staging and commits remain manual.
 
-Expected generated projections include:
+Expected generated projection:
 
-- date index
-- domain index
-- related-doc index
-- related-file index
-- change-request index
 - change-history search payload
+
+Do not add speculative grouped projections such as by-domain or by-related-file indexes without a current report or service consumer.
 
 ## Human Views
 

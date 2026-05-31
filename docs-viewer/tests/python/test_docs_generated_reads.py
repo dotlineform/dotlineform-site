@@ -195,7 +195,7 @@ def test_generated_docs_log_projection_uses_allowlisted_names() -> None:
 
         payload = generated_reads.read_generated_docs_log_projection(repo_root, "search-index")
         try:
-            generated_reads.read_generated_docs_log_projection(repo_root, "../schema")
+            generated_reads.read_generated_docs_log_projection(repo_root, "by-domain")
         except ValueError as exc:
             error = str(exc)
         else:

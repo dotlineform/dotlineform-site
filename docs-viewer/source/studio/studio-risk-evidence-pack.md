@@ -25,8 +25,25 @@ Status: command-line runner and Local Studio route implemented.
 
 The current repo already has some evidence producers, such as `studio/checks/javascript_inventory_guardrail.py`, `studio/commands/run_checks.py`, app smokes, builder diagnostics, and generated payload indexes.
 The first runner now collects static metrics, static search evidence, generated payload evidence, git touch counts, the JavaScript inventory guardrail, optional subjective notes, and allowlisted runtime check profiles into a consistent local run directory.
-The Local Studio app server exposes a narrow risk API for listing producers, creating validated runs, listing recent runs, reading run summaries, and appending Activity rows for user-initiated write runs.
-The Local Studio route at `/studio/risk/?mode=manage` provides the first UI for dry runs, write runs, recent runs, and summary review.
+The Local Studio app server exposes a narrow risk API for listing producers, creating validated runs, listing recent runs, reading run summaries, deleting local run snapshots, and appending Activity rows for user-initiated write runs.
+The Local Studio route at `/studio/risk/?mode=manage` provides the first UI for dry runs, write runs, recent runs, snapshot deletion, and summary review.
+
+Producer implementation backlog is tracked in [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
+
+## Evidence Validity
+
+Risk evidence must test whether scripts and generated artifacts have an active workflow purpose.
+Ownership is necessary but not sufficient: a script or generated file can be correctly owned and still be harmful if its contract is speculative, unused, or duplicative.
+
+For script and generated-artifact evidence, summaries should distinguish:
+
+- consumed by an active runtime, report, build, test, or documented operator workflow
+- retained only as source-of-truth input
+- transitional evidence with a retirement or migration task
+- unconsumed output that should be removed, stopped at the producer, or replaced with a smaller contract
+
+Temporary generated artifacts still need a consumer or explicit cleanup path.
+Do not treat "has an owner" as proof that the artifact should continue to exist.
 
 ## Output Location
 
@@ -73,36 +90,32 @@ Each run directory should contain:
 | `commands.json` | Exact command lines, working directories, environment flags that are safe to record, exit codes, and elapsed times. |
 | `summary.md` | Human-readable summary suitable for linking from an app inventory or change request. |
 | `summary.json` | Machine-readable summary grouped by app, area, indicator, evidence source, and close-out relevance. |
-| `static-metrics.json` | File counts, line counts, import/export counts, dependency direction, and grouped ownership metrics. |
+| `static-metrics.json` | Source/config file counts, line counts, import/export counts, dependency direction, and grouped ownership metrics. Generated and canonical data payload roots are excluded so payload size does not distort source metrics. |
 | `static-searches.json` | Repeatable search patterns, matched paths, counts, and excerpts where useful. |
-| `route-exposure.json` | Public/local/runtime route exposure, app ownership, loaded script/config surfaces, and retired-path findings. |
-| `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, and relevant builder diagnostics. |
+| `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, docs-log generated indexes, and relevant builder diagnostics. |
 | `script-family-inventory.json` | Python/Ruby script-family counts, line counts, family totals, and largest-file observations migrated from the legacy script inventory rerun block. |
 | `git-history.json` | Recent touch counts grouped by app, area, file family, and file. |
-| `runtime-checks.json` | Node, Python, Ruby/Jekyll, pytest, smoke, Playwright, Lighthouse, or browser-devtools-derived results used by the run. |
+| `runtime-checks.json` | Optional allowlisted runtime check profile results. |
 | `subjective-notes.jsonl` | User feedback, reviewer notes, confidence, affected app/area, and proposed follow-up. |
-| `artifacts/` | Optional detailed logs, screenshots, traces, Lighthouse reports, profiler exports, or raw command outputs. |
+| `artifacts/` | Optional detailed logs or raw command outputs created by producer implementations. |
 
 Only create an artifact when that evidence type was actually collected.
 The manifest should list omitted evidence types so absence is explicit.
 
 ## Evidence Producers
 
-The first risk evidence runner should wrap existing producers before adding new analysis.
-
-Initial producers:
+Current producers:
 
 | Producer | Command source | Output |
 | --- | --- | --- |
 | JavaScript inventory guardrail | `studio/checks/javascript_inventory_guardrail.py --json` | Legacy JavaScript inventory consistency and concentration metrics. |
-| Check profiles | `studio/commands/run_checks.py --profile <profile>` | Existing check summaries and logs under `var/test-runs/`; copy or link the relevant summary into the risk run. |
-| Static file metrics | new risk runner helper | File counts, line counts, and grouped totals by app and file family. |
-| Import/export scan | new risk runner helper | Dependency direction and cross-app coupling evidence. |
-| Static searches | new risk runner helper | Configurable `rg` patterns for stale paths, broad state, retired modules, endpoints, generated paths, and ownership smells. |
-| Generated payload scan | new risk runner helper | Payload sizes, counts, schemas, index sizes, and changed/removed diagnostics where available. |
-| Script family inventory | new risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc `find`, `wc`, and inline Python rerun commands from the legacy script inventory. |
-| Git touch counts | new risk runner helper | Recent edit concentration grouped by app, area, family, and file. |
-| Runtime/browser checks | existing smoke scripts, Playwright, Lighthouse when targeted | Runtime evidence only when the risk question needs it. |
+| Check profiles | `studio/commands/run_checks.py --profile <profile>` | Existing check summaries and logs under `var/test-runs/`; summary paths are linked from `runtime-checks.json`. |
+| Static file metrics | risk runner helper | Source/config file counts, line counts, bytes, and grouped totals by app and file family. Excludes generated and canonical data payload roots. |
+| Import/export scan | risk runner helper | Dependency direction and cross-app coupling evidence inside `static-metrics.json`. |
+| Static searches | risk runner helper | Configurable patterns for stale paths, broad state, retired modules, endpoints, generated paths, and ownership smells. |
+| Generated payload scan | risk runner helper | Generated JSON payload counts, sizes, docs-log generated indexes, and basic shape observations. |
+| Script family inventory | risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc rerun commands from the legacy script inventory. |
+| Git touch counts | risk runner helper | Recent edit concentration grouped by app, area, family, and file. |
 | Subjective notes | manually maintained JSONL or command option | User feedback and reviewer judgement as labelled non-deterministic evidence. |
 
 ## Command Shape
@@ -135,6 +148,7 @@ Dry-run behavior:
 
 Runtime profiles are allowlisted and execute through `studio/commands/run_checks.py`.
 `--include-lighthouse` is accepted as a deferred hook but does not run Lighthouse until a safe URL contract is defined.
+Future route exposure, browser target, and Lighthouse producers are tracked in [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
 ## Inventory Integration
 
@@ -161,9 +175,11 @@ It exposes:
 | `GET` | `/studio/api/risk/runs` | recent risk evidence runs with compact metadata |
 | `POST` | `/studio/api/risk/runs` | start one validated evidence run through `studio/checks/risk_evidence_pack.py` |
 | `GET` | `/studio/api/risk/runs/<run-id>/summary` | read `summary.md` and `summary.json` for a completed run |
+| `DELETE` | `/studio/api/risk/runs/<run-id>` | delete one local run snapshot directory under `var/studio/risk/runs/` |
 
 The browser may choose app id, area slug, run id, dry-run mode, and allowlisted runtime options.
 The browser may not provide command text, shell flags, environment values, arbitrary paths, or subjective-notes file paths.
+Snapshot deletion uses the same safe run-id validation as summary reads and only removes ignored local run artifacts.
 
 ## Activity Integration
 
@@ -188,17 +204,7 @@ Command-line Codex runs do not need to append activity unless they are invoked t
 - creating a new server for risk evidence
 - making a generic command runner
 
-## Implementation Tasks
+## Future Producers
 
-Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
-
-| ID | status | action |
-| --- | --- | --- |
-| 1 | done | Define the risk evidence run directory and artifact contract. |
-| 2 | done | Implement `studio/checks/risk_evidence_pack.py` with dry-run and write modes. |
-| 3 | done | Add static file metrics, import/export scan, static searches, generated payload scan, and git touch-count producers. |
-| 4 | done | Wrap existing JavaScript inventory guardrail output as transition evidence. |
-| 5 | in progress | Add optional runtime producer hooks for existing smokes, Playwright, and Lighthouse when a targeted question requires them. Existing smoke profiles are allowlisted through `studio/commands/run_checks.py`; Lighthouse remains deferred until a safe URL contract exists. |
-| 6 | deferred | Define the compact `studio/data/generated/risk/` summary shape only if a Studio route needs to read current risk evidence. The first route reads summaries through the narrow Local Studio API, so no checked-in generated read model is needed yet. |
-| 7 | done | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. The route work is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route). |
-| 8 | done | Migrate legacy inventory rerun instructions into evidence-pack producers, starting with Python/Ruby script-family metrics in `script-family-inventory.json`. |
+Future producer implementation is intentionally tracked outside this durable contract.
+Use [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) for route exposure, browser target, Lighthouse, subjective-note workflow, and compact generated-summary tasks.

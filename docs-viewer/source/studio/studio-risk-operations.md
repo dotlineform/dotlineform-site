@@ -55,8 +55,8 @@ This is the same boundary risk operations need.
 | Risk/audit/check scripts | `studio/checks/` | Deterministic checks and standalone audits live here unless a domain-specific service already owns the behavior. |
 | Audit runner and API adapter | `studio/app/server/studio/` | `audit_runner.py` owns the allowlist; `studio_audit_api.py` exposes the Local Studio browser API. |
 | Audit UI | Local Studio app shell | `/studio/audits/?mode=manage` remains the launch/read surface. |
-| Risk evidence API adapter | `studio/app/server/studio/` | `studio_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, and Activity rows. |
-| Risk evidence UI | Local Studio app shell | `/studio/risk/?mode=manage` is the run/review surface for risk evidence packs. |
+| Risk evidence API adapter | `studio/app/server/studio/` | `studio_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, snapshot deletion, and Activity rows. |
+| Risk evidence UI | Local Studio app shell | `/studio/risk/?mode=manage` is the run/review/delete surface for risk evidence packs. |
 | Activity UI | Local Studio app shell | `/studio/activity/?mode=manage` remains the unified activity review surface. |
 | Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/studio/activity/activity_log.jsonl`, `var/studio/activity/activity_log.json`, and the checked-in activity contract path. |
 | Local risk reports/artifacts | `var/studio/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |

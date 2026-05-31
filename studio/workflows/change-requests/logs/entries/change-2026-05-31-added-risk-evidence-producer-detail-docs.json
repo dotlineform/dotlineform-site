@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-31-added-risk-evidence-producer-detail-docs",
+  "date": "2026-05-31",
+  "title": "Added Risk Evidence Producer Detail Docs",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "studio",
+    "workflow"
+  ],
+  "summary": "Added child documentation for runtime/browser evidence, route exposure evidence, and the risk evidence producer roadmap.",
+  "source": {
+    "file": "docs-viewer/source/studio/studio-risk-evidence-pack.md"
+  },
+  "subjects": [
+    "risk-analysis",
+    "evidence-pack",
+    "lighthouse",
+    "route-exposure"
+  ],
+  "related_docs": [
+    "studio-risk-evidence-pack",
+    "studio-risk-runtime-browser-evidence",
+    "studio-risk-route-exposure-evidence",
+    "studio-risk-evidence-producer-roadmap"
+  ],
+  "related_files": [
+    "docs-viewer/source/studio/studio-risk-evidence-pack.md",
+    "docs-viewer/source/studio/studio-risk-runtime-browser-evidence.md",
+    "docs-viewer/source/studio/studio-risk-route-exposure-evidence.md",
+    "docs-viewer/source/studio/studio-risk-evidence-producer-roadmap.md"
+  ],
+  "effect": "Deferred producers such as Lighthouse and route exposure now have explicit contracts, tasks, and implementation order instead of vague rows in the evidence-pack table.",
+  "verification": [
+    "git diff --check passed"
+  ]
+}

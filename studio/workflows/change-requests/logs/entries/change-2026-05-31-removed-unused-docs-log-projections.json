@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-31-removed-unused-docs-log-projections",
+  "date": "2026-05-31",
+  "title": "Removed Unused Docs Log Projections",
+  "status": "implemented",
+  "type": "maintenance",
+  "domains": [
+    "docs-viewer",
+    "workflow"
+  ],
+  "summary": "Stopped generating and serving unused grouped docs-log projections, leaving only the change-history search index consumed by the Docs Viewer report.",
+  "source": {
+    "file": "studio/workflows/change-requests/README.md"
+  },
+  "subjects": [
+    "change-history",
+    "generated-data",
+    "maintenance-risk"
+  ],
+  "related_docs": [
+    "change-history-reports",
+    "docs-viewer-reports",
+    "source-tree-ownership"
+  ],
+  "related_files": [
+    "studio/workflows/change-requests/services/docs_logs/build_indexes.py",
+    "docs-viewer/services/docs_generated_reads.py",
+    "studio/workflows/change-requests/generated/README.md",
+    "studio/tests/python/test_docs_logs_indexes.py",
+    "docs-viewer/tests/python/test_docs_generated_reads.py",
+    "studio/tests/python/test_risk_evidence_pack.py"
+  ],
+  "effect": "Local generated docs-log data no longer includes large by-domain, by-date, by-related-doc, by-related-file, or by-change-request JSON files that duplicated search-index content without a current consumer.",
+  "verification": [
+    "pytest studio/tests/python/test_docs_logs_indexes.py docs-viewer/tests/python/test_docs_generated_reads.py studio/tests/python/test_risk_evidence_pack.py passed",
+    "python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write passed",
+    "python3 -m py_compile studio/workflows/change-requests/services/docs_logs/build_indexes.py docs-viewer/services/docs_generated_reads.py passed",
+    "git diff --check passed"
+  ]
+}

@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -49,6 +50,15 @@ def risk_post_response(repo_root: Path, api_path: str, body: dict[str, Any]) -> 
     if api_path != "/runs":
         raise FileNotFoundError(f"Unknown risk API route: {api_path}")
     return HTTPStatus.OK, run_risk_evidence_payload(repo_root, body)
+
+
+def risk_delete_response(repo_root: Path, api_path: str) -> tuple[HTTPStatus, dict[str, Any]]:
+    if not api_path.startswith("/runs/"):
+        raise FileNotFoundError(f"Unknown risk API route: {api_path}")
+    run_id = api_path.removeprefix("/runs/").strip("/")
+    if not run_id:
+        raise FileNotFoundError(f"Unknown risk API route: {api_path}")
+    return HTTPStatus.OK, delete_risk_run_payload(repo_root, run_id)
 
 
 def risk_health_payload(repo_root: Path) -> dict[str, Any]:
@@ -165,12 +175,7 @@ def compact_run_payload(repo_root: Path, run_dir: Path) -> dict[str, Any]:
 
 
 def risk_run_summary_payload(repo_root: Path, run_id: str) -> dict[str, Any]:
-    safe_run_id = validate_slug(run_id, "run_id")
-    run_dir = (repo_root / RISK_RUNS_REL_DIR / safe_run_id).resolve()
-    try:
-        run_dir.relative_to(repo_root.resolve())
-    except ValueError as error:
-        raise ValueError("run_id resolved outside the repo") from error
+    safe_run_id, run_dir = validated_run_dir(repo_root, run_id)
     if not run_dir.is_dir():
         raise FileNotFoundError(f"Risk evidence run does not exist: {safe_run_id}")
 
@@ -184,6 +189,23 @@ def risk_run_summary_payload(repo_root: Path, run_id: str) -> dict[str, Any]:
         "summary": read_json_object(summary_json_path) if summary_json_path.exists() else None,
         "summary_markdown": summary_md_path.read_text(encoding="utf-8") if summary_md_path.exists() else "",
         "summary_path": repo_relative(summary_md_path, repo_root) if summary_md_path.exists() else None,
+        "time_utc": utc_now(),
+    }
+
+
+def delete_risk_run_payload(repo_root: Path, run_id: str) -> dict[str, Any]:
+    safe_run_id, run_dir = validated_run_dir(repo_root, run_id)
+    if run_dir.is_symlink() or not run_dir.is_dir():
+        raise FileNotFoundError(f"Risk evidence run does not exist: {safe_run_id}")
+    deleted_run = compact_run_payload(repo_root, run_dir)
+    deleted_path = repo_relative(run_dir, repo_root)
+    shutil.rmtree(run_dir)
+    return {
+        "ok": True,
+        "status": "deleted",
+        "run_id": safe_run_id,
+        "deleted_path": deleted_path,
+        "run": deleted_run,
         "time_utc": utc_now(),
     }
 
@@ -320,6 +342,19 @@ def normalize_runtime_profiles(value: object) -> list[str]:
         if profile not in normalized:
             normalized.append(profile)
     return normalized
+
+
+def validated_run_dir(repo_root: Path, run_id: str) -> tuple[str, Path]:
+    safe_run_id = validate_slug(run_id, "run_id")
+    runs_root = repo_root / RISK_RUNS_REL_DIR
+    resolved_runs_root = runs_root.resolve()
+    run_dir = runs_root / safe_run_id
+    resolved_run_dir = run_dir.resolve()
+    try:
+        resolved_run_dir.relative_to(resolved_runs_root)
+    except ValueError as error:
+        raise ValueError("run_id resolved outside the risk runs directory") from error
+    return safe_run_id, run_dir
 
 
 def extract_summary_path(stdout: str) -> str | None:

@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-05-31-added-risk-snapshot-deletion",
+  "date": "2026-05-31",
+  "title": "Added Risk Snapshot Deletion",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "workflow"
+  ],
+  "summary": "Added a Local Studio risk API delete endpoint and recent-run UI control for removing local risk evidence run snapshots while the evidence pack design is still evolving.",
+  "source": {
+    "file": "docs-viewer/source/studio/studio-risk-evidence-pack.md"
+  },
+  "subjects": [
+    "risk-analysis",
+    "evidence-pack",
+    "local-studio"
+  ],
+  "related_docs": [
+    "studio-risk-evidence-pack",
+    "site-request-studio-risk-route",
+    "studio-risk-operations"
+  ],
+  "related_files": [
+    "studio/app/server/studio/studio_risk_api.py",
+    "studio/app/server/studio/studio_app_server.py",
+    "studio/app/frontend/js/studio-risk.js",
+    "studio/app/frontend/js/studio-transport.js",
+    "studio/app/frontend/config/ui-text/studio-risk.json",
+    "studio/app/assets/css/studio.css",
+    "studio/tests/python/test_studio_app_server.py",
+    "studio/tests/smoke/local_studio_app_risk_route.py"
+  ],
+  "effect": "Risk evidence snapshots can be removed from the Studio Risk recent-runs list without manually deleting directories under var/studio/risk/runs/.",
+  "verification": [
+    "pytest studio/tests/python/test_studio_app_server.py passed",
+    "python3 -m py_compile studio/tests/smoke/local_studio_app_risk_route.py studio/app/server/studio/studio_risk_api.py studio/app/server/studio/studio_app_server.py passed",
+    "node --check studio/app/frontend/js/studio-risk.js passed",
+    "node --check studio/app/frontend/js/studio-transport.js passed",
+    "studio/tests/smoke/local_studio_app_risk_route.py passed with desktop delete flow and mobile route load",
+    "git diff --check passed"
+  ]
+}

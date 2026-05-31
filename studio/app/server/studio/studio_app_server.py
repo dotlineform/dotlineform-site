@@ -34,7 +34,7 @@ from studio_app_views import (  # noqa: E402
 )
 from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio_risk_api import risk_get_payload, risk_post_response  # noqa: E402
+from studio_risk_api import risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -180,6 +180,18 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
+    def do_DELETE(self) -> None:
+        request = urlsplit(self.path)
+        path = unquote(request.path)
+        if path.startswith("/studio/api/risk/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_risk_api_delete_json(path.removeprefix("/studio/api/risk"))
+            return
+
+        self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
@@ -227,7 +239,7 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         self.send_header("Access-Control-Allow-Origin", origin)
         self.send_header("Vary", "Origin")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def send_json(self, payload: object, status: HTTPStatus = HTTPStatus.OK) -> None:
@@ -296,6 +308,17 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         try:
             body = self.read_json_body()
             status, payload = risk_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_risk_api_delete_json(self, api_path: str) -> None:
+        try:
+            status, payload = risk_delete_response(self.repo_root, api_path)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

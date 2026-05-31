@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-05-30
+last_updated: 2026-05-31
 parent_id: architecture
 viewable: true
 ---
@@ -140,7 +140,7 @@ Generated public artifacts remain outside `studio/` when public pages need them.
 Examples include public catalogue JSON, public search indexes, public Docs Viewer payloads for `/library/` and `/analysis/`, public thumbnails, and public route media.
 
 Generated Studio read models remain under `studio/data/generated/` when they are only for Local Studio authoring/review.
-Generated change-history projections remain under `studio/workflows/change-requests/generated/`.
+The generated change-history search projection remains under `studio/workflows/change-requests/generated/`.
 Generated committed manage-mode Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local manage-mode runtime use but are not public static assets.
 
 `var/` remains local working output for staging, backups, imports, generated run logs, temporary media derivatives, and test run summaries.

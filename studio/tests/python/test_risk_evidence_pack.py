@@ -31,6 +31,27 @@ def test_collect_static_metrics_counts_selected_app_roots(tmp_path: Path) -> Non
     assert metrics["by_extension"] == {".js": 1, ".md": 1}
 
 
+def test_collect_static_metrics_excludes_generated_and_canonical_data(tmp_path: Path) -> None:
+    docs_generated = tmp_path / "docs-viewer" / "generated" / "docs" / "studio"
+    docs_generated.mkdir(parents=True)
+    (docs_generated / "index.json").write_text("[1]\n[2]\n", encoding="utf-8")
+    studio_generated = tmp_path / "studio" / "workflows" / "change-requests" / "generated"
+    studio_generated.mkdir(parents=True)
+    (studio_generated / "search-index.json").write_text("[1]\n[2]\n", encoding="utf-8")
+    studio_canonical = tmp_path / "studio" / "data" / "canonical" / "catalogue"
+    studio_canonical.mkdir(parents=True)
+    (studio_canonical / "works.json").write_text("[1]\n[2]\n", encoding="utf-8")
+    source_root = tmp_path / "studio" / "checks"
+    source_root.mkdir(parents=True)
+    (source_root / "risk.py").write_text("print('count')\n", encoding="utf-8")
+
+    metrics = risk_pack.collect_static_metrics("all", tmp_path)
+
+    assert metrics["totals"]["files"] == 1
+    assert metrics["totals"]["lines"] == 1
+    assert metrics["largest_files"] == [{"path": "studio/checks/risk.py", "lines": 1, "bytes": 15}]
+
+
 def test_import_export_scan_reports_js_dependency_counts(tmp_path: Path) -> None:
     docs_root = tmp_path / "docs-viewer"
     docs_root.mkdir()

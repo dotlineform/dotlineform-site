@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
+import shutil
 import sys
 import urllib.request
 from pathlib import Path
@@ -19,6 +21,9 @@ sys.path.insert(0, str(REPO_ROOT))
 from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
+DELETE_FIXTURE_RUN_ID = "risk-route-smoke-delete-snapshot"
+
+
 def start_server() -> tuple[StudioAppServer, str]:
     server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
@@ -26,10 +31,29 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
+def write_delete_fixture() -> Path:
+    run_dir = REPO_ROOT / "var" / "studio" / "risk" / "runs" / DELETE_FIXTURE_RUN_ID
+    if run_dir.exists():
+        shutil.rmtree(run_dir)
+    run_dir.mkdir(parents=True)
+    created_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    (run_dir / "manifest.json").write_text(
+        json.dumps({"run_id": DELETE_FIXTURE_RUN_ID, "app": "docs-viewer", "area": "runtime", "created_at_utc": created_at}),
+        encoding="utf-8",
+    )
+    (run_dir / "summary.json").write_text(
+        json.dumps({"run_id": DELETE_FIXTURE_RUN_ID, "app": "docs-viewer", "area": "runtime", "status": "passed", "warnings": [], "evidence": []}),
+        encoding="utf-8",
+    )
+    (run_dir / "summary.md").write_text("# Smoke delete snapshot\n", encoding="utf-8")
+    return run_dir
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
 
+    delete_fixture_run_dir = write_delete_fixture()
     server, base_url = start_server()
     try:
         with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
@@ -87,6 +111,15 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("risk should not appear as a top-nav item")
 
                 if label == "desktop":
+                    delete_button = page.locator(f'[data-risk-run-delete="{DELETE_FIXTURE_RUN_ID}"]')
+                    expect(delete_button).to_be_visible(timeout=10_000)
+                    page.once("dialog", lambda dialog: dialog.accept())
+                    delete_button.click()
+                    expect(page.locator("#studioRiskStatus")).to_contain_text("deleted", timeout=10_000)
+                    expect(page.locator(f'[data-risk-run-delete="{DELETE_FIXTURE_RUN_ID}"]')).to_have_count(0, timeout=10_000)
+                    if delete_fixture_run_dir.exists():
+                        raise AssertionError(f"delete fixture still exists: {delete_fixture_run_dir}")
+
                     page.locator("#studioRiskDryRun").check()
                     page.locator("#studioRiskRunId").fill("risk-route-smoke-dry-run")
                     page.locator("#studioRiskRun").click()

@@ -53,8 +53,22 @@ METRIC_EXTENSIONS = {
     ".yaml",
     ".yml",
 }
-GENERATED_PAYLOAD_ROOTS = ("assets/data", "docs-viewer/generated", "studio/data/generated")
+GENERATED_PAYLOAD_ROOTS = (
+    "assets/data",
+    "docs-viewer/generated",
+    "studio/data/generated",
+    "studio/workflows/change-requests/generated",
+)
 SCRIPT_INVENTORY_ROOTS = ("studio", "docs-viewer", "analytics-app", "data-sharing")
+STATIC_METRIC_EXCLUDED_PREFIXES: tuple[tuple[str, ...], ...] = (
+    ("assets", "data"),
+    ("docs-viewer", "generated"),
+    ("studio", "data", "canonical"),
+    ("studio", "data", "generated"),
+    ("studio", "workflows", "change-requests", "generated"),
+    ("studio", "workflows", "change-requests", "reports"),
+    ("analytics-app", "data", "canonical"),
+)
 EXCLUDED_DIRS = {
     ".git",
     ".jekyll-cache",
@@ -140,7 +154,10 @@ def iter_source_files(roots: Iterable[Path], repo_root: Path = REPO_ROOT) -> Ite
                 continue
             if path.suffix not in METRIC_EXTENSIONS:
                 continue
-            if EXCLUDED_DIRS.intersection(relative_parts(path, repo_root)):
+            parts = relative_parts(path, repo_root)
+            if EXCLUDED_DIRS.intersection(parts):
+                continue
+            if any(parts[: len(prefix)] == prefix for prefix in STATIC_METRIC_EXCLUDED_PREFIXES):
                 continue
             yield path
 

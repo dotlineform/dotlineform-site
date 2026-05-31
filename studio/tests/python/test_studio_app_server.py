@@ -22,7 +22,7 @@ from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, 
 from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio.app.server.studio.studio_risk_api import append_risk_activity, risk_get_payload, risk_post_response  # noqa: E402
+from studio.app.server.studio.studio_risk_api import append_risk_activity, risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -357,6 +357,32 @@ def test_risk_api_validates_run_requests_without_command_passthrough() -> None:
     assert payload["ok"] is True
     assert payload["dry_run"] is True
     assert "risk_evidence_pack.py" in payload["stdout"] or "Risk evidence pack dry run" in payload["stdout"]
+
+
+def test_risk_api_deletes_run_snapshots_with_path_validation() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        run_dir = repo_root / "var" / "studio" / "risk" / "runs" / "sample-run"
+        run_dir.mkdir(parents=True)
+        (run_dir / "summary.json").write_text(
+            json.dumps({"run_id": "sample-run", "app": "docs-viewer", "area": "runtime", "status": "passed"}),
+            encoding="utf-8",
+        )
+        (run_dir / "summary.md").write_text("# Summary\n", encoding="utf-8")
+
+        status, payload = risk_delete_response(repo_root, "/runs/sample-run")
+
+        assert status == HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["status"] == "deleted"
+        assert payload["run_id"] == "sample-run"
+        assert payload["deleted_path"] == "var/studio/risk/runs/sample-run"
+        assert not run_dir.exists()
+
+        with pytest.raises(FileNotFoundError, match="does not exist"):
+            risk_delete_response(repo_root, "/runs/sample-run")
+        with pytest.raises(ValueError, match="safe slug"):
+            risk_delete_response(repo_root, "/runs/../bad")
 
 
 def test_risk_activity_append_uses_contract_context() -> None:

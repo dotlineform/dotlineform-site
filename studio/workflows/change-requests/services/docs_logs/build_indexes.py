@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from collections import defaultdict
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -18,11 +17,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import path for tests
 
 
 GENERATED_FILES = {
-    "by_date": "by-date.json",
-    "by_domain": "by-domain.json",
-    "by_related_doc": "by-related-doc.json",
-    "by_related_file": "by-related-file.json",
-    "by_change_request": "by-change-request.json",
     "search_index": "search-index.json",
 }
 
@@ -94,64 +88,6 @@ def generated_meta(records: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def build_by_date(records: list[dict[str, Any]]) -> dict[str, Any]:
-    years: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
-    for record in records:
-        year = record["date"][:4]
-        month = record["date"][:7]
-        years[year][month].append(entry_summary(record))
-    return {
-        **generated_meta(records),
-        "years": [
-            {
-                "year": year,
-                "months": [
-                    {"month": month, "entries": entries}
-                    for month, entries in sorted(months.items(), reverse=True)
-                ],
-            }
-            for year, months in sorted(years.items(), reverse=True)
-        ],
-    }
-
-
-def group_by_list_field(records: list[dict[str, Any]], field: str, *, fallback: str | None = None) -> dict[str, list[dict[str, Any]]]:
-    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for record in records:
-        values = record.get(field, [])
-        if isinstance(values, str):
-            values = [values]
-        if not values and fallback:
-            values = [fallback]
-        for value in values:
-            grouped[str(value)].append(entry_summary(record))
-    return dict(sorted(grouped.items()))
-
-
-def build_by_domain(records: list[dict[str, Any]]) -> dict[str, Any]:
-    grouped = group_by_list_field(records, "domains")
-    return {**generated_meta(records), "domains": grouped}
-
-
-def build_by_related_doc(records: list[dict[str, Any]]) -> dict[str, Any]:
-    grouped = group_by_list_field(records, "related_docs")
-    return {**generated_meta(records), "related_docs": grouped}
-
-
-def build_by_related_file(records: list[dict[str, Any]]) -> dict[str, Any]:
-    grouped = group_by_list_field(records, "related_files")
-    return {**generated_meta(records), "related_files": grouped}
-
-
-def build_by_change_request(records: list[dict[str, Any]]) -> dict[str, Any]:
-    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for record in records:
-        request_id = record.get("change_request_doc_id")
-        if request_id:
-            grouped[str(request_id)].append(entry_summary(record))
-    return {**generated_meta(records), "change_requests": dict(sorted(grouped.items()))}
-
-
 def weighted_search_text(record: dict[str, Any]) -> dict[str, str]:
     title_parts = [record["title"], record["date"], *record.get("domains", []), *record.get("subjects", [])]
     trace_parts = [
@@ -189,13 +125,24 @@ def build_search_index(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 def build_outputs(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     return {
-        "by_date": build_by_date(records),
-        "by_domain": build_by_domain(records),
-        "by_related_doc": build_by_related_doc(records),
-        "by_related_file": build_by_related_file(records),
-        "by_change_request": build_by_change_request(records),
         "search_index": build_search_index(records),
     }
+
+
+def unique_list_values(records: list[dict[str, Any]], field: str) -> list[str]:
+    values: set[str] = set()
+    for record in records:
+        raw_values = record.get(field, [])
+        if isinstance(raw_values, str):
+            raw_values = [raw_values]
+        if not isinstance(raw_values, list):
+            continue
+        values.update(str(value) for value in raw_values if value)
+    return sorted(values)
+
+
+def unique_field_values(records: list[dict[str, Any]], field: str) -> list[str]:
+    return sorted(str(record[field]) for record in records if record.get(field))
 
 
 def write_outputs(root: Path, outputs: dict[str, dict[str, Any]]) -> list[str]:
@@ -226,10 +173,10 @@ def main(argv: list[str] | None = None) -> int:
         summary = {
             "entry_count": len(records),
             "generated_files": list(GENERATED_FILES.values()),
-            "domains": sorted(outputs["by_domain"]["domains"]),
-            "related_docs": len(outputs["by_related_doc"]["related_docs"]),
-            "related_files": len(outputs["by_related_file"]["related_files"]),
-            "change_requests": len(outputs["by_change_request"]["change_requests"]),
+            "domains": unique_list_values(records, "domains"),
+            "related_docs": len(unique_list_values(records, "related_docs")),
+            "related_files": len(unique_list_values(records, "related_files")),
+            "change_requests": len(unique_field_values(records, "change_request_doc_id")),
         }
         if args.json:
             print(json.dumps(summary, indent=2, ensure_ascii=False))

@@ -36,7 +36,7 @@ def sample_record(entry_id: str, change_date: str, title: str, domain: str) -> d
     }
 
 
-def test_build_outputs_groups_entries_by_required_indexes() -> None:
+def test_build_outputs_creates_search_index_only() -> None:
     records = [
         sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer"),
         sample_record("change-2026-04-30-two", "2026-04-30", "Two", "search"),
@@ -44,12 +44,7 @@ def test_build_outputs_groups_entries_by_required_indexes() -> None:
 
     outputs = build_indexes.build_outputs(records)
 
-    assert outputs["by_date"]["years"][0]["year"] == "2026"
-    assert outputs["by_date"]["years"][0]["months"][0]["month"] == "2026-05"
-    assert outputs["by_domain"]["domains"]["docs-viewer"][0]["id"] == "change-2026-05-19-one"
-    assert outputs["by_related_doc"]["related_docs"]["scripts-docs-builder"][0]["id"] == "change-2026-05-19-one"
-    assert outputs["by_related_file"]["related_files"]["docs-viewer/build/build_docs.rb"][1]["id"] == "change-2026-04-30-two"
-    assert outputs["by_change_request"]["change_requests"]["site-request-docs-build-incremental"][0]["id"] == "change-2026-05-19-one"
+    assert list(outputs) == ["search_index"]
     assert outputs["search_index"]["entries"][0]["search_text"]["trace"].count("scripts-docs-builder") == 1
 
 
@@ -118,12 +113,5 @@ def test_write_outputs_creates_expected_generated_files() -> None:
         outputs = build_indexes.build_outputs([sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer")])
         written = build_indexes.write_outputs(root, outputs)
 
-        assert written == [
-            "studio/workflows/change-requests/generated/by-date.json",
-            "studio/workflows/change-requests/generated/by-domain.json",
-            "studio/workflows/change-requests/generated/by-related-doc.json",
-            "studio/workflows/change-requests/generated/by-related-file.json",
-            "studio/workflows/change-requests/generated/by-change-request.json",
-            "studio/workflows/change-requests/generated/search-index.json",
-        ]
+        assert written == ["studio/workflows/change-requests/generated/search-index.json"]
         assert (root / "studio/workflows/change-requests" / "generated" / "search-index.json").exists()
