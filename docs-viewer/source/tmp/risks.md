@@ -6,90 +6,89 @@ last_updated: 2026-05-31
 ui_status: draft
 ---
 
-comments:
+We need to bring repo context into this because it changes the priorities of the risk definitions themselves. 'change' and 'complexity' are also linked to the purpose of the repo modules themselves.
 
-- the cards are good summaries
-- tables less useful when they contain more than 3 columns and lots of text, because the document content area is narrow
+we also need to be clear that the risk categories are observable indicators, not the actual risks. the risks are:
 
+## risks
 
-# risks
+- the system will actually break in a significant way
+- the breakages might be a single effect or a cumulation of lots of little things
+- it will be hard to fix without major effort / refactor
+- the system is hard to maintain - it takes too long to work out how it works so it doesn't get maintained which increases the risk of failure
+- development strategy is causing a csacade of increasing risks because the fundamental design is wrong or no longer suitable for the current apps.
 
-I recommend turning the inventories into a small reporting system rather than longer single documents.
+examples:
+- css is too tangled and unstructured, changing one thing breaks another and it is hard to see cause and effect chains.
+- backup, var/ files or logs build up over time because they are not manually checked, it is forgotten why they were being generated in the first place, it is not obvious that this is happening
+- code is literally too long which makes it costly and inefficient to navigate/search both for humans (time, context switching) and AI (token cost, context switching), which consequently introduces errors, missed changes or opportunities for improvement.
+- relying on Jekyll/Ruby for specific libraries because it was originally a design convenience decision to use them, not because it was the best or strategic. it is no longer appropriate, possibly a real blocker to future work, but downstream refactoring effort is now significant.
 
-**Recommended Structure**
+## risk indicators
 
-Keep the current scoring definitions, but split the analysis into four document types:
+let's consolidate. maintenance has some good questions and indicators but these need to be homed under the other categories.
 
-1. **Risk Policy**
-   - Keep `studio-javascript-payload-inventory.md` mostly as policy.
-   - Define categories, scoring rules, bands, and rescore rules.
-   - Avoid putting current findings here.
+front-end:
+- architectural - are the methodology and frameworks introducing risk? are high level design decisions needed? is the architecture stable, has a planned strategy?
+- structural - this includes: ownbership boundaries, consistency, code organisation and structure, UI design. does it all fit together effectively? is the current structure introducing risk?
+- performance - this is both visible and invisible. if performance is bad but not noticed, that can hide deeper problems.
 
-2. **Current Risk Dashboard**
-   - One short priority document for humans.
-   - Purpose: answer “what should we improve next?”
-   - Include:
-     - top 5 priorities
-     - why each matters
-     - recommended next action
-     - expected evidence of improvement
-     - owner area
-     - whether it is file-level, family-level, or cross-cutting
+backend:
+- architectural
+- structural
+- workflow - backend specific
+- performance
 
-3. **Raw Inventories**
-   - Keep long tables here only.
-   - Separate by unit:
-     - JavaScript file inventory
-     - JavaScript family rollup
-     - Python/Ruby script-family inventory
-     - largest-file watch list as an appendix or separate report
-   - These are evidence, not the main reading path.
+## repo/app context
 
-4. **Risk Category Reports**
-   - One report per risk type:
-     - Maintenance risk
-     - Structural/ownership risk
-     - Performance risk
-     - Architectural drift risk
-   - Each report should rank only that risk, across relevant files/families.
-   - This avoids one table asking the reader to compare maintenance, performance, and architecture at the same time.
+repo context:
+- what are the fundamental purposes of the repo and the apps within it?
+- how important are the risk categories to each app?
+- what does change/complexity mean for each app?
 
-**Main Change**
+### 1. Public Site 
 
-Separate “what is risky?” from “what should we do?”
+Purpose: A catalogue of art work and text.
+Host: GitHub Pages
 
-For each priority, use a compact action card like:
+Key drivers:
+- performance / payloads: very important because it is a public site, media heavy, elegant UI. Needs to be responsive and fast.
+- architecture: Static site. Jekyll is now a blocker/inconvenience, it is now largely only serving route stubs.
+- structure and taxonomy: fairly complex but very stable, unlikely to change significantly. additional features very rare.
+- data volumes: new records are <100/month. total records measured in 100's or low 1000's across the schema
 
-```md
-## Catalogue Save/Build Path
+### 2. Studio
 
-Priority: 1
-Risk type: performance + maintenance
-Unit: script family
-Evidence: broad save path touches source writes, generated artifacts, lookup refreshes, search, media, and activity rows.
-Recommended action: add save/build diagnostics before further structural splitting.
-Expected improvement: identify repeated broad rebuilds and slow media/search/generated steps.
-Concrete next slice: catalogue diagnostics for elapsed time, counts, fallback reasons.
-Verification: local save response/log includes per-step counts and timings.
-```
+Purpose: manage the data that is published on the public site.
+Host: Local server.
+Key drivers:
+- performance / payloads: running locally hides most performance problems. not a priority to improve because it won't be especially noticeable. most performance gains have been at dev level e.g. ensuring that local Jekyll is decoupled from dev servers.
+- architecture: moving towards a JS app, having come from a large and unmanaged code base.
+- structure and taxonomy: constantly growing in complexity but relatively bounded now that docs viewer and analytics modules have been decoupled.
+- data volumes: same as public site.
 
-**Specific Recommendations**
+### 3. Analytics
 
-- Do not make the big inventory tables the main artifact. They should support decisions, not be the decision surface.
-- Add a short “Current Priorities” dashboard that is no more than 1-2 screens.
-- Split file-level and family-level analysis. They answer different questions:
-  - file-level: “where should future edits slow down?”
-  - family-level: “where should improvement work be scheduled?”
-- Keep largest-file analysis separate from risk priority. Large files are useful watch items, but size is not the same as risk.
-- Convert “Recommended improvements” bullets into explicit actions with owner, evidence, verification, and expected score/class movement.
-- For JavaScript, add family rollups so `Catalogue editors`, `Docs Viewer`, `Analytics tag routes`, and `Public runtime` can be prioritized without scanning 190 rows.
-- For Python/Ruby, keep the family matrix but move the detailed prose into separate family notes or category reports.
-- Add a “Do not prioritize now” section. This is useful where something is large but currently acceptable, or where diagnostics should come before refactoring.
+Purpose: manage analytical dimensions layered on top of the catalogue data and provide analytical tools and resources.
+Host: Local server.
+Key drivers:
+- performance / payloads: same as studio.
+- architecture: moving towards a JS app, having come from a large and unmanaged code base.
+- structure and taxonomy: constantly growing in complexity. significant future work likely, including integration with 3rd party data visualisation libraries, data sharing with LLMs.
+- data volumes: same as public site.
 
-**Best Next Step**
+### 4. Docs Viewer
 
-Create a new concise dashboard first, probably something like:
+Purpose: manage text/media documents for publishing on public site. Increasing support to Analytics app (e.g. data sharing, displaying analytical data).
+Host: Local server.
+Key drivers:
+- performance / payloads: same local server considerations as Studio, but performance is more noticable and important because it gets significantly more frequent user interaction. The read-only docs viewer installs are on the public site and consequently performance/optimisation of the front-end javascript is a key priority.
+- architecture: moving towards a JS app, having come from a large and unmanaged code base.
+- structure and taxonomy: constantly growing in complexity. UI under constant refinement. significant future work likely, including integration via Analytics app for data visualisation and data sharing with LLMs.
+- data volumes: low. documents total <1000.
 
-`docs-viewer/source/studio/studio-risk-priority-dashboard.md`
+## next steps
 
-Then gradually move detailed category-specific analysis out of the long inventories as they are refreshed. The immediate priority list should probably start with catalogue diagnostics, because the current Python/Ruby analysis already says visibility should come before another broad split.
+- studio-risk-analysis-policy.md needs to reflect the updated risk mitigation categories
+- studio-risk-priority-dashboard.md needs reviewing in light of the categories and repo context
+- inventories need to be redesigned and separated so that each app has it's own inventory and consequent priority actions.
