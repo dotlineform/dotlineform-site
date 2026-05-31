@@ -1,9 +1,10 @@
 ---
 doc_id: doc-ui-status
-title: Doc UI Status
+title: UI Status
 added_date: "2026-05-13 21:41"
 last_updated: "2026-05-13 21:41"
 parent_id: docs-viewer
+viewable: true
 ---
 # Doc UI Status
 

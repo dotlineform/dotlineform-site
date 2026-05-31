@@ -57,7 +57,8 @@ Technical route and workflow docs:
 
 - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
 - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
-- **[Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)**
+- **[Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)**
+- **[Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)**
 - **[Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)**
 - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
 - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**

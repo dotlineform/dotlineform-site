@@ -1,6 +1,6 @@
 ---
 doc_id: docs-broken-links
-title: Docs Broken Links
+title: Broken Links
 added_date: 2026-04-23
 last_updated: 2026-05-22
 ui_status: report

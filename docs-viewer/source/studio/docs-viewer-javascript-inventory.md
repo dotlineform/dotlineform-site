@@ -4,12 +4,12 @@ title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
 last_updated: 2026-05-28
 ui_status: review
-parent_id: studio-javascript-payload-inventory
+parent_id: studio-risk-analysis-policy
 viewable: true
 ---
 # Docs Viewer JavaScript Inventory
 
-This document is the Docs Viewer-specific review slice of [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
+This document is the Docs Viewer-specific review slice of [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
 It uses the same four-risk scoring model as the parent inventory, but limits the table and follow-up notes to browser JavaScript under `docs-viewer/runtime/js/`.
 
 ## Current Summary
@@ -428,6 +428,6 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 ## Related References
 
-- [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
+- [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
 - [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan)

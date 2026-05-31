@@ -1,9 +1,10 @@
 ---
 doc_id: scripts-docs-management-server
-title: Docs Management Service
+title: Management Service
 added_date: 2026-04-24
 last_updated: 2026-05-30
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Management Service
 

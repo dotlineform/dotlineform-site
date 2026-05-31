@@ -1,9 +1,10 @@
 ---
 doc_id: scripts-docs-builder
-title: Docs Viewer Builder
+title: Builder
 added_date: 2026-04-23
 last_updated: 2026-05-26
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Builder
 

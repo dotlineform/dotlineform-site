@@ -1,6 +1,6 @@
 ---
 doc_id: docs-viewer-toolbar-model
-title: Docs Viewer Toolbar Model
+title: Toolbar Model
 added_date: 2026-05-31
 last_updated: 2026-05-31
 parent_id: docs-viewer

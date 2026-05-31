@@ -1,6 +1,6 @@
 ---
 doc_id: config-docs-viewer
-title: Docs Viewer Config
+title: Config
 added_date: 2026-05-12
 last_updated: 2026-05-25
 parent_id: docs-viewer

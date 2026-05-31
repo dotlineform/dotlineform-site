@@ -78,7 +78,7 @@ For local Studio route migration, public-link resolver adoption, Studio route UR
 For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
-For browser JavaScript maintenance-risk work, use [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
+For browser JavaScript maintenance-risk work, use [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
 For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
 If the work needs a task tracker, create one from [Tasks Template](/docs/?scope=studio&doc=tasks-template).
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.

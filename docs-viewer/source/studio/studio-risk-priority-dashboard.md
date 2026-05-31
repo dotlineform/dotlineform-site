@@ -12,9 +12,9 @@ viewable: true
 This dashboard is the short decision surface for Studio maintenance-risk work.
 Use it before reading the full inventories.
 
-The source inventories remain the evidence:
+The policy and source inventories remain the evidence:
 
-- [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
+- [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
@@ -33,7 +33,7 @@ For JavaScript, the near-term priority is to reconcile stale or conflicting inve
 | 1 | Catalogue save/build path | Script family | Maintenance and performance | Add save/build diagnostics for source writes, lookup refreshes, generated artifacts, search updates, media work, elapsed time, and fallback reasons. | Local save/build responses or logs show per-step counts, elapsed time, and fallback reasons. |
 | 2 | Catalogue generated/search/media rebuild scope | Script family | Performance | Use the diagnostics from priority 1 to reduce repeated broad generated artifact, lookup, search, or media work where field-aware metadata can safely narrow the scope. | A measured repeated broad path becomes a narrower path with the same dry-run/write behavior and focused verification. |
 | 3 | JavaScript inventory reconciliation | Inventory quality | Planning risk | Reconcile the full JavaScript inventory with the Docs Viewer-specific inventory before starting another browser-JS batch. | Current scores, active paths, and Docs Viewer entry/runtime rows agree across the dashboard and source inventories. |
-| 4 | Docs Viewer browser-JS controller boundaries | File family | Structural and architectural | Pick one complete controller family, such as management, bookmarks, search, or config, and narrow one remaining broad handoff to explicit owner inputs. | One above-target Docs Viewer row moves toward score 4 because a complete responsibility has a focused owner and tests or smoke coverage. |
+| 4 | Docs Viewer browser-JS controller boundaries | File family | Ownership boundary | Pick one complete controller family, such as management, bookmarks, search, or config, and narrow one remaining broad handoff to explicit owner inputs. | One above-target Docs Viewer row moves toward score 4 because a complete responsibility has a focused owner and tests or smoke coverage. |
 | 5 | Media derivation and publishing path | Script family | Performance | Add batch-level media timing and counts, then evaluate bounded parallelism or batched freshness checks only for the measured slow path. | Media reports identify source count, derivative count, skipped count, elapsed time, and the slowest stage. |
 | 6 | Cross-service local server mechanics | Cross-cutting family | Structure and consistency | Standardize only identical local-service mechanics: request-size limits, JSON parse errors, CORS headers, compact log fields, and response envelopes. | Shared mechanics are consistent without hiding service-specific write allowlists or domain behavior. |
 | 7 | Audit and check scripts | Script family | Maintenance and structure | Group broad checks by source family and report section before adding more unrelated checks. | `audit_site_consistency.py` remains readable by source family and emits machine-readable sections. |
@@ -89,7 +89,7 @@ Priority: 4
 
 Unit: file family, with file-level score movement.
 
-Primary risk: structural and architectural.
+Primary risk: ownership boundary.
 
 Why it matters: the Docs Viewer runtime has useful focused owners, but management, bookmark, search, config, and controller handoffs still need active guardrails so new features do not drift back into broad runtime coordination.
 
@@ -123,13 +123,16 @@ Use these category views to avoid mixing unrelated risks in one table.
 | 2 | Docs build, management, import, and export | Script family | Keep cross-language contracts documented together; revisit full fallbacks only when diagnostics show repeated cost. |
 | 3 | Audit and check scripts | Script family | Group checks and shared output contracts before adding more broad checks. |
 
-### Structural And Ownership Risk
+### Ownership Boundary Risk
 
 | Priority | Area | Unit | Improvement direction |
 | ---: | --- | --- | --- |
 | 1 | Docs Viewer browser-JS controllers | File family | Continue narrowing broad runtime handoffs into explicit owner contracts. |
 | 2 | Cross-service local server mechanics | Cross-cutting family | Standardize identical mechanics without creating a broad service framework. |
 | 3 | Catalogue write server | File within family | Keep HTTP orchestration separate from generated artifact, lookup, media, and source-model behavior. |
+
+Architectural drift is tracked inside this category at dashboard level.
+Use separate structural and architectural scores only in detailed frontend inventory rows where the difference is measurable.
 
 ### Performance Risk
 
@@ -138,14 +141,6 @@ Use these category views to avoid mixing unrelated risks in one table.
 | 1 | Catalogue generated/search/media work | Script family | Use diagnostics to reduce repeated broad rebuilds and media work. |
 | 2 | Media derivation | Script family | Measure batch cost, then consider bounded parallelism or batched freshness checks. |
 | 3 | Docs rebuilds | Script family | Monitor targeted-build diagnostics; avoid optimization work until repeated full fallbacks are visible. |
-
-### Architectural Drift Risk
-
-| Priority | Area | Unit | Improvement direction |
-| ---: | --- | --- | --- |
-| 1 | Docs Viewer app/runtime boundary | File family | Do not add new feature lifecycle ownership to the private runtime coordinator. |
-| 2 | Catalogue editor/action browser modules | File family | Keep route shells as orchestration and move complete responsibilities to focused owners. |
-| 3 | Catalogue script generation modules | Script family | Keep new generated artifact behavior in existing generation, lookup, or source-model owners. |
 
 ## Not Current Priorities
 

@@ -4,13 +4,13 @@ title: Javascript Inventory
 added_date: 2026-05-20
 last_updated: 2026-05-30
 ui_status: review
-parent_id: studio-javascript-payload-inventory
+parent_id: studio-risk-analysis-policy
 viewable: true
 ---
 # Javascript Inventory
 
 This document is the current browser JavaScript inventory.
-The scoring policy is defined in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
+The scoring policy is defined in [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy).
 
 Split refresh status:
 

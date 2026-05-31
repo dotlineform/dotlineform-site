@@ -1,6 +1,6 @@
 ---
 doc_id: docs-viewer-css-cascade-design
-title: Docs Viewer CSS Cascade Design
+title: CSS Cascade Design
 added_date: 2026-05-11
 last_updated: 2026-05-25
 parent_id: docs-viewer
