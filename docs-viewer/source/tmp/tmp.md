@@ -4,10 +4,21 @@ title: "tmp"
 added_date: 2026-05-26
 last_updated: 2026-05-26
 ui_status: draft
-sort_order: 100
 ---
 
 # tmp
+
+
+the risk categories defined in studio-javascript-payload-inventory.md and studio-python-ruby-script-inventory.md are useful but the current analysis is too complicated and it is hard to see what the priorities for improvement are. there are a few issues:
+
+- the risk categories are all contained in single tables, which makes prioritising difficult because it is dealing with multiple risks at once. separating risk categories into separate reports might be easier to comprehend?
+- there is a mix of analysis across single files and 'file families'. both are relevant but not necessarily in the same report.
+- the summaries of the findings are too scattered across the documents.
+- the documents are too long to easily extract the key messages
+- we need to be able to extract concrete actions from the analysis.
+
+please provide recommendations for improving this risk analysis.
+
 
 docs viewer config:
 

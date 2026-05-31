@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T22:29:12Z",
+  "generated_at": "2026-05-31T10:26:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -140,6 +140,21 @@
     },
     {
       "scope": "tmp",
+      "doc_id": "risks",
+      "title": "risks",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "risks.md",
+      "viewer_url": "/docs/?scope=tmp&doc=risks",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/risks.json",
+      "content_text_length": 3437,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "tmp",
       "doc_id": "tmp",
       "title": "tmp",
       "added_date": "2026-05-26",
@@ -150,7 +165,7 @@
       "source_path": "tmp.md",
       "viewer_url": "/docs/?scope=tmp&doc=tmp",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "content_text_length": 1947,
+      "content_text_length": 2813,
       "ui_status": "draft"
     },
     {

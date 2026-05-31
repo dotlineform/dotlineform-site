@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-decd5d320269b24ee824d8c8686ba8e5",
-    "generated_at_utc": "2026-05-30T19:53:25Z",
-    "count": 11
+    "version": "blake2b-51c0b044d7075d272e597a75b6285a14",
+    "generated_at_utc": "2026-05-31T10:26:13Z",
+    "count": 12
   },
   "entries": [
     {
@@ -167,6 +167,22 @@
         "37"
       ],
       "search_text": "panel-sizes panel sizes panel sizes 2026-05-20 19:37 2026 05 20 19 37"
+    },
+    {
+      "id": "risks",
+      "kind": "doc",
+      "title": "risks",
+      "href": "/docs/?scope=tmp&doc=risks",
+      "last_updated": "2026-05-31",
+      "display_meta": "2026-05-31",
+      "search_terms": [
+        "risks",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "risks 2026-05-31 2026 05 31"
     },
     {
       "id": "tmp",
