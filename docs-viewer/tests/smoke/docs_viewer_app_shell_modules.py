@@ -148,7 +148,8 @@ def assert_header_controls_management_render(page: Page) -> None:
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 topBarChildIds: Array.from(document.querySelector('.docsViewer__topBar').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
-                viewerToolbarChildIds: Array.from(document.querySelector('.docsViewer__viewerToolbar').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
+                viewerToolbarChildIds: Array.from(document.querySelector('.docsViewer__viewerToolbar').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
+                panelControlsChildIds: Array.from(document.querySelector('#docsViewerPanelControls').children).map((node) => node.id || '')
             };
         }"""
     )
@@ -166,10 +167,14 @@ def assert_header_controls_management_render(page: Page) -> None:
         "docsViewerScopeSelect",
         "docsViewerRecentButton",
         "docsViewerSearchInput",
+        "docsViewerPanelControls",
+    ]:
+        raise AssertionError(f"viewer toolbar control order changed unexpectedly: {result!r}")
+    if result["panelControlsChildIds"] != [
         "docsViewerIndexViewToggle",
         "docsViewerInfoToggle",
     ]:
-        raise AssertionError(f"viewer toolbar control order changed unexpectedly: {result!r}")
+        raise AssertionError(f"viewer toolbar panel-control order changed unexpectedly: {result!r}")
 
 
 def assert_management_actions_render(page: Page) -> None:

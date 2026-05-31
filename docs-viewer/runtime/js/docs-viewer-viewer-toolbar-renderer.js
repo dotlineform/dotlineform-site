@@ -112,6 +112,17 @@ function appendInfoToggle(documentRef, toolbar) {
   toolbar.appendChild(button);
 }
 
+function appendPanelControls(documentRef, toolbar) {
+  var group = documentRef.createElement("div");
+  group.className = "docsViewer__panelControls";
+  group.id = "docsViewerPanelControls";
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", "Panel controls");
+  appendIndexViewToggle(documentRef, group);
+  appendInfoToggle(documentRef, group);
+  toolbar.appendChild(group);
+}
+
 export function renderDocsViewerViewerToolbar(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
@@ -135,8 +146,7 @@ export function renderDocsViewerViewerToolbar(options) {
     appendRecentButton(documentRef, toolbar);
     appendSearchInput(documentRef, toolbar, controlMount);
   }
-  appendIndexViewToggle(documentRef, toolbar);
-  appendInfoToggle(documentRef, toolbar);
+  appendPanelControls(documentRef, toolbar);
 
   mount.appendChild(toolbar);
   return toolbar;

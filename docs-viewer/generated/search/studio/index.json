@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ad188fd9f5263ef6719635b3bbf43855",
-    "generated_at_utc": "2026-05-31T13:52:32Z",
-    "count": 212
+    "version": "blake2b-537fd0aa9c859c3a877a848ed8f8578e",
+    "generated_at_utc": "2026-05-31T15:17:03Z",
+    "count": 211
   },
   "entries": [
     {
@@ -2975,31 +2975,6 @@
         "31"
       ],
       "search_text": "docs-viewer-toolbar-model docs viewer toolbar model docs viewer toolbar model docs viewer 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "docs-viewer-toolbar-model-tasks",
-      "kind": "doc",
-      "title": "Docs Viewer Toolbar Model Tasks",
-      "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model-tasks",
-      "last_updated": "2026-05-31",
-      "parent_id": "docs-viewer-toolbar-model",
-      "parent_title": "Docs Viewer Toolbar Model",
-      "display_meta": "2026-05-31 • Docs Viewer Toolbar Model",
-      "search_terms": [
-        "docs-viewer-toolbar-model-tasks",
-        "docs",
-        "viewer",
-        "toolbar",
-        "model",
-        "tasks",
-        "docs viewer toolbar model tasks",
-        "docs viewer toolbar model",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "docs-viewer-toolbar-model-tasks docs viewer toolbar model tasks docs viewer toolbar model tasks docs viewer toolbar model 2026-05-31 2026 05 31"
     },
     {
       "id": "docs-viewer-view-capability-contract",

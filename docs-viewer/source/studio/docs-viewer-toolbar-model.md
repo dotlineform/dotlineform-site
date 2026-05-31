@@ -8,17 +8,14 @@ viewable: true
 ---
 # Docs Viewer Toolbar Model
 
-Implementation status: top bar and viewer toolbar are implemented; manage toolbar and document toolbar still use transitional renderer names.
-
-This document records the intended Docs Viewer toolbar model.
-It is Docs Viewer-specific UI guidance, not a generic Studio toolbar primitive.
+This is Docs Viewer-specific UI guidance, not a generic Studio toolbar primitive.
 
 ## Purpose
 
 Docs Viewer now has enough controls that "row", "actions", "controls", and "toolbar" should not be used interchangeably.
 The rendered view should be easy to describe, and the implementation should expose matching owner surfaces.
 
-The target model is:
+The model is:
 
 - top bar: layout container for top-level toolbar groups
 - viewer toolbar: read, navigation, search, and layout/context controls
@@ -26,7 +23,7 @@ The target model is:
 - document toolbar: controls for the current selected document
 - context panel toolbar: view switching inside the context/info panel
 
-## Target Top Bar
+## Top Bar
 
 The top bar is a visual layout container.
 It can place the viewer toolbar and manage toolbar on the same row when space allows, then wrap one toolbar below the other on narrower screens.
@@ -34,7 +31,7 @@ It can place the viewer toolbar and manage toolbar on the same row when space al
 The top bar should not own control behavior.
 It should render or mount named toolbar surfaces and let those toolbar owners expose refs to the runtime.
 
-Target structure:
+Structure:
 
 ```text
 top bar
@@ -57,11 +54,9 @@ The viewer toolbar owns controls that apply to the viewer experience and remain 
 
 The index view toggle and context/info panel toggle are layout/view controls.
 They should not be treated as management actions, even if some hosted views or index modes are only available in management-enabled routes.
+They render as a panel-controls group after the search control so they remain visibly part of the viewer toolbar.
 
-Target owner:
-
-- current renderer: `docs-viewer-viewer-toolbar-renderer.js`
-- current top-bar layout owner: `docs-viewer-top-bar-renderer.js`
+Top-bar layout owner: `docs-viewer-top-bar-renderer.js`
 
 ## Manage Toolbar
 
@@ -75,28 +70,19 @@ The manage toolbar owns controls that imply management mode, write capability, o
 The manage toolbar may sit next to the viewer toolbar in the same top bar.
 Its presence must still depend on route access and management UI availability.
 
-Target owner:
-
-- future renderer: `docs-viewer-manage-toolbar-renderer.js`
-- current owner: `docs-viewer-management-actions-renderer.js`
+Owner: `docs-viewer-manage-toolbar-renderer.js`
 
 ## Document Toolbar
 
 The document toolbar owns controls for the current selected document.
 
-Candidate controls:
+Example controls:
 
 - bookmark toggle
 - document status pills
 - future document-specific actions that are not global viewer layout controls
 
-The context/info panel toggle should move out of the document toolbar in the target model.
-Opening the context panel is a viewer layout action, not a document metadata action.
-
-Target owner:
-
-- future renderer: `docs-viewer-document-toolbar-renderer.js`
-- current owner: document meta action cluster in `docs-viewer-document-shell-renderer.js`
+Owner: `docs-viewer-document-toolbar-renderer.js`
 
 ## Context Panel Toolbar
 
@@ -121,24 +107,8 @@ Target owner:
 
 ## Naming Notes
 
-Use "context panel" when describing the broader role.
-The current implementation may keep `infoPanel` names until a focused rename is worth the churn.
+Use:
 
-Use "toolbar" only when referring to one of the named toolbar surfaces in this document.
-Use "row" for layout only, not for ownership.
-Use "cluster" only for transitional implementation notes.
-
-## Current Gaps
-
-- The management toolbar still uses `docs-viewer-management-actions-renderer.js`.
-- The document toolbar still exists as a document meta action cluster rather than a named document-toolbar renderer.
-- Current implementation names still use `infoPanel` for the broader context panel.
-
-These gaps are acceptable until the next toolbar-related slice.
-Do not start a broad rename just to align names.
-
-## Implementation Tasks
-
-[Toolbar Model Tasks](/docs/?scope=studio&doc=docs-viewer-toolbar-model-tasks) tracks the implementation sequence for this model.
-
-The intended outcome is that a request such as "move the info pill next to the index view pill in the viewer toolbar" maps directly to a named rendered surface and a small implementation slice.
+- "context panel" when describing the broader role. The current implementation may keep `infoPanel` names until a focused rename is worth the churn.
+- "toolbar" only when referring to one of the named toolbar surfaces in this document.
+- "row" for layout only, not for ownership.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T14:05:52Z",
+  "generated_at": "2026-05-31T15:21:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1747,21 +1747,7 @@
       "source_path": "docs-viewer-toolbar-model.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model.json",
-      "content_text_length": 4791
-    },
-    {
-      "scope": "studio",
-      "doc_id": "docs-viewer-toolbar-model-tasks",
-      "title": "Docs Viewer Toolbar Model Tasks",
-      "added_date": "2026-05-31",
-      "last_updated": "2026-05-31",
-      "parent_id": "docs-viewer-toolbar-model",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "docs-viewer-toolbar-model-tasks.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-toolbar-model-tasks",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model-tasks.json",
-      "content_text_length": 5171
+      "content_text_length": 3482
     },
     {
       "scope": "studio",

@@ -27,6 +27,7 @@
   --docs-viewer-doc-width: 80ch; /* current: 72ch; try 60ch-88ch */
   --docs-viewer-info-width: 20rem; /* current: 280px / 17.5rem; try 14rem-22rem */
   --docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
+  --docs-viewer-search-width: 20rem; /* current: 20rem; try 16rem-24rem */
 
   /* derived tokens */
   --docs-viewer-measure: var(--docs-viewer-doc-width);
@@ -454,6 +455,14 @@
 .docsViewer__search{
   flex: 1 1 18rem;
   min-width: 0;
+  max-width: var(--docs-viewer-search-width);
+}
+
+.docsViewer__panelControls{
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .docsViewer__recentButton{
