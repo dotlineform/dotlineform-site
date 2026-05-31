@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cb230852bafe24a93a836f2abadee7b3",
-    "generated_at_utc": "2026-05-31T10:30:34Z",
-    "count": 210
+    "version": "blake2b-ad188fd9f5263ef6719635b3bbf43855",
+    "generated_at_utc": "2026-05-31T13:52:32Z",
+    "count": 212
   },
   "entries": [
     {
@@ -2328,19 +2328,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-29",
-      "display_meta": "2026-05-29",
+      "last_updated": "2026-05-31",
+      "display_meta": "2026-05-31",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-29",
+        "2026-05-31",
         "2026",
         "05",
-        "29"
+        "31"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-29 2026 05 29"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-31 2026 05 31"
     },
     {
       "id": "doc-ui-status",
@@ -2951,6 +2951,55 @@
         "14"
       ],
       "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
+    },
+    {
+      "id": "docs-viewer-toolbar-model",
+      "kind": "doc",
+      "title": "Docs Viewer Toolbar Model",
+      "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
+      "last_updated": "2026-05-31",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-31 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-toolbar-model",
+        "docs",
+        "viewer",
+        "toolbar",
+        "model",
+        "docs viewer toolbar model",
+        "docs viewer",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model docs viewer toolbar model docs viewer 2026-05-31 2026 05 31"
+    },
+    {
+      "id": "docs-viewer-toolbar-model-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Toolbar Model Tasks",
+      "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model-tasks",
+      "last_updated": "2026-05-31",
+      "parent_id": "docs-viewer-toolbar-model",
+      "parent_title": "Docs Viewer Toolbar Model",
+      "display_meta": "2026-05-31 • Docs Viewer Toolbar Model",
+      "search_terms": [
+        "docs-viewer-toolbar-model-tasks",
+        "docs",
+        "viewer",
+        "toolbar",
+        "model",
+        "tasks",
+        "docs viewer toolbar model tasks",
+        "docs viewer toolbar model",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "docs-viewer-toolbar-model-tasks docs viewer toolbar model tasks docs viewer toolbar model tasks docs viewer toolbar model 2026-05-31 2026 05 31"
     },
     {
       "id": "docs-viewer-view-capability-contract",

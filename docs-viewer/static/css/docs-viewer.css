@@ -20,10 +20,15 @@
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
   --docs-viewer-sidebar-control-inset: 0.45rem;
-  --docs-viewer-index-width: 16.25rem; /* current: 260px / 16.25rem; try 14rem-20rem */
-  --docs-viewer-doc-width: var(--docs-viewer-content-measure, var(--content-measure, 72ch)); /* current: 72ch; try 60ch-88ch */
-  --docs-viewer-info-width: 17.5rem; /* current: 280px / 17.5rem; try 14rem-22rem */
+
+  /* panel widths */
+  /* the host fallback behavior can stay in the base stylesheet docs-viewer-base.css */
+  --docs-viewer-index-width: 20rem; /* current: 260px / 16.25rem; try 14rem-20rem */
+  --docs-viewer-doc-width: 80ch; /* current: 72ch; try 60ch-88ch */
+  --docs-viewer-info-width: 20rem; /* current: 280px / 17.5rem; try 14rem-22rem */
   --docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
+
+  /* derived tokens */
   --docs-viewer-measure: var(--docs-viewer-doc-width);
   --docs-viewer-index-rail: minmax(var(--docs-viewer-panel-width-min), var(--docs-viewer-index-width));
   --docs-viewer-info-rail: minmax(var(--docs-viewer-panel-width-min), var(--docs-viewer-info-width));
@@ -297,11 +302,24 @@
   cursor: wait;
 }
 
-.docsViewer__searchRow{
+.docsViewer__topBar{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.65rem;
+}
+
+.docsViewer__viewerToolbar{
+  display: flex;
+  flex: 1 1 32rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.docsViewer__manageToolbarMount{
+  flex: 0 1 auto;
+  margin-left: auto;
 }
 
 .docsViewer__scopeField{
@@ -564,6 +582,7 @@
   color: var(--docs-viewer-muted);
 }
 
+.docsViewer__indexViewToggle,
 .docsViewer__infoToggle,
 .docsViewer__bookmarkToggle{
   box-sizing: border-box;
@@ -584,21 +603,29 @@
   cursor: pointer;
 }
 
+.docsViewer__indexViewToggle[hidden],
+.docsViewer__infoToggle[hidden]{
+  display: none;
+}
+
 .docsViewer__infoToggle{
   font-weight: 700;
 }
 
+.docsViewer__indexViewToggle:hover,
 .docsViewer__infoToggle:hover,
 .docsViewer__bookmarkToggle:hover{
   background: var(--docs-viewer-panel-2);
 }
 
+.docsViewer__indexViewToggle:focus-visible,
 .docsViewer__infoToggle:focus-visible,
 .docsViewer__bookmarkToggle:focus-visible{
   outline: 2px solid var(--docs-viewer-border-strong);
   outline-offset: 2px;
 }
 
+.docsViewer__indexViewToggle.is-active,
 .docsViewer__infoToggle.is-active,
 .docsViewer__bookmarkToggle.is-active{
   border-color: var(--docs-viewer-border-strong);

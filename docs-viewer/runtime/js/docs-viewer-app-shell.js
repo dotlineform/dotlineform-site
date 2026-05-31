@@ -1,6 +1,9 @@
 import {
-  renderDocsViewerHeaderControls
-} from "./docs-viewer-header-controls-renderer.js";
+  renderDocsViewerTopBar
+} from "./docs-viewer-top-bar-renderer.js";
+import {
+  applyDocsViewerViewerToolbarProjection
+} from "./docs-viewer-viewer-toolbar-renderer.js";
 import {
   applyDocsViewerDocumentShellProjection,
   documentShellMount,
@@ -99,6 +102,8 @@ function emptyManagementShell(documentRef) {
 
 function appShellResult(parts) {
   return {
+    topBar: parts.topBar,
+    viewerToolbar: parts.viewerToolbar,
     headerControls: parts.headerControls,
     documentShell: parts.documentShell,
     infoPanel: parts.infoPanel,
@@ -114,12 +119,13 @@ export function initDocsViewerAppShell(options) {
   var root = settings.root;
   var documentRef = settings.document || document;
   var routeContext = routeContextFor(settings);
-  var headerControls = renderDocsViewerHeaderControls({
+  var topBar = renderDocsViewerTopBar({
     document: documentRef,
     root: root,
     mount: settings.headerControlsMount || headerControlsMount(root),
     routeContext: routeContext
   });
+  var headerControls = topBar && topBar.viewerToolbar;
   var documentShell = renderDocsViewerDocumentShell({
     document: documentRef,
     root: root,
@@ -135,7 +141,7 @@ export function initDocsViewerAppShell(options) {
     root: root,
     mount: settings.infoPanelMount || infoPanelMount(root)
   });
-  var actionMount = settings.managementActionsMount || settings.mount || managementActionsMount(root);
+  var actionMount = settings.managementActionsMount || settings.mount || (topBar && topBar.manageToolbarMount) || managementActionsMount(root);
   var shellMount = settings.managementShellMount || managementShellMount(root);
   if (actionMount) {
     actionMount.replaceChildren();
@@ -146,6 +152,8 @@ export function initDocsViewerAppShell(options) {
   if (!managementAllowed(routeContext)) {
     return Promise.resolve(appShellResult({
       headerControls: headerControls,
+      topBar: topBar && topBar.topBar,
+      viewerToolbar: topBar && topBar.viewerToolbar,
       documentShell: documentShell,
       infoPanel: infoPanel,
       indexPanel: indexPanel,
@@ -173,6 +181,8 @@ export function initDocsViewerAppShell(options) {
       }) : emptyManagementShell(documentRef);
       return appShellResult({
         headerControls: headerControls,
+        topBar: topBar && topBar.topBar,
+        viewerToolbar: topBar && topBar.viewerToolbar,
         documentShell: documentShell,
         infoPanel: infoPanel,
         indexPanel: indexPanel,
@@ -185,6 +195,8 @@ export function initDocsViewerAppShell(options) {
       console.warn("docs_viewer: management shell failed to initialize", error);
       return appShellResult({
         headerControls: headerControls,
+        topBar: topBar && topBar.topBar,
+        viewerToolbar: topBar && topBar.viewerToolbar,
         documentShell: documentShell,
         infoPanel: infoPanel,
         indexPanel: indexPanel,
@@ -237,6 +249,14 @@ export function getDocsViewerAppShellRefs(options) {
       recentButton: documentRef.getElementById("docsViewerRecentButton"),
       searchInput: documentRef.getElementById("docsViewerSearchInput")
     },
+    topBar: {
+      root: documentRef.getElementById("docsViewerTopBar")
+    },
+    viewerToolbar: {
+      root: documentRef.getElementById("docsViewerViewerToolbar"),
+      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle"),
+      infoToggle: documentRef.getElementById("docsViewerInfoToggle")
+    },
     indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
     documentShell: getDocsViewerAppShellDocumentRefs({ root: root, document: documentRef }),
     infoPanel: getDocsViewerAppShellInfoPanelRefs({ root: root, document: documentRef }),
@@ -246,7 +266,6 @@ export function getDocsViewerAppShellRefs(options) {
     managementActions: {
       mount: documentRef.getElementById("docsViewerManageActionsMount"),
       row: documentRef.getElementById("docsViewerManageRow"),
-      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle"),
       actionsButton: documentRef.getElementById("docsViewerManageActionsButton"),
       actionsMenu: documentRef.getElementById("docsViewerManageActionsMenu")
     }
@@ -259,6 +278,10 @@ export function renderDocsViewerAppShellIndexPanelState(options) {
 
 export function renderDocsViewerAppShellDocumentState(options) {
   applyDocsViewerDocumentShellProjection(options || {});
+}
+
+export function renderDocsViewerAppShellViewerToolbarState(options) {
+  applyDocsViewerViewerToolbarProjection(options || {});
 }
 
 export function renderDocsViewerAppShellInfoPanelState(options) {

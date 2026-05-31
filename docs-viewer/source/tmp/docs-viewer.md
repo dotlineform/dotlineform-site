@@ -7,6 +7,21 @@ ui_status: draft
 parent_id: ""
 ---
 
+## panel widths
+
+[docs-viewer.css](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/static/css/docs-viewer.css:23):
+
+```css
+--docs-viewer-index-width: 16.25rem; /* current: 260px / 16.25rem; try 14rem-20rem */
+--docs-viewer-doc-width: var(--docs-viewer-content-measure, var(--content-measure, 72ch)); /* current: 72ch; try 60ch-88ch */
+--docs-viewer-info-width: 17.5rem; /* current: 280px / 17.5rem; try 14rem-22rem */
+--docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
+```
+
+The grid rails and sidebar now derive from those tokens, so you can experiment by changing only the three main panel values: `index-width`, `doc-width`, and `info-width`.
+
+---
+
 > we didn't discuss the framework question for docs viewer
 
 Correct. We only framed the framework checkpoint for **Studio**.

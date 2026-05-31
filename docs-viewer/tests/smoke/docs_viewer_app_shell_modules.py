@@ -56,12 +56,12 @@ def assert_header_controls_render(page: Page) -> None:
                 searchAriaLabel: searchInput?.getAttribute('aria-label') || '',
                 visibleLabel: document.querySelector('label[for="docsViewerSearchInput"]')?.textContent || '',
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
-                rowCount: document.querySelectorAll('.docsViewer__searchRow').length
+                viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length
             };
         }"""
     )
     expected = {
-        "returnedHeaderClass": "docsViewer__searchRow",
+        "returnedHeaderClass": "docsViewer__viewerToolbar",
         "scopeSelectCount": 0,
         "recentButtonText": "recently added",
         "recentButtonPressed": "false",
@@ -69,7 +69,7 @@ def assert_header_controls_render(page: Page) -> None:
         "searchAriaLabel": "Search library",
         "visibleLabel": "Search library",
         "managementMountCount": 0,
-        "rowCount": 1,
+        "viewerToolbarCount": 1,
     }
     if result != expected:
         raise AssertionError(f"public header controls render failed: {result!r}")
@@ -100,12 +100,12 @@ def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
                 recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
-                rowCount: document.querySelectorAll('.docsViewer__searchRow').length
+                viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length
             };
         }"""
     )
     expected = {
-        "returnedHeaderClass": "docsViewer__searchRow",
+        "returnedHeaderClass": "docsViewer__viewerToolbar",
         "scopeSelectCount": 1,
         "scopeLabelFor": "docsViewerScopeSelect",
         "scopeButtonCount": 1,
@@ -113,7 +113,7 @@ def assert_header_controls_search_disabled_scope_only(page: Page) -> None:
         "recentButtonCount": 0,
         "searchInputCount": 0,
         "managementMountCount": 0,
-        "rowCount": 1,
+        "viewerToolbarCount": 1,
     }
     if result != expected:
         raise AssertionError(f"search-disabled scope header render failed: {result!r}")
@@ -147,11 +147,12 @@ def assert_header_controls_management_render(page: Page) -> None:
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
                 managementMountCount: document.querySelectorAll('#docsViewerManageActionsMount').length,
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
-                rowChildIds: Array.from(document.querySelector('.docsViewer__searchRow').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
+                topBarChildIds: Array.from(document.querySelector('.docsViewer__topBar').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
+                viewerToolbarChildIds: Array.from(document.querySelector('.docsViewer__viewerToolbar').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
             };
         }"""
     )
-    if result["returnedHeaderClass"] != "docsViewer__searchRow" or result["returnedRowId"] != "docsViewerManageRow":
+    if result["returnedHeaderClass"] != "docsViewer__viewerToolbar" or result["returnedRowId"] != "docsViewerManageRow":
         raise AssertionError(f"management header render did not return expected rows: {result!r}")
     if result["scopeSelectCount"] != 1 or result["scopeButtonCount"] != 1 or result["scopeListCount"] != 1:
         raise AssertionError(f"management header render omitted expected scope select controls: {result!r}")
@@ -159,13 +160,16 @@ def assert_header_controls_management_render(page: Page) -> None:
         raise AssertionError(f"management header render omitted expected controls: {result!r}")
     if result["managementMountCount"] != 1 or result["manageRowCount"] != 1:
         raise AssertionError(f"management header render omitted action mount/row: {result!r}")
-    if result["rowChildIds"] != [
+    if result["topBarChildIds"] != ["docsViewerViewerToolbar", "docsViewerManageActionsMount"]:
+        raise AssertionError(f"management top-bar order changed unexpectedly: {result!r}")
+    if result["viewerToolbarChildIds"] != [
         "docsViewerScopeSelect",
         "docsViewerRecentButton",
         "docsViewerSearchInput",
-        "docsViewerManageActionsMount",
+        "docsViewerIndexViewToggle",
+        "docsViewerInfoToggle",
     ]:
-        raise AssertionError(f"management header control order changed unexpectedly: {result!r}")
+        raise AssertionError(f"viewer toolbar control order changed unexpectedly: {result!r}")
 
 
 def assert_management_actions_render(page: Page) -> None:
@@ -174,7 +178,7 @@ def assert_management_actions_render(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
-                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                 </section>
             `;
@@ -183,7 +187,6 @@ def assert_management_actions_render(page: Page) -> None:
             const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
             const ids = [
                 'docsViewerManageRow',
-                'docsViewerIndexViewToggle',
                 'docsViewerManageActionsButton',
                 'docsViewerManageActionsMenu',
                 'docsViewerManageRebuildButton',
@@ -225,7 +228,6 @@ def assert_management_actions_render(page: Page) -> None:
                 missingShellIds: shellIds.filter((id) => !document.getElementById(id)),
                 menuRole: document.getElementById('docsViewerManageActionsMenu')?.getAttribute('role') || '',
                 menuItemCount: document.querySelectorAll('#docsViewerManageActionsMenu [role="menuitem"]').length,
-                indexToggleHidden: document.getElementById('docsViewerIndexViewToggle')?.hidden,
                 actionOrder: Array.from(document.querySelector('.docsViewer__manageActions').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
                 contextActionCount: document.querySelectorAll('#docsViewerContextMenu [data-context-action]').length,
                 metadataDialogLabel: document.querySelector('#docsViewerMetadataModal [role="dialog"]')?.getAttribute('aria-labelledby') || '',
@@ -251,10 +253,8 @@ def assert_management_actions_render(page: Page) -> None:
         raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
     if result["menuRole"] != "menu" or result["menuItemCount"] != 8:
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
-    if result["indexToggleHidden"] is not True:
-        raise AssertionError(f"index-view toolbar toggle should start hidden until projected: {result!r}")
-    if result["actionOrder"][:2] != ["docsViewerIndexViewToggle", "docsViewerManageActionsButton"]:
-        raise AssertionError(f"index-view toolbar toggle should sit immediately left of Actions: {result!r}")
+    if result["actionOrder"][0] != "docsViewerManageActionsButton":
+        raise AssertionError(f"manage toolbar should start with the Actions button: {result!r}")
     if result["contextActionCount"] != 5 or result["metadataDialogLabel"] != "docsViewerMetadataHeading":
         raise AssertionError(f"management context/metadata shell changed unexpectedly: {result!r}")
     if result["importRouteReady"] != "false" or result["settingsFieldName"] != "show_updated_date":
@@ -271,7 +271,7 @@ def assert_management_actions_omitted(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
-                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                 </section>
             `;
@@ -287,7 +287,7 @@ def assert_management_actions_omitted(page: Page) -> None:
                 metadataModalCount: document.querySelectorAll('#docsViewerMetadataModal').length,
                 importRootCount: document.querySelectorAll('#docsHtmlImportRoot').length,
                 settingsModalCount: document.querySelectorAll('#docsViewerSettingsModal').length,
-                actionsMountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                actionsMountCount: document.querySelectorAll('[data-docs-viewer-management-actions-mount]').length,
                 shellMountChildCount: document.querySelector('[data-docs-viewer-management-shell-mount]').children.length
             };
         }"""
@@ -301,7 +301,7 @@ def assert_management_actions_omitted(page: Page) -> None:
         "metadataModalCount": 0,
         "importRootCount": 0,
         "settingsModalCount": 0,
-        "actionsMountChildCount": 0,
+        "actionsMountCount": 0,
         "shellMountChildCount": 0,
     }:
         raise AssertionError(f"public route management action omission failed: {result!r}")
@@ -739,7 +739,6 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
-                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <p id="docsViewerStatus"></p>
                   <div id="docsViewerBookmarkRow"></div>
@@ -788,7 +787,7 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                 infoBodyId: context.appShellRefs.infoPanel.body?.id || '',
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
-                actionsMountChildCount: document.querySelector('[data-docs-viewer-management-actions-mount]').children.length,
+                actionsMountCount: document.querySelectorAll('[data-docs-viewer-management-actions-mount]').length,
                 shellMountChildCount: document.querySelector('[data-docs-viewer-management-shell-mount]').children.length
             };
         }"""
@@ -806,7 +805,7 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
         "infoBodyId": "docsViewerInfoPanelBody",
         "manageRowCount": 0,
         "contextMenuCount": 0,
-        "actionsMountChildCount": 0,
+        "actionsMountCount": 0,
         "shellMountChildCount": 0,
     }:
         raise AssertionError(f"public app boot context contract failed: {result!r}")
@@ -1270,7 +1269,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                 hasRouteWorkflowBridge: Boolean(app && (app.applyCurrentRoute || app.loadIndex || app.loadDoc)),
                 hasInitialLoadPromise: Boolean(app && app.initialLoadPromise && typeof app.initialLoadPromise.then === 'function'),
                 routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
-                headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
+                viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
                 documentShellCount: document.querySelectorAll('.docsViewer__main').length,
                 activeDocId: activeLink?.dataset.docId || '',
@@ -1292,7 +1291,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
         raise AssertionError(f"app boot exposed retired runtime internals: {result!r}")
     if result["hasInitialLoadPromise"] is not True or result["routeId"] != "analysis-public":
         raise AssertionError(f"app boot did not return the intended runtime contract: {result!r}")
-    if result["headerRowCount"] != 1 or result["navCount"] != 1 or result["documentShellCount"] != 1:
+    if result["viewerToolbarCount"] != 1 or result["navCount"] != 1 or result["documentShellCount"] != 1:
         raise AssertionError(f"single-start boot duplicated shell markup: {result!r}")
     if result["activeDocId"] != "analysis" or result["activeDocText"] != "Analysis":
         raise AssertionError(f"single-start boot did not complete initial route load: {result!r}")
@@ -1463,7 +1462,6 @@ def assert_document_shell_render(page: Page) -> None:
                 'docsViewerUpdated',
                 'docsViewerSummary',
                 'docsViewerStatusPills',
-                'docsViewerInfoToggle',
                 'docsViewerBookmarkToggle',
                 'docsViewerContent',
                 'docsViewerResultsStatus',
@@ -1478,8 +1476,6 @@ def assert_document_shell_render(page: Page) -> None:
                 mainLive: document.querySelector('.docsViewer__main')?.getAttribute('aria-live') || '',
                 bookmarkText: document.getElementById('docsViewerBookmarkToggle')?.textContent || '',
                 bookmarkPressed: document.getElementById('docsViewerBookmarkToggle')?.getAttribute('aria-pressed') || '',
-                infoToggleHidden: document.getElementById('docsViewerInfoToggle')?.hidden,
-                infoToggleExpanded: document.getElementById('docsViewerInfoToggle')?.getAttribute('aria-expanded') || '',
                 metaHidden: document.getElementById('docsViewerMeta')?.hidden,
                 resultsHidden: document.getElementById('docsViewerResults')?.hidden,
                 moreHidden: document.getElementById('docsViewerMore')?.hidden
@@ -1494,8 +1490,6 @@ def assert_document_shell_render(page: Page) -> None:
         "mainLive": "polite",
         "bookmarkText": "☆",
         "bookmarkPressed": "false",
-        "infoToggleHidden": True,
-        "infoToggleExpanded": "false",
         "metaHidden": True,
         "resultsHidden": True,
         "moreHidden": True,
@@ -1529,7 +1523,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
     if result != {
         "documentShellCount": 1,
         "statusPillsCount": 1,
-        "infoToggleCount": 1,
+        "infoToggleCount": 0,
         "bookmarkToggleCount": 1,
         "manageRowCount": 1,
         "editButtonCount": 1,
@@ -1591,12 +1585,15 @@ def assert_document_shell_projection(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
             await module.initDocsViewerAppShell({ root, document });
-            const refs = module.getDocsViewerAppShellDocumentRefs({ root, document });
+            const shellRefs = module.getDocsViewerAppShellRefs({ root, document });
+            const refs = shellRefs.documentShell;
+            const toolbarRefs = shellRefs.viewerToolbar;
             refs.more.innerHTML = '<button>More</button>';
             module.renderDocsViewerAppShellDocumentState({
                 refs,
@@ -1613,6 +1610,14 @@ def assert_document_shell_projection(page: Page) -> None:
                     infoToggleLabel: 'Hide document info'
                 }
             });
+            module.renderDocsViewerAppShellViewerToolbarState({
+                refs: toolbarRefs,
+                projection: {
+                    infoToggleHidden: false,
+                    infoTogglePressed: true,
+                    infoToggleLabel: 'Hide document info'
+                }
+            });
             const searchProjection = {
                 metaHidden: refs.meta.hidden,
                 contentHidden: refs.content.hidden,
@@ -1622,9 +1627,9 @@ def assert_document_shell_projection(page: Page) -> None:
                 resultsHidden: refs.results.hidden,
                 moreHidden: refs.more.hidden,
                 moreHtml: refs.more.innerHTML,
-                infoToggleHidden: refs.infoToggle.hidden,
-                infoToggleExpanded: refs.infoToggle.getAttribute('aria-expanded'),
-                infoToggleLabel: refs.infoToggle.getAttribute('aria-label')
+                infoToggleHidden: toolbarRefs.infoToggle.hidden,
+                infoToggleExpanded: toolbarRefs.infoToggle.getAttribute('aria-expanded'),
+                infoToggleLabel: toolbarRefs.infoToggle.getAttribute('aria-label')
             };
             module.renderDocsViewerAppShellDocumentState({
                 refs,
@@ -1641,6 +1646,14 @@ def assert_document_shell_projection(page: Page) -> None:
                     clearMore: true
                 }
             });
+            module.renderDocsViewerAppShellViewerToolbarState({
+                refs: toolbarRefs,
+                projection: {
+                    infoToggleHidden: true,
+                    infoTogglePressed: false,
+                    infoToggleLabel: 'Show document info'
+                }
+            });
             const documentProjection = {
                 contentHidden: refs.content.hidden,
                 resultsStatusText: refs.resultsStatus.textContent,
@@ -1649,9 +1662,9 @@ def assert_document_shell_projection(page: Page) -> None:
                 resultsHidden: refs.results.hidden,
                 moreHidden: refs.more.hidden,
                 moreHtml: refs.more.innerHTML,
-                infoToggleHidden: refs.infoToggle.hidden,
-                infoToggleExpanded: refs.infoToggle.getAttribute('aria-expanded'),
-                infoToggleLabel: refs.infoToggle.getAttribute('aria-label')
+                infoToggleHidden: toolbarRefs.infoToggle.hidden,
+                infoToggleExpanded: toolbarRefs.infoToggle.getAttribute('aria-expanded'),
+                infoToggleLabel: toolbarRefs.infoToggle.getAttribute('aria-label')
             };
             return { searchProjection, documentProjection };
         }"""
@@ -1940,7 +1953,7 @@ def assert_panel_layout_contract(page: Page) -> None:
             const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
-                  <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
+                  <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
@@ -1991,7 +2004,7 @@ def assert_panel_layout_contract(page: Page) -> None:
                 storage,
                 storageScope: 'studio',
                 indexPanelRefs: refs.indexPanel,
-                indexViewToggleRefs: refs.managementActions,
+                indexViewToggleRefs: refs.viewerToolbar,
                 documentShellRefs: refs.documentShell,
                 infoPanelRefs: refs.infoPanel,
                 panels: {
@@ -2009,10 +2022,10 @@ def assert_panel_layout_contract(page: Page) -> None:
                 view: root.dataset.indexPanelView,
                 toggleLabel: refs.indexPanel.sidebarToggle.getAttribute('aria-label'),
                 expandHidden: refs.indexPanel.sidebarExpand.hidden,
-                indexToggleHidden: refs.managementActions.indexViewToggle.hidden,
-                indexToggleText: refs.managementActions.indexViewToggle.textContent,
-                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
-                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label'),
+                indexToggleHidden: refs.viewerToolbar.indexViewToggle.hidden,
+                indexToggleText: refs.viewerToolbar.indexViewToggle.textContent,
+                indexToggleTarget: refs.viewerToolbar.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.viewerToolbar.indexViewToggle.getAttribute('aria-label'),
                 actionOrder: Array.from(document.querySelector('.docsViewer__manageActions').children).map((node) => node.id || node.querySelector('[id]')?.id || '')
             };
             layout.setActiveIndexView('index-graph');
@@ -2023,9 +2036,9 @@ def assert_panel_layout_contract(page: Page) -> None:
                 navHidden: refs.indexPanel.nav.hidden,
                 placeholderHidden: refs.indexPanel.indexPlaceholder.hidden,
                 placeholderText: refs.indexPanel.indexPlaceholder.textContent,
-                indexToggleText: refs.managementActions.indexViewToggle.textContent,
-                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
-                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label')
+                indexToggleText: refs.viewerToolbar.indexViewToggle.textContent,
+                indexToggleTarget: refs.viewerToolbar.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.viewerToolbar.indexViewToggle.getAttribute('aria-label')
             };
             const graphExpandedState = layout.expandIndexPanelState();
             const graphExpandedProjection = {
@@ -2038,9 +2051,9 @@ def assert_panel_layout_contract(page: Page) -> None:
                 view: root.dataset.indexPanelView,
                 expandHidden: refs.indexPanel.sidebarExpand.hidden,
                 navHidden: refs.indexPanel.nav.hidden,
-                indexToggleText: refs.managementActions.indexViewToggle.textContent,
-                indexToggleTarget: refs.managementActions.indexViewToggle.dataset.indexPanelView,
-                indexToggleLabel: refs.managementActions.indexViewToggle.getAttribute('aria-label')
+                indexToggleText: refs.viewerToolbar.indexViewToggle.textContent,
+                indexToggleTarget: refs.viewerToolbar.indexViewToggle.dataset.indexPanelView,
+                indexToggleLabel: refs.viewerToolbar.indexViewToggle.getAttribute('aria-label')
             };
             const toggledState = layout.toggleIndexPanelState();
             const storedStudio = values['dotlineform-docs-viewer-index-panel:studio'];
@@ -2120,7 +2133,6 @@ def assert_panel_layout_contract(page: Page) -> None:
             "indexToggleTarget": "index-graph",
             "indexToggleLabel": "Tree index view",
             "actionOrder": [
-                "docsViewerIndexViewToggle",
                 "docsViewerManageActionsButton",
                 "docsViewerManageViewableButton",
                 "docsViewerDraftToggle",
@@ -3767,7 +3779,7 @@ def assert_render_is_idempotent(page: Page) -> None:
             await module.initDocsViewerAppShell({ root, document, routeContext });
             await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
-                headerRowCount: document.querySelectorAll('.docsViewer__searchRow').length,
+                viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
                 recentButtonCount: document.querySelectorAll('#docsViewerRecentButton').length,
                 searchInputCount: document.querySelectorAll('#docsViewerSearchInput').length,
@@ -3793,7 +3805,7 @@ def assert_render_is_idempotent(page: Page) -> None:
         }"""
     )
     if result != {
-        "headerRowCount": 1,
+        "viewerToolbarCount": 1,
         "scopeSelectCount": 1,
         "recentButtonCount": 1,
         "searchInputCount": 1,

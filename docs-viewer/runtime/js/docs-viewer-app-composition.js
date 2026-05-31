@@ -167,7 +167,7 @@ export function createDocsViewerAppComposition(options) {
     panels: routeConfig.panels,
     routeId: routeConfig.routeId,
     indexPanelRefs: appShellRefs.indexPanel,
-    indexViewToggleRefs: appShellRefs.managementActions,
+    indexViewToggleRefs: appShellRefs.viewerToolbar,
     documentShellRefs: appShellRefs.documentShell,
     infoPanelRefs: appShellRefs.infoPanel,
     hostedViewRegistry: hostedViewRegistry,

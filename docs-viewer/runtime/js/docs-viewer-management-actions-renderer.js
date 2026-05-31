@@ -72,8 +72,7 @@ function renderActionMenuItem(item) {
 
 var MANAGEMENT_ACTIONS_MARKUP = [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
-  '  <div class="docsViewer__manageActions">',
-  '    <button class="docsViewer__indexViewToggle" type="button" id="docsViewerIndexViewToggle" aria-label="Tree index view" title="Tree index view" hidden>📁</button>',
+  '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
   '    <div class="docsViewer__actionsMenuHost">',
   '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
   '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',

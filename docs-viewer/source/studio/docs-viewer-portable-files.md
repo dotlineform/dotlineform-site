@@ -54,7 +54,8 @@ Copy the shared viewer runtime files:
 - `docs-viewer/runtime/js/docs-viewer-config-service.js`
 - `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
-- `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
+- `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`
+- `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`
 - `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
 - `docs-viewer/runtime/js/docs-viewer-view-state.js`
 - `docs-viewer/runtime/js/docs-viewer-view-context.js`

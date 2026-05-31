@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T10:30:33Z",
+  "generated_at": "2026-05-31T14:05:52Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -290,7 +290,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 47088,
+      "content_text_length": 47584,
       "ui_status": "review"
     },
     {
@@ -1382,14 +1382,14 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-05-31",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 9627
+      "content_text_length": 9861
     },
     {
       "scope": "studio",
@@ -1658,7 +1658,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11102
+      "content_text_length": 11156
     },
     {
       "scope": "studio",
@@ -1734,6 +1734,34 @@
       "ui_status": "report",
       "viewer_report": "source_config",
       "viewer_report_access": "manage"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-toolbar-model",
+      "title": "Docs Viewer Toolbar Model",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "docs-viewer",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-toolbar-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model.json",
+      "content_text_length": 4791
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-toolbar-model-tasks",
+      "title": "Docs Viewer Toolbar Model Tasks",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "docs-viewer-toolbar-model",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-toolbar-model-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-toolbar-model-tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model-tasks.json",
+      "content_text_length": 5171
     },
     {
       "scope": "studio",

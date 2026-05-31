@@ -54,7 +54,8 @@ export function startDocsViewerRuntime(options) {
 
   var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
-  var indexViewToggle = appShellRefs.managementActions && appShellRefs.managementActions.indexViewToggle;
+  var viewerToolbarRefs = appShellRefs.viewerToolbar || {};
+  var indexViewToggle = viewerToolbarRefs.indexViewToggle;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
   var documentShellRefs = appShellRefs.documentShell;
@@ -65,7 +66,7 @@ export function startDocsViewerRuntime(options) {
   var updatedEl = documentShellRefs.updatedEl;
   var summaryEl = documentShellRefs.summaryEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
-  var infoToggle = documentShellRefs.infoToggle;
+  var infoToggle = viewerToolbarRefs.infoToggle;
   var bookmarkToggle = documentShellRefs.bookmarkToggle;
   var statusPills = documentShellRefs.statusPills;
   var content = documentShellRefs.content;

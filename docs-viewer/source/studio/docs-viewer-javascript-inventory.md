@@ -103,7 +103,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current risk score: 4.
 - This file is now the shared ES module entrypoint wrapper loaded by route shells.
 - 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; `docs-viewer.js` only initializes that owner before existing route boot and waits for it before management/theme binding.
-- 2026-05-27 owner note: header-control composition moved to `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved control IDs.
+- 2026-05-31 owner note: top-bar layout now lives in `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, and viewer toolbar controls live in `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`. The index-view toggle and info/context toggle are viewer-toolbar controls rather than management-action or document-meta controls.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
 - 2026-05-27 owner note: document shell composition moved to `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved document/meta/search-result IDs. The entry module still orchestrates route boot and passes document-shell refs to focused controllers.
 - 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
@@ -284,16 +284,21 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-app-shell.js`
 
 - Added 2026-05-27 as the app-shell owner for management action-area coordination.
-- Current scope is intentionally narrow: render route-provided header controls through `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`, render index panel chrome through `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, clear the management action mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered rows before existing management/theme binding continues.
+- Current scope is intentionally narrow: render top-bar layout through `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, render viewer toolbar controls through `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`, render index panel chrome through `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, clear the management toolbar mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered surfaces before existing management/theme binding continues.
 - It also renders the document shell through `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved IDs.
 - It also renders the info panel shell through `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`; lifecycle and metadata presentation stay in the focused info-panel host/view modules.
 - It also clears and renders the management shell mount through `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only when route access allows management UI.
 - The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
 - Revisit the inventory table and score during the next full JavaScript inventory refresh; the expected target score for this focused renderer is 4 or lower while it stays limited to shell rendering.
 
-### `docs-viewer/runtime/js/docs-viewer-header-controls-renderer.js`
+### `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`
 
-- Added 2026-05-27 as the focused renderer for scope picker, recently-added button, search input, and management-action mount composition.
+- Added 2026-05-31 as the focused top-bar layout owner for the viewer-toolbar surface and management-toolbar mount.
+- Keep this module limited to rendering layout mounts and delegating control rendering to toolbar owners.
+
+### `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`
+
+- Added 2026-05-31 as the focused renderer for scope picker, recently-added button, search input, index-view toggle, and info/context panel toggle.
 - 2026-05-29 owner note: the scope picker shell now renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount from route context.
 

@@ -3,16 +3,11 @@ function routeAllowsScopeQuery(routeContext) {
   return false;
 }
 
-function routeAllowsManagement(routeContext) {
-  if (routeContext && routeContext.access) return Boolean(routeContext.access.canLoadManagementUi);
-  return false;
-}
-
 function routeEnablesSearch(mount) {
   return !mount || mount.dataset.enableSearch !== "false";
 }
 
-function appendScopeSelect(documentRef, row) {
+function appendScopeSelect(documentRef, toolbar) {
   var label = documentRef.createElement("label");
   label.className = "docsViewer__scopeField";
   label.setAttribute("for", "docsViewerScopeSelect");
@@ -54,20 +49,20 @@ function appendScopeSelect(documentRef, row) {
   button.append(emoji, text);
   menu.append(button, list);
   label.append(select, menu);
-  row.appendChild(label);
+  toolbar.appendChild(label);
 }
 
-function appendRecentButton(documentRef, row) {
+function appendRecentButton(documentRef, toolbar) {
   var button = documentRef.createElement("button");
   button.className = "docsViewer__actionButton docsViewer__recentButton";
   button.type = "button";
   button.id = "docsViewerRecentButton";
   button.setAttribute("aria-pressed", "false");
   button.textContent = "recently added";
-  row.appendChild(button);
+  toolbar.appendChild(button);
 }
 
-function appendSearchInput(documentRef, row, mount) {
+function appendSearchInput(documentRef, toolbar, mount) {
   var ariaLabel = String(mount && mount.dataset.searchAriaLabel || "Search docs");
   var placeholder = String(mount && mount.dataset.searchPlaceholder || "search docs");
 
@@ -89,43 +84,79 @@ function appendSearchInput(documentRef, row, mount) {
   input.setAttribute("aria-label", ariaLabel);
 
   wrap.append(label, input);
-  row.appendChild(wrap);
+  toolbar.appendChild(wrap);
 }
 
-function appendManagementMount(documentRef, row) {
-  var mount = documentRef.createElement("div");
-  mount.id = "docsViewerManageActionsMount";
-  mount.setAttribute("data-docs-viewer-management-actions-mount", "");
-  row.appendChild(mount);
+function appendIndexViewToggle(documentRef, toolbar) {
+  var button = documentRef.createElement("button");
+  button.className = "docsViewer__indexViewToggle";
+  button.type = "button";
+  button.id = "docsViewerIndexViewToggle";
+  button.hidden = true;
+  button.setAttribute("aria-label", "Tree index view");
+  button.title = "Tree index view";
+  button.textContent = "📁";
+  toolbar.appendChild(button);
 }
 
-export function renderDocsViewerHeaderControls(options) {
+function appendInfoToggle(documentRef, toolbar) {
+  var button = documentRef.createElement("button");
+  button.className = "docsViewer__infoToggle";
+  button.id = "docsViewerInfoToggle";
+  button.type = "button";
+  button.hidden = true;
+  button.setAttribute("aria-label", "Show document info");
+  button.setAttribute("aria-expanded", "false");
+  button.title = "Show document info";
+  button.textContent = "i";
+  toolbar.appendChild(button);
+}
+
+export function renderDocsViewerViewerToolbar(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
-  var mount = settings.mount;
+  var mount = settings.mount || null;
+  var controlMount = settings.controlMount || mount;
   var routeContext = settings.routeContext || null;
   if (!mount) return null;
 
-  mount.replaceChildren();
+  var toolbar = documentRef.createElement("div");
+  toolbar.className = "docsViewer__viewerToolbar";
+  toolbar.id = "docsViewerViewerToolbar";
+  toolbar.setAttribute("role", "toolbar");
+  toolbar.setAttribute("aria-label", "Viewer controls");
 
-  var enableSearch = routeEnablesSearch(mount);
+  var enableSearch = routeEnablesSearch(controlMount);
   var allowScopeQuery = routeAllowsScopeQuery(routeContext);
-  if (!enableSearch && !allowScopeQuery) return null;
-
-  var row = documentRef.createElement("div");
-  row.className = "docsViewer__searchRow";
-
   if (allowScopeQuery) {
-    appendScopeSelect(documentRef, row);
+    appendScopeSelect(documentRef, toolbar);
   }
   if (enableSearch) {
-    appendRecentButton(documentRef, row);
-    appendSearchInput(documentRef, row, mount);
+    appendRecentButton(documentRef, toolbar);
+    appendSearchInput(documentRef, toolbar, controlMount);
   }
-  if (routeAllowsManagement(routeContext)) {
-    appendManagementMount(documentRef, row);
-  }
+  appendIndexViewToggle(documentRef, toolbar);
+  appendInfoToggle(documentRef, toolbar);
 
-  mount.appendChild(row);
-  return row;
+  mount.appendChild(toolbar);
+  return toolbar;
+}
+
+export function applyDocsViewerViewerToolbarProjection(options) {
+  var refs = options && options.refs ? options.refs : {};
+  var projection = options && options.projection ? options.projection : {};
+  var infoToggle = refs.infoToggle || null;
+  if (!infoToggle) return;
+
+  if (Object.prototype.hasOwnProperty.call(projection, "infoToggleHidden")) {
+    infoToggle.hidden = Boolean(projection.infoToggleHidden);
+  }
+  if (Object.prototype.hasOwnProperty.call(projection, "infoTogglePressed")) {
+    infoToggle.classList.toggle("is-active", Boolean(projection.infoTogglePressed));
+    infoToggle.setAttribute("aria-expanded", projection.infoTogglePressed ? "true" : "false");
+  }
+  if (Object.prototype.hasOwnProperty.call(projection, "infoToggleLabel")) {
+    infoToggle.setAttribute("aria-label", projection.infoToggleLabel || "Show document info");
+    infoToggle.title = projection.infoToggleLabel || "Show document info";
+  }
 }

@@ -38,16 +38,6 @@ export function renderDocsViewerDocumentShell(options = {}) {
   statusPills.id = "docsViewerStatusPills";
   statusPills.hidden = true;
 
-  const infoToggle = documentRef.createElement("button");
-  infoToggle.className = "docsViewer__infoToggle";
-  infoToggle.id = "docsViewerInfoToggle";
-  infoToggle.type = "button";
-  infoToggle.hidden = true;
-  infoToggle.setAttribute("aria-label", "Show document info");
-  infoToggle.setAttribute("aria-expanded", "false");
-  infoToggle.title = "Show document info";
-  infoToggle.textContent = "i";
-
   const bookmarkToggle = documentRef.createElement("button");
   bookmarkToggle.className = "docsViewer__bookmarkToggle";
   bookmarkToggle.id = "docsViewerBookmarkToggle";
@@ -58,7 +48,7 @@ export function renderDocsViewerDocumentShell(options = {}) {
   bookmarkToggle.title = "Add bookmark";
   bookmarkToggle.textContent = "☆";
 
-  metaActions.append(statusPills, infoToggle, bookmarkToggle);
+  metaActions.append(statusPills, bookmarkToggle);
   metaRow.append(metaCopy, metaActions);
   meta.appendChild(metaRow);
 
@@ -97,7 +87,6 @@ export function findDocsViewerDocumentShellRefs(options = {}) {
     updatedEl: root.querySelector("#docsViewerUpdated"),
     summaryEl: root.querySelector("#docsViewerSummary"),
     statusPills: root.querySelector("#docsViewerStatusPills"),
-    infoToggle: root.querySelector("#docsViewerInfoToggle"),
     bookmarkToggle: root.querySelector("#docsViewerBookmarkToggle"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
@@ -115,19 +104,6 @@ export function applyDocsViewerDocumentShellProjection(options = {}) {
   applyHidden(refs.resultsStatus, projection, "resultsStatusHidden");
   applyHidden(refs.results, projection, "resultsHidden");
   applyHidden(refs.more, projection, "moreHidden");
-  applyHidden(refs.infoToggle, projection, "infoToggleHidden");
-
-  if (refs.infoToggle) {
-    if (Object.prototype.hasOwnProperty.call(projection, "infoTogglePressed")) {
-      refs.infoToggle.classList.toggle("is-active", Boolean(projection.infoTogglePressed));
-      refs.infoToggle.setAttribute("aria-expanded", projection.infoTogglePressed ? "true" : "false");
-    }
-    if (Object.prototype.hasOwnProperty.call(projection, "infoToggleLabel")) {
-      refs.infoToggle.setAttribute("aria-label", projection.infoToggleLabel || "Show document info");
-      refs.infoToggle.title = projection.infoToggleLabel || "Show document info";
-    }
-  }
-
   if (refs.resultsStatus) {
     if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusText")) {
       refs.resultsStatus.textContent = String(projection.resultsStatusText || "");
