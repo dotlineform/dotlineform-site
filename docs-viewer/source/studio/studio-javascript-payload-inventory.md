@@ -12,6 +12,7 @@ This document defines the scoring policy and maintenance method for browser Java
 
 Current risk scores live in:
 
+- [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard)
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
 - Docs Viewer-specific follow-up lives in [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 

@@ -12,6 +12,7 @@ viewable: true
 This document records the current maintenance, structure/consistency, and performance risk inventory for Python and Ruby scripts under `scripts/`.
 
 It complements [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory), but uses script-family ownership rather than browser payload size as the primary review unit.
+Use [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) for the current short priority order before reading the full inventory.
 
 ## Current Priority
 

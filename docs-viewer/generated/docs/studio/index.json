@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T23:19:53Z",
+  "generated_at": "2026-05-31T10:30:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -276,7 +276,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 10250
+      "content_text_length": 10281
     },
     {
       "scope": "studio",
@@ -377,7 +377,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 18275,
+      "content_text_length": 18382,
       "ui_status": "urgent"
     },
     {
@@ -408,6 +408,21 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json",
       "content_text_length": 1688
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-risk-priority-dashboard",
+      "title": "Studio Risk Priority Dashboard",
+      "added_date": "2026-05-31",
+      "last_updated": "2026-05-31",
+      "parent_id": "audit",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-risk-priority-dashboard.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-risk-priority-dashboard",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
+      "content_text_length": 9213,
+      "ui_status": "review"
     },
     {
       "scope": "studio",

@@ -6,6 +6,12 @@ last_updated: 2026-05-31
 ui_status: draft
 ---
 
+comments:
+
+- the cards are good summaries
+- tables less useful when they contain more than 3 columns and lots of text, because the document content area is narrow
+
+
 # risks
 
 I recommend turning the inventories into a small reporting system rather than longer single documents.

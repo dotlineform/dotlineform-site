@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ce71d941a6e94dc03423dba17d654dee",
-    "generated_at_utc": "2026-05-30T22:37:05Z",
-    "count": 209
+    "version": "blake2b-cb230852bafe24a93a836f2abadee7b3",
+    "generated_at_utc": "2026-05-31T10:30:34Z",
+    "count": 210
   },
   "entries": [
     {
@@ -656,6 +656,30 @@
         "24"
       ],
       "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "studio-risk-priority-dashboard",
+      "kind": "doc",
+      "title": "Studio Risk Priority Dashboard",
+      "href": "/docs/?scope=studio&doc=studio-risk-priority-dashboard",
+      "last_updated": "2026-05-31",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-31 • Audit",
+      "search_terms": [
+        "studio-risk-priority-dashboard",
+        "studio",
+        "risk",
+        "priority",
+        "dashboard",
+        "studio risk priority dashboard",
+        "audit",
+        "2026-05-31",
+        "2026",
+        "05",
+        "31"
+      ],
+      "search_text": "studio-risk-priority-dashboard studio risk priority dashboard studio risk priority dashboard audit 2026-05-31 2026 05 31"
     },
     {
       "id": "catalogue",
