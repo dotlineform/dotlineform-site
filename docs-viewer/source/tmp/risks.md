@@ -6,6 +6,12 @@ last_updated: 2026-05-31
 ui_status: draft
 ---
 
+
+
+
+
+---
+
 We need to bring repo context into this because it changes the priorities of the risk definitions themselves. 'change' and 'complexity' are also linked to the purpose of the repo modules themselves.
 
 we also need to be clear that the risk categories are observable indicators, not the actual risks. the risks are:

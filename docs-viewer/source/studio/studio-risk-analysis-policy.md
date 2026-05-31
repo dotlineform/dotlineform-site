@@ -9,69 +9,91 @@ viewable: true
 ---
 # Studio Risk Analysis Policy
 
-This document defines how Studio risk analysis is classified, scored, prioritised, and closed.
+This document defines how Studio risk analysis is classified, prioritised, and closed.
 
 Use this policy with:
 
 - [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard) for the short current priority order
-- [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for browser JavaScript rows
-- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) for Docs Viewer browser JavaScript follow-up
-- [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) for script and backend-service families
+- [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for browser JavaScript evidence during the inventory transition
+- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) for Docs Viewer browser JavaScript evidence during the inventory transition
+- [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) for script and backend-service evidence during the inventory transition
 
 ## Purpose
 
 Risk analysis is an action-selection tool.
-It should identify where a focused improvement will reduce future-change risk, route cost, local-service cost, or planning uncertainty.
+It should identify where a focused improvement will reduce the chance of breakage, accumulated drift, costly repair, or strategic blockage.
 
 It is not:
 
 - a leaderboard of largest files
 - a mandate to split every long module
-- a substitute for route-family judgement
+- a substitute for app-level judgement
 - a reason to create generic frameworks before repeated mechanics are proven identical
+- an attempt to measure project-management, staffing, deadline, or future-skill risk
 
-The expected output is a concrete improvement action with evidence that the risk moved.
+The expected output is a concrete app-improvement action with evidence that the relevant risk indicator moved.
+
+## Actual Risks
+
+The risk categories are observable indicators.
+They are not the actual risks.
+
+The actual risks this policy is trying to prevent are:
+
+- the system breaks in a significant way
+- many small breakages accumulate into a larger failure
+- the fix requires major effort or broad refactor because the cause and ownership are unclear
+- the system becomes too hard to understand, so it does not get maintained and failure risk increases
+- the development strategy compounds risk because a foundational design choice is wrong or no longer suitable for the current apps
 
 ## Review Units
 
-Choose the smallest unit that matches the risk.
+Choose the smallest unit that matches the risk evidence.
 
 | Unit | Use when | Example |
 | --- | --- | --- |
-| File | One module has a coherent risk surface. | A browser route controller owns too many lifecycle concerns. |
+| App | The priority decision should improve one app as a usable system. | Docs Viewer public/runtime performance and local management structure. |
 | File family | Several files form one route, controller, service, or workflow boundary. | Docs Viewer search, management, bookmark, or config modules. |
-| Script family | A backend workflow spans command wrappers, services, generators, and helpers. | Catalogue save/build, docs build/import/export, media derivation. |
+| File | One module has a coherent risk surface. | A browser route controller owns too many lifecycle concerns. |
+| Workflow family | A backend workflow spans command wrappers, services, generators, and helpers. | Catalogue save/build, docs build/import/export, media derivation. |
 | Cross-cutting family | Several services share mechanics but not domain behavior. | Local-server JSON parsing, CORS, request limits, compact logs. |
 | Inventory quality | The risk report itself is stale or contradictory. | Full JavaScript rows disagree with the Docs Viewer-specific rows. |
 
-Do not mix file-level and family-level conclusions in the same action unless the evidence names both.
-The dashboard should describe the improvement unit explicitly.
+Frontend and backend evidence should be reviewed together when they belong to the same app.
+The action should improve the app, not send the work into a technical rabbit hole because one layer has a convenient table.
 
-## General Risk Categories
+## Observable Risk Indicators
 
-### Maintenance Risk
+### Architectural Fit Risk
 
-Maintenance risk is the cost and danger of changing behavior later.
+Architectural fit risk asks whether foundational design, framework, hosting, or strategy choices still fit the app's purpose.
+
+Useful indicators:
+
+- the current framework is now mostly historical convenience rather than the best fit
+- hosting or publishing constraints force awkward downstream behavior
+- a major app direction has changed but the technical base still reflects the old direction
+- future feature work repeatedly pushes against the same foundational boundary
+- a route, app, or workflow has no credible long-term strategy beyond incremental patching
+
+Examples:
+
+- Jekyll/Ruby remains in a path mostly because it was once convenient, even if the current app now behaves more like generated static route stubs plus local JS tooling.
+- Analytics is likely to grow toward richer data visualisation and LLM-sharing workflows, so weak app architecture has higher future impact than it would in a stable public page.
+
+### Structural Risk
+
+Structural risk asks whether the current organisation makes cause, ownership, and change boundaries clear enough.
 
 Useful indicators:
 
 - mixed responsibilities such as rendering, validation, service calls, state mutation, modal lifecycle, data normalization, and workflow rules in one owner
 - broad state reads or hidden contracts instead of explicit inputs
-- repeated recent touches to the same module or workflow
-- hard-to-test behavior that only runs through route boot, DOM events, or local service startup
-- fallback paths where post, patch, offline, dry-run, write, and manual modes are interleaved
-
-### Ownership Boundary Risk
-
-Ownership boundary risk covers current structural shape and future architectural drift.
-
-At dashboard level, treat structural and architectural risk as one priority category unless the action clearly addresses only one of them.
-In this repo, most useful improvements reduce both: moving a complete responsibility to a focused owner improves current structure and makes the next related change less likely to drift back into a broad coordinator.
-
-Use the terms separately only when the distinction is measurable:
-
-- Structural risk asks: is the code currently shaped according to the intended ownership model?
-- Architectural risk asks: will the next related change naturally land in the right place?
+- route/controller files own behavior that belongs in domain, service, render, modal, route-state, or workflow modules
+- CSS or UI structure is tangled enough that changing one thing can break another without a clear cause/effect chain
+- code is physically too long to navigate efficiently, increasing human context switching and AI token/context cost
+- the same concept is updated in several places without a clear owner
+- sibling route or service families use inconsistent patterns for the same responsibility
 
 Evidence of improvement:
 
@@ -81,10 +103,30 @@ Evidence of improvement:
 - sibling route or service families now follow the same boundary pattern
 - focused checks cover behavior that previously required full route or service boot
 
-### Performance Risk
+### Workflow Risk
 
-Performance risk is avoidable cost in route load, interaction, local-service work, rebuild work, or external-command work.
-It is not raw file size alone.
+Workflow risk is most relevant to backend, local-service, generated-data, and operational paths.
+It asks whether side effects, generated files, logs, backups, and chained operations are visible and controlled.
+
+Useful indicators:
+
+- one save/build path touches many outputs, backups, generated payloads, logs, search indexes, media derivatives, or activity rows
+- generated files, `var/` files, backups, or logs can build up without being noticed
+- it is not obvious why an output is being generated or whether it is still needed
+- dry-run, write, fallback, manual, and offline modes are interleaved
+- local-service response envelopes, request parsing, write allowlists, or log fields drift across services
+- broad audit scripts grow by adding unrelated checks without grouping or machine-readable sections
+
+Evidence of improvement:
+
+- diagnostics show counts, elapsed time, skipped work, generated artifact groups, and fallback reasons
+- write allowlists and backup behavior remain visible
+- generated artifact behavior lives in generation, lookup, source-model, or media owners rather than HTTP handlers
+- repeated local-service mechanics are standardized only where contracts are identical
+
+### Performance / Cost Risk
+
+Performance and cost risk is avoidable cost in public route load, interaction, local-service work, rebuild work, media work, or developer/AI navigation.
 
 Useful indicators:
 
@@ -93,6 +135,7 @@ Useful indicators:
 - repeated full-list rendering or expensive input-time filtering
 - repeated JSON loads, joins, full scans, subprocess calls, or media freshness checks
 - conservative full rebuilds where field-aware metadata could safely narrow the scope
+- large files or tangled surfaces increase review time, search time, token cost, or missed-change risk
 
 Evidence of improvement:
 
@@ -101,22 +144,116 @@ Evidence of improvement:
 - a measured broad path becomes a narrower path with equivalent dry-run/write behavior
 - media or rebuild reports identify slow stages before optimization is attempted
 
-### Planning Risk
+### Planning / Evidence Risk
 
-Planning risk applies when the inventory or dashboard is stale, contradictory, or too scattered to support action.
+Planning and evidence risk applies when the inventory, dashboard, or diagnostics are stale, contradictory, missing, or too scattered to support action.
 
-Use this category sparingly.
-It should lead to reconciliation work, not to code refactoring by guesswork.
+Use this category to make the decision surface reliable.
+It should not be used as a reason to refactor code by guesswork.
+
+Useful indicators:
+
+- active paths, scores, current owners, and priority rows disagree across inventories
+- retired paths remain mixed with active owners
+- frontend and backend evidence is separated in a way that obscures the app-level priority
+- a performance claim is plausible but unmeasured
+- the dashboard duplicates long tables instead of pointing to evidence
 
 Evidence of improvement:
 
-- active paths, scores, current owners, and priority rows agree across source inventories
+- app-owned inventories agree with the dashboard
 - stale retired paths are clearly marked as retired
-- the dashboard points to the current evidence document instead of duplicating long tables
+- diagnostics exist before optimization work is prioritised
+- the next action and close-out evidence are concrete
 
-## Frontend Policy
+## App Priority Order
 
-Frontend risk analysis applies to browser JavaScript and route-facing UI modules.
+Each app has its own order of importance for the same indicator categories.
+This is not a scoring formula.
+It is a practical priority order for deciding what becomes actionable first.
+
+A lower-ordered category is not ignored.
+It simply should not become the next action unless it is causing visible breakage, blocking a higher-ordered category, or the higher-ordered categories have no current actionable evidence.
+For example, a local server path can have high performance risk, but if performance is low in that app's priority order, the work should not repeatedly need to defend why that optimization is not next.
+
+### Public Site
+
+Purpose: catalogue artwork and text on GitHub Pages.
+
+Priority order:
+
+1. Performance / cost
+2. Architectural fit
+3. Structural
+4. Workflow
+5. Planning / evidence
+
+Rationale:
+
+- public payloads, media, responsiveness, and elegant UI matter directly
+- static hosting and Jekyll/Ruby fit are strategic architecture concerns
+- structure and taxonomy are complex but relatively stable
+- data volumes are low to moderate and new-record volume is modest
+
+### Studio
+
+Purpose: local app for managing data published on the public site.
+
+Priority order:
+
+1. Structural
+2. Workflow
+3. Architectural fit
+4. Planning / evidence
+5. Performance / cost
+
+Rationale:
+
+- local runtime hides most user-visible performance problems
+- performance work matters when it affects development speed or causes repeated broad work, but it is usually not the first app-level action
+- the main risk is keeping a formerly large unmanaged codebase moving toward clear JS-app and service ownership
+- Docs Viewer and Analytics decoupling has reduced but not removed structure pressure
+
+### Analytics
+
+Purpose: manage analytical dimensions over catalogue data and provide analytical tools and resources.
+
+Priority order:
+
+1. Architectural fit
+2. Structural
+3. Workflow
+4. Planning / evidence
+5. Performance / cost
+
+Rationale:
+
+- likely future growth includes third-party visualisation libraries and LLM data-sharing workflows
+- weak architecture or unclear app boundaries will compound faster here than in stable public catalogue routes
+- local performance is lower priority unless richer visualisation/data workflows make it user-visible or development-blocking
+
+### Docs Viewer
+
+Purpose: manage text/media documents for publishing and support read-only public installs, Studio docs, and Analytics-related data-sharing/documentation flows.
+
+Priority order:
+
+1. Structural
+2. Performance / cost
+3. Architectural fit
+4. Workflow
+5. Planning / evidence
+
+Rationale:
+
+- local Docs Viewer gets frequent interaction, so responsiveness is more noticeable than most local Studio paths
+- read-only public installs make frontend JavaScript performance a public-site concern
+- UI and document structure are under active refinement
+- future Analytics integration and data-sharing support raise architecture pressure
+
+## Frontend Evidence
+
+Frontend risk evidence applies to browser JavaScript, CSS, route-facing UI modules, and public/runtime payloads.
 
 Current active roots include:
 
@@ -128,49 +265,20 @@ Current active roots include:
 
 Do not treat retired `assets/studio/js/...` paths as active owners when planning new work.
 
-### Frontend Scoring
+The current JavaScript inventories still contain legacy frontend score columns: `Maint.`, `Struct.`, `Perf.`, and `Arch.`.
+During the transition:
 
-Browser JavaScript uses four 0-3 category scores:
+- treat `Maint.` evidence as structural, workflow, performance/cost, or planning/evidence evidence according to the specific note
+- keep `Struct.`, `Perf.`, and `Arch.` as evidence columns, but prioritise them through the app priority order
+- do not start a frontend action from the global table alone when an app-owned priority list gives clearer direction
 
-- Maintenance
-- Structural
-- Performance
-- Architectural
-
-The total score is the sum of those category scores.
-The normal target is 4 or lower.
-A score of 4 means every category may still be present, but each is low.
-
-Use 0 carefully.
-It means the category is materially absent or inapplicable in the file's current role, not merely that the file seems easy.
-
-| Risk | Score 0: absent or inapplicable | Score 1: low risk | Score 2: medium risk | Score 3: high risk |
-| --- | --- | --- | --- | --- |
-| Maintenance | Isolated, stable, generated, declarative, or mechanically owned file with no direct maintenance surface. | Focused role, explicit inputs, stable behavior, directly testable or small enough to review. | Some mixed concerns, recurring touches, broad reads, or moderate test friction. | Many mixed concerns, broad reads/writes, frequent edits, fallback paths, or hard-to-test behavior. |
-| Structural | No meaningful structural ownership decision exists beyond keeping the file isolated in its current role. | Module shape matches its role and established route-family boundaries. | Partial split exists, but ownership or contracts remain incomplete. | Route/controller owns layers that belong in domain, service, render, modal, route-state, or workflow modules. |
-| Performance | No material runtime performance requirement for the file's current route exposure, data volume, and interaction pattern. | Lazy, rare, small, public-cost-neutral, or no meaningful boot/input cost. | Route-local exposure, moderate size, repeated list work, or occasional input-time cost. | Public/shared eager exposure, large initial payload, heavy boot work, repeated full renders, or expensive input-time operations. |
-| Architectural | No plausible future-responsibility drift because the file is isolated or future work has a clearly separate owner. | Clear owner exists for future changes and the file reinforces durable patterns. | Future changes may drift into the file because ownership is only partly clear. | Current shape is likely to attract unrelated future work, diverge from sibling patterns, or require unrelated concerns to be reviewed together. |
-
-Risk bands:
-
-- 0-3: below the normal target; acceptable only when one or more category scores are legitimately absent or inapplicable
-- 4: normal target state
-- 5: low-priority watch item; improve opportunistically when changing nearby behavior
-- 6-7: medium priority; schedule as part of the relevant route-family batch
-- 8-12: high priority; plan a focused mitigation slice before adding more behavior to that file
-
-Priority should be based on current risk and concrete improvement evidence, not ease alone.
-
-### Frontend Improvement Rules
-
-Prefer slices that remove a complete responsibility from a mixed controller and leave a clearer ownership boundary.
-
-Good frontend score-moving slices:
+Good frontend improvement slices:
 
 - move rendering, modal lifecycle, workflow, state projection, service calls, or route commands to a focused owner
 - narrow broad state handoffs to explicit owner inputs
 - keep route entry modules as orchestration shells
 - lazy-load management-only, report-only, import-only, or modal-heavy behavior where route exposure makes that meaningful
+- reduce public payload, boot work, or input-time work where the app priority order makes performance actionable
 - add focused module checks for behavior that previously required full route boot
 
 Poor frontend slices:
@@ -179,37 +287,26 @@ Poor frontend slices:
 - split a file only because it is large
 - add generic abstractions before sibling route families show the same need
 - lower a score merely because code moved elsewhere
+- optimise local-only route payloads when higher-priority structural or workflow work is blocking app clarity
 
-Rescore downward only when at least one category has materially changed.
-Record whether the slice was score-moving or only a guardrail.
+## Backend Evidence
 
-## Backend Policy
+Backend risk evidence applies to Python and Ruby scripts, local service handlers, generators, builders, import/export tools, audit scripts, media scripts, generated payloads, backups, logs, and `var/` outputs.
 
-Backend risk analysis applies to Python and Ruby scripts, local service handlers, generators, builders, import/export tools, audit scripts, and media scripts.
+Backend evidence should sit in the same app priority list as frontend evidence.
+Separate backend inventories are useful as evidence stores, but they should not create a separate queue of technical actions detached from the app they affect.
 
-Backend work uses family-level classification rather than a four-score file table because the main risk often sits in workflow breadth, rebuild scope, service mechanics, write safety, and cross-language contracts.
+Classify backend evidence with the same observable indicators:
 
-### Backend Classifications
+- Architectural fit
+- Structural
+- Workflow
+- Performance / cost
+- Planning / evidence
 
-Classify each script or service family as high, medium, or low for:
+Backend workflow risk is usually more important than frontend workflow risk because backend paths create source writes, backups, generated outputs, service responses, logs, and local state.
 
-- Maintenance risk
-- Structure and consistency risk
-- Performance risk
-
-Backend policy intentionally combines structural and architectural concerns as **Structure and consistency risk**.
-Splitting them into separate backend categories would usually double-count the same evidence: module ownership, command shape, testability, logging, backup behavior, write allowlists, response envelopes, and service mechanics.
-
-High means the area should be considered for near-term improvement when related work is opened.
-Medium means watch it and improve opportunistically.
-Low means no immediate structural or performance action is recommended.
-
-### Backend Improvement Rules
-
-Start with visibility when performance or rebuild scope is uncertain.
-Do not optimize broad rebuilds, media work, or local-service paths until diagnostics show which path is expensive or repeated.
-
-Good backend score-moving or classification-moving slices:
+Good backend improvement slices:
 
 - add counts, elapsed time, skipped work, and fallback reasons to save/build/rebuild/media responses or logs
 - move generated artifact behavior into existing generation, lookup, source-model, or media owners rather than HTTP service handlers
@@ -227,27 +324,28 @@ Poor backend slices:
 
 ## Dashboard Policy
 
-The dashboard is the short decision surface.
+The dashboard is the short app-level decision surface.
 It should not duplicate full inventory tables.
 
 Dashboard rows must include:
 
 - priority
-- area
+- app or app-facing area
 - unit
-- main risk
+- main risk indicator
 - next action
 - evidence of improvement
 
-Use combined category labels when they better match action:
+Frontend and backend evidence should appear in the same priority list when both affect the same app.
+The dashboard should choose actions that improve the app, not actions that are merely convenient for one technology layer.
 
-- `Maintenance`
-- `Ownership boundary`
-- `Performance`
-- `Planning`
-- `Structure and consistency`
+Use these indicator labels:
 
-Only split structural and architectural dashboard rows when the action and evidence are distinct.
+- `Architectural fit`
+- `Structural`
+- `Workflow`
+- `Performance / cost`
+- `Planning / evidence`
 
 ## Close-Out Rules
 
@@ -255,9 +353,9 @@ A risk-reduction action closes only when the evidence has changed.
 
 Examples:
 
-- a frontend row is rescored because a complete responsibility moved to a focused owner
-- a backend family classification changes because diagnostics or ownership boundaries materially improved
-- a performance priority changes because measured diagnostics identify or eliminate a repeated broad path
-- a planning-risk item closes because active paths and scores agree across inventories
+- a frontend controller family has a clearer owner and future related changes have an obvious destination
+- a backend workflow shows counts, elapsed time, skipped work, and fallback reasons that did not exist before
+- a public route payload or boot cost is reduced where public performance is an app priority
+- an app-owned inventory agrees with the dashboard and retired paths are clearly marked
 
-If the work only adds tests, docs, or guardrails, record it as a guardrail unless it also changes the underlying ownership, performance, or planning evidence.
+If the work only adds tests, docs, or guardrails, record it as a guardrail unless it also changes the underlying architectural, structural, workflow, performance/cost, or planning/evidence risk.
