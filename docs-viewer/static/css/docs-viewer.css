@@ -1,7 +1,6 @@
 /* docs-viewer/static/css/docs-viewer.css */
 
 .docsViewer{
-  --docs-viewer-measure: var(--docs-viewer-content-measure, var(--content-measure, 72ch));
   --docs-viewer-draft-color: var(--docs-viewer-muted);
   --docs-viewer-text: var(--docs-viewer-theme-text, var(--docs-viewer-base-text, var(--text, #111)));
   --docs-viewer-muted: var(--docs-viewer-theme-muted, var(--docs-viewer-base-muted, var(--muted, #555)));
@@ -21,9 +20,14 @@
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
   --docs-viewer-sidebar-control-inset: 0.45rem;
-  --docs-viewer-index-rail: minmax(220px, 260px);
-  --docs-viewer-info-rail: minmax(220px, 280px);
-  --docs-viewer-panel-clearance-width: 16.25rem;
+  --docs-viewer-index-width: 16.25rem; /* current: 260px / 16.25rem; try 14rem-20rem */
+  --docs-viewer-doc-width: var(--docs-viewer-content-measure, var(--content-measure, 72ch)); /* current: 72ch; try 60ch-88ch */
+  --docs-viewer-info-width: 17.5rem; /* current: 280px / 17.5rem; try 14rem-22rem */
+  --docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
+  --docs-viewer-measure: var(--docs-viewer-doc-width);
+  --docs-viewer-index-rail: minmax(var(--docs-viewer-panel-width-min), var(--docs-viewer-index-width));
+  --docs-viewer-info-rail: minmax(var(--docs-viewer-panel-width-min), var(--docs-viewer-info-width));
+  --docs-viewer-panel-clearance-width: var(--docs-viewer-index-width);
   --docs-viewer-panel-clearance: calc(18px + var(--docs-viewer-panel-clearance-width) + var(--docs-viewer-space-5));
   --docs-viewer-document-width: min(
     100%,
@@ -38,7 +42,7 @@
 }
 
 .docsViewer[data-info-panel-state="open"]{
-  --docs-viewer-panel-clearance-width: 17.5rem;
+  --docs-viewer-panel-clearance-width: var(--docs-viewer-info-width);
   grid-template-columns:
     var(--docs-viewer-index-rail)
     minmax(0, 1fr)
@@ -48,13 +52,13 @@
 @media (min-width: 821px){
   .docsViewer[data-index-panel-state="collapsed"]{
     --docs-viewer-panel-clearance-width: 2.8rem;
-    --docs-viewer-measure: var(--docs-viewer-content-measure, var(--content-measure, 72ch));
+    --docs-viewer-measure: var(--docs-viewer-doc-width);
     grid-template-columns: 2.8rem minmax(0, 1fr);
   }
 
   .docsViewer[data-index-panel-state="collapsed"][data-info-panel-state="open"]{
-    --docs-viewer-panel-clearance-width: 17.5rem;
-    --docs-viewer-measure: var(--docs-viewer-content-measure, var(--content-measure, 72ch));
+    --docs-viewer-panel-clearance-width: var(--docs-viewer-info-width);
+    --docs-viewer-measure: var(--docs-viewer-doc-width);
     grid-template-columns: 2.8rem minmax(0, 1fr) var(--docs-viewer-info-rail);
   }
 
@@ -83,7 +87,7 @@
   grid-row: 2;
   min-width: 0;
   justify-self: start;
-  width: min(100%, 16.25rem);
+  width: min(100%, var(--docs-viewer-index-width));
 }
 
 .docsViewer__sidebarInner{
