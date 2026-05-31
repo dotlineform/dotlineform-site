@@ -17,9 +17,9 @@ Status:
 
 Design a workspace mount architecture so Docs Viewer can read and write documentation data from either the current repo or an external application data workspace.
 
-This is the larger architecture behind true local scopes.
-If a user does not want generated JSON committed, they almost certainly do not want the source Markdown committed either.
-True local scopes should therefore keep source, config, manifest, generated docs payloads, and generated search payloads outside the repo or under an ignored application-local data root.
+If a user does not want generated JSON committed, they almost certainly do not want the source Markdown committed either. True local scopes should therefore keep source, config, manifest, generated docs payloads, and generated search payloads outside the repo or under an ignored application-local data root.
+
+This is the larger architecture behind true local scopes, and should be treated as a product/application-data change, not as a small New Scope form tweak. This request defines the broader workspace abstraction that would subsume repo-backed and non-repo-backed scope storage under one resolver.
 
 ## Goal
 
@@ -32,7 +32,6 @@ The desired end state is:
 - true local scopes can live outside the repo
 - repo-backed workspaces and external workspaces use the same scope-resolution abstraction
 - browser reads for non-public data go through a Docs Viewer service URL contract, not static repo-relative files
-- this work can carry forward if Docs Viewer becomes a standalone application
 
 ## Workspace Model
 
@@ -80,12 +79,9 @@ The current Docs Viewer scope model assumes repo-relative source and generated p
 - browser runtime fetches generated payload URLs from the current web origin; it cannot fetch arbitrary local filesystem paths
 - local management, import, rebuild, watcher, manifest, and deletion helpers report or validate paths as repo-relative paths
 
-That means `in repo, untracked` and `not in repo` are different implementation tiers.
+That means `in repo, untracked` and `not in repo` are different implementation tiers. `In repo, untracked` can mostly use the existing path model with better ignore rules and preview warnings. It remains visible to repo tooling and can still be accidentally staged if ignore coverage is incomplete. `Not in repo` needs an application data layer.
 
-`In repo, untracked` can mostly use the existing path model with better ignore rules and preview warnings.
-It remains visible to repo tooling and can still be accidentally staged if ignore coverage is incomplete.
-
-`Not in repo` needs an application data layer.
+Workspace mounts should treat the current repo-backed setup as one adapter, not as legacy special-case behavior.
 
 ## Required Architecture Work
 
@@ -98,20 +94,6 @@ Required implementation work includes:
 - a browser/runtime URL contract for local generated payloads served by the Docs Viewer service
 - import, rebuild, watcher, capability, delete, and cleanup paths that understand external application data roots
 - tests that prove true local scope files do not appear in normal repo staging workflows
-
-This work should be treated as a product/application-data change, not as a small New Scope form tweak.
-
-## Relationship To Committed Manage-Mode Storage
-
-[Committed Manage-Mode Scope Storage Request](/docs/?scope=studio&mode=manage&doc=site-request-committed-manage-mode-scope-storage) is the near-term request for Studio and repo-tracked manage-mode scopes.
-
-That request fixes the immediate `assets/` publication-boundary problem.
-This request defines the broader workspace abstraction that would eventually subsume repo-backed and non-repo-backed scope storage under one resolver.
-
-The two efforts should stay aligned:
-
-- committed manage-mode storage should avoid hardcoding paths in ways that block workspace mounts later
-- workspace mounts should treat the current repo-backed setup as one adapter, not as legacy special-case behavior
 
 ## Implementation Tasks
 
