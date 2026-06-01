@@ -55,7 +55,7 @@ The import modal:
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
 - hides role-marked interactive HTML files from the staged file picker and copies each one into `assets/docs/interactive/<scope>/` for manual iframe-token embedding
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
-- validates the generated Markdown through the current Jekyll docs renderer before write success
+- validates the generated Markdown through the shared Python Docs Viewer Markdown renderer before write success
 - writes a new doc immediately when the target is free
 - opens a filename-conflict modal when the staged filename stem matches an existing doc target
 
@@ -277,7 +277,7 @@ Expect simplified output for:
 - source images or downloadable files that have not yet been copied to the configured media store
 
 Markdown, text, SVG, image-wrapper, and file-wrapper imports bypass the HTML converter.
-They are still validated through the current Jekyll docs renderer before write success.
+They are still validated through the shared Python Docs Viewer Markdown renderer before write success.
 
 ## Related References
 

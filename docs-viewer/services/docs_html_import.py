@@ -6,12 +6,9 @@ import base64
 import binascii
 import datetime as dt
 import json
-import os
 import re
 import shutil
-import subprocess
 import sys
-import tempfile
 from collections import Counter
 from dataclasses import dataclass, field
 from html import escape
@@ -22,6 +19,13 @@ from urllib.parse import unquote, urlsplit
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 from docs_scope_config import IMPORT_MEDIA_CONFIGS, MEDIA_PATH_PREFIXES, SCOPE_ROOTS
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+if str(SHARED_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(SHARED_PYTHON_DIR))
+
+from markdown_renderer import markdown_renderer_contract, render_markdown_document  # noqa: E402
 
 
 STAGING_REL_DIR = Path("var/docs/import-staging")
@@ -182,13 +186,6 @@ def normalize_scope(scope: str) -> str:
     if value not in SCOPE_ROOTS:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_ROOTS.keys()))}")
     return value
-
-
-def detect_bundle_bin() -> Optional[str]:
-    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
-    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
-        return str(rbenv_bundle)
-    return shutil.which("bundle")
 
 
 def source_format_for_path(path: Path) -> str:
@@ -1105,42 +1102,24 @@ def materialize_inline_raster_media(
     return written
 
 
-def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, Any]:
-    renderer_script = repo_root / "studio" / "shared" / "ruby" / "render_markdown_with_jekyll.rb"
-    if not renderer_script.exists():
-        raise RuntimeError(f"Markdown renderer helper not found: {relative_path(repo_root, renderer_script)}")
-
-    bundle_bin = detect_bundle_bin()
-    if not bundle_bin:
-        raise RuntimeError("Bundler not found; ensure the local Jekyll toolchain is available before validating imported Markdown.")
-
-    with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".md", delete=False) as handle:
-        handle.write(markdown)
-        handle.write("\n")
-        temp_path = Path(handle.name)
-
+def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, Any]:
     try:
-        completed = subprocess.run(
-            [bundle_bin, "exec", "ruby", str(renderer_script), str(temp_path)],
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-    finally:
-        try:
-            temp_path.unlink()
-        except OSError:
-            pass
+        rendered = render_markdown_document(markdown, title=title)
+    except Exception as exc:
+        raise RuntimeError(f"Python Markdown validation failed: {exc}") from exc
 
-    if completed.returncode != 0:
-        detail = (completed.stderr or completed.stdout).strip() or f"exit {completed.returncode}"
-        raise RuntimeError(f"Jekyll Markdown validation failed: {detail}")
-
+    contract = markdown_renderer_contract()
     return {
         "ok": True,
-        "html_chars": len(completed.stdout),
-        "renderer": "studio/shared/ruby/render_markdown_with_jekyll.rb",
+        "html_chars": len(rendered.html),
+        "text_chars": len(rendered.plain_text),
+        "renderer": "studio/shared/python/markdown_renderer.py",
+        "renderer_contract": contract,
+        "sanitizer_boundary": {
+            "import_html": "docs_html_import structured conversion and SVG serialization",
+            "raw_markdown_html": "allowed by renderer contract; authored Markdown remains trusted input",
+            "sanitizes_html": False,
+        },
     }
 
 
@@ -1313,7 +1292,7 @@ def generate_html_import_preview(
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
     apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1806,7 +1785,7 @@ def generate_markdown_import_preview(
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1839,7 +1818,7 @@ def generate_markdown_package_import_preview(
         scope=normalized_scope,
     )
     apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1859,7 +1838,7 @@ def generate_text_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1901,7 +1880,7 @@ def generate_svg_import_preview(
         "tag_counts": {"svg": svg_count} if svg_count else {},
         "comment_count": 0,
     }
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1920,7 +1899,7 @@ def generate_image_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 
@@ -1939,7 +1918,7 @@ def generate_file_media_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
-    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
 

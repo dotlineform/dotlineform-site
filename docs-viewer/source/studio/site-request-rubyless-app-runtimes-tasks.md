@@ -29,12 +29,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Preserved Python Docs Viewer payload builder command behavior with focused checks for dry-run no-write mode, write mode browser config output, unchanged second writes, targeted `--only-doc-ids` CLI diagnostics, generated reference payload behavior, and concise front-matter failure output.
 - Added the Python Docs Viewer search builder entrypoint at `docs-viewer/build/build_search.py`, covering generated docs index reads, viewability and manage-only filtering, current docs-search schema/version hashing, dry-run/write/force modes, scope-specific output paths, targeted `--only-doc-ids` patch/remove behavior, and failure handling for docs-incompatible targeted flags. Callers still use the Ruby builder until the orchestration swap task.
 - Switched Docs Viewer rebuild orchestration to Python builders in the management rebuild helper, live rebuild watcher, and scope lifecycle build-command planning. The swap removes Bundler/Ruby detection and command construction from docs payload/search rebuild paths, keeps targeted docs/search behavior, and leaves Docs import Markdown validation for task 12.
+- Replaced Docs import Markdown validation with the shared Python Markdown renderer/import sanitizer boundary for HTML, Markdown, Markdown package, text, SVG, image, and file-media previews. Docs import preview validation no longer detects Bundler or invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`.
 
 ## Next Task Steer
 
-Continue with Phase 2 task 12: replace Docs import Markdown validation.
+Continue with Phase 2 task 13: update Analytics documents Data Sharing apply path.
 
-The remaining Docs Viewer service-side Ruby use is the import Markdown validation path in `docs-viewer/services/docs_html_import.py`. Replace that with the Python renderer/sanitizer boundary without changing the already-swapped docs payload/search rebuild orchestration.
+Docs Viewer payload/search rebuild orchestration and Docs import Markdown validation now use Python paths. Next, confirm Analytics documents Data Sharing apply reaches only the Python Docs Viewer rebuild path through `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` and `docs-viewer/services/docs_data_sharing/write.py`.
 
 ## Implementation Steer
 
@@ -114,7 +115,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 9 | done | Preserve Docs Viewer payload builder command behavior. Implement dry-run/write modes, scope selection, targeted `--only-doc-ids`, diagnostics, unchanged-file behavior, generated reference payloads, and failure messages needed by management workflows. |
 | 10 | done | Build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`. It should consume generated docs payloads, preserve the current search index schema/version/hash behavior, support scope-specific writes, and support targeted docs-search updates where currently used. |
 | 11 | done | Switch Docs Viewer rebuild orchestration to Python builders. Update `docs-viewer/services/docs_write_rebuild.py`, `docs-viewer/services/docs_live_rebuild_watcher.py`, `docs-viewer/services/docs_scope_manifest.py`, `docs-viewer/services/docs_management_service.py`, `docs-viewer/services/docs_management_mutation_service.py`, `docs-viewer/services/docs_management_import_service.py`, and `docs-viewer/services/docs_import_source_service.py` so docs payload/search rebuilds no longer detect Bundler or invoke Ruby. Keep the docs watcher service, but change its command implementation to Python builders with no Ruby fallback on Python failure. |
-| 12 | planned | Replace Docs import Markdown validation. Remove `docs_html_import.py` dependence on `studio/shared/ruby/render_markdown_with_jekyll.rb`; validate staged HTML, Markdown, Markdown package, text, SVG, image, and file-media previews through the Python renderer/sanitizer boundary. |
+| 12 | done | Replace Docs import Markdown validation. Remove `docs_html_import.py` dependence on `studio/shared/ruby/render_markdown_with_jekyll.rb`; validate staged HTML, Markdown, Markdown package, text, SVG, image, and file-media previews through the Python renderer/sanitizer boundary. |
 | 13 | planned | Update Analytics documents Data Sharing apply path. Ensure `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` and `docs-viewer/services/docs_data_sharing/write.py` reach only the Python Docs Viewer rebuild path for returned document package apply. |
 
 ### Phase 3: Catalogue Search And Prose

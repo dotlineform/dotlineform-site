@@ -397,7 +397,7 @@ def patch_rebuilds(repo_root: Path) -> None:
             docs_doc_ids=docs_doc_ids,
         )
 
-    def fake_validate_markdown_with_jekyll(_repo_root: Path, markdown: str) -> dict[str, Any]:
+    def fake_validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, Any]:
         return {
             "ok": True,
             "html_chars": len(markdown),
@@ -407,7 +407,7 @@ def patch_rebuilds(repo_root: Path) -> None:
     docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild_scope_outputs
     docs_management_service.write_rebuild.rebuild_all_docs_outputs = fake_rebuild_all_docs_outputs
     docs_management_service.write_rebuild.perform_source_write_and_rebuild = fake_perform_source_write_and_rebuild
-    sys.modules["docs_html_import"].validate_markdown_with_jekyll = fake_validate_markdown_with_jekyll
+    sys.modules["docs_html_import"].validate_markdown_preview = fake_validate_markdown_preview
 
 
 def start_server(repo_root: Path) -> tuple[DocsViewerServer, str]:

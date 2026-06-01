@@ -491,8 +491,8 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -505,7 +505,7 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_path = root / "docs-viewer/source/library/compact-name.md"
         source_exists = source_path.exists()
@@ -560,8 +560,8 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -574,7 +574,7 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
         asset_path = root / "assets/docs/interactive/library/worksheet-widget.html"
@@ -615,8 +615,8 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -630,7 +630,7 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             files = import_source_service.handle_import_source_files(root)["files"]
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         asset_exists = (root / "assets/docs/interactive/library/worksheet-widget.html").exists()
 
@@ -662,8 +662,8 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
         existing_asset.write_text("existing\n", encoding="utf-8")
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -681,7 +681,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
         asset_text = existing_asset.read_text(encoding="utf-8")
@@ -721,6 +721,45 @@ def test_source_import_files_list_html_and_markdown() -> None:
     assert by_filename["package-note"]["package_markdown_count"] == 1
 
 
+def test_source_import_previews_validate_with_python_renderer() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_html(root, "source.html", "<html><body><h1>Source</h1><p>Body.</p></body></html>")
+        write_staged_markdown(root, "source.md", "# Source\n\n| A | B |\n| - | - |\n| 1 | 2 |\n")
+        write_staged_text(root, "source.txt", "Source\n\nSee https://example.com/path.\n")
+        write_staged_text(root, "source.svg", "<svg viewBox='0 0 10 10'><title>Source</title><rect /></svg>\n")
+        write_staged_bytes(root, "source.png", b"fake image")
+        write_staged_bytes(root, "source.pdf", b"fake pdf")
+        write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n\nBody.\n")
+
+        previews = [
+            docs_html_import.generate_import_preview(
+                root,
+                source_path=docs_html_import.resolve_staged_import_source(root, staged_filename),
+                scope="library",
+                include_prompt_meta=False,
+            )
+            for staged_filename in [
+                "source.html",
+                "source.md",
+                "source.txt",
+                "source.svg",
+                "source.png",
+                "source.pdf",
+                "package-note",
+            ]
+        ]
+
+    source_formats = {preview["source_format"] for preview in previews}
+    assert source_formats == {"html", "markdown", "text", "svg", "image", "file", "markdown_package"}
+    for preview in previews:
+        validation = preview["markdown_validation"]
+        assert validation["ok"] is True
+        assert validation["renderer"] == "studio/shared/python/markdown_renderer.py"
+        assert validation["renderer_contract"]["library"] == "markdown-it-py"
+        assert validation["sanitizer_boundary"]["import_html"] == "docs_html_import structured conversion and SVG serialization"
+
+
 def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -732,8 +771,8 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -746,7 +785,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_path = root / "docs-viewer/source/library/markdown-note.md"
         source_text = source_path.read_text(encoding="utf-8")
@@ -770,8 +809,8 @@ def test_text_import_autolinks_plain_urls() -> None:
         write_staged_text(root, "plain-note.txt", "Plain Note\n\nSee https://example.com/path.\n")
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -784,7 +823,7 @@ def test_text_import_autolinks_plain_urls() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/plain-note.md").read_text(encoding="utf-8")
 
@@ -810,8 +849,8 @@ def test_svg_import_strips_unsafe_content() -> None:
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -824,7 +863,7 @@ def test_svg_import_strips_unsafe_content() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/diagram.md").read_text(encoding="utf-8")
 
@@ -844,8 +883,8 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
         write_staged_bytes(root, "reference-image.png", b"fake image")
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -858,7 +897,7 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-image.md").read_text(encoding="utf-8")
 
@@ -892,8 +931,8 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -906,7 +945,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-diagram.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/inline-diagram-image-01.png"
@@ -933,8 +972,8 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -947,7 +986,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-note.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/inline-note-image-02.png"
@@ -972,8 +1011,8 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -986,7 +1025,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/mixed-inline.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/mixed-inline-image-01.png"
@@ -1006,8 +1045,8 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -1020,7 +1059,7 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-file.md").read_text(encoding="utf-8")
 
@@ -1055,8 +1094,8 @@ Some text.
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -1069,7 +1108,7 @@ Some text.
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/my-note.md").read_text(encoding="utf-8")
         webp_path = root / "var/docs/import-staging/my-note-image-01.webp"
@@ -1125,8 +1164,8 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
         )
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -1139,7 +1178,7 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
     warnings = payload["import_preview"]["warnings"]
     assert payload["ok"] is True
@@ -1156,8 +1195,8 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
         validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_with_jekyll"]
-        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+        original_validation = validation_globals["validate_markdown_preview"]
+        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -1179,7 +1218,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_with_jekyll"] = original_validation
+            validation_globals["validate_markdown_preview"] = original_validation
 
         source_path = root / "docs-viewer/source/library/reference-file-2.md"
         source_exists = source_path.exists()

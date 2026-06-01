@@ -89,7 +89,7 @@ Ruby scripts and helpers currently in the app/data-generation path:
 - `studio/shared/ruby/jekyll_markdown_renderer.rb`
   - initializes the Jekyll Markdown converter used by Docs Viewer and catalogue prose rendering
 - `studio/shared/ruby/render_markdown_with_jekyll.rb`
-  - command helper used by Python services to render or validate Markdown through Jekyll
+  - command helper still used by catalogue prose rendering; Docs import validation no longer uses it
 - `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb`
   - Jekyll server helper; should remain public-preview-only if still needed after app runtime cleanup
 
@@ -102,8 +102,8 @@ Docs Viewer direct dependencies:
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
   - detects Bundler and runs the Ruby Docs Viewer docs/search builders whenever watched source Markdown changes
 - `docs-viewer/services/docs_html_import.py`
-  - runs `bundle exec ruby studio/shared/ruby/render_markdown_with_jekyll.rb` to validate staged import Markdown previews
-  - this validation is reached by HTML, Markdown, Markdown package, text, SVG, image, and file-media import previews
+  - validates staged HTML, Markdown, Markdown package, text, SVG, image, and file-media import previews through the shared Python Markdown renderer/import sanitizer boundary
+  - no longer detects Bundler or invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`
 - `docs-viewer/services/docs_scope_manifest.py`
   - emits Docs Viewer scope lifecycle build commands that name `docs-viewer/build/build_docs.rb` and `docs-viewer/build/build_search.rb`
   - create/delete apply paths execute the rebuilds through `docs_write_rebuild.py`
@@ -166,9 +166,9 @@ Current test/check references that will need to move with the implementation:
 - `docs-viewer/tests/python/test_docs_live_rebuild_watcher.py`
   - asserts the watcher calls the Ruby Docs Viewer builders
 - `docs-viewer/tests/python/test_docs_import_service.py`
-  - patches `validate_markdown_with_jekyll` and rebuild helpers around import workflows
+  - patches `validate_markdown_preview` and rebuild helpers around import workflows
 - `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
-  - patches Docs Viewer rebuild and Jekyll validation helpers for management workflow smoke coverage
+  - patches Docs Viewer rebuild and Python Markdown validation helpers for management workflow smoke coverage
 - `studio/tests/python/test_catalogue_build_commands.py`
   - asserts the current Ruby catalogue search command shape
 - `studio/tests/python/test_docs_logs_indexes.py`

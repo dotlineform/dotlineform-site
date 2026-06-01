@@ -97,7 +97,8 @@ The current dispatch functions are:
 - `generate_image_import_preview()`
 - `generate_file_media_import_preview()`
 
-Every preview is validated through `validate_markdown_with_jekyll()` before it is returned as successful.
+Every preview is validated through `validate_markdown_preview()` before it is returned as successful.
+That helper renders generated preview Markdown through the shared Python Markdown renderer and records the explicit import sanitizer boundary.
 Preview generation does not write source docs.
 For inline raster data URLs, preview generation plans media output but write-time materialization is handled later by the service.
 
@@ -119,7 +120,7 @@ Every format returns a preview dictionary with the same core fields:
 - `markdown_preview`
 - `tag_counts`
 - `comment_count`
-- `jekyll_validation`
+- `markdown_validation`
 
 Optional fields are format-specific:
 
@@ -234,7 +235,7 @@ The registry and service enforce narrow inputs before conversion:
 - supported extensions come from the registry
 - media filenames must remain plain filenames when copied or materialized
 - repo asset writes must stay under the configured repo asset prefix
-- generated Markdown must pass the local Jekyll renderer validation
+- generated Markdown must pass the Python renderer validation used by Docs Viewer payload generation
 
 SVG safety is shared by HTML inline SVG and standalone SVG imports:
 

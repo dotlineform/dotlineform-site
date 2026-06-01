@@ -78,7 +78,7 @@ Import behavior:
 - escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
 - converts plain-text `http://` and `https://` URLs in prose into Markdown autolinks while leaving existing anchors and code/preformatted text alone
 - applies the same SVG safety rules to HTML inline SVG and standalone SVG files
-- validates the generated Markdown through the repo's Jekyll renderer helper before returning success
+- validates the generated Markdown through the shared Python Docs Viewer Markdown renderer before returning success
 - supports the prompt/meta include toggle already defined by the import spec for HTML imports
 - derives the proposed `doc_id` and new Markdown filename stem from the staged source filename, not from the imported document title
 - derives Markdown import titles from the first `# H1` when present, then falls back to the staged filename
