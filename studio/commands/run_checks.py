@@ -335,12 +335,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
         CheckCommand(
             "studio-docs-build",
-            ("./docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"),
+            (sys.executable, "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",
         ),
         CheckCommand(
             "studio-search-build",
-            ("./docs-viewer/build/build_search.rb", "--scope", "studio", "--write"),
+            (sys.executable, "docs-viewer/build/build_search.py", "--scope", "studio", "--write"),
             "Regenerate Studio docs search payload.",
         ),
     ),

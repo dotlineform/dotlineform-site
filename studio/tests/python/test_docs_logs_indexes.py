@@ -28,7 +28,7 @@ def sample_record(entry_id: str, change_date: str, title: str, domain: str) -> d
         "domains": [domain],
         "subjects": ["payloads"],
         "related_docs": ["scripts-docs-builder"],
-        "related_files": ["docs-viewer/build/build_docs.rb"],
+        "related_files": ["docs-viewer/build/build_docs.py"],
         "change_request_doc_id": "site-request-docs-build-incremental",
         "summary": f"{title} summary.",
         "effect": f"{title} effect.",
