@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b23591346d82d4e5a364b94df8bb403e",
-    "generated_at_utc": "2026-06-01T18:20:12Z",
-    "count": 230
+    "version": "blake2b-7411b409c0d61f793bb4e898a594c22e",
+    "generated_at_utc": "2026-06-01T20:58:03Z",
+    "count": 231
   },
   "entries": [
     {
@@ -1039,10 +1039,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-01",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-19 • Catalogue",
+      "display_meta": "2026-06-01 • Catalogue",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -1050,12 +1050,12 @@
         "catalogue",
         "catalogue scope",
         "scope",
-        "2026-05-19",
+        "2026-06-01",
         "2026",
-        "05",
-        "19"
+        "06",
+        "01"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope 2026-05-19 2026 05 19"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope 2026-06-01 2026 06 01"
     },
     {
       "id": "data-models-catalogue-source",
@@ -1133,24 +1133,22 @@
       "kind": "doc",
       "title": "Data Flow",
       "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-06-01",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-11 14:10 • Catalogue",
+      "display_meta": "2026-06-01 • Catalogue",
       "search_terms": [
         "data-flow",
         "data",
         "flow",
         "data flow",
         "catalogue",
-        "2026-05-11 14:10",
+        "2026-06-01",
         "2026",
-        "05",
-        "11",
-        "14",
-        "10"
+        "06",
+        "01"
       ],
-      "search_text": "data-flow data flow data flow catalogue 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "data-flow data flow data flow catalogue 2026-06-01 2026 06 01"
     },
     {
       "id": "config-pipeline-json",
@@ -1849,6 +1847,32 @@
         "01"
       ],
       "search_text": "site-request-public-route-simplification site request public route simplification public route simplification request change requests change requests 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "site-request-public-route-simplification-tasks",
+      "kind": "doc",
+      "title": "Public Route Simplification Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-public-route-simplification-tasks",
+      "last_updated": "2026-06-01",
+      "parent_id": "site-request-public-route-simplification",
+      "parent_title": "Public Route Simplification Request",
+      "display_meta": "2026-06-01 • Public Route Simplification Request",
+      "search_terms": [
+        "site-request-public-route-simplification-tasks",
+        "site",
+        "request",
+        "public",
+        "route",
+        "simplification",
+        "tasks",
+        "public route simplification tasks",
+        "public route simplification request",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "site-request-public-route-simplification-tasks site request public route simplification tasks public route simplification tasks public route simplification request 2026-06-01 2026 06 01"
     },
     {
       "id": "site-request-public-static-site-build",
@@ -4372,24 +4396,22 @@
       "kind": "doc",
       "title": "Search Index Schema",
       "href": "/docs/?scope=studio&doc=search-index-schema",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-06-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 12:50 • Search",
+      "display_meta": "2026-06-01 • Search",
       "search_terms": [
         "search-index-schema",
         "search",
         "index",
         "schema",
         "search index schema",
-        "2026-05-11 12:50",
+        "2026-06-01",
         "2026",
-        "05",
-        "11",
-        "12",
-        "50"
+        "06",
+        "01"
       ],
-      "search_text": "search-index-schema search index schema search index schema 2026-05-11 12:50 2026 05 11 12 50"
+      "search_text": "search-index-schema search index schema search index schema 2026-06-01 2026 06 01"
     },
     {
       "id": "search-normalisation-rules",

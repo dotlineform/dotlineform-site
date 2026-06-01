@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T18:28:21Z",
+  "generated_at": "2026-06-01T20:58:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 11264
+      "content_text_length": 11672
     },
     {
       "scope": "studio",
@@ -633,14 +633,14 @@
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-01",
       "parent_id": "catalogue",
       "hidden": false,
       "viewable": true,
       "source_path": "data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue.json",
-      "content_text_length": 1392
+      "content_text_length": 1568
     },
     {
       "scope": "studio",
@@ -689,14 +689,14 @@
       "doc_id": "data-flow",
       "title": "Data Flow",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-06-01",
       "parent_id": "catalogue",
       "hidden": false,
       "viewable": true,
       "source_path": "data-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=data-flow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-flow.json",
-      "content_text_length": 4422
+      "content_text_length": 5237
     },
     {
       "scope": "studio",
@@ -1076,9 +1076,24 @@
       "viewable": true,
       "source_path": "site-request-public-route-simplification.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-public-route-simplification",
-      "ui_status": "draft",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification.json",
-      "content_text_length": 10407
+      "content_text_length": 11556
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-public-route-simplification-tasks",
+      "title": "Public Route Simplification Tasks",
+      "added_date": "2026-06-01",
+      "last_updated": "2026-06-01",
+      "parent_id": "site-request-public-route-simplification",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-public-route-simplification-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-public-route-simplification-tasks",
+      "ui_status": "done",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification-tasks.json",
+      "content_text_length": 13527
     },
     {
       "scope": "studio",
@@ -2570,14 +2585,14 @@
       "doc_id": "search-index-schema",
       "title": "Search Index Schema",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-06-01",
       "parent_id": "search",
       "hidden": false,
       "viewable": true,
       "source_path": "search-index-schema.md",
       "viewer_url": "/docs/?scope=studio&doc=search-index-schema",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-index-schema.json",
-      "content_text_length": 7483
+      "content_text_length": 7412
     },
     {
       "scope": "studio",
