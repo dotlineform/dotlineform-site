@@ -191,7 +191,8 @@ After this, the public route should be able to fetch:
 
 Run the Docs Viewer service for management.
 Docs management is served through `DOCS_VIEWER_BASE_URL`; Local Studio only links to that peer service.
-The project still needs `_config.yml`, configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
+The project still needs `_config.yml`, configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python dependencies used by those scripts.
+Ruby/Jekyll dependencies are only needed when the install also needs public-site preview/build parity.
 
 Then open:
 

@@ -56,7 +56,7 @@ The `search_output` field owns the generated docs-search index path.
 
 - reads Markdown source docs from each configured scope source root
 - reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, and optional `viewable`
-- renders each Markdown body to HTML using the local Jekyll Markdown stack
+- renders each Markdown body to HTML using the shared Python Markdown renderer at `studio/shared/python/markdown_renderer.py`
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - resolves <code>&#91;&#91;interactive-html:...&#93;&#93;</code> tokens to same-scope sandboxed iframes for repo-local interactive HTML assets
@@ -69,6 +69,9 @@ The `search_output` field owns the generated docs-search index path.
 - writes `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from `docs-viewer/config/scopes/docs_scopes.json`, including route/scope data, scope menu `meta`, and the `docs_viewer` browser settings used by local manage mode and public read-only routes
 - writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
+
+The builder does not invoke Ruby, Bundler, or Jekyll.
+Jekyll remains a separate public-site preview/build verification layer.
 
 ## Source Inclusion And Viewability
 

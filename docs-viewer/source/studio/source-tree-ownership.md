@@ -42,7 +42,7 @@ The current Studio-owned source homes are:
 | `studio/data/config/` | Studio-owned checked-in config, including catalogue and Studio runtime data contracts. |
 | `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Risk summaries belong here only when they are intentionally served by Local Studio; ordinary local risk artifacts belong under `var/studio/risk/`. Retired thumbnail-quality preview output is not an active served contract. |
 | `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
-| `studio/shared/` | Shared Python/Ruby helpers used by Studio-owned commands and services. |
+| `studio/shared/` | Shared Python helpers used by Studio-owned commands, Docs Viewer builders, catalogue generation, and services. |
 | `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, and other verification checks. |
 | `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
 | `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |

@@ -58,7 +58,7 @@ Top-level survivors are intentional:
 - Catalogue search uses `./studio/services/catalogue/search/build_search.py` directly.
 - `make_srcset_images.sh`, when present, is the stable shell wrapper for the media implementation.
 - shared infrastructure modules now live under `studio/shared/`.
-- shared Ruby/Jekyll helpers now live under `studio/shared/ruby/` or the owning Docs Viewer build path.
+- Ruby/Jekyll is public-site preview/build tooling only; active app-facing docs, search, and catalogue generation use Python builders.
 
 ## Current Build Boundaries
 
@@ -95,6 +95,14 @@ Search builds:
     - `assets/data/moments_index.json`
   - outputs:
     - `assets/data/search/catalogue/index.json`
+
+Catalogue prose rendering:
+
+- `studio/services/catalogue/generate_work_pages.py`
+  - renders work, series, and moment Markdown from `studio/data/canonical/catalogue-markdown/`
+  - writes rendered `content_html` into public catalogue payloads
+  - uses the shared Python Markdown renderer at `studio/shared/python/markdown_renderer.py`
+  - does not invoke Ruby, Bundler, or Jekyll
 
 Catalogue/runtime maintenance:
 

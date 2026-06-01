@@ -140,7 +140,9 @@ def main(argv: list[str] | None = None) -> int:
                     const nav = document.querySelector("#docsViewerNav");
                     const step = document.querySelector("#docsViewerSidebarToggle");
                     const expand = document.querySelector("#docsViewerSidebarExpand");
+                    const viewToggle = document.querySelector("#docsViewerIndexViewToggle");
                     return root?.dataset.indexPanelState === "normal" &&
+                        root?.dataset.indexPanelView === "index-tree" &&
                         nav &&
                         nav.querySelector('a[data-doc-id="docs-viewer-overview"]') &&
                         step &&
@@ -148,6 +150,43 @@ def main(argv: list[str] | None = None) -> int:
                         !step.hidden &&
                         expand &&
                         expand.getAttribute("aria-controls") === "docsViewerNav" &&
+                        expand.hidden &&
+                        viewToggle &&
+                        viewToggle.dataset.activeIndexPanelView === "index-tree" &&
+                        viewToggle.dataset.indexPanelView === "index-graph";
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerSidebarToggle").click()
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const nav = document.querySelector("#docsViewerNav");
+                    const main = document.querySelector(".docsViewer__main");
+                    return root?.dataset.indexPanelState === "collapsed" &&
+                        nav &&
+                        getComputedStyle(nav).display === "none" &&
+                        main &&
+                        getComputedStyle(main).display !== "none";
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerSidebarToggle").click()
+            page.wait_for_function(
+                """() => document.querySelector("#docsViewerRoot")?.dataset.indexPanelState === "normal" """,
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerIndexViewToggle").click()
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const placeholder = document.querySelector("#docsViewerIndexPlaceholder");
+                    const expand = document.querySelector("#docsViewerSidebarExpand");
+                    return root?.dataset.indexPanelView === "index-graph" &&
+                        root?.dataset.indexPanelState === "normal" &&
+                        placeholder &&
+                        !placeholder.hidden &&
+                        expand &&
                         !expand.hidden;
                 }""",
                 timeout=args.timeout_ms,
@@ -158,8 +197,27 @@ def main(argv: list[str] | None = None) -> int:
                     const root = document.querySelector("#docsViewerRoot");
                     const main = document.querySelector(".docsViewer__main");
                     return root?.dataset.indexPanelState === "expanded" &&
+                        root?.dataset.indexPanelView === "index-graph" &&
                         main &&
                         getComputedStyle(main).display === "none";
+                }""",
+                timeout=args.timeout_ms,
+            )
+            page.locator("#docsViewerIndexViewToggle").click()
+            page.wait_for_function(
+                """() => {
+                    const root = document.querySelector("#docsViewerRoot");
+                    const nav = document.querySelector("#docsViewerNav");
+                    const main = document.querySelector(".docsViewer__main");
+                    const expand = document.querySelector("#docsViewerSidebarExpand");
+                    return root?.dataset.indexPanelState === "normal" &&
+                        root?.dataset.indexPanelView === "index-tree" &&
+                        nav &&
+                        getComputedStyle(nav).display !== "none" &&
+                        main &&
+                        getComputedStyle(main).display !== "none" &&
+                        expand &&
+                        expand.hidden;
                 }""",
                 timeout=args.timeout_ms,
             )
@@ -169,16 +227,12 @@ def main(argv: list[str] | None = None) -> int:
                     const root = document.querySelector("#docsViewerRoot");
                     const heading = document.querySelector("#docsViewerContent h1");
                     const activeLink = document.querySelector('#docsViewerNav a[data-doc-id="docs-viewer-overview"]');
-                    return root?.dataset.indexPanelState === "expanded" &&
+                    return root?.dataset.indexPanelState === "normal" &&
+                        root?.dataset.indexPanelView === "index-tree" &&
                         heading?.id === "docs-viewer-overview" &&
                         activeLink?.classList.contains("is-active") &&
                         activeLink?.getAttribute("aria-current") === "page";
                 }""",
-                timeout=args.timeout_ms,
-            )
-            page.locator("#docsViewerSidebarToggle").click()
-            page.wait_for_function(
-                """() => document.querySelector("#docsViewerRoot")?.dataset.indexPanelState === "normal" """,
                 timeout=args.timeout_ms,
             )
             tree_url = page.url
@@ -300,7 +354,24 @@ def main(argv: list[str] | None = None) -> int:
                     "document": {"enabled": True, "default_view": "document"},
                     "info": {"enabled": True, "default_view": "metadata-info"},
                 },
-                "hosted_views": {"records": []},
+                "hosted_views": {
+                    "records": [
+                        {
+                            "id": "index-graph",
+                            "label": "Index graph",
+                            "panel": "index",
+                            "access": "manage",
+                            "renderer": "index-placeholder",
+                            "availability": "available",
+                            "placeholder_text": "Graph index placeholder",
+                            "capabilities": {
+                                "layout_states": ["normal", "collapsed", "expanded"],
+                                "toolbar": True,
+                                "toolbar_view": "index-graph-toolbar",
+                            },
+                        }
+                    ]
+                },
             },
             "configUrl": "",
             "generatedBaseUrl": "",

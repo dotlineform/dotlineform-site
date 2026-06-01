@@ -115,7 +115,7 @@ The helper:
 - unions any `--extra-series-ids`
 - requires every series in the build scope to have `status: published`
 - requires a series primary work to exist, belong to the series, and have `status: published`
-- lets the generator render optional work and series prose from `studio/data/canonical/catalogue-markdown/works/<work_id>.md` and `studio/data/canonical/catalogue-markdown/series/<series_id>.md`
+- lets the generator render optional work and series prose from `studio/data/canonical/catalogue-markdown/works/<work_id>.md` and `studio/data/canonical/catalogue-markdown/series/<series_id>.md` through the shared Python Markdown renderer
 - stages in-scope source images under `var/catalogue/media/`
   - work source media resolves through `project_folder`, optional `project_subfolder`, and `project_filename`
   - work-detail source media resolves through the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
@@ -130,6 +130,9 @@ The helper:
   - `works-index-json`
   - `recent-index-json`
 - then runs `build_search.py --scope catalogue`
+
+The JSON engine writes rendered `content_html` for work, series, and moment prose with `studio/shared/python/markdown_renderer.py`.
+Catalogue JSON builds and catalogue search builds do not invoke Ruby, Bundler, or Jekyll.
 
 The extracted build modules own selection and validation rules, media planning/execution, field-aware narrowing, command construction, and step-result shaping. The entrypoint owns CLI option binding, preview text, command sequencing, subprocess execution, and the response payload shape used by Studio.
 

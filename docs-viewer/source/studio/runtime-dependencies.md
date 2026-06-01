@@ -41,7 +41,7 @@ The repo currently has five practical dependency layers:
 1. Python packages from `requirements.txt`
 2. Ruby/Jekyll packages from the GitHub Pages stack
 3. external command-line tools used by media/generation workflows
-4. local app/service runners that consume the Python and Ruby toolchains
+4. local app/service runners that consume Python, plus public-site preview/build runners that consume Ruby/Jekyll
 5. local or cloud runtime bootstrap scripts that install or verify the above
 
 ## Python Packages
@@ -55,15 +55,15 @@ Current checked-in Python packages:
 | `lxml` | PyPI via `requirements.txt` | parser backend for the Docs HTML import tree build | feature-specific | feature-specific | treated as part of the pinned HTML import parser stack |
 | `bleach` | PyPI via `requirements.txt` | HTML sanitization for Docs HTML import | feature-specific | feature-specific | required for the intended import sanitization boundary even if the first scaffold uses only a subset of that behavior |
 | `Pillow` | PyPI via `requirements.txt` | raster image conversion for Docs Markdown package imports | feature-specific | feature-specific | required when importing package images that must become 800px-max WebP outputs |
-| `markdown-it-py` | PyPI via `requirements.txt` | CommonMark Markdown rendering for Python Docs Viewer v2 builders | feature-specific | feature-specific | initial renderer pin uses `MarkdownIt("commonmark")` with no enabled plugins |
+| `markdown-it-py` | PyPI via `requirements.txt` | CommonMark Markdown rendering for Python Docs Viewer builders and catalogue prose rendering | feature-specific | feature-specific | current renderer pin uses `MarkdownIt("commonmark")`, the built-in `table` rule, and no external plugins |
 
 Current interpretation:
 
 - `openpyxl` is the only current baseline Python package for the established catalogue/workbook pipeline
 - `beautifulsoup4`, `lxml`, and `bleach` are checked-in because the HTML import feature is intended to build against a fixed parser/sanitizer stack from the start
 - `Pillow` is checked-in because Markdown package imports convert local package images to WebP during write
-- `markdown-it-py` is checked in because Docs Viewer v2 generated payloads need a pinned Python Markdown renderer before Ruby builder callers are migrated
-- in cloud environments that never touch Docs Import, these import packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
+- `markdown-it-py` is checked in because Docs Viewer payload generation and catalogue prose rendering use a pinned Python Markdown renderer
+- in cloud environments that never touch Docs Import or generated Markdown rendering, these feature-specific packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
 
 ## Ruby And Jekyll Stack
 
@@ -130,10 +130,12 @@ These are the main checked-in contracts that keep local and cloud runs aligned.
 - `beautifulsoup4`
 - `lxml`
 - `bleach`
+- `Pillow`
+- `markdown-it-py`
 
 Reason:
 
-- even though they are currently tied to the HTML import feature, they are now intentionally checked into `requirements.txt`
+- even though some packages are tied to Docs Import or generated-output features, they are now intentionally checked into `requirements.txt`
 - Codespaces and Codex Cloud should therefore install them normally rather than treating them as purely ad hoc local extras
 
 ### Optional unless the workflow needs them
@@ -160,6 +162,8 @@ Current local app boundaries:
 
 `bin/local-all` supervises these sibling services when a local session needs the full stack.
 The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue does not depend on Studio route config.
+Docs Viewer docs/search generation, catalogue search generation, and catalogue prose rendering are Python app-generation paths.
+Ruby/Bundler/Jekyll is reserved for public-site preview/build and publish-sensitive verification.
 
 ## Codespaces And Codex Cloud Expectations
 

@@ -392,7 +392,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "docs-viewer/tests/smoke/docs_viewer_management_modal.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Docs Viewer management modal semantics, action rows, focus behavior, and mobile sizing.",
         ),

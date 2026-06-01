@@ -35,7 +35,7 @@ The current checked-in Python packages are:
 | `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs. | Using Docs Import for Markdown packages with local images. |
 | `openpyxl` | Not a Docs Viewer dependency; used by workbook/spreadsheet pipeline scripts. | Catalogue or spreadsheet-driven workflows need it. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
-| `markdown-it-py` | CommonMark Markdown renderer selected for Docs Viewer v2 payload generation. | Building or testing the Python Docs Viewer Markdown renderer. |
+| `markdown-it-py` | CommonMark Markdown renderer selected for Docs Viewer payload generation and catalogue prose rendering. | Building or testing the Python Markdown renderer, Docs Viewer payloads, or catalogue prose generation. |
 
 The Docs HTML import implementation currently lives in `docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
@@ -45,6 +45,7 @@ It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule bec
 Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
 Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
 Acceptance fixtures in `studio/tests/python/test_markdown_renderer_acceptance.py` assert rendered HTML semantics and generated plain text directly; they do not compare output to Jekyll or Kramdown.
+That no-parity policy is intentional: Python app builders protect generated app contracts, while Jekyll remains public-site preview/build tooling.
 
 ## Parser Stack Roles
 
