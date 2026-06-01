@@ -63,14 +63,14 @@ Implementation scope:
 Acceptance checks:
 
 - `./docs-viewer/build/build_docs.py --scope studio` dry run still works without writing
-- `./docs-viewer/build/build_docs.py --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
+- `./docs-viewer/build/build_docs.py --scope studio --write --diagnostics` reports machine-readable diagnostics without changing generated payload schemas beyond intentional metadata or console output
 - focused tests cover diagnostic payload shaping where the behavior is structured
 - docs-management service responses keep existing keys stable
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
 
 Implementation note:
 
-- `docs-viewer/build/build_docs.py` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
+- `docs-viewer/build/build_docs.py` now emits one compact diagnostics JSON line per selected scope when called with `--diagnostics`, without changing generated Docs Viewer payload schemas.
 - `docs-viewer/services/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
 - `docs-viewer/services/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
 - The owning builder, management, watcher, import, export, and site change-log docs were updated with the new command, response, and log contracts.

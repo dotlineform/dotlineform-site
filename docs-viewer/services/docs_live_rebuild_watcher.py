@@ -216,7 +216,7 @@ def rebuild_scope(
     docs_doc_ids: Optional[list[str]] = None,
     search_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write")
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
         fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids)

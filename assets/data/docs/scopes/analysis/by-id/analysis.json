@@ -9,5 +9,5 @@
   "viewable": true,
   "source_path": "analysis.md",
   "viewer_url": "/analysis/?doc=analysis",
-  "content_html": "<h1 id=\"analysis\">Analysis</h1>\n\n<p>Analysis is the public document space for interpretive and analytical writing about the portfolio.</p>\n\n<p>Use this scope for:</p>\n\n<ul>\n  <li>series analysis</li>\n  <li>work analysis</li>\n  <li>tag and dimension notes</li>\n  <li>LLM-assisted review outputs</li>\n  <li>comparative catalogue observations</li>\n</ul>\n\n"
+  "content_html": "<h1>Analysis</h1>\n<p>Analysis is the public document space for interpretive and analytical writing about the portfolio.</p>\n<p>Use this scope for:</p>\n<ul>\n<li>series analysis</li>\n<li>work analysis</li>\n<li>tag and dimension notes</li>\n<li>LLM-assisted review outputs</li>\n<li>comparative catalogue observations</li>\n</ul>\n"
 }

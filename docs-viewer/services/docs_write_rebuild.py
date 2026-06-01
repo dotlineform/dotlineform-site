@@ -172,7 +172,7 @@ def rebuild_scope_outputs(
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write")
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -355,7 +355,7 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
         scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
 
     commands = [
-        ("docs", python_builder_command(DOCS_BUILDER_SCRIPT, "--write")),
+        ("docs", python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")),
     ]
     for scope in scope_ids:
         commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))

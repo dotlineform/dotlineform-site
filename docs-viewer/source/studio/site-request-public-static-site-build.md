@@ -14,7 +14,7 @@ Status:
 - draft
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - Do not create an implementation task list until the open questions in this request have been answered or deliberately deferred.
-- [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) should be completed first so this migration can consume the resulting route contract.
+- [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) has been completed first so this migration can consume the resulting route contract.
 
 ## Summary
 

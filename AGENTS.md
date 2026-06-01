@@ -37,16 +37,36 @@
 - When optimising code or refactoring, extract around stable ownership boundaries.
 - For risk mitigation and scoring, consult as appropriate:
   - Javascript: `docs-viewer/source/studio/studio-javascript-payload-inventory.md`
-  - Python, Ruby: `docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
+  - Python and public Jekyll/Ruby scripts: `docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
 
 ## Studio Documentation and Search
 
 - Docs source is flat under `docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders.
 - scope `studio` is the reference for live development and maintenance documents.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not source Markdown directly.
-- Do not rebuild doc payloads
+- For routine docs-source edits, do not rebuild doc payloads manually; this is handled by `bin/local-studio` / the docs-watcher. Run the builders only when the task explicitly concerns build behavior, generated payloads, or verification.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
-- Use explicit scope for docs search rebuilds: `./scripts/build_search.rb --scope studio --write`
+- Docs Viewer payload and search builders are Python entrypoints:
+  - docs payloads: `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --write`
+  - docs search: `$HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope studio --write`
+- `build_docs.py` prints a compact human summary by default. Automation that needs the machine-readable diagnostics line should pass `--diagnostics`.
+
+## Public Routes
+
+- Current first-party public catalogue routes are fixed shells with query-state:
+  - `/series/`
+  - `/series/?series=<series_id>`
+  - `/series/?mode=moments`
+  - `/works/`
+  - `/works/?work=<work_id>`
+  - `/works/?work=<work_id>&series=<series_id>`
+  - `/work-details/?detail=<detail_uid>`
+  - `/moments/`
+  - `/moments/<moment_id>/`
+- Do not add compatibility redirects or first-party links for retired `/works/<work_id>/`, `/series/<series_id>/`, or `/work_details/<detail_uid>/` routes.
+- Public route construction and route-state parsing are owned by `assets/js/public-catalogue-runtime.js`; Studio public-link helpers should mirror that contract.
+- Generated public payloads should not carry derivable URL fields such as catalogue search `href` or moment preview `public_url` unless a documented non-derivable exception is required.
+- Remaining `_works/`, `_series/`, and `_work_details/` collection outputs are Jekyll build-layer artifacts only. Do not treat them as durable route contracts.
 
 ## Change Log
 
@@ -64,9 +84,10 @@
 - Env vars are saved in `var/local/site.env`
 - In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed.
 
-## Ruby / Jekyll Toolchain
+## Public Jekyll Toolchain
 
-- This repo expects:
+- App-facing Docs Viewer, search, catalogue search, and catalogue prose builders are Python-owned. Ruby/Jekyll remains only for the public-site preview/build layer until the static public-site builder replaces it.
+- The public Jekyll layer expects:
   - `.ruby-version` = `3.1.6`
   - Bundler = `2.6.9`
 - In Codex/sandbox runs, do not rely on system `ruby`/`bundle` (`/usr/bin/*`), which can cause false failures.
@@ -129,7 +150,7 @@
 - When scanning changed files for local path leaks and sensitive terms, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 - Remove user-specific absolute paths from comments/docs/examples unless explicitly required by the user.
-- Keep script examples generic and project-local (`./scripts/...`) unless a pinned interpreter or non-default workbook path is explicitly needed.
+- Keep script examples generic and project-local, using current entrypoint families such as `docs-viewer/build/...`, `studio/commands/...`, `studio/services/...`, and `bin/...` unless a pinned interpreter or non-default workbook path is explicitly needed.
 - Do not publish machine-specific usernames, absolute filesystem paths, or local mount details in repo docs.
 - Never hardcode credentials, tokens, or private keys in source/docs; use env vars and redact examples.
 - Keep logs for local write services minimal (ids/counts/status), not full payload/file-content dumps.
@@ -151,7 +172,7 @@
   - `R2_SECRET_ACCESS_KEY`
   - `R2_BUCKET`
   - `R2_ENDPOINT`
-- Before reporting environment issues in Codex Cloud or Codespaces, run a version check pass for Python, Ruby, Bundler, and Jekyll.
+- Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime work. For public Jekyll build or preview issues, also check Ruby, Bundler, and Jekyll.
 - Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
 
 ## Git and Change Hygiene

@@ -267,7 +267,7 @@ class DocsDataBuilder:
         self._catalogue_cache: dict[str, dict[str, dict[str, Any]]] = {}
         self._viewer_scope_for_path: dict[str, str] | None = None
 
-    def run(self, *, write: bool) -> dict[str, Any]:
+    def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
         docs = self.load_docs()
         self.validate_docs(docs)
@@ -308,10 +308,15 @@ class DocsDataBuilder:
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
         if write:
-            self.write_outputs(write_plan)
+            self.write_outputs(
+                write_plan,
+                docs_total=len(index_payload["docs"]),
+                reference_total=reference_payloads["index"]["header"]["count"],
+            )
         else:
             self.print_dry_run(index_payload, reference_payloads, write_plan)
-        self.print_diagnostics(diagnostics)
+        if emit_diagnostics:
+            self.print_diagnostics(diagnostics)
         return {
             "index_payload": index_payload,
             "item_payloads": item_payloads,
@@ -1147,7 +1152,7 @@ class DocsDataBuilder:
             "reference_target_text_by_key": target_text_by_key,
         }
 
-    def write_outputs(self, write_plan: dict[str, Any]) -> None:
+    def write_outputs(self, write_plan: dict[str, Any], *, docs_total: int, reference_total: int) -> None:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["index_write"]:
@@ -1156,11 +1161,13 @@ class DocsDataBuilder:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
-        print(f"Docs JSON done for scope {self.scope_id}.")
-        print(f"Index wrote: {1 if write_plan['index_write'] else 0}. Path: {self.output_dir / 'index.json'}")
-        print(f"Doc payloads wrote: {len(write_plan['changed_item_ids'])}. Path: {self.items_dir}")
-        print(f"Doc payloads removed: {len(write_plan['stale_item_ids'])}. Path: {self.items_dir}")
         self.write_reference_outputs(write_plan)
+        self.print_human_summary(
+            write_plan,
+            mode="write",
+            docs_total=docs_total,
+            reference_total=reference_total,
+        )
 
     def write_reference_outputs(self, write_plan: dict[str, Any]) -> None:
         self.references_by_doc_dir.mkdir(parents=True, exist_ok=True)
@@ -1175,27 +1182,47 @@ class DocsDataBuilder:
             write_text(self.reference_target_path(*key), write_plan["reference_target_text_by_key"][key])
         for key in write_plan["stale_reference_target_keys"]:
             self.reference_target_path(*key).unlink(missing_ok=True)
-        print(f"References JSON done for scope {self.scope_id}.")
-        print(f"Reference index wrote: {1 if write_plan['reference_index_write'] else 0}. Path: {self.references_dir / 'index.json'}")
-        print(f"Reference by-doc payloads wrote: {len(write_plan['changed_reference_doc_ids'])}. Path: {self.references_by_doc_dir}")
-        print(f"Reference by-doc payloads removed: {len(write_plan['stale_reference_doc_ids'])}. Path: {self.references_by_doc_dir}")
-        print(f"Reference by-target payloads wrote: {len(write_plan['changed_reference_target_keys'])}. Path: {self.references_by_target_dir}")
-        print(f"Reference by-target payloads removed: {len(write_plan['stale_reference_target_keys'])}. Path: {self.references_by_target_dir}")
 
     def print_dry_run(self, index_payload: dict[str, Any], reference_payloads: dict[str, Any], write_plan: dict[str, Any]) -> None:
-        print("Dry run:")
-        print(f"  scope: {self.scope_id}")
-        print(f"  source: {self.source_dir}")
-        print(f"  docs: {len(index_payload['docs'])}")
-        print(f"  semantic references: {reference_payloads['index']['header']['count']}")
-        print(f"  would write index: {1 if write_plan['index_write'] else 0}")
-        print(f"  would write doc payloads: {len(write_plan['changed_item_ids'])}")
-        print(f"  would remove stale doc payloads: {len(write_plan['stale_item_ids'])}")
-        print(f"  would write references index: {1 if write_plan['reference_index_write'] else 0}")
-        print(f"  would write reference by-doc payloads: {len(write_plan['changed_reference_doc_ids'])}")
-        print(f"  would write reference by-target payloads: {len(write_plan['changed_reference_target_keys'])}")
-        print(f"  would remove stale reference by-doc payloads: {len(write_plan['stale_reference_doc_ids'])}")
-        print(f"  would remove stale reference by-target payloads: {len(write_plan['stale_reference_target_keys'])}")
+        self.print_human_summary(
+            write_plan,
+            mode="dry-run",
+            docs_total=len(index_payload["docs"]),
+            reference_total=reference_payloads["index"]["header"]["count"],
+        )
+
+    def print_human_summary(
+        self,
+        write_plan: dict[str, Any],
+        *,
+        mode: str,
+        docs_total: int,
+        reference_total: int,
+    ) -> None:
+        doc_write_count = len(write_plan["changed_item_ids"])
+        doc_remove_count = len(write_plan["stale_item_ids"])
+        reference_write_count = (
+            (1 if write_plan["reference_index_write"] else 0)
+            + len(write_plan["changed_reference_doc_ids"])
+            + len(write_plan["changed_reference_target_keys"])
+        )
+        reference_remove_count = (
+            len(write_plan["stale_reference_doc_ids"])
+            + len(write_plan["stale_reference_target_keys"])
+        )
+        index_write_count = (1 if write_plan["index_write"] else 0) + (1 if write_plan["reference_index_write"] else 0)
+        verb = "would write" if mode == "dry-run" else "wrote"
+        remove_verb = "would remove" if mode == "dry-run" else "removed"
+
+        print(f"Docs build ({mode}) scope={self.scope_id}")
+        print(f"  docs total: {docs_total}")
+        print(f"  docs {verb}: {doc_write_count}")
+        print(f"  docs {remove_verb}: {doc_remove_count}")
+        print(f"  references total: {reference_total}")
+        print(f"  references {verb}: {reference_write_count}")
+        print(f"  references {remove_verb}: {reference_remove_count}")
+        print(f"  indexes {verb}: {index_write_count}")
+        print(f"  warnings: {len(self.warnings)}")
 
     def diagnostics_payload(
         self,
@@ -1309,10 +1336,10 @@ def write_browser_config(repo_root: Path, configs: list[DocsScopeConfig], *, pat
     target = repo_root / path
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists() and target.read_text(encoding="utf-8") == text:
-        print(f"{label} unchanged: {target}")
+        print(f"{label}: unchanged")
         return
     target.write_text(text, encoding="utf-8")
-    print(f"{label} wrote: {target}")
+    print(f"{label}: wrote")
 
 
 def public_readonly_configs(configs: list[DocsScopeConfig]) -> list[DocsScopeConfig]:
@@ -1332,6 +1359,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--output", help="Override docs data output directory for a single selected scope.")
     parser.add_argument("--viewer-base-url", help="Override viewer page URL base for a single selected scope.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
+    parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
 
@@ -1376,7 +1404,7 @@ def main(argv: list[str] | None = None) -> int:
             viewer_base_url=args.viewer_base_url,
             only_doc_ids=only_doc_ids,
         )
-        builder.run(write=args.write)
+        builder.run(write=args.write, emit_diagnostics=args.diagnostics)
     return 0
 
 

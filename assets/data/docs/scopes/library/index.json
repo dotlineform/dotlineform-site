@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T11:01:54Z",
+  "generated_at": "2026-06-01T21:12:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -17,9 +17,9 @@
       "viewable": true,
       "source_path": "abstract-thought.md",
       "viewer_url": "/library/?doc=abstract-thought",
+      "summary": "Our abstract thoughts are implemented in and constrained by physical and chemical processes in the brain, but they are organized at higher levels of description where concepts like representation, inference, and meaning become the natural explanatory tools.",
       "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json",
-      "content_text_length": 4751,
-      "summary": "Our abstract thoughts are implemented in and constrained by physical and chemical processes in the brain, but they are organized at higher levels of description where concepts like representation, inference, and meaning become the natural explanatory tools."
+      "content_text_length": 4773
     },
     {
       "scope": "library",
@@ -33,7 +33,7 @@
       "source_path": "bayesian-reasoning.md",
       "viewer_url": "/library/?doc=bayesian-reasoning",
       "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json",
-      "content_text_length": 2629
+      "content_text_length": 2661
     },
     {
       "scope": "library",
@@ -47,7 +47,7 @@
       "source_path": "beauty.md",
       "viewer_url": "/library/?doc=beauty",
       "content_url": "/assets/data/docs/scopes/library/by-id/beauty.json",
-      "content_text_length": 4401
+      "content_text_length": 4412
     },
     {
       "scope": "library",
@@ -61,7 +61,7 @@
       "source_path": "beauty-memory-meaning.md",
       "viewer_url": "/library/?doc=beauty-memory-meaning",
       "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json",
-      "content_text_length": 4164
+      "content_text_length": 4220
     },
     {
       "scope": "library",
@@ -75,7 +75,7 @@
       "source_path": "beyond-conscious-subconscious.md",
       "viewer_url": "/library/?doc=beyond-conscious-subconscious",
       "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
-      "content_text_length": 3423
+      "content_text_length": 3445
     },
     {
       "scope": "library",
@@ -88,9 +88,9 @@
       "viewable": true,
       "source_path": "can-the-brain-comprehend-how-it-works.md",
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "summary": "The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration.",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json",
-      "content_text_length": 5370,
-      "summary": "The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration."
+      "content_text_length": 5401
     },
     {
       "scope": "library",
@@ -104,7 +104,7 @@
       "source_path": "coincidence-inevitability.md",
       "viewer_url": "/library/?doc=coincidence-inevitability",
       "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-inevitability.json",
-      "content_text_length": 2964
+      "content_text_length": 3009
     },
     {
       "scope": "library",
@@ -118,7 +118,7 @@
       "source_path": "coincidence-salience.md",
       "viewer_url": "/library/?doc=coincidence-salience",
       "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json",
-      "content_text_length": 1188
+      "content_text_length": 1208
     },
     {
       "scope": "library",
@@ -131,9 +131,9 @@
       "viewable": true,
       "source_path": "defining-information-for-cross-boundary-comparisons.md",
       "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons",
+      "summary": "Establish a consistent, cross‑domain definition of “information” to compare event boundaries in memory and event horizons in black holes.",
       "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json",
-      "content_text_length": 4294,
-      "summary": "Establish a consistent, cross‑domain definition of “information” to compare event boundaries in memory and event horizons in black holes."
+      "content_text_length": 4329
     },
     {
       "scope": "library",
@@ -146,9 +146,9 @@
       "viewable": true,
       "source_path": "dreaming-is-active.md",
       "viewer_url": "/library/?doc=dreaming-is-active",
+      "summary": "Dreaming is not a passive process, it actively influences the memory reconstruction process.",
       "content_url": "/assets/data/docs/scopes/library/by-id/dreaming-is-active.json",
-      "content_text_length": 4653,
-      "summary": "Dreaming is not a passive process, it actively influences the memory reconstruction process."
+      "content_text_length": 4708
     },
     {
       "scope": "library",
@@ -162,7 +162,7 @@
       "source_path": "closed-vs-open-universe.md",
       "viewer_url": "/library/?doc=closed-vs-open-universe",
       "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json",
-      "content_text_length": 3077
+      "content_text_length": 3141
     },
     {
       "scope": "library",
@@ -175,9 +175,9 @@
       "viewable": true,
       "source_path": "evolutionary-psychology-overview.md",
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
+      "summary": "This overview frames evolutionary psychology for a Processing application.",
       "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json",
-      "content_text_length": 2124,
-      "summary": "This overview frames evolutionary psychology for a Processing application."
+      "content_text_length": 2180
     },
     {
       "scope": "library",
@@ -191,7 +191,7 @@
       "source_path": "3d-space-to-many-dimensions.md",
       "viewer_url": "/library/?doc=3d-space-to-many-dimensions",
       "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json",
-      "content_text_length": 3156
+      "content_text_length": 3188
     },
     {
       "scope": "library",

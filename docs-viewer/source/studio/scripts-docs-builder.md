@@ -206,15 +206,31 @@ Targeted write:
 ./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids docs-build-management-import-export-improvements
 ```
 
-## Diagnostics
+## Output And Diagnostics
 
-Each selected scope run prints one compact diagnostics line after the dry-run or write summary:
+By default, each selected scope prints a compact human summary:
+
+```text
+Docs build (dry-run) scope=studio
+  docs total: 233
+  docs would write: 0
+  docs would remove: 0
+  references total: 0
+  references would write: 0
+  references would remove: 0
+  indexes would write: 0
+  warnings: 0
+```
+
+Automation that needs machine-readable diagnostics should pass `--diagnostics`.
+With that flag, each selected scope also prints one compact diagnostics line after the human summary:
 
 ```text
 Docs builder diagnostics: {"scope":"studio",...}
 ```
 
-The diagnostics payload is console output only. It does not change the generated Docs Viewer JSON schema.
+The diagnostics payload is console output only.
+It does not change the generated Docs Viewer JSON schema.
 
 Current fields:
 

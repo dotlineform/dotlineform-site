@@ -248,12 +248,14 @@ def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio"])
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--diagnostics"])
 
         assert exit_code == 0
         assert stderr == ""
-        assert "Dry run:" in stdout
-        assert "would write doc payloads: 2" in stdout
+        assert "Docs build (dry-run) scope=studio" in stdout
+        assert "docs total: 2" in stdout
+        assert "docs would write: 2" in stdout
+        assert "warnings: 0" in stdout
         assert diagnostics_from_stdout(stdout)["doc_payloads_changed"] == 2
         assert not (root / "docs-viewer/generated/docs/studio/index.json").exists()
         assert not (root / "docs-viewer/generated/docs/studio/references/index.json").exists()
@@ -261,22 +263,35 @@ def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
         assert not (root / "docs-viewer/config/defaults/docs-viewer-public-config.json").exists()
 
 
+def test_python_docs_builder_cli_omits_diagnostics_by_default() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio"])
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "Docs build (dry-run) scope=studio" in stdout
+    assert "Docs builder diagnostics:" not in stdout
+
+
 def test_python_docs_builder_cli_reports_unchanged_second_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
         first_exit, _, _ = run_cli(root, ["--scope", "studio", "--write"])
-        second_exit, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
+        second_exit, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--diagnostics"])
 
         diagnostics = diagnostics_from_stdout(stdout)
 
     assert first_exit == 0
     assert second_exit == 0
     assert stderr == ""
-    assert "Docs Viewer browser config unchanged:" in stdout
-    assert "Docs Viewer public browser config unchanged:" in stdout
-    assert "Doc payloads wrote: 0." in stdout
-    assert "Reference by-doc payloads wrote: 0." in stdout
+    assert "Docs Viewer browser config: unchanged" in stdout
+    assert "Docs Viewer public browser config: unchanged" in stdout
+    assert "Docs build (write) scope=studio" in stdout
+    assert "docs wrote: 0" in stdout
+    assert "references wrote: 0" in stdout
     assert diagnostics["doc_payloads_changed"] == 0
     assert diagnostics["reference_index_changed"] == 0
     assert diagnostics["reference_by_doc_payloads_changed"] == 0
@@ -291,7 +306,7 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
         parent_before = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
         write_source_docs(root, child_body_suffix="CLI targeted update.")
 
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--only-doc-ids", "child", "--write"])
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--only-doc-ids", "child", "--write", "--diagnostics"])
         parent_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
         child_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
         diagnostics = diagnostics_from_stdout(stdout)
@@ -300,7 +315,8 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
     assert stderr == ""
     assert parent_after == parent_before
     assert "CLI targeted update." in child_after["content_html"]
-    assert "Doc payloads wrote: 1." in stdout
+    assert "Docs build (write) scope=studio" in stdout
+    assert "docs wrote: 1" in stdout
     assert diagnostics["build_mode"] == "targeted"
     assert diagnostics["only_doc_ids"] == ["child"]
     assert diagnostics["doc_payloads_changed"] == 1

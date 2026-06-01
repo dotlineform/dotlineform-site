@@ -102,7 +102,7 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
         module.targeted_docs_build_fallback_reason = original_fallback
 
     assert calls == [
-        [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write"],
+        [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write", "--diagnostics"],
         [
             module.PYTHON_EXECUTABLE,
             "docs-viewer/build/build_search.py",

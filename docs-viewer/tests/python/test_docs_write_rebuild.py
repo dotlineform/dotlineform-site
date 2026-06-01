@@ -65,7 +65,7 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     }
     assert result["search"] == {"mode": "full", "doc_ids": []}
     assert calls == [
-        (["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"], calls[0][1]),
+        (["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"], calls[0][1]),
         (["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"], calls[0][1]),
     ]
     assert result["diagnostics"]["search"]["mode"] == "full"
@@ -182,12 +182,13 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
         [
             "/tmp/python",
             "docs-viewer/build/build_docs.py",
-            "--scope",
-            "studio",
-            "--write",
-            "--only-doc-ids",
-            "body-doc,linked-doc",
-        ]
+                "--scope",
+                "studio",
+                "--write",
+                "--diagnostics",
+                "--only-doc-ids",
+                "body-doc,linked-doc",
+            ]
     ]
 
 
@@ -221,7 +222,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
         "doc_ids": ["body-doc"],
         "reason": "full-scope fallback: existing docs index missing",
     }
-    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
 
 
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
@@ -242,7 +243,7 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["search"] == {"mode": "none", "doc_ids": []}
-    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
 
 
 def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
@@ -377,7 +378,7 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"],
         ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
         ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "library", "--write"],
         ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "analysis", "--write"],
@@ -426,7 +427,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"],
         ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
     ]
 

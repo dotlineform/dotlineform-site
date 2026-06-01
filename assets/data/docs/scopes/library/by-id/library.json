@@ -9,5 +9,5 @@
   "viewable": true,
   "source_path": "library.md",
   "viewer_url": "/library/?doc=library",
-  "content_html": "<h1 id=\"library\">Library</h1>\n\n<p>Library is a document space for research and reference.</p>\n\n"
+  "content_html": "<h1>Library</h1>\n<p>Library is a document space for research and reference.</p>\n"
 }
