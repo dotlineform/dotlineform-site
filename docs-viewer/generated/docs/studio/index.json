@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T17:00:59Z",
+  "generated_at": "2026-06-01T18:28:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1064,6 +1064,36 @@
       "ui_status": "urgent",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
       "content_text_length": 9010
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-public-route-simplification",
+      "title": "Public Route Simplification Request",
+      "added_date": "2026-06-01",
+      "last_updated": "2026-06-01",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-public-route-simplification.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-public-route-simplification",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification.json",
+      "content_text_length": 10407
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-public-static-site-build",
+      "title": "Public Static Site Build Request",
+      "added_date": "2026-06-01",
+      "last_updated": "2026-06-01",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-public-static-site-build.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-public-static-site-build",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
+      "content_text_length": 14258
     },
     {
       "scope": "studio",

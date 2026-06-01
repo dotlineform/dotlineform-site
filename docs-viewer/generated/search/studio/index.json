@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a39edb2028be7b2b1b0a2c48de267213",
-    "generated_at_utc": "2026-06-01T17:00:59Z",
-    "count": 228
+    "version": "blake2b-b23591346d82d4e5a364b94df8bb403e",
+    "generated_at_utc": "2026-06-01T18:20:12Z",
+    "count": 230
   },
   "entries": [
     {
@@ -1822,6 +1822,60 @@
         "27"
       ],
       "search_text": "site-request-portable-docs-viewer-public-fixture-tasks site request portable docs viewer public fixture tasks portable docs viewer public fixture tasks portable docs viewer request 2026-05-27 2026 05 27"
+    },
+    {
+      "id": "site-request-public-route-simplification",
+      "kind": "doc",
+      "title": "Public Route Simplification Request",
+      "href": "/docs/?scope=studio&doc=site-request-public-route-simplification",
+      "last_updated": "2026-06-01",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-01 • Change Requests",
+      "search_terms": [
+        "site-request-public-route-simplification",
+        "site",
+        "request",
+        "public",
+        "route",
+        "simplification",
+        "public route simplification request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "site-request-public-route-simplification site request public route simplification public route simplification request change requests change requests 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "site-request-public-static-site-build",
+      "kind": "doc",
+      "title": "Public Static Site Build Request",
+      "href": "/docs/?scope=studio&doc=site-request-public-static-site-build",
+      "last_updated": "2026-06-01",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-01 • Change Requests",
+      "search_terms": [
+        "site-request-public-static-site-build",
+        "site",
+        "request",
+        "public",
+        "static",
+        "build",
+        "public static site build request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "site-request-public-static-site-build site request public static build public static site build request change requests change requests 2026-06-01 2026 06 01"
     },
     {
       "id": "site-request-r2-media-upload-automation",
