@@ -830,8 +830,11 @@ permalink: /series/
 
     modeButtons.forEach(function (button) {
       button.addEventListener('click', function () {
-        if (selectedSeriesId) return;
         var nextMode = normalizeMode(button.getAttribute('data-mode'));
+        if (selectedSeriesId) {
+          window.location.href = runtime.catalogueIndexUrl(baseurl, nextMode === 'moments' ? { mode: 'moments' } : {});
+          return;
+        }
         if (nextMode === currentMode || !catalogueItems[nextMode].length) return;
         currentMode = nextMode;
         persistMode(currentMode);

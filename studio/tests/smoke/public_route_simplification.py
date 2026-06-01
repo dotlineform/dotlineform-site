@@ -73,13 +73,19 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     if "/moments/" not in moment_href or "?mode=moments" in moment_href:
         raise AssertionError(f"moment browse link should open an individual moment page: {moment_href!r}")
 
-    goto(page, base_url, "/series/?series=009")
+    goto(page, base_url, "/series/?series=009&from=recent")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
     show_list_view(page)
     expect(page.locator("#seriesIndexList .seriesIndexItem").first).to_contain_text("a poem divided into 4 parts", timeout=10_000)
     series_work_href = first_href(page, "#seriesIndexList .seriesIndexItem")
     if "/works/?" not in series_work_href or "work=" not in series_work_href or "series=009" not in series_work_href:
         raise AssertionError(f"selected-series work link is not canonical: {series_work_href!r}")
+    works_nav_href = first_href(page, ".site-nav .nav-item[href$='/series/']")
+    if not works_nav_href.endswith("/series/"):
+        raise AssertionError(f"works top nav should be a reset link on selected-series state: {works_nav_href!r}")
+    page.locator("[data-role='catalog-index-mode-btn'][data-mode='works']").click()
+    page.wait_for_url("**/series/", timeout=10_000)
+    expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
 
     goto(page, base_url, "/works/?work=00001")
     expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)
