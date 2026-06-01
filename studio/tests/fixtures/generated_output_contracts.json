@@ -1,0 +1,335 @@
+{
+  "schema": "rubyless_generated_output_contract_fixtures_v1",
+  "policy": {
+    "protects": "app-facing generated data contracts",
+    "does_not_protect": [
+      "Jekyll output",
+      "Kramdown-specific wrapping",
+      "Rouge syntax-highlighter classes",
+      "exact generated timestamps",
+      "exact current-output hashes"
+    ],
+    "renderer_contract": {
+      "markdown_library": "markdown-it-py",
+      "preset": "commonmark",
+      "enabled_rules": ["table"],
+      "enabled_plugins": [],
+      "jekyll_kramdown_parity": false
+    }
+  },
+  "docs_viewer": {
+    "index_json": {
+      "path_pattern": "<docs_scope.output>/index.json",
+      "required_top_level_keys": ["docs", "generated_at", "viewer_options"],
+      "viewer_options": {
+        "non_loadable_doc_ids": [],
+        "manage_only_tree_root_ids": ["change-history-reports"],
+        "show_updated_date": true
+      },
+      "doc_entry": {
+        "scope": "studio",
+        "doc_id": "contract-fixture",
+        "title": "Contract Fixture",
+        "added_date": "2026-06-01",
+        "last_updated": "2026-06-01",
+        "parent_id": "site-request-rubyless-app-runtimes",
+        "hidden": false,
+        "viewable": true,
+        "source_path": "contract-fixture.md",
+        "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
+        "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
+        "content_text_length": 84
+      },
+      "contracts": [
+        "docs is an array of index records",
+        "content_url points to the scope output by-id payload",
+        "content_text_length is a non-negative integer",
+        "generated_at exists but exact value is not a contract"
+      ]
+    },
+    "by_id_json": {
+      "path_pattern": "<docs_scope.output>/by-id/<doc_id>.json",
+      "required_top_level_keys": [
+        "scope",
+        "doc_id",
+        "title",
+        "added_date",
+        "last_updated",
+        "parent_id",
+        "hidden",
+        "viewable",
+        "source_path",
+        "viewer_url",
+        "content_html"
+      ],
+      "payload": {
+        "scope": "studio",
+        "doc_id": "contract-fixture",
+        "title": "Contract Fixture",
+        "added_date": "2026-06-01",
+        "last_updated": "2026-06-01",
+        "parent_id": "site-request-rubyless-app-runtimes",
+        "hidden": false,
+        "viewable": true,
+        "source_path": "contract-fixture.md",
+        "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
+        "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">request link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[ref:work:00638]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"
+      },
+      "html_semantics_contains": [
+        "<h1 id=\"contract-fixture\">Contract Fixture</h1>",
+        "<a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">request link</a>",
+        "<code>inline code</code>",
+        "<ul>",
+        "<pre><code>literal token [[ref:work:00638]]</code></pre>",
+        "<table>",
+        "<details><summary>Raw summary</summary><p>Trusted raw body</p></details>"
+      ],
+      "non_contract_fragments": [
+        "highlighter-rouge",
+        "language-plaintext",
+        "<div class=\"highlight\">",
+        "<span class=\""
+      ]
+    },
+    "references": {
+      "index_json": {
+        "path_pattern": "<docs_scope.output>/references/index.json",
+        "required_top_level_keys": ["header", "targets"],
+        "header": {
+          "schema": "docs_semantic_references_index_v1",
+          "scope": "studio",
+          "count": 2,
+          "target_count": 1,
+          "generated_at": "timestamp"
+        },
+        "targets": [
+          {
+            "target_kind": "work",
+            "target_id": "00638",
+            "target_key": "work:00638",
+            "target_title": "3 symbols",
+            "target_status": "published",
+            "target_href": "/works/00638/",
+            "reference_count": 2,
+            "target_payload_url": "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
+          }
+        ]
+      },
+      "by_target_json": {
+        "path_pattern": "<docs_scope.output>/references/by-target/<target_kind>/<target_id>.json",
+        "required_top_level_keys": [
+          "header",
+          "target",
+          "references"
+        ],
+        "header": {
+          "schema": "docs_semantic_reference_target_v1",
+          "scope": "studio",
+          "target_kind": "work",
+          "target_id": "00638",
+          "count": 2,
+          "generated_at": "timestamp"
+        },
+        "target": {
+          "target_kind": "work",
+          "target_id": "00638",
+          "target_key": "work:00638",
+          "target_title": "3 symbols",
+          "target_status": "published",
+          "target_href": "/works/00638/"
+        },
+        "references": [
+          {
+            "source_scope": "studio",
+            "source_doc_id": "contract-fixture",
+            "source_title": "Contract Fixture",
+            "source_path": "contract-fixture.md",
+            "source_viewer_url": "/docs/?scope=studio&doc=contract-fixture",
+            "target_kind": "work",
+            "target_id": "00638",
+            "target_key": "work:00638",
+            "target_href": "/works/00638/",
+            "target_title": "3 symbols",
+            "target_status": "published",
+            "label": "three signs",
+            "action": "link",
+            "ordinal": 1
+          },
+          {
+            "source_scope": "studio",
+            "source_doc_id": "other-contract-fixture",
+            "source_title": "Other Contract Fixture",
+            "source_path": "other-contract-fixture.md",
+            "source_viewer_url": "/docs/?scope=studio&doc=other-contract-fixture",
+            "target_kind": "work",
+            "target_id": "00638",
+            "target_key": "work:00638",
+            "target_href": "/works/00638/",
+            "target_title": "3 symbols",
+            "target_status": "published",
+            "label": "3 symbols",
+            "action": "link",
+            "ordinal": 2
+          }
+        ]
+      }
+    }
+  },
+  "docs_search": {
+    "index_json": {
+      "path_pattern": "<docs_scope.search_output>",
+      "required_top_level_keys": ["header", "entries"],
+      "header": {
+        "schema": "search_index_studio_v1",
+        "scope": "studio",
+        "version_pattern": "^blake2b-[0-9a-f]{32}$",
+        "generated_at_utc": "timestamp",
+        "count": 1
+      },
+      "entry": {
+        "id": "contract-fixture",
+        "kind": "doc",
+        "title": "Contract Fixture",
+        "href": "/docs/?scope=studio&doc=contract-fixture",
+        "last_updated": "2026-06-01",
+        "parent_id": "site-request-rubyless-app-runtimes",
+        "parent_title": "Rubyless App Runtimes Request",
+        "display_meta": "2026-06-01 - Rubyless App Runtimes Request",
+        "search_terms": [
+          "contract-fixture",
+          "contract",
+          "fixture",
+          "rubyless app runtimes request",
+          "rubyless",
+          "app",
+          "runtimes",
+          "request",
+          "2026-06-01",
+          "2026",
+          "06",
+          "01"
+        ],
+        "search_text": "contract-fixture contract fixture rubyless app runtimes request rubyless app runtimes request 2026-06-01 2026 06 01"
+      }
+    }
+  },
+  "catalogue_search": {
+    "index_json": {
+      "path_pattern": "assets/data/search/catalogue/index.json",
+      "required_top_level_keys": ["header", "entries"],
+      "header": {
+        "schema": "search_index_v1",
+        "version_pattern": "^blake2b-[0-9a-f]{32}$",
+        "generated_at_utc": "timestamp",
+        "count": 3
+      },
+      "entries": [
+        {
+          "kind": "moment",
+          "id": "contract-moment",
+          "title": "Contract Moment",
+          "href": "/moments/contract-moment/",
+          "date": "2026-06-01",
+          "display_meta": "2026",
+          "search_terms": [
+            "contract-moment",
+            "contract",
+            "moment",
+            "contract moment",
+            "2026",
+            "2026-06-01",
+            "06",
+            "01"
+          ],
+          "search_text": "contract-moment contract moment contract moment 2026 2026-06-01 06 01"
+        },
+        {
+          "kind": "series",
+          "id": "001",
+          "title": "Contract Series",
+          "href": "/series/001/",
+          "year": 2026,
+          "display_meta": "2026",
+          "series_type": "sequence",
+          "search_terms": [
+            "001",
+            "contract series",
+            "contract",
+            "series",
+            "2026",
+            "sequence"
+          ],
+          "search_text": "001 contract series contract series 2026 sequence"
+        },
+        {
+          "kind": "work",
+          "id": "00638",
+          "title": "3 symbols",
+          "href": "/works/00638/",
+          "year": 1998,
+          "display_meta": "1998",
+          "series_ids": ["026"],
+          "series_titles": ["collected 1989-1998"],
+          "medium_type": "drawing",
+          "search_terms": [
+            "00638",
+            "3 symbols",
+            "3",
+            "symbols",
+            "1998",
+            "026",
+            "collected 1989-1998",
+            "collected",
+            "1989",
+            "drawing"
+          ],
+          "search_text": "00638 3 symbols 3 symbols 1998 026 collected 1989-1998 collected 1989 drawing"
+        }
+      ]
+    }
+  },
+  "catalogue_prose": {
+    "content_html_cases": [
+      {
+        "kind": "work",
+        "id": "00638",
+        "source_markdown": "# 3 symbols\n\nWork prose with **emphasis** and [series link](/series/026/).",
+        "content_html": "<h1 id=\"3-symbols\">3 symbols</h1>\n<p>Work prose with <strong>emphasis</strong> and <a href=\"/series/026/\">series link</a>.</p>\n",
+        "html_semantics_contains": [
+          "<h1 id=\"3-symbols\">3 symbols</h1>",
+          "<strong>emphasis</strong>",
+          "<a href=\"/series/026/\">series link</a>"
+        ]
+      },
+      {
+        "kind": "series",
+        "id": "026",
+        "source_markdown": "Series prose\n\n- item one",
+        "content_html": "<p>Series prose</p>\n<ul>\n<li>item one</li>\n</ul>\n",
+        "html_semantics_contains": [
+          "<p>Series prose</p>",
+          "<ul>",
+          "<li>item one</li>"
+        ]
+      },
+      {
+        "kind": "moment",
+        "id": "contract-moment",
+        "source_markdown": "<aside data-kind=\"note\">Moment note</aside>\n\n| Name | Value |\n| --- | --- |\n| Alpha | 1 |",
+        "content_html": "<aside data-kind=\"note\">Moment note</aside>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n",
+        "html_semantics_contains": [
+          "<aside data-kind=\"note\">Moment note</aside>",
+          "<table>",
+          "<th>Name</th>",
+          "<td>Alpha</td>"
+        ]
+      }
+    ],
+    "non_contract_fragments": [
+      "highlighter-rouge",
+      "language-plaintext",
+      "<div class=\"highlight\">",
+      "<span class=\""
+    ]
+  }
+}

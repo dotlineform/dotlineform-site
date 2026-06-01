@@ -24,12 +24,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Added the shared Python Markdown renderer helper with CommonMark, built-in table support, explicit raw-HTML behavior, and no external renderer plugins.
 - Added Docs Viewer v2 renderer acceptance fixtures for rendered HTML semantics and generated plain text without Jekyll/Kramdown parity checks.
 - Added Docs Viewer v2 custom-token contract fixtures for media, interactive HTML, semantic references, invalid references, code-skip behavior, generated reference payloads, and generated search text.
+- Added generated-output contract fixtures for Docs Viewer docs payloads, semantic reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` without locking in current Jekyll/Kramdown markup.
 
 ## Next Task Steer
 
-Continue with Phase 1 task 7: add generated-output contract fixtures before implementation.
+Continue with Phase 2 task 8: build the Python Docs Viewer payload builder that replaces `docs-viewer/build/build_docs.rb`.
 
-This means covering Docs Viewer `index.json`, Docs Viewer `by-id/*.json`, reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` so the migration protects app contracts rather than current Jekyll/Kramdown markup.
+Use the generated-output contract fixture from task 7 as the app-facing payload shape guard, not as a Jekyll/Kramdown parity target.
 
 ## Implementation Steer
 
@@ -99,7 +100,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 4 | done | Build a shared Python Markdown rendering helper. Start from `MarkdownIt("commonmark")`, enable only syntax needed by current authored docs and acceptance fixtures, and keep raw HTML/sanitization behavior explicit. Do not add Jekyll/Kramdown parity fixtures or automated current-output comparison checks. |
 | 5 | done | Add Docs Viewer v2 renderer acceptance fixtures before caller migration. Cover headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables if enabled, generated plain text, and HTML semantics directly rather than comparing against Jekyll/Kramdown output. |
 | 6 | done | Add custom-token builder fixtures before caller migration. Cover media tokens, interactive HTML tokens, semantic reference tokens, invalid/missing/non-published references, code-block skip behavior, generated semantic reference payloads, and generated search text. |
-| 7 | planned | Add generated-output contract fixtures before implementation. Cover Docs Viewer `index.json`, Docs Viewer `by-id/*.json`, reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` so the migration protects app contracts rather than current Jekyll/Kramdown markup. |
+| 7 | done | Add generated-output contract fixtures before implementation. Cover Docs Viewer `index.json`, Docs Viewer `by-id/*.json`, reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` so the migration protects app contracts rather than current Jekyll/Kramdown markup. |
 
 ### Phase 2: Docs Viewer Builders And Callers
 
