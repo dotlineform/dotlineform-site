@@ -22,7 +22,7 @@ docs-viewer/bin/docs-viewer
 ## Purpose
 
 Local Studio, Local Analytics, UI Catalogue, public Jekyll preview, and Docs Viewer have separate launcher commands.
-`bin/local-studio` starts the Local Studio app, Studio catalogue/audit/activity/admin APIs, the docs live rebuild watcher, and optional startup maintenance tasks.
+`bin/local-studio` starts the Local Studio app, Studio catalogue/audit/activity/admin APIs, the docs live rebuild watcher, and Python startup maintenance tasks.
 The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
 `bin/local-studio` does not start the Docs Viewer web service, Local Analytics, UI Catalogue, or Jekyll preview.
 It no longer serves `/docs/`, `/analytics/`, or `/ui-catalogue/`.
@@ -90,7 +90,8 @@ Each command:
 
 - changes into the repo root
 - loads `var/local/site.env` when present
-- uses the repo's preferred Ruby or Python executable when that command needs one
+- uses the repo's preferred Python executable for local app runners and maintenance tasks
+- uses the repo's preferred Ruby/Bundler stack only for explicit public-site preview/build commands
 - otherwise falls back to the corresponding executable on `PATH`
 
 `bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
@@ -429,10 +430,10 @@ If either `bin/local-studio` child process exits unexpectedly, that runner stops
 If you disable the watcher or want an explicit manual rebuild, use:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope studio --write
-./docs-viewer/build/build_search.rb --scope studio --write
-./docs-viewer/build/build_docs.rb --scope library --write
-./docs-viewer/build/build_search.rb --scope library --write
+./docs-viewer/build/build_docs.py --scope studio --write
+./docs-viewer/build/build_search.py --scope studio --write
+./docs-viewer/build/build_docs.py --scope library --write
+./docs-viewer/build/build_search.py --scope library --write
 ```
 
 ## Related References

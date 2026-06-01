@@ -170,7 +170,7 @@ Implemented:
 - catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, and Project State workflows use local Studio catalogue APIs
 - catalogue handler-owned behavior has been extracted into callable service functions
 - the standalone tag write, Docs management, and catalogue write servers have been retired
-- `bin/local-studio` starts only the local Studio app, optional Docs watcher, and optional startup rebuilds
+- `bin/local-studio` starts only the local Studio app, optional Docs watcher, and Python startup maintenance tasks
 
 Still in progress:
 

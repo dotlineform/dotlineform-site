@@ -78,18 +78,18 @@ Current checked-in sources:
 Current repo role:
 
 - build the site locally with Jekyll
-- render docs Markdown through the same Jekyll Markdown converter used by the docs builder
+- render public-site Markdown through the Jekyll Markdown converter used by public preview/build
 - keep publish-sensitive checks aligned with the GitHub Pages-compatible stack
 
 Current practical dependency boundary:
 
 - `github-pages` is the top-level Ruby gem contract
 - Jekyll and related gems come through that stack
-- the docs builder and site verification should therefore be treated as depending on the repo's pinned Ruby/Bundler/Jekyll contract, not just on “some Ruby”
+- public-site preview/build and publish-sensitive site verification should therefore be treated as depending on the repo's pinned Ruby/Bundler/Jekyll contract, not just on “some Ruby”
 
 Local/cloud criticality:
 
-- local: critical for any Jekyll build, docs rendering, or publish-sensitive verification
+- local: critical for any Jekyll build, public-site rendering, or publish-sensitive verification
 - cloud: critical in parity mode and for final verification; less critical for Python-only script work that does not touch site rendering
 
 ## External Command-Line Tools
@@ -123,7 +123,7 @@ These are the main checked-in contracts that keep local and cloud runs aligned.
 ### Usually needed in both local and cloud
 
 - `openpyxl`
-- the pinned Ruby/Bundler/Jekyll stack when site/docs rendering matters
+- the pinned Ruby/Bundler/Jekyll stack when public-site rendering matters
 
 ### Feature-specific but now part of the repo baseline install
 
