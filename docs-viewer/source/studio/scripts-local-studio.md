@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: servers
 ---
 # Local Runners
@@ -138,12 +138,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `UI_CATALOGUE_APP_ACCESS_LOG`
   default: `0`
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each UI Catalogue app request
-- `DOCS_STARTUP_REBUILD_SCOPES`
-  default: blank
-  accepted values: configured docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`, or comma-separated combinations
-- `CATALOGUE_STARTUP_LOOKUP_REBUILD`
-  default: `off`
-  accepted enabled values: `1`, `on`, `true`, or `yes`
 - `DOCS_WATCH_ENABLED`
   default: `1`
 - `DOCS_WATCH_POLL_SECONDS`
@@ -185,8 +179,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 Example:
 
 ```bash
-export DOCS_STARTUP_REBUILD_SCOPES=""
-export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export STUDIO_APP_PORT=8765
 export STUDIO_APP_ACCESS_LOG=0
 export ANALYTICS_APP_PORT=8766
@@ -196,15 +188,6 @@ export UI_CATALOGUE_APP_ACCESS_LOG=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
-
-Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid reminder that startup docs/docs-search rebuilds are intentionally off.
-To run a startup rebuild locally, edit that value to a configured docs scope id such as `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
-
-Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
-Set it to `1`, `on`, `true`, or `yes` when startup should refresh `studio/data/generated/catalogue-lookup/` before the local Studio app starts.
-
-The runner reads valid docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`.
-Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing the runner.
 
 ## Startup Sequence
 
@@ -226,36 +209,22 @@ If any child process exits, `bin/local-all` prints which service exited, stops t
 
 ### Local Studio
 
-Before it starts any rebuilds or long-running processes, `bin/local-studio` checks that the Local Studio app port is available when the app server is enabled.
+Before it starts long-running processes, `bin/local-studio` checks that the Local Studio app port is available when the app server is enabled.
 If the port is unavailable, the runner exits immediately with a message naming `STUDIO_APP_PORT`.
 
-After that preflight, `bin/local-studio` runs the startup write steps below:
+After that preflight, `bin/local-studio` runs the startup write step below:
 
-1. if `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
-   - `$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet`
-2. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
-   - `./docs-viewer/build/build_docs.rb --scope <scope> --write`
-   - `./docs-viewer/build/build_search.rb --scope <scope> --write`
-   for each listed docs scope
-3. if `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, it runs:
-   - `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write`
+If `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
 
-That means a default `bin/local-studio` run skips startup docs/docs-search rebuilds and startup catalogue lookup export.
+- `$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet`
+
+`bin/local-studio` does not run startup docs/docs-search rebuilds or startup catalogue lookup export.
 The local Studio app catalogue API refreshes derived lookup payloads after catalogue writes.
-
-If `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, startup also updates:
-
-- derived catalogue lookup JSON under `studio/data/generated/catalogue-lookup/`
 
 By default it also prunes local Studio backup files under `var/studio/backups/` and `var/studio/catalogue/backups/`.
 Backup retention keeps the newest backups per target file; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention).
 
-If `DOCS_STARTUP_REBUILD_SCOPES` is set, it also updates:
-
-- scope-matching docs-viewer JSON under `assets/data/docs/scopes/<scope>/`
-- scope-matching docs-search JSON under `assets/data/search/<scope>/`
-
-After those startup writes succeed, it starts the long-running local processes below.
+After startup writes succeed, it starts the long-running local processes below.
 
 ## Running Services
 
@@ -420,8 +389,6 @@ At startup the runner prints quick links for:
 - Local Analytics App
 - UI Catalogue App
 - local API ownership
-- startup docs rebuild scopes
-- startup catalogue lookup rebuild status
 - Docs Live Watcher status
 - Backup retention status
 - Series Tag Editor in Local Analytics:
@@ -453,8 +420,8 @@ If either `bin/local-studio` child process exits unexpectedly, that runner stops
 - serve `/docs/` or Docs Viewer management APIs
 - serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
 - run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
-- rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
-- rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
+- rebuild any docs/docs-search scope on startup
+- rebuild catalogue lookup artifacts on startup
 - rebuild public search artifacts on startup
 - start a separate frontend asset server
 - replace Jekyll as the public preview host

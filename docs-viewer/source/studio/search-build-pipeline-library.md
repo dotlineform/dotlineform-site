@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-library
 title: Search Build Pipeline Library Scope
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-01
 parent_id: search-build-pipeline
 ---
 # Search Build Pipeline Library Scope
@@ -70,5 +70,4 @@ Current builder behaviour for Library:
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Library docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
-- if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/local-studio` runs a startup `library` docs-search rebuild
 - while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/library/*.md` changes aligned with `assets/data/search/library/index.json`

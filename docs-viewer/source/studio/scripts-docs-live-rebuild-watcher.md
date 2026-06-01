@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: Live Rebuild Watcher
 added_date: 2026-04-24
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: docs-viewer
 viewable: true
 ---
@@ -133,7 +133,7 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 ## Operational Notes
 
 - `bin/local-studio` starts this watcher by default
-- `bin/local-studio` does not perform a default startup docs/docs-search rebuild; startup rebuilds are opt-in through `DOCS_STARTUP_REBUILD_SCOPES`
+- `bin/local-studio` does not perform startup docs/docs-search rebuilds
 - `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/local-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds

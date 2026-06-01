@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: "2026-05-09 21:28"
+last_updated: 2026-06-01
 parent_id: catalogue
 ---
 # Catalogue Lookup Export
@@ -74,8 +74,7 @@ The catalogue editors use these files as follows:
   - focused record load from `series/<series_id>.json`
   - add-work validation from `work_search.json`
 
-## Dev Studio
+## Refresh Flow
 
-`bin/local-studio` can run this export before starting Local Studio when `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled.
-
-The catalogue write server also refreshes these lookup payloads after canonical catalogue source writes.
+The catalogue write server refreshes these lookup payloads after canonical catalogue source writes.
+Run the export script manually when a full derived lookup refresh is needed outside a write flow.

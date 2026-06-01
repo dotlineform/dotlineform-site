@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-05-31
+last_updated: 2026-06-01
 parent_id: ""
 ---
 # Studio
@@ -90,7 +90,6 @@ bin/local-all
 
 Current runner behavior:
 
-- optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - starts the local Studio app server for the Studio shell, Catalogue APIs, Studio audit APIs, activity, and admin routes
 - does not start Local Analytics, UI Catalogue, public-site preview, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for the supervised sibling-service workflow
 - has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
@@ -104,7 +103,7 @@ Current limits:
 - it does not enable `--livereload`
 - it does not serve `/docs/`; Docs Viewer manage mode belongs to the standalone Docs Viewer service
 - it does not serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
-- it does not rebuild docs or docs-search artifacts on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
+- it does not rebuild docs or docs-search artifacts on startup
 - it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
 - local server architecture and future consolidation strategy are documented in **[Servers](/docs/?scope=studio&doc=servers)**

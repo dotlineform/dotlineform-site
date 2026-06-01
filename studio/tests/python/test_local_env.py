@@ -10,9 +10,9 @@ from typing import Any, Callable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+if str(SHARED_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 import local_env  # noqa: E402
 
@@ -41,7 +41,7 @@ def test_load_env_file_accepts_export_quotes_and_blank_values() -> None:
                     "# local config",
                     'export DOTLINEFORM_PROJECTS_BASE_DIR="/tmp/projects"',
                     "MAKE_SRCSET_JOBS=4",
-                    'DOCS_STARTUP_REBUILD_SCOPES=""',
+                    'EMPTY_VALUE=""',
                 ]
             )
             + "\n",
@@ -52,7 +52,7 @@ def test_load_env_file_accepts_export_quotes_and_blank_values() -> None:
 
     assert_equal(values["DOTLINEFORM_PROJECTS_BASE_DIR"], "/tmp/projects", "quoted export")
     assert_equal(values["MAKE_SRCSET_JOBS"], "4", "unexported value")
-    assert_equal(values["DOCS_STARTUP_REBUILD_SCOPES"], "", "blank reminder value")
+    assert_equal(values["EMPTY_VALUE"], "", "blank value")
 
 
 def test_runtime_env_site_file_wins_over_inherited_shell() -> None:

@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: studio
 ---
 # Studio Runtime
@@ -210,8 +210,7 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 What it runs before starting long-lived services:
 
 - required port preflight for the local Studio app
-- optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
-- `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write`
+- Studio backup retention cleanup when enabled
 
 What it starts:
 

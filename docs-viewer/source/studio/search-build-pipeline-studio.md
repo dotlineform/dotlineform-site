@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-studio
 title: Search Build Pipeline Studio Scope
 added_date: 2026-05-19
-last_updated: 2026-05-25
+last_updated: 2026-06-01
 parent_id: search-build-pipeline
 ---
 # Search Build Pipeline Studio Scope
@@ -89,4 +89,4 @@ Current derived search support fields:
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Studio docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
-- `bin/local-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `docs-viewer/source/studio/*.md` changes aligned with `docs-viewer/generated/search/studio/index.json`
+- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/studio/*.md` changes aligned with `docs-viewer/generated/search/studio/index.json`

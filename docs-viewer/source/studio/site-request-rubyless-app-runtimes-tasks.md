@@ -18,12 +18,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Added the Markdown library decision to the parent request, recommending `markdown-it-py` and explicitly rejecting Jekyll/Kramdown parity checks.
 - Expanded this tracker into phased tasks with startup cleanup as Phase 0, explicit generated-output contract fixtures, no mixed builder mode, no hidden Ruby fallbacks, and no implicit cleanup.
 - Clarified that generated docs/search payloads may be stale during migration because source Markdown remains readable directly.
+- Removed disabled local-startup rebuild handling from `bin/local-studio`, including `DOCS_STARTUP_REBUILD_SCOPES`, `CATALOGUE_STARTUP_LOOKUP_REBUILD`, startup Ruby docs/search builder calls, startup catalogue lookup export, and related active docs/tests.
 
 ## Next Task Steer
 
-Start with Phase 0 task 1: remove the disabled local-startup rebuild code paths from `bin/local-studio` and `bin/local-all`.
+Continue with Phase 0 task 2: define the cutover preflight for later phases.
 
-This means removing the actual startup rebuild code, service wiring, flags, messages, docs, and tests for `DOCS_STARTUP_REBUILD_SCOPES` and `CATALOGUE_STARTUP_LOOKUP_REBUILD`, including startup calls to `docs-viewer/build/build_docs.rb`, `docs-viewer/build/build_search.rb`, and catalogue lookup rebuild. Keep `docs-viewer/services/docs_live_rebuild_watcher.py` as the long-running docs watcher service.
+This means documenting when to pause `bin/local-all` or affected services before builder/caller swaps, keeping docs watcher expectations explicit, accepting stale generated docs/search payloads during migration because source Markdown remains readable directly, and restarting only after the current phase is verified.
 
 ## Implementation Steer
 
@@ -58,7 +59,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Remove disabled local-startup rebuild code paths, not just flags. Delete `DOCS_STARTUP_REBUILD_SCOPES` and `CATALOGUE_STARTUP_LOOKUP_REBUILD` handling from `bin/local-studio`/`bin/local-all`, including scope parsing, startup rebuild loops, catalogue lookup rebuild calls, related service wiring, startup messages, docs, and tests. Remove the actual calls to `docs-viewer/build/build_docs.rb`, `docs-viewer/build/build_search.rb`, and startup catalogue lookup rebuild from local app startup. Keep `docs-viewer/services/docs_live_rebuild_watcher.py` as the long-running docs watcher service. |
+| 1 | done | Remove disabled local-startup rebuild code paths, not just flags. Delete `DOCS_STARTUP_REBUILD_SCOPES` and `CATALOGUE_STARTUP_LOOKUP_REBUILD` handling from `bin/local-studio`/`bin/local-all`, including scope parsing, startup rebuild loops, catalogue lookup rebuild calls, related service wiring, startup messages, docs, and tests. Remove the actual calls to `docs-viewer/build/build_docs.rb`, `docs-viewer/build/build_search.rb`, and startup catalogue lookup rebuild from local app startup. Keep `docs-viewer/services/docs_live_rebuild_watcher.py` as the long-running docs watcher service. |
 | 2 | planned | Define the cutover preflight for later phases. Pause `bin/local-all` or affected services before builder/caller swaps, keep docs watcher expectations explicit, accept stale generated docs/search payloads during migration because source Markdown remains readable directly, and restart only after the current phase is verified. |
 
 ### Phase 1: Renderer And Fixtures

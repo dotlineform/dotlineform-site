@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
 added_date: 2026-04-22
-last_updated: "2026-05-09 21:45"
+last_updated: 2026-06-01
 parent_id: config
 viewable: true
 ---
@@ -257,7 +257,7 @@ Use these references for the contracts:
 
 Current operational constraints:
 
-- `bin/local-studio` runs startup docs/docs-search rebuilds only when `DOCS_STARTUP_REBUILD_SCOPES` is set, and derived catalogue lookup export only when `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
+- `bin/local-studio` does not run startup docs/docs-search rebuilds or startup catalogue lookup export; use manual builders or write-service rebuild paths when generated data needs refreshing
 - Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/public-site-preview` when local preview links are being checked
 - `studio/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 

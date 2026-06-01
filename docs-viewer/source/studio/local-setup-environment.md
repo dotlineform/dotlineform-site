@@ -2,7 +2,7 @@
 doc_id: local-setup-environment
 title: Local Setup Environment
 added_date: 2026-05-19
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: local-setup
 ---
 # Local Setup Environment
@@ -21,7 +21,6 @@ Recommended shape:
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/absolute/path/to/dotlineform"
 export MAKE_SRCSET_JOBS=4
-export DOCS_STARTUP_REBUILD_SCOPES=""
 
 export R2_ACCOUNT_ID="..."
 export R2_ACCESS_KEY_ID="..."
@@ -37,7 +36,6 @@ What the shared variables mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
-- `DOCS_STARTUP_REBUILD_SCOPES`: optional `bin/local-studio` startup docs/docs-search rebuild scopes; keep it blank as an explicit reminder that startup rebuilds are off
 
 Common local app runner variables:
 

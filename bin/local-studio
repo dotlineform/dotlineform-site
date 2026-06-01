@@ -13,12 +13,6 @@ if [ -f "$SITE_ENV_PATH" ]; then
   set +a
 fi
 
-if [ -x "$HOME/.rbenv/shims/bundle" ]; then
-  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
-else
-  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
-fi
-
 if [ -x "$HOME/miniconda3/bin/python3" ]; then
   PYTHON_BIN="$HOME/miniconda3/bin/python3"
 else
@@ -29,8 +23,6 @@ STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
 STUDIO_APP_ACCESS_LOG="${STUDIO_APP_ACCESS_LOG:-0}"
-DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
-CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
 DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
 DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
@@ -39,82 +31,6 @@ RUNNER_NAME="bin/local-studio"
 
 STUDIO_APP_PID=""
 DOCS_WATCHER_PID=""
-STARTUP_DOC_SCOPES=()
-DOCS_SCOPE_IDS=()
-
-load_docs_scope_ids() {
-  local scope_id
-  DOCS_SCOPE_IDS=()
-  while IFS= read -r scope_id; do
-    if [ -n "$scope_id" ]; then
-      DOCS_SCOPE_IDS+=("$scope_id")
-    fi
-  done < <("$PYTHON_BIN" - <<'PY'
-import json
-from pathlib import Path
-
-payload = json.loads(Path("docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
-if payload.get("schema_version") != "docs_scopes_v1":
-    raise SystemExit("Invalid docs scope config: expected docs_scopes_v1")
-scopes = payload.get("scopes")
-if not isinstance(scopes, list):
-    raise SystemExit("Invalid docs scope config: expected scopes array")
-for item in scopes:
-    if isinstance(item, dict):
-        scope_id = str(item.get("scope_id") or "").strip().lower()
-        if scope_id:
-            print(scope_id)
-PY
-)
-  if [ "${#DOCS_SCOPE_IDS[@]}" -eq 0 ]; then
-    echo "ERROR: No docs scopes found in docs-viewer/config/scopes/docs_scopes.json" >&2
-    exit 1
-  fi
-}
-
-docs_scope_supported() {
-  local candidate="$1"
-  local scope
-  for scope in "${DOCS_SCOPE_IDS[@]}"; do
-    if [ "$scope" = "$candidate" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-parse_startup_doc_scopes() {
-  local raw="$1"
-  local part
-  local token
-  local normalized
-  local seen_scopes=" "
-
-  STARTUP_DOC_SCOPES=()
-  if [ -z "$raw" ]; then
-    return 0
-  fi
-
-  IFS=',' read -r -a scope_parts <<< "$raw"
-  for part in "${scope_parts[@]}"; do
-    token="$(printf '%s' "$part" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    normalized="$(printf '%s' "$token" | tr '[:upper:]' '[:lower:]')"
-    if [ -z "$normalized" ]; then
-      continue
-    fi
-
-    if ! docs_scope_supported "$normalized"; then
-      echo "ERROR: Unsupported DOCS_STARTUP_REBUILD_SCOPES entry: $token" >&2
-      echo "Use a comma-separated list of configured docs scopes: ${DOCS_SCOPE_IDS[*]}" >&2
-      exit 1
-    fi
-
-    if [[ "$seen_scopes" != *" $normalized "* ]]; then
-      STARTUP_DOC_SCOPES+=("$normalized")
-      seen_scopes="$seen_scopes$normalized "
-    fi
-  done
-}
 
 port_available() {
   local host="$1"
@@ -186,9 +102,6 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-load_docs_scope_ids
-parse_startup_doc_scopes "$DOCS_STARTUP_REBUILD_SCOPES"
-
 echo "Starting Local Studio from $ROOT_DIR"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Local Studio App: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT"
@@ -207,21 +120,8 @@ echo "Catalogue APIs: handled by Local Studio App"
 echo "Docs Viewer links/API: handled by configured Docs Viewer service (${DOCS_VIEWER_BASE_URL:-http://${DOCS_VIEWER_HOST:-127.0.0.1}:${DOCS_VIEWER_PORT:-8776}})"
 echo "Audit API: handled by Local Studio App"
 echo "Analytics/tag/data-sharing routes: handled by bin/local-analytics"
-if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
-  echo "Startup docs rebuild scopes: ${STARTUP_DOC_SCOPES[*]}"
-else
-  echo "Startup docs rebuild scopes: none"
-fi
-case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
-  1|on|true|yes)
-    echo "Startup catalogue lookup rebuild: enabled"
-    ;;
-  *)
-    echo "Startup catalogue lookup rebuild: disabled"
-    ;;
-esac
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  echo "Docs Live Watcher: enabled (configured docs scopes: ${DOCS_SCOPE_IDS[*]})"
+  echo "Docs Live Watcher: enabled"
 else
   echo "Docs Live Watcher: disabled"
 fi
@@ -243,26 +143,6 @@ else
     echo "WARNING: Studio backup retention cleanup failed; continuing startup." >&2
   }
 fi
-
-if [ "${#STARTUP_DOC_SCOPES[@]}" -eq 0 ]; then
-  echo "Skipping startup docs/docs-search rebuilds"
-else
-  for scope in "${STARTUP_DOC_SCOPES[@]}"; do
-    echo "Building docs viewer data for scope: $scope"
-    "$BUNDLE_BIN" exec ruby docs-viewer/build/build_docs.rb --scope "$scope" --write
-    echo "Building docs search data for scope: $scope"
-    "$BUNDLE_BIN" exec ruby docs-viewer/build/build_search.rb --scope "$scope" --write
-  done
-fi
-case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
-  1|on|true|yes)
-    echo "Building catalogue lookup data"
-    "$PYTHON_BIN" studio/services/catalogue/export_catalogue_lookup.py --write
-    ;;
-  *)
-    echo "Skipping startup catalogue lookup rebuild"
-    ;;
-esac
 echo
 echo "Press Ctrl+C to stop all processes."
 echo

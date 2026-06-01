@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Builder
 added_date: 2026-04-23
-last_updated: 2026-05-26
+last_updated: 2026-06-01
 parent_id: docs-viewer
 viewable: true
 ---
@@ -233,7 +233,6 @@ Current fields:
 
 ## Operational Notes
 
-- `bin/local-studio` runs this builder only when `DOCS_STARTUP_REBUILD_SCOPES` requests a startup docs/docs-search rebuild
 - `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/**/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.rb --scope <scope> --write`
 - Docs Viewer manage mode rebuilds the current docs scope through the standalone Docs Viewer service

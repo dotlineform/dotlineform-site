@@ -124,9 +124,6 @@ Docs Viewer direct dependencies:
 Studio direct dependencies:
 
 - `bin/local-studio`
-  - resolves Bundler at startup
-  - runs `bundle exec ruby docs-viewer/build/build_docs.rb --scope <scope> --write` for `DOCS_STARTUP_REBUILD_SCOPES`
-  - runs `bundle exec ruby docs-viewer/build/build_search.rb --scope <scope> --write` for the same startup rebuild scopes
   - starts `docs-viewer/services/docs_live_rebuild_watcher.py`, which currently depends on the Ruby docs/search builders
 - `studio/services/catalogue/catalogue_build_commands.py`
   - resolves Bundler and constructs `bundle exec ruby studio/services/catalogue/search/build_search.rb --scope catalogue`
