@@ -54,8 +54,10 @@ def assert_required_keys(payload: dict[str, Any], required: list[str], label: st
     assert_equal(missing, [], f"{label} missing keys")
 
 
-def assert_search_entry(entry: dict[str, Any], label: str) -> None:
-    required = ["id", "kind", "title", "href", "search_terms", "search_text"]
+def assert_search_entry(entry: dict[str, Any], label: str, *, requires_href: bool = True) -> None:
+    required = ["id", "kind", "title", "search_terms", "search_text"]
+    if requires_href:
+        required.append("href")
     assert_required_keys(entry, required, label)
     assert_true(isinstance(entry["search_terms"], list) and entry["search_terms"], f"{label} search_terms")
     assert_equal(entry["search_text"], " ".join(entry["search_terms"]), f"{label} search_text")
@@ -190,8 +192,8 @@ def test_catalogue_search_payload_contract_fixture() -> None:
     assert_equal(header["count"], len(entries), "catalogue search count")
     assert_equal({entry["kind"] for entry in entries}, REQUIRED_CATALOGUE_SEARCH_KINDS, "catalogue search kinds")
     for entry in entries:
-        assert_search_entry(entry, f"catalogue search {entry['kind']}")
-        assert_contains(entry["href"], f"/{entry['kind']}s/" if entry["kind"] != "series" else "/series/", "catalogue href")
+        assert_search_entry(entry, f"catalogue search {entry['kind']}", requires_href=False)
+        assert_true("href" not in entry, f"catalogue search {entry['kind']} should derive public URLs at runtime")
 
     work_entry = next(entry for entry in entries if entry["kind"] == "work")
     assert_true(isinstance(work_entry["series_ids"], list), "work series ids")

@@ -2,7 +2,7 @@
 doc_id: search-index-schema
 title: Search Index Schema
 added_date: 2026-04-01
-last_updated: "2026-05-11 12:50"
+last_updated: 2026-06-01
 parent_id: search
 ---
 # Search Index Schema
@@ -79,7 +79,7 @@ Each search record represents one searchable item:
 Every record carries enough data for the browser to:
 
 - identify the item
-- link to it
+- identify the public route target
 - render a compact result row
 - evaluate matches against the current search model
 
@@ -94,7 +94,6 @@ The current serialized schema uses these fields.
 | `kind` | string | yes | identifies the content type | current values: `work`, `series`, `moment` |
 | `id` | string | yes | canonical stable identifier | always serialized as a string |
 | `title` | string | yes | primary display title and major search field | human-facing label |
-| `href` | string | yes | site-relative destination path | current values are relative site paths |
 | `year` | integer | no | year-based date value | used for works or series where available |
 | `date` | string | no | canonical date string | currently used for moments |
 | `display_meta` | string | no | compact display metadata | used in result rows and token generation |
@@ -111,7 +110,8 @@ The table above is the canonical field inventory for the serialized payload.
 
 The main search-specific distinctions to keep in mind are:
 
-- `title`, `href`, and `display_meta` exist so the browser can render a useful result row without a secondary fetch
+- `title` and `display_meta` exist so the browser can render a useful result row without a secondary fetch
+- public catalogue result URLs are derived in the browser from `kind` and `id`, not serialized as `href`
 - `series_ids`, `series_titles`, `medium_type`, and `series_type` are structured fields carried through so search can reason over more than titles alone
 - `search_terms` and `search_text` are generated specifically for search and are not authored source fields
 
@@ -120,7 +120,6 @@ The main search-specific distinctions to keep in mind are:
 Fields used primarily for display:
 
 - `title`
-- `href`
 - `display_meta`
 - `series_titles`
 
@@ -145,7 +144,6 @@ Structured fields carried from source-like data:
 - `kind`
 - `id`
 - `title`
-- `href`
 - `year`
 - `date`
 - `display_meta`
@@ -184,7 +182,6 @@ Current kind differences:
 Important current conventions:
 
 - ids are always strings
-- links are site-relative paths
 - array-valued relationship and tag fields serialize as arrays, not omitted scalars
 - optional scalar fields are omitted when empty by the current builder
 - `search_terms` values are already normalized at build time
@@ -201,7 +198,6 @@ Representative work record:
   "kind": "work",
   "id": "00533",
   "title": "2 bodies monoprint",
-  "href": "/works/00533/",
   "year": 2025,
   "display_meta": "2025",
   "series_ids": ["2-bodies"],
@@ -229,7 +225,6 @@ Representative series record:
   "kind": "series",
   "id": "2-bodies",
   "title": "2 bodies",
-  "href": "/series/2-bodies/",
   "year": 2025,
   "display_meta": "2025",
   "series_ids": [],
@@ -254,7 +249,6 @@ Representative moment record:
   "kind": "moment",
   "id": "4-stories",
   "title": "4 stories",
-  "href": "/moments/4-stories/",
   "date": "2020-01-01",
   "display_meta": "c. 2020?",
   "series_ids": [],
@@ -278,7 +272,7 @@ Representative moment record:
 
 The current schema is shaped this way for pragmatic reasons:
 
-- ids, titles, and hrefs are present so the browser can render useful results without secondary fetches
+- ids and titles are present so the browser can render useful results and derive current public catalogue URLs without secondary fetches
 - compact structured metadata is included so search can grow beyond exact title lookup
 - `search_terms` and `search_text` are precomputed so the browser does not need to reconstruct token bundles from heterogeneous fields on every search
 - the index stays compact by excluding full content bodies and other large page data

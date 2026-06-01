@@ -73,7 +73,8 @@ def main(argv: list[str] | None = None) -> int:
                         work: "00001",
                         mode: "new"
                     });
-                    const publicWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {
+                    const publicWorkUrl = mod.buildPublicSiteUrl(config, "/works/", {
+                        work: "00123",
                         from: "studio",
                         empty: "",
                         zero: 0
@@ -87,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
                     } catch (error) {
                         cataloguePublicMissingBaseError = String(error && error.message || error);
                     }
-                    const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {}, { site: "production" });
+                    const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/", { work: "00123" }, { site: "production" });
 
                     let openModalDetail = null;
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
@@ -235,13 +236,13 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected work editor URL: {result['workEditorUrl']!r}")
         if result["newDetailUrl"] != "/studio/catalogue-work-detail/?mode=new&work=00001":
             raise AssertionError(f"unexpected new detail URL: {result['newDetailUrl']!r}")
-        if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio&zero=0":
+        if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/?work=00123&from=studio&zero=0":
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
-        if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio":
+        if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/?from=studio&work=00123":
             raise AssertionError(f"unexpected catalogue public work URL: {result['cataloguePublicWorkUrl']!r}")
         if "Missing Studio site base" not in result["cataloguePublicMissingBaseError"]:
             raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")
-        if result["liveWorkUrl"] != "https://dotlineform.com/works/00123/":
+        if result["liveWorkUrl"] != "https://dotlineform.com/works/?work=00123":
             raise AssertionError(f"unexpected live work URL: {result['liveWorkUrl']!r}")
         if result["openModalDetail"]["name"] != "confirm-delete":
             raise AssertionError(f"unexpected openModal detail: {result['openModalDetail']!r}")

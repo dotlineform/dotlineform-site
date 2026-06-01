@@ -37,7 +37,6 @@ def assert_catalogue_search_runtime(page: Page) -> None:
                     kind: 'work',
                     id: 'W-002',
                     title: 'Blue Field',
-                    href: '/works/002/',
                     display_meta: '2025',
                     medium_type: 'print',
                     series_ids: ['s-1'],
@@ -49,7 +48,6 @@ def assert_catalogue_search_runtime(page: Page) -> None:
                     kind: 'work',
                     id: 'W-001',
                     title: 'Blue',
-                    href: '/works/001/',
                     display_meta: '2024',
                     medium_type: 'drawing',
                     search_terms: ['blue'],
@@ -59,7 +57,6 @@ def assert_catalogue_search_runtime(page: Page) -> None:
                     kind: 'series',
                     id: 'S-001',
                     title: 'Field Series',
-                    href: '/series/s-1/',
                     series_type: 'study',
                     search_text: 'field series study'
                 },
@@ -150,7 +147,7 @@ def assert_catalogue_search_runtime(page: Page) -> None:
     assert result["firstSeriesNorm"] == ["field series"]
     assert result["projectionStatus"] == "Showing 1 of 2 results"
     assert "Blue" in result["projectionHtml"]
-    assert "/base/works/001/" in result["projectionHtml"]
+    assert "/base/works/?work=W-001" in result["projectionHtml"]
     assert "studioSearch__moreBtn" in result["moreHtml"]
     assert result["metrics"]["queryLength"] == 4
     assert result["metrics"]["entryCount"] == 3
@@ -171,7 +168,7 @@ def run(site_root: Path) -> None:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
-            page.goto(f"{base_url}/", wait_until="domcontentloaded")
+            page.goto(f"{base_url}/series/", wait_until="domcontentloaded")
             errors: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_catalogue_search_runtime(page)

@@ -81,7 +81,6 @@ def moment_import_apply_payload(context: CatalogueWriteContext, body: Mapping[st
         "preview": result.preview,
         "build": {},
         "steps": [],
-        "public_url": "",
         "metadata_path": str(result.preview.get("metadata_path") or ""),
         "target_path": str(result.preview.get("target_path") or ""),
     }

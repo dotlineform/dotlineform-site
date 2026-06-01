@@ -3,7 +3,7 @@ doc_id: site-request-public-route-simplification-tasks
 title: Public Route Simplification Tasks
 added_date: 2026-06-01
 last_updated: 2026-06-01
-ui_status: draft
+ui_status: done
 parent_id: site-request-public-route-simplification
 viewable: true
 ---
@@ -13,16 +13,16 @@ This is the implementation tracker for [Public Route Simplification Request](/do
 
 ## Next Session Steer
 
-Start from the current changed working tree; do not restart the route-helper slice.
-The first slice already added the canonical browser route helper, `/series/` query-state modes, `/works/?work=...`, `/work-details/?detail=...`, `/moments/` recovery, `404.html`, and first-party route retargeting for recent/search/legacy layout links, Studio public-link helpers, catalogue search generation, and Docs Viewer semantic references.
+The route simplification request is closed.
+The completed implementation is recorded in structured docs-log entry `change-2026-06-01-closed-public-route-simplification`.
 
-Next session should focus on the remaining task rows:
+Decisions made in this slice:
 
-- finish task 8 by scanning and cleaning plain public Library/Analysis links that still point to retired catalogue paths, without adding compatibility redirects
-- finish task 9 by reviewing generated public payload contracts for derivable URL fields, especially moment `public_url`, and either remove/replace consumers or document any non-derivable exception
-- advance task 10 by auditing remaining first-party dependence on `_works/`, `_series/`, and `_work_details/` collection outputs; keep collection generation only where Jekyll build constraints still require it, and record the removal condition
-- advance task 12 by turning the ad hoc public route smoke into focused checked-in smoke coverage for the recommended route set
-- update owning docs in task 13 after the remaining contract decisions are made; do not manually rebuild Docs Viewer payloads
+- Library and Analysis source docs had no plain Markdown links to retired public catalogue paths.
+- Studio moment preview payloads no longer emit the derivable `public_url`; the Studio moment summary derives the public route from moment id and route config.
+- Catalogue search entries no longer serialize derivable `href` values for current catalogue kinds; search rendering derives URLs from `kind` and `id`.
+- First-party public navigation no longer depends on `_works/`, `_series/`, or `_work_details/` collection paths. Those collection outputs remain generated only because Jekyll is still the public build layer; the removal condition is the later public static-site builder replacing those collection-generated files with fixed shell output and individual moment pages.
+- Focused public route smoke coverage now lives in `studio/tests/smoke/public_route_simplification.py` and is included in the `studio-smoke` profile.
 
 Useful verification already run for the first slice:
 
@@ -83,13 +83,13 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | done | Add the `/work-details/` selected-detail shell. `/work-details/?detail=<detail_uid>` should render the selected detail view with media, title, explicit back link to parent work context, and detail prev/next behavior. Retire first-party links to legacy `/work_details/<detail_uid>/`. |
 | 6 | done | Keep individual moment pages and clean the moments index behavior. Individual moment links from the catalogue moments grid/list may continue to open paths such as `/moments/a-doll-story/`. Add an explicit `/moments/` recovery route that sends or links users to `/series/?mode=moments`, preventing local directory listings and accidental public 404 behavior. |
 | 7 | done | Update catalogue search and first-party public navigation to use the canonical route helper. Search result links, recent links, series/grid links, works-list links, detail links, prev/next links, and back links should stop assembling old path-style routes locally. |
-| 8 | in progress | Update Docs Viewer semantic references and plain public docs links. Semantic references that publish as public catalogue links must emit the new canonical routes. Any existing plain links in Library or Analysis can be cleaned directly and should not create compatibility requirements. |
-| 9 | in progress | Update Studio public-link helpers and generated public payload contracts. Studio preview/public links should resolve through the new route contract. If generated public payloads contain derivable URL fields, remove them or replace consumers with runtime-derived routes unless a documented exception is required. |
-| 10 | planned | Stop relying on per-record Jekyll collection outputs for first-party navigation. After the fixed shells and route helpers are verified, remove or disable first-party dependence on `/works/<work_id>/`, `/series/<series_id>/`, and `/work_details/<detail_uid>/`. Keep any remaining collection output only if a current build or cleanup constraint requires it, and document the removal condition. |
+| 8 | done | Update Docs Viewer semantic references and plain public docs links. Semantic references that publish as public catalogue links must emit the new canonical routes. Any existing plain links in Library or Analysis can be cleaned directly and should not create compatibility requirements. |
+| 9 | done | Update Studio public-link helpers and generated public payload contracts. Studio preview/public links should resolve through the new route contract. If generated public payloads contain derivable URL fields, remove them or replace consumers with runtime-derived routes unless a documented exception is required. |
+| 10 | done | Stop relying on per-record Jekyll collection outputs for first-party navigation. After the fixed shells and route helpers are verified, remove or disable first-party dependence on `/works/<work_id>/`, `/series/<series_id>/`, and `/work_details/<detail_uid>/`. Keep any remaining collection output only if a current build or cleanup constraint requires it, and document the removal condition. |
 | 11 | done | Add or update `404.html`. Unknown retired routes should show simple "page unavailable" copy with a link back to `/series/`. Do not create broad compatibility redirects for old paths. |
-| 12 | in progress | Add or update focused public route smoke coverage. Cover the recommended smoke set below using a Jekyll build served from an isolated temporary destination. |
-| 13 | planned | Update owning docs after implementation. Update this tracker, the parent route simplification request if the route contract changes during implementation, public route/source ownership docs if route ownership changes materially, and the static-site build request only if its preconditions change. Do not rebuild Docs Viewer payloads manually. |
-| 14 | planned | Close out the route simplification request. Confirm no unresolved route-compatibility layers remain, record any still-generated per-record outputs with owner/removal condition, and create a structured docs-log entry if the implementation is meaningful enough to record in change history. |
+| 12 | done | Add or update focused public route smoke coverage. Cover the recommended smoke set below using a Jekyll build served from an isolated temporary destination. |
+| 13 | done | Update owning docs after implementation. Update this tracker, the parent route simplification request if the route contract changes during implementation, public route/source ownership docs if route ownership changes materially, and the static-site build request only if its preconditions change. Do not rebuild Docs Viewer payloads manually. |
+| 14 | done | Close out the route simplification request. Confirm no unresolved route-compatibility layers remain, record any still-generated per-record outputs with owner/removal condition, and create a structured docs-log entry if the implementation is meaningful enough to record in change history. |
 
 ## Recommended Verification
 
@@ -111,6 +111,16 @@ Use this smoke set for implementation verification:
 - run a focused source scan to catch stale first-party route string assembly outside the canonical route helper
 
 ## Implementation Notes
+
+2026-06-01 generated-contract and smoke-coverage slice:
+
+- Library and Analysis source scans found no plain links to retired public catalogue paths.
+- Removed derivable `public_url` from Studio moment preview/import payloads and made the Studio moment summary derive its public link through `buildPublicMomentUrl`.
+- Removed derivable `href` from generated catalogue search entries for current catalogue kinds. The public search runtime now accepts entries without `href` and derives work, series, and moment result links from `kind` and `id`.
+- Updated stale smoke fixtures and contract fixtures that still expected `/works/<id>/`, `/series/<id>/`, or `/work_details/<uid>/`.
+- Added `studio/tests/smoke/public_route_simplification.py` and wired it into `studio-smoke`.
+- Documented route/data-flow ownership in `data-flow`, `search-index-schema`, `data-models-catalogue`, and `source-tree-ownership`.
+- Remaining per-record Jekyll collection outputs are build-layer artifacts only. Removal condition: the public static-site builder must generate fixed route shell output and individual moment pages without relying on `_works/`, `_series/`, or `_work_details/`.
 
 2026-06-01 route-helper and public-shell slice:
 

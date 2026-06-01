@@ -15,13 +15,13 @@ def run(base_url: str) -> None:
         page = browser.new_page()
         errors: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.goto(f"{base_url.rstrip('/')}/works/00001/?series=009", wait_until="domcontentloaded")
-        expect(page.locator("#workTitleHidden")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
+        page.goto(f"{base_url.rstrip('/')}/works/?work=00001&series=009", wait_until="domcontentloaded")
+        expect(page.locator("#selectedWorkTitleHidden")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
         expect(page.locator("#pageBackLink")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
         expect(page.locator("#workSeriesLink")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
         expect(page.locator("#seriesNav")).to_be_visible(timeout=10_000)
         expect(page.locator("#seriesNavCounter")).to_contain_text("1/", timeout=10_000)
-        href_pattern = re.compile(r"/works/[0-9]+/\?series=009")
+        href_pattern = re.compile(r"/works/\?series=009&work=[0-9]+|/works/\?work=[0-9]+&series=009")
         expect(page.locator("#seriesNavPrev")).to_have_attribute("href", href_pattern, timeout=10_000)
         expect(page.locator("#seriesNavNext")).to_have_attribute("href", href_pattern, timeout=10_000)
         if errors:

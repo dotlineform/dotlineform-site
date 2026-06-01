@@ -109,7 +109,7 @@
             "target_key": "work:00638",
             "target_title": "3 symbols",
             "target_status": "published",
-            "target_href": "/works/00638/",
+            "target_href": "/works/?work=00638",
             "count": 2,
             "bucket_url": "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
           }
@@ -136,7 +136,7 @@
         "target_key": "work:00638",
         "target_kind": "work",
         "target_id": "00638",
-        "target_href": "/works/00638/",
+        "target_href": "/works/?work=00638",
         "target_title": "3 symbols",
         "target_status": "published",
         "count": 2,
@@ -218,7 +218,6 @@
           "kind": "moment",
           "id": "contract-moment",
           "title": "Contract Moment",
-          "href": "/moments/contract-moment/",
           "date": "2026-06-01",
           "display_meta": "2026",
           "search_terms": [
@@ -237,7 +236,6 @@
           "kind": "series",
           "id": "001",
           "title": "Contract Series",
-          "href": "/series/001/",
           "year": 2026,
           "display_meta": "2026",
           "series_type": "sequence",
@@ -255,7 +253,6 @@
           "kind": "work",
           "id": "00638",
           "title": "3 symbols",
-          "href": "/works/00638/",
           "year": 1998,
           "display_meta": "1998",
           "series_ids": ["026"],

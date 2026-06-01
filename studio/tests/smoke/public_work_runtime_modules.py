@@ -79,7 +79,7 @@ def assert_public_work_runtime(page: Page, base_url: str) -> None:
     assert result["title"] == "Poems"
     assert result["link"] == {
         "label": "Poems",
-        "href": "/base/series/009/",
+        "href": "/base/series/?series=009",
         "hidden": False,
     }
     assert result["soloLink"]["hidden"] is True
@@ -96,13 +96,13 @@ def assert_public_work_runtime(page: Page, base_url: str) -> None:
     assert result["backDefault"] == {
         "label": "\u2190 Poems",
         "seriesLabel": "Poems",
-        "href": "/base/series/009/",
+        "href": "/base/series/?series=009",
     }
     assert result["nav"] == {
         "hidden": False,
         "counterHidden": False,
-        "prevHref": "/base/works/00001/?series=009&series_page=2",
-        "nextHref": "/base/works/00003/?series=009&series_page=2",
+        "prevHref": "/base/works/?series=009&series_page=2&work=00001",
+        "nextHref": "/base/works/?series=009&series_page=2&work=00003",
         "counterText": "2/3",
     }
     assert result["hiddenNav"] == {"hidden": True, "counterHidden": True}
@@ -114,7 +114,7 @@ def run(site_root: Path) -> None:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
-            page.goto(f"{base_url}/", wait_until="domcontentloaded")
+            page.goto(f"{base_url}/series/", wait_until="domcontentloaded")
             errors: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_public_work_runtime(page, base_url)

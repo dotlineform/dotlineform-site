@@ -128,6 +128,9 @@ Public Jekyll source and runtime remain outside `studio/`:
 Public route adapters for Docs Viewer should stay minimal.
 Docs Viewer shell source, management shell source, config, CSS, reports, and services belong under `docs-viewer/`.
 
+Public catalogue route construction and route-state parsing are owned by `assets/js/public-catalogue-runtime.js`.
+First-party public pages, catalogue search rendering, Docs Viewer semantic references, and Studio public-link helpers should derive work, series, detail, and moment URLs through that contract or its Studio equivalent rather than serializing derivable URL fields in generated catalogue payloads.
+
 ## Generated Output Rule
 
 Generated output paths should make the flow obvious:

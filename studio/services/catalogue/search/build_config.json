@@ -27,7 +27,6 @@
         "kind": { "source_families": ["catalogue_indexes"] },
         "id": { "source_families": ["catalogue_indexes"] },
         "title": { "source_families": ["catalogue_indexes"] },
-        "href": { "source_families": ["catalogue_indexes"] },
         "year": { "source_families": ["catalogue_indexes"] },
         "date": { "source_families": ["catalogue_indexes"] },
         "display_meta": { "source_families": ["catalogue_indexes"] },

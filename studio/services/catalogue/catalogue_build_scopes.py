@@ -318,7 +318,6 @@ def preview_moment_source(
         "staging_path": str(build_media.MOMENT_PROSE_STAGING_REL_DIR / filename),
         "target_path": str(CATALOGUE_MOMENT_PROSE_REL_DIR / filename),
         "metadata_path": str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME),
-        "public_url": f"/moments/{moment_id}/",
         "generated_page_path": str(Path("_moments") / f"{moment_id}.md"),
         "generated_json_path": str(Path("assets/moments/index") / f"{moment_id}.json"),
         "moments_index_path": "assets/data/moments_index.json",

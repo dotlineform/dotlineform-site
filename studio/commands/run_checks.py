@@ -457,6 +457,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the public /series/ header theme toggle.",
         ),
         CheckCommand(
+            "public-route-simplification-smoke",
+            (
+                sys.executable,
+                "studio/tests/smoke/public_route_simplification.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check the simplified public route contract for series, works, details, moments, search, and 404 recovery.",
+        ),
+        CheckCommand(
             "catalogue-series-modal-smoke",
             (
                 sys.executable,

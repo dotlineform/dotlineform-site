@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: Catalogue Scope
 added_date: 2026-04-01
-last_updated: 2026-05-19
+last_updated: 2026-06-01
 parent_id: catalogue
 ---
 # Catalogue Scope
@@ -16,7 +16,7 @@ Current checked-in catalogue model families include:
 
 - canonical source records under `assets/studio/data/catalogue/`
 - canonical prose sources under `_docs_catalogue/`
-- public route stubs under `_works/`, `_series/`, `_work_details/`, and `_moments/`
+- Jekyll collection/page inputs under `_works/`, `_series/`, `_work_details/`, and `_moments/`; work, series, and detail first-party navigation now uses fixed public shells with query-state routes while these collection inputs remain a Jekyll build constraint
 - shared indexes under `assets/data/`
 - per-record payloads under `assets/series/index/`, `assets/works/index/`, and `assets/moments/index/`
 - catalogue search under `assets/data/search/catalogue/index.json`

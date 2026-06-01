@@ -2,7 +2,7 @@
 doc_id: data-flow
 title: Data Flow
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: 2026-06-01
 parent_id: catalogue
 ---
 # Data Flow
@@ -16,9 +16,12 @@ For the catalogue artifact contracts themselves, use [Catalogue Scope](/docs/?sc
 Current public browsing routes covered here:
 
 - `/series/`
-- `/series/<series_id>/`
-- `/works/<work_id>/`
-- `/work_details/<detail_uid>/`
+- `/series/?series=<series_id>`
+- `/series/?mode=moments`
+- `/works/`
+- `/works/?work=<work_id>`
+- `/work-details/?detail=<detail_uid>`
+- `/moments/`
 - `/moments/<moment_id>/`
 
 The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
@@ -55,16 +58,19 @@ How the page uses them:
 
 - `works` mode is built from `series_index.json`
 - `moments` mode is built from `moments_index.json`
+- selected-series state is restored from `?series=<series_id>` and uses `assets/data/works_index.json` for lightweight work-card metadata
 - moment card URLs still come from `site.moments` URLs embedded into the page at build time
 
 This route does not read per-series, per-work, or per-moment JSON records.
 
-## 2. Series Page
+## 2. Legacy Series Collection Page
 
 User-facing step:
 
 - `/series/<series_id>/`
-- shows a grid of all works in the series
+- legacy Jekyll collection output
+- current first-party navigation uses `/series/?series=<series_id>`
+- shows a grid of all works in the series if reached directly
 - shows optional series prose below the grid
 
 Current JSON used:
@@ -84,11 +90,12 @@ How the page uses them:
 - `assets/series/index/<series_id>.json` supplies prose content for the lower content block
 - the page does not fetch per-work JSON for the series grid
 
-## 3. Work Page
+## 3. Work Shell
 
 User-facing step:
 
-- `/works/<work_id>/`
+- `/works/`
+- `/works/?work=<work_id>`
 - shows the work
 - shows one grid per detail section
 
@@ -99,7 +106,8 @@ Current JSON used:
 
 Template:
 
-- `_layouts/work.html`
+- `works/index.md`
+- `_layouts/work.html` remains as legacy Jekyll collection output while collections are still generated
 
 What `series_index.json` provides on the work page:
 
@@ -110,11 +118,11 @@ What `series_index.json` provides on the work page:
 
 The work page is work-local by design. Detail sections, detail links, prose, downloads, and published links all come from the per-work record.
 
-## 4. Detail Page
+## 4. Detail Shell
 
 User-facing step:
 
-- `/work_details/<detail_uid>/`
+- `/work-details/?detail=<detail_uid>`
 - shows a single detail image
 
 Current JSON used:
@@ -123,11 +131,12 @@ Current JSON used:
 
 Template:
 
-- `_layouts/work_details.html`
+- `work-details/index.md`
+- `_layouts/work_details.html` remains as legacy Jekyll collection output while collections are still generated
 
 How the page works:
 
-- it derives `work_id` from the `detail_uid` route prefix
+- it derives `work_id` from the `detail_uid` query value or explicit `from_work` context
 - it fetches `assets/works/index/<work_id>.json`
 - it finds the matching `detail_uid` in that work payload
 
@@ -172,22 +181,26 @@ The implemented data flow is now:
 1. `/series/`
    - uses `assets/data/series_index.json`
    - uses `assets/data/moments_index.json`
+   - uses `assets/data/works_index.json` only for selected-series state
 
-2. `/series/<series_id>/`
+2. `/series/?series=<series_id>`
    - uses `assets/data/series_index.json`
    - uses `assets/data/works_index.json`
-   - uses `assets/series/index/<series_id>.json`
 
-3. `/works/<work_id>/`
+3. `/works/?work=<work_id>`
    - uses `assets/works/index/<work_id>.json`
    - uses `assets/data/series_index.json` for series context
 
-4. `/work_details/<detail_uid>/`
-   - derives `work_id` from the `detail_uid` route prefix
+4. `/work-details/?detail=<detail_uid>`
+   - derives `work_id` from the `detail_uid` query value or explicit `from_work` context
    - uses `assets/works/index/<work_id>.json`
 
-5. `/moments/<moment_id>/`
+5. `/moments/`
+   - recovers to `/series/?mode=moments` with a visible fallback link
+
+6. `/moments/<moment_id>/`
    - uses `assets/moments/index/<moment_id>.json`
 
-6. `/catalogue/search/`
+7. `/catalogue/search/`
    - uses `assets/data/search/catalogue/index.json`
+   - derives public catalogue result URLs in the browser from `kind` and `id`

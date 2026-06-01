@@ -234,7 +234,6 @@ def main() -> int:
                 "record": moment_record,
                 "record_hash": "hash-moment-current",
                 "preview": {
-                    "public_url": f"/moments/{MOMENT_ID}/",
                     "generated_page_exists": True,
                     "generated_json_exists": True,
                     "in_moments_index": True,

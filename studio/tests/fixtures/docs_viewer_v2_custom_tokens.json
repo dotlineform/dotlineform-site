@@ -22,19 +22,19 @@
         "00638": {
           "title": "3 symbols",
           "status": "published",
-          "href": "/works/00638/"
+          "href": "/works/?work=00638"
         },
         "00999": {
           "title": "Draft work",
           "status": "draft",
-          "href": "/works/00999/"
+          "href": "/works/?work=00999"
         }
       },
       "series": {
         "026": {
           "title": "collected 1989-1998",
           "status": "published",
-          "href": "/series/026/"
+          "href": "/series/?series=026"
         }
       },
       "moment": {
@@ -112,7 +112,7 @@
       "source_markdown": "[[ref:work:638|three signs]]",
       "expected": {
         "html_contains": [
-          "href=\"/works/00638/\"",
+          "href=\"/works/?work=00638\"",
           "target=\"_blank\"",
           "rel=\"noopener noreferrer\"",
           "data-ref-kind=\"work\"",
@@ -132,7 +132,7 @@
             "target_kind": "work",
             "target_id": "00638",
             "target_key": "work:00638",
-            "target_href": "/works/00638/",
+            "target_href": "/works/?work=00638",
             "target_title": "3 symbols",
             "target_status": "published",
             "label": "three signs",
@@ -148,7 +148,7 @@
       "source_markdown": "[[ref:series:26]]",
       "expected": {
         "html_contains": [
-          "href=\"/series/026/\"",
+          "href=\"/series/?series=026\"",
           "data-ref-kind=\"series\"",
           "data-ref-id=\"026\"",
           ">collected 1989-1998</a>"
@@ -160,7 +160,7 @@
             "target_kind": "series",
             "target_id": "026",
             "target_key": "series:026",
-            "target_href": "/series/026/",
+            "target_href": "/series/?series=026",
             "target_title": "collected 1989-1998",
             "target_status": "published",
             "label": "collected 1989-1998",

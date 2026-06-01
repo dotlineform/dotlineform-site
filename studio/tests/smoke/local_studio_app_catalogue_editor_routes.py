@@ -133,19 +133,19 @@ def main(argv: list[str] | None = None) -> int:
                     "url": "/studio/catalogue-series/?mode=manage&series=001",
                     "root": "#catalogueSeriesRoot",
                     "selector": "#catalogueSeriesSummary a[href*='/series/']",
-                    "prefix": f"{public_preview_base}/series/001/",
+                    "prefix": f"{public_preview_base}/series/?series=001",
                 },
                 {
                     "url": "/studio/catalogue-work/?mode=manage&work=00001",
                     "root": "#catalogueWorkRoot",
                     "selector": "#catalogueWorkSummary a[href*='/works/']",
-                    "prefix": f"{public_preview_base}/works/00001/",
+                    "prefix": f"{public_preview_base}/works/?work=00001",
                 },
                 {
                     "url": "/studio/catalogue-work-detail/?mode=manage&detail=00001-001",
                     "root": "#catalogueWorkDetailRoot",
-                    "selector": "#catalogueWorkDetailSummary a[href*='/work_details/']",
-                    "prefix": f"{public_preview_base}/work_details/00001-001/",
+                    "selector": "#catalogueWorkDetailSummary a[href*='/work-details/']",
+                    "prefix": f"{public_preview_base}/work-details/?detail=00001-001",
                 },
                 {
                     "url": "/studio/catalogue-moment/?mode=manage&moment=13-moments-in-october",

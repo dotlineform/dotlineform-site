@@ -1,5 +1,4 @@
 import {
-  buildPublicCatalogueUrl,
   buildPublicMomentUrl
 } from "./catalogue-public-links.js";
 import {
@@ -79,10 +78,7 @@ export function renderMomentReadiness(state, options = {}) {
 
 export function renderMomentSummary(state, options = {}) {
   const preview = state.preview || {};
-  const previewPublicUrl = normalizeText(preview.public_url);
-  const publicUrl = previewPublicUrl
-    ? buildPublicCatalogueUrl(state.config, previewPublicUrl)
-    : buildPublicMomentUrl(state.config, state.currentMomentId);
+  const publicUrl = buildPublicMomentUrl(state.config, state.currentMomentId);
   const fields = [
     { label: "public URL", value: publicUrl },
     { label: "generated", value: catalogueGeneratedStatusText(preview) },

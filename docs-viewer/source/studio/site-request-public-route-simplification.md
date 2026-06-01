@@ -3,7 +3,7 @@ doc_id: site-request-public-route-simplification
 title: Public Route Simplification Request
 added_date: 2026-06-01
 last_updated: 2026-06-01
-ui_status: draft
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,9 +11,9 @@ viewable: true
 
 Status:
 
-- draft
-- This request defines the cleaner public route model before the public static-site builder migration starts.
-- The route model and 404 behavior are agreed; implementation is tracked in the child task document.
+- done
+- The cleaner public route model has been implemented while Jekyll remains the public preview/build layer.
+- The child task document records implementation notes, verification, remaining Jekyll collection-output removal conditions, and the structured docs-log entry.
 
 ## Task Tracker
 

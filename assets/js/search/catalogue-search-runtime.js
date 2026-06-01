@@ -40,7 +40,7 @@ export function normalizeCatalogueSearchEntries(entries, scopePolicy) {
         seriesTypeNorm: normalizeCatalogueSearchText(String(entry.series_type || ""))
       };
     })
-    .filter((entry) => entry.kind && entry.id && entry.title && entry.href);
+    .filter((entry) => entry.kind && entry.id && entry.title && (entry.href || isCatalogueRouteKind(entry.kind)));
 }
 
 export function createCatalogueSearchResultsProjection(options = {}) {
@@ -257,6 +257,10 @@ function catalogueEntryHref(entry, baseurl) {
   if (entry.kind === "work") return withBaseUrl(baseurl, `/works/?work=${encodeURIComponent(entry.id)}`);
   if (entry.kind === "moment") return withBaseUrl(baseurl, `/moments/${encodeURIComponent(entry.id)}/`);
   return withBaseUrl(baseurl, entry.href);
+}
+
+function isCatalogueRouteKind(kind) {
+  return kind === "series" || kind === "work" || kind === "moment";
 }
 
 function catalogueEntryTargetAttrs(entry) {
