@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-catalogue
 title: Search Build Pipeline Catalogue Scope
 added_date: 2026-05-19
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: search-build-pipeline
 ---
 # Search Build Pipeline Catalogue Scope
@@ -11,7 +11,8 @@ parent_id: search-build-pipeline
 
 ### Current Writer
 
-- `./studio/services/catalogue/search/build_search.rb --scope catalogue`
+- direct Python builder: `./studio/services/catalogue/search/build_search.py --scope catalogue`
+- existing catalogue search callers continue to invoke the Ruby builder until the Rubyless app-runtimes caller swap task is complete
 
 ### Current Output
 
@@ -54,13 +55,13 @@ Current integration facts:
 Default write command:
 
 ```bash
-./studio/services/catalogue/search/build_search.rb --scope catalogue --write
+./studio/services/catalogue/search/build_search.py --scope catalogue --write
 ```
 
 Dry run:
 
 ```bash
-./studio/services/catalogue/search/build_search.rb --scope catalogue
+./studio/services/catalogue/search/build_search.py --scope catalogue
 ```
 
 Current supported overrides:
@@ -75,7 +76,7 @@ Current supported overrides:
 
 Current targeted-update boundary:
 
-- `catalogue` does not support `--only-doc-ids`
+- `catalogue` does not support `--only-doc-ids` or `--source-index`
 - `--only-records` accepts comma-separated `work:<id>`, `series:<id>`, and `moment:<id>` targets
 - catalogue targeted mode is additive-only
 - missing entries are inserted from current generated catalogue source JSON
@@ -151,3 +152,11 @@ Current safeguards include:
 - deterministic sort order before serialization
 - content-version hashing for change detection
 - domain-specific config validation before output is written or skipped
+
+### Python Builder Status
+
+The Python catalogue search builder is available at `studio/services/catalogue/search/build_search.py`.
+It preserves the current catalogue search payload contract, config validation, dry-run/write/force behavior, BLAKE2b content versioning, source JSON overrides, docs-only flag rejection, and additive-only targeted-record behavior.
+
+The caller swap is intentionally separate.
+Until that task is complete, catalogue build orchestration may still resolve Bundler and invoke `studio/services/catalogue/search/build_search.rb`.
