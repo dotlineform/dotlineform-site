@@ -44,6 +44,7 @@ The shared Python Markdown renderer lives at `studio/shared/python/markdown_rend
 It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
 Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
 Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
+Acceptance fixtures in `studio/tests/python/test_markdown_renderer_acceptance.py` assert rendered HTML semantics and generated plain text directly; they do not compare output to Jekyll or Kramdown.
 
 ## Parser Stack Roles
 

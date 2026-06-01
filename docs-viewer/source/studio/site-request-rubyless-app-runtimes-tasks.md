@@ -22,12 +22,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Defined the cutover preflight for later builder/caller swaps.
 - Pinned `markdown-it-py==3.0.0` in `requirements.txt` and recorded the initial no-plugin `MarkdownIt("commonmark")` renderer dependency contract.
 - Added the shared Python Markdown renderer helper with CommonMark, built-in table support, explicit raw-HTML behavior, and no external renderer plugins.
+- Added Docs Viewer v2 renderer acceptance fixtures for rendered HTML semantics and generated plain text without Jekyll/Kramdown parity checks.
 
 ## Next Task Steer
 
-Continue with Phase 1 task 5: add Docs Viewer v2 renderer acceptance fixtures before caller migration.
+Continue with Phase 1 task 6: add custom-token builder fixtures before caller migration.
 
-This means covering headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables, generated plain text, and HTML semantics directly rather than comparing against Jekyll/Kramdown output.
+This means covering media tokens, interactive HTML tokens, semantic reference tokens, invalid/missing/non-published references, code-block skip behavior, generated semantic reference payloads, and generated search text.
 
 ## Implementation Steer
 
@@ -95,7 +96,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | 3 | done | Pin the Python Markdown renderer dependency. Add `markdown-it-py` to `requirements.txt` with an exact version, record any enabled renderer plugins in the builder docs/tests, and confirm the dependency loads through the configured Miniconda Python environment. |
 | 4 | done | Build a shared Python Markdown rendering helper. Start from `MarkdownIt("commonmark")`, enable only syntax needed by current authored docs and acceptance fixtures, and keep raw HTML/sanitization behavior explicit. Do not add Jekyll/Kramdown parity fixtures or automated current-output comparison checks. |
-| 5 | planned | Add Docs Viewer v2 renderer acceptance fixtures before caller migration. Cover headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables if enabled, generated plain text, and HTML semantics directly rather than comparing against Jekyll/Kramdown output. |
+| 5 | done | Add Docs Viewer v2 renderer acceptance fixtures before caller migration. Cover headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables if enabled, generated plain text, and HTML semantics directly rather than comparing against Jekyll/Kramdown output. |
 | 6 | planned | Add custom-token builder fixtures before caller migration. Cover media tokens, interactive HTML tokens, semantic reference tokens, invalid/missing/non-published references, code-block skip behavior, generated semantic reference payloads, and generated search text. |
 | 7 | planned | Add generated-output contract fixtures before implementation. Cover Docs Viewer `index.json`, Docs Viewer `by-id/*.json`, reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` so the migration protects app contracts rather than current Jekyll/Kramdown markup. |
 
