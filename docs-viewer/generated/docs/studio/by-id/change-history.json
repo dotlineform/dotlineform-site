@@ -9,8 +9,8 @@
   "viewable": true,
   "source_path": "change-history.md",
   "viewer_url": "/docs/?scope=studio&doc=change-history",
-  "content_html": "<h1 id=\"change-history\">Change History</h1>\n\n",
   "ui_status": "report",
   "viewer_report": "change_history",
-  "viewer_report_access": "manage"
+  "viewer_report_access": "manage",
+  "content_html": "<h1>Change History</h1>\n"
 }

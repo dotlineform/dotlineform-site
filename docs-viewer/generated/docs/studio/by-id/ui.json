@@ -9,5 +9,5 @@
   "viewable": true,
   "source_path": "ui.md",
   "viewer_url": "/docs/?scope=studio&doc=ui",
-  "content_html": "<h1 id=\"ui\">UI</h1>\n\n<p>This section describes the site’s shared UI design approach, audit and maintenance.</p>\n\n<p>Detailed implementation guidance is in <a href=\"/docs/?scope=studio&doc=ui-catalogue\">UI Catalogue</a>, the index for named primitives, composition patterns, and isolated demo pages.</p>\n"
+  "content_html": "<h1>UI</h1>\n<p>This section describes the site's shared UI design approach, audit and maintenance.</p>\n<p>Detailed implementation guidance is in <a href=\"/docs/?scope=studio&amp;doc=ui-catalogue\">UI Catalogue</a>, the index for named primitives, composition patterns, and isolated demo pages.</p>\n"
 }

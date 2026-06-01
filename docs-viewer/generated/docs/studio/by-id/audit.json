@@ -9,5 +9,5 @@
   "viewable": true,
   "source_path": "audit.md",
   "viewer_url": "/docs/?scope=studio&doc=audit",
-  "content_html": "<h1 id=\"audit\">Audit</h1>\n\n<p>This section contains policy and guidance about auditing the repo to identify problems and areas which need improving.</p>\n"
+  "content_html": "<h1>Audit</h1>\n<p>This section contains policy and guidance about auditing the repo to identify problems and areas which need improving.</p>\n"
 }

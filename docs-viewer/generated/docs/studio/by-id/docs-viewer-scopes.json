@@ -9,5 +9,5 @@
   "viewable": true,
   "source_path": "docs-viewer-scopes.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-scopes",
-  "content_html": "<h1 id=\"docs-viewer-scopes\">Docs Viewer Scopes</h1>\n\n<p>Docs Viewer can be installed into different scopes.</p>\n"
+  "content_html": "<h1>Docs Viewer Scopes</h1>\n<p>Docs Viewer can be installed into different scopes.</p>\n"
 }
