@@ -30,12 +30,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Added the Python Docs Viewer search builder entrypoint at `docs-viewer/build/build_search.py`, covering generated docs index reads, viewability and manage-only filtering, current docs-search schema/version hashing, dry-run/write/force modes, scope-specific output paths, targeted `--only-doc-ids` patch/remove behavior, and failure handling for docs-incompatible targeted flags. Callers still use the Ruby builder until the orchestration swap task.
 - Switched Docs Viewer rebuild orchestration to Python builders in the management rebuild helper, live rebuild watcher, and scope lifecycle build-command planning. The swap removes Bundler/Ruby detection and command construction from docs payload/search rebuild paths, keeps targeted docs/search behavior, and leaves Docs import Markdown validation for task 12.
 - Replaced Docs import Markdown validation with the shared Python Markdown renderer/import sanitizer boundary for HTML, Markdown, Markdown package, text, SVG, image, and file-media previews. Docs import preview validation no longer detects Bundler or invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`.
+- Confirmed Analytics documents Data Sharing apply reaches the same Python Docs Viewer rebuild helper as Docs management writes, and added regression coverage that returned-package summary apply invokes `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py` rather than Bundler, Ruby, or `.rb` builders.
 
 ## Next Task Steer
 
-Continue with Phase 2 task 13: update Analytics documents Data Sharing apply path.
+Continue with Phase 3 task 14: build the Python catalogue search builder.
 
-Docs Viewer payload/search rebuild orchestration and Docs import Markdown validation now use Python paths. Next, confirm Analytics documents Data Sharing apply reaches only the Python Docs Viewer rebuild path through `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` and `docs-viewer/services/docs_data_sharing/write.py`.
+Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. The next remaining app-facing Ruby builder family is catalogue search.
 
 ## Implementation Steer
 
@@ -116,7 +117,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 10 | done | Build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`. It should consume generated docs payloads, preserve the current search index schema/version/hash behavior, support scope-specific writes, and support targeted docs-search updates where currently used. |
 | 11 | done | Switch Docs Viewer rebuild orchestration to Python builders. Update `docs-viewer/services/docs_write_rebuild.py`, `docs-viewer/services/docs_live_rebuild_watcher.py`, `docs-viewer/services/docs_scope_manifest.py`, `docs-viewer/services/docs_management_service.py`, `docs-viewer/services/docs_management_mutation_service.py`, `docs-viewer/services/docs_management_import_service.py`, and `docs-viewer/services/docs_import_source_service.py` so docs payload/search rebuilds no longer detect Bundler or invoke Ruby. Keep the docs watcher service, but change its command implementation to Python builders with no Ruby fallback on Python failure. |
 | 12 | done | Replace Docs import Markdown validation. Remove `docs_html_import.py` dependence on `studio/shared/ruby/render_markdown_with_jekyll.rb`; validate staged HTML, Markdown, Markdown package, text, SVG, image, and file-media previews through the Python renderer/sanitizer boundary. |
-| 13 | planned | Update Analytics documents Data Sharing apply path. Ensure `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` and `docs-viewer/services/docs_data_sharing/write.py` reach only the Python Docs Viewer rebuild path for returned document package apply. |
+| 13 | done | Update Analytics documents Data Sharing apply path. Ensure `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py` and `docs-viewer/services/docs_data_sharing/write.py` reach only the Python Docs Viewer rebuild path for returned document package apply. |
 
 ### Phase 3: Catalogue Search And Prose
 

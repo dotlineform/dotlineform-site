@@ -152,8 +152,8 @@ Analytics dependencies:
 - `bin/local-analytics`
   - no direct Ruby, Bundler, Jekyll, or `.rb` script invocation
 - `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
-  - no direct Ruby invocation, but the documents Data Sharing handler injects `docs_write_rebuild.perform_source_write_and_rebuild`
-  - returned document package apply can therefore reach the Ruby Docs Viewer docs/search builders through `docs-viewer/services/docs_data_sharing/write.py`
+  - no direct Ruby invocation; the documents Data Sharing handler injects `docs_write_rebuild.perform_source_write_and_rebuild`
+  - returned document package apply now reaches the Python Docs Viewer docs/search builders through `docs-viewer/services/docs_data_sharing/write.py`
 - `analytics-app/app/server/analytics_app/tag_services/*`
   - no direct Ruby script dependency found in the current tag registry, alias, group, assignment, promotion, activity, or route modules
 - `analytics-app/app/frontend/js/*`
