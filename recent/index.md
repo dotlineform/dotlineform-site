@@ -36,6 +36,7 @@ section: works
 </div>
 <p id="recentIndexEmpty" hidden>nothing recently added yet</p>
 
+<script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   (function () {
     var root = document.getElementById('recentIndexRoot');
@@ -43,7 +44,10 @@ section: works
     var empty = document.getElementById('recentIndexEmpty');
     if (!root || !list || !empty) return;
 
-    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
+
+    var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
     var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '').trim();
     var thumbSizes = [];
     try {
@@ -102,11 +106,11 @@ section: works
         var seriesItem = seriesMap && typeof seriesMap === 'object' ? seriesMap[targetId] : null;
         var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
         if (works.length === 1) {
-          return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/?from=recent';
+          return runtime.workUrl(String(works[0]), baseurl, { from: 'recent' });
         }
-        return baseurl + '/series/' + encodeURIComponent(targetId) + '/?from=recent';
+        return runtime.catalogueIndexUrl(baseurl, { series: targetId, from: 'recent' });
       }
-      return baseurl + '/works/' + encodeURIComponent(targetId) + '/?from=recent';
+      return runtime.workUrl(targetId, baseurl, { from: 'recent' });
     }
 
     function compareEntries(a, b) {

@@ -8,15 +8,24 @@ export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
 }
 
 export function buildPublicWorkUrl(config, workId, params = {}) {
-  return buildPublicRecordUrl(config, "works_page_base", "/works/", workId, params);
+  return buildPublicCatalogueUrl(config, "/works/", {
+    ...params,
+    work: normalizeText(workId)
+  });
 }
 
 export function buildPublicSeriesUrl(config, seriesId, params = {}) {
-  return buildPublicRecordUrl(config, "series_page_base", "/series/", seriesId, params);
+  return buildPublicCatalogueUrl(config, "/series/", {
+    ...params,
+    series: normalizeText(seriesId)
+  });
 }
 
 export function buildPublicWorkDetailUrl(config, detailUid, params = {}) {
-  return buildPublicRecordUrl(config, "work_details_page_base", "/work_details/", detailUid, params);
+  return buildPublicCatalogueUrl(config, "/work-details/", {
+    ...params,
+    detail: normalizeText(detailUid)
+  });
 }
 
 export function buildPublicMomentUrl(config, momentId, params = {}) {

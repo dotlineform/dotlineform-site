@@ -823,13 +823,21 @@ class DocsDataBuilder:
             "target_kind": token.kind,
             "target_id": str(record.get(id_field) or normalized_id),
             "target_key": target_key,
-            "target_href": f"{route_base}/{quote(normalized_id)}/",
+            "target_href": self.catalogue_ref_href(token.kind, normalized_id, route_base),
             "target_title": str(record.get("title") or "").strip(),
             "target_status": status,
             "exists": True,
             "linkable": status == "published",
             "warning": "" if status == "published" else f"semantic reference {target_key} targets non-published catalogue record",
         }
+
+    def catalogue_ref_href(self, kind: str, normalized_id: str, route_base: str) -> str:
+        encoded_id = quote(normalized_id)
+        if kind == "work":
+            return f"/works/?work={encoded_id}"
+        if kind == "series":
+            return f"/series/?series={encoded_id}"
+        return f"{route_base}/{encoded_id}/"
 
     def normalize_numeric_semantic_id(self, value: str, width: int) -> str:
         text = re.sub(r"\D", "", value.strip().removeprefix("'"))

@@ -191,30 +191,30 @@ layout: default
     function updateBackLink() {
       if (!ctx.fromWork) {
         link.textContent = '← works';
-        link.setAttribute('href', baseurl + '/series/');
+        link.setAttribute('href', runtime.catalogueIndexUrl(baseurl));
         return;
       }
-      var href = baseurl + '/works/' + encodeURIComponent(ctx.fromWork) + '/';
-      var query = [];
-      if (ctx.series) query.push('series=' + encodeURIComponent(ctx.series));
-      if (ctx.seriesPage > 0) query.push('series_page=' + encodeURIComponent(String(ctx.seriesPage)));
-      if (ctx.detailsSection) query.push('details_section=' + encodeURIComponent(ctx.detailsSection));
-      if (ctx.detailsPage > 0) query.push('details_page=' + encodeURIComponent(String(ctx.detailsPage)));
-      if (query.length) href += '?' + query.join('&');
+      var href = runtime.workUrl(ctx.fromWork, baseurl, {
+        series: ctx.series,
+        series_page: ctx.seriesPage,
+        details_section: ctx.detailsSection,
+        details_page: ctx.detailsPage
+      });
       if (ctx.section) href += '#details-' + encodeURIComponent(ctx.section);
       link.textContent = '← ' + (ctx.fromWorkTitle || ctx.fromWork);
       link.setAttribute('href', href);
     }
 
     function buildDetailHref(uid) {
-      var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(ctx.fromWork);
-      if (ctx.fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(ctx.fromWorkTitle);
-      if (ctx.section) href += '&section=' + encodeURIComponent(ctx.section);
-      if (ctx.series) href += '&series=' + encodeURIComponent(ctx.series);
-      if (ctx.seriesPage > 0) href += '&series_page=' + encodeURIComponent(String(ctx.seriesPage));
-      if (ctx.detailsSection) href += '&details_section=' + encodeURIComponent(ctx.detailsSection);
-      if (ctx.detailsPage > 0) href += '&details_page=' + encodeURIComponent(String(ctx.detailsPage));
-      return href;
+      return runtime.workDetailUrl(uid, baseurl, {
+        from_work: ctx.fromWork,
+        from_work_title: ctx.fromWorkTitle,
+        section: ctx.section,
+        series: ctx.series,
+        series_page: ctx.seriesPage,
+        details_section: ctx.detailsSection,
+        details_page: ctx.detailsPage
+      });
     }
 
     function findDetailRecord(workPayload) {

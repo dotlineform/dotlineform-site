@@ -230,11 +230,12 @@ function renderCatalogueSearchEntry(entry, options) {
   if (entry.kind === "series" && entry.seriesType) metaParts.push(escapeHtml(entry.seriesType));
   const metaHtml = metaParts.join(escapeHtml(separator));
   const linkAttrs = catalogueEntryTargetAttrs(entry);
+  const href = catalogueEntryHref(entry, options.baseurl);
   return `
     <li class="studioSearch__item">
       <div class="studioSearch__itemHead">
         <span class="studioSearch__kind">${escapeHtml(kindLabel(options.text, entry.kind))}</span>
-        <a class="studioSearch__title" href="${escapeHtml(withBaseUrl(options.baseurl, entry.href))}"${linkAttrs}>${escapeHtml(entry.title)}</a>
+        <a class="studioSearch__title" href="${escapeHtml(href)}"${linkAttrs}>${escapeHtml(entry.title)}</a>
       </div>
       <p class="studioSearch__id">${escapeHtml(entry.id)}</p>
       ${metaHtml ? `<p class="studioSearch__meta">${metaHtml}</p>` : ""}
@@ -246,9 +247,16 @@ function renderSeriesLinks(entry, options) {
   return entry.seriesTitles.map((title, index) => {
     const seriesId = String(entry.seriesIds[index] || "").trim();
     if (!seriesId) return escapeHtml(title);
-    const href = withBaseUrl(options.baseurl, `/series/${encodeURIComponent(seriesId)}/`);
+    const href = withBaseUrl(options.baseurl, `/series/?series=${encodeURIComponent(seriesId)}`);
     return `<a class="studioSearch__metaLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`;
   });
+}
+
+function catalogueEntryHref(entry, baseurl) {
+  if (entry.kind === "series") return withBaseUrl(baseurl, `/series/?series=${encodeURIComponent(entry.id)}`);
+  if (entry.kind === "work") return withBaseUrl(baseurl, `/works/?work=${encodeURIComponent(entry.id)}`);
+  if (entry.kind === "moment") return withBaseUrl(baseurl, `/moments/${encodeURIComponent(entry.id)}/`);
+  return withBaseUrl(baseurl, entry.href);
 }
 
 function catalogueEntryTargetAttrs(entry) {

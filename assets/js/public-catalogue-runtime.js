@@ -51,6 +51,78 @@
     return trimBaseurl(baseurl) + '/' + pathText.replace(/^\/+/, '');
   }
 
+  function appendQuery(url, params) {
+    var query = new URLSearchParams();
+    Object.keys(params || {}).forEach(function (key) {
+      var value = params[key];
+      if (value == null || value === '') return;
+      query.set(key, String(value));
+    });
+    var textQuery = query.toString();
+    if (!textQuery) return url;
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + textQuery;
+  }
+
+  function catalogueIndexUrl(baseurl, options) {
+    var opts = options || {};
+    var params = {};
+    var mode = text(opts.mode).toLowerCase();
+    var seriesId = text(opts.series || opts.seriesId);
+    var page = toPositiveInteger(opts.seriesPage || opts.series_page);
+    var from = text(opts.from).toLowerCase();
+    if (seriesId) {
+      params.series = seriesId;
+    } else if (mode === 'moments') {
+      params.mode = 'moments';
+    }
+    if (page > 0) params.series_page = String(page);
+    if (from) params.from = from;
+    return appendQuery(buildPath(baseurl, '/series/'), params);
+  }
+
+  function worksUrl(baseurl, options) {
+    return appendQuery(buildPath(baseurl, '/works/'), options || {});
+  }
+
+  function workUrl(workId, baseurl, options) {
+    var id = text(workId);
+    var params = Object.assign({}, options || {});
+    if (id) params.work = id;
+    return worksUrl(baseurl, params);
+  }
+
+  function workDetailUrl(detailUid, baseurl, options) {
+    var id = text(detailUid);
+    var params = Object.assign({}, options || {});
+    if (id) params.detail = id;
+    return appendQuery(buildPath(baseurl, '/work-details/'), params);
+  }
+
+  function momentUrl(momentId, baseurl) {
+    return buildPath(baseurl, '/moments/' + encodeURIComponent(text(momentId)) + '/');
+  }
+
+  function momentsRecoveryUrl(baseurl) {
+    return catalogueIndexUrl(baseurl, { mode: 'moments' });
+  }
+
+  function notFoundRecoveryUrl(baseurl) {
+    return catalogueIndexUrl(baseurl);
+  }
+
+  function parseRouteState(locationLike) {
+    var source = locationLike || {};
+    var params = new URLSearchParams(source.search || '');
+    return {
+      mode: text(params.get('mode')).toLowerCase() === 'moments' ? 'moments' : 'works',
+      series: text(params.get('series')).toLowerCase(),
+      work: text(params.get('work')),
+      detail: text(params.get('detail')),
+      seriesPage: toPositiveInteger(params.get('series_page')),
+      from: text(params.get('from')).toLowerCase()
+    };
+  }
+
   function workPayloadUrl(workId, baseurl) {
     return buildPath(baseurl, '/assets/works/index/' + encodeURIComponent(text(workId)) + '.json');
   }
@@ -69,14 +141,6 @@
 
   function worksIndexUrl(baseurl) {
     return buildPath(baseurl, '/assets/data/works_index.json');
-  }
-
-  function workUrl(workId, baseurl) {
-    return buildPath(baseurl, '/works/' + encodeURIComponent(text(workId)) + '/');
-  }
-
-  function workDetailUrl(detailUid, baseurl) {
-    return buildPath(baseurl, '/work_details/' + encodeURIComponent(text(detailUid)) + '/');
   }
 
   function thumbUrl(base, id, suffix, size, format) {
@@ -137,7 +201,7 @@
     var ids = seriesIndexWorkIds(payload, id);
     return {
       label: seriesIndexTitle(payload, id) || id,
-      href: trimBaseurl(baseurl) + '/series/' + encodeURIComponent(id) + '/',
+      href: catalogueIndexUrl(baseurl, { series: id }),
       hidden: ids.length <= 1
     };
   }
@@ -156,7 +220,7 @@
       textValue = '\u2190 ' + label;
     } else if (!fromSeriesId && !fromContext) {
       textValue = '\u2190 ' + label;
-      href = baseurl + '/series/' + encodeURIComponent(seriesId) + '/';
+      href = catalogueIndexUrl(baseurl, { series: seriesId });
     }
     return {
       label: textValue,
@@ -174,13 +238,13 @@
     if (index === -1 || workIds.length < 2) return { hidden: true, counterHidden: true };
     var baseurl = trimBaseurl(options && options.baseurl);
     var page = toPositiveInteger(options && options.seriesPage);
-    var qs = '?series=' + encodeURIComponent(seriesId);
-    if (page > 0) qs += '&series_page=' + encodeURIComponent(String(page));
+    var navOptions = { series: seriesId };
+    if (page > 0) navOptions.series_page = String(page);
     return {
       hidden: false,
       counterHidden: false,
-      prevHref: baseurl + '/works/' + workIds[(index - 1 + workIds.length) % workIds.length] + '/' + qs,
-      nextHref: baseurl + '/works/' + workIds[(index + 1) % workIds.length] + '/' + qs,
+      prevHref: workUrl(workIds[(index - 1 + workIds.length) % workIds.length], baseurl, navOptions),
+      nextHref: workUrl(workIds[(index + 1) % workIds.length], baseurl, navOptions),
       counterText: String(index + 1) + '/' + String(workIds.length)
     };
   }
@@ -194,6 +258,13 @@
     slug: slug,
     fetchJson: fetchJson,
     buildPath: buildPath,
+    appendQuery: appendQuery,
+    catalogueIndexUrl: catalogueIndexUrl,
+    worksUrl: worksUrl,
+    momentUrl: momentUrl,
+    momentsRecoveryUrl: momentsRecoveryUrl,
+    notFoundRecoveryUrl: notFoundRecoveryUrl,
+    parseRouteState: parseRouteState,
     workPayloadUrl: workPayloadUrl,
     seriesPayloadUrl: seriesPayloadUrl,
     momentPayloadUrl: momentPayloadUrl,

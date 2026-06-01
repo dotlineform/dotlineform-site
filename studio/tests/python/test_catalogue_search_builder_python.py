@@ -185,8 +185,10 @@ def test_python_catalogue_search_builder_writes_current_schema_and_hash() -> Non
         ("series", "009"),
         ("work", "00001"),
     ]
+    series = entries[1]
+    assert series["href"] == "/series/?series=009"
     work = entries[2]
-    assert work["href"] == "/works/00001/"
+    assert work["href"] == "/works/?work=00001"
     assert work["series_ids"] == ["009"]
     assert work["series_titles"] == ["Field Notes"]
     assert work["medium_type"] == "drawing"

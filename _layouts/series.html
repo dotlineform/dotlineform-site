@@ -100,7 +100,7 @@ layout: default
         return;
       }
       if (indexLink) {
-        indexLink.setAttribute('href', baseurl + '/works/?series=' + encodeURIComponent(seriesId));
+        indexLink.setAttribute('href', runtime.worksUrl(baseurl, { series: seriesId }));
       }
 
       function updateHeaderFromSeries(row) {
@@ -152,10 +152,10 @@ layout: default
       }
 
       function withQuery(url, page) {
-        var q = 'series=' + encodeURIComponent(seriesId);
-        if (page > 1) q += '&series_page=' + encodeURIComponent(String(page));
-        var join = (url.indexOf('?') === -1) ? '?' : '&';
-        return url + join + q;
+        return runtime.workUrl(url, baseurl, {
+          series: seriesId,
+          series_page: page > 1 ? String(page) : ''
+        });
       }
 
       function render(items) {
@@ -242,7 +242,7 @@ layout: default
           return {
             work_id: id,
             title: String(wr.title || id),
-            work_url: runtime.workUrl(id, baseurl),
+            work_url: id,
             thumb_primary: thumbPrimary,
             thumb_srcset: thumbSrcset
           };
@@ -325,7 +325,7 @@ layout: default
         link.setAttribute('href', baseurl + '/recent/');
       } else {
         link.textContent = '← works';
-        link.setAttribute('href', baseurl + '/series/');
+        link.setAttribute('href', runtime.catalogueIndexUrl(baseurl));
       }
     })();
   </script>

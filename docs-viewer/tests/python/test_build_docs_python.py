@@ -194,7 +194,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert 'title="Alt text"' in content_html
     assert 'class="docsViewer__interactiveFrame"' in content_html
     assert "--docs-viewer-interactive-height: 420px" in content_html
-    assert 'href="/works/00638/"' in content_html
+    assert 'href="/works/?work=00638"' in content_html
     assert "[[ref:series:26]]" in content_html
     assert "[[ref:moment:dark-sky]]" in content_html
     assert child["viewer_report"] == "semantic_references"

@@ -165,6 +165,7 @@ permalink: /series/
 </div>
 <p id="seriesIndexEmpty" hidden>no works yet</p>
 
+<script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   (function () {
     var root = document.getElementById('seriesIndexRoot');
@@ -183,7 +184,12 @@ permalink: /series/
     var modeButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-mode-btn"]'));
     if (!viewButtons.length || !sortButtons.length || !modeButtons.length) return;
 
-    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
+
+    var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
+    var routeState = runtime.parseRouteState(window.location);
+    var selectedSeriesId = String(routeState.series || '').trim().toLowerCase();
     var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '').trim();
     var thumbMomentsBase = String(root.getAttribute('data-thumb-moments-base') || '').trim();
     var thumbSizes = [];
@@ -243,7 +249,7 @@ permalink: /series/
       empty_works: 'no works yet',
       empty_moments: 'no moments yet'
     };
-    var currentMode = readStoredMode();
+    var currentMode = selectedSeriesId ? 'works' : (routeState.mode === 'moments' ? 'moments' : readStoredMode());
     var modeState = {
       works: {
         view: readStoredView('works'),
@@ -593,9 +599,9 @@ permalink: /series/
       var sid = String((seriesItem && seriesItem.series_id) || '').trim();
       var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
       if (works.length === 1) {
-        return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/';
+        return runtime.workUrl(String(works[0]), baseurl);
       }
-      return baseurl + '/series/' + encodeURIComponent(sid) + '/';
+      return runtime.catalogueIndexUrl(baseurl, { series: sid });
     }
 
     function buildSeriesItem(seriesItem) {
@@ -611,6 +617,25 @@ permalink: /series/
         year_display: yearDisplay,
         year_sort: Number.isFinite(numericYear) ? numericYear : parseYearNumber('', yearDisplay),
         thumb_id: String((seriesItem && seriesItem.primary_work_id) || '').trim()
+      };
+    }
+
+    function buildWorkItem(workId, worksMap, seriesRow) {
+      var wid = String(workId || '').trim();
+      if (!wid) return null;
+      var work = worksMap && worksMap[wid] && typeof worksMap[wid] === 'object' ? worksMap[wid] : {};
+      var title = String((work && work.title) || wid);
+      var yearDisplay = String((work && (work.year_display != null ? work.year_display : work.year)) || '').trim();
+      var numericYear = Number(work && work.year);
+      return {
+        kind: 'works',
+        id: wid,
+        title: title,
+        href: runtime.workUrl(wid, baseurl, { series: selectedSeriesId }),
+        year_display: yearDisplay,
+        year_sort: Number.isFinite(numericYear) ? numericYear : parseYearNumber('', yearDisplay),
+        thumb_id: wid,
+        series_title: String((seriesRow && seriesRow.title) || selectedSeriesId)
       };
     }
 
@@ -680,7 +705,7 @@ permalink: /series/
 
     function syncRecentButtonState() {
       var enabledHref = String(recentBtn.getAttribute('data-enabled-href') || '').trim();
-      var disabled = currentMode === 'moments';
+      var disabled = currentMode === 'moments' || !!selectedSeriesId;
       recentBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
       if (disabled) {
         recentBtn.removeAttribute('href');
@@ -805,10 +830,14 @@ permalink: /series/
 
     modeButtons.forEach(function (button) {
       button.addEventListener('click', function () {
+        if (selectedSeriesId) return;
         var nextMode = normalizeMode(button.getAttribute('data-mode'));
         if (nextMode === currentMode || !catalogueItems[nextMode].length) return;
         currentMode = nextMode;
         persistMode(currentMode);
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, '', runtime.catalogueIndexUrl(baseurl, { mode: currentMode }));
+        }
         updateModeUi();
         updateSortUi();
         renderCurrentView();
@@ -831,19 +860,34 @@ permalink: /series/
 
     Promise.all([
       fetchJson(seriesIndexUrl),
-      loadMomentsIndexMap()
+      loadMomentsIndexMap(),
+      selectedSeriesId ? fetchJson(baseurl + '/assets/data/works_index.json').catch(function () { return {}; }) : Promise.resolve({})
     ])
       .then(function (results) {
         var seriesPayload = results[0];
         var momentsIndexMap = results[1];
+        var worksPayload = results[2];
         var seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === 'object'
           ? seriesPayload.series
           : {};
+        var worksMap = worksPayload && worksPayload.works && typeof worksPayload.works === 'object'
+          ? worksPayload.works
+          : {};
 
         uiText = copyUiText(uiTextDefaults);
-        catalogueItems.works = Object.keys(seriesMap).map(function (sid) {
-          return buildSeriesItem(seriesMap[sid]);
-        }).filter(Boolean);
+        if (selectedSeriesId) {
+          var selectedSeries = seriesMap[selectedSeriesId] && typeof seriesMap[selectedSeriesId] === 'object'
+            ? seriesMap[selectedSeriesId]
+            : null;
+          var selectedWorkIds = Array.isArray(selectedSeries && selectedSeries.works) ? selectedSeries.works : [];
+          catalogueItems.works = selectedWorkIds.map(function (workId) {
+            return buildWorkItem(workId, worksMap, selectedSeries);
+          }).filter(Boolean);
+        } else {
+          catalogueItems.works = Object.keys(seriesMap).map(function (sid) {
+            return buildSeriesItem(seriesMap[sid]);
+          }).filter(Boolean);
+        }
         catalogueItems.moments = Array.isArray(momentsItems) ? momentsItems.map(function (item) {
           return buildMomentItem(mergeMomentIndexItem(item, momentsIndexMap));
         }).filter(Boolean) : [];
