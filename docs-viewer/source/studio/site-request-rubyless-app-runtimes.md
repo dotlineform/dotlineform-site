@@ -3,7 +3,7 @@ doc_id: site-request-rubyless-app-runtimes
 title: Rubyless App Runtimes Request
 added_date: 2026-05-30
 last_updated: 2026-06-01
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,10 +11,11 @@ viewable: true
 
 Status:
 
-- draft
+- done
 - This request defines the path to a JavaScript + Python app/tooling stack.
 - Treat the Docs Viewer work as Docs Viewer v2: choose the right Python/JavaScript rendering and authoring approach rather than preserving incidental proof-of-concept output.
 - Ruby/Jekyll stays only as a manual public-site preview/build layer until the public site itself is replaced.
+- Closed on 2026-06-01 after app-runtime verification and separate public-site Ruby/Jekyll build/preview verification.
 
 ## Task Tracker
 
@@ -72,11 +73,12 @@ Ruby/Jekyll
 
 Jekyll should consume generated assets; it should not be a dependency for generating app data or helping Docs Viewer function.
 
-## Current Ruby Dependency Map
+## Closed Runtime Boundary Map
 
-This is the current app-facing Ruby dependency surface found in Studio, Docs Viewer, and Analytics source modules. Public-site-only wrappers such as `bin/public-site-preview` and `bin/public-site-build` remain intentionally outside this app-runtime list.
+This is the closed app-runtime dependency surface for Studio, Docs Viewer, Analytics, and UI Catalogue source modules.
+Public-site-only wrappers such as `bin/public-site-preview` and `bin/public-site-build` remain intentionally outside this app-runtime list.
 
-Ruby scripts and helpers currently in the app/data-generation path:
+Current app/data-generation scripts and helpers now in the Python path:
 
 - `docs-viewer/build/build_docs.py`
   - builds Docs Viewer payloads for configured scopes
@@ -106,7 +108,7 @@ Docs Viewer direct dependencies:
 - `docs-viewer/services/docs_management_service.py`
   - manual `/docs/rebuild` and source-config write follow-through call `docs_write_rebuild.py`
 - `docs-viewer/services/docs_management_routes.py`
-  - exposes Docs Viewer management endpoints that dispatch rebuild, mutation, lifecycle, and import requests to the Ruby-backed services listed here
+  - exposes Docs Viewer management endpoints that dispatch rebuild, mutation, lifecycle, and import requests to the Python-backed services listed here
 - `docs-viewer/services/docs_management_mutation_service.py`
   - create, metadata, viewability, move, delete, and multi-scope mutation follow-through calls `docs_write_rebuild.py`
 - `docs-viewer/services/docs_management_import_service.py`
@@ -196,7 +198,7 @@ The current custom Markdown behavior is not a Jekyll plugin or a separate Ruby t
 
 - it parses front matter itself
 - it resolves custom content tokens before calling the Markdown converter
-- it calls `JekyllMarkdownRenderer.render_string(...)` only after token expansion
+- it calls the shared Python Markdown renderer only after token expansion
 - it post-processes rendered HTML for image titles, Docs Viewer links, plain text, and generated metadata
 
 The current custom content tokens are:
@@ -369,6 +371,27 @@ The request is complete when:
 - remaining Ruby files and commands are documented as manual public-site preview/build only
 - public-site Jekyll preview/build still works when explicitly run
 
+## Implementation Closeout
+
+Completed on 2026-06-01.
+
+What changed:
+
+- Docs Viewer docs payloads, Docs Viewer search indexes, catalogue search indexes, and catalogue prose rendering now use Python builders and the shared Python Markdown renderer.
+- Docs Viewer management rebuilds, live rebuild watcher behavior, Docs import validation, scope lifecycle rebuilds, and Analytics documents Data Sharing apply paths reach the Python Docs Viewer builder path.
+- Local Studio startup is Python/JavaScript only and no longer runs disabled Ruby docs/search or catalogue startup rebuild paths.
+- App-runtime command examples, dependency docs, script inventories, and risk docs now record Ruby/Bundler/Jekyll as public-site preview/build only.
+- Retired app-facing Ruby helpers and replaced Ruby Docs Viewer/catalogue search builder entrypoints were removed from active app paths.
+
+Verification:
+
+- App acceptance smoke verification passed for Studio, Analytics, Docs Viewer management, and UI Catalogue.
+- Docs Viewer smoke passed after aligning stale smoke expectations with current tree-vs-graph index-panel capability behavior and running the management modal module smoke against the source/module root.
+- Public-site verification was kept separate: `bin/public-site-build --destination /tmp/dlf-public-site-verification --quiet` passed, and `bin/public-site-preview --no-livereload --port 4199` served `/` and `/series/` with 200 responses before the temporary preview was stopped.
+- Final closeout scans found no unresolved Ruby/Python app-builder dispatch, hidden Ruby fallback, dual-write path, temporary bridge, or implicit cleanup task. Remaining Ruby/Bundler/Jekyll command hits are public-site preview/build wrappers, public-preview URL config, public/Jekyll docs, public-build tests, or negative guardrail assertions.
+
+Generated docs/search payloads were not rebuilt during closeout; source Markdown remains the durable record, and local docs payload rebuilds are handled by the normal docs watcher/manual build workflow.
+
 ## Known Risks
 
 - Markdown rendering can differ when moving away from Jekyll/Kramdown. Docs Viewer v2 should not chase full Kramdown parity, freeze incidental current HTML, or use current Jekyll/Kramdown output as an automated comparison baseline. It should protect document meaning, links, media behavior, semantic references, and search text through explicit semantic fixtures.
@@ -377,3 +400,7 @@ The request is complete when:
 - Catalogue search affects public search behavior as well as local app links. Preserve the output schema before changing consumers.
 - Some generated assets are shared between app runtime and public preview. The owner should be Python if apps need the asset; Jekyll should only consume it.
 - Leaving Jekyll as manual preview means public-site checks remain Ruby-backed until a separate public renderer migration exists.
+
+## Change Log Entries
+
+- `change-2026-06-01-closed-rubyless-app-runtime-migration`

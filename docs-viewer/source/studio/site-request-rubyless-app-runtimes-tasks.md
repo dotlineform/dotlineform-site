@@ -3,7 +3,7 @@ doc_id: site-request-rubyless-app-runtimes-tasks
 title: Rubyless App Runtimes Tasks
 added_date: 2026-06-01
 last_updated: 2026-06-01
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-rubyless-app-runtimes
 viewable: true
 ---
@@ -47,12 +47,14 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Verified Studio, Analytics, Docs Viewer management, and UI Catalogue app roots against Ruby/Jekyll runtime references. Studio and Analytics retain only public-preview URL config references; UI Catalogue has no Ruby/Jekyll hits; Docs Viewer management/build/service roots have no Ruby/Jekyll hits.
 - Ran focused app-boundary tests: Studio runner/app/catalogue command tests, Analytics Data Sharing/tag route tests, Docs Viewer rebuild/import/builder/search tests, and UI Catalogue app server tests.
 - Completed final app acceptance verification for task 31. Studio smoke, Analytics smoke, UI Catalogue smoke, and Docs Viewer smoke pass; the Docs Viewer smoke fix updated stale expectations for tree-vs-graph index-panel expansion and runs the management modal module smoke against the source/module root where manage-only assets are present.
+- Completed separate public-site verification for task 32. `bin/public-site-build --destination /tmp/dlf-public-site-verification --quiet` passed, and `bin/public-site-preview --no-livereload --port 4199` served `/` and `/series/` with 200 responses through Ruby/Jekyll/WEBrick before the temporary preview was stopped.
+- Completed final closeout for task 33. The parent request is marked done, remaining Ruby/Bundler/Jekyll usage is recorded as public-site preview/build only, no unresolved compatibility layer or implicit cleanup task was found, and docs-log entry `change-2026-06-01-closed-rubyless-app-runtime-migration` records the migration.
 
 ## Next Task Steer
 
-Continue with Phase 5 task 32: run separate public-site verification.
+All implementation tasks are complete.
 
-Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation/caller orchestration and catalogue prose rendering now use Python. `bin/local-studio` is covered as a Python/JS-only runner, active check/test command-shape expectations point at Python app builders, the shared Ruby Markdown/render helpers are retired, stale Ruby search builder entrypoints have been deleted, no task-20 cleanup leftovers require new rows, command/runtime docs describe the current Python app-generation boundary, dependency docs describe the renderer/sanitizer policy, script/risk docs record the current active app-runtime inventory, the first Ruby/Bundler audit confirms active app surfaces are clean, no mixed builder mode remains, and app acceptance smoke verification is complete. The next remaining work is separate public-site verification for the manual Ruby/Jekyll preview/build layer.
+Docs Viewer app-facing generation paths are Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation/caller orchestration and catalogue prose rendering use Python. `bin/local-studio` is covered as a Python/JS-only runner, active check/test command-shape expectations point at Python app builders, the shared Ruby Markdown/render helpers are retired, stale Ruby search builder entrypoints have been deleted, no task-20 cleanup leftovers require new rows, command/runtime docs describe the current Python app-generation boundary, dependency docs describe the renderer/sanitizer policy, script/risk docs record the current active app-runtime inventory, Ruby/Bundler/Jekyll remains public-site preview/build only, app acceptance smoke verification is complete, separate public-site Ruby/Jekyll build/preview verification passes, and durable docs-log history is recorded.
 
 ## Implementation Steer
 
@@ -167,5 +169,5 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 29 | done | Verify Docs Viewer management is JavaScript + Python only. `/docs/` management, source mutations, scope config, generated docs payloads, generated references, generated search, import preview/apply, and live rebuild watcher should all be Python/JS. Public `/library/` and `/analysis/` remain public-site preview concerns. |
 | 30 | done | Verify UI Catalogue is JavaScript + Python/static only. Serve demos without Jekyll and keep public-site integration checks separate. |
 | 31 | done | Run final acceptance and app verification. Include renderer/builder acceptance fixtures, generated-output contract fixtures, Docs Viewer payload/search checks, catalogue search contract checks, catalogue prose rendering checks, Local Studio smoke, Local Analytics/Data Sharing smoke, Docs Viewer management smoke, UI Catalogue smoke, and syntax/import checks for changed Python and JavaScript. Acceptance evidence: `var/test-runs/rubyless-task31-studio-smoke/summary.md`, `var/test-runs/rubyless-task31-analytics-smoke/summary.md`, `var/test-runs/rubyless-task31-ui-catalogue-smoke/summary.md`, and `var/test-runs/rubyless-task31-docs-viewer-smoke-pass/summary.md`. |
-| 32 | planned | Run separate public-site verification. Run an explicit Jekyll public-site build/preview check only to confirm the manual public preview/build layer still works, not to benchmark app Markdown rendering. |
-| 33 | planned | Final closeout. Confirm there are no unresolved compatibility layers or implicit cleanup tasks, record remaining Ruby usage as public-preview-only or deferred public-site renderer work, update this tracker statuses, update the parent request if scope/risks changed, and add any required docs-log entry. |
+| 32 | done | Run separate public-site verification. Run an explicit Jekyll public-site build/preview check only to confirm the manual public preview/build layer still works, not to benchmark app Markdown rendering. Verification: `bin/public-site-build --destination /tmp/dlf-public-site-verification --quiet` passed; `bin/public-site-preview --no-livereload --port 4199` served `/` and `/series/` with 200 responses, then the temporary preview was stopped. |
+| 33 | done | Final closeout. Confirm there are no unresolved compatibility layers or implicit cleanup tasks, record remaining Ruby usage as public-preview-only or deferred public-site renderer work, update this tracker statuses, update the parent request if scope/risks changed, and add any required docs-log entry. Closeout recorded in the parent request and docs-log entry `change-2026-06-01-closed-rubyless-app-runtime-migration`. |

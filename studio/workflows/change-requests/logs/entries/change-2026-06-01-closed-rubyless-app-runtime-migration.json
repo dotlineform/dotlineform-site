@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-06-01-closed-rubyless-app-runtime-migration",
+  "date": "2026-06-01",
+  "title": "Closed Rubyless App Runtime Migration",
+  "status": "completed",
+  "type": "migration",
+  "domains": [
+    "docs-viewer",
+    "studio",
+    "analytics",
+    "catalogue",
+    "scripts"
+  ],
+  "summary": "Moved app-facing docs, search, catalogue search, and catalogue prose generation to Python while keeping browser app surfaces JavaScript-owned and Ruby/Jekyll limited to explicit public-site preview/build.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-rubyless-app-runtimes-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "rubyless-runtime",
+    "python-builders",
+    "public-site-preview"
+  ],
+  "change_request_doc_id": "site-request-rubyless-app-runtimes",
+  "related_docs": [
+    "site-request-rubyless-app-runtimes",
+    "site-request-rubyless-app-runtimes-tasks",
+    "runtime-dependencies",
+    "scripts",
+    "docs-viewer-dependencies",
+    "studio-python-ruby-script-inventory"
+  ],
+  "related_files": [
+    "docs-viewer/source/studio/site-request-rubyless-app-runtimes.md",
+    "docs-viewer/source/studio/site-request-rubyless-app-runtimes-tasks.md",
+    "docs-viewer/build/build_docs.py",
+    "docs-viewer/build/build_search.py",
+    "studio/services/catalogue/search/build_search.py",
+    "studio/shared/python/markdown_renderer.py",
+    "bin/local-studio",
+    "bin/public-site-preview",
+    "bin/public-site-build"
+  ],
+  "effect": "Studio, Analytics, Docs Viewer management, and UI Catalogue no longer depend on Ruby or Bundler for app runtime behavior or app-facing generated data; public-site Ruby/Jekyll verification remains a separate manual layer.",
+  "verification": [
+    "Task 31 app smoke profiles passed for Studio Analytics UI Catalogue and Docs Viewer.",
+    "Task 32 public-site build passed and preview served public routes before shutdown."
+  ]
+}
