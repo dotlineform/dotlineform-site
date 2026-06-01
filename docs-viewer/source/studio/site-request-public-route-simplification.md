@@ -13,7 +13,11 @@ Status:
 
 - draft
 - This request defines the cleaner public route model before the public static-site builder migration starts.
-- The route model and 404 behavior are agreed; the next step is to create an implementation task list.
+- The route model and 404 behavior are agreed; implementation is tracked in the child task document.
+
+## Task Tracker
+
+Use [Public Route Simplification Tasks](/docs/?scope=studio&doc=site-request-public-route-simplification-tasks) for the implementation sequence, task status, and verification checklist.
 
 ## Summary
 
@@ -156,41 +160,8 @@ The durable outcome should be a small public route helper contract driven by act
 Generated public payloads should avoid persistent URL fields because URLs are route projections, not record data.
 Browser-side route building and route parsing should live together, so selected work, selected series, selected detail, selected moment, and navigation context are handled consistently.
 
-## Implementation Sequence Shape
-
-The implementation task list should follow this order once the route model is agreed:
-
-1. Define the canonical route helper contract for works, series, work details, moments, and index routes.
-2. Add or adapt fixed Jekyll shell routes for the new canonical route model.
-3. Update browser runtime helpers to build and parse the new route URLs.
-4. Update public shell scripts so record identity comes from query/state parameters where needed rather than `page.slug`.
-5. Update catalogue search, generated URL fields, Docs Viewer references, and Studio public-link helpers only where they have a current navigation requirement.
-6. Stop relying on per-record Jekyll collection outputs for first-party navigation.
-7. Add or update `404.html` for retired and unknown route recovery.
-8. Run public route smoke checks while Jekyll is still the build baseline.
-9. Document the resulting route contract for the later public static-site builder.
-
 The later static-builder request should not need to know the old route model.
 It should consume only the route contract produced by this request.
-
-## Recommended Verification
-
-Use this smoke set for the implementation task list:
-
-- build the current Jekyll public site to an isolated temporary destination
-- serve the built output through a local static server
-- load `/series/` and verify works mode renders
-- switch to moments mode and verify `/series/?mode=moments` restores moments browse state
-- open a selected series state through `/series/?series=<series_id>` and verify the filtered/selected view renders
-- open a selected work through `/works/?work=<work_id>` and verify title, media, metadata, and explicit back link render
-- open a selected work with series context through `/works/?work=<work_id>&series=<series_id>` and verify prev/next series navigation
-- open a work detail through `/work-details/?detail=<detail_uid>` and verify media, title, explicit back link, and detail prev/next behavior
-- open a moment from the catalogue moments grid/list and verify the individual moment page renders
-- open `/moments/` and verify it recovers to `/series/?mode=moments` with a visible fallback link
-- open catalogue search, choose a work/series/moment result, and verify the result uses the canonical route helper
-- load a public Library or Analysis semantic reference link and verify it resolves to the canonical catalogue route
-- load an unknown retired route and verify `404.html` shows "page unavailable" with a `/series/` recovery link
-- run a focused source scan to catch stale first-party route string assembly outside the canonical route helper
 
 ## Acceptance Criteria For The Spec
 
