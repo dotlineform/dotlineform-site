@@ -1,0 +1,288 @@
+{
+  "schema": "docs_viewer_v2_custom_token_fixtures_v1",
+  "renderer_contract": {
+    "markdown_library": "markdown-it-py",
+    "preset": "commonmark",
+    "enabled_rules": ["table"],
+    "enabled_plugins": [],
+    "jekyll_kramdown_parity": false
+  },
+  "shared_context": {
+    "scope": "library",
+    "doc": {
+      "doc_id": "token-fixture",
+      "title": "Token Fixture",
+      "source_path": "token-fixture.md",
+      "viewer_url": "/library/?doc=token-fixture"
+    },
+    "media_base": "https://media.dotlineform.com",
+    "interactive_asset_root": "assets/docs/interactive/library",
+    "catalogue_records": {
+      "work": {
+        "00638": {
+          "title": "3 symbols",
+          "status": "published",
+          "href": "/works/00638/"
+        },
+        "00999": {
+          "title": "Draft work",
+          "status": "draft",
+          "href": "/works/00999/"
+        }
+      },
+      "series": {
+        "026": {
+          "title": "collected 1989-1998",
+          "status": "published",
+          "href": "/series/026/"
+        }
+      },
+      "moment": {
+        "dark-sky": {
+          "title": "Dark Sky",
+          "status": "published",
+          "href": "/moments/dark-sky/"
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "media_relative_path",
+      "covers": ["media_token", "generated_search_text"],
+      "source_markdown": "![Diagram]([[media:docs/library/diagram.png]])",
+      "expected": {
+        "resolved_markdown": "![Diagram](https://media.dotlineform.com/docs/library/diagram.png)",
+        "html_contains": [
+          "src=\"https://media.dotlineform.com/docs/library/diagram.png\"",
+          "alt=\"Diagram\""
+        ],
+        "plain_text": "[image: Diagram]",
+        "warnings": [],
+        "semantic_references": []
+      }
+    },
+    {
+      "id": "media_absolute_url_passthrough",
+      "covers": ["media_token"],
+      "source_markdown": "<img src=\"[[media:https://cdn.example.test/docs/chart.jpg]]\" alt=\"Chart\">",
+      "expected": {
+        "resolved_markdown": "<img src=\"https://cdn.example.test/docs/chart.jpg\" alt=\"Chart\">",
+        "html_contains": [
+          "src=\"https://cdn.example.test/docs/chart.jpg\"",
+          "alt=\"Chart\""
+        ],
+        "warnings": [],
+        "semantic_references": []
+      }
+    },
+    {
+      "id": "interactive_html_iframe",
+      "covers": ["interactive_html_token", "generated_search_text"],
+      "source_markdown": "[[interactive-html:coincidence-salience.html height=546]]",
+      "context": {
+        "interactive_assets": ["coincidence-salience.html"]
+      },
+      "expected": {
+        "html_contains": [
+          "class=\"docsViewer__interactiveFrame\"",
+          "src=\"/assets/docs/interactive/library/coincidence-salience.html\"",
+          "sandbox=\"allow-scripts\"",
+          "loading=\"lazy\"",
+          "title=\"Interactive HTML: coincidence-salience.html\"",
+          "--docs-viewer-interactive-height: 546px"
+        ],
+        "plain_text": "",
+        "warnings": [],
+        "semantic_references": []
+      }
+    },
+    {
+      "id": "interactive_html_missing_asset",
+      "covers": ["interactive_html_token", "invalid_missing_reference"],
+      "source_markdown": "[[interactive-html:missing.html]]",
+      "context": {
+        "interactive_assets": []
+      },
+      "expected_error": "Interactive HTML asset not found for scope library: assets/docs/interactive/library/missing.html"
+    },
+    {
+      "id": "semantic_ref_published_work_with_label",
+      "covers": ["semantic_reference_token", "generated_semantic_reference_payload", "generated_search_text"],
+      "source_markdown": "[[ref:work:638|three signs]]",
+      "expected": {
+        "html_contains": [
+          "href=\"/works/00638/\"",
+          "target=\"_blank\"",
+          "rel=\"noopener noreferrer\"",
+          "data-ref-kind=\"work\"",
+          "data-ref-id=\"00638\"",
+          "data-ref-action=\"link\"",
+          ">three signs</a>"
+        ],
+        "plain_text": "three signs",
+        "warnings": [],
+        "semantic_references": [
+          {
+            "source_scope": "library",
+            "source_doc_id": "token-fixture",
+            "source_title": "Token Fixture",
+            "source_path": "token-fixture.md",
+            "source_viewer_url": "/library/?doc=token-fixture",
+            "target_kind": "work",
+            "target_id": "00638",
+            "target_key": "work:00638",
+            "target_href": "/works/00638/",
+            "target_title": "3 symbols",
+            "target_status": "published",
+            "label": "three signs",
+            "action": "link",
+            "ordinal": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "semantic_ref_published_series_title_fallback",
+      "covers": ["semantic_reference_token", "generated_semantic_reference_payload"],
+      "source_markdown": "[[ref:series:26]]",
+      "expected": {
+        "html_contains": [
+          "href=\"/series/026/\"",
+          "data-ref-kind=\"series\"",
+          "data-ref-id=\"026\"",
+          ">collected 1989-1998</a>"
+        ],
+        "plain_text": "collected 1989-1998",
+        "warnings": [],
+        "semantic_references": [
+          {
+            "target_kind": "series",
+            "target_id": "026",
+            "target_key": "series:026",
+            "target_href": "/series/026/",
+            "target_title": "collected 1989-1998",
+            "target_status": "published",
+            "label": "collected 1989-1998",
+            "action": "link",
+            "ordinal": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "semantic_ref_non_published_work",
+      "covers": ["semantic_reference_token", "invalid_missing_reference"],
+      "source_markdown": "[[ref:work:999|draft target]]",
+      "expected": {
+        "html_contains": [
+          "<span",
+          "data-ref-kind=\"work\"",
+          "data-ref-id=\"00999\"",
+          "data-ref-status=\"draft\"",
+          ">draft target</span>"
+        ],
+        "warnings": [
+          "semantic reference work:00999 targets non-published catalogue record"
+        ],
+        "semantic_references": [
+          {
+            "target_kind": "work",
+            "target_id": "00999",
+            "target_key": "work:00999",
+            "target_status": "draft",
+            "label": "draft target",
+            "action": "link",
+            "ordinal": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "semantic_ref_missing_work",
+      "covers": ["semantic_reference_token", "invalid_missing_reference"],
+      "source_markdown": "[[ref:work:12345|missing target]]",
+      "expected": {
+        "html_contains": [
+          "<span",
+          "data-ref-kind=\"work\"",
+          "data-ref-id=\"12345\"",
+          "data-ref-status=\"missing\"",
+          ">missing target</span>"
+        ],
+        "warnings": [
+          "unresolved semantic reference work:12345"
+        ],
+        "semantic_references": [
+          {
+            "target_kind": "work",
+            "target_id": "12345",
+            "target_key": "work:12345",
+            "target_status": "missing",
+            "label": "missing target",
+            "action": "link",
+            "ordinal": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "semantic_ref_unsupported_kind_and_action",
+      "covers": ["semantic_reference_token", "invalid_missing_reference"],
+      "source_markdown": "[[ref:object:abc|unsupported]]{action=embed}",
+      "expected": {
+        "html_contains": [
+          "<span",
+          "data-ref-kind=\"object\"",
+          "data-ref-id=\"abc\"",
+          "data-ref-action=\"embed\"",
+          "data-ref-status=\"unsupported_kind\"",
+          ">unsupported</span>"
+        ],
+        "warnings": [
+          "unsupported semantic reference action \"embed\"",
+          "unsupported semantic reference kind \"object\""
+        ],
+        "semantic_references": [
+          {
+            "target_kind": "object",
+            "target_id": "abc",
+            "target_key": "object:abc",
+            "target_status": "unsupported_kind",
+            "label": "unsupported",
+            "action": "embed",
+            "ordinal": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "semantic_ref_code_skip",
+      "covers": ["semantic_reference_token", "code_block_skip_behavior", "generated_search_text"],
+      "source_markdown": "Inline `[[ref:work:638]]` stays literal.\n\n```markdown\n[[ref:series:26]]\n```\n\nOutside [[ref:moment:dark-sky]].",
+      "expected": {
+        "html_contains": [
+          "<code>[[ref:work:638]]</code>",
+          "[[ref:series:26]]",
+          "href=\"/moments/dark-sky/\"",
+          ">Dark Sky</a>"
+        ],
+        "plain_text": "Inline [[ref:work:638]] stays literal.\n\n[[ref:series:26]]\n\nOutside Dark Sky.",
+        "warnings": [],
+        "semantic_references": [
+          {
+            "target_kind": "moment",
+            "target_id": "dark-sky",
+            "target_key": "moment:dark-sky",
+            "target_href": "/moments/dark-sky/",
+            "target_title": "Dark Sky",
+            "target_status": "published",
+            "label": "Dark Sky",
+            "action": "link",
+            "ordinal": 1
+          }
+        ]
+      }
+    }
+  ]
+}
