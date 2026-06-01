@@ -11,6 +11,26 @@ viewable: true
 
 This is the implementation tracker for [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification).
 
+## Next Session Steer
+
+Start from the current changed working tree; do not restart the route-helper slice.
+The first slice already added the canonical browser route helper, `/series/` query-state modes, `/works/?work=...`, `/work-details/?detail=...`, `/moments/` recovery, `404.html`, and first-party route retargeting for recent/search/legacy layout links, Studio public-link helpers, catalogue search generation, and Docs Viewer semantic references.
+
+Next session should focus on the remaining task rows:
+
+- finish task 8 by scanning and cleaning plain public Library/Analysis links that still point to retired catalogue paths, without adding compatibility redirects
+- finish task 9 by reviewing generated public payload contracts for derivable URL fields, especially moment `public_url`, and either remove/replace consumers or document any non-derivable exception
+- advance task 10 by auditing remaining first-party dependence on `_works/`, `_series/`, and `_work_details/` collection outputs; keep collection generation only where Jekyll build constraints still require it, and record the removal condition
+- advance task 12 by turning the ad hoc public route smoke into focused checked-in smoke coverage for the recommended route set
+- update owning docs in task 13 after the remaining contract decisions are made; do not manually rebuild Docs Viewer payloads
+
+Useful verification already run for the first slice:
+
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/build/build_docs.py studio/services/catalogue/search/build_search.py`
+- `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py studio/tests/python/test_catalogue_search_builder_python.py`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- local Playwright smoke against an isolated static server for `/series/`, `/series/?mode=moments`, `/series/?series=009`, `/works/?work=00001`, `/works/?work=00001&series=009`, `/work-details/?detail=00001-001&from_work=00001`, `/moments/`, `/404.html`, and `/catalogue/search/?q=00001`
+
 ## Implementation Steer
 
 Implement the simplified public route model while Jekyll remains the public preview/build layer.
