@@ -93,7 +93,6 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     try:
         assert module.rebuild_scope(
             Path("/repo"),
-            "/tmp/bundle",
             "tmp",
             docs_doc_ids=["tmp"],
             search_doc_ids=["tmp"],
@@ -103,12 +102,10 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
         module.targeted_docs_build_fallback_reason = original_fallback
 
     assert calls == [
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "tmp", "--write"],
+        [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write"],
         [
-            "/tmp/bundle",
-            "exec",
-            "ruby",
-            "docs-viewer/build/build_search.rb",
+            module.PYTHON_EXECUTABLE,
+            "docs-viewer/build/build_search.py",
             "--scope",
             "tmp",
             "--write",

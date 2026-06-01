@@ -39,7 +39,7 @@ The service expects the project to provide:
 - a Jekyll `_config.yml` at the repo root
 - `docs-viewer/config/scopes/docs_scopes.json` with at least one configured docs scope
 - Python dependencies needed by the docs import/export helpers
-- Ruby, Bundler, and Jekyll for rebuild commands reached through `./docs-viewer/build/build_docs.rb` and `./docs-viewer/build/build_search.rb`
+- Python docs rebuild commands reached through `./docs-viewer/build/build_docs.py` and `./docs-viewer/build/build_search.py`
 
 Local service location is static for v1 and comes from `var/local/site.env`:
 

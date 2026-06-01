@@ -4,10 +4,9 @@
 from __future__ import annotations
 
 import json
-import os
 import re
-import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
@@ -25,13 +24,13 @@ from docs_watch_suppression import (
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
+PYTHON_EXECUTABLE = sys.executable
+DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
+SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
-def detect_bundle_bin() -> Optional[str]:
-    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
-    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
-        return str(rbenv_bundle)
-    return shutil.which("bundle")
+def python_builder_command(script: str, *args: str) -> list[str]:
+    return [PYTHON_EXECUTABLE, script, *args]
 
 
 def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
@@ -170,14 +169,10 @@ def rebuild_scope_outputs(
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
-    bundle_bin = detect_bundle_bin()
-    if not bundle_bin:
-        raise RuntimeError("bundle executable not found")
-
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
-    docs_command = [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", scope, "--write"]
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write")
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -195,7 +190,7 @@ def rebuild_scope_outputs(
     if include_search:
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
-            commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
+            commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
             search = {"mode": "targeted" if target_doc_ids else "none", "doc_ids": target_doc_ids}
@@ -203,18 +198,15 @@ def rebuild_scope_outputs(
                 commands.append(
                     (
                         "search",
-                        [
-                            bundle_bin,
-                            "exec",
-                            "ruby",
-                            "docs-viewer/build/build_search.rb",
+                        python_builder_command(
+                            SEARCH_BUILDER_SCRIPT,
                             "--scope",
                             scope,
                             "--write",
                             "--only-doc-ids",
                             ",".join(target_doc_ids),
                             "--remove-missing",
-                        ],
+                        ),
                     )
                 )
     steps = []
@@ -357,20 +349,16 @@ def perform_multi_scope_source_write_and_rebuild(
 
 
 def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
-    bundle_bin = detect_bundle_bin()
-    if not bundle_bin:
-        raise RuntimeError("bundle executable not found")
-
     try:
         scope_ids = list(load_docs_scope_configs(repo_root).keys())
     except FileNotFoundError:
         scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
 
     commands = [
-        ("docs", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"]),
+        ("docs", python_builder_command(DOCS_BUILDER_SCRIPT, "--write")),
     ]
     for scope in scope_ids:
-        commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
+        commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
     steps = []
     docs_diagnostics: list[Dict[str, Any]] = []
     search_diagnostics: list[Dict[str, Any]] = []

@@ -12,8 +12,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import shutil
 import subprocess
 import sys
 import time
@@ -43,6 +41,9 @@ from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppression
 from local_env import runtime_env
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
+PYTHON_EXECUTABLE = sys.executable
+DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
+SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
 def log(message: str) -> None:
@@ -72,11 +73,8 @@ def detect_repo_root(explicit_root: str) -> Path:
     raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
 
 
-def detect_bundle_bin() -> Optional[str]:
-    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
-    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
-        return str(rbenv_bundle)
-    return shutil.which("bundle")
+def python_builder_command(script: str, *args: str) -> list[str]:
+    return [PYTHON_EXECUTABLE, script, *args]
 
 
 def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
@@ -214,12 +212,11 @@ def affected_search_doc_ids(
 
 def rebuild_scope(
     repo_root: Path,
-    bundle_bin: str,
     scope: str,
     docs_doc_ids: Optional[list[str]] = None,
     search_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    docs_command = [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", scope, "--write"]
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write")
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
         fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids)
@@ -229,7 +226,7 @@ def rebuild_scope(
             docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
     if search_doc_ids is None:
-        commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
+        commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
         log(f"Rebuilding {scope} docs and full docs search.")
     else:
         target_doc_ids = ordered_unique(search_doc_ids)
@@ -237,18 +234,15 @@ def rebuild_scope(
             commands.append(
                 (
                     "search",
-                    [
-                        bundle_bin,
-                        "exec",
-                        "ruby",
-                        "docs-viewer/build/build_search.rb",
+                    python_builder_command(
+                        SEARCH_BUILDER_SCRIPT,
                         "--scope",
                         scope,
                         "--write",
                         "--only-doc-ids",
                         ",".join(target_doc_ids),
                         "--remove-missing",
-                    ],
+                    ),
                 )
             )
             log(f"Rebuilding {scope} docs and targeted docs search: {', '.join(target_doc_ids)}.")
@@ -284,7 +278,6 @@ def parse_args() -> argparse.Namespace:
     env = runtime_env()
     parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
-    parser.add_argument("--bundle-bin", default="", help="Override bundle executable path.")
     parser.add_argument(
         "--poll-seconds",
         type=float,
@@ -314,10 +307,6 @@ def main() -> int:
         raise SystemExit("--debounce-seconds must be zero or greater")
 
     repo_root = detect_repo_root(args.repo_root)
-    bundle_bin = args.bundle_bin or detect_bundle_bin()
-    if not bundle_bin:
-        raise SystemExit("bundle executable not found")
-
     states = {}
     for scope, rel_root in SCOPE_ROOTS.items():
         root = repo_root / rel_root
@@ -405,7 +394,6 @@ def main() -> int:
 
                 rebuild_succeeded = rebuild_scope(
                     repo_root,
-                    bundle_bin,
                     ready_scope,
                     docs_doc_ids=docs_doc_ids,
                     search_doc_ids=search_doc_ids,

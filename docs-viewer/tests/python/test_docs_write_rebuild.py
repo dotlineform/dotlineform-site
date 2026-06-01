@@ -34,15 +34,15 @@ DOCS_DIAGNOSTICS_STDOUT = (
 )
 
 
-def with_fake_bundle(value: str = "/tmp/bundle"):
-    original = write_rebuild.detect_bundle_bin
-    write_rebuild.detect_bundle_bin = lambda: value
+def with_fake_python(value: str = "/tmp/python"):
+    original = write_rebuild.PYTHON_EXECUTABLE
+    write_rebuild.PYTHON_EXECUTABLE = value
     return original
 
 
 def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     calls: list[tuple[list[str], str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **kwargs):
@@ -55,7 +55,7 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
             result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio")
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
     assert result["docs"] == {
@@ -65,8 +65,8 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     }
     assert result["search"] == {"mode": "full", "doc_ids": []}
     assert calls == [
-        (["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"], calls[0][1]),
-        (["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"], calls[0][1]),
+        (["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"], calls[0][1]),
+        (["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"], calls[0][1]),
     ]
     assert result["diagnostics"]["search"]["mode"] == "full"
     assert result["diagnostics"]["search"]["doc_ids"] == []
@@ -75,12 +75,12 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
 
 def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **_kwargs):
         calls.append(list(command))
-        if any(str(part).endswith("build_docs.rb") for part in command):
+        if any(str(part).endswith("build_docs.py") for part in command):
             return Completed(stdout=DOCS_DIAGNOSTICS_STDOUT)
         return Completed(
             stdout=(
@@ -96,7 +96,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio", search_doc_ids=["a", "b"])
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["diagnostics"]["docs"]["scope"] == "studio"
     assert result["diagnostics"]["docs"]["source_files_scanned"] == 10
@@ -115,7 +115,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
 
 def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **_kwargs):
@@ -132,14 +132,12 @@ def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
             )
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["search"] == {"mode": "targeted", "doc_ids": ["child", "parent"]}
     assert calls[1] == [
-        "/tmp/bundle",
-        "exec",
-        "ruby",
-        "docs-viewer/build/build_search.rb",
+        "/tmp/python",
+        "docs-viewer/build/build_search.py",
         "--scope",
         "library",
         "--write",
@@ -151,7 +149,7 @@ def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
 
 def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
     original_fallback = write_rebuild.targeted_docs_build_fallback_reason
 
@@ -172,7 +170,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.targeted_docs_build_fallback_reason = original_fallback
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["docs"] == {
         "mode": "targeted",
@@ -182,10 +180,8 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     assert result["search"] == {"mode": "none", "doc_ids": []}
     assert calls == [
         [
-            "/tmp/bundle",
-            "exec",
-            "ruby",
-            "docs-viewer/build/build_docs.rb",
+            "/tmp/python",
+            "docs-viewer/build/build_docs.py",
             "--scope",
             "studio",
             "--write",
@@ -197,7 +193,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
 
 def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
     original_fallback = write_rebuild.targeted_docs_build_fallback_reason
 
@@ -218,19 +214,19 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.targeted_docs_build_fallback_reason = original_fallback
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["docs"] == {
         "mode": "full",
         "doc_ids": ["body-doc"],
         "reason": "full-scope fallback: existing docs index missing",
     }
-    assert calls == [["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"]]
 
 
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **_kwargs):
@@ -243,14 +239,14 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
             result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio", search_doc_ids=["", " "])
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["search"] == {"mode": "none", "doc_ids": []}
-    assert calls == [["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"]]
 
 
 def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(_command, **_kwargs):
@@ -267,7 +263,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
                 raise AssertionError("Expected rebuild failure to propagate")
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert message == "problem with front-matter on doc docs-viewer/source/studio/bad.md at line 7 column 1: could not find expected ':'"
 
@@ -364,7 +360,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
 
 def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **_kwargs):
@@ -377,21 +373,21 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
             result = write_rebuild.rebuild_all_docs_outputs(Path(temp_path))
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "library", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "analysis", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "tmp", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "library", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "analysis", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "tmp", "--write"],
     ]
 
 
 def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
     calls: list[list[str]] = []
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
 
     def fake_run(command, **_kwargs):
@@ -426,17 +422,17 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
             result = write_rebuild.rebuild_all_docs_outputs(repo_root)
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write"],
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
     ]
 
 
 def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
-    original_bundle = with_fake_bundle()
+    original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
     calls: list[list[str]] = []
 
@@ -478,7 +474,7 @@ def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
                 raise AssertionError("Expected docs rebuild to reject manage-mode public generated roots")
     finally:
         write_rebuild.subprocess.run = original_run
-        write_rebuild.detect_bundle_bin = original_bundle
+        write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert calls == []
 

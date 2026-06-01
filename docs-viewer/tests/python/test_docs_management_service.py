@@ -397,7 +397,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])
-    assert any(command["command"] == "./docs-viewer/build/build_docs.rb --scope research --write" for command in payload["build_commands"])
+    assert any(command["command"] == "./docs-viewer/build/build_docs.py --scope research --write" for command in payload["build_commands"])
 
 
 def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:

@@ -28,7 +28,7 @@ The watcher maps source roots directly onto docs scopes:
 - `docs-viewer/source/analysis/**/*.md` -> `analysis`
 - `docs-viewer/source/library/*.md` -> `library`
 
-The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./docs-viewer/build/build_docs.rb` and the Docs Viewer service.
+The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./docs-viewer/build/build_docs.py` and the Docs Viewer service.
 
 It watches source roots only. It does not watch generated outputs under:
 
@@ -59,7 +59,6 @@ Default behavior:
 ## Optional Flags
 
 - `--repo-root /path/to/dotlineform-site`: override root auto-detection by parent-searching for `_config.yml`
-- `--bundle-bin /path/to/bundle`: override bundle executable path
 - `--poll-seconds 1.0`: polling interval
 - `--debounce-seconds 1.0`: quiet window before rebuild
 - `--targeted-search-threshold 5`: maximum changed file count for targeted docs-search updates; use `-1` to target whenever the affected ids are safe
@@ -69,21 +68,21 @@ Default behavior:
 When the watcher sees a change for one scope, it runs:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope <scope> --write
-./docs-viewer/build/build_search.rb --scope <scope> --write --only-doc-ids <ids> --remove-missing
+./docs-viewer/build/build_docs.py --scope <scope> --write
+./docs-viewer/build/build_search.py --scope <scope> --write --only-doc-ids <ids> --remove-missing
 ```
 
 When affected ids are safe, the docs payload command becomes:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope <scope> --write --only-doc-ids <ids>
+./docs-viewer/build/build_docs.py --scope <scope> --write --only-doc-ids <ids>
 ```
 
 If targeted docs payload prerequisites are missing, the docs payload step falls back to:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope <scope> --write
-./docs-viewer/build/build_search.rb --scope <scope> --write --only-doc-ids <ids> --remove-missing
+./docs-viewer/build/build_docs.py --scope <scope> --write
+./docs-viewer/build/build_search.py --scope <scope> --write --only-doc-ids <ids> --remove-missing
 ```
 
 This usually happens when source docs were added while the watcher was not running, leaving generated payloads missing for unselected docs.
@@ -92,8 +91,8 @@ The full docs payload pass catches the scope up, while the search step can remai
 When the changed-file count exceeds `--targeted-search-threshold`, or when the parsed snapshot cannot safely identify affected ids, both docs and search fall back to:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope <scope> --write
-./docs-viewer/build/build_search.rb --scope <scope> --write
+./docs-viewer/build/build_docs.py --scope <scope> --write
+./docs-viewer/build/build_search.py --scope <scope> --write
 ```
 
 That means a source change under one docs root keeps both:
