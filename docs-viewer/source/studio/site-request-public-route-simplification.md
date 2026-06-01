@@ -12,8 +12,8 @@ viewable: true
 Status:
 
 - draft
-- This request should define the cleaner public route model before the public static-site builder migration starts.
-- Do not create an implementation task list until the route model and 404 behavior are agreed.
+- This request defines the cleaner public route model before the public static-site builder migration starts.
+- The route model and 404 behavior are agreed; the next step is to create an implementation task list.
 
 ## Summary
 
@@ -51,8 +51,8 @@ The route simplification work should concentrate those responsibilities before a
 
 ## Goals
 
-- define the canonical public route model for catalogue browsing before the Jekyll replacement
-- decide whether works, series, moments, and work details need dedicated path routes or can use query/state-driven route shells
+- implement the canonical public route model for catalogue browsing before the Jekyll replacement
+- move works, series state, and work details to query/state-driven route shells where that reduces route count without harming current navigation
 - reduce route count and build complexity when there is no clear user-facing reason to keep per-record pages
 - preserve current first-party navigation flows from public indexes, grids, search, and Docs Viewer references
 - define a clean public `404.html` behavior for retired or unknown routes
@@ -70,18 +70,56 @@ The route simplification work should concentrate those responsibilities before a
 - changing generated catalogue data schemas unless the chosen navigation model genuinely needs a narrow URL or state-field update
 - changing Library or Analysis Docs Viewer route ownership unless a public-link dependency needs adjustment
 
-## Proposed Defaults
+## Design Decisions
 
-Use these defaults unless route review finds a better model:
+Use these decisions for the implementation task list:
 
 - keep stable top-level public shells for `/series/`, `/works/`, `/recent/`, `/catalogue/search/`, `/library/`, and `/analysis/`
 - prefer query/state-driven catalogue record views where this preserves user workflows with fewer generated HTML files
 - avoid generating per-record route stubs solely to keep URLs readable
 - do not add broad compatibility redirect tables for old per-record URLs
-- provide a clean `404.html` with a short route back to current public navigation
+- provide a clean `404.html` with simple "page unavailable" copy and a link back to `/series/`, the current public home/root experience
 - keep URL/state contracts as small as possible; use query parameters when they are the simplest way to restore the intended view, but do not replicate current URL fields or path shapes without a current user need
-- prefer runtime URL builders over storing redundant generated URL fields when a URL can be derived from record id plus route state
+- dynamically derive public URLs in runtime helpers from record id plus route state; if persistent generated URL fields exist, remove them unless a documented non-derivable exception is found
+- centralize public URL construction and route-state parsing before the static-builder migration; route strings should not be assembled independently across page scripts
 - use Jekyll only as the existing rendering/preview mechanism during this request; do not make the route model depend on Jekyll collections as a durable contract
+
+## Route Design
+
+Preferred canonical shape:
+
+```text
+/series/                         catalogue/series index shell
+/series/?series=009              selected/filtered series state in the catalogue index shell
+/series/?mode=moments            moments browse state in the catalogue index shell
+
+/works/                          works list shell
+/works/?work=00001               selected work view
+/works/?work=00001&series=009    selected work with series navigation context
+
+/work-details/?detail=00001-001  selected work detail view
+/moments/                        explicit recovery route to /series/?mode=moments
+/moments/a-doll-story/           individual moment page
+```
+
+Design rationale:
+
+- use one fixed shell per public record family instead of one generated HTML page per record
+- keep copied URLs restorable through explicit query parameters
+- treat query parameters as route state, not as compatibility shims for old paths
+- treat selected series as state in the existing `/series/` catalogue index shell rather than as a separate series page family
+- keep the historically named `/series/` route as the single public catalogue entry point for works, series, and moments unless route naming becomes a real blocker
+- keep moments discoverable through the `/series/` catalogue index mode rather than adding moments back to the top navigation
+- make `/moments/` an explicit recovery route to `/series/?mode=moments`, with a visible fallback link, rather than allowing local directory listings or accidental 404 behavior
+- individual moment pages can remain path routes for now because the current interaction opens a selected moment from the catalogue index grid/list
+- keep work details as selected state in the `/work-details/` shell for this route simplification, with explicit links back to parent work context
+- keep first-party navigation context, such as selected series, in query parameters only when it changes visible behavior
+- keep important return paths in explicit in-page back links rather than depending on browser history
+- prefer `/work-details/` over the legacy `/work_details/` spelling because old inbound compatibility is not required
+- avoid preserving path-style routes solely because they are more readable
+- centralize URL construction and parsing in public runtime helpers so templates, search, generated payloads, and Studio previews do not each invent route shapes
+- use `assets/js/public-catalogue-runtime.js` as the first likely owner for the browser-side route helper contract unless implementation review shows a smaller dedicated route module is cleaner
+- treat browser history as best-effort; predictable back/forward behavior is useful, but explicit page back links carry the navigation context that matters
 
 ## Current Surfaces To Review
 
@@ -103,17 +141,20 @@ The simplified route model must account for these current route assumptions:
   currently gets `detail_uid` from the Jekyll page slug and builds back/prev/next links around `/works/<work_id>/` and `/work_details/<detail_uid>/`
 - `_layouts/moment.html`
   currently gets moment identity from the Jekyll page slug
+- `/moments/`
+  currently has inconsistent behavior: local preview may expose a directory listing while the public site returns 404; target behavior is a small redirect/recovery page to `/series/?mode=moments`
 - catalogue search runtime
   currently emits path-style result URLs for works, series, moments, or work details
 - generated public catalogue payloads
-  may contain URL fields or route assumptions; review whether each is still needed rather than carrying fields forward by default
+  should not store derivable public URLs; if URL fields or route assumptions are found, remove or replace them with runtime-derived helpers unless a documented exception is required
 - Docs Viewer semantic references
-  may link from public Library or Analysis docs to catalogue work, series, or moment targets
+  publish as normal public links in Library or Analysis docs, so they must move to the new catalogue route model without exposing special-link behavior to the user
 - Studio public-link helpers
   may need to resolve public preview links against the new route contract
 
 The durable outcome should be a small public route helper contract driven by actual navigation and share-state needs.
-Generated URL fields should be retained only when they remove real complexity or represent data the runtime cannot cheaply derive.
+Generated public payloads should avoid persistent URL fields because URLs are route projections, not record data.
+Browser-side route building and route parsing should live together, so selected work, selected series, selected detail, selected moment, and navigation context are handled consistently.
 
 ## Implementation Sequence Shape
 
@@ -132,47 +173,34 @@ The implementation task list should follow this order once the route model is ag
 The later static-builder request should not need to know the old route model.
 It should consume only the route contract produced by this request.
 
-## Route Model Questions
+## Recommended Verification
 
-Answer these before creating an implementation task list.
+Use this smoke set for the implementation task list:
 
-1. Work pages:
-   Should individual works keep `/works/<work_id>/`, move to `/works/?work=<work_id>`, or use another shell/query shape?
-
-2. Series pages:
-   Should individual series keep `/series/<series_id>/`, move to `/series/?series=<series_id>`, or merge into the existing series index state model?
-
-3. Work detail pages:
-   Should work details remain independent public pages, become state within a work page, or use a single `/work_details/?detail=<detail_uid>` shell?
-
-4. Moments:
-   Should moments keep individual readable paths, move to one route shell, or be represented through the same catalogue browse/search experience as works and series?
-
-5. Search and generated URL fields:
-   Which generated payload fields currently store public URLs, and are they still needed?
-   If a URL can be derived from id plus route state, prefer deriving it in the runtime helper rather than preserving a generated field.
-
-6. Public runtime helpers:
-   Which JavaScript helpers build public URLs, and should they centralize on one canonical route builder before the static-builder migration?
-
-7. Docs Viewer semantic references:
-   Do public Library or Analysis docs link to catalogue work, series, or moment URLs that must move to the new model?
-
-8. Browser history and sharing:
-   Which views actually need restorable copied URLs, and which transient navigation context can remain local UI state?
-
-9. 404 behavior:
-   What should `404.html` show, and which current navigation target should it offer as the primary recovery path?
-
-10. Verification:
-    Which public smoke tests should prove that index navigation, search-result navigation, series navigation, detail opening, browser back/forward, and unknown routes behave correctly?
+- build the current Jekyll public site to an isolated temporary destination
+- serve the built output through a local static server
+- load `/series/` and verify works mode renders
+- switch to moments mode and verify `/series/?mode=moments` restores moments browse state
+- open a selected series state through `/series/?series=<series_id>` and verify the filtered/selected view renders
+- open a selected work through `/works/?work=<work_id>` and verify title, media, metadata, and explicit back link render
+- open a selected work with series context through `/works/?work=<work_id>&series=<series_id>` and verify prev/next series navigation
+- open a work detail through `/work-details/?detail=<detail_uid>` and verify media, title, explicit back link, and detail prev/next behavior
+- open a moment from the catalogue moments grid/list and verify the individual moment page renders
+- open `/moments/` and verify it recovers to `/series/?mode=moments` with a visible fallback link
+- open catalogue search, choose a work/series/moment result, and verify the result uses the canonical route helper
+- load a public Library or Analysis semantic reference link and verify it resolves to the canonical catalogue route
+- load an unknown retired route and verify `404.html` shows "page unavailable" with a `/series/` recovery link
+- run a focused source scan to catch stale first-party route string assembly outside the canonical route helper
 
 ## Acceptance Criteria For The Spec
 
 - the canonical public route model is documented before Jekyll replacement begins
 - old inbound URL compatibility is explicitly not required
 - first-party public navigation still reaches works, series, moments, work details, catalogue search, Library, and Analysis as needed
-- generated public URL fields are removed or retained based on current navigation needs, not on preserving old route shapes
+- moments remain part of the single catalogue entry point, not a top-nav route family
+- `/moments/` no longer exposes a local directory listing and recovers to `/series/?mode=moments`
+- generated public URL fields are removed if they exist, unless a documented non-derivable exception is required
 - runtime URL helpers own derivable URLs and route-state parsing where practical
-- unknown retired routes resolve to a clean 404 experience
+- important return navigation is available through explicit in-page links, with browser history treated as useful but not primary
+- unknown retired routes resolve to a clean `404.html` with a `/series/` recovery link
 - the later public static-site builder can enumerate a smaller, explicit route set
