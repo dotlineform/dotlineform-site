@@ -40,8 +40,10 @@ The current checked-in Python packages are:
 The Docs HTML import implementation currently lives in `docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
 
-The Docs Viewer v2 Markdown renderer starts from `MarkdownIt("commonmark")`.
-No renderer plugins are enabled in the initial dependency pin; later syntax additions must record their enabled plugins in this document and in the renderer fixtures.
+The shared Python Markdown renderer lives at `studio/shared/python/markdown_renderer.py`.
+It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
+Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
+Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
 
 ## Parser Stack Roles
 
