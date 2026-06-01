@@ -284,9 +284,9 @@
         "kind": "work",
         "id": "00638",
         "source_markdown": "# 3 symbols\n\nWork prose with **emphasis** and [series link](/series/026/).",
-        "content_html": "<h1 id=\"3-symbols\">3 symbols</h1>\n<p>Work prose with <strong>emphasis</strong> and <a href=\"/series/026/\">series link</a>.</p>\n",
+        "content_html": "<h1>3 symbols</h1>\n<p>Work prose with <strong>emphasis</strong> and <a href=\"/series/026/\">series link</a>.</p>\n",
         "html_semantics_contains": [
-          "<h1 id=\"3-symbols\">3 symbols</h1>",
+          "<h1>3 symbols</h1>",
           "<strong>emphasis</strong>",
           "<a href=\"/series/026/\">series link</a>"
         ]

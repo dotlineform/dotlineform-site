@@ -85,6 +85,8 @@ ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analyt
 if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
     sys.path.insert(0, str(ANALYTICS_PACKAGE_DIR))
 
+from markdown_renderer import render_markdown_to_html  # noqa: E402
+
 try:
     from catalogue import catalogue_generation_indexes as indexes
     from catalogue import catalogue_generation_moments as moment_artifacts
@@ -292,26 +294,16 @@ def write_index_json_payload(
     return True
 
 
-def render_markdown_with_jekyll(markdown_path: Path) -> str:
-    """Render a markdown file to HTML using the repo's local Jekyll stack."""
-    renderer_script = REPO_ROOT / "studio" / "shared" / "ruby" / "render_markdown_with_jekyll.rb"
-    if not renderer_script.exists():
-        raise SystemExit(f"Markdown renderer helper not found: {renderer_script}")
-
-    bundle_path = shutil.which("bundle")
-    if bundle_path is None:
-        raise SystemExit("Bundler not found in PATH; ensure the local Jekyll toolchain is available before generating moment JSON.")
-
-    proc = subprocess.run(
-        [bundle_path, "exec", "ruby", str(renderer_script), str(markdown_path.resolve())],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout).strip()
-        raise SystemExit(f"Failed to render markdown with Jekyll: {markdown_path}\n{detail}")
-    return proc.stdout
+def render_catalogue_prose_markdown(markdown_path: Path) -> str:
+    """Render trusted catalogue prose Markdown with the shared Python renderer."""
+    try:
+        markdown = markdown_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"Failed to read catalogue prose markdown: {markdown_path} ({exc})") from exc
+    try:
+        return render_markdown_to_html(markdown)
+    except Exception as exc:  # noqa: BLE001
+        raise SystemExit(f"Failed to render catalogue prose markdown: {markdown_path}\n{exc}") from exc
 
 
 def parse_sips_pixel_dims(output: str) -> tuple[Optional[int], Optional[int]]:
@@ -1043,7 +1035,7 @@ def main() -> None:
                 source_prose_path = resolve_series_prose_source_path(series_id)
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
-                    content_html = render_markdown_with_jekyll(source_prose_path)
+                    content_html = render_catalogue_prose_markdown(source_prose_path)
 
                 payload_version = compute_payload_version(
                     compact_json_object({
@@ -1401,7 +1393,7 @@ def main() -> None:
                 work_record = records.build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
-                    content_html = render_markdown_with_jekyll(source_prose_path)
+                    content_html = render_catalogue_prose_markdown(source_prose_path)
                 payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections, "content_html": content_html}))
 
                 payload = compact_json_object({
@@ -1652,7 +1644,7 @@ def main() -> None:
                         print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                         moments_pages_written += 1
 
-                content_html = render_markdown_with_jekyll(source_prose_path)
+                content_html = render_catalogue_prose_markdown(source_prose_path)
                 payload = moment_artifacts.build_moment_record_payload(
                     moment_record,
                     content_html=content_html,

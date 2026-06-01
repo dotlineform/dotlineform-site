@@ -33,12 +33,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Confirmed Analytics documents Data Sharing apply reaches the same Python Docs Viewer rebuild helper as Docs management writes, and added regression coverage that returned-package summary apply invokes `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py` rather than Bundler, Ruby, or `.rb` builders.
 - Added the Python catalogue search builder entrypoint at `studio/services/catalogue/search/build_search.py`, covering the current catalogue search schema, config validation, dry-run/write/force modes, BLAKE2b content versioning, source JSON overrides, docs-only flag rejection, and additive-only `--only-records` targeted behavior. Callers still use the Ruby builder until the task 15 orchestration swap.
 - Switched catalogue search caller orchestration to `studio/services/catalogue/search/build_search.py` through `catalogue_build_commands.py`. Scoped builds, field-aware previews, publication/delete follow-through, bulk build targets, and direct catalogue search rebuild helpers no longer resolve Bundler or invoke Ruby for catalogue search.
+- Moved catalogue prose rendering in `studio/services/catalogue/generate_work_pages.py` to the shared Python Markdown renderer. Work, series, and moment `content_html` generation no longer invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`; focused fixtures cover representative prose semantics without Jekyll/Kramdown markup lock-in.
 
 ## Next Task Steer
 
-Continue with Phase 3 task 16: move catalogue prose rendering to the shared Python Markdown renderer.
+Continue with Phase 4 task 17: make `bin/local-studio` Python/JS only.
 
-Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation and caller orchestration now use Python. The next remaining app-facing Ruby helper family is catalogue prose rendering in `studio/services/catalogue/generate_work_pages.py`.
+Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation/caller orchestration and catalogue prose rendering now use Python. The next remaining app-facing Ruby assumptions are launcher/runtime command checks and public-preview-only Ruby boundaries.
 
 ## Implementation Steer
 
@@ -127,7 +128,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | 14 | done | Build the Python catalogue search builder that replaces `studio/services/catalogue/search/build_search.rb`. Preserve the current catalogue search index contract consumed by public search and local app links, including dry-run/write modes, targeted-record behavior, config validation, and failure output. |
 | 15 | done | Switch catalogue search callers to the Python builder. Update `studio/services/catalogue/catalogue_build_commands.py`, `catalogue_build_service.py`, `catalogue_json_build.py`, publication/delete flows, bulk flows, and affected tests so catalogue search rebuilds no longer resolve Bundler or invoke Ruby. |
-| 16 | planned | Move catalogue prose rendering to the shared Python Markdown renderer. Update `studio/services/catalogue/generate_work_pages.py` so work, series, and moment `content_html` no longer uses `studio/shared/ruby/render_markdown_with_jekyll.rb`; add focused fixtures for representative prose. |
+| 16 | done | Move catalogue prose rendering to the shared Python Markdown renderer. Update `studio/services/catalogue/generate_work_pages.py` so work, series, and moment `content_html` no longer uses `studio/shared/ruby/render_markdown_with_jekyll.rb`; add focused fixtures for representative prose. |
 
 ### Phase 4: Launchers, Tests, Cleanup, And Docs
 
