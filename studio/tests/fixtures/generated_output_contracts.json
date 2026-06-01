@@ -110,8 +110,8 @@
             "target_title": "3 symbols",
             "target_status": "published",
             "target_href": "/works/00638/",
-            "reference_count": 2,
-            "target_payload_url": "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
+            "count": 2,
+            "bucket_url": "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
           }
         ]
       },
@@ -119,25 +119,27 @@
         "path_pattern": "<docs_scope.output>/references/by-target/<target_kind>/<target_id>.json",
         "required_top_level_keys": [
           "header",
-          "target",
+          "target_key",
+          "target_kind",
+          "target_id",
+          "target_href",
+          "target_title",
+          "target_status",
+          "count",
           "references"
         ],
         "header": {
-          "schema": "docs_semantic_reference_target_v1",
+          "schema": "docs_semantic_references_by_target_v1",
           "scope": "studio",
-          "target_kind": "work",
-          "target_id": "00638",
-          "count": 2,
-          "generated_at": "timestamp"
+          "count": 2
         },
-        "target": {
-          "target_kind": "work",
-          "target_id": "00638",
-          "target_key": "work:00638",
-          "target_title": "3 symbols",
-          "target_status": "published",
-          "target_href": "/works/00638/"
-        },
+        "target_key": "work:00638",
+        "target_kind": "work",
+        "target_id": "00638",
+        "target_href": "/works/00638/",
+        "target_title": "3 symbols",
+        "target_status": "published",
+        "count": 2,
         "references": [
           {
             "source_scope": "studio",
@@ -145,12 +147,6 @@
             "source_title": "Contract Fixture",
             "source_path": "contract-fixture.md",
             "source_viewer_url": "/docs/?scope=studio&doc=contract-fixture",
-            "target_kind": "work",
-            "target_id": "00638",
-            "target_key": "work:00638",
-            "target_href": "/works/00638/",
-            "target_title": "3 symbols",
-            "target_status": "published",
             "label": "three signs",
             "action": "link",
             "ordinal": 1
@@ -161,12 +157,6 @@
             "source_title": "Other Contract Fixture",
             "source_path": "other-contract-fixture.md",
             "source_viewer_url": "/docs/?scope=studio&doc=other-contract-fixture",
-            "target_kind": "work",
-            "target_id": "00638",
-            "target_key": "work:00638",
-            "target_href": "/works/00638/",
-            "target_title": "3 symbols",
-            "target_status": "published",
             "label": "3 symbols",
             "action": "link",
             "ordinal": 2

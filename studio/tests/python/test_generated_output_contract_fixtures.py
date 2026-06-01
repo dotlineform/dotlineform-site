@@ -139,13 +139,15 @@ def test_docs_viewer_reference_payload_contract_fixtures() -> None:
     assert_equal(index_fixture["header"]["schema"], "docs_semantic_references_index_v1", "references index schema")
     assert_equal(index_fixture["header"]["target_count"], len(index_fixture["targets"]), "references target count")
     target = index_fixture["targets"][0]
-    for key in ("target_kind", "target_id", "target_key", "target_title", "target_status", "target_href", "reference_count"):
+    for key in ("target_kind", "target_id", "target_key", "target_title", "target_status", "target_href", "count"):
         assert_true(target.get(key) not in (None, ""), f"references index target {key}")
-    assert_contains(target["target_payload_url"], "/references/by-target/work/00638.json", "target payload URL")
+    assert_contains(target["bucket_url"], "/references/by-target/work/00638.json", "target bucket URL")
 
     assert_required_keys(target_fixture, target_fixture["required_top_level_keys"], "references by-target")
-    assert_equal(target_fixture["header"]["schema"], "docs_semantic_reference_target_v1", "target schema")
+    assert_equal(target_fixture["header"]["schema"], "docs_semantic_references_by_target_v1", "target schema")
     assert_equal(target_fixture["header"]["count"], len(target_fixture["references"]), "target reference count")
+    for key in ("target_kind", "target_id", "target_key", "target_status", "target_href", "target_title", "count"):
+        assert_true(target_fixture.get(key) not in (None, ""), f"target payload {key}")
     sample_reference = target_fixture["references"][0]
     for key in (
         "source_scope",
@@ -153,12 +155,6 @@ def test_docs_viewer_reference_payload_contract_fixtures() -> None:
         "source_title",
         "source_path",
         "source_viewer_url",
-        "target_kind",
-        "target_id",
-        "target_key",
-        "target_href",
-        "target_title",
-        "target_status",
         "label",
         "action",
         "ordinal",
