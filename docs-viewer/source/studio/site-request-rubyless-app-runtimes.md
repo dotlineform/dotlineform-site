@@ -2,7 +2,7 @@
 doc_id: site-request-rubyless-app-runtimes
 title: Rubyless App Runtimes Request
 added_date: 2026-05-30
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -15,6 +15,10 @@ Status:
 - This request defines the path to a JavaScript + Python app/tooling stack.
 - Treat the Docs Viewer work as Docs Viewer v2: choose the right Python/JavaScript rendering and authoring approach rather than preserving incidental proof-of-concept output.
 - Ruby/Jekyll stays only as a manual public-site preview/build layer until the public site itself is replaced.
+
+## Task Tracker
+
+Use [Rubyless App Runtimes Tasks](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes-tasks) for the implementation sequence, task status, and closeout tracking.
 
 ## Summary
 
@@ -68,6 +72,111 @@ Ruby/Jekyll
 
 Jekyll should consume generated assets; it should not be a dependency for generating app data or helping Docs Viewer function.
 
+## Current Ruby Dependency Map
+
+This is the current app-facing Ruby dependency surface found in Studio, Docs Viewer, and Analytics source modules. Public-site-only wrappers such as `bin/public-site-preview` and `bin/public-site-build` remain intentionally outside this app-runtime list.
+
+Ruby scripts and helpers currently in the app/data-generation path:
+
+- `docs-viewer/build/build_docs.rb`
+  - builds Docs Viewer payloads for configured scopes
+  - directly requires `studio/shared/ruby/jekyll_markdown_renderer.rb`
+  - owns current custom Docs Viewer token expansion before Markdown rendering
+- `docs-viewer/build/build_search.rb`
+  - builds Docs Viewer search indexes for docs scopes
+- `studio/services/catalogue/search/build_search.rb`
+  - builds the catalogue search index
+- `studio/shared/ruby/jekyll_markdown_renderer.rb`
+  - initializes the Jekyll Markdown converter used by Docs Viewer and catalogue prose rendering
+- `studio/shared/ruby/render_markdown_with_jekyll.rb`
+  - command helper used by Python services to render or validate Markdown through Jekyll
+- `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb`
+  - Jekyll server helper; should remain public-preview-only if still needed after app runtime cleanup
+
+Docs Viewer direct dependencies:
+
+- `docs-viewer/services/docs_write_rebuild.py`
+  - detects Bundler and runs `bundle exec ruby docs-viewer/build/build_docs.rb`
+  - runs `bundle exec ruby docs-viewer/build/build_search.rb`
+  - used for single-scope rebuilds, targeted docs/search rebuilds, and all-scope rebuilds
+- `docs-viewer/services/docs_live_rebuild_watcher.py`
+  - detects Bundler and runs the Ruby Docs Viewer docs/search builders whenever watched source Markdown changes
+- `docs-viewer/services/docs_html_import.py`
+  - runs `bundle exec ruby studio/shared/ruby/render_markdown_with_jekyll.rb` to validate staged import Markdown previews
+  - this validation is reached by HTML, Markdown, Markdown package, text, SVG, image, and file-media import previews
+- `docs-viewer/services/docs_scope_manifest.py`
+  - emits Docs Viewer scope lifecycle build commands that name `docs-viewer/build/build_docs.rb` and `docs-viewer/build/build_search.rb`
+  - create/delete apply paths execute the rebuilds through `docs_write_rebuild.py`
+- `docs-viewer/services/docs_management_service.py`
+  - manual `/docs/rebuild` and source-config write follow-through call `docs_write_rebuild.py`
+- `docs-viewer/services/docs_management_routes.py`
+  - exposes Docs Viewer management endpoints that dispatch rebuild, mutation, lifecycle, and import requests to the Ruby-backed services listed here
+- `docs-viewer/services/docs_management_mutation_service.py`
+  - create, metadata, viewability, move, delete, and multi-scope mutation follow-through calls `docs_write_rebuild.py`
+- `docs-viewer/services/docs_management_import_service.py`
+  - source import apply paths call `docs_write_rebuild.py`
+- `docs-viewer/services/docs_import_source_service.py`
+  - staged source import previews call `docs_html_import.py`
+  - staged source import create/overwrite apply paths call `docs_write_rebuild.py`
+- `docs-viewer/services/docs_data_sharing/write.py`
+  - returned document package apply writes source Markdown and calls the injected `perform_source_write_and_rebuild` dependency
+
+Studio direct dependencies:
+
+- `bin/local-studio`
+  - resolves Bundler at startup
+  - runs `bundle exec ruby docs-viewer/build/build_docs.rb --scope <scope> --write` for `DOCS_STARTUP_REBUILD_SCOPES`
+  - runs `bundle exec ruby docs-viewer/build/build_search.rb --scope <scope> --write` for the same startup rebuild scopes
+  - starts `docs-viewer/services/docs_live_rebuild_watcher.py`, which currently depends on the Ruby docs/search builders
+- `studio/services/catalogue/catalogue_build_commands.py`
+  - resolves Bundler and constructs `bundle exec ruby studio/services/catalogue/search/build_search.rb --scope catalogue`
+- `studio/services/catalogue/catalogue_build_service.py`
+  - uses the catalogue build command helper for catalogue search rebuilds after scoped catalogue writes
+- `studio/services/catalogue/catalogue_write_service.py`
+  - catalogue write preview/apply routes call `catalogue_build_service.py`
+- `studio/services/catalogue/catalogue_work_service.py`, `studio/services/catalogue/catalogue_series_service.py`, `studio/services/catalogue/catalogue_moment_service.py`, and `studio/services/catalogue/catalogue_work_detail_service.py`
+  - scoped work, series, moment, and detail writes call `catalogue_build_service.py`
+- `studio/services/catalogue/catalogue_bulk_service.py`
+  - bulk-add workflows call `catalogue_build_service.py`
+- `studio/services/catalogue/catalogue_publication_service.py` and `studio/services/catalogue/catalogue_delete_service.py`
+  - publication/delete workflows call the Ruby-backed catalogue search rebuild helper
+- `studio/services/catalogue/catalogue_json_build.py`
+  - adds the Ruby catalogue search builder to scoped JSON build command plans when `rebuild_search` is enabled
+- `studio/services/catalogue/generate_work_pages.py`
+  - runs `bundle exec ruby studio/shared/ruby/render_markdown_with_jekyll.rb`
+  - uses that helper to render source prose into `content_html` for series JSON, work JSON, and moment JSON payloads
+- `studio/commands/run_checks.py`
+  - the docs profile invokes `./docs-viewer/build/build_docs.rb --scope studio --write`
+  - the docs profile invokes `./docs-viewer/build/build_search.rb --scope studio --write`
+  - docs-viewer smoke profiles still use Jekyll temp builds for browser smoke setup; that is verification/public-preview coupling, not a desired app runtime dependency
+
+Analytics dependencies:
+
+- `bin/local-analytics`
+  - no direct Ruby, Bundler, Jekyll, or `.rb` script invocation
+- `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
+  - no direct Ruby invocation, but the documents Data Sharing handler injects `docs_write_rebuild.perform_source_write_and_rebuild`
+  - returned document package apply can therefore reach the Ruby Docs Viewer docs/search builders through `docs-viewer/services/docs_data_sharing/write.py`
+- `analytics-app/app/server/analytics_app/tag_services/*`
+  - no direct Ruby script dependency found in the current tag registry, alias, group, assignment, promotion, activity, or route modules
+- `analytics-app/app/frontend/js/*`
+  - no direct Ruby script dependency found in the current browser modules
+
+Current test/check references that will need to move with the implementation:
+
+- `docs-viewer/tests/python/test_docs_write_rebuild.py`
+  - asserts the current `bundle exec ruby docs-viewer/build/build_docs.rb` and `bundle exec ruby docs-viewer/build/build_search.rb` command shapes
+- `docs-viewer/tests/python/test_docs_live_rebuild_watcher.py`
+  - asserts the watcher calls the Ruby Docs Viewer builders
+- `docs-viewer/tests/python/test_docs_import_service.py`
+  - patches `validate_markdown_with_jekyll` and rebuild helpers around import workflows
+- `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
+  - patches Docs Viewer rebuild and Jekyll validation helpers for management workflow smoke coverage
+- `studio/tests/python/test_catalogue_build_commands.py`
+  - asserts the current Ruby catalogue search command shape
+- `studio/tests/python/test_docs_logs_indexes.py`
+  - still records `docs-viewer/build/build_docs.rb` as a related file in docs log index fixtures
+
 ## Goals
 
 - replace `docs-viewer/build/build_docs.rb` with a Python Docs Viewer payload builder, including the current custom Markdown token pipeline
@@ -86,26 +195,6 @@ Jekyll should consume generated assets; it should not be a dependency for genera
 - accidental app UI behavior changes caused only by swapping implementation language
 - moving local write services into JavaScript
 - making browser code write to the filesystem directly
-
-## Implementation Tasks
-
-Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
-
-| ID | status | action |
-| --- | --- | --- |
-| 1 | planned | Build the Python Docs Viewer payload builder that replaces `docs-viewer/build/build_docs.rb`. It should read Markdown source and scope config, parse front matter, apply the custom token pipeline, render document HTML/text, write `index.json` and `by-id/*.json`, and preserve the generated Docs Viewer data shape. |
-| 2 | planned | Switch Docs Viewer docs generation callers to the Python builder. Update live rebuild watcher, local app commands, docs, and tests so Docs Viewer payloads no longer require Ruby or Jekyll rendering. |
-| 3 | planned | Build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`. It should consume generated docs payloads, preserve current search index schema/versioning behavior, and support scope-specific writes. |
-| 4 | planned | Switch Docs Viewer search generation callers to the Python builder. Update live rebuild watcher, local app commands, docs, and tests so docs search no longer requires Ruby. |
-| 5 | planned | Build the Python catalogue search builder that replaces `studio/services/catalogue/search/build_search.rb`. Preserve the current catalogue search index contract consumed by public search and local app links. |
-| 6 | planned | Retire app-facing Ruby markdown/Jekyll helpers. Remove or isolate `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb` from app/data-generation paths. Any remaining use must be public-preview-only. |
-| 7 | planned | Make `bin/local-studio` and related app launchers Python/JS only. They may expose configured public preview URLs, but they must not start, check, or require Jekyll for app health. |
-| 8 | planned | Confirm Studio is JavaScript + Python only. `/studio/`, route shells, runtime config, catalogue editors, audits, activity, Docs links, and APIs should run from Python server + JS frontend + Python builders. |
-| 9 | planned | Confirm Analytics is JavaScript + Python only. Analytics routes, tag workflows, Data Sharing flows, runtime config, generated app data, and APIs should not depend on Ruby/Jekyll. |
-| 10 | planned | Confirm Docs Viewer management is JavaScript + Python only. `/docs/` management, source mutations, scope config, generated docs payloads, and generated search should all be Python/JS. Public `/library/` and `/analysis/` remain public-site preview concerns. |
-| 11 | planned | Confirm UI Catalogue is JavaScript + Python/static only. Serve demos without Jekyll and keep public-site integration checks separate. |
-| 12 | planned | Update command docs and runtime docs. Describe Ruby only under manual public preview/build, and describe Docs Viewer generation, search generation, catalogue search generation, app servers, and live rebuilds as Python/JS. |
-| 13 | planned | Final closeout. Run app smoke checks, Docs Viewer v2 builder acceptance checks, catalogue search contract checks, and a separate manual-public-site/Jekyll build check. Record any remaining Ruby usage as public-preview-only or deferred public-site renderer work. |
 
 ## Current Custom Token Implementation
 
@@ -144,6 +233,7 @@ Docs Viewer v2 may keep this syntax, adapt it, or replace it with a cleaner synt
 The current rendered HTML is not a formal contract. It is the output from the proof-of-concept Docs Viewer builder: Markdown went in, HTML came out, and the viewer used it.
 
 The replacement should not chase byte-for-byte parity with Jekyll/Kramdown or freeze incidental current markup.
+Jekyll/Kramdown output is not the benchmark for the Python renderer, and the migration should not add automated comparison checks against current Jekyll-rendered HTML.
 
 The target is a better Docs Viewer v2 content pipeline that supports what the site actually needs:
 
@@ -155,7 +245,56 @@ The target is a better Docs Viewer v2 content pipeline that supports what the si
 - browser behavior in Docs Viewer and public read-only installs
 - room to change token syntax, preprocessing, renderer library, or viewer UI behavior when that is the best solution
 
-The public site consumes generated HTML/data assets. Jekyll currently provides public routing stubs and public-site preview/build mechanics; it should not define the Docs Viewer content-generation contract.
+The public site consumes generated HTML/data assets. Jekyll currently provides public routing stubs and public-site preview/build mechanics; it does not own critical Markdown-to-HTML conversion for the app surfaces covered by this request and should not define the Docs Viewer content-generation contract.
+
+## Markdown Library Decision
+
+The Python Docs Viewer builder should use a third-party Markdown library for Markdown parsing and HTML rendering. It should not hand-roll a Markdown parser.
+
+Recommended default: use `markdown-it-py`, pinned in `requirements.txt`, with the smallest enabled syntax set that satisfies the acceptance fixtures.
+
+Rationale:
+
+- `markdown-it-py` has a CommonMark baseline, configurable parsing rules, and a plugin model. Its docs describe core support for GFM-style tables, strikethrough, task lists, and alerts, with additional plugins available through `mdit-py-plugins`.
+- The token/rule architecture is a better fit for Docs Viewer v2 than treating Markdown as opaque text forever. The first implementation may still preprocess current custom tokens before rendering, but the library leaves room to move media, interactive HTML, and semantic reference handling into explicit parser/renderer rules later.
+- CommonMark gives the app a clearer future contract than the current incidental Jekyll/Kramdown output. The request already accepts that generated HTML is not byte-for-byte stable, and does not treat current Jekyll/Kramdown output as a reference baseline.
+- The project already accepts focused Python dependencies for Docs Viewer import behavior (`beautifulsoup4`, `lxml`, `bleach`, `Pillow`). A pinned Markdown renderer is a similar app-runtime dependency and is easier to reason about than keeping Ruby/Jekyll in the app path.
+
+Pros of using a third-party Markdown library:
+
+- avoids owning the full Markdown parsing surface, including nested lists, fenced code, raw HTML blocks, escaping, links, images, tables, and edge cases
+- reduces implementation time and parser-bug risk
+- gives a documented syntax baseline for future authoring guidance
+- supports focused acceptance fixtures around document semantics instead of parser internals
+- keeps Markdown rendering in-process in Python, without Bundler, Ruby, Jekyll site initialization, or subprocess helpers
+
+Cons and controls:
+
+- rendered HTML will differ from current Jekyll/Kramdown output in some cases; this is acceptable because current output is not the benchmark
+- fixture checks should assert the desired Docs Viewer v2 semantics directly, not compare Python output to Jekyll/Kramdown output
+- parser/plugin choices become a content contract; pin the package version and record enabled plugins in the builder tests/docs
+- raw HTML output is not a sanitization boundary; keep import sanitization and viewer safety rules explicit, and use `bleach` where imported/untrusted HTML needs filtering
+- custom Docs Viewer semantics should remain builder-owned, not hidden inside a third-party plugin with unclear output contracts
+- dependency upgrades need fixture review for representative docs, custom tokens, search text, and semantic references
+
+Candidate assessment:
+
+| library | fit | notes |
+| --- | --- | --- |
+| `markdown-it-py` | preferred | CommonMark baseline, configurable rules, plugin architecture, GFM-adjacent options, and a token pipeline that can support Docs Viewer-specific renderer rules over time. |
+| `Python-Markdown` (`markdown`) | acceptable fallback | Mature and extensible, but its docs explicitly say it is not a CommonMark implementation. Better fit for MkDocs-style ecosystems than for defining a new Docs Viewer v2 content contract. |
+| `mistune` | acceptable fallback | Fast Python Markdown parser with renderers and plugins, but less aligned with the CommonMark/GFM-compatible ecosystem direction than `markdown-it-py` for this use case. |
+| hand-rolled parser | not recommended | Too much syntax surface and too much long-term maintenance risk for little benefit. Use custom code only for Docs Viewer-specific tokens, metadata, generated references, post-processing, and search text extraction. |
+
+Initial implementation guidance:
+
+- add `markdown-it-py` to `requirements.txt` with an exact version
+- start from `MarkdownIt("commonmark")`
+- enable only syntax needed by current authored docs and acceptance fixtures, likely tables first if required
+- keep current media, interactive HTML, and semantic reference token handling explicit in the Python builder
+- add fixtures before switching callers, covering headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables if enabled, media tokens, interactive HTML tokens, semantic references, generated plain text, and generated reference payloads
+- do not add Jekyll/Kramdown parity fixtures or automated current-output comparison checks
+- treat catalogue prose rendering as a second consumer of the same Python Markdown rendering helper where practical, so work, series, and moment `content_html` stop using `render_markdown_with_jekyll.rb`
 
 ## Builder Replacement Details
 
@@ -240,7 +379,7 @@ The request is complete when:
 
 ## Known Risks
 
-- Markdown rendering can differ when moving away from Jekyll/Kramdown. Docs Viewer v2 should not chase full Kramdown parity or freeze incidental current HTML; it should protect document meaning, links, media behavior, semantic references, and search text.
+- Markdown rendering can differ when moving away from Jekyll/Kramdown. Docs Viewer v2 should not chase full Kramdown parity, freeze incidental current HTML, or use current Jekyll/Kramdown output as an automated comparison baseline. It should protect document meaning, links, media behavior, semantic references, and search text through explicit semantic fixtures.
 - Custom token handling is part of the required builder behavior, but the exact syntax is open to change. Media, interactive HTML, and semantic reference behavior need explicit Python implementations, migration rules when syntax changes, and fixtures.
 - Search index compatibility depends on matching text normalization, visibility filtering, and version/hash rules. Treat this as a contract, not an incidental implementation detail.
 - Catalogue search affects public search behavior as well as local app links. Preserve the output schema before changing consumers.

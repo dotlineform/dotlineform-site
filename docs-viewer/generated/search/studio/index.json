@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4a4f5da77ab9b3016861080e61353bf2",
-    "generated_at_utc": "2026-05-31T21:22:19Z",
-    "count": 227
+    "version": "blake2b-9b20c0dfa8e17621a9be61eecb3cecd7",
+    "generated_at_utc": "2026-06-01T11:51:54Z",
+    "count": 228
   },
   "entries": [
     {
@@ -2025,10 +2025,10 @@
       "kind": "doc",
       "title": "Rubyless App Runtimes Request",
       "href": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-01",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-30 • Change Requests",
+      "display_meta": "2026-06-01 • Change Requests",
       "search_terms": [
         "site-request-rubyless-app-runtimes",
         "site",
@@ -2040,12 +2040,38 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-30",
+        "2026-06-01",
         "2026",
-        "05",
-        "30"
+        "06",
+        "01"
       ],
-      "search_text": "site-request-rubyless-app-runtimes site request rubyless app runtimes rubyless app runtimes request change requests change requests 2026-05-30 2026 05 30"
+      "search_text": "site-request-rubyless-app-runtimes site request rubyless app runtimes rubyless app runtimes request change requests change requests 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "site-request-rubyless-app-runtimes-tasks",
+      "kind": "doc",
+      "title": "Rubyless App Runtimes Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes-tasks",
+      "last_updated": "2026-06-01",
+      "parent_id": "site-request-rubyless-app-runtimes",
+      "parent_title": "Rubyless App Runtimes Request",
+      "display_meta": "2026-06-01 • Rubyless App Runtimes Request",
+      "search_terms": [
+        "site-request-rubyless-app-runtimes-tasks",
+        "site",
+        "request",
+        "rubyless",
+        "app",
+        "runtimes",
+        "tasks",
+        "rubyless app runtimes tasks",
+        "rubyless app runtimes request",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "site-request-rubyless-app-runtimes-tasks site request rubyless app runtimes tasks rubyless app runtimes tasks rubyless app runtimes request 2026-06-01 2026 06 01"
     },
     {
       "id": "site-request-studio-activity-follow-ups",
