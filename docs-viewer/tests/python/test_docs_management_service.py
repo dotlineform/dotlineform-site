@@ -116,9 +116,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                             "status": "active",
                             "selection_model": "documents",
                             "paths": {
-                                "outbound_package_root": "var/studio/data-sharing/library/exports",
-                                "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
-                                "review_output_root": "var/studio/data-sharing/library/import-preview",
+                                "outbound_package_root": "var/analytics/data-sharing/library/exports",
+                                "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
+                                "review_output_root": "var/analytics/data-sharing/library/import-preview",
                                 "source_root": "docs-viewer/source/library",
                                 "backup_root": "var/docs/backups",
                             },
@@ -1034,7 +1034,7 @@ def test_docs_export_request_passes_target_format() -> None:
         return {
             "ok": True,
             "target_format": kwargs["target_format"],
-            "output_file": "var/studio/data-sharing/library/exports/test.json",
+            "output_file": "var/analytics/data-sharing/library/exports/test.json",
             "output_written": False,
             "counts": {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0},
             "issue_counts": {"errors": 0, "warnings": 0},

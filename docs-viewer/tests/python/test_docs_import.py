@@ -31,7 +31,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
-    (root / "var/studio/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
+    (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
     write_current_index(
         root,
         [
@@ -66,7 +66,7 @@ def write_current_index(root: Path, docs: list[dict], *, payload_ids: list[str] 
 
 
 def write_staged(root: Path, filename: str, text: str) -> None:
-    path = root / "var/studio/data-sharing/library/import-staging" / filename
+    path = root / "var/analytics/data-sharing/library/import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
@@ -268,15 +268,15 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
         ]
         write_staged(root, "summaries.json", json.dumps(payload))
         report = render(root, parse(root, "summaries.json"))
-        first_preview = (root / "var/studio/data-sharing/library/import-preview/alpha-20260503-204000.md").read_text(encoding="utf-8")
-        missing_preview = (root / "var/studio/data-sharing/library/import-preview/record-3-20260503-204000.md").read_text(encoding="utf-8")
+        first_preview = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md").read_text(encoding="utf-8")
+        missing_preview = (root / "var/analytics/data-sharing/library/import-preview/record-3-20260503-204000.md").read_text(encoding="utf-8")
 
     assert report["preview_written"] is True
     assert [item["path"] for item in report["preview_files"]] == [
-        "var/studio/data-sharing/library/import-preview/summaries-tree-20260503-204000.md",
-        "var/studio/data-sharing/library/import-preview/alpha-20260503-204000.md",
-        "var/studio/data-sharing/library/import-preview/alpha-record-2-20260503-204000.md",
-        "var/studio/data-sharing/library/import-preview/record-3-20260503-204000.md",
+        "var/analytics/data-sharing/library/import-preview/summaries-tree-20260503-204000.md",
+        "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md",
+        "var/analytics/data-sharing/library/import-preview/alpha-record-2-20260503-204000.md",
+        "var/analytics/data-sharing/library/import-preview/record-3-20260503-204000.md",
     ]
     assert "matched_config_fields" in first_preview
     assert "staged_only_fields" in first_preview
@@ -306,16 +306,16 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
             + "\n",
         )
         report = render(root, parse(root, "content-20260102-030405.jsonl"))
-        preview = (root / "var/studio/data-sharing/library/import-preview/alpha-20260102-030405.md").read_text(encoding="utf-8")
+        preview = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260102-030405.md").read_text(encoding="utf-8")
 
     assert report["preview_files"] == [
         {
-            "path": "var/studio/data-sharing/library/import-preview/content-tree-20260102-030405.md",
+            "path": "var/analytics/data-sharing/library/import-preview/content-tree-20260102-030405.md",
             "record_count": 1,
             "kind": "relationship_tree",
         },
         {
-            "path": "var/studio/data-sharing/library/import-preview/alpha-20260102-030405.md",
+            "path": "var/analytics/data-sharing/library/import-preview/alpha-20260102-030405.md",
             "record_index": 0,
             "doc_id": "alpha",
             "kind": "document",
@@ -339,11 +339,11 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
         }
         write_staged(root, "relationships.json", json.dumps(payload))
         report = render(root, parse(root, "relationships.json"))
-        preview = (root / "var/studio/data-sharing/library/import-preview/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
+        preview = (root / "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
 
     assert report["preview_files"][:1] == [
         {
-            "path": "var/studio/data-sharing/library/import-preview/relationships-tree-20260503-204000.md",
+            "path": "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md",
             "record_count": 3,
             "kind": "relationship_tree",
         }
@@ -360,10 +360,10 @@ def test_preview_renderer_can_dry_run_without_writing_files() -> None:
         root = Path(temp)
         write_staged(root, "summaries.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
         report = render(root, parse(root, "summaries.json"), write=False)
-        preview_exists = (root / "var/studio/data-sharing/library/import-preview/alpha-20260503-204000.md").exists()
+        preview_exists = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md").exists()
 
     assert report["preview_written"] is False
-    assert report["preview_files"][0]["path"] == "var/studio/data-sharing/library/import-preview/alpha-20260503-204000.md"
+    assert report["preview_files"][0]["path"] == "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md"
     assert preview_exists is False
 
 
