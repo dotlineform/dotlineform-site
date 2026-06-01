@@ -19,7 +19,7 @@ This is a normalization-policy document. It is not the schema, ranking, or UI do
 
 This document applies to two related processes:
 
-- index-time normalization in `docs-viewer/build/build_search.rb` and `studio/services/catalogue/search/build_search.py`
+- index-time normalization in `docs-viewer/build/build_search.py` and `studio/services/catalogue/search/build_search.py`
 - query-time normalization in the client search runtimes
 
 It covers:

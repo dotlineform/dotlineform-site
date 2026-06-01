@@ -54,7 +54,7 @@ Do not add a separate risk server for risk dashboards, app inventories, audit la
 
 Top-level survivors are intentional:
 
-- Docs Viewer docs/search rebuilds use `./docs-viewer/build/build_docs.py` and `./docs-viewer/build/build_search.rb` directly.
+- Docs Viewer docs/search rebuilds use `./docs-viewer/build/build_docs.py` and `./docs-viewer/build/build_search.py` directly.
 - Catalogue search uses `./studio/services/catalogue/search/build_search.py` directly.
 - `make_srcset_images.sh`, when present, is the stable shell wrapper for the media implementation.
 - shared infrastructure modules now live under `studio/shared/`.
@@ -77,7 +77,7 @@ Docs-domain builds:
 
 Search builds:
 
-- `./docs-viewer/build/build_search.rb`
+- `./docs-viewer/build/build_search.py`
   - Docs Viewer-owned search builder for configured docs scopes
   - source indexes:
     - `docs-viewer/generated/docs/studio/index.json`

@@ -164,7 +164,7 @@ The Docs Viewer search builder derives its input and output paths from that scop
 Then build search with:
 
 ```sh
-./docs-viewer/build/build_search.rb --scope research --write
+./docs-viewer/build/build_search.py --scope research --write
 ```
 
 ### 7. Build Docs Data
@@ -178,7 +178,7 @@ Build the viewer JSON:
 Build the search JSON if search is enabled:
 
 ```sh
-./docs-viewer/build/build_search.rb --scope research --write
+./docs-viewer/build/build_search.py --scope research --write
 ```
 
 After this, the public route should be able to fetch:
@@ -266,7 +266,7 @@ Build the generated docs and search payloads:
 
 ```sh
 ./docs-viewer/build/build_docs.py --scope notes --write
-./docs-viewer/build/build_search.rb --scope notes --write
+./docs-viewer/build/build_search.py --scope notes --write
 ```
 
 After this, the local Docs Viewer service should be able to fetch:

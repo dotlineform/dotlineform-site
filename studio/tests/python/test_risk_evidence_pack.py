@@ -90,7 +90,7 @@ def test_collect_script_family_inventory_groups_active_python_ruby_roots(tmp_pat
     (catalogue_root / "catalogue_write_server.py").write_text("print('one')\nprint('two')\n", encoding="utf-8")
     docs_root = tmp_path / "docs-viewer" / "build"
     docs_root.mkdir(parents=True)
-    (docs_root / "build_docs.rb").write_text("puts 'docs'\n", encoding="utf-8")
+    (docs_root / "public_preview_helper.rb").write_text("puts 'docs'\n", encoding="utf-8")
     test_root = tmp_path / "docs-viewer" / "tests"
     test_root.mkdir(parents=True)
     (test_root / "test_docs.py").write_text("print('skip')\n", encoding="utf-8")

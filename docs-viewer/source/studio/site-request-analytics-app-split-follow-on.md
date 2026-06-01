@@ -160,7 +160,7 @@ Current tag source path references to `studio/data/canonical/analytics/...` appe
 - Studio/catalogue/search/audit consumers:
   - `studio/services/catalogue/catalogue_cleanup.py`
   - `studio/services/catalogue/generate_work_pages.py`
-  - `studio/services/catalogue/search/build_search.rb`
+  - `studio/services/catalogue/search/build_search.py`
   - `studio/checks/audit_site_consistency.py`
   - `studio/checks/projection_contract.json`
 - Tests and smokes:
@@ -183,7 +183,7 @@ Current tag source path references to `studio/data/canonical/analytics/...` appe
 
 Public-site search does not need tag terms, but current catalogue search code still reads Analytics tag files directly:
 
-- `studio/services/catalogue/search/build_search.rb`
+- `studio/services/catalogue/search/build_search.py`
   - defaults `tag_assignments_path` and `tag_registry_path` to `studio/data/canonical/analytics/...`
   - exposes `--tag-assignments` and `--tag-registry`
   - loads tag assignments and registry during catalogue search generation
@@ -274,7 +274,7 @@ No `studio/services/analytics` compatibility package remains in active source.
 Task 4 added `tag_services/tag_source_paths.py` as the Analytics-owned tag source path contract.
 Current Python consumers now use that contract for tag assignment and tag source paths instead of embedding `studio/data/canonical/analytics/...` directly.
 The source files themselves have not moved yet; task 6 owns that file move.
-The remaining active direct tag source paths are catalogue search defaults in `studio/services/catalogue/search/build_search.rb` and static projection contract JSON, which are covered by task 5 and task 6.
+The remaining active direct tag source paths are catalogue search defaults in `studio/services/catalogue/search/build_search.py` and static projection contract JSON, which are covered by task 5 and task 6.
 
 ### Analytics Frontend Naming Carryover
 

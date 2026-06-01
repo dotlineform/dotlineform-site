@@ -35,7 +35,7 @@ The core decision is that incremental search is primarily an orchestration conce
 - no browser-side write path for generated search artifacts
 - no hidden-draft search surface in the first implementation
 - no catalogue body/prose indexing in the first slice
-- no replacement for the full `./docs-viewer/build/build_search.rb --scope <scope> --write` command
+- no replacement for the full `./docs-viewer/build/build_search.py --scope <scope> --write` command
 
 ## Current State
 
@@ -63,7 +63,7 @@ Incremental search should be split across two layers:
   - decide whether changed records are safe for targeted update
   - fall back to a full rebuild when dependencies are ambiguous
 
-This avoids making `build_search.rb` responsible for local write workflows, watcher behavior, or docs-management batching.
+This avoids making the Docs Viewer search builder responsible for local write workflows, watcher behavior, or docs-management batching.
 
 ## Phase 1. Bulk-Orchestration Fix
 
@@ -126,9 +126,9 @@ Add a search-owned way to update only affected docs-domain search entries after 
 
 Implementation shape:
 
-- keep `build_search.rb --scope <scope> --write` as the full rebuild command
-- add targeted docs-mode flags to `build_search.rb`, using this first command shape:
-  - `build_search.rb --scope <scope> --write --only-doc-ids id1,id2 --remove-missing`
+- keep `build_search.py --scope <scope> --write` as the full rebuild command
+- add targeted docs-mode flags to `build_search.py`, using this first command shape:
+  - `build_search.py --scope <scope> --write --only-doc-ids id1,id2 --remove-missing`
 - accept doc ids only for targeted updates; do not accept source paths in the first contract
 - refuse targeted updates for `catalogue` until catalogue has its own dependency model
 - load the existing generated search artifact
@@ -175,7 +175,7 @@ Resolved decisions:
 - output should report full diagnostic counts for Codex/server use, not for routine human review
 - targeted mode refuses catalogue scope until there is a catalogue-specific dependency model
 
-Status: implemented for docs-domain scopes in `docs-viewer/build/build_search.rb`.
+Status: implemented for docs-domain scopes in `docs-viewer/build/build_search.py`.
 Targeted mode currently supports `studio` and `library` by `doc_id`; `catalogue` still falls back to full rebuilds only.
 
 ### Manual checks needed:

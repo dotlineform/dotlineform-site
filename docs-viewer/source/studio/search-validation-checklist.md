@@ -45,13 +45,13 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] Run `./docs-viewer/build/build_docs.py`
 - [ ] Confirm the docs dry run completes without error for configured docs scopes
-- [ ] Run `./docs-viewer/build/build_search.rb --scope studio`
+- [ ] Run `./docs-viewer/build/build_search.py --scope studio`
 - [ ] Confirm the dry run reports `docs-viewer/generated/search/studio/index.json` or correctly skips by version check
-- [ ] Run `./docs-viewer/build/build_search.rb --scope library`
+- [ ] Run `./docs-viewer/build/build_search.py --scope library`
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
-- [ ] Run `./docs-viewer/build/build_search.rb --scope analysis`
+- [ ] Run `./docs-viewer/build/build_search.py --scope analysis`
 - [ ] Confirm the dry run reports `assets/data/search/analysis/index.json` or correctly skips by version check
-- [ ] If the change touched targeted docs-search updates, run `./docs-viewer/build/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
+- [ ] If the change touched targeted docs-search updates, run `./docs-viewer/build/build_search.py --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
 - [ ] Confirm `./studio/services/catalogue/search/build_search.py --scope catalogue --only-doc-ids anything --remove-missing` fails closed because catalogue uses `--only-records`

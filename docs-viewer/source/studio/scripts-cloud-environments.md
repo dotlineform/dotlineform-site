@@ -192,7 +192,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
 $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 ./docs-viewer/build/build_docs.py
-./docs-viewer/build/build_search.rb --scope studio
+./docs-viewer/build/build_search.py --scope studio
 bundle exec jekyll build --quiet
 ```
 
@@ -236,7 +236,7 @@ Potential future incompatibilities and how they surface:
 Recommended response loop:
 
 1. rerun setup with parity-oriented flags (`FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9`)
-2. run full parity checks (`./docs-viewer/build/build_docs.py`, `./docs-viewer/build/build_search.rb --scope studio`, `bundle exec jekyll build --quiet`)
+2. run full parity checks (`./docs-viewer/build/build_docs.py`, `./docs-viewer/build/build_search.py --scope studio`, `bundle exec jekyll build --quiet`)
 3. if mismatch persists, update pinned versions in `.ruby-version`, `Gemfile.lock`, and cloud runtime files together (plus docs) in one change set
 
 ## Codespaces Consistency Notes

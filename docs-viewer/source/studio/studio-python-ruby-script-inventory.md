@@ -150,12 +150,12 @@ Relevant files:
 - `docs-viewer/services/docs_management_service.py`
 - `docs-viewer/services/docs_viewer_service.py`
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
-- `docs-viewer/build/build_search.rb`
+- `docs-viewer/build/build_search.py`
 
 Docs have been moving out of the cross-language ownership risk that originally motivated this inventory.
 Python now owns the generated Docs Viewer payload builder, management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
-Docs search still has retired Ruby references until the Rubyless app-runtime cleanup finishes.
-The remaining consistency risk is keeping source rules, generated payload shape, search behavior, management responses, and docs-watch behavior aligned as the old Ruby entrypoints are removed.
+Python also owns Docs Viewer search generation after the Rubyless app-runtime cleanup removed the retired Ruby entrypoint.
+The remaining consistency risk is keeping source rules, generated payload shape, search behavior, management responses, and docs-watch behavior aligned as the Python builders evolve.
 
 The remaining performance risk is fallback visibility, not a missing targeted-build contract.
 The builder now accepts targeted same-scope docs payload ids, and docs-management, source import, Library returned-package apply, and watcher paths use those ids when dependency rules are explicit.
@@ -169,7 +169,7 @@ Current guardrails and watch points:
 - the `build_docs.py --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
 - rebuild diagnostics already expose source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time in rebuild responses or logs
 - resolver-data changes outside docs source, such as catalogue title or route changes, remain full-scope until a future change defines explicit affected-id rules for them
-- Ruby builder and Python management response contracts should stay documented together when generated Docs Viewer schema changes
+- Python builder and management response contracts should stay documented together when generated Docs Viewer schema changes
 
 Immediate work signal: medium.
 

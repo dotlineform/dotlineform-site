@@ -161,7 +161,7 @@ Ownership decisions for this slice:
 | Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json` | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; generate browser-facing defaults through the Docs Viewer builder. |
 | Docs Viewer UI text | `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under Docs Viewer config. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
-| Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
+| Inline docs search | `assets/data/search/<scope>/index.json`, `docs-viewer/build/build_search.py`, `docs-viewer/config/scopes/docs_scopes.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
 | Docs Viewer local service | `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, and adjacent Docs Viewer service modules | Docs Viewer | Keep the standalone service and management dispatcher under `docs-viewer/services/`; the old `docs_management_server.py` entrypoint is removed. |
 | Studio application code | `assets/studio/js/*`, `assets/studio/data/studio_config.json`, Studio generated payloads | Studio | Do not reorganise broad Studio files in this request; only extract Docs Viewer dependencies. |
 | Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
@@ -296,7 +296,7 @@ Direction:
 
 - Catalogue search and Docs search are separate data-domain products
 - Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`
-- the stable public command shape can remain `./docs-viewer/build/build_search.rb --scope <scope> --write`
+- the stable public command shape can remain `./docs-viewer/build/build_search.py --scope <scope> --write`
 - the shared command should dispatch to domain adapters, not force Catalogue and Docs into one universal builder
 - Catalogue search remains Catalogue-owned behind its adapter
 - Docs search becomes Docs Viewer-owned behind its adapter
@@ -304,8 +304,8 @@ Direction:
 
 Owner-command direction:
 
-- call the Catalogue search builder at `studio/services/catalogue/search/build_search.rb`
-- call the Docs Viewer search builder at `docs-viewer/build/build_search.rb`
+- call the Catalogue search builder at `studio/services/catalogue/search/build_search.py`
+- call the Docs Viewer search builder at `docs-viewer/build/build_search.py`
 - share only domain-neutral helper code such as text normalization, deterministic JSON writing, and basic validation
 - do not generalize Catalogue joins, tag enrichment, docs `viewable` filtering, or docs route policy into a single abstract schema engine in this slice
 
@@ -324,8 +324,8 @@ Tasks:
 
 Acceptance:
 
-- `./docs-viewer/build/build_search.rb --scope <scope> --write` still works for Catalogue and docs scopes
-- the command dispatches through domain adapters rather than one mixed Catalogue/docs implementation
+- `./docs-viewer/build/build_search.py --scope <scope> --write` works for configured docs scopes
+- Catalogue and docs search use separate owner entrypoints rather than one mixed Catalogue/docs implementation
 - a portable Docs Viewer install can build inline docs search without copying Catalogue/public search files
 - Catalogue search continues to build and run independently
 - `/analysis/` uses Docs search because it is document-domain content

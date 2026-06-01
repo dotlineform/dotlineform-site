@@ -169,9 +169,9 @@ Copy:
 
 For inline docs search, copy:
 
-- `docs-viewer/build/build_search.rb`
+- `docs-viewer/build/build_search.py`
 
-Docs Viewer search scopes use `docs-viewer/build/build_search.rb` directly.
+Docs Viewer search scopes use `docs-viewer/build/build_search.py` directly.
 The Catalogue search builder remains separate in this repo.
 Adding a new docs scope should only require adding that scope to `docs-viewer/config/scopes/docs_scopes.json`, rebuilding docs data, and then running the Docs Viewer search builder for the new scope.
 

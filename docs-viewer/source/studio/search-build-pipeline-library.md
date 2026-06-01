@@ -11,7 +11,7 @@ parent_id: search-build-pipeline
 
 ### Current Writer
 
-- `./docs-viewer/build/build_search.rb --scope library`, dispatched to `docs-viewer/build/build_search.rb`
+- `./docs-viewer/build/build_search.py --scope library`, dispatched to `docs-viewer/build/build_search.py`
 
 ### Current Output
 
@@ -29,13 +29,13 @@ Rows with `viewable: false` are skipped so draft Library docs can be generated f
 Default write command:
 
 ```bash
-./docs-viewer/build/build_search.rb --scope library --write
+./docs-viewer/build/build_search.py --scope library --write
 ```
 
 Dry run:
 
 ```bash
-./docs-viewer/build/build_search.rb --scope library
+./docs-viewer/build/build_search.py --scope library
 ```
 
 Current supported overrides:
@@ -63,9 +63,9 @@ Current builder behaviour for Library:
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
   - `./docs-viewer/build/build_docs.py --scope library --write`
-  - `./docs-viewer/build/build_search.rb --scope library --write`
+  - `./docs-viewer/build/build_search.py --scope library --write`
 - targeted docs-search command:
-  - `./docs-viewer/build/build_search.rb --scope library --write --only-doc-ids library --remove-missing`
+  - `./docs-viewer/build/build_search.py --scope library --write --only-doc-ids library --remove-missing`
 - live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes

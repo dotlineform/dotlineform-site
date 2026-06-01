@@ -99,11 +99,11 @@ Current files:
 - Catalogue runtime policy: `assets/data/search/policy.json`
 - Docs browser runtime: `docs-viewer/runtime/js/docs-viewer.js`
 - Docs search helpers: `docs-viewer/runtime/js/docs-viewer-search.js`
-- Docs Viewer search build entrypoint: `docs-viewer/build/build_search.rb`
+- Docs Viewer search build entrypoint: `docs-viewer/build/build_search.py`
 - Catalogue search build entrypoint: `studio/services/catalogue/search/build_search.py`
 - Catalogue search build implementation: `studio/services/catalogue/search/build_search.py`
 - Catalogue search build config: `studio/services/catalogue/search/build_config.json`
-- Docs Viewer search build implementation: `docs-viewer/build/build_search.rb`
+- Docs Viewer search build implementation: `docs-viewer/build/build_search.py`
 - Docs Viewer search scope config: `docs-viewer/config/scopes/docs_scopes.json`
 
 Current live surfaces:

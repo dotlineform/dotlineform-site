@@ -12,7 +12,7 @@ parent_id: search-build-pipeline
 The current search build uses explicit domain-owned entrypoints:
 
 - Catalogue implementation owner: `studio/services/catalogue/search/build_search.py`
-- Docs Viewer implementation owner: `docs-viewer/build/build_search.rb`
+- Docs Viewer implementation owner: `docs-viewer/build/build_search.py`
 
 Current live search outputs:
 
@@ -67,7 +67,7 @@ Current non-goals across all scopes:
 ## Adapter Registry And Build Config
 
 Call the owner script for the scope being rebuilt.
-Catalogue search uses `studio/services/catalogue/search/build_search.py`; configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` use `docs-viewer/build/build_search.rb`.
+Catalogue search uses `studio/services/catalogue/search/build_search.py`; configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` use `docs-viewer/build/build_search.py`.
 
 `studio/services/catalogue/search/build_config.json` is Catalogue-owned.
 Current Catalogue config responsibilities:

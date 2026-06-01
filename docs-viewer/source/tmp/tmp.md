@@ -15,6 +15,7 @@ please continue with task 16.
 
 ---
 
+
 docs viewer config:
 
 how to update config through manage-mode
@@ -74,12 +75,12 @@ servers:
 
 scripts:
 
-./docs-viewer/build/build_docs.rb --scope studio
-./docs-viewer/build/build_docs.rb --scope studio --write
-./docs-viewer/build/build_docs.rb --scope studio --write --only-doc-ids example-doc
-./docs-viewer/build/build_search.rb
+./docs-viewer/build/build_docs.py --scope studio
+./docs-viewer/build/build_docs.py --scope studio --write
+./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids example-doc
+./docs-viewer/build/build_search.py
 
-./studio/services/catalogue/search/build_search.rb
+./studio/services/catalogue/search/build_search.py
 
 
 ---
