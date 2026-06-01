@@ -2,7 +2,7 @@
 doc_id: docs-viewer-dependencies
 title: Docs Viewer Dependencies
 added_date: 2026-05-14
-last_updated: 2026-05-18
+last_updated: 2026-06-01
 parent_id: docs-viewer
 ---
 # Docs Viewer Dependencies
@@ -35,9 +35,13 @@ The current checked-in Python packages are:
 | `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs. | Using Docs Import for Markdown packages with local images. |
 | `openpyxl` | Not a Docs Viewer dependency; used by workbook/spreadsheet pipeline scripts. | Catalogue or spreadsheet-driven workflows need it. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
+| `markdown-it-py` | CommonMark Markdown renderer selected for Docs Viewer v2 payload generation. | Building or testing the Python Docs Viewer Markdown renderer. |
 
 The Docs HTML import implementation currently lives in `docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
+
+The Docs Viewer v2 Markdown renderer starts from `MarkdownIt("commonmark")`.
+No renderer plugins are enabled in the initial dependency pin; later syntax additions must record their enabled plugins in this document and in the renderer fixtures.
 
 ## Parser Stack Roles
 
@@ -58,6 +62,7 @@ A generic third-party HTML-to-Markdown converter is not the product logic bounda
 - the install source for Python packages used by repo scripts
 - the parity contract between local setup, Codespaces, and Codex Cloud
 - the place to pin parser and sanitizer versions when Docs Import behavior depends on them
+- the place to pin Markdown renderer versions when generated Docs Viewer output depends on them
 
 It should not be treated as:
 
@@ -71,13 +76,13 @@ That keeps local and cloud sessions on the same parser and image-conversion beha
 
 ## Operational Checks
 
-Before treating Docs Import as available in a new environment, confirm the parser and conversion stack can be imported by the configured project Python:
+Before treating Docs Import or Docs Viewer v2 Markdown rendering as available in a new environment, confirm the parser, conversion, and renderer stack can be imported by the configured project Python:
 
 ```bash
-python -c "import bs4, lxml, bleach, PIL"
+python -c "import bs4, lxml, bleach, PIL; from markdown_it import MarkdownIt; MarkdownIt('commonmark')"
 ```
 
-If this fails, install the pinned packages from `requirements.txt` in the active Python environment before starting the Docs Viewer service or running Docs Import checks.
+If this fails, install the pinned packages from `requirements.txt` in the active Python environment before starting the Docs Viewer service, running Docs Import checks, or running Docs Viewer renderer fixtures.
 
 ## Related References
 

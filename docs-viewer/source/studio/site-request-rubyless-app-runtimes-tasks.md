@@ -19,12 +19,14 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Expanded this tracker into phased tasks with startup cleanup as Phase 0, explicit generated-output contract fixtures, no mixed builder mode, no hidden Ruby fallbacks, and no implicit cleanup.
 - Clarified that generated docs/search payloads may be stale during migration because source Markdown remains readable directly.
 - Removed disabled local-startup rebuild handling from `bin/local-studio`, including `DOCS_STARTUP_REBUILD_SCOPES`, `CATALOGUE_STARTUP_LOOKUP_REBUILD`, startup Ruby docs/search builder calls, startup catalogue lookup export, and related active docs/tests.
+- Defined the cutover preflight for later builder/caller swaps.
+- Pinned `markdown-it-py==3.0.0` in `requirements.txt` and recorded the initial no-plugin `MarkdownIt("commonmark")` renderer dependency contract.
 
 ## Next Task Steer
 
-Continue with Phase 0 task 2: define the cutover preflight for later phases.
+Continue with Phase 1 task 4: build a shared Python Markdown rendering helper.
 
-This means documenting when to pause `bin/local-all` or affected services before builder/caller swaps, keeping docs watcher expectations explicit, accepting stale generated docs/search payloads during migration because source Markdown remains readable directly, and restarting only after the current phase is verified.
+This means starting from `MarkdownIt("commonmark")`, enabling only syntax needed by current authored docs and acceptance fixtures, and keeping raw HTML/sanitization behavior explicit. Do not add Jekyll/Kramdown parity fixtures or automated current-output comparison checks.
 
 ## Implementation Steer
 
@@ -49,6 +51,30 @@ Each implementation slice should reduce or hold steady the existing risk profile
 
 Any cleanup discovered during implementation should become an explicit task in this tracker. Do not leave cleanup as an implicit follow-up or fold it into vague closeout language.
 
+## Cutover Preflight
+
+Use this preflight before any later phase that changes builder implementations, builder callers, watcher behavior, or generated-output contracts.
+
+Pause local services when the slice swaps a command entrypoint, service caller, watcher command, import/apply path, catalogue write follow-through, or generated-output schema. Prefer stopping `bin/local-all` so Local Studio, Local Analytics, UI Catalogue, Docs Viewer, public preview, and docs watcher children are not racing against partially changed code. If the slice affects only one isolated service, stopping that service is enough, but record that narrower choice in the closeout.
+
+Before editing a caller family:
+
+- identify the active Ruby command/helper being replaced
+- identify the Python owner that will replace it
+- identify the generated artifacts that may be stale during the slice
+- identify the app routes or local services that should remain paused until verification completes
+- choose the smallest focused checks that prove the current phase, not the full migration
+
+Docs watcher expectations:
+
+- keep `docs-viewer/services/docs_live_rebuild_watcher.py` as the long-running watcher service until a later task explicitly changes its command implementation
+- do not run the watcher during a builder/caller swap unless the current phase is already verified
+- when watcher behavior changes, verify both targeted docs-search updates and full same-scope fallback behavior
+
+Generated docs/search payloads may be stale during the migration. That is acceptable while a phase is in progress because source Markdown remains readable directly, and freshness returns through the verified replacement builders rather than through mixed Ruby/Python fallback paths. Do not add hidden startup rebuilds, compatibility dispatch, dual-write behavior, or Ruby fallback branches to keep payloads fresh mid-cutover.
+
+Restart services only after the current phase passes its focused verification and the tracker records any unresolved cleanup as an explicit task. If a service cannot safely restart without a follow-up task, leave it paused, record the blocker with owner/removal condition, and do not continue into adjacent feature work.
+
 ## Implementation Tasks
 
 Work through the table by ID order.
@@ -60,13 +86,13 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 1 | done | Remove disabled local-startup rebuild code paths, not just flags. Delete `DOCS_STARTUP_REBUILD_SCOPES` and `CATALOGUE_STARTUP_LOOKUP_REBUILD` handling from `bin/local-studio`/`bin/local-all`, including scope parsing, startup rebuild loops, catalogue lookup rebuild calls, related service wiring, startup messages, docs, and tests. Remove the actual calls to `docs-viewer/build/build_docs.rb`, `docs-viewer/build/build_search.rb`, and startup catalogue lookup rebuild from local app startup. Keep `docs-viewer/services/docs_live_rebuild_watcher.py` as the long-running docs watcher service. |
-| 2 | planned | Define the cutover preflight for later phases. Pause `bin/local-all` or affected services before builder/caller swaps, keep docs watcher expectations explicit, accept stale generated docs/search payloads during migration because source Markdown remains readable directly, and restart only after the current phase is verified. |
+| 2 | done | Define the cutover preflight for later phases. Pause `bin/local-all` or affected services before builder/caller swaps, keep docs watcher expectations explicit, accept stale generated docs/search payloads during migration because source Markdown remains readable directly, and restart only after the current phase is verified. |
 
 ### Phase 1: Renderer And Fixtures
 
 | ID | status | action |
 | --- | --- | --- |
-| 3 | planned | Pin the Python Markdown renderer dependency. Add `markdown-it-py` to `requirements.txt` with an exact version, record any enabled renderer plugins in the builder docs/tests, and confirm the dependency loads through the configured Miniconda Python environment. |
+| 3 | done | Pin the Python Markdown renderer dependency. Add `markdown-it-py` to `requirements.txt` with an exact version, record any enabled renderer plugins in the builder docs/tests, and confirm the dependency loads through the configured Miniconda Python environment. |
 | 4 | planned | Build a shared Python Markdown rendering helper. Start from `MarkdownIt("commonmark")`, enable only syntax needed by current authored docs and acceptance fixtures, and keep raw HTML/sanitization behavior explicit. Do not add Jekyll/Kramdown parity fixtures or automated current-output comparison checks. |
 | 5 | planned | Add Docs Viewer v2 renderer acceptance fixtures before caller migration. Cover headings, links, lists, fenced code, inline code, raw HTML allowed by the current content model, tables if enabled, generated plain text, and HTML semantics directly rather than comparing against Jekyll/Kramdown output. |
 | 6 | planned | Add custom-token builder fixtures before caller migration. Cover media tokens, interactive HTML tokens, semantic reference tokens, invalid/missing/non-published references, code-block skip behavior, generated semantic reference payloads, and generated search text. |

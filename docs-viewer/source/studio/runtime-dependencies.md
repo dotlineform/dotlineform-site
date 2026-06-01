@@ -2,7 +2,7 @@
 doc_id: runtime-dependencies
 title: Runtime Dependencies
 added_date: 2026-04-23
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: dev-home
 ---
 # Runtime Dependencies
@@ -55,12 +55,14 @@ Current checked-in Python packages:
 | `lxml` | PyPI via `requirements.txt` | parser backend for the Docs HTML import tree build | feature-specific | feature-specific | treated as part of the pinned HTML import parser stack |
 | `bleach` | PyPI via `requirements.txt` | HTML sanitization for Docs HTML import | feature-specific | feature-specific | required for the intended import sanitization boundary even if the first scaffold uses only a subset of that behavior |
 | `Pillow` | PyPI via `requirements.txt` | raster image conversion for Docs Markdown package imports | feature-specific | feature-specific | required when importing package images that must become 800px-max WebP outputs |
+| `markdown-it-py` | PyPI via `requirements.txt` | CommonMark Markdown rendering for Python Docs Viewer v2 builders | feature-specific | feature-specific | initial renderer pin uses `MarkdownIt("commonmark")` with no enabled plugins |
 
 Current interpretation:
 
 - `openpyxl` is the only current baseline Python package for the established catalogue/workbook pipeline
 - `beautifulsoup4`, `lxml`, and `bleach` are checked-in because the HTML import feature is intended to build against a fixed parser/sanitizer stack from the start
 - `Pillow` is checked-in because Markdown package imports convert local package images to WebP during write
+- `markdown-it-py` is checked in because Docs Viewer v2 generated payloads need a pinned Python Markdown renderer before Ruby builder callers are migrated
 - in cloud environments that never touch Docs Import, these import packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
 
 ## Ruby And Jekyll Stack
