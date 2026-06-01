@@ -2,7 +2,7 @@
 doc_id: search-incremental-orchestration-plan
 title: Incremental Search Orchestration Plan
 added_date: 2026-04-24
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-06-01"
 parent_id: search
 ---
 # Incremental Search Orchestration Plan
@@ -355,7 +355,7 @@ Initial build-config concept:
 
 This is a contract sketch rather than a committed file path. The implementation should choose a build-owned config location and keep runtime-facing policy separate unless a rule is genuinely shared by both builder and browser.
 
-Phase 4 status: implemented as a small source-family/dependency config at `studio/services/catalogue/search/build_config.json`, with builder validation in `studio/services/catalogue/search/build_search.rb` before adding body or summary fields.
+Phase 4 status: implemented as a small source-family/dependency config at `studio/services/catalogue/search/build_config.json`, with builder validation in `studio/services/catalogue/search/build_search.py` before adding body or summary fields.
 
 ## Historical First Implementation Slice
 

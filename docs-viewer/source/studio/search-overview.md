@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: Search Overview
 added_date: 2026-03-31
-last_updated: "2026-05-11 21:30"
+last_updated: "2026-06-01"
 parent_id: search
 ---
 # Search Overview
@@ -100,8 +100,8 @@ Current files:
 - Docs browser runtime: `docs-viewer/runtime/js/docs-viewer.js`
 - Docs search helpers: `docs-viewer/runtime/js/docs-viewer-search.js`
 - Docs Viewer search build entrypoint: `docs-viewer/build/build_search.rb`
-- Catalogue search build entrypoint: `studio/services/catalogue/search/build_search.rb`
-- Catalogue search build implementation: `studio/services/catalogue/search/build_search.rb`
+- Catalogue search build entrypoint: `studio/services/catalogue/search/build_search.py`
+- Catalogue search build implementation: `studio/services/catalogue/search/build_search.py`
 - Catalogue search build config: `studio/services/catalogue/search/build_config.json`
 - Docs Viewer search build implementation: `docs-viewer/build/build_search.rb`
 - Docs Viewer search scope config: `docs-viewer/config/scopes/docs_scopes.json`

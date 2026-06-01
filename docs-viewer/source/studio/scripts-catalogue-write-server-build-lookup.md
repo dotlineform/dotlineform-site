@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-build-lookup
 title: Catalogue Write Server Build And Lookup
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-01
 parent_id: scripts-catalogue-write-server
 ---
 # Catalogue Write Server Build And Lookup
@@ -355,7 +355,7 @@ Scoped build preconditions:
 
 - `generate_work_pages.py --internal-json-source-run --refresh-published` for the selected work and affected series ids
 - or `generate_work_pages.py --internal-json-source-run --refresh-published` for the selected series and affected works
-- `build_search.rb --scope catalogue --write`
+- `build_search.py --scope catalogue --write`
 
 The apply path uses refresh mode rather than broad force mode. That allows selected published records to be recomputed while unchanged generated payloads and catalogue search output still skip by content version. A request-level `force` value remains the explicit stronger rewrite path.
 

@@ -79,19 +79,17 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
     ]
 
 
-def test_search_command_uses_configured_bundle_and_catalogue_scope() -> None:
+def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
     cmd = commands.build_search_command(
         Path("/repo"),
         write=True,
         force=True,
-        env={"HOME": "/no/such/home", "BUNDLE_BIN": "/custom/bundle"},
+        env={"HOME": "/no/such/home"},
     )
 
     assert cmd == [
-        "/custom/bundle",
-        "exec",
-        "ruby",
-        "/repo/studio/services/catalogue/search/build_search.rb",
+        sys.executable,
+        "/repo/studio/services/catalogue/search/build_search.py",
         "--scope",
         "catalogue",
         "--write",
@@ -121,6 +119,6 @@ def test_failed_command_step_shape_and_message_without_running_subprocess() -> N
 if __name__ == "__main__":
     test_generate_work_command_preserves_scope_and_flags()
     test_generate_moment_command_preserves_scope_and_flags()
-    test_search_command_uses_configured_bundle_and_catalogue_scope()
+    test_search_command_uses_python_builder_and_catalogue_scope()
     test_failed_command_step_shape_and_message_without_running_subprocess()
     print("Catalogue build command tests OK")

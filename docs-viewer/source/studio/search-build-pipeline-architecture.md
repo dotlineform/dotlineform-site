@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-architecture
 title: Search Build Pipeline Architecture
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-01
 parent_id: search-build-pipeline
 ---
 # Search Build Pipeline Architecture
@@ -11,7 +11,7 @@ parent_id: search-build-pipeline
 
 The current search build uses explicit domain-owned entrypoints:
 
-- Catalogue implementation owner: `studio/services/catalogue/search/build_search.rb`
+- Catalogue implementation owner: `studio/services/catalogue/search/build_search.py`
 - Docs Viewer implementation owner: `docs-viewer/build/build_search.rb`
 
 Current live search outputs:
@@ -67,7 +67,7 @@ Current non-goals across all scopes:
 ## Adapter Registry And Build Config
 
 Call the owner script for the scope being rebuilt.
-Catalogue search uses `studio/services/catalogue/search/build_search.rb`; configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` use `docs-viewer/build/build_search.rb`.
+Catalogue search uses `studio/services/catalogue/search/build_search.py`; configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` use `docs-viewer/build/build_search.rb`.
 
 `studio/services/catalogue/search/build_config.json` is Catalogue-owned.
 Current Catalogue config responsibilities:
@@ -78,7 +78,7 @@ Current Catalogue config responsibilities:
 - map emitted search fields to source families
 - keep the Catalogue artifact strategy combined
 
-Current validation responsibilities in `studio/services/catalogue/search/build_search.rb`:
+Current validation responsibilities in `studio/services/catalogue/search/build_search.py`:
 
 - reject unsupported config versions
 - reject source-family references outside the Catalogue scope

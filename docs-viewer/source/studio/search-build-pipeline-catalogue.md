@@ -12,7 +12,7 @@ parent_id: search-build-pipeline
 ### Current Writer
 
 - direct Python builder: `./studio/services/catalogue/search/build_search.py --scope catalogue`
-- existing catalogue search callers continue to invoke the Ruby builder until the Rubyless app-runtimes caller swap task is complete
+- catalogue build orchestration constructs the same Python command through `studio/services/catalogue/catalogue_build_commands.py`
 
 ### Current Output
 
@@ -158,5 +158,5 @@ Current safeguards include:
 The Python catalogue search builder is available at `studio/services/catalogue/search/build_search.py`.
 It preserves the current catalogue search payload contract, config validation, dry-run/write/force behavior, BLAKE2b content versioning, source JSON overrides, docs-only flag rejection, and additive-only targeted-record behavior.
 
-The caller swap is intentionally separate.
-Until that task is complete, catalogue build orchestration may still resolve Bundler and invoke `studio/services/catalogue/search/build_search.rb`.
+Catalogue build orchestration now calls this Python builder directly.
+Scoped builds, field-aware previews, publication/delete follow-through, bulk build targets, and direct catalogue search rebuild helpers should not resolve Bundler or invoke Ruby for catalogue search.

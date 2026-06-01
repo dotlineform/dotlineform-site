@@ -2,19 +2,9 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, Mapping, Sequence
-
-
-def resolve_bundle_bin(env: Mapping[str, str] | None = None) -> str:
-    env = env or os.environ
-    home = Path(env.get("HOME", "")).expanduser()
-    shim = home / ".rbenv/shims/bundle"
-    if shim.exists() and os.access(shim, os.X_OK):
-        return str(shim)
-    return str(env.get("BUNDLE_BIN", "bundle"))
 
 
 def build_generate_command(
@@ -79,11 +69,10 @@ def build_generate_moment_command(
 
 
 def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapping[str, str] | None = None) -> list[str]:
+    _ = env
     cmd = [
-        resolve_bundle_bin(env),
-        "exec",
-        "ruby",
-        str(repo_root / "studio" / "services" / "catalogue" / "search" / "build_search.rb"),
+        sys.executable,
+        str(repo_root / "studio" / "services" / "catalogue" / "search" / "build_search.py"),
         "--scope",
         "catalogue",
     ]

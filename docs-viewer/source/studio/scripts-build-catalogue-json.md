@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: "2026-05-12 18:45"
+last_updated: "2026-06-01"
 parent_id: catalogue
 ---
 # Scoped JSON Catalogue Build
@@ -129,7 +129,7 @@ The helper:
   - `series-index-json`
   - `works-index-json`
   - `recent-index-json`
-- then runs `build_search.rb --scope catalogue`
+- then runs `build_search.py --scope catalogue`
 
 The extracted build modules own selection and validation rules, media planning/execution, field-aware narrowing, command construction, and step-result shaping. The entrypoint owns CLI option binding, preview text, command sequencing, subprocess execution, and the response payload shape used by Studio.
 
@@ -148,7 +148,7 @@ For `--moment-file`, the helper:
 - generates local moment primary and thumbnail srcset derivatives under `var/catalogue/media/moments/`
 - copies generated moment thumbnails into `assets/moments/img/`
 - runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id> --refresh-published`
-- then runs `build_search.rb --scope catalogue`
+- then runs `build_search.py --scope catalogue`
 
 Force behavior:
 

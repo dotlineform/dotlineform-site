@@ -2,7 +2,7 @@
 doc_id: config-search-build-json
 title: Search Build Config JSON
 added_date: 2026-04-25
-last_updated: "2026-05-11 21:30"
+last_updated: "2026-06-01"
 parent_id: search
 ---
 # Search Build Config JSON
@@ -13,7 +13,7 @@ Config file:
 
 ## Scope
 
-`build_config.json` is the Catalogue search source-family and field-dependency contract used behind `studio/services/catalogue/search/build_search.rb --scope catalogue`.
+`build_config.json` is the Catalogue search source-family and field-dependency contract used behind `studio/services/catalogue/search/build_search.py --scope catalogue`.
 Docs Viewer search no longer uses this file.
 
 Current responsibilities include:
@@ -28,13 +28,13 @@ Current responsibilities include:
 
 Current caller:
 
-- `scripts/search/build_search.rb`, reached through `studio/services/catalogue/search/build_search.rb --scope catalogue`
+- `studio/services/catalogue/search/build_search.py --scope catalogue`
 
 The Catalogue builder loads this config at startup, validates the config shape, and then checks that emitted entry fields have source-family declarations.
 
 ## When it is read
 
-- once per `./studio/services/catalogue/search/build_search.rb --scope catalogue` invocation
+- once per `./studio/services/catalogue/search/build_search.py --scope catalogue` invocation
 - before build output is written or skipped
 
 ## Current boundaries

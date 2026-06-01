@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: 2026-05-30
+last_updated: 2026-06-01
 parent_id: dev-home
 ---
 # Scripts
@@ -55,7 +55,7 @@ Do not add a separate risk server for risk dashboards, app inventories, audit la
 Top-level survivors are intentional:
 
 - Docs Viewer docs/search rebuilds use `./docs-viewer/build/build_docs.rb` and `./docs-viewer/build/build_search.rb` directly.
-- Catalogue search uses `./studio/services/catalogue/search/build_search.rb` directly.
+- Catalogue search uses `./studio/services/catalogue/search/build_search.py` directly.
 - `make_srcset_images.sh`, when present, is the stable shell wrapper for the media implementation.
 - shared infrastructure modules now live under `studio/shared/`.
 - shared Ruby/Jekyll helpers now live under `studio/shared/ruby/` or the owning Docs Viewer build path.
@@ -87,7 +87,7 @@ Search builds:
     - `docs-viewer/generated/search/studio/index.json`
     - `assets/data/search/analysis/index.json`
     - `assets/data/search/library/index.json`
-- `./studio/services/catalogue/search/build_search.rb`
+- `./studio/services/catalogue/search/build_search.py`
   - Catalogue-owned search builder
   - source indexes:
     - `assets/data/series_index.json`
