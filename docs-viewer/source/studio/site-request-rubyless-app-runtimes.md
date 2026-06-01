@@ -37,7 +37,7 @@ This means replacing the Ruby builders and helpers that apps currently rely on, 
 
 The Ruby/Jekyll dependency in Docs Viewer generation was a pragmatic shortcut.
 
-When `build_docs.rb` was first built, piggy-backing on the local Jekyll server and Jekyll's Markdown converter saved development time. At that point Docs Viewer was a proof of concept, and using the existing public-site toolchain was a reasonable way to get Markdown rendered into usable HTML quickly.
+When `build_docs.py` was first built, piggy-backing on the local Jekyll server and Jekyll's Markdown converter saved development time. At that point Docs Viewer was a proof of concept, and using the existing public-site toolchain was a reasonable way to get Markdown rendered into usable HTML quickly.
 
 The architecture has since become more complex:
 
@@ -78,34 +78,30 @@ This is the current app-facing Ruby dependency surface found in Studio, Docs Vie
 
 Ruby scripts and helpers currently in the app/data-generation path:
 
-- `docs-viewer/build/build_docs.rb`
+- `docs-viewer/build/build_docs.py`
   - builds Docs Viewer payloads for configured scopes
-  - directly requires `studio/shared/ruby/jekyll_markdown_renderer.rb`
+  - directly requires `studio/shared/python/markdown_renderer.py`
   - owns current custom Docs Viewer token expansion before Markdown rendering
-- `docs-viewer/build/build_search.rb`
+- `docs-viewer/build/build_search.py`
   - builds Docs Viewer search indexes for docs scopes
-- `studio/services/catalogue/search/build_search.rb`
+- `studio/services/catalogue/search/build_search.py`
   - builds the catalogue search index
-- `studio/shared/ruby/jekyll_markdown_renderer.rb`
-  - initializes the Jekyll Markdown converter used by Docs Viewer and catalogue prose rendering
-- `studio/shared/ruby/render_markdown_with_jekyll.rb`
-  - command helper still used by catalogue prose rendering; Docs import validation no longer uses it
-- `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb`
-  - Jekyll server helper; should remain public-preview-only if still needed after app runtime cleanup
+- `studio/shared/python/markdown_renderer.py`
+  - renders trusted Docs Viewer and catalogue prose Markdown through `markdown-it-py`
 
 Docs Viewer direct dependencies:
 
 - `docs-viewer/services/docs_write_rebuild.py`
-  - detects Bundler and runs `bundle exec ruby docs-viewer/build/build_docs.rb`
-  - runs `bundle exec ruby docs-viewer/build/build_search.rb`
+  - runs `docs-viewer/build/build_docs.py`
+  - runs `docs-viewer/build/build_search.py`
   - used for single-scope rebuilds, targeted docs/search rebuilds, and all-scope rebuilds
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
-  - detects Bundler and runs the Ruby Docs Viewer docs/search builders whenever watched source Markdown changes
+  - runs the Python Docs Viewer docs/search builders whenever watched source Markdown changes
 - `docs-viewer/services/docs_html_import.py`
   - validates staged HTML, Markdown, Markdown package, text, SVG, image, and file-media import previews through the shared Python Markdown renderer/import sanitizer boundary
   - no longer detects Bundler or invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`
 - `docs-viewer/services/docs_scope_manifest.py`
-  - emits Docs Viewer scope lifecycle build commands that name `docs-viewer/build/build_docs.rb` and `docs-viewer/build/build_search.rb`
+  - emits Docs Viewer scope lifecycle build commands that name `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py`
   - create/delete apply paths execute the rebuilds through `docs_write_rebuild.py`
 - `docs-viewer/services/docs_management_service.py`
   - manual `/docs/rebuild` and source-config write follow-through call `docs_write_rebuild.py`
@@ -124,9 +120,9 @@ Docs Viewer direct dependencies:
 Studio direct dependencies:
 
 - `bin/local-studio`
-  - starts `docs-viewer/services/docs_live_rebuild_watcher.py`, which currently depends on the Ruby docs/search builders
+  - starts `docs-viewer/services/docs_live_rebuild_watcher.py`, which currently depends on the Python docs/search builders
 - `studio/services/catalogue/catalogue_build_commands.py`
-  - resolves Bundler and constructs `bundle exec ruby studio/services/catalogue/search/build_search.rb --scope catalogue`
+  - constructs `studio/services/catalogue/search/build_search.py --scope catalogue`
 - `studio/services/catalogue/catalogue_build_service.py`
   - uses the catalogue build command helper for catalogue search rebuilds after scoped catalogue writes
 - `studio/services/catalogue/catalogue_write_service.py`
@@ -136,15 +132,14 @@ Studio direct dependencies:
 - `studio/services/catalogue/catalogue_bulk_service.py`
   - bulk-add workflows call `catalogue_build_service.py`
 - `studio/services/catalogue/catalogue_publication_service.py` and `studio/services/catalogue/catalogue_delete_service.py`
-  - publication/delete workflows call the Ruby-backed catalogue search rebuild helper
+  - publication/delete workflows call the Python catalogue search rebuild helper
 - `studio/services/catalogue/catalogue_json_build.py`
-  - adds the Ruby catalogue search builder to scoped JSON build command plans when `rebuild_search` is enabled
+  - adds the Python catalogue search builder to scoped JSON build command plans when `rebuild_search` is enabled
 - `studio/services/catalogue/generate_work_pages.py`
-  - runs `bundle exec ruby studio/shared/ruby/render_markdown_with_jekyll.rb`
-  - uses that helper to render source prose into `content_html` for series JSON, work JSON, and moment JSON payloads
+  - uses the shared Python Markdown renderer to render source prose into `content_html` for series JSON, work JSON, and moment JSON payloads
 - `studio/commands/run_checks.py`
-  - the docs profile invokes `./docs-viewer/build/build_docs.rb --scope studio --write`
-  - the docs profile invokes `./docs-viewer/build/build_search.rb --scope studio --write`
+  - the docs profile invokes `./docs-viewer/build/build_docs.py --scope studio --write`
+  - the docs profile invokes `docs-viewer/build/build_search.py --scope studio --write`
   - docs-viewer smoke profiles still use Jekyll temp builds for browser smoke setup; that is verification/public-preview coupling, not a desired app runtime dependency
 
 Analytics dependencies:
@@ -159,30 +154,30 @@ Analytics dependencies:
 - `analytics-app/app/frontend/js/*`
   - no direct Ruby script dependency found in the current browser modules
 
-Current test/check references that will need to move with the implementation:
+Current test/check references:
 
 - `docs-viewer/tests/python/test_docs_write_rebuild.py`
-  - asserts the current `bundle exec ruby docs-viewer/build/build_docs.rb` and `bundle exec ruby docs-viewer/build/build_search.rb` command shapes
+  - asserts the Python Docs Viewer builder command shapes
 - `docs-viewer/tests/python/test_docs_live_rebuild_watcher.py`
-  - asserts the watcher calls the Ruby Docs Viewer builders
+  - asserts the watcher calls the Python Docs Viewer builders
 - `docs-viewer/tests/python/test_docs_import_service.py`
   - patches `validate_markdown_preview` and rebuild helpers around import workflows
 - `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
   - patches Docs Viewer rebuild and Python Markdown validation helpers for management workflow smoke coverage
 - `studio/tests/python/test_catalogue_build_commands.py`
-  - asserts the current Ruby catalogue search command shape
+  - asserts the Python catalogue search command shape
 - `studio/tests/python/test_docs_logs_indexes.py`
-  - still records `docs-viewer/build/build_docs.rb` as a related file in docs log index fixtures
+  - records `docs-viewer/build/build_docs.py` as a related file in docs log index fixtures
 
 ## Goals
 
-- replace `docs-viewer/build/build_docs.rb` with a Python Docs Viewer payload builder, including the current custom Markdown token pipeline
+- replace the retired Ruby Docs Viewer payload builder with `docs-viewer/build/build_docs.py`, including the current custom Markdown token pipeline
 - replace `docs-viewer/build/build_search.rb` with a Python Docs Viewer search builder
 - replace `studio/services/catalogue/search/build_search.rb` with a Python catalogue search builder
 - remove app-facing dependencies on `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and Jekyll server helper modules
 - make docs live rebuilds call Python builders
 - make local app launchers start Python/JS app runtimes only
-- keep `bin/public-site-build`, Bundler, and Jekyll documented as public-site preview/build tooling only
+- keep direct `bundle exec jekyll serve` / `bundle exec jekyll build`, Bundler, and Jekyll documented as public-site preview/build tooling only
 - preserve the generated JSON shape and useful content semantics while allowing deliberate Docs Viewer v2 improvements to token syntax, preprocessing, rendering, and browser behavior
 
 ## Non-Goals
@@ -197,7 +192,7 @@ Current test/check references that will need to move with the implementation:
 
 The current custom Markdown behavior is not a Jekyll plugin or a separate Ruby token library.
 
-`docs-viewer/build/build_docs.rb` owns the custom token pipeline directly:
+`docs-viewer/build/build_docs.py` owns the custom token pipeline directly:
 
 - it parses front matter itself
 - it resolves custom content tokens before calling the Markdown converter
@@ -297,7 +292,7 @@ Initial implementation guidance:
 
 ### Python Docs Builder
 
-The Python replacement for `docs-viewer/build/build_docs.rb` should own:
+The Python replacement for `docs-viewer/build/build_docs.py` should own:
 
 - source discovery for configured scopes
 - Markdown front matter parsing

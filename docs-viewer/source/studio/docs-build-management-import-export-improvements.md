@@ -16,10 +16,9 @@ The preferred shape is two implementation slices plus one closeout slice.
 
 ## Current Risk
 
-The Docs path crosses language and ownership boundaries:
+The Docs path used to cross language and ownership boundaries:
 
-- Ruby owns `docs-viewer/build/build_docs.rb` and docs search builders.
-- Python owns `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
+- Python owns `docs-viewer/build/build_docs.py`, `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
 - The live watcher and docs-management service both coordinate docs payload rebuilds and docs search updates.
 - Semantic references add derived per-doc and per-target relationship artifacts, which makes affected-doc rebuild optimization useful but dependency-sensitive.
 
@@ -29,7 +28,7 @@ That means a small source edit can still require parsing a whole docs scope befo
 ## Goals
 
 - expose enough rebuild diagnostics to know which docs path is slow before optimizing
-- define a durable affected-doc build contract for `build_docs.rb`
+- define a durable affected-doc build contract for `build_docs.py`
 - make targeted docs payload rebuilds safe around semantic references, deleted docs, metadata changes, and resolver-data changes
 - keep Docs management service logic as orchestration, not as the owner of builder, import, export, or mutation rules
 - keep import/export adapter behavior explicit and documented
@@ -63,15 +62,15 @@ Implementation scope:
 
 Acceptance checks:
 
-- `./docs-viewer/build/build_docs.rb --scope studio` dry run still works without writing
-- `./docs-viewer/build/build_docs.rb --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
+- `./docs-viewer/build/build_docs.py --scope studio` dry run still works without writing
+- `./docs-viewer/build/build_docs.py --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
 - focused tests cover diagnostic payload shaping where the behavior is structured
 - docs-management service responses keep existing keys stable
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
 
 Implementation note:
 
-- `docs-viewer/build/build_docs.rb` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
+- `docs-viewer/build/build_docs.py` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
 - `docs-viewer/services/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
 - `docs-viewer/services/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
 - The owning builder, management, watcher, import, export, and site change-log docs were updated with the new command, response, and log contracts.
@@ -88,12 +87,12 @@ Status: completed in the affected-doc build slice.
 
 Purpose:
 
-- implement a safe affected-doc rebuild path for `docs-viewer/build/build_docs.rb`
+- implement a safe affected-doc rebuild path for `docs-viewer/build/build_docs.py`
 - use it from docs-management and watcher paths only when dependency rules prove it is safe
 
 Implementation scope:
 
-- add a dry-run-first `--only-doc-ids` option to `./docs-viewer/build/build_docs.rb --scope <scope>`
+- add a dry-run-first `--only-doc-ids` option to `./docs-viewer/build/build_docs.py --scope <scope>`
 - keep full-scope rebuild as the fallback when dependency rules are incomplete or unsafe
 - define affected-doc dependency rules for:
   - edited source body
@@ -128,7 +127,7 @@ Risks:
 
 Implementation note:
 
-- `docs-viewer/build/build_docs.rb` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
+- `docs-viewer/build/build_docs.py` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
 - Targeted docs payload rebuilds still build the scope index from current source metadata, render selected per-doc payloads only, and derive semantic-reference by-target artifacts from refreshed selected by-doc records plus existing unselected by-doc records.
 - `docs-viewer/services/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
 - Targeted orchestration falls back to a full docs payload rebuild when existing generated output is missing or incomplete.
@@ -190,7 +189,7 @@ Risks:
 
 This plan is complete.
 
-- `docs-viewer/build/build_docs.rb` has an explicit affected-doc input contract through `--only-doc-ids`
+- `docs-viewer/build/build_docs.py` has an explicit affected-doc input contract through `--only-doc-ids`
 - docs-management, live-watcher, import, and export responses expose enough diagnostics to identify expensive rebuild paths
 - targeted rebuilds are used only where dependency rules make them safe
 - semantic-reference artifacts are preserved correctly under targeted docs rebuilds

@@ -36,12 +36,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Moved catalogue prose rendering in `studio/services/catalogue/generate_work_pages.py` to the shared Python Markdown renderer. Work, series, and moment `content_html` generation no longer invokes `studio/shared/ruby/render_markdown_with_jekyll.rb`; focused fixtures cover representative prose semantics without Jekyll/Kramdown markup lock-in.
 - Confirmed `bin/local-studio` is Python/JS only, added a focused runner contract test for that boundary, and updated Local Studio runner/runtime docs so manual docs rebuild examples point at Python builders while Ruby/Bundler remains public-preview/build only.
 - Updated check-profile and fixture command expectations for Python app builders. The `docs` run-check profile now invokes `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py`, docs-log fixtures cite the Python docs builder, and the named Docs Viewer/catalogue command-shape tests pass against Python builder expectations.
+- Retired the shared app-facing Ruby Markdown/render helpers and the retired Ruby Docs Viewer payload builder that depended on them. `bin/public-site-preview` no longer loads the WEBrick reset filter through `RUBYOPT`; public-site preview can use raw `bundle exec jekyll serve` when no wrapper is needed.
 
 ## Next Task Steer
 
-Continue with Phase 4 task 19: retire or isolate app-facing Ruby helpers.
+Continue with Phase 4 task 20: remove obsolete compatibility scaffolding and mixed-runtime knobs.
 
-Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation/caller orchestration and catalogue prose rendering now use Python. `bin/local-studio` is covered as a Python/JS-only runner, and active check/test command-shape expectations point at Python app builders. The next remaining work is to retire or isolate replaced Ruby helper files as public-preview-only or obsolete.
+Docs Viewer app-facing generation paths are now Python-backed for payloads, docs search, Docs import validation, and Analytics documents Data Sharing apply. Catalogue search generation/caller orchestration and catalogue prose rendering now use Python. `bin/local-studio` is covered as a Python/JS-only runner, active check/test command-shape expectations point at Python app builders, and the shared Ruby Markdown/render helpers are retired. The next remaining work is to remove obsolete compatibility scaffolding, stale Ruby builder entrypoints, and mixed-runtime knobs.
 
 ## Implementation Steer
 
@@ -138,7 +139,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | 17 | done | Make `bin/local-studio` Python/JS only. Remove remaining Bundler detection and Ruby app-builder command assumptions; keep public preview URLs informational only. |
 | 18 | done | Update check profiles and tests that assert Ruby command shapes. Move `docs-viewer/tests/python/test_docs_write_rebuild.py`, `test_docs_live_rebuild_watcher.py`, `test_docs_import_service.py`, `docs_viewer_management_workflows.py`, `studio/tests/python/test_catalogue_build_commands.py`, and docs-log fixture references to Python command/helper expectations. |
-| 19 | planned | Retire or isolate app-facing Ruby helpers. Remove app/data-generation use of `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb`. Any remaining Ruby helper use must be documented as public-preview-only. |
+| 19 | done | Retire or isolate app-facing Ruby helpers. Remove app/data-generation use of `studio/shared/ruby/jekyll_markdown_renderer.rb`, `studio/shared/ruby/render_markdown_with_jekyll.rb`, and `studio/shared/ruby/jekyll_webrick_client_reset_filter.rb`. Any remaining Ruby helper use must be documented as public-preview-only. |
 | 20 | planned | Remove obsolete compatibility scaffolding and mixed-runtime knobs. Delete or retire replaced Ruby builder dispatch options, Bundler override options used only by app builders, stale command examples in active app docs, and tests that exist only to preserve old Ruby command shapes. |
 | 21 | planned | Add explicit cleanup tasks for any leftovers found during implementation. If a temporary bridge, stale generated path, obsolete helper, old docs reference, or retired test cannot be removed immediately, add a new row to this table before closeout with a concrete owner and removal condition. |
 | 22 | planned | Update command/runtime docs. Describe Python Docs Viewer generation, Python docs search generation, Python catalogue search generation, Python catalogue prose rendering, app servers, docs watcher behavior, and live rebuilds; remove active-app examples for disabled startup rebuilds and Ruby app builders. |

@@ -63,7 +63,7 @@ Current builder behaviour for Analysis:
 - consumed by inline docs search on `/analysis/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./docs-viewer/build/build_docs.rb --scope analysis --write`
+  - `./docs-viewer/build/build_docs.py --scope analysis --write`
   - `./docs-viewer/build/build_search.rb --scope analysis --write`
 - targeted docs-search command:
   - `./docs-viewer/build/build_search.rb --scope analysis --write --only-doc-ids analysis --remove-missing`

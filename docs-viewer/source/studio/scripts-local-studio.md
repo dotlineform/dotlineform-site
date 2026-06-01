@@ -30,6 +30,7 @@ It no longer serves `/docs/`, `/analytics/`, or `/ui-catalogue/`.
 `bin/local-ui-catalogue` starts the standalone UI Catalogue demo app.
 `docs-viewer/bin/docs-viewer` starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
 `bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
+Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site work; the public preview path no longer requires a repo Ruby helper.
 `bin/local-all` is the optional host-owned orchestration runner for starting public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and the Docs Viewer web service together.
 
 The old combined bridge command has been retired.

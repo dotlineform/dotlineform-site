@@ -163,9 +163,9 @@ Copy them only if you are copying existing built content; otherwise generate the
 
 Copy:
 
-- `docs-viewer/build/build_docs.rb`
+- `docs-viewer/build/build_docs.py`
 - `docs-viewer/config/scopes/docs_scopes.json`
-- `studio/shared/ruby/jekyll_markdown_renderer.rb`
+- `studio/shared/python/markdown_renderer.py`
 
 For inline docs search, copy:
 

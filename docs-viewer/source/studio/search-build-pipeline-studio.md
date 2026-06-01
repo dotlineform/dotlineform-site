@@ -81,7 +81,7 @@ Current derived search support fields:
 - consumed by inline docs search on `/docs/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./docs-viewer/build/build_docs.rb --scope studio --write`
+  - `./docs-viewer/build/build_docs.py --scope studio --write`
   - `./docs-viewer/build/build_search.rb --scope studio --write`
 - targeted docs-search command:
   - `./docs-viewer/build/build_search.rb --scope studio --write --only-doc-ids search-build-pipeline --remove-missing`

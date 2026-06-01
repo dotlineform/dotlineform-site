@@ -11,6 +11,7 @@ This section documents the current Local Studio app runtime: the app server, rou
 
 Local Studio is intentionally separate from the public dotlineform.com site.
 Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll preview/build work.
+Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site preview/build when no repo wrapper is needed.
 The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
 Risk operations are Local Studio-owned.

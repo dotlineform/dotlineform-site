@@ -118,7 +118,7 @@ Use `--no-livereload` to override that local default for a single run.
 ## Wrapper versus raw Jekyll
 
 `bin/public-site-preview` is intentionally a thin project wrapper around `bundle exec jekyll serve`.
-It adds repo defaults that are easy to forget when typing the raw command.
+It adds repo defaults, but raw `bundle exec jekyll serve` is also a supported public-preview workflow.
 
 The wrapper:
 
@@ -129,7 +129,6 @@ The wrapper:
 - uses `PUBLIC_SITE_HOST` or `JEKYLL_HOST`, defaulting to `127.0.0.1`
 - uses `PUBLIC_SITE_PORT` or `JEKYLL_PORT`, defaulting to `4000`
 - uses `PUBLIC_SITE_LIVERELOAD`, defaulting to disabled
-- loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
 
 In practice, this command:
 
@@ -140,15 +139,14 @@ bin/public-site-preview
 is roughly equivalent to:
 
 ```bash
-RUBYOPT="-rscripts/jekyll_webrick_client_reset_filter.rb" \
 bundle exec jekyll serve \
   --config _config.yml \
   --host 127.0.0.1 \
   --port 4000
 ```
 
-Use `bin/public-site-preview` for normal local public-site work because it encodes the repo defaults.
-Use raw `bundle exec jekyll serve` only when deliberately bypassing or changing those defaults.
+Use `bin/public-site-preview` when you want those defaults loaded from `var/local/site.env`.
+Use raw `bundle exec jekyll serve` when you want the direct Jekyll command without repo wrapper behavior.
 
 ## Related References
 

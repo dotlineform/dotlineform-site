@@ -89,7 +89,7 @@ Search update behavior:
 
 Docs payload rebuild behavior:
 
-- create, source import create/overwrite, metadata, viewability, move, normalize order, delete, and Library returned-package apply writes pass explicit docs payload ids into `./docs-viewer/build/build_docs.rb --scope <scope> --write --only-doc-ids <ids>`
+- create, source import create/overwrite, metadata, viewability, move, normalize order, delete, and Library returned-package apply writes pass explicit docs payload ids into `./docs-viewer/build/build_docs.py --scope <scope> --write --only-doc-ids <ids>`
 - source-config settings writes and explicit `POST /docs/rebuild` remain full same-scope docs payload rebuilds
 - rebuild responses include `rebuild.docs.mode`, `rebuild.docs.doc_ids`, and `rebuild.docs.reason` alongside the existing `rebuild.search` object so callers can tell whether docs payloads used targeted mode or a full fallback
 

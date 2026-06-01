@@ -62,7 +62,7 @@ Current builder behaviour for Library:
 - consumed by inline docs search on `/library/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./docs-viewer/build/build_docs.rb --scope library --write`
+  - `./docs-viewer/build/build_docs.py --scope library --write`
   - `./docs-viewer/build/build_search.rb --scope library --write`
 - targeted docs-search command:
   - `./docs-viewer/build/build_search.rb --scope library --write --only-doc-ids library --remove-missing`

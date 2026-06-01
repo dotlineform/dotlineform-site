@@ -22,7 +22,7 @@ Add an authored semantic-reference token for Docs Viewer Markdown.
 
 Implementation note:
 
-- v1 is implemented in `docs-viewer/build/build_docs.rb` for `work`, `series`, and `moment` references.
+- v1 is implemented in `docs-viewer/build/build_docs.py` for `work`, `series`, and `moment` references.
 - Generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`.
 - The management report is [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references).
 
@@ -203,7 +203,7 @@ Docs Viewer or a future public runtime can progressively enhance `data-ref-actio
 The docs build should emit incremental relationship artifacts alongside the normal docs index and per-doc payloads.
 
 The output should not be a single all-scope registry blob that rewrites whenever one source doc changes.
-The current docs watcher already rebuilds the affected scope only, and `build_docs.rb` already writes unchanged docs payloads incrementally.
+The current docs watcher already rebuilds the affected scope only, and `build_docs.py` already writes unchanged docs payloads incrementally.
 Semantic-reference output should preserve that behavior by diffing and writing per-doc and per-target files.
 
 Proposed paths:
@@ -281,7 +281,7 @@ Current watcher behavior:
 - a changed Studio doc rebuilds only the `studio` docs scope
 - a changed Library doc rebuilds only the `library` docs scope
 - docs search can be targeted to affected `doc_id`s
-- `build_docs.rb` still parses the rebuilt scope, then writes only changed generated files
+- `build_docs.py` still parses the rebuilt scope, then writes only changed generated files
 
 Semantic references should use the same pattern:
 
@@ -488,10 +488,10 @@ That should be a later change because it affects public page layout and generate
 ### Affected-Doc Build Input
 
 Implemented on 2026-05-19.
-`build_docs.rb` now accepts targeted same-scope docs payload input:
+`build_docs.py` now accepts targeted same-scope docs payload input:
 
 ```sh
-./docs-viewer/build/build_docs.rb --scope studio --write --only-doc-ids example-doc
+./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids example-doc
 ```
 
 Current behavior:

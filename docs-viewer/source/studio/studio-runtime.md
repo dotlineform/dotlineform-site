@@ -196,7 +196,7 @@ Studio no longer owns a separate documentation route. Its docs are served by the
 Current Studio usage of the Docs Viewer:
 
 - Studio section docs live in `docs-viewer/source/studio/`
-- `docs-viewer/build/build_docs.rb` builds the Studio docs payload into the Studio docs scope
+- `docs-viewer/build/build_docs.py` builds the Studio docs payload into the Studio docs scope
 - `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio&doc=<doc_id>` opens those docs in the standalone Docs Viewer service
 - Studio page `i` links use those scoped URLs directly
 - the Docs Viewer service owns manage-mode actions such as rebuild beside the docs search input

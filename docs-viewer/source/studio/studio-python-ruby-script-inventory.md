@@ -142,7 +142,7 @@ Immediate work signal: high.
 
 Relevant files:
 
-- `docs-viewer/build/build_docs.rb`
+- `docs-viewer/build/build_docs.py`
 - `docs-viewer/services/docs_html_import.py`
 - `docs-viewer/services/docs_export.py`
 - `docs-viewer/services/docs_import.py`
@@ -152,9 +152,10 @@ Relevant files:
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
 - `docs-viewer/build/build_search.rb`
 
-Docs have the clearest cross-language ownership risk.
-Ruby owns the generated Docs Viewer payload builder and search adapters, while Python owns management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
-That split is acceptable, but it raises consistency risk when a change must update source rules, generated payload shape, search behavior, management responses, and docs-watch behavior together.
+Docs have been moving out of the cross-language ownership risk that originally motivated this inventory.
+Python now owns the generated Docs Viewer payload builder, management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
+Docs search still has retired Ruby references until the Rubyless app-runtime cleanup finishes.
+The remaining consistency risk is keeping source rules, generated payload shape, search behavior, management responses, and docs-watch behavior aligned as the old Ruby entrypoints are removed.
 
 The remaining performance risk is fallback visibility, not a missing targeted-build contract.
 The builder now accepts targeted same-scope docs payload ids, and docs-management, source import, Library returned-package apply, and watcher paths use those ids when dependency rules are explicit.
@@ -165,7 +166,7 @@ Current guardrails and watch points:
 
 - source config, generated reads, mutations, import/export adapters, and rebuild orchestration already have current Python owners; avoid moving that behavior back into the HTTP service layer
 - Docs management transport and endpoint dispatch remain current architecture in `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, and `docs-viewer/services/docs_management_routes.py`; endpoint behavior should stay in focused read, capability, mutation, import, source, rebuild, or audit service modules before being wired through the dispatcher
-- the `build_docs.rb --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
+- the `build_docs.py --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
 - rebuild diagnostics already expose source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time in rebuild responses or logs
 - resolver-data changes outside docs source, such as catalogue title or route changes, remain full-scope until a future change defines explicit affected-id rules for them
 - Ruby builder and Python management response contracts should stay documented together when generated Docs Viewer schema changes
@@ -271,7 +272,7 @@ Immediate work signal: medium.
 | `studio/services/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
 | `docs-viewer/services/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
 | `studio/services/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
-| `docs-viewer/build/build_docs.rb` | 1,576 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
+| `docs-viewer/build/build_docs.py` | 1,576 | high | medium | medium | Central Python docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
 | `studio/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
 | `docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
 | `data-sharing/data_sharing/adapters/tags/adapter.py` | 1,277 | medium | medium | low | Data Sharing apply paths remain adapter-owned and directly tested while delegating tag validation and writes to Analytics helpers. |

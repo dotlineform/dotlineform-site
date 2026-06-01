@@ -11,7 +11,7 @@ viewable: true
 Script:
 
 ```bash
-./docs-viewer/build/build_docs.rb --write
+./docs-viewer/build/build_docs.py --write
 ```
 
 The operational entrypoint is the Docs Viewer-owned builder above.
@@ -48,7 +48,7 @@ Scope configuration:
 - `docs-viewer/config/scopes/docs_scopes.json`
 
 This config is the shared source of truth for docs scope ids, Markdown source roots, generated docs output roots, generated search output paths, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
-`./docs-viewer/build/build_docs.rb`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
+`./docs-viewer/build/build_docs.py`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
 The `output` field owns the generated docs payload root.
 The `search_output` field owns the generated docs-search index path.
 
@@ -165,13 +165,13 @@ Semantic reference tokens:
 Default command:
 
 ```bash
-./docs-viewer/build/build_docs.rb --write
+./docs-viewer/build/build_docs.py --write
 ```
 
 Dry run:
 
 ```bash
-./docs-viewer/build/build_docs.rb
+./docs-viewer/build/build_docs.py
 ```
 
 Flags:
@@ -194,13 +194,13 @@ Flags:
 Targeted dry run:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope studio --only-doc-ids docs-build-management-import-export-improvements
+./docs-viewer/build/build_docs.py --scope studio --only-doc-ids docs-build-management-import-export-improvements
 ```
 
 Targeted write:
 
 ```bash
-./docs-viewer/build/build_docs.rb --scope studio --write --only-doc-ids docs-build-management-import-export-improvements
+./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids docs-build-management-import-export-improvements
 ```
 
 ## Diagnostics
@@ -237,12 +237,12 @@ Current fields:
 - Renderer acceptance fixtures live in `studio/tests/python/test_markdown_renderer_acceptance.py` and cover headings, links, lists, fenced code, inline code, raw HTML, tables, generated plain text, and HTML semantics without comparing against Jekyll/Kramdown output.
 - Custom-token contract fixtures live in `studio/tests/fixtures/docs_viewer_v2_custom_tokens.json`, with validation coverage in `studio/tests/python/test_docs_viewer_v2_custom_token_fixtures.py`.
 - `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/**/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
-- if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.rb --scope <scope> --write`
+- if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.py --scope <scope> --write`
 - Docs Viewer manage mode rebuilds the current docs scope through the standalone Docs Viewer service
-- manual `./docs-viewer/build/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
-- live Docs Viewer management actions chain same-scope docs search through the Docs Viewer service rather than through `build_docs.rb` itself
+- manual `./docs-viewer/build/build_docs.py --scope <scope> --write` remains a low-level docs-payload rebuild only
+- live Docs Viewer management actions chain same-scope docs search through the Docs Viewer service rather than through `build_docs.py` itself
 - changing only the docs data does not require any separate asset pipeline
-- manual `./docs-viewer/build/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio`, `analysis`, and `library`
+- manual `./docs-viewer/build/build_docs.py --write` with no `--scope` rebuilds all configured docs scopes, currently `studio`, `analysis`, and `library`
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
@@ -250,7 +250,7 @@ Current fields:
   - stale semantic-reference by-doc and by-target payloads are removed when references or source docs no longer generate them
 - targeted `--only-doc-ids` writes still rebuild the scope index from current source metadata, including title-based sibling ordering, but render and write only selected per-doc payloads; unchanged unselected rows keep their existing generated payload text length
 - targeted semantic-reference writes rebuild the selected docs' by-doc records and derive by-target buckets from the refreshed selected records plus existing unselected by-doc records, so stale target buckets are removed when a selected doc changes or drops references
-- targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.rb --scope <scope> --write` first when initializing or repairing an output tree
+- targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.py --scope <scope> --write` first when initializing or repairing an output tree
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
 
 Jekyll verification builds:

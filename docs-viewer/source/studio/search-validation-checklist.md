@@ -43,7 +43,7 @@ Prefer real site examples over synthetic test strings.
 
 ## B. Docs-Domain Build And Artifact Checks
 
-- [ ] Run `./docs-viewer/build/build_docs.rb`
+- [ ] Run `./docs-viewer/build/build_docs.py`
 - [ ] Confirm the docs dry run completes without error for configured docs scopes
 - [ ] Run `./docs-viewer/build/build_search.rb --scope studio`
 - [ ] Confirm the dry run reports `docs-viewer/generated/search/studio/index.json` or correctly skips by version check
