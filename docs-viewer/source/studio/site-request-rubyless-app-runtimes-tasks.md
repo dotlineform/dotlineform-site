@@ -26,12 +26,13 @@ This is the implementation tracker for [Rubyless App Runtimes Request](/docs/?sc
 - Added Docs Viewer v2 custom-token contract fixtures for media, interactive HTML, semantic references, invalid references, code-skip behavior, generated reference payloads, and generated search text.
 - Added generated-output contract fixtures for Docs Viewer docs payloads, semantic reference payloads, docs search payloads, catalogue search payloads, and catalogue prose `content_html` without locking in current Jekyll/Kramdown markup.
 - Added the Python Docs Viewer payload builder entrypoint at `docs-viewer/build/build_docs.py`, covering Markdown source loading, scope config, front matter, custom tokens, semantic references, Python Markdown rendering, generated docs payloads, reference payloads, targeted payload mode, browser config writes, and diagnostics. Callers still use the Ruby builder until the later orchestration swap task.
+- Preserved Python Docs Viewer payload builder command behavior with focused checks for dry-run no-write mode, write mode browser config output, unchanged second writes, targeted `--only-doc-ids` CLI diagnostics, generated reference payload behavior, and concise front-matter failure output.
 
 ## Next Task Steer
 
-Continue with Phase 2 task 9: preserve Docs Viewer payload builder command behavior for the Python builder.
+Continue with Phase 2 task 10: build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`.
 
-Use the generated-output contract fixture from task 7 and the new Python builder tests as the app-facing payload shape guards. Keep caller swaps for task 11.
+Use the generated-output contract fixture from task 7 and the existing Ruby search builder behavior as the app-facing search payload shape guards. Keep caller swaps for task 11.
 
 ## Implementation Steer
 
@@ -108,7 +109,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 8 | done | Build the Python Docs Viewer payload builder that replaces `docs-viewer/build/build_docs.rb`. It should read Markdown source and scope config, parse front matter, apply the custom token pipeline, render document HTML/text through the shared Python renderer, write `index.json` and `by-id/*.json`, and preserve the generated Docs Viewer data shape. |
-| 9 | planned | Preserve Docs Viewer payload builder command behavior. Implement dry-run/write modes, scope selection, targeted `--only-doc-ids`, diagnostics, unchanged-file behavior, generated reference payloads, and failure messages needed by management workflows. |
+| 9 | done | Preserve Docs Viewer payload builder command behavior. Implement dry-run/write modes, scope selection, targeted `--only-doc-ids`, diagnostics, unchanged-file behavior, generated reference payloads, and failure messages needed by management workflows. |
 | 10 | planned | Build the Python Docs Viewer search builder that replaces `docs-viewer/build/build_search.rb`. It should consume generated docs payloads, preserve the current search index schema/version/hash behavior, support scope-specific writes, and support targeted docs-search updates where currently used. |
 | 11 | planned | Switch Docs Viewer rebuild orchestration to Python builders. Update `docs-viewer/services/docs_write_rebuild.py`, `docs-viewer/services/docs_live_rebuild_watcher.py`, `docs-viewer/services/docs_scope_manifest.py`, `docs-viewer/services/docs_management_service.py`, `docs-viewer/services/docs_management_mutation_service.py`, `docs-viewer/services/docs_management_import_service.py`, and `docs-viewer/services/docs_import_source_service.py` so docs payload/search rebuilds no longer detect Bundler or invoke Ruby. Keep the docs watcher service, but change its command implementation to Python builders with no Ruby fallback on Python failure. |
 | 12 | planned | Replace Docs import Markdown validation. Remove `docs_html_import.py` dependence on `studio/shared/ruby/render_markdown_with_jekyll.rb`; validate staged HTML, Markdown, Markdown package, text, SVG, image, and file-media previews through the Python renderer/sanitizer boundary. |

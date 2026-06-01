@@ -5,8 +5,11 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import tempfile
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 
@@ -146,6 +149,26 @@ def run_builder(root: Path, *, only_doc_ids: list[str] | None = None, write: boo
     return builder.run(write=write)
 
 
+def run_cli(root: Path, args: list[str]) -> tuple[int, str, str]:
+    cwd = Path.cwd()
+    stdout = StringIO()
+    stderr = StringIO()
+    try:
+        os.chdir(root)
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = build_docs.main(args)
+    finally:
+        os.chdir(cwd)
+    return exit_code, stdout.getvalue(), stderr.getvalue()
+
+
+def diagnostics_from_stdout(stdout: str) -> dict[str, object]:
+    prefix = "Docs builder diagnostics: "
+    lines = [line.removeprefix(prefix) for line in stdout.splitlines() if line.startswith(prefix)]
+    assert lines
+    return json.loads(lines[-1])
+
+
 def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
@@ -209,42 +232,114 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
-        cwd = Path.cwd()
-        try:
-            os.chdir(root)
-            exit_code = build_docs.main(["--scope", "studio", "--write"])
-        finally:
-            os.chdir(cwd)
+        exit_code, _, _ = run_cli(root, ["--scope", "studio", "--write"])
 
-    assert exit_code == 0
-    browser_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-config.json")
-    public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
+        assert exit_code == 0
+        browser_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-config.json")
+        public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
+
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
     assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}
     assert public_config["scopes"] == []
 
 
+def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio"])
+
+        assert exit_code == 0
+        assert stderr == ""
+        assert "Dry run:" in stdout
+        assert "would write doc payloads: 2" in stdout
+        assert diagnostics_from_stdout(stdout)["doc_payloads_changed"] == 2
+        assert not (root / "docs-viewer/generated/docs/studio/index.json").exists()
+        assert not (root / "docs-viewer/generated/docs/studio/references/index.json").exists()
+        assert not (root / "docs-viewer/config/defaults/docs-viewer-config.json").exists()
+        assert not (root / "docs-viewer/config/defaults/docs-viewer-public-config.json").exists()
+
+
+def test_python_docs_builder_cli_reports_unchanged_second_write() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        first_exit, _, _ = run_cli(root, ["--scope", "studio", "--write"])
+        second_exit, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
+
+        diagnostics = diagnostics_from_stdout(stdout)
+
+    assert first_exit == 0
+    assert second_exit == 0
+    assert stderr == ""
+    assert "Docs Viewer browser config unchanged:" in stdout
+    assert "Docs Viewer public browser config unchanged:" in stdout
+    assert "Doc payloads wrote: 0." in stdout
+    assert "Reference by-doc payloads wrote: 0." in stdout
+    assert diagnostics["doc_payloads_changed"] == 0
+    assert diagnostics["reference_index_changed"] == 0
+    assert diagnostics["reference_by_doc_payloads_changed"] == 0
+    assert diagnostics["reference_by_target_payloads_changed"] == 0
+
+
+def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        run_cli(root, ["--scope", "studio", "--write"])
+        parent_before = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
+        write_source_docs(root, child_body_suffix="CLI targeted update.")
+
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--only-doc-ids", "child", "--write"])
+        parent_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
+        child_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        diagnostics = diagnostics_from_stdout(stdout)
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert parent_after == parent_before
+    assert "CLI targeted update." in child_after["content_html"]
+    assert "Doc payloads wrote: 1." in stdout
+    assert diagnostics["build_mode"] == "targeted"
+    assert diagnostics["only_doc_ids"] == ["child"]
+    assert diagnostics["doc_payloads_changed"] == 1
+
+
+def test_python_docs_builder_script_reports_front_matter_errors_without_traceback() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_text(
+            root / "docs-viewer/source/studio/bad.md",
+            """---
+doc_id: bad
+invalid front matter
+---
+# Bad
+""",
+        )
+        completed = subprocess.run(
+            [sys.executable, str(BUILD_DIR / "build_docs.py"), "--scope", "studio", "--write"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    assert completed.returncode == 1
+    assert "problem with front-matter on doc" in completed.stderr
+    assert "Traceback" not in completed.stderr
+
+
 def main() -> None:
     test_python_docs_builder_writes_docs_payloads_and_references()
     test_python_docs_builder_preserves_existing_payloads_for_targeted_builds()
-    cwd = Path.cwd()
-    with tempfile.TemporaryDirectory() as temp_path:
-        # CLI uses Path.cwd() as the repo root; run this check in an isolated mini repo.
-        root = Path(temp_path)
-        prepare_repo(root)
-        try:
-            os.chdir(root)
-            exit_code = build_docs.main(["--scope", "studio", "--write"])
-        finally:
-            os.chdir(cwd)
-        assert exit_code == 0
-        browser_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-config.json")
-        public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
-        assert browser_config["schema_version"] == "docs_viewer_config_v1"
-        assert browser_config["scopes"][0]["scope_id"] == "studio"
-        assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}
-        assert public_config["scopes"] == []
+    test_python_docs_builder_writes_browser_configs_on_cli_write()
+    test_python_docs_builder_cli_dry_run_does_not_write_outputs()
+    test_python_docs_builder_cli_reports_unchanged_second_write()
+    test_python_docs_builder_cli_targeted_write_updates_selected_doc_only()
+    test_python_docs_builder_script_reports_front_matter_errors_without_traceback()
     print("Python Docs Viewer builder tests OK")
 
 
