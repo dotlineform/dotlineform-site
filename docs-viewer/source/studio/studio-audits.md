@@ -2,7 +2,7 @@
 doc_id: studio-audits
 title: Studio Audits
 added_date: 2026-05-03
-last_updated: "2026-05-23"
+last_updated: "2026-06-02"
 parent_id: audit
 viewable: true
 ---
@@ -22,15 +22,15 @@ The first version lists the Studio ready-state audit and provides a Run command.
 
 The page uses:
 
-- `assets/studio/js/studio-audits.js`
-- `assets/studio/js/studio-transport.js`
+- `studio/app/frontend/js/studio-audits.js`
+- `studio/app/frontend/js/studio-transport.js`
 - `studio/app/server/studio/studio_audit_api.py`
 - `studio/app/server/studio/audit_runner.py`
 - `studio/checks/audit_studio_ready_state.py`
 
-Visible runtime copy lives under `ui_text.studio_audits` in `assets/studio/data/studio_config.json`.
+Visible runtime copy lives in `studio/app/frontend/config/ui-text/studio-audits.json`, loaded through `paths.data.ui_text.studio_audits` in `studio/app/frontend/config/studio-config.json`.
 
-The local service endpoint definitions live in `assets/studio/js/studio-transport.js`, matching the existing Studio transport pattern.
+The local service endpoint definitions live in `studio/app/frontend/js/studio-transport.js`, matching the existing Studio transport pattern.
 The active browser endpoints are hosted by the local Studio app server under `/studio/api/audits/...`.
 
 ## Ready State

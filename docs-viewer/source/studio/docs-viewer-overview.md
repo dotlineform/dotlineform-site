@@ -210,7 +210,7 @@ Current recently-added behavior:
 
 - the button is rendered by the shared shell when inline docs search is enabled
 - the runtime sorts current-scope viewable docs by `added_date` descending, then title ascending
-- the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
+- the list is capped by `docs_viewer.recently_added_limit` in the Docs Viewer config family
 - list metadata uses `added_date` and, when available, parent title in the form `date • parent`
 
 Current report behavior:
@@ -239,7 +239,7 @@ Current manage-mode draft behavior:
 - the manage toolbar has a `show viewable` checkbox, checked by default, that keeps viewable docs visible for context
 - unchecking `show viewable` gives a focused non-viewable/draft review tree
 - manage-mode direct links to a viewable doc auto-enable `show viewable` so links can land on the target
-- non-viewable docs are prefixed with `✏️` in the index and use the configured draft color from `studio_config.json`
+- non-viewable docs are prefixed with the configured draft marker in the index and use Docs Viewer config and CSS policy for draft display
 - a selected non-viewable doc can be made viewable through the manage toolbar; the action prompts before also making required non-viewable ancestors or optional descendants viewable
 
 Document view updated-date metadata is scope-configurable because it is more useful in Studio Docs than Library. Docs search continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.

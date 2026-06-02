@@ -56,7 +56,7 @@ Before adding or changing UI:
 
 ### UI Copy Check
 
-For Studio pages, visible runtime copy should normally come from `assets/studio/data/studio_config.json`.
+For Studio pages, visible runtime copy should normally come from route-scoped files under `studio/app/frontend/config/ui-text/`, loaded through `paths.data.ui_text` in `studio/app/frontend/config/studio-config.json`.
 
 Check these points:
 
@@ -116,7 +116,7 @@ Rules:
 - Page templates should own major layout containers and section boundaries.
 - JS should generate only the inner dynamic fragments that actually change at runtime.
 
-For Studio-generated markup, use `assets/studio/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place.
+For Studio-generated markup, use `studio/app/frontend/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place.
 
 ## Site Interaction Defaults
 

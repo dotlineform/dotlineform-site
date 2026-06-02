@@ -78,39 +78,6 @@ export function getStudioDataPath(config, key) {
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getSiteDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "site", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
-export function getDocsScopeDataPath(config, scope, key = "index") {
-  const normalizedScope = normalize(scope);
-  const path = pathValue(config, ["paths", "data", "docs", "scopes", normalizedScope, key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
-export function getSearchScopeDataPath(config, scope, key = "index") {
-  const normalizedScope = normalize(scope);
-  const path = pathValue(config, ["paths", "data", "search", "scopes", normalizedScope, key]);
-  if (typeof path === "string" && path.trim()) {
-    return resolveSiteAssetPath(path);
-  }
-
-  if (normalizedScope === "catalogue") {
-    const legacyPath = pathValue(config, ["paths", "data", "site", "search_index"]);
-    if (typeof legacyPath === "string" && legacyPath.trim()) {
-      return resolveSiteAssetPath(legacyPath);
-    }
-  }
-
-  return "";
-}
-
-export function getSearchPolicyPath(config) {
-  const path = pathValue(config, ["paths", "data", "search", "policy"]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
 export function getStudioUiTextPath(config, group) {
   const normalizedGroup = normalizeUiTextGroup(group);
   const path = pathValue(config, ["paths", "data", "ui_text", normalizedGroup]);
@@ -134,8 +101,7 @@ export function getStudioRoute(config, key) {
   if (routeEntry && typeof routeEntry.path === "string" && routeEntry.path.trim()) {
     return resolveSitePath(routeEntry.path);
   }
-  const path = pathValue(config, ["paths", "routes", key]);
-  return resolveSitePath(typeof path === "string" ? path : "");
+  return "";
 }
 
 export function buildStudioRouteUrl(config, key, params = {}) {
@@ -252,8 +218,4 @@ function applyTextTokens(text, tokens) {
     const value = tokens[key];
     return value == null ? "" : String(value);
   });
-}
-
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
 }

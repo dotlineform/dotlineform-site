@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Config Loader JS
 added_date: 2026-04-01
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: studio
 viewable: true
 ---
@@ -40,14 +40,13 @@ Current responsibilities include:
 - resolving root-relative paths against the current site base path
 - exposing accessors for:
   - Studio data paths
-  - shared site data paths
-  - generated docs-scope data paths
-  - search scope index paths
-  - search policy path
   - scoped UI-text bundle paths
   - Studio route paths
   - Studio UI text from loaded scoped bundles
 - exposing Studio-owned config-backed accessors used by current Studio routes
+
+Legacy exports for shared site data, Docs scope data, search scope indexes, and search policy lookup have been removed.
+Those config surfaces belong to their owning public site, Docs Viewer, or search config families instead of the Local Studio config loader.
 
 The Studio config loader does not publish a fallback copy of the full Studio runtime config or route registry.
 
@@ -67,6 +66,6 @@ What does not stay here:
 - dedicated `/catalogue/search/` policy parsing
   that lives in `assets/js/search/search-policy.js`
 - local write transport
-  that lives in `assets/studio/js/studio-transport.js`
+  that lives in `studio/app/frontend/js/studio-transport.js`
 - page-specific DOM/event logic
   that stays in the page controllers

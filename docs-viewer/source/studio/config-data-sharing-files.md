@@ -1,0 +1,59 @@
+---
+doc_id: config-data-sharing-files
+title: Data Sharing Config Files
+added_date: 2026-06-02
+last_updated: 2026-06-02
+parent_id: studio
+viewable: true
+---
+# Data Sharing Config Files
+
+Config files:
+
+- `data-sharing/config/adapters.json`
+- `data-sharing/config/adapters.schema.json`
+- `data-sharing/config/library-export-configs.json`
+- `data-sharing/config/library-export-configs.schema.json`
+
+## Contract Role
+
+`adapters.json` is the Data Sharing domain registry.
+It defines domain dispatch, adapter modules, operation capabilities, path contracts, source write targets, returned-package staging roots, review output roots, and operation-level UI/action metadata needed by the Data Sharing services.
+
+`library-export-configs.json` defines Library export profiles.
+Profiles describe which documents or fields are packaged for outbound Data Sharing workflows.
+
+Schema files validate those config shapes.
+
+## What Reads Them
+
+Data Sharing services read the adapter registry to dispatch prepare, list-returned, review, and apply operations.
+Library export tooling reads Library export profiles during package preparation.
+Analytics-hosted Data Sharing browser routes read workflow metadata through `/analytics/api/data-sharing/config`; that endpoint publishes a UI-safe registry view and attaches Library sharing profiles to the prepare capability.
+The browser should not fetch these files directly through Analytics static file serving.
+
+## Edit Class
+
+`adapters.json` is maintainer-editable workflow config.
+It can change behavior, source-write scope, and adapter dispatch, so changes require focused Data Sharing tests.
+
+`library-export-configs.json` is user/maintainer-editable workflow config.
+It is safer to edit than the adapter registry, but profile changes should still be checked with prepare/export tests.
+
+Schemas are code infrastructure.
+
+## Cleanup Review
+
+Cleanup should focus on ownership:
+
+- keep Data Sharing domain capability and path contracts in `adapters.json`, not Studio or Analytics route config
+- keep route visible copy in Analytics UI-text bundles, not adapter capability records unless the copy is operation-owned
+- remove retired domains or operations only with service dispatch tests
+- keep source-write targets explicit and narrow
+- keep returned-package staging and review output paths under local working output roots
+
+Further work for subsequent sessions:
+
+- keep `/analytics/api/data-sharing/config` as the only browser-facing Data Sharing config lookup for Analytics-hosted Data Sharing routes
+- keep the public config response on a whitelist of UI-needed fields; do not expose adapter path contracts, source write targets, output path patterns, metadata contracts, or document field contracts to browser routes
+- if the public config response needs more shaping or more domains, move the public-payload helpers out of `analytics_data_sharing_api.py` into a focused module and keep the current static-path and payload-whitelist tests

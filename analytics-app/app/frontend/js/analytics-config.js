@@ -1,25 +1,61 @@
 const DEFAULT_ANALYTICS_CONFIG = {
   "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
-  "paths": {
+  "app": {
     "routes": {
-      "series_tags": "/analytics/series-tags/",
-      "series_tag_editor": "/analytics/series-tag-editor/",
-      "data_sharing_prepare": "/analytics/data-sharing/prepare/?mode=manage",
-      "data_sharing_review": "/analytics/data-sharing/review/?mode=manage",
-      "tag_registry": "/analytics/tag-registry/",
-      "tag_aliases": "/analytics/tag-aliases/",
-      "tag_groups": "/analytics/tag-groups/",
-      "series_page_base": "/series/",
-      "library_page": "/library/",
-      "analysis_page": "/analysis/",
-      "works_page_base": "/works/"
-    },
-    "data": {
-      "analytics": {
-        "data_sharing_adapters": "/data-sharing/config/adapters.json",
-        "library_export_configs": "/data-sharing/config/library-export-configs.json"
+      "tag_groups": {
+        "label": "tag groups",
+        "title": "Tag Groups",
+        "path": "/analytics/tag-groups/",
+        "script": "/analytics/app/frontend/js/tag-groups.js",
+        "nav": false
       },
+      "tag_registry": {
+        "label": "registry",
+        "title": "Tag Registry",
+        "path": "/analytics/tag-registry/",
+        "script": "/analytics/app/frontend/js/tag-registry.js",
+        "nav": false
+      },
+      "tag_aliases": {
+        "label": "aliases",
+        "title": "Tag Aliases",
+        "path": "/analytics/tag-aliases/",
+        "script": "/analytics/app/frontend/js/tag-aliases.js",
+        "nav": false
+      },
+      "series_tags": {
+        "label": "series tags",
+        "title": "Series Tags",
+        "path": "/analytics/series-tags/",
+        "script": "/analytics/app/frontend/js/series-tags.js",
+        "nav": false
+      },
+      "series_tag_editor": {
+        "label": "tag editor",
+        "title": "Series Tag Editor",
+        "path": "/analytics/series-tag-editor/",
+        "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
+        "nav": false
+      },
+      "data_sharing_prepare": {
+        "label": "prepare share",
+        "title": "Prepare Share Package",
+        "path": "/analytics/data-sharing/prepare/?mode=manage",
+        "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
+        "nav": false
+      },
+      "data_sharing_review": {
+        "label": "review share",
+        "title": "Review Returned Package",
+        "path": "/analytics/data-sharing/review/?mode=manage",
+        "script": "/analytics/app/frontend/js/data-sharing-review.js",
+        "nav": false
+      }
+    }
+  },
+  "paths": {
+    "data": {
       "site": {
         "series_index": "/assets/data/series_index.json",
         "works_index": "/assets/data/works_index.json"
@@ -173,11 +209,6 @@ export function getAnalyticsCoverageGroups(config) {
   return sanitizeStringArray(pathValue(config, ["analysis", "groups", "coverage_groups"]), fallback);
 }
 
-export function getAnalyticsDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "analytics", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
 export function getSiteDataPath(config, key) {
   const path = pathValue(config, ["paths", "data", "site", key]);
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
@@ -190,7 +221,7 @@ export function getAnalyticsUiTextPath(config, group) {
 }
 
 export function getAnalyticsRoute(config, key) {
-  const path = pathValue(config, ["paths", "routes", key]);
+  const path = pathValue(config, ["app", "routes", key, "path"]);
   return resolveSitePath(typeof path === "string" ? path : "");
 }
 

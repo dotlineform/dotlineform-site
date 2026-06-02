@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
 
 try:
     from analytics_data_sharing_api import service_endpoints as data_sharing_service_endpoints
@@ -12,50 +13,32 @@ except ModuleNotFoundError:  # pragma: no cover - supports package-style imports
     from .analytics_data_sharing_api import service_endpoints as data_sharing_service_endpoints
 
 
-ANALYTICS_VIEWS: dict[str, dict[str, str]] = {
-    "tag_groups": {
-        "label": "tag groups",
-        "title": "Tag Groups",
-        "path": "/analytics/tag-groups/",
-        "script": "/analytics/app/frontend/js/tag-groups.js",
-    },
-    "tag_registry": {
-        "label": "registry",
-        "title": "Tag Registry",
-        "path": "/analytics/tag-registry/",
-        "script": "/analytics/app/frontend/js/tag-registry.js",
-    },
-    "tag_aliases": {
-        "label": "aliases",
-        "title": "Tag Aliases",
-        "path": "/analytics/tag-aliases/",
-        "script": "/analytics/app/frontend/js/tag-aliases.js",
-    },
-    "series_tags": {
-        "label": "series tags",
-        "title": "Series Tags",
-        "path": "/analytics/series-tags/",
-        "script": "/analytics/app/frontend/js/series-tags.js",
-    },
-    "series_tag_editor": {
-        "label": "tag editor",
-        "title": "Series Tag Editor",
-        "path": "/analytics/series-tag-editor/",
-        "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
-        "nav": "false",
-    },
-    "data_sharing_prepare": {
-        "label": "prepare share",
-        "title": "Prepare Share Package",
-        "path": "/analytics/data-sharing/prepare/?mode=manage",
-        "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
-    },
-    "data_sharing_review": {
-        "label": "review share",
-        "title": "Review Returned Package",
-        "path": "/analytics/data-sharing/review/?mode=manage",
-        "script": "/analytics/app/frontend/js/data-sharing-review.js",
-    },
+ANALYTICS_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
+    "label",
+    "title",
+    "path",
+    "script",
+    "nav",
+)
+
+ANALYTICS_ROUTE_COPY_FIELDS: tuple[str, ...] = (
+    "label",
+    "title",
+    "path",
+    "script",
+    "nav",
+)
+
+ANALYTICS_ROUTE_REGISTRY_PATH = ("app", "routes")
+
+ANALYTICS_SERVED_ROUTE_PATHS: dict[str, str] = {
+    "tag_groups": "/analytics/tag-groups/",
+    "tag_registry": "/analytics/tag-registry/",
+    "tag_aliases": "/analytics/tag-aliases/",
+    "series_tags": "/analytics/series-tags/",
+    "series_tag_editor": "/analytics/series-tag-editor/",
+    "data_sharing_prepare": "/analytics/data-sharing/prepare/",
+    "data_sharing_review": "/analytics/data-sharing/review/",
 }
 
 ANALYTICS_TOP_NAV_VIEW_IDS: tuple[str, ...] = ()
@@ -114,11 +97,105 @@ def load_analytics_config(repo_root: Path) -> dict[str, object]:
         raise RuntimeError(f"Could not read Analytics config: {config_path}") from error
     if not isinstance(payload, dict):
         raise RuntimeError(f"Analytics config must be a JSON object: {config_path}")
+    validate_analytics_route_registry(repo_root, payload)
     return payload
 
 
-def analytics_views(_repo_root: Path) -> dict[str, dict[str, str]]:
-    return {view_id: dict(view) for view_id, view in ANALYTICS_VIEWS.items()}
+def analytics_route_registry(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, dict[str, object]]:
+    source = payload if payload is not None else load_analytics_config(repo_root)
+    raw_routes: object = source
+    for key in ANALYTICS_ROUTE_REGISTRY_PATH:
+        raw_routes = raw_routes.get(key) if isinstance(raw_routes, dict) else None
+    if not isinstance(raw_routes, dict):
+        raise RuntimeError("Analytics config app.routes must be a JSON object")
+
+    return {
+        route_id: {field: route[field] for field in ANALYTICS_ROUTE_COPY_FIELDS if field in route}
+        for route_id, route in raw_routes.items()
+        if isinstance(route_id, str) and isinstance(route, dict)
+    }
+
+
+def validate_analytics_route_registry(repo_root: Path, payload: dict[str, object]) -> None:
+    raw_routes: object = payload
+    for key in ANALYTICS_ROUTE_REGISTRY_PATH:
+        raw_routes = raw_routes.get(key) if isinstance(raw_routes, dict) else None
+    if not isinstance(raw_routes, dict):
+        raise RuntimeError("Analytics config app.routes must be a JSON object")
+
+    errors: list[str] = []
+    seen_paths: dict[str, str] = {}
+
+    for route_id, route in raw_routes.items():
+        if not isinstance(route_id, str) or not route_id.strip():
+            errors.append("route ids must be non-empty strings")
+            continue
+        if not isinstance(route, dict):
+            errors.append(f"{route_id}: route must be a JSON object")
+            continue
+
+        for field in ANALYTICS_ROUTE_REQUIRED_FIELDS:
+            if field not in route:
+                errors.append(f"{route_id}: missing required field {field}")
+
+        path = route.get("path")
+        normalized_path = normalize_route_path(str(path)) if isinstance(path, str) and path.strip() else ""
+        if not normalized_path:
+            errors.append(f"{route_id}: missing path")
+        elif normalized_path in seen_paths:
+            errors.append(f"{route_id}: duplicate path with {seen_paths[normalized_path]}: {path}")
+        else:
+            seen_paths[normalized_path] = route_id
+
+        script = route.get("script")
+        if not isinstance(script, str) or not script.strip():
+            errors.append(f"{route_id}: missing script")
+        elif not resolve_analytics_static_path(repo_root, script.strip()).exists():
+            errors.append(f"{route_id}: script does not exist: {script}")
+
+        served_path = ANALYTICS_SERVED_ROUTE_PATHS.get(route_id)
+        if not served_path:
+            errors.append(f"{route_id}: no current Analytics route serves this view")
+        elif normalize_route_path(served_path) != normalized_path:
+            errors.append(f"{route_id}: path {path} does not match served route {served_path}")
+
+        if not isinstance(route.get("nav"), bool):
+            errors.append(f"{route_id}: nav must be boolean")
+
+    for route_id in sorted(set(ANALYTICS_SERVED_ROUTE_PATHS) - set(raw_routes)):
+        errors.append(f"{route_id}: missing Analytics route metadata")
+
+    paths_routes = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
+    paths_routes = paths_routes.get("routes") if isinstance(paths_routes.get("routes"), dict) else {}
+    if isinstance(paths_routes, dict):
+        duplicate_keys = sorted(set(raw_routes) & set(paths_routes))
+        for key in duplicate_keys:
+            errors.append(f"{key}: Analytics route metadata must live in app.routes, not paths.routes")
+
+    if errors:
+        raise RuntimeError("Invalid Analytics route registry: " + "; ".join(errors))
+
+
+def normalize_route_path(path: str) -> str:
+    parsed = urlsplit(path)
+    normalized = parsed.path.strip() or "/"
+    if normalized != "/" and not normalized.endswith("/"):
+        normalized = f"{normalized}/"
+    return normalized
+
+
+def resolve_analytics_static_path(repo_root: Path, request_path: str) -> Path:
+    if request_path.startswith("/analytics/app/"):
+        relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+    elif request_path.startswith("/analytics/data/"):
+        relative = f"analytics-app/data/{request_path.removeprefix('/analytics/data/')}"
+    else:
+        relative = request_path.lstrip("/")
+    return repo_root / relative
+
+
+def analytics_views(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, dict[str, object]]:
+    return analytics_route_registry(repo_root, payload)
 
 
 def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
@@ -181,7 +258,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
         "views": [
             {"id": view_id, **view}
-            for view_id, view in analytics_views(repo_root).items()
+            for view_id, view in analytics_views(repo_root, payload).items()
         ],
         "navigation": {
             "primary": list(ANALYTICS_TOP_NAV_VIEW_IDS),

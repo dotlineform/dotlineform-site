@@ -9,6 +9,8 @@ from pathlib import Path
 import sys
 import tempfile
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
@@ -19,7 +21,7 @@ for path in (REPO_ROOT, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
-from analytics_app_config import runtime_config  # noqa: E402
+from analytics_app_config import load_analytics_config, runtime_config, validate_analytics_route_registry  # noqa: E402
 from analytics_app_server import AnalyticsAppRequestHandler  # noqa: E402
 
 
@@ -33,6 +35,9 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert runtime["navigation"]["primary"] == []
+    assert "routes" not in payload["paths"]
+    assert payload["app"]["routes"]["tag_registry"]["path"] == "/analytics/tag-registry/"
+    assert payload["app"]["routes"]["data_sharing_prepare"]["path"] == "/analytics/data-sharing/prepare/?mode=manage"
     assert any(view["id"] == "tag_registry" and view["path"] == "/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/analytics/series-tags/" for view in runtime["views"])
@@ -59,6 +64,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert data_sharing == {
         "base": "/analytics/api/data-sharing",
         "health": "/analytics/api/data-sharing/health",
+        "config": "/analytics/api/data-sharing/config",
         "selectable_records": "/analytics/api/data-sharing/selectable-records",
         "returned_packages": "/analytics/api/data-sharing/returned-packages",
         "prepare": "/analytics/api/data-sharing/prepare",
@@ -66,9 +72,25 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
         "apply": "/analytics/api/data-sharing/apply",
     }
 
-    assert runtime["data_paths"]["analytics"]["data_sharing_adapters"] == "/data-sharing/config/adapters.json"
+    assert "analytics" not in runtime["data_paths"]
+    assert runtime["data_paths"]["site"]["series_index"] == "/assets/data/series_index.json"
+    assert runtime["data_paths"]["site"]["works_index"] == "/assets/data/works_index.json"
     assert runtime["data_paths"]["ui_text"]["tag_registry"] == "/analytics/app/frontend/config/ui-text/tag-registry.json"
     assert runtime["modals"]["event"] == "analytics:open-modal"
+    assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
+    assert payload["analysis"]["rag"]["deprecated_statuses"] == ["deprecated", "candidate"]
+    assert payload["analysis"]["rag"]["completeness"]["group_coverage_denominator"] == 4
+    assert payload["analysis"]["rag"]["rules"]["amber"]["if_missing_all_groups"] == ["form", "theme"]
+
+
+def test_analytics_route_registry_rejects_paths_routes_duplicates() -> None:
+    payload = load_analytics_config(REPO_ROOT)
+    paths = payload.setdefault("paths", {})
+    assert isinstance(paths, dict)
+    paths["routes"] = {"tag_registry": "/analytics/tag-registry/"}
+
+    with pytest.raises(RuntimeError, match="Analytics route metadata must live in app.routes"):
+        validate_analytics_route_registry(REPO_ROOT, payload)
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:
@@ -98,8 +120,8 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/analytics/app/frontend/js/tag-registry.js") is True
     assert allowed("/analytics/app/frontend/config/analytics-config.json") is True
     assert allowed("/analytics/app/assets/css/analytics.css") is True
-    assert allowed("/data-sharing/config/adapters.json") is True
-    assert allowed("/data-sharing/config/library-export-configs.json") is True
+    assert allowed("/data-sharing/config/adapters.json") is False
+    assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/analytics/data/canonical/tag-registry.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
 

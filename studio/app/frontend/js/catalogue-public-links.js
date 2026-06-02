@@ -1,7 +1,3 @@
-import {
-  getStudioRoute
-} from "./studio-config.js";
-
 export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
   const normalizedPath = normalizePublicPath(path);
   return buildPublicSiteUrl(config, normalizedPath, params);
@@ -29,13 +25,8 @@ export function buildPublicWorkDetailUrl(config, detailUid, params = {}) {
 }
 
 export function buildPublicMomentUrl(config, momentId, params = {}) {
-  return buildPublicRecordUrl(config, "moments_page_base", "/moments/", momentId, params);
-}
-
-function buildPublicRecordUrl(config, routeKey, fallbackBase, recordId, params = {}) {
-  const id = normalizeText(recordId);
-  const routeBase = normalizeRouteBase(getStudioRoute(config, routeKey) || fallbackBase);
-  return buildPublicCatalogueUrl(config, id ? `${routeBase}${encodeURIComponent(id)}/` : routeBase, params);
+  const id = normalizeText(momentId);
+  return buildPublicCatalogueUrl(config, id ? `/moments/${encodeURIComponent(id)}/` : "/moments/", params);
 }
 
 function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
@@ -60,11 +51,6 @@ function getStudioSiteBase(config, siteKey) {
   const site = sites && sites[siteKey];
   const value = site && site.base;
   return typeof value === "string" && value.trim() ? value.trim().replace(/\/+$/, "") : "";
-}
-
-function normalizeRouteBase(value) {
-  const text = normalizePublicPath(value || "/");
-  return text.endsWith("/") ? text : `${text}/`;
 }
 
 function normalizePublicPath(value) {

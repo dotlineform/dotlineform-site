@@ -61,6 +61,63 @@ def selectable_records_payload() -> dict[str, object]:
     }
 
 
+def config_payload() -> dict[str, object]:
+    return {
+        "ok": True,
+        "schema_version": "data_sharing_adapters_v2",
+        "adapters": [
+            {
+                "id": "documents",
+                "label": "Documents",
+                "status": "active",
+                "data_domains": {
+                    "library": {
+                        "label": "Library",
+                        "scope": "library",
+                        "status": "active",
+                        "selection_model": "documents",
+                    }
+                },
+                "capabilities": [
+                    {
+                        "operation": "prepare",
+                        "status": "active",
+                        "message": "",
+                        "selection_model": "documents",
+                        "sharing_profiles": [
+                            {
+                                "id": "library-parent-child-relationships",
+                                "label": "Parent-child relationships",
+                                "enabled": True,
+                                "scopes": ["library"],
+                                "target": {"format": "json", "supported_formats": ["json"]},
+                                "selection": {
+                                    "mode": "explicit_doc_ids",
+                                    "include_descendants": True,
+                                    "include_non_viewable": True,
+                                },
+                            }
+                        ],
+                    },
+                    {
+                        "operation": "list_returned",
+                        "status": "active",
+                        "message": "",
+                        "selection_model": "none",
+                    },
+                    {
+                        "operation": "apply",
+                        "status": "active",
+                        "message": "",
+                        "selection_model": "records",
+                        "apply_actions": [],
+                    },
+                ],
+            }
+        ],
+    }
+
+
 def prepare_payload() -> dict[str, object]:
     return {
         "ok": True,
@@ -149,6 +206,7 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         parsed = urlparse(request.url)
         data_sharing_paths = {
             "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/config",
             "/analytics/api/data-sharing/selectable-records",
             "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
@@ -161,6 +219,8 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         payload: dict[str, object]
         if parsed.path == "/analytics/api/data-sharing/health":
             payload = {"ok": True, "service": "analytics_data_sharing", "dry_run": False}
+        elif parsed.path == "/analytics/api/data-sharing/config":
+            payload = config_payload()
         elif parsed.path == "/analytics/api/data-sharing/selectable-records":
             payload = selectable_records_payload()
         elif parsed.path == "/analytics/api/data-sharing/prepare":
@@ -194,6 +254,8 @@ def assert_runtime_views(base_url: str) -> None:
     data_sharing = services.get("data_sharing", {}) if isinstance(services, dict) else {}
     if data_sharing.get("health") != "/analytics/api/data-sharing/health":
         raise AssertionError(f"runtime config missing Analytics Data Sharing API endpoints: {data_sharing!r}")
+    if data_sharing.get("config") != "/analytics/api/data-sharing/config":
+        raise AssertionError(f"runtime config missing Analytics Data Sharing config endpoint: {data_sharing!r}")
 
 
 def read_json_url(url: str) -> dict[str, object]:
@@ -257,8 +319,10 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
+            requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
+            page.on("request", lambda request: requests.append(request.url))
             data_sharing_api_calls = install_mock_data_sharing_api(page)
 
             assert_prepare(page, base_url)
@@ -267,6 +331,7 @@ def main(argv: list[str] | None = None) -> int:
 
         required_paths = {
             "/analytics/api/data-sharing/health",
+            "/analytics/api/data-sharing/config",
             "/analytics/api/data-sharing/selectable-records",
             "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
@@ -278,6 +343,9 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"missing Analytics Data Sharing API calls: {sorted(missing_paths)!r}; calls={data_sharing_api_calls!r}")
         if "/docs/generated/index" in seen_paths:
             raise AssertionError(f"prepare page still read the generic generated docs index: {data_sharing_api_calls!r}")
+        static_config_requests = [request for request in requests if "/data-sharing/config/" in request]
+        if static_config_requests:
+            raise AssertionError(f"routes still requested static Data Sharing config: {static_config_requests!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

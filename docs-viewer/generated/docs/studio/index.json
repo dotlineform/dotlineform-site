@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T21:15:17Z",
+  "generated_at": "2026-06-02T22:46:18Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -232,7 +232,7 @@
       "source_path": "scripts-audit-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json",
-      "content_text_length": 2917
+      "content_text_length": 2927
     },
     {
       "scope": "studio",
@@ -338,14 +338,14 @@
       "doc_id": "studio-audits",
       "title": "Studio Audits",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-06-02",
       "parent_id": "audit",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-audits",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json",
-      "content_text_length": 2140
+      "content_text_length": 2244
     },
     {
       "scope": "studio",
@@ -1692,7 +1692,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 18327
+      "content_text_length": 18345
     },
     {
       "scope": "studio",
@@ -2227,7 +2227,7 @@
       "source_path": "config-search-policy-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-policy-json.json",
-      "content_text_length": 1952
+      "content_text_length": 1960
     },
     {
       "scope": "studio",
@@ -2471,6 +2471,34 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-analytics-config-json",
+      "title": "Analytics Config JSON",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-analytics-config-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-analytics-config-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json",
+      "content_text_length": 3553
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-analytics-ui-text-json",
+      "title": "Analytics UI Text Config",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-analytics-ui-text-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-analytics-ui-text-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-ui-text-json.json",
+      "content_text_length": 1735
+    },
+    {
+      "scope": "studio",
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
@@ -2488,42 +2516,42 @@
       "doc_id": "catalogue-status",
       "title": "Catalogue Drafts",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-22 20:55",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "catalogue-status.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-status.json",
-      "content_text_length": 3252
+      "content_text_length": 3285
     },
     {
       "scope": "studio",
       "doc_id": "catalogue-field-registry-review",
       "title": "Catalogue Field Registry",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "catalogue-field-registry-review.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-field-registry-review",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-field-registry-review.json",
-      "content_text_length": 2501
+      "content_text_length": 2548
     },
     {
       "scope": "studio",
       "doc_id": "scripts-verify-catalogue-field-registry",
       "title": "Catalogue Field Registry Verification",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-verify-catalogue-field-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-verify-catalogue-field-registry.json",
-      "content_text_length": 2969
+      "content_text_length": 2987
     },
     {
       "scope": "studio",
@@ -2593,7 +2621,7 @@
       "source_path": "data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue.json",
-      "content_text_length": 1568
+      "content_text_length": 1578
     },
     {
       "scope": "studio",
@@ -2607,7 +2635,7 @@
       "source_path": "catalogue-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-series-editor.json",
-      "content_text_length": 9903
+      "content_text_length": 9918
     },
     {
       "scope": "studio",
@@ -2621,7 +2649,7 @@
       "source_path": "data-models-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue-source",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-source.json",
-      "content_text_length": 10842
+      "content_text_length": 10863
     },
     {
       "scope": "studio",
@@ -2635,7 +2663,7 @@
       "source_path": "scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-source.json",
-      "content_text_length": 3484
+      "content_text_length": 3494
     },
     {
       "scope": "studio",
@@ -2677,7 +2705,7 @@
       "source_path": "studio-works.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-works",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-works.json",
-      "content_text_length": 4671
+      "content_text_length": 4707
     },
     {
       "scope": "studio",
@@ -2754,42 +2782,42 @@
       "doc_id": "studio-config-and-save-flow",
       "title": "Config and Save Flow",
       "added_date": "2026-04-22",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 11006
+      "content_text_length": 11053
     },
     {
       "scope": "studio",
-      "doc_id": "config-studio-config-json",
-      "title": "Config JSON",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-30",
+      "doc_id": "config-files-inventory",
+      "title": "Config Files Inventory",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
-      "source_path": "config-studio-config-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 6106
+      "source_path": "config-files-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-files-inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json",
+      "content_text_length": 6411
     },
     {
       "scope": "studio",
       "doc_id": "config-studio-config-js",
       "title": "Config Loader JS",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2585
+      "content_text_length": 2745
     },
     {
       "scope": "studio",
@@ -2804,6 +2832,34 @@
       "viewer_url": "/docs/?scope=studio&doc=data-flow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-flow.json",
       "content_text_length": 5237
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-data-sharing-files",
+      "title": "Data Sharing Config Files",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-data-sharing-files.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-files",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-files.json",
+      "content_text_length": 2747
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-docs-viewer-files",
+      "title": "Docs Viewer Config Files",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-docs-viewer-files.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer-files",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json",
+      "content_text_length": 2849
     },
     {
       "scope": "studio",
@@ -2975,6 +3031,34 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-studio-config-json",
+      "title": "Studio Config JSON",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-studio-config-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
+      "content_text_length": 4920
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-studio-data-configs",
+      "title": "Studio Data Config Files",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-studio-data-configs.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-studio-data-configs",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-data-configs.json",
+      "content_text_length": 1774
+    },
+    {
+      "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
@@ -2986,6 +3070,20 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
       "content_text_length": 10763
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-studio-ui-text-json",
+      "title": "Studio UI Text Config",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-studio-ui-text-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-studio-ui-text-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-ui-text-json.json",
+      "content_text_length": 2345
     },
     {
       "scope": "studio",
@@ -3321,7 +3419,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json",
-      "content_text_length": 11782
+      "content_text_length": 11895
     }
   ]
 }

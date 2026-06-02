@@ -33,12 +33,12 @@ Primary template:
 
 Page controller:
 
-- `assets/studio/js/studio-works.js`
+- `studio/app/frontend/js/studio-works.js`
 
 Supporting modules:
 
-- `assets/studio/js/studio-ui.js`
-- `assets/studio/js/studio-data.js`
+- `studio/app/frontend/js/studio-ui.js`
+- `studio/app/frontend/js/studio-data.js`
 
 Current data sources:
 
@@ -168,7 +168,7 @@ Meaning:
 
 ## Local App Migration
 
-The page shell is mounted in the local Studio app server and reuses the existing `assets/studio/js/studio-works.js` browser module.
+The page shell is mounted in the local Studio app server and reuses the existing `studio/app/frontend/js/studio-works.js` browser module.
 The old Jekyll route shell has been retired.
 Because Studio and the public Jekyll preview now have separate local hosts, the controller uses the local Studio public-site link resolver for work and series links.
 
@@ -184,7 +184,7 @@ This page follows the Studio-specific shared UI boundary documented in [UI Frame
 - `data-role` defines JS selectors
 - `data-state` defines active sort state
 
-`assets/studio/js/studio-ui.js` holds the role selector and state token used by `studio-works.js`.
+`studio/app/frontend/js/studio-ui.js` holds the role selector and state token used by `studio-works.js`.
 
 ## Change Guidance
 
@@ -193,4 +193,4 @@ If a request refers to:
 - “sort buttons”
   - start with `[data-role="sort-button"]` and `.tagStudioList__sortBtn`
 - “active sort state”
-  - start with `updateHeaderState(...)` in `assets/studio/js/studio-works.js`
+  - start with `updateHeaderState(...)` in `studio/app/frontend/js/studio-works.js`

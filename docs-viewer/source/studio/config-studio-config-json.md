@@ -1,8 +1,8 @@
 ---
 doc_id: config-studio-config-json
-title: Config JSON
+title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: studio
 viewable: true
 ---
@@ -10,146 +10,119 @@ viewable: true
 
 Config file:
 
-- `assets/studio/data/studio_config.json`
+- `studio/app/frontend/config/studio-config.json`
 
-## Scope
+See also:
 
-`studio_config.json` is the shared browser-facing bootstrap manifest for Studio pages.
-It is published into the local Studio runtime config; it is not a shared manifest for Analytics or public Docs Viewer scopes.
+- [Config Files Inventory](/docs/?scope=studio&doc=config-files-inventory)
+- [Studio UI Text Config](/docs/?scope=studio&doc=config-studio-ui-text-json)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 
-Current responsibilities include:
+## Contract Role
 
-- route paths used by Studio UI
-- JSON data paths used by Studio loaders
-- shared Docs Viewer settings used by `/docs/` and `/library/`
-- scope-specific Docs Viewer UI status emoji definitions
-- the route and feed path for the current Studio activity page
-- route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
-- scoped Studio UI-text bundle paths under `paths.data.ui_text`; Docs Viewer copy belongs to `docs-viewer/config/ui-text/ui-text.json`
-- the Studio Audits route path and scoped UI-text bundle path
-- catalogue UI options such as the Studio series-type dropdown values
+`studio-config.json` is the source browser-facing manifest for the Local Studio app.
+The local app server reads it, validates the Local Studio route registry, injects runtime details, and serves the combined payload as the Studio runtime config.
 
-The file is the root browser manifest.
-It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`, while Docs Viewer copy belongs under `docs-viewer/config/ui-text/ui-text.json`.
-Domain behavior should live with the domain runtime that uses the config.
-Analytics app config now owns Analytics/Data Sharing route, UI-text, scoring, and endpoint paths.
-For example, Analytics scoring code lives in `analytics-app/app/frontend/js/analysis-tag-scoring.js`; `studio_config.json` no longer supplies that runtime's policy values or `/analysis/` public route/search paths.
+The file currently owns:
 
-## What calls it
+- Local Studio route shell metadata under `app.routes`
+- Studio data path lookup under `paths.data.studio`
+- Studio UI-text bundle path lookup under `paths.data.ui_text`
 
-This file is fetched through **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**.
+It does not own:
 
-Current direct consumers of that loader include:
+- Analytics app routes or Analytics tag runtime policy
+- Data Sharing adapter behavior or source-write policy
+- Docs Viewer scope, route, status, or UI-text configuration
+- public catalogue route construction policy
+- service endpoint contracts injected by the local app server
+- generated payload schemas
 
-- `assets/studio/js/studio-works.js`
-- `assets/studio/js/activity.js`
-- `assets/studio/js/catalogue-status.js`
-- `assets/studio/js/activity.js`
-- `assets/studio/js/catalogue-moment-editor.js`
-- `assets/studio/js/project-state.js`
-- `assets/studio/js/studio-audits.js`
-- `assets/studio/js/catalogue-work-editor.js`
-- `assets/studio/js/catalogue-work-detail-editor.js`
-- `assets/studio/js/catalogue-series-editor.js`
-- `docs-viewer/runtime/js/docs-viewer.js`
+## What Reads It
 
-It also feeds shared path resolution used by:
+Current readers include:
 
-- `assets/studio/js/studio-data.js`
+- `studio/app/server/studio/studio_app_config.py`, which loads the file, validates `app.routes`, injects `app.runtime`, and serves the runtime config
+- `studio/app/frontend/js/studio-config.js`, which fetches the served runtime config and exposes route, data-path, UI-text, and copy helpers
+- `studio/app/frontend/js/studio-app.js`, `studio-navigation.js`, and `studio-route-registry.js`, which use `app.routes` for shell boot and navigation
+- route modules that call `loadStudioConfigWithText(group)` and `getStudioText(...)`
+- `studio/app/frontend/js/studio-data.js`, which uses Studio data paths for static fallback reads when catalogue server reads are unavailable
+- `studio/services/catalogue/catalogue_field_registry.py`, which resolves the catalogue field registry path from `paths.data.studio.catalogue_field_registry`
 
-Analytics/Data Sharing app config lives at `analytics-app/app/frontend/config/analytics-config.json`.
-The active Data Sharing domain list and capability status come from `data-sharing/config/adapters.json`.
-Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
+## Runtime Shape
 
-## When it is read
+The source file is not the full runtime payload.
+`studio_app_config.py` adds `app.runtime` at serve time.
 
-- once per page load on Studio pages that call `loadStudioConfig()`
-- then reused from the loader module’s cached promise for the rest of that page session
+Runtime-injected values include:
 
-## Current boundaries
+- local app host and asset version
+- runtime endpoint paths such as `/studio/runtime-config.json`
+- Local Studio service endpoint paths
+- public preview and production site bases
+- media and pipeline defaults
+- resolved view records derived from `app.routes`
+- navigation and modal runtime metadata
 
-What stays here:
+Do not add those injected values to the source JSON unless the server contract changes.
 
-- route and data-path lookup used by browser-side modules
-- shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
-- shared Docs Viewer status emoji config under `docs_viewer.ui_statuses_by_scope`
-- catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
-- lookup paths for scoped Studio UI-text payloads
+## Edit Class
 
-Visible Studio UI copy must use scoped payloads under `assets/studio/data/ui_text/`.
-Current bundles:
+This file is maintainer-editable code infrastructure.
+It is not a user preference file.
 
-- `activity-log.json`
-- `bulk-add-work.json`
-- `catalogue-field-registry-review.json`
-- `catalogue-work-editor.json`
-- `catalogue-work-detail-editor.json`
-- `catalogue-series-editor.json`
-- `catalogue-moment-editor.json`
-- `catalogue-status.json`
-- `docs-viewer.json`
-- `library-documents.json`
-- `project-state.json`
-- `site-series-index.json`
-- `studio-audits.json`
-- `studio-works.json`
+Safe edits require matching code/tests when they change:
 
-Do not add domain workflows, service endpoint contracts, generated payload schemas, or scoring implementations to `studio_config.json`.
-If a domain needs behavior, place that behavior in the owning runtime module and keep this file to paths, policy values, options, and scoped payload lookup.
+- route ids, paths, scripts, navigation flags, shell type, or ready-state ids
+- data path keys used by route modules
+- UI-text bundle path keys
+- catalogue option lists used by route modules
 
-## Data Sharing Pages
+## Active Sections
 
-Data Sharing prepare/review pages no longer read `studio_config.json`.
-They are owned by the standalone Local Analytics app and read `analytics-app/app/frontend/config/analytics-config.json`, route-scoped UI text under `analytics-app/app/frontend/config/ui-text/`, same-origin services under `/analytics/api/data-sharing/...`, and adapter config under `data-sharing/config/`.
-Do not restore Data Sharing route keys, endpoint keys, or scoped UI-text paths to `studio_config.json`.
-Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation belong in the Data Sharing adapters and local service.
+### `app.routes`
 
-Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs in `assets/studio/data/ui_text/catalogue-series-editor.json` because create mode now lives at `/studio/catalogue-series/?mode=new`.
+Local Studio route shell registry.
+Each route entry must match a served Local Studio route and JavaScript route script.
 
-## Docs Viewer status emoji
+Validation catches:
 
-`docs_viewer.ui_statuses_by_scope` defines the status values that the shared Docs Viewer may expose for each docs scope.
+- missing required fields
+- duplicate route paths
+- unsupported shell types
+- missing route scripts
+- route ids or paths that do not match current served routes
+- Studio route metadata left in `paths.routes`
 
-The current shape is:
+### `paths.data.studio`
 
-```json
-{
-  "docs_viewer": {
-    "ui_statuses_by_scope": {
-      "studio": [
-        {
-          "ui_status": "done",
-          "label": "Done",
-          "emoji": "✅"
-        }
-      ],
-      "library": [],
-      "analysis": []
-    }
-  }
-}
-```
+Studio data-path lookup.
+The current primary use is catalogue static fallback data, catalogue lookup payloads, activity log data, and `catalogue_field_registry`.
 
-Contract:
+Server-backed catalogue reads should prefer the Local Studio catalogue API when available.
+Static paths are fallback/runtime asset paths, not write contracts.
+`catalogue_lookup_meta` is not exposed because no active Local Studio route consumes the generated lookup metadata payload.
 
-- scope keys are docs-viewer scope ids such as `studio`, `library`, and `analysis`
-- each scope value must be an array
-- each status entry uses `ui_status`, `label`, and `emoji`
-- `ui_status` is the stable front-matter value
-- `label` is UI copy for controls and accessible labels
-- `emoji` is the compact visual marker for index and status-pill UI
-- malformed, duplicate, blank, or overlong entries are ignored by the viewer rather than treated as build failures
+### `paths.data.ui_text`
 
-Related status-pill labels and save-state messages live in `docs-viewer/config/ui-text/ui-text.json`, loaded through `paths.data.ui_text.docs_viewer`, including:
+Maps route UI-text group names to files under `studio/app/frontend/config/ui-text/`.
+The text bundle contract is documented in [Studio UI Text Config](/docs/?scope=studio&doc=config-studio-ui-text-json).
 
-- `draft_toggle_label`
-- `draft_toggle_aria_label`
-- `metadata_status_draft_option`
-- `status_pill_set_label`
-- `status_pill_clear_label`
-- `status_pill_readonly_label`
-- `status_pill_saving`
-- `status_pill_saved`
-- `status_pill_failed`
+## Cleanup Review
 
-The status config is scope-aware, while the shared Docs Viewer now fetches its visible copy from the scoped Docs Viewer UI-text payload.
+Completed cleanup:
+
+- `paths.routes` has been removed from the source file
+- stale public/content route keys such as `library_page`, `search`, `series_page_base`, `works_page_base`, `moments_page_base`, and stale `work_details_page_base` have been removed from Local Studio config
+- unused `studio-config.js` helper exports for site data, Docs scope data, search scope indexes, and search policy paths have been removed
+- public moment URL construction now lives with the public catalogue link helper instead of generic Studio route lookup
+- focused tests assert that runtime `data_paths` exposes only `studio` and `ui_text`
+- unused `paths.data.ui_text.site_series_index` and its orphaned `site-series-index.json` bundle have been removed
+- unused `paths.data.studio.catalogue_lookup_meta` has been removed
+- `catalogue.series_type_options` has been removed from broad Studio bootstrap config; the Series editor owns its current option list in `catalogue-series-fields.js`
+
+Recommended verification for the cleanup pass:
+
+- `$HOME/miniconda3/bin/python3 -m json.tool studio/app/frontend/config/studio-config.json`
+- `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py`
+- focused browser/module smoke for Studio navigation and catalogue public links

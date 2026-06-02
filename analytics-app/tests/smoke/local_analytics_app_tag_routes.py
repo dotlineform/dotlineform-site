@@ -144,9 +144,9 @@ def main(argv: list[str] | None = None) -> int:
                         raise AssertionError(f"series tag editor did not load series 036: {series_id!r}")
                     series_href = page.locator("#seriesTagEditorCat a").get_attribute("href")
                     primary_work_href = page.locator("#seriesTagEditorPrimaryWork a").get_attribute("href")
-                    if series_href != f"{public_preview_base}/series/036/":
+                    if series_href != f"{public_preview_base}/series/?series=036":
                         raise AssertionError(f"series link did not use public preview base: {series_href!r}")
-                    if primary_work_href and not primary_work_href.startswith(f"{public_preview_base}/works/"):
+                    if primary_work_href and not primary_work_href.startswith(f"{public_preview_base}/works/?work="):
                         raise AssertionError(f"primary work link did not use public preview base: {primary_work_href!r}")
                     theme_toggle = page.locator("[data-analytics-theme-toggle]")
                     if theme_toggle.count() != 1:

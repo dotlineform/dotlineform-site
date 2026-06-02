@@ -56,7 +56,7 @@ It does not replace domain-specific configs:
 
 - Docs Viewer scope build details stay in `docs-viewer/config/scopes/docs_scopes.json`
 - search source-family behavior stays in `scripts/search/build_config.json`
-- catalogue field-aware build scoping stays in `assets/studio/data/catalogue_field_registry.json`
+- catalogue field-aware build scoping stays in `studio/data/config/catalogue/catalogue-field-registry.json`
 - `_config.yml` stays the public Jekyll build config
 
 The projection contract audit checks those systems at the public/local boundary.

@@ -1,25 +1,61 @@
 {
   "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
-  "paths": {
+  "app": {
     "routes": {
-      "series_tags": "/analytics/series-tags/",
-      "series_tag_editor": "/analytics/series-tag-editor/",
-      "data_sharing_prepare": "/analytics/data-sharing/prepare/?mode=manage",
-      "data_sharing_review": "/analytics/data-sharing/review/?mode=manage",
-      "tag_registry": "/analytics/tag-registry/",
-      "tag_aliases": "/analytics/tag-aliases/",
-      "tag_groups": "/analytics/tag-groups/",
-      "series_page_base": "/series/",
-      "library_page": "/library/",
-      "analysis_page": "/analysis/",
-      "works_page_base": "/works/"
-    },
-    "data": {
-      "analytics": {
-        "data_sharing_adapters": "/data-sharing/config/adapters.json",
-        "library_export_configs": "/data-sharing/config/library-export-configs.json"
+      "tag_groups": {
+        "label": "tag groups",
+        "title": "Tag Groups",
+        "path": "/analytics/tag-groups/",
+        "script": "/analytics/app/frontend/js/tag-groups.js",
+        "nav": false
       },
+      "tag_registry": {
+        "label": "registry",
+        "title": "Tag Registry",
+        "path": "/analytics/tag-registry/",
+        "script": "/analytics/app/frontend/js/tag-registry.js",
+        "nav": false
+      },
+      "tag_aliases": {
+        "label": "aliases",
+        "title": "Tag Aliases",
+        "path": "/analytics/tag-aliases/",
+        "script": "/analytics/app/frontend/js/tag-aliases.js",
+        "nav": false
+      },
+      "series_tags": {
+        "label": "series tags",
+        "title": "Series Tags",
+        "path": "/analytics/series-tags/",
+        "script": "/analytics/app/frontend/js/series-tags.js",
+        "nav": false
+      },
+      "series_tag_editor": {
+        "label": "tag editor",
+        "title": "Series Tag Editor",
+        "path": "/analytics/series-tag-editor/",
+        "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
+        "nav": false
+      },
+      "data_sharing_prepare": {
+        "label": "prepare share",
+        "title": "Prepare Share Package",
+        "path": "/analytics/data-sharing/prepare/?mode=manage",
+        "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
+        "nav": false
+      },
+      "data_sharing_review": {
+        "label": "review share",
+        "title": "Review Returned Package",
+        "path": "/analytics/data-sharing/review/?mode=manage",
+        "script": "/analytics/app/frontend/js/data-sharing-review.js",
+        "nav": false
+      }
+    }
+  },
+  "paths": {
+    "data": {
       "site": {
         "series_index": "/assets/data/series_index.json",
         "works_index": "/assets/data/works_index.json"
@@ -32,6 +68,52 @@
         "series_tag_editor": "/analytics/app/frontend/config/ui-text/series-tag-editor.json",
         "series_tags": "/analytics/app/frontend/config/ui-text/series-tags.json",
         "tag_groups": "/analytics/app/frontend/config/ui-text/tag-groups.json"
+      }
+    }
+  },
+  "analysis": {
+    "groups": {
+      "ordered": [
+        "subject",
+        "domain",
+        "form",
+        "theme"
+      ],
+      "coverage_groups": [
+        "subject",
+        "domain",
+        "form",
+        "theme"
+      ]
+    },
+    "rag": {
+      "deprecated_statuses": [
+        "deprecated",
+        "candidate"
+      ],
+      "completeness": {
+        "group_coverage_denominator": 4,
+        "tag_bonus_max": 0.25,
+        "tag_bonus_cap_at_total_tags": 6,
+        "score_cap": 1.0
+      },
+      "rules": {
+        "red": {
+          "if_total_tags_eq": 0,
+          "if_unknown_tags_gt": 0
+        },
+        "amber": {
+          "if_groups_present_lte": 1,
+          "if_total_tags_lt": 3,
+          "if_deprecated_tags_gt": 0,
+          "if_missing_all_groups": [
+            "form",
+            "theme"
+          ]
+        },
+        "green": {
+          "fallback": true
+        }
       }
     }
   }

@@ -39,7 +39,7 @@ Current checked-in catalogue model families:
 - scope search:
   - `assets/data/search/catalogue/index.json`
 - Studio planning/support data:
-  - `assets/studio/data/catalogue_field_registry.json`
+  - `studio/data/config/catalogue/catalogue-field-registry.json`
 
 Primary writers:
 
@@ -155,17 +155,17 @@ Nested `details[]` records do not repeat section-level `section_id`, `section_ti
 
 ## Catalogue Field Registry
 
-### `assets/studio/data/catalogue_field_registry.json`
+### `studio/data/config/catalogue/catalogue-field-registry.json`
 
 Purpose:
 
 - source of truth for field-aware catalogue build scoping rules
-- reviewable registry for the future Studio field-registry page
+- reviewable registry for the Studio field-registry page
 - bridge between the Task 1 dependency inventory and later executable build-planning implementation
 
 Location:
 
-- exposed through `assets/studio/data/studio_config.json` at `paths.data.studio.catalogue_field_registry`
+- exposed through `studio/app/frontend/config/studio-config.json` at `paths.data.studio.catalogue_field_registry`
 
 Current content families:
 

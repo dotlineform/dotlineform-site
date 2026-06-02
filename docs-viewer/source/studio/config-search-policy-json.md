@@ -49,7 +49,7 @@ The policy helpers in `assets/js/search/search-policy.js` then expose:
 - once per `/catalogue/search/` page load
 - before the dedicated search page fetches the Catalogue search index
 
-The public `/catalogue/search/` page does not fetch `assets/studio/data/studio_config.json` for normal operation.
+The public `/catalogue/search/` page does not fetch `studio/app/frontend/config/studio-config.json` for normal operation.
 This keeps the public search shell independent from Studio bootstrap config size.
 
 ## Current scope boundary

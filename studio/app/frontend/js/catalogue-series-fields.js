@@ -70,12 +70,8 @@ function dedupeOptions(items) {
   return out;
 }
 
-function getSeriesTypeOptions(config) {
-  const configured = config && config.catalogue && Array.isArray(config.catalogue.series_type_options)
-    ? config.catalogue.series_type_options
-    : null;
-  const options = dedupeOptions(configured || SERIES_TYPE_OPTIONS);
-  return options.length ? options : SERIES_TYPE_OPTIONS.slice();
+function getSeriesTypeOptions() {
+  return SERIES_TYPE_OPTIONS.slice();
 }
 
 function formatNumberText(value) {

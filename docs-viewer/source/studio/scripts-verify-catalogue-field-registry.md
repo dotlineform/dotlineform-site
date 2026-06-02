@@ -2,7 +2,7 @@
 doc_id: scripts-verify-catalogue-field-registry
 title: Catalogue Field Registry Verification
 added_date: 2026-05-01
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-06-02"
 parent_id: studio
 viewable: true
 ---
@@ -26,14 +26,14 @@ This read-only helper verifies representative catalogue field-registry build pla
 
 Use this script after changing:
 
-- `assets/studio/data/catalogue_field_registry.json`
+- `studio/data/config/catalogue/catalogue-field-registry.json`
 - `studio/services/catalogue/catalogue_field_registry.py`
 - `studio/services/catalogue/catalogue_source.py`
 - `studio/services/catalogue/moment_sources.py`
 - field-aware preview or save-time build planning
 - the optional `catalogue` check profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
 
-It loads the registry path through `assets/studio/data/studio_config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
+It loads the registry path through `studio/app/frontend/config/studio-config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
 
 It also verifies source/registry drift:
 

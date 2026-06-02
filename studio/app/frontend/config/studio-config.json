@@ -123,14 +123,6 @@
     }
   },
   "paths": {
-    "routes": {
-      "search": "/catalogue/search/",
-      "series_page_base": "/series/",
-      "library_page": "/library/",
-      "moments_page_base": "/moments/",
-      "works_page_base": "/works/",
-      "work_details_page_base": "/work_details/"
-    },
     "data": {
       "studio": {
         "activity_log": "/studio/data/generated/activity/activity-log.json",
@@ -141,33 +133,10 @@
         "catalogue_lookup_work_search": "/studio/data/generated/catalogue-lookup/work_search.json",
         "catalogue_lookup_series_search": "/studio/data/generated/catalogue-lookup/series_search.json",
         "catalogue_lookup_work_detail_search": "/studio/data/generated/catalogue-lookup/work_detail_search.json",
-        "catalogue_lookup_meta": "/studio/data/generated/catalogue-lookup/meta.json",
         "catalogue_lookup_work_base": "/studio/data/generated/catalogue-lookup/works/",
         "catalogue_lookup_work_detail_base": "/studio/data/generated/catalogue-lookup/work_details/",
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
         "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json"
-      },
-      "site": {
-        "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json"
-      },
-      "docs": {
-        "scopes": {
-          "library": {
-            "index": "/assets/data/docs/scopes/library/index.json"
-          }
-        }
-      },
-      "search": {
-        "policy": "/assets/data/search/policy.json",
-        "scopes": {
-          "catalogue": {
-            "index": "/assets/data/search/catalogue/index.json"
-          },
-          "library": {
-            "index": "/assets/data/search/library/index.json"
-          }
-        }
       },
       "ui_text": {
         "catalogue_work_editor": "/studio/app/frontend/config/ui-text/catalogue-work-editor.json",
@@ -179,17 +148,10 @@
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",
         "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
-        "site_series_index": "/studio/app/frontend/config/ui-text/site-series-index.json",
         "studio_audits": "/studio/app/frontend/config/ui-text/studio-audits.json",
         "studio_risk": "/studio/app/frontend/config/ui-text/studio-risk.json",
         "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
       }
     }
-  },
-  "catalogue": {
-    "series_type_options": [
-      "primary",
-      "holding"
-    ]
   }
 }

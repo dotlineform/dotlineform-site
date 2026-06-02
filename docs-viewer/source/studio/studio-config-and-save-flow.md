@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: Config and Save Flow
 added_date: 2026-04-22
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 parent_id: studio
 viewable: true
 ---
@@ -12,6 +12,7 @@ This document describes the current shared Studio config, data-loading boundary,
 
 For file-level ownership of the current config artifacts, see:
 
+- **[Config Files Inventory](/docs/?scope=studio&doc=config-files-inventory)**
 - **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
 - **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
 - **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
@@ -20,31 +21,32 @@ For file-level ownership of the current config artifacts, see:
 
 Studio configuration is defined in:
 
-- `assets/studio/data/studio_config.json`
+- `studio/app/frontend/config/studio-config.json`
 
 It is loaded by:
 
-- `assets/studio/js/studio-config.js`
+- `studio/app/frontend/js/studio-config.js`
 
 Current responsibilities:
 
-- public route paths used across Studio links
-- public JSON paths used by Studio pages
-- RAG analysis group and threshold settings
-- Studio-owned UI copy used by the editor, registry, aliases, series tags, tag groups, and search surfaces
+- Local Studio route shell metadata under `app.routes`
+- Studio data path lookup under `paths.data.studio`
+- Studio UI-text bundle lookup under `paths.data.ui_text`
+- route-local option lists are owned by their route modules rather than broad Studio bootstrap config
 
-Current route/data-path responsibilities include:
+Current route/data-path responsibilities do not include Analytics, Data Sharing adapter behavior, or Docs Viewer scope and route policy.
+Those contracts live in their own app config families:
 
-- Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `activity_log`, `project_state`, `bulk_add_work`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
-- shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
-- Studio-owned JSON paths
-- shared catalogue index paths
-- dedicated search policy and per-scope search index paths
+- Analytics app config: `analytics-app/app/frontend/config/analytics-config.json`
+- Data Sharing adapter config: `data-sharing/config/adapters.json`
+- Docs Viewer config: `docs-viewer/config/...`
+
+Known cleanup work remains for legacy public/content route keys and redundant path helpers.
+That cleanup is tracked in [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json).
 
 ## Shared Data and Transport Modules
 
-`assets/studio/js/studio-data.js` centralizes shared read-side helpers for Studio pages.
+`studio/app/frontend/js/studio-data.js` centralizes shared read-side helpers for Studio pages.
 
 Current shared responsibilities include:
 
@@ -54,7 +56,7 @@ Current shared responsibilities include:
 - group-description normalization
 - assignment and series data shaping used across Studio pages
 
-`assets/studio/js/studio-transport.js` centralizes the local write-service boundary.
+`studio/app/frontend/js/studio-transport.js` centralizes the local write-service boundary.
 
 Current responsibilities include:
 

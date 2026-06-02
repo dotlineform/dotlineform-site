@@ -2,7 +2,7 @@
 doc_id: catalogue-field-registry-review
 title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: 2026-05-22
+last_updated: 2026-06-02
 parent_id: studio
 viewable: true
 ---
@@ -12,7 +12,7 @@ Route:
 
 - `/studio/catalogue-field-registry/?mode=manage`
 
-This Studio page is a read-only review surface for `assets/studio/data/catalogue_field_registry.json`.
+This Studio page is a read-only review surface for `studio/data/config/catalogue/catalogue-field-registry.json`.
 It is hosted by the local Studio app server, not by a Jekyll route shell.
 
 ## Route Ready State
@@ -41,7 +41,7 @@ That follow-up is tracked in [JSON Schema Adoption Request](/docs/?scope=studio&
 
 The page:
 
-- loads the registry path from `assets/studio/data/studio_config.json`
+- loads the registry path from `studio/app/frontend/config/studio-config.json` through `paths.data.studio.catalogue_field_registry`
 - displays the formatted registry JSON in a read-only text box
 - accepts a field-name search
 - when search is empty, shows the whole registry
@@ -51,7 +51,7 @@ The page:
 
 ## Local App Migration
 
-The page shell is mounted in the local Studio app server and reuses the existing `assets/studio/js/catalogue-field-registry-review.js` browser module.
+The page shell is mounted in the local Studio app server and reuses `studio/app/frontend/js/catalogue-field-registry-review.js`.
 The old Jekyll route shell has been retired.
 
 Focused smoke coverage:

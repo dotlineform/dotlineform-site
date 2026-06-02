@@ -48,7 +48,6 @@ STATIC_PREFIXES = (
     "/assets/series/",
     "/assets/work_details/",
     "/assets/works/",
-    "/data-sharing/config/",
     "/analytics/data/",
     "/analytics/app/assets/",
     "/analytics/app/frontend/js/",

@@ -21,7 +21,7 @@ Current checked-in catalogue model families include:
 - shared indexes under `assets/data/`
 - per-record payloads under `assets/series/index/`, `assets/works/index/`, and `assets/moments/index/`
 - catalogue search under `assets/data/search/catalogue/index.json`
-- Studio planning/support data in `assets/studio/data/catalogue_field_registry.json`
+- Studio planning/support data in `studio/data/config/catalogue/catalogue-field-registry.json`
 
 Primary writers:
 

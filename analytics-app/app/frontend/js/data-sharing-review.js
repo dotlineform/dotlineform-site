@@ -1,4 +1,4 @@
-import { getAnalyticsDataPath, getAnalyticsText, loadAnalyticsConfigWithText } from "./analytics-config.js";
+import { getAnalyticsText, loadAnalyticsConfigWithText } from "./analytics-config.js";
 import {
   DATA_SHARING_ENDPOINTS,
   configureAnalyticsTransport,
@@ -73,18 +73,8 @@ function setStatus(node, state, message) {
   }
 }
 
-async function loadJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-async function loadAdapterRegistry(config) {
-  const registryPath = getAnalyticsDataPath(config, "data_sharing_adapters")
-    || "/data-sharing/config/adapters.json";
-  return loadJson(registryPath);
+async function loadAdapterRegistry() {
+  return getJson(DATA_SHARING_ENDPOINTS.config);
 }
 
 function routeModeForState(state) {
@@ -276,7 +266,7 @@ async function init() {
   try {
     state.config = await loadAnalyticsConfigWithText("data_sharing_review");
     configureAnalyticsTransport(state.config);
-    const adapterRegistry = await loadAdapterRegistry(state.config);
+    const adapterRegistry = await loadAdapterRegistry();
     state.adapterRegistry = adapterRegistry;
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_SCOPES);
     state.scope = workflowScopeFromDataSharingReviewUrl(state.workflowScopes);

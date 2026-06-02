@@ -433,7 +433,7 @@ async function init() {
       namespace: "catalogue_series_editor",
       saveModeNode,
       applyText: (config) => {
-        state.seriesTypeOptions = getSeriesTypeOptions(config);
+        state.seriesTypeOptions = getSeriesTypeOptions();
         refreshSeriesTypeOptions(state);
         searchNode.placeholder = t(state, "search_placeholder", "find series by title");
         openButton.textContent = t(state, "open_button", "Open");

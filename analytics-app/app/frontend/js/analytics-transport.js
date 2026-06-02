@@ -18,6 +18,7 @@ const ANALYTICS_WRITE_RUNTIME_KEYS = Object.freeze({
 
 const DATA_SHARING_ENDPOINTS = {
   health: "/analytics/api/data-sharing/health",
+  config: "/analytics/api/data-sharing/config",
   selectableRecords: "/analytics/api/data-sharing/selectable-records",
   prepare: "/analytics/api/data-sharing/prepare",
   returnedPackages: "/analytics/api/data-sharing/returned-packages",
@@ -38,6 +39,7 @@ export function configureAnalyticsTransport(config) {
     const configuredDataSharing = normalizeServiceEndpoints(dataSharing);
     Object.assign(DATA_SHARING_ENDPOINTS, {
       health: configuredDataSharing.health || DATA_SHARING_ENDPOINTS.health,
+      config: configuredDataSharing.config || DATA_SHARING_ENDPOINTS.config,
       selectableRecords: configuredDataSharing.selectable_records || DATA_SHARING_ENDPOINTS.selectableRecords,
       prepare: configuredDataSharing.prepare || DATA_SHARING_ENDPOINTS.prepare,
       returnedPackages: configuredDataSharing.returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,

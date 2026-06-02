@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: Catalogue Drafts
 added_date: 2026-04-18
-last_updated: "2026-05-22 20:55"
+last_updated: "2026-06-02"
 parent_id: studio
 viewable: true
 ---
@@ -44,8 +44,8 @@ The page reads canonical source JSON through the local Studio app catalogue API:
 - `GET /studio/api/catalogue/read?key=catalogue_series`
 - `GET /studio/api/catalogue/read?key=catalogue_moments`
 
-The logical keys are configured through `assets/studio/data/studio_config.json`.
-The canonical source files still live under `assets/studio/data/catalogue/`, but public Jekyll output excludes Studio-only catalogue source data.
+The logical keys are configured through `studio/app/frontend/config/studio-config.json` under `paths.data.studio`.
+The canonical source files now live under `studio/data/canonical/catalogue/`, and public Jekyll output excludes Studio-only catalogue source data.
 
 ## Current Behavior
 

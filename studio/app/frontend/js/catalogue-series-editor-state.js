@@ -48,7 +48,7 @@ export function collectSeriesEditorElements() {
 }
 
 export function createSeriesEditorState(elements, options = {}) {
-  const seriesTypeOptions = options.seriesTypeOptions || getSeriesTypeOptions(null);
+  const seriesTypeOptions = options.seriesTypeOptions || getSeriesTypeOptions();
   return {
     config: null,
     mode: "single",

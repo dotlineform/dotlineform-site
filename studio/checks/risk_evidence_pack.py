@@ -64,6 +64,7 @@ STATIC_METRIC_EXCLUDED_PREFIXES: tuple[tuple[str, ...], ...] = (
     ("docs-viewer", "generated"),
     ("studio", "data", "canonical"),
     ("studio", "data", "generated"),
+    ("studio", "workflows", "change-requests", "generated"),
     ("analytics-app", "data", "canonical"),
 )
 EXCLUDED_DIRS = {

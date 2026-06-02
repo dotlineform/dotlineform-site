@@ -98,7 +98,7 @@ In new mode:
 - the top input is the new `series_id` input
 - when `?mode=new` and `?series=<series_id>` are both present, the `series` value is treated as the draft `series_id`
 - the suggested next id is prefilled
-- `series_type` renders as a config-backed select using `catalogue.series_type_options`
+- `series_type` renders as a fixed select owned by `studio/app/frontend/js/catalogue-series-fields.js`
 - `series_type` defaults to `primary`
 - `title`, `series_type`, `year`, and `year_display` are required
 - `status` is visible and fixed to `draft`

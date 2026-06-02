@@ -65,11 +65,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
-    assert "docs_page" not in payload["paths"]["routes"]
-    assert "analysis_page" not in payload["paths"]["routes"]
-    assert "docs_html_import" not in payload["paths"]["routes"]
-    assert "catalogue_work_editor" not in payload["paths"]["routes"]
-    assert "catalogue_field_registry_review" not in payload["paths"]["routes"]
+    assert "routes" not in payload["paths"]
     assert "docs" not in payload["app"]["routes"]
     assert any(view["id"] == "studio_home" and view["path"] == "/studio/" for view in runtime["views"])
     assert not any(view["id"] == "docs" for view in runtime["views"])
@@ -99,9 +95,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
     assert "external_links" not in payload
+    assert "catalogue" not in payload
+    assert set(runtime["data_paths"]) == {"studio", "ui_text"}
     assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
-    assert "studio" not in runtime["data_paths"].get("docs", {}).get("scopes", {})
-    assert "studio" not in runtime["data_paths"].get("search", {}).get("scopes", {})
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -142,8 +138,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "library_export_configs" not in runtime["data_paths"]["studio"]
+    assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
     assert "tag_groups" not in runtime["data_paths"]["ui_text"]
-    assert "analysis" not in runtime["data_paths"]["search"]["scopes"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
@@ -184,7 +180,9 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         validate_studio_route_registry(REPO_ROOT, stale_route)
 
     duplicated_legacy_path = json.loads(json.dumps(payload))
-    duplicated_legacy_path["paths"]["routes"]["catalogue_field_registry_review"] = "/studio/catalogue-field-registry/?mode=manage"
+    duplicated_legacy_path["paths"]["routes"] = {
+        "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage"
+    }
     with pytest.raises(RuntimeError, match="Studio route metadata must live in app.routes"):
         validate_studio_route_registry(REPO_ROOT, duplicated_legacy_path)
 

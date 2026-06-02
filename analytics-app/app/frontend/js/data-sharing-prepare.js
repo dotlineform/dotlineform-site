@@ -1,9 +1,10 @@
 import {
+  DATA_SHARING_ENDPOINTS,
   configureAnalyticsTransport,
+  getJson,
   probeDataSharingHealth
 } from "./analytics-transport.js";
 import {
-  getAnalyticsDataPath,
   getAnalyticsText,
   loadAnalyticsConfigWithText
 } from "./analytics-config.js";
@@ -128,10 +129,8 @@ function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
   window.location.href = url.toString();
 }
 
-async function loadAdapterRegistry(config) {
-  const registryPath = getAnalyticsDataPath(config, "data_sharing_adapters")
-    || "/data-sharing/config/adapters.json";
-  return loadJson(registryPath);
+async function loadAdapterRegistry() {
+  return getJson(DATA_SHARING_ENDPOINTS.config);
 }
 
 function scopeUnavailableMessage(state) {
@@ -340,7 +339,7 @@ async function init() {
     markBusy(state, true);
     state.config = await loadAnalyticsConfigWithText("data_sharing_prepare");
     configureAnalyticsTransport(state.config);
-    const adapterRegistry = await loadAdapterRegistry(state.config);
+    const adapterRegistry = await loadAdapterRegistry();
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
     state.prepareCapability = workflowCapabilityForOperation(adapterRegistry, "prepare", state.scope);
@@ -348,12 +347,7 @@ async function init() {
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
     if (workflowDomainIsActive(state.workflowScopes, state.scope)) {
       const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
-      const exportConfigPayload = capabilityProfiles.length
-        ? { configs: capabilityProfiles }
-        : await loadJson(
-          getAnalyticsDataPath(state.config, "library_export_configs")
-            || "/data-sharing/config/library-export-configs.json"
-        );
+      const exportConfigPayload = { configs: capabilityProfiles };
       state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
     }
 

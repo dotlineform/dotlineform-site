@@ -1,24 +1,20 @@
-import {
-  getAnalyticsRoute
-} from "./analytics-config.js";
-
 export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
   const normalizedPath = normalizePublicPath(path);
   return buildPublicSiteUrl(config, normalizedPath, params);
 }
 
 export function buildPublicWorkUrl(config, workId, params = {}) {
-  return buildPublicRecordUrl(config, "works_page_base", "/works/", workId, params);
+  return buildPublicCatalogueUrl(config, "/works/", {
+    ...params,
+    work: normalizeText(workId)
+  });
 }
 
 export function buildPublicSeriesUrl(config, seriesId, params = {}) {
-  return buildPublicRecordUrl(config, "series_page_base", "/series/", seriesId, params);
-}
-
-function buildPublicRecordUrl(config, routeKey, fallbackBase, recordId, params = {}) {
-  const id = normalizeText(recordId);
-  const routeBase = normalizeRouteBase(getAnalyticsRoute(config, routeKey) || fallbackBase);
-  return buildPublicCatalogueUrl(config, id ? `${routeBase}${encodeURIComponent(id)}/` : routeBase, params);
+  return buildPublicCatalogueUrl(config, "/series/", {
+    ...params,
+    series: normalizeText(seriesId)
+  });
 }
 
 function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
@@ -43,11 +39,6 @@ function getAnalyticsSiteBase(config, siteKey) {
   const site = sites && sites[siteKey];
   const value = site && site.base;
   return typeof value === "string" && value.trim() ? value.trim().replace(/\/+$/, "") : "";
-}
-
-function normalizeRouteBase(value) {
-  const text = normalizePublicPath(value || "/");
-  return text.endsWith("/") ? text : `${text}/`;
 }
 
 function normalizePublicPath(value) {
