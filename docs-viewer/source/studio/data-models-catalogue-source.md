@@ -3,7 +3,7 @@ doc_id: data-models-catalogue-source
 title: Catalogue Source Model
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: catalogue
+parent_id: studio
 viewable: true
 ---
 # Catalogue Source Model

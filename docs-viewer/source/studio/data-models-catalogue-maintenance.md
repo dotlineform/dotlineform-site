@@ -3,7 +3,7 @@ doc_id: data-models-catalogue-maintenance
 title: Catalogue Model Maintenance
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: catalogue
+parent_id: studio
 viewable: true
 ---
 # Catalogue Model Maintenance

@@ -15,4 +15,3 @@ Documents are organised by root level folders in Docs Viewer:
 4. **[Studio Scope](/docs/?scope=studio&doc=data-models-studio)** for Studio route data, the Studio docs corpus, Studio docs search data, and Analytics tag source references that still interact with catalogue checks
 5. **[Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)** for the public Analysis docs corpus and Analysis docs search data
 6. **[Library Scope](/docs/?scope=studio&doc=data-models-library)** for the Library docs corpus and Library docs search data
-7. **[Config](/docs/?scope=studio&doc=config)**

@@ -3,7 +3,8 @@ doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
 last_updated: "2026-05-18 00:00"
-parent_id: user-guide
+parent_id: docs-viewer
+viewable: true
 ---
 # Docs Import
 

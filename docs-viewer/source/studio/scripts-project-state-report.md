@@ -2,8 +2,9 @@
 doc_id: scripts-project-state-report
 title: Project State Report
 added_date: 2026-04-27
-last_updated: "2026-05-26"
-parent_id: catalogue
+last_updated: 2026-05-26
+parent_id: studio
+viewable: true
 ---
 # Project State Report
 

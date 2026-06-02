@@ -2,8 +2,9 @@
 doc_id: project-state-page
 title: Project State Page
 added_date: 2026-04-27
-last_updated: "2026-05-26"
-parent_id: catalogue
+last_updated: 2026-05-26
+parent_id: studio
+viewable: true
 ---
 # Project State Page
 

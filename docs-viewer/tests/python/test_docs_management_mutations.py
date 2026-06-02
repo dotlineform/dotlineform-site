@@ -262,7 +262,7 @@ def test_move_plan_supports_moving_parent_subtree() -> None:
     assert plan.search_doc_ids == ["target", "target-child"]
 
 
-def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
+def test_delete_preview_preserves_child_blocker_without_link_warning() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         parent_preview = mutations.plan_delete_preview(repo_root, "studio", "target")
@@ -271,8 +271,7 @@ def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
     assert parent_preview["allowed"] is False
     assert parent_preview["blockers"] == ["1 child docs still depend on this parent"]
     assert target_preview["allowed"] is True
-    assert target_preview["warnings"] == ["1 inbound markdown references will become broken"]
-    assert target_preview["inbound_refs"][0]["doc_id"] == "parent"
+    assert target_preview["warnings"] == []
 
 
 def test_delete_apply_plan_selects_doc_delete_path_and_search_target() -> None:
@@ -301,7 +300,7 @@ def main() -> None:
         test_move_plan_noops_when_parent_is_unchanged,
         test_move_plan_keeps_search_target_for_reparent,
         test_move_plan_supports_moving_parent_subtree,
-        test_delete_preview_preserves_child_blocker_and_inbound_warning,
+        test_delete_preview_preserves_child_blocker_without_link_warning,
         test_delete_apply_plan_selects_doc_delete_path_and_search_target,
     ]
     for test in tests:

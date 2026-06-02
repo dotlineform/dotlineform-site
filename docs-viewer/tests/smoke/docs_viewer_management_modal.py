@@ -1273,8 +1273,7 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                                 ok: true,
                                 allowed: true,
                                 title: 'Current Doc',
-                                warnings: [],
-                                inbound_refs: []
+                                warnings: []
                             })
                         });
                     }, 20);

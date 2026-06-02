@@ -3,7 +3,8 @@ doc_id: thumbnail-quality-page
 title: Thumbnail Quality Page
 added_date: 2026-05-12
 last_updated: 2026-05-30
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Thumbnail Quality Page
 

@@ -1,9 +1,9 @@
 ---
 doc_id: config-studio-config-js
-title: Studio Config Loader JS
+title: Config Loader JS
 added_date: 2026-04-01
 last_updated: 2026-05-30
-parent_id: config
+parent_id: studio
 viewable: true
 ---
 # Studio Config Loader JS

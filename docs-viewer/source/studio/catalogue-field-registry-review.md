@@ -2,8 +2,9 @@
 doc_id: catalogue-field-registry-review
 title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: "2026-05-22"
-parent_id: catalogue
+last_updated: 2026-05-22
+parent_id: studio
+viewable: true
 ---
 # Catalogue Field Registry
 

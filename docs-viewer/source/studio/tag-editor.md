@@ -451,6 +451,21 @@ These are loaded through:
 
 - `analytics-app/app/frontend/js/analytics-data.js`
 
+## Offline Session Mode
+
+Current offline behavior:
+
+- the editor stages normalized series rows in browser `localStorage`
+- staged rows preserve assignment objects, including `w_manual` and optional `alias`
+- the editor advances its baseline after staging so the page behaves like a save flow
+- local-only changes are surfaced back into the UI
+
+Current session management surface:
+
+- the Series Tags page is the session hub
+- `Session` opens the offline-session modal
+- `Import` opens the import-preview/apply flow when the local server is available
+
 ## Business Logic
 
 Primary business logic modules:

@@ -3,7 +3,8 @@ doc_id: data-flow
 title: Data Flow
 added_date: 2026-03-31
 last_updated: 2026-06-01
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Data Flow
 

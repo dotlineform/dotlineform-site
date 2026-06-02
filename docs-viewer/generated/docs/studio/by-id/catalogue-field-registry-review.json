@@ -4,7 +4,7 @@
   "title": "Catalogue Field Registry",
   "added_date": "2026-05-01",
   "last_updated": "2026-05-22",
-  "parent_id": "catalogue",
+  "parent_id": "studio",
   "hidden": false,
   "viewable": true,
   "source_path": "catalogue-field-registry-review.md",

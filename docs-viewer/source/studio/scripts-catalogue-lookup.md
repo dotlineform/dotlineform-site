@@ -3,7 +3,8 @@ doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
 last_updated: 2026-06-01
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Catalogue Lookup Export
 

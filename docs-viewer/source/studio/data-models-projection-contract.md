@@ -69,7 +69,7 @@ It must not publish Studio docs payloads or Studio docs search unless a separate
 | --- | --- | --- | --- | --- |
 | Tag vocabulary and assignments | `analytics-app/data/canonical/tag-registry.json`, `tag-aliases.json`, `tag-assignments.json`, `tag-groups.json` | none by default; public catalogue search does not consume Analytics tags | local analytics API read/write payloads and tag route views | [Analytics](/docs/?scope=studio&doc=analytics) |
 | Work storage lookup | `studio/data/generated/activity/work-storage-index.json` | none | Studio Works storage review data | [Studio Works](/docs/?scope=studio&doc=studio-works) |
-| Studio config and UI text | `studio/app/frontend/config/studio-config.json`, `studio/app/frontend/config/ui-text/*.json`, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and Studio route UI text payloads | [Config](/docs/?scope=studio&doc=config), [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) |
+| Studio config and UI text | `studio/app/frontend/config/studio-config.json`, `studio/app/frontend/config/ui-text/*.json`, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and Studio route UI text payloads | [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) |
 | Studio activity | local write-service outputs under `var/studio/activity/` | none | Studio Activity route/API data | [Studio Activity](/docs/?scope=studio&doc=studio-activity) |
 
 Studio app data is local by default.

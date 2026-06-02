@@ -1,9 +1,9 @@
 ---
 doc_id: config-studio-config-json
-title: Studio Config JSON
+title: Config JSON
 added_date: 2026-04-24
 last_updated: 2026-05-30
-parent_id: config
+parent_id: studio
 viewable: true
 ---
 # Studio Config JSON

@@ -503,31 +503,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     )
 
 
-def find_inbound_refs(
-    repo_root: Path,
-    target: source_model.ScopeDoc,
-    docs: list[source_model.ScopeDoc],
-) -> list[Dict[str, str]]:
-    target_filename = target.path.name
-    doc_link_fragment = f"doc={target.doc_id}"
-    refs: list[Dict[str, str]] = []
-    for doc in docs:
-        if doc.doc_id == target.doc_id:
-            continue
-        source = doc.source_text
-        if doc_link_fragment not in source and target_filename not in source:
-            continue
-        refs.append(
-            {
-                "doc_id": doc.doc_id,
-                "title": doc.title,
-                "path": relative_path(repo_root, doc.path),
-            }
-        )
-    refs.sort(key=lambda item: (item["title"].lower(), item["doc_id"]))
-    return refs
-
-
 def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
     scope = source_model.normalize_scope(scope)
     docs = source_model.load_scope_docs(repo_root, scope)
@@ -545,13 +520,10 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, A
         for doc in docs
         if doc.parent_id == target.doc_id
     ]
-    inbound_refs = find_inbound_refs(repo_root, target, docs)
     blockers = []
     warnings = []
     if children:
         blockers.append(f"{len(children)} child docs still depend on this parent")
-    if inbound_refs:
-        warnings.append(f"{len(inbound_refs)} inbound markdown references will become broken")
 
     return {
         "ok": True,
@@ -563,7 +535,6 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, A
         "blockers": blockers,
         "warnings": warnings,
         "children": children,
-        "inbound_refs": inbound_refs,
     }
 
 
@@ -589,7 +560,6 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "doc_id": target.doc_id,
             "path": relative_path(repo_root, target.path),
             "warnings": preview["warnings"],
-            "inbound_refs": preview["inbound_refs"],
             "summary_text": f"Deleted {target.doc_id}.",
         },
         source_deletes=(SourceDelete(target.path),),

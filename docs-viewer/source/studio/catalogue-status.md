@@ -3,7 +3,8 @@ doc_id: catalogue-status
 title: Catalogue Drafts
 added_date: 2026-04-18
 last_updated: "2026-05-22 20:55"
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Catalogue Drafts
 

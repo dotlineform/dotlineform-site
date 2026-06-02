@@ -26,15 +26,6 @@ export function buildDocsViewerDeletePreviewBody(preview) {
       lines.push("- " + item);
     });
   }
-  if (Array.isArray(preview && preview.inbound_refs) && preview.inbound_refs.length) {
-    lines.push("Inbound refs:");
-    preview.inbound_refs.slice(0, 6).forEach(function (item) {
-      lines.push("- " + item.doc_id);
-    });
-    if (preview.inbound_refs.length > 6) {
-      lines.push("- +" + (preview.inbound_refs.length - 6) + " more");
-    }
-  }
   return lines;
 }
 

@@ -88,7 +88,7 @@ Operational log target:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
+
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)

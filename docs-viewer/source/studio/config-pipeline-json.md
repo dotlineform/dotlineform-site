@@ -3,7 +3,8 @@ doc_id: config-pipeline-json
 title: Pipeline Config JSON
 added_date: 2026-03-31
 last_updated: "2026-05-12 18:45"
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Pipeline Config JSON
 

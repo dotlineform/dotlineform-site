@@ -1,9 +1,9 @@
 ---
 doc_id: studio-config-and-save-flow
-title: Studio Config and Save Flow
+title: Config and Save Flow
 added_date: 2026-04-22
 last_updated: 2026-06-01
-parent_id: config
+parent_id: studio
 viewable: true
 ---
 # Studio Config and Save Flow
@@ -12,7 +12,6 @@ This document describes the current shared Studio config, data-loading boundary,
 
 For file-level ownership of the current config artifacts, see:
 
-- **[Config](/docs/?scope=studio&doc=config)**
 - **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
 - **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
 - **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
@@ -42,8 +41,6 @@ Current route/data-path responsibilities include:
 - Studio-owned JSON paths
 - shared catalogue index paths
 - dedicated search policy and per-scope search index paths
-
-The exact key inventory belongs in the [Config](/docs/?scope=studio&doc=config) section rather than here.
 
 ## Shared Data and Transport Modules
 
@@ -211,45 +208,6 @@ Catalogue scoped rebuild behavior:
 - `POST /studio/api/catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
 - unified Studio Activity records these JSON-source scoped rebuilds
-
-### Offline Session Mode
-
-Current offline behavior:
-
-- the editor stages normalized series rows in browser `localStorage`
-- staged rows preserve assignment objects, including `w_manual` and optional `alias`
-- the editor advances its baseline after staging so the page behaves like a save flow
-- local-only changes are surfaced back into the UI
-
-Current session management surface:
-
-- the Series Tags page is the session hub
-- `Session` opens the offline-session modal
-- `Import` opens the import-preview/apply flow when the local server is available
-
-## Data Files and Ownership
-
-Studio currently depends on four data families:
-
-- Studio-owned tag data
-- Studio-owned catalogue source data
-- shared catalogue index data
-- dedicated search policy/search-index data
-- Studio docs data rebuilt by the docs builder
-
-Current ownership boundary:
-
-- Studio reads both Studio-owned JSON and shared site/search artifacts
-- mutable catalogue editor reads are local-service-backed and should not fall back to stale static source JSON when the catalogue server is unavailable
-- work, detail, file, link, and series editors read focused derived lookup records through the local catalogue service rather than full canonical source maps
-- Studio writes only through the local save service
-- detailed payload shape belongs in [Data Models](/docs/?scope=studio&doc=data-models), not here
-
-Use these references for the contracts:
-
-- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
-- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
-- [Config](/docs/?scope=studio&doc=config)
 
 ## Operational Notes
 

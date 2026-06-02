@@ -2,8 +2,9 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: "2026-06-01"
-parent_id: catalogue
+last_updated: 2026-06-01
+parent_id: studio
+viewable: true
 ---
 # Scoped JSON Catalogue Build
 

@@ -426,15 +426,3 @@ If you disable the watcher or want an explicit manual rebuild, use:
 ./docs-viewer/build/build_docs.py --scope library --write
 ./docs-viewer/build/build_search.py --scope library --write
 ```
-
-## Related References
-
-- [Scripts](/docs/?scope=studio&doc=scripts)
-- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
-- [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
-- [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
-- [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)

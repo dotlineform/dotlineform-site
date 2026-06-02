@@ -1,11 +1,11 @@
 ---
 doc_id: css-audit-spec
-title: CSS Audit Spec (v1)
+title: CSS Audit Spec
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:00"
 parent_id: ui
 ---
-# CSS Audit Spec (v1)
+# CSS Audit Spec
 
 ## Goal
 
@@ -19,7 +19,7 @@ Related contract:
 
 - [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
 
-## Scope (v1)
+## Scope
 
 Static and heuristic checks only (no browser required).
 
@@ -73,7 +73,7 @@ Each finding is labeled:
 - `css_token_drift_typography_spacing`
 - `css_rule_size_hotspot`
 
-## CLI (v1)
+## CLI
 
 - `--site-root` default `.`
 - `--checks` default `all`

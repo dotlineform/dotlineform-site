@@ -3,7 +3,8 @@ doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
 last_updated: 2026-05-22
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Catalogue Works
 

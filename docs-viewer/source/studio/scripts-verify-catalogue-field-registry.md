@@ -3,7 +3,8 @@ doc_id: scripts-verify-catalogue-field-registry
 title: Catalogue Field Registry Verification
 added_date: 2026-05-01
 last_updated: "2026-05-09 21:28"
-parent_id: catalogue
+parent_id: studio
+viewable: true
 ---
 # Catalogue Field Registry Verification
 

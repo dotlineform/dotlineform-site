@@ -34,8 +34,6 @@ Note on document structure:
   detailed implementation rules for local Studio route migration, public/local URL boundaries, route builders, and UI Catalogue demo visibility.
 - **[Architecture](/docs/?scope=studio&doc=architecture)**
   route/runtime building blocks, shared shell behavior, and generated-artifact flow into the live site.
-- **[Config](/docs/?scope=studio&doc=config)**
-  checked-in config files and loader modules, what reads them, and when.
 - **[Data Models](/docs/?scope=studio&doc=data-models)**
   the main reference for generated/runtime data contracts and source-data records.
 - **[Scripts](/docs/?scope=studio&doc=scripts)**

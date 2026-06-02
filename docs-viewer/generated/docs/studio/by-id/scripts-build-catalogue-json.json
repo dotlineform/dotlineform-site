@@ -4,7 +4,7 @@
   "title": "Scoped JSON Catalogue Build",
   "added_date": "2026-04-18",
   "last_updated": "2026-06-01",
-  "parent_id": "catalogue",
+  "parent_id": "studio",
   "hidden": false,
   "viewable": true,
   "source_path": "scripts-build-catalogue-json.md",
