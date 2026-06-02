@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7411b409c0d61f793bb4e898a594c22e",
-    "generated_at_utc": "2026-06-01T20:58:03Z",
+    "version": "blake2b-49743d62730a3c82c4c18e2547b67206",
+    "generated_at_utc": "2026-06-02T04:13:58Z",
     "count": 231
   },
   "entries": [
@@ -4698,10 +4698,10 @@
       "kind": "doc",
       "title": "Catalogue Write Service Operations",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-06-02",
       "parent_id": "scripts-catalogue-write-server",
       "parent_title": "Catalogue Write Services",
-      "display_meta": "2026-05-23 • Catalogue Write Services",
+      "display_meta": "2026-06-02 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-operations",
         "scripts",
@@ -4713,12 +4713,12 @@
         "service",
         "catalogue write services",
         "services",
-        "2026-05-23",
+        "2026-06-02",
         "2026",
-        "05",
-        "23"
+        "06",
+        "02"
       ],
-      "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write service operations service catalogue write services services 2026-05-23 2026 05 23"
+      "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write service operations service catalogue write services services 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-local-studio",

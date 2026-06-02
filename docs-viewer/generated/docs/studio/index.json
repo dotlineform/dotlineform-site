@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T21:20:44Z",
+  "generated_at": "2026-06-02T04:13:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2767,14 +2767,14 @@
       "doc_id": "scripts-catalogue-write-server-operations",
       "title": "Catalogue Write Service Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-06-02",
       "parent_id": "scripts-catalogue-write-server",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-catalogue-write-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-operations.json",
-      "content_text_length": 7130
+      "content_text_length": 8169
     },
     {
       "scope": "studio",
