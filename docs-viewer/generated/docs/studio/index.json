@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T07:59:19Z",
+  "generated_at": "2026-06-02T08:30:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1674,7 +1674,7 @@
       "viewer_report": "docs_broken_links",
       "viewer_report_access": "manage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2106
+      "content_text_length": 322
     },
     {
       "scope": "studio",
@@ -1688,7 +1688,7 @@
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 2301
+      "content_text_length": 2722
     },
     {
       "scope": "studio",

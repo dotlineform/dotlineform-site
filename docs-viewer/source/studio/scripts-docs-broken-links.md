@@ -89,15 +89,12 @@ Flags:
 
 ## Docs Viewer Integration
 
-The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same audit logic through the Docs management endpoint:
+The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same audit logic through the Docs management endpoint `POST /docs/broken-links`. This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. That keeps the browser report thin while leaving the audit reusable from the terminal.
 
-- `POST /docs/broken-links`
+The report depends on the local Docs management API through the configured Docs Viewer service.
 
-That keeps the browser report thin while leaving the audit reusable from the terminal.
-
-## Related References
-
-- [Scripts](/docs/?scope=studio&doc=scripts)
-- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
-- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+1. Docs Viewer loads this report-backed document in manage mode
+2. the report module selects the current or requested docs scope
+3. the report sends `POST <DOCS_VIEWER_BASE_URL>/docs/broken-links`
+4. the Docs Viewer service runs the shared docs broken-links audit logic for that scope
+5. the report renders the returned issue list
