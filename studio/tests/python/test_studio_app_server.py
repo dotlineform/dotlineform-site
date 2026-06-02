@@ -72,16 +72,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "docs_html_import" not in payload["paths"]["routes"]
     assert "catalogue_work_editor" not in payload["paths"]["routes"]
     assert "catalogue_field_registry_review" not in payload["paths"]["routes"]
+    assert "docs" not in payload["app"]["routes"]
     assert any(view["id"] == "studio_home" and view["path"] == "/studio/" for view in runtime["views"])
-    assert any(
-        view["id"] == "docs"
-        and view["path"] == "/docs/?mode=manage"
-        and view["doc_id"] == "docs-viewer"
-        and view["shell_type"] == "external"
-        and "doc_href" not in view
-        and "script" not in view
-        for view in runtime["views"]
-    )
+    assert not any(view["id"] == "docs" for view in runtime["views"])
     assert not any("doc_href" in view for view in runtime["views"])
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
@@ -100,7 +93,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/?mode=manage" for view in runtime["views"])
-    assert runtime["navigation"]["primary"] == ["docs"]
+    assert runtime["navigation"]["primary"] == []
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert "analytics" not in runtime["services"]
     assert "data_sharing" not in runtime["services"]

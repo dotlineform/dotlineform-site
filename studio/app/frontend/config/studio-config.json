@@ -13,15 +13,6 @@
         "shell_type": "javascript",
         "ready_state_route_id": "studio-home"
       },
-      "docs": {
-        "label": "docs",
-        "title": "Docs",
-        "path": "/docs/?mode=manage",
-        "doc_id": "docs-viewer",
-        "nav": true,
-        "shell_type": "external",
-        "ready_state_route_id": ""
-      },
       "studio_audits": {
         "label": "audits",
         "title": "Studio Audits",

@@ -47,8 +47,8 @@ def main(argv: list[str] | None = None) -> int:
 
         with urllib.request.urlopen(f"{base_url}/studio/", timeout=10) as response:
             body = response.read().decode("utf-8")
-        if "/docs/?mode=manage" not in body:
-            raise AssertionError("Local Studio should still render the plain Docs Viewer link target")
+        if "/docs/?mode=manage" in body:
+            raise AssertionError("Local Studio should not render the retired header Docs Viewer link")
         if "docsViewerRoot" in body:
             raise AssertionError("Local Studio home unexpectedly contains Docs Viewer shell markup")
 
@@ -67,9 +67,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("Local Studio did not expose the configured Docs Viewer doc scope")
         if "doc_ids" in docs_viewer_links:
             raise AssertionError("Local Studio duplicated route doc IDs under Docs Viewer external links")
-        docs_route = runtime_config.get("app", {}).get("routes", {}).get("docs", {})
-        if docs_route.get("doc_id") != "docs-viewer":
-            raise AssertionError("Local Studio did not expose the configured Docs route doc ID")
+        if "docs" in runtime_config.get("app", {}).get("routes", {}):
+            raise AssertionError("Local Studio should not expose a Docs header route")
 
         print(f"local Studio Docs Viewer boundary OK: {base_url}/studio/")
         return 0

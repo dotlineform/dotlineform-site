@@ -62,7 +62,6 @@ def main(argv: list[str] | None = None) -> int:
                         empty: "",
                         zero: 0
                     });
-                    const docsViewUrl = mod.buildStudioViewUrl(config, "docs");
                     const workEditorUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_editor", {
                         work: "00001",
                         empty: "",
@@ -130,11 +129,10 @@ def main(argv: list[str] | None = None) -> int:
                         hasThumbnailQualityService: Object.prototype.hasOwnProperty.call(config.app.runtime.services.catalogue || {}, "thumbnail_quality_preview"),
                         hasThumbnailQualityDataPath: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths.studio || {}, "thumbnail_quality_preview"),
                         hasThumbnailQualityDocId: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "thumbnail_quality"),
+                        hasDocsRoute: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "docs"),
                         docsExternalLink: externalLinks.docs_viewer,
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
-                        docsViewPath: mod.getStudioView(config, "docs").path,
-                        docsViewUrl,
                         rewrittenDocsHref: docsLink.getAttribute("href"),
                         dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
@@ -180,6 +178,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("runtime data paths unexpectedly exposed retired thumbnail-quality data")
         if result["hasThumbnailQualityDocId"]:
             raise AssertionError("Docs Viewer links unexpectedly exposed retired thumbnail-quality doc id")
+        if result["hasDocsRoute"]:
+            raise AssertionError("runtime routes unexpectedly exposed retired Docs header route")
         if thumbnail_route_status != 404:
             raise AssertionError(f"retired thumbnail-quality route returned {thumbnail_route_status}, expected 404")
         if thumbnail_api_status != 404:
@@ -200,20 +200,16 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
-        if result["docsViewPath"] != "/docs/?mode=manage":
-            raise AssertionError(f"unexpected Docs view path: {result['docsViewPath']!r}")
-        if result["docsViewUrl"] != "http://127.0.0.1:8776/docs/?mode=manage":
-            raise AssertionError(f"unexpected Docs view URL: {result['docsViewUrl']!r}")
         if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?mode=manage":
             raise AssertionError(f"unexpected rewritten Docs link: {result['rewrittenDocsHref']!r}")
-        expected_top_nav = ["docs"]
+        expected_top_nav = []
         if result["runtimePrimaryNav"] != expected_top_nav:
             raise AssertionError(f"unexpected runtime primary nav: {result['runtimePrimaryNav']!r}")
         top_nav_ids = [link["viewId"] for link in result["topNavLinks"]]
         top_nav_labels = [link["label"] for link in result["topNavLinks"]]
         if top_nav_ids != expected_top_nav:
             raise AssertionError(f"unexpected top nav ids: {result['topNavLinks']!r}")
-        if top_nav_labels != ["docs"]:
+        if top_nav_labels:
             raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
         if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
             raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")

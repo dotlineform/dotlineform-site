@@ -86,16 +86,7 @@ const DEFAULT_ANALYTICS_CONFIG = {
       "base_url": "http://127.0.0.1:8776",
       "docs_path": "/docs/",
       "default_mode": "manage",
-      "doc_scope": "studio",
-      "doc_ids": {
-        "tag_groups": "tag-groups",
-        "tag_registry": "tag-registry",
-        "tag_aliases": "tag-aliases",
-        "series_tags": "series-tags",
-        "series_tag_editor": "tag-editor",
-        "data_sharing_prepare": "studio-data-sharing",
-        "data_sharing_review": "studio-data-sharing"
-      }
+      "doc_scope": "studio"
     }
   }
 };

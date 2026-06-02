@@ -72,7 +72,6 @@ def ui_catalogue_header() -> str:
       <div class="uiCatalogueShellHeader__actions">
         <nav class="uiCatalogueShellNav" aria-label="UI Catalogue">
           <a class="uiCatalogueShellNav__item" href="/ui-catalogue/demos/">demos</a>
-          <a class="uiCatalogueShellNav__item" href="/docs/?scope=studio&amp;mode=manage&amp;doc=ui-catalogue">docs</a>
         </nav>
         <button class="uiCatalogueThemeToggle" type="button" data-ui-catalogue-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="uiCatalogueThemeToggle__icon" data-ui-catalogue-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">

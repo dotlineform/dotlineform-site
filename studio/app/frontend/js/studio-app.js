@@ -1,5 +1,4 @@
 import { loadStudioConfig } from "./studio-config.js";
-import { buildDocsViewerUrl } from "./studio-navigation.js";
 import { hasStudioRouteBodyRenderer, renderStudioRouteBody } from "./studio-route-body-renderers.js";
 import { buildStudioShellContract, listStudioRoutes } from "./studio-route-registry.js";
 import { initStudioThemeToggle } from "./studio-theme.js";
@@ -82,11 +81,8 @@ function renderNavItems(config, activeRoute) {
   return listStudioRoutes(config)
     .filter((route) => route.nav)
     .map((route) => {
-      const href = route.shellType === "external" && route.id === "docs"
-        ? buildDocsViewerUrl(config, route.path)
-        : route.path;
       const activeClass = route.id === activeRoute.id ? " is-active" : "";
-      return `<a class="nav-item${activeClass}" href="${escapeHtml(href, true)}" data-studio-navigate="${escapeHtml(route.id, true)}">${escapeHtml(route.label)}</a>`;
+      return `<a class="nav-item${activeClass}" href="${escapeHtml(route.path, true)}" data-studio-navigate="${escapeHtml(route.id, true)}">${escapeHtml(route.label)}</a>`;
     })
     .join("\n          ");
 }
