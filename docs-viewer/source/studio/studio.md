@@ -106,7 +106,6 @@ Current limits:
 - it does not rebuild docs or docs-search artifacts on startup
 - it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
-- local server architecture and future consolidation strategy are documented in **[Servers](/docs/?scope=studio&doc=servers)**
 
 If you disable the watcher or need an explicit rebuild, rebuild docs payloads manually by scope:
 

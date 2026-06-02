@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T10:16:40Z",
+  "generated_at": "2026-06-02T10:56:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -18,7 +18,7 @@
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 1566
+      "content_text_length": 1424
     },
     {
       "scope": "studio",
@@ -134,6 +134,34 @@
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json",
       "content_text_length": 9766
+    },
+    {
+      "scope": "studio",
+      "doc_id": "analytics-tag-services",
+      "title": "Tag Services",
+      "added_date": "2026-07-02",
+      "last_updated": "2026-07-02",
+      "parent_id": "analytics",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "analytics-tag-services.md",
+      "viewer_url": "/docs/?scope=studio&doc=analytics-tag-services",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-services.json",
+      "content_text_length": 1800
+    },
+    {
+      "scope": "studio",
+      "doc_id": "analytics-tag-source-data",
+      "title": "Tag Source Data",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-05-06 20:51",
+      "parent_id": "analytics",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "analytics-tag-source-data.md",
+      "viewer_url": "/docs/?scope=studio&doc=analytics-tag-source-data",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-source-data.json",
+      "content_text_length": 3991
     },
     {
       "scope": "studio",
@@ -1615,7 +1643,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 10175
+      "content_text_length": 9957
     },
     {
       "scope": "studio",
@@ -1746,6 +1774,20 @@
       "summary": "Docs Viewer-specific dependency boundary, especially the parser stack introduced for staged source import.",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-dependencies.json",
       "content_text_length": 5332
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-data",
+      "title": "Docs Data",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-05-06 20:51",
+      "parent_id": "docs-viewer",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-data.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-data",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-data.json",
+      "content_text_length": 2610
     },
     {
       "scope": "studio",
@@ -2269,6 +2311,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-local-studio",
+      "title": "Local Runners",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-06-02",
+      "parent_id": "local-setup",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-local-studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json",
+      "content_text_length": 15288
+    },
+    {
+      "scope": "studio",
       "doc_id": "local-setup-environment",
       "title": "Local Setup Environment",
       "added_date": "2026-05-19",
@@ -2661,17 +2717,31 @@
     },
     {
       "scope": "studio",
-      "doc_id": "servers",
-      "title": "Servers",
-      "added_date": "2026-04-17",
+      "doc_id": "studio",
+      "title": "Studio",
+      "added_date": "2026-04-23",
       "last_updated": "2026-06-02",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
-      "source_path": "servers.md",
-      "viewer_url": "/docs/?scope=studio&doc=servers",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/servers.json",
-      "content_text_length": 1543
+      "source_path": "studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
+      "content_text_length": 4803
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-activity",
+      "title": "Activity Report",
+      "added_date": "2026-05-08",
+      "last_updated": "2026-05-22",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-activity.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-activity",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json",
+      "content_text_length": 2926
     },
     {
       "scope": "studio",
@@ -2679,13 +2749,13 @@
       "title": "Catalogue Write Services",
       "added_date": "2026-04-22",
       "last_updated": "2026-05-19",
-      "parent_id": "servers",
+      "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 2476
+      "content_text_length": 2231
     },
     {
       "scope": "studio",
@@ -2741,77 +2811,7 @@
       "source_path": "scripts-catalogue-write-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-operations.json",
-      "content_text_length": 7676
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-local-studio",
-      "title": "Local Runners",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-06-02",
-      "parent_id": "servers",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-local-studio.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json",
-      "content_text_length": 15298
-    },
-    {
-      "scope": "studio",
-      "doc_id": "local-studio-server-architecture",
-      "title": "Local Studio Server Architecture",
-      "added_date": "2026-04-17",
-      "last_updated": "2026-05-30",
-      "parent_id": "servers",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "local-studio-server-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 9544
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-tag-write-server",
-      "title": "Retired Tag Write Server",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-30",
-      "parent_id": "servers",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-tag-write-server.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 2306
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio",
-      "title": "Studio",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-06-02",
-      "parent_id": "",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4891
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-activity",
-      "title": "Activity Report",
-      "added_date": "2026-05-08",
-      "last_updated": "2026-05-22",
-      "parent_id": "studio",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-activity.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-activity",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json",
-      "content_text_length": 2926
+      "content_text_length": 7546
     },
     {
       "scope": "studio",
@@ -2839,7 +2839,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
-      "content_text_length": 6032
+      "content_text_length": 6022
     },
     {
       "scope": "studio",
@@ -2854,6 +2854,20 @@
       "viewer_url": "/docs/?scope=studio&doc=local-studio-routes",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-routes.json",
       "content_text_length": 7027
+    },
+    {
+      "scope": "studio",
+      "doc_id": "local-studio-server-architecture",
+      "title": "Local Studio Server Architecture",
+      "added_date": "2026-04-17",
+      "last_updated": "2026-05-30",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "local-studio-server-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
+      "content_text_length": 9544
     },
     {
       "scope": "studio",
@@ -2881,7 +2895,7 @@
       "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
-      "content_text_length": 9871
+      "content_text_length": 853
     },
     {
       "scope": "studio",

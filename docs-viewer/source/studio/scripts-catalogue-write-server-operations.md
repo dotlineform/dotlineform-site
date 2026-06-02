@@ -9,7 +9,6 @@ parent_id: scripts-catalogue-write-server
 
 ## Module Ownership
 
-- The retired `studio/services/catalogue/catalogue_write_server.py` wrapper no longer owns any Local Studio HTTP surface.
 - `studio/app/server/studio/studio_catalogue_api.py` owns the active Local Studio `/studio/api/catalogue/...` HTTP surface and calls catalogue service functions directly.
 - `studio/services/catalogue/catalogue_write_service.py` owns callable Local Studio catalogue route dispatch only.
   It maps `/studio/api/catalogue/...` service paths to focused workflow modules and preserves the shared `handle_catalogue_post(repo_root, api_path, body, dry_run=False)` boundary.
@@ -89,7 +88,6 @@ Operational log target:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Servers](/docs/?scope=studio&doc=servers)
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

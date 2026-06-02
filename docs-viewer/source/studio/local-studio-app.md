@@ -118,5 +118,4 @@ Current focused Local Studio checks are grouped by ownership:
 - [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-- [Servers](/docs/?scope=studio&doc=servers)
 - [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)

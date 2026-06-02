@@ -3,19 +3,15 @@ doc_id: scripts-catalogue-write-server
 title: Catalogue Write Services
 added_date: 2026-04-22
 last_updated: 2026-05-19
-parent_id: servers
+parent_id: studio
 ---
 # Catalogue Write Services
 
 Status:
 
-- the standalone `studio/services/catalogue/catalogue_write_server.py` HTTP wrapper is retired
 - Local Studio serves active catalogue APIs through `studio/app/server/studio/studio_app_server.py`
 - catalogue write behavior lives in focused modules behind `studio/services/catalogue/catalogue_write_service.py`
-
-The retired wrapper used to bind a separate local-only catalogue write process.
-That separate process is no longer a supported fallback/debug path.
-Use Local Studio app routes under `/studio/api/catalogue/...` for browser-facing catalogue writes.
+- Use Local Studio app routes under `/studio/api/catalogue/...` for browser-facing catalogue writes.
 
 ## Current Behavior
 
@@ -36,7 +32,7 @@ The Local Studio catalogue service can:
 - `studio/app/server/studio/studio_catalogue_api.py` owns the Local Studio `/studio/api/catalogue/...` adapter.
 - `studio/services/catalogue/catalogue_write_service.py` owns service route dispatch.
 - focused modules such as `catalogue_bulk_service.py`, `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, `catalogue_publication_service.py`, and `catalogue_prose_import_service.py` own workflow behavior.
-- `studio/services/catalogue/catalogue_routes.py` remains the stable catalogue route constant inventory for activity profiles and request-contract documentation.
+- `studio/services/catalogue/catalogue_routes.py` is the stable catalogue route constant inventory for activity profiles and request-contract documentation.
 
 ## Child References
 

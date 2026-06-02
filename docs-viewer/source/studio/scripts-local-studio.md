@@ -3,7 +3,8 @@ doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
 last_updated: 2026-06-02
-parent_id: servers
+parent_id: local-setup
+viewable: true
 ---
 # Local Runners
 
@@ -432,7 +433,6 @@ If you disable the watcher or want an explicit manual rebuild, use:
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
-- [Servers](/docs/?scope=studio&doc=servers)
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)

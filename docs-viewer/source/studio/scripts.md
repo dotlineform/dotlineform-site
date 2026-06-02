@@ -9,7 +9,6 @@ parent_id: dev-home
 
 - This page is the high-level entry point for active repo scripts.
 - Command-level usage, flags, output paths, and operational notes live in the child docs below.
-- Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
 
 The current script surface is organized by owner:
 
@@ -165,8 +164,6 @@ Catalogue/runtime maintenance:
   Report source project folders and primary images that are not represented by `works.json`.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
-- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
-  Records the retired standalone tag write service and the current Analytics-owned tag API replacement.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
   Run the local Studio catalogue source save service with explicit write allowlists.
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
@@ -179,7 +176,6 @@ Catalogue/runtime maintenance:
 ## Related References
 
 - [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
-- [Servers](/docs/?scope=studio&doc=servers)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)

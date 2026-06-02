@@ -7,8 +7,9 @@ parent_id: ""
 ---
 # Analytics
 
-Analytics is now a standalone local app boundary.
-Run it with:
+Analytics is a standalone local app boundary. [analysis](/analysis/) is the public-facing Docs Viewer for this data domain.
+
+Run Analytics with:
 
 ```bash
 bin/local-analytics
@@ -18,8 +19,17 @@ Default local route:
 
 - `http://127.0.0.1:8766/analytics/`
 
-Analytics owns tag groups, tag registry, tag aliases, series tags, series tag editing, Data Sharing routes/APIs, semantic-reference maintenance, document analysis, and future visualisation workflows.
-Retired Studio paths under `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` should not be recreated.
+Analytics owns:
+
+- tag groups,
+- tag registry,
+- tag aliases,
+- series tags,
+- series tag editing,
+- Data Sharing routes/APIs,
+- semantic-reference maintenance,
+- document analysis,
+- future visualisation workflows.
 
 Current source boundary:
 
@@ -30,5 +40,3 @@ Current source boundary:
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
 - `analytics-app/data/canonical/` owns canonical tag source data. Raw local browser access, where useful for diagnostics or smoke tests, is under `/analytics/data/canonical/...`.
 - `data-sharing/` owns the headless Data Sharing registry, config, workflow dispatch, package I/O, and domain adapters used by Analytics.
-
-[analysis](/analysis/) is the public-facing Docs Viewer for this data domain.

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-eec78388406a4d46573fadf95e2ff406",
-    "generated_at_utc": "2026-06-02T10:10:28Z",
-    "count": 232
+    "version": "blake2b-bf6ee0b423c52fc660b0e5990f1808d6",
+    "generated_at_utc": "2026-06-02T10:52:13Z",
+    "count": 233
   },
   "entries": [
     {
@@ -209,6 +209,53 @@
         "30"
       ],
       "search_text": "tag-registry tag registry tag registry analytics 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "analytics-tag-services",
+      "kind": "doc",
+      "title": "Tag Services",
+      "href": "/docs/?scope=studio&doc=analytics-tag-services",
+      "last_updated": "2026-07-02",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-07-02 • Analytics",
+      "search_terms": [
+        "analytics-tag-services",
+        "analytics",
+        "tag",
+        "services",
+        "tag services",
+        "2026-07-02",
+        "2026",
+        "07",
+        "02"
+      ],
+      "search_text": "analytics-tag-services analytics tag services tag services 2026-07-02 2026 07 02"
+    },
+    {
+      "id": "analytics-tag-source-data",
+      "kind": "doc",
+      "title": "Tag Source Data",
+      "href": "/docs/?scope=studio&doc=analytics-tag-source-data",
+      "last_updated": "2026-05-06 20:51",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:51 • Analytics",
+      "search_terms": [
+        "analytics-tag-source-data",
+        "analytics",
+        "tag",
+        "source",
+        "data",
+        "tag source data",
+        "2026-05-06 20:51",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "51"
+      ],
+      "search_text": "analytics-tag-source-data analytics tag source data tag source data 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
       "id": "tiered-dimension-policy",
@@ -3022,6 +3069,31 @@
       "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer 2026-06-01 2026 06 01"
     },
     {
+      "id": "docs-data",
+      "kind": "doc",
+      "title": "Docs Data",
+      "href": "/docs/?scope=studio&doc=docs-data",
+      "last_updated": "2026-05-06 20:51",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-06 20:51 • Docs Viewer",
+      "search_terms": [
+        "docs-data",
+        "docs",
+        "data",
+        "docs data",
+        "docs viewer",
+        "viewer",
+        "2026-05-06 20:51",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "51"
+      ],
+      "search_text": "docs-data docs data docs data docs viewer viewer 2026-05-06 20:51 2026 05 06 20 51"
+    },
+    {
       "id": "scripts-docs-export",
       "kind": "doc",
       "title": "Documents Package Preparation Script",
@@ -3916,6 +3988,31 @@
       "search_text": "local-setup local setup local setup 2026-05-30 2026 05 30"
     },
     {
+      "id": "scripts-local-studio",
+      "kind": "doc",
+      "title": "Local Runners",
+      "href": "/docs/?scope=studio&doc=scripts-local-studio",
+      "last_updated": "2026-06-02",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-06-02 • Local Setup",
+      "search_terms": [
+        "scripts-local-studio",
+        "scripts",
+        "local",
+        "studio",
+        "local runners",
+        "runners",
+        "local setup",
+        "setup",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "scripts-local-studio scripts local studio local runners runners local setup setup 2026-06-02 2026 06 02"
+    },
+    {
       "id": "local-setup-environment",
       "kind": "doc",
       "title": "Local Setup Environment",
@@ -4570,20 +4667,42 @@
       "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-06-01 2026 06 01"
     },
     {
-      "id": "servers",
+      "id": "studio",
       "kind": "doc",
-      "title": "Servers",
-      "href": "/docs/?scope=studio&doc=servers",
+      "title": "Studio",
+      "href": "/docs/?scope=studio&doc=studio",
       "last_updated": "2026-06-02",
       "display_meta": "2026-06-02",
       "search_terms": [
-        "servers",
+        "studio",
         "2026-06-02",
         "2026",
         "06",
         "02"
       ],
-      "search_text": "servers 2026-06-02 2026 06 02"
+      "search_text": "studio 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "studio-activity",
+      "kind": "doc",
+      "title": "Activity Report",
+      "href": "/docs/?scope=studio&doc=studio-activity",
+      "last_updated": "2026-05-22",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-22 • Studio",
+      "search_terms": [
+        "studio-activity",
+        "studio",
+        "activity",
+        "activity report",
+        "report",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "studio-activity studio activity activity report report 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-catalogue-write-server",
@@ -4591,9 +4710,9 @@
       "title": "Catalogue Write Services",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "last_updated": "2026-05-19",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-05-19 • Servers",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-19 • Studio",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -4602,13 +4721,13 @@
         "server",
         "catalogue write services",
         "services",
-        "servers",
+        "studio",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write services services servers 2026-05-19 2026 05 19"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write services services studio 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-catalogue-write-server-build-lookup",
@@ -4718,117 +4837,6 @@
       "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write service operations service catalogue write services services 2026-06-02 2026 06 02"
     },
     {
-      "id": "scripts-local-studio",
-      "kind": "doc",
-      "title": "Local Runners",
-      "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-06-02",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-06-02 • Servers",
-      "search_terms": [
-        "scripts-local-studio",
-        "scripts",
-        "local",
-        "studio",
-        "local runners",
-        "runners",
-        "servers",
-        "2026-06-02",
-        "2026",
-        "06",
-        "02"
-      ],
-      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-06-02 2026 06 02"
-    },
-    {
-      "id": "local-studio-server-architecture",
-      "kind": "doc",
-      "title": "Local Studio Server Architecture",
-      "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-05-30",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-05-30 • Servers",
-      "search_terms": [
-        "local-studio-server-architecture",
-        "local",
-        "studio",
-        "server",
-        "architecture",
-        "local studio server architecture",
-        "servers",
-        "2026-05-30",
-        "2026",
-        "05",
-        "30"
-      ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-30 2026 05 30"
-    },
-    {
-      "id": "scripts-tag-write-server",
-      "kind": "doc",
-      "title": "Retired Tag Write Server",
-      "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-05-30",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-05-30 • Servers",
-      "search_terms": [
-        "scripts-tag-write-server",
-        "scripts",
-        "tag",
-        "write",
-        "server",
-        "retired tag write server",
-        "retired",
-        "servers",
-        "2026-05-30",
-        "2026",
-        "05",
-        "30"
-      ],
-      "search_text": "scripts-tag-write-server scripts tag write server retired tag write server retired servers 2026-05-30 2026 05 30"
-    },
-    {
-      "id": "studio",
-      "kind": "doc",
-      "title": "Studio",
-      "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-06-02",
-      "display_meta": "2026-06-02",
-      "search_terms": [
-        "studio",
-        "2026-06-02",
-        "2026",
-        "06",
-        "02"
-      ],
-      "search_text": "studio 2026-06-02 2026 06 02"
-    },
-    {
-      "id": "studio-activity",
-      "kind": "doc",
-      "title": "Activity Report",
-      "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-22",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
-      "search_terms": [
-        "studio-activity",
-        "studio",
-        "activity",
-        "activity report",
-        "report",
-        "2026-05-22",
-        "2026",
-        "05",
-        "22"
-      ],
-      "search_text": "studio-activity studio activity activity report report 2026-05-22 2026 05 22"
-    },
-    {
       "id": "local-studio-apis",
       "kind": "doc",
       "title": "Local Studio APIs",
@@ -4893,6 +4901,29 @@
         "02"
       ],
       "search_text": "local-studio-routes local studio routes local studio routes 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "local-studio-server-architecture",
+      "kind": "doc",
+      "title": "Local Studio Server Architecture",
+      "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
+      "last_updated": "2026-05-30",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-30 • Studio",
+      "search_terms": [
+        "local-studio-server-architecture",
+        "local",
+        "studio",
+        "server",
+        "architecture",
+        "local studio server architecture",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture 2026-05-30 2026 05 30"
     },
     {
       "id": "studio-ready-state",
