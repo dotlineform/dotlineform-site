@@ -149,9 +149,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD`
   default: `5`
   controls the maximum changed file count for watcher-targeted docs-search updates; use `-1` to target whenever affected ids are safe
-- `DOTLINEFORM_BACKUP_RETENTION`
-  default: `on`
-  set to `off` or `0` to skip the startup Studio backup retention cleanup
 - `PUBLIC_SITE_ENABLED`
   default: `1`
   used by `bin/local-all`; set to `0` to skip the public-site preview child process
@@ -214,19 +211,10 @@ If any child process exits, `bin/local-all` prints which service exited, stops t
 Before it starts long-running processes, `bin/local-studio` checks that the Local Studio app port is available when the app server is enabled.
 If the port is unavailable, the runner exits immediately with a message naming `STUDIO_APP_PORT`.
 
-After that preflight, `bin/local-studio` runs the startup write step below:
-
-If `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
-
-- `$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet`
-
 `bin/local-studio` does not run startup docs/docs-search rebuilds or startup catalogue lookup export.
 The local Studio app catalogue API refreshes derived lookup payloads after catalogue writes.
 
-By default it also prunes local Studio backup files under `var/studio/backups/` and `var/studio/catalogue/backups/`.
-Backup retention keeps the newest backups per target file; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention).
-
-After startup writes succeed, it starts the long-running local processes below.
+After startup preflight succeeds, it starts the long-running local processes below.
 
 ## Running Services
 
@@ -392,7 +380,6 @@ At startup the runner prints quick links for:
 - UI Catalogue App
 - local API ownership
 - Docs Live Watcher status
-- Backup retention status
 - Series Tag Editor in Local Analytics:
   - `http://127.0.0.1:8766/analytics/series-tag-editor/?series=<series_id>`
 

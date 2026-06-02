@@ -58,7 +58,6 @@ def make_registry_payload() -> dict[str, object]:
                             "returned_package_staging_root": "var/analytics/data-sharing/tags/import-staging",
                             "review_output_root": "var/analytics/data-sharing/tags/import-preview",
                             "source_root": "analytics-app/data/canonical",
-                            "backup_root": "var/analytics/data-sharing/tags/backups",
                         },
                         "source_write_targets": {
                             "tag_registry": "analytics-app/data/canonical/tag-registry.json",
@@ -141,7 +140,6 @@ def make_registry_payload() -> dict[str, object]:
                         "path_contract": {
                             "staging_root": "returned_package_staging_root",
                             "source_root": "source_root",
-                            "backup_root": "backup_root",
                         },
                         "requires_confirmation": True,
                         "apply_actions": [
@@ -382,7 +380,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
     assert activity["record_groups"]["tags"]["sample_ids"] == ["subject:stone", "subject:trees", "subject:water"]
 
 
-def test_registry_review_and_confirmed_apply_use_backups() -> None:
+def test_registry_review_and_confirmed_apply_writes_source() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
@@ -440,7 +438,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
     assert preflight["requires_confirmation"] is True
     assert preflight["written"] is False
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/analytics/data-sharing/tags/backups/tag-registry.json.bak-")
+    assert "backup_files" not in applied
     assert {item["tag_id"] for item in registry["tags"]} == {"subject:trees", "subject:water", "subject:stone", "subject:sky"}
 
 
@@ -541,7 +539,7 @@ def test_assignments_review_reports_applicable_conflict_invalid_and_missing() ->
     ]
 
 
-def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None:
+def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
@@ -604,7 +602,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
 
     assert preflight["requires_confirmation"] is True
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/analytics/data-sharing/tags/backups/tag-assignments.json.bak-")
+    assert "backup_files" not in applied
     assert assignments["series"]["series-a"]["tags"] == [{"tag_id": "subject:sky", "w_manual": 0.6}]
     assert activity["record_groups"]["series"]["sample_ids"] == ["series-a"]
     assert activity["record_groups"]["works"]["sample_ids"] == ["00001"]
@@ -617,10 +615,10 @@ def main() -> None:
         test_prepare_registry_package_dry_run_does_not_write,
         test_tags_handlers_dispatch_through_data_sharing_workflow,
         test_prepare_bundle_package_writes_under_outbound_root_and_activity,
-        test_registry_review_and_confirmed_apply_use_backups,
+        test_registry_review_and_confirmed_apply_writes_source,
         test_aliases_review_and_preflight_validate_without_writing,
         test_assignments_review_reports_applicable_conflict_invalid_and_missing,
-        test_assignments_confirmed_apply_writes_backup_and_activity_groups,
+        test_assignments_confirmed_apply_writes_source_and_activity_groups,
     ]
     for test in tests:
         test()

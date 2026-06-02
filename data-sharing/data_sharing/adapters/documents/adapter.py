@@ -31,7 +31,6 @@ from docs_data_sharing.package import (  # noqa: E402
 from docs_data_sharing.review import review_returned_document_package  # noqa: E402
 from docs_data_sharing.write import (  # noqa: E402
     DocsDataSharingWriteDependencies,
-    MakeBackupBundle,
     PerformSourceWriteAndRebuild,
 )
 import docs_source_model as source_model  # noqa: E402
@@ -44,12 +43,10 @@ LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 @dataclass(frozen=True)
 class DocumentsDataSharingDependencies:
     log_event: LogEvent
-    make_backup_bundle: MakeBackupBundle
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
     def write_dependencies(self) -> DocsDataSharingWriteDependencies:
         return DocsDataSharingWriteDependencies(
-            make_backup_bundle=self.make_backup_bundle,
             perform_source_write_and_rebuild=self.perform_source_write_and_rebuild,
         )
 

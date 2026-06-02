@@ -210,7 +210,6 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 What it runs before starting long-lived services:
 
 - required port preflight for the local Studio app
-- Studio backup retention cleanup when enabled
 
 What it starts:
 

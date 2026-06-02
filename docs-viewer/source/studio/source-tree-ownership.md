@@ -27,7 +27,7 @@ The repo is intentionally one repository:
 - UI Catalogue owns isolated UI demos and reference assets outside Local Studio.
 - Jekyll owns public layouts, includes, route pages, public route JavaScript/CSS, public media, and generated public runtime payloads.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
-- Local working output, backups, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
+- Local working output, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
 
 ## Studio Source
 
@@ -63,13 +63,13 @@ Current Analytics-owned source homes:
 | Path | Owner / role |
 | --- | --- |
 | `analytics-app/app/server/analytics_app/` | Local Analytics app server, Analytics route views, runtime config projection, static serving, tag API dispatch, and Data Sharing API dispatch. |
-| `analytics-app/app/server/analytics_app/tag_services/` | Analytics tag-domain helper modules for source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection. |
+| `analytics-app/app/server/analytics_app/tag_services/` | Analytics tag-domain helper modules for source path contracts, validation, planning, dry-run/write transactions, route constants, and compact activity projection. |
 | `analytics-app/app/frontend/` | Analytics browser modules, route modules, shell helpers, UI text config, and Analytics runtime config source. |
 | `analytics-app/app/assets/` | Analytics-only CSS and static assets used by Local Analytics routes. |
 | `analytics-app/tests/` | Analytics Python and browser smoke tests, including tag route/API checks and Data Sharing route/API checks. |
 | `analytics-app/data/canonical/` | Canonical tag registry, alias, assignment, and group source data used by Analytics. Raw local browser access, where needed, is served through `/analytics/data/canonical/...`. |
 | `data-sharing/` | Headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters used by Analytics. |
-| `var/analytics/data-sharing/` | Local Data Sharing package output, returned-package staging, review artifacts, and backups. |
+| `var/analytics/data-sharing/` | Local Data Sharing package output, returned-package staging, and review artifacts. |
 
 Analytics routes and APIs live under `/analytics/...` and `/analytics/api/...`.
 Do not add aliases, proxies, dual-read paths, or static-serving shims for retired `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths.
@@ -146,7 +146,7 @@ Generated Studio read models remain under `studio/data/generated/` when they are
 The generated change-history search projection remains under `studio/workflows/change-requests/generated/`.
 Generated committed manage-mode Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local manage-mode runtime use but are not public static assets.
 
-`var/` remains local working output for staging, backups, imports, generated run logs, temporary media derivatives, and test run summaries.
+`var/` remains local working output for staging, imports, generated run logs, temporary media derivatives, and test run summaries.
 
 ## Compatibility Rule
 

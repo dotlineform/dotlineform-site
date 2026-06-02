@@ -7,7 +7,7 @@ import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
 
 from docs_html_import import (
     HTML_STAGED_SUFFIXES,
@@ -36,8 +36,6 @@ from docs_source_model import (
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
-MakeBackupBundle = Callable[[Path, str, str, list[ScopeDoc], Optional[Dict[str, Any]]], Path]
-MakeImportOverwriteBackup = Callable[[Path, str, ScopeDoc, Optional[Dict[str, Any]]], Path]
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 
 INTERACTIVE_HTML_ASSET_REL_ROOT = Path("assets/docs/interactive")
@@ -47,8 +45,6 @@ INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 @dataclass(frozen=True)
 class ImportSourceDependencies:
     log_event: LogEvent
-    make_backup_bundle: MakeBackupBundle
-    make_import_overwrite_backup: MakeImportOverwriteBackup
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
@@ -384,7 +380,6 @@ def handle_import_source(
             "dry_run": dry_run,
         }
 
-    backup_dir = None
     rebuild = None
     inline_media_written: list[dict[str, Any]] = []
     interactive_html_written: list[Dict[str, Any]] = []
@@ -398,18 +393,6 @@ def handle_import_source(
             title_changed=overwrite_title != collision_doc.title,
         )
         if not dry_run:
-            backup_dir = dependencies.make_import_overwrite_backup(
-                repo_root,
-                scope,
-                collision_doc,
-                {
-                    "staged_filename": staged_filename,
-                    "include_prompt_meta": include_prompt_meta,
-                    "source_path": preview.get("source_path"),
-                    "title": preview.get("title"),
-                },
-            )
-
             def write_import_artifacts() -> None:
                 nonlocal inline_media_written, interactive_html_written
                 inline_media_written = materialize_inline_raster_media(
@@ -472,7 +455,6 @@ def handle_import_source(
             "import_preview": preview,
             "inline_media_written": inline_media_written,
             "interactive_html_written": interactive_html_written,
-            "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
             "rebuild": rebuild,
             "summary_text": import_summary_text(
                 "overwrite",
@@ -487,21 +469,6 @@ def handle_import_source(
     target_path = scope_root(repo_root, scope) / f"{doc_id}.md"
     source_text = imported_source_text_for_create(preview, docs, scope)
     if not dry_run:
-        backup_dir = dependencies.make_backup_bundle(
-            repo_root,
-            scope,
-            "import-create",
-            [],
-            {
-                "staged_filename": staged_filename,
-                "include_prompt_meta": include_prompt_meta,
-                "doc_id": doc_id,
-                "title": preview["title"],
-                "path": relative_path(repo_root, target_path),
-                "source_path": preview.get("source_path"),
-            },
-        )
-
         def write_import_artifacts() -> None:
             nonlocal inline_media_written, interactive_html_written
             inline_media_written = materialize_inline_raster_media(
@@ -564,7 +531,6 @@ def handle_import_source(
         "import_preview": preview,
         "inline_media_written": inline_media_written,
         "interactive_html_written": interactive_html_written,
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "summary_text": import_summary_text("create", doc_id, staged_filename, interactive_html_written),
         "dry_run": dry_run,

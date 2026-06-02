@@ -177,7 +177,6 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                     "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
                                     "review_output_root": "var/analytics/data-sharing/library/import-preview",
                                     "source_root": "docs-viewer/source/library",
-                                    "backup_root": "var/docs/backups",
                                 },
                                 "source_write_targets": {
                                     "documents": "docs-viewer/source/library",
@@ -235,7 +234,6 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                 "path_contract": {
                                     "staging_root": "returned_package_staging_root",
                                     "source_root": "source_root",
-                                    "backup_root": "backup_root",
                                 },
                                 "requires_confirmation": True,
                                 "apply_actions": [
@@ -1260,7 +1258,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
     assert payload["summary_apply_written"] is False
 
 
-def test_library_import_summary_apply_creates_backup_and_writes_source() -> None:
+def test_library_import_summary_apply_writes_source() -> None:
     original_rebuild = stub_rebuild()
     try:
         with make_repo() as temp:
@@ -1285,25 +1283,17 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
                 dry_run=False,
             )
             source_text = (root / "docs-viewer/source/library/alpha.md").read_text(encoding="utf-8")
-            backup_dir = root / payload["backup_dir"]
-            manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
-            backup_exists = backup_dir.exists()
-            backup_source_exists = (backup_dir / "alpha.md").exists()
     finally:
         write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["summary_apply_written"] is True
     assert payload["counts"]["updates"] == 1
-    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert "backup_dir" not in payload
     assert payload["rebuild"]["docs"]["mode"] == "targeted"
     assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["diagnostics"]["docs"]["build_mode"] == "targeted"
-    assert backup_exists
-    assert backup_source_exists
-    assert manifest["operation"] == "documents-summary-apply"
-    assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert "last_updated: 2026-05-01" in source_text
     assert "summary: New summary." in source_text
 
@@ -1417,7 +1407,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
     assert payload["hierarchy_apply_written"] is False
 
 
-def test_library_import_hierarchy_apply_creates_backup_and_removes_retired_sort_order() -> None:
+def test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_order() -> None:
     original_rebuild = stub_rebuild()
     try:
         with make_repo() as temp:
@@ -1450,21 +1440,17 @@ def test_library_import_hierarchy_apply_creates_backup_and_removes_retired_sort_
             )
             alpha_text = (root / "docs-viewer/source/library/alpha.md").read_text(encoding="utf-8")
             library_text = (root / "docs-viewer/source/library/library.md").read_text(encoding="utf-8")
-            backup_dir = root / payload["backup_dir"]
-            manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
     finally:
         write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["hierarchy_apply_written"] is True
     assert payload["counts"]["changed"] == 1
-    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert "backup_dir" not in payload
     assert payload["rebuild"]["docs"]["mode"] == "targeted"
     assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["diagnostics"]["search"]["mode"] == "targeted"
-    assert manifest["operation"] == "documents-hierarchy-apply"
-    assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert "last_updated: 2026-05-01" in alpha_text
     assert 'parent_id: ""' in alpha_text
     assert "sort_order:" not in alpha_text
@@ -1543,11 +1529,11 @@ def main() -> None:
         test_markdown_package_import_reports_unresolved_and_unsupported_links,
         test_import_collision_prompts_for_replacement_doc_id,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
-        test_library_import_summary_apply_creates_backup_and_writes_source,
+        test_library_import_summary_apply_writes_source,
         test_documents_data_sharing_apply_uses_python_docs_rebuild_commands,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,
         test_library_import_hierarchy_apply_preflight_reports_missing_target_doc,
-        test_library_import_hierarchy_apply_creates_backup_and_removes_retired_sort_order,
+        test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_order,
         test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write,
         test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows,
     ]

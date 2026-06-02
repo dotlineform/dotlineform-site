@@ -187,7 +187,6 @@ def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> Non
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00002", repo_root=root)
         plan = catalogue_delete_plans.build_delete_apply_plan(source_dir, root, "work", "00002", preview)
 
-    assert_equal(plan.backup_label, "catalogue-delete-work", "backup label")
     assert_equal(sorted(path.name for path in plan.payloads), ["series.json", "work_details.json", "works.json"], "payload files")
     assert_equal(plan.payloads[(source_dir / "works.json").resolve()]["works"].get("00002"), None, "deleted work payload")
     assert_equal(plan.payloads[(source_dir / "series.json").resolve()]["series"]["010"].get("primary_work_id"), None, "draft primary cleared")

@@ -55,8 +55,8 @@ Current behavior:
 - source config settings allowlist, validation payloads, and allowlisted source-config writes are owned by `docs-viewer/services/docs_source_config_settings.py`
 - docs-specific Studio Activity row construction is owned by `docs-viewer/services/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `docs-viewer/services/docs_write_rebuild.py`
-- staged source import orchestration for the Docs Viewer import modal is owned by `docs-viewer/services/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
-- management mutation planners for create, metadata, viewability, move, and delete flows are owned by `docs-viewer/services/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
+- staged source import orchestration for the Docs Viewer import modal is owned by `docs-viewer/services/docs_import_source_service.py`; the server binds the existing log and rebuild helpers and keeps activity append timing
+- management mutation planners for create, metadata, viewability, move, and delete flows are owned by `docs-viewer/services/docs_management_mutations.py`; the server still parses requests, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by the `docs_broken_links` Docs Viewer report for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes

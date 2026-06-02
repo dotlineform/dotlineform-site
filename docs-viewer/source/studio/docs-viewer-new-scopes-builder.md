@@ -327,7 +327,6 @@ Apply behavior:
 - appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
 - creates a public read-only route page only for `public_readonly`
 - writes a user-created, tool-created manifest record
-- creates a timestamped backup bundle for the previous scope config and manifest files
 - runs the docs build and, when requested, the docs search build after the config and source files are written
 
 Apply response fields:
@@ -345,12 +344,11 @@ Apply response fields:
 - `missing_files`
 - `build_commands`
 - `urls`
-- `backup_dir`
 - `rebuild`
 - `summary_text`
 - `dry_run`
 
-Dry-run server mode validates the apply request and returns the apply response shape without writing files, creating a backup, or running rebuild commands.
+Dry-run server mode validates the apply request and returns the apply response shape without writing files or running rebuild commands.
 
 ## Delete Preview Endpoint
 
@@ -405,7 +403,6 @@ Apply behavior:
 - reports missing manifest-owned paths without blocking the delete
 - removes the scope entry from `docs-viewer/config/scopes/docs_scopes.json`
 - removes the scope record from `docs-viewer/config/scopes/docs_scope_manifest.json`
-- creates a timestamped backup bundle for the previous scope config and manifest files
 - refreshes docs viewer generated outputs for the remaining configured scopes
 
 Apply response fields:
@@ -421,12 +418,11 @@ Apply response fields:
 - `missing_files`
 - `build_commands`
 - `urls`
-- `backup_dir`
 - `rebuild`
 - `summary_text`
 - `dry_run`
 
-Dry-run server mode validates the delete apply request and returns the apply response shape without deleting files, changing config/manifest state, creating a backup, or running rebuild commands.
+Dry-run server mode validates the delete apply request and returns the apply response shape without deleting files, changing config/manifest state, or running rebuild commands.
 
 ## Create Flow Contract
 

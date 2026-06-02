@@ -114,11 +114,10 @@ def test_prose_import_apply_writes_changed_source_without_backup() -> None:
         assert not (root / "var/studio/catalogue/backups").exists()
 
 
-def test_moment_import_apply_writes_body_and_metadata_backup() -> None:
+def test_moment_import_apply_writes_body_and_metadata() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source_dir = write_source_baseline(root)
-        backups_dir = root / "var/studio/catalogue/backups"
         write_text(root / "var/docs/catalogue/import-staging/moments/keys.md", "Moment body")
 
         result = prose_import.apply_moment_import(
@@ -135,7 +134,6 @@ def test_moment_import_apply_writes_body_and_metadata_backup() -> None:
                 },
             },
             allowed_write_roots={(root / "studio/data/canonical/catalogue-markdown/moments").resolve()},
-            backups_dir=backups_dir,
             dry_run=False,
         )
 
@@ -146,12 +144,11 @@ def test_moment_import_apply_writes_body_and_metadata_backup() -> None:
         assert record["title"] == "Keys updated"
         assert record["status"] == "draft"
         assert record["date"] == "2024-01-02"
-        assert result.backup_paths
 
 
 if __name__ == "__main__":
     test_prose_import_preview_reports_overwrite_and_hashes()
     test_prose_import_apply_enforces_allowlisted_target_root()
     test_prose_import_apply_writes_changed_source_without_backup()
-    test_moment_import_apply_writes_body_and_metadata_backup()
+    test_moment_import_apply_writes_body_and_metadata()
     print("catalogue prose import tests passed")

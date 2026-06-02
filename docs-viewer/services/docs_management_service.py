@@ -32,18 +32,13 @@ import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
 from docs_management_capabilities_service import capabilities_payload  # noqa: E402
 from docs_management_context import (  # noqa: E402
-    BACKUPS_REL_DIR,
     DEFAULT_MARKDOWN_APP_ENV,
     LOGS_REL_DIR,
     MAX_BODY_BYTES,
     allowed_origin,
-    backup_stamp_now,
     detect_repo_root,
     find_repo_root,
     log_event,
-    make_backup_bundle,
-    make_import_overwrite_backup,
-    make_scope_lifecycle_backup,
     relative_path,
     utc_now,
     viewer_url_for,

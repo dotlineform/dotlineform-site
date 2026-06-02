@@ -115,23 +115,23 @@ Analytics tag routes are owned by Local Analytics and write only:
 - `analytics-app/data/canonical/tag-registry.json`
 - `analytics-app/data/canonical/tag-aliases.json`
 - `analytics-app/data/canonical/tag-groups.json`
-- Analytics backup and compact log paths
+- Analytics compact log paths
 
 Catalogue routes write only through explicit service allowlists:
 
 - canonical catalogue source JSON under `studio/data/canonical/catalogue/`
-- catalogue backup and log paths
+- catalogue log paths
 - focused generated/public outputs when a scoped build, publication, delete, import, or Project State workflow explicitly owns them
 
 Docs routes write only through the Docs Viewer service and its management mutation/import/rebuild services.
-Data Sharing document writes are exposed through the Local Analytics Data Sharing API and remain docs-aware by delegating to document-domain helpers for validation, backups, source writes, and rebuild follow-through.
+Data Sharing document writes are exposed through the Local Analytics Data Sharing API and remain docs-aware by delegating to document-domain helpers for validation, source writes, and rebuild follow-through.
 
 Audit routes run only allowlisted local checks.
 
 Build routes invoke allowlisted local commands and write their documented generated outputs.
 
 Import routes keep preview and apply separate.
-Apply endpoints use narrow allowlists, validation, backup bundles, and operation summaries.
+Apply endpoints use narrow allowlists, validation, atomic write helpers or rebuild wrappers, and operation summaries.
 
 ## Shared Infrastructure
 
@@ -149,7 +149,6 @@ The local Studio app server already shares:
 Domain modules still own:
 
 - stale-version, hash, or source-consistency checks where applicable
-- backup helpers and backup destinations
 - minimal JSONL logging
 - capability details
 - validation rules

@@ -220,11 +220,10 @@ Cancel leaves the existing asset unchanged.
 
 Template: `assets/docs/interactive/template.html`
 
-## Backup Behavior
+## Recovery Behavior
 
-Before overwriting through the low-level service, the importer creates an untracked backup under:
-
-- `var/docs/backups/`
+The importer no longer creates local backup bundles before source writes.
+Recover overwritten source through Git history, host/filesystem backups, or an explicit manual copy made before import.
 
 ## What To Expect In The Result
 

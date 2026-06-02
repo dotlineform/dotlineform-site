@@ -98,10 +98,10 @@ Import behavior:
 - the Studio filename-conflict modal uses `overwrite_doc_id` plus `confirm_overwrite: true` for its explicit Replace action
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, and existing `viewable` state; retired `sort_order` front matter is removed during overwrite
 - refreshes the overwritten doc's `last_updated` to the current minute
-- creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - writes decoded inline raster media files only during create or overwrite, not during preview-only responses
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild targeted same-scope docs payloads and run targeted docs-search updates for affected ids
+- source recovery relies on Git history, host/filesystem backups, or explicit manual copies made before import
 
 `POST /docs/import-html` remains a compatibility alias for older callers through route dispatch and delegates to the same source import handler.
 

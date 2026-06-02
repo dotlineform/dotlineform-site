@@ -120,7 +120,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
                                 "review_output_root": "var/analytics/data-sharing/library/import-preview",
                                 "source_root": "docs-viewer/source/library",
-                                "backup_root": "var/docs/backups",
                             },
                             "source_write_targets": {
                                 "documents": "docs-viewer/source/library",
@@ -647,7 +646,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
-    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert "backup_dir" not in payload
     assert payload["build_commands"][0]["status"] == "completed"
     assert calls == [(repo_root, "research", {"include_search": True})]
     assert default_doc_exists is True
@@ -852,7 +851,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
-    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert "backup_dir" not in payload
     assert delete_calls == [repo_root]
     assert create_calls == [(repo_root, "research", {"include_search": True})]
     assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]

@@ -24,7 +24,7 @@ The registry must:
 - keep media-producing formats explicit
 - keep HTML prompt/meta handling explicit
 - send every format through one preview contract before write
-- keep create, collision, overwrite, backup, and rebuild behavior outside individual format converters
+- keep create, collision, overwrite, source-write, and rebuild behavior outside individual format converters
 
 The registry is intentionally small.
 It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
@@ -219,10 +219,10 @@ The service:
 - requires a replacement doc id or explicit overwrite confirmation when the proposed target collides
 - creates new source docs with standard Docs Viewer front matter
 - preserves existing identity, parent, order, and visibility metadata on overwrite
-- creates operation-specific backups before write
 - materializes inline raster media during create or overwrite
 - writes the source Markdown atomically
 - rebuilds same-scope docs payloads and targeted docs-search entries after successful writes
+- relies on Git history, host/filesystem backups, or explicit manual copies for source recovery
 
 The normal UI collision recovery path uses `replacement_doc_id`.
 `replacement_title` remains as a compatibility fallback for older callers.
@@ -256,7 +256,7 @@ To add a new source format:
 6. Update [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) and [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server).
 
 New formats should not write files directly from preview builders.
-Keep writes in the service layer so backup, rebuild, and search behavior remain consistent across formats.
+Keep writes in the service layer so source-write, rebuild, and search behavior remain consistent across formats.
 
 ## Related References
 

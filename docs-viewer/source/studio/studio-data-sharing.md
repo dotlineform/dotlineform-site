@@ -34,8 +34,11 @@ The prepare page asks the active adapter for selectable records instead of readi
 For Library documents, that selectable-record response can still be backed by Docs Viewer generated data and docs-domain helpers; the shared Analytics shell should not hard-code that implementation detail.
 
 Document source writes remain docs-aware.
-The documents adapter calls reusable docs-domain helpers for generated reads, simplified HTML/package creation, returned JSON review, Markdown/front matter updates, backups, and docs/search rebuild follow-through.
+The documents adapter calls reusable docs-domain helpers for generated reads, simplified HTML/package creation, returned JSON review, Markdown/front matter updates, and docs/search rebuild follow-through.
 Those helpers are callable without routing through Docs Viewer HTTP endpoints.
+
+Data Sharing apply routes no longer create local backup artifacts.
+Recovery for changed source records relies on Git history, host/filesystem backups, or explicit manual copies made before a risky operation.
 
 Runtime packages, returned-package staging, and review artifacts use:
 

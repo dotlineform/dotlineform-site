@@ -270,7 +270,6 @@ def test_publication_build_transaction_dry_run_preserves_payload_shape() -> None
         success, payload = catalogue_publication.run_publication_build_transaction(
             repo_root=root,
             source_dir=source_dir,
-            backups_dir=root / "var/studio/catalogue/backups",
             dry_run=True,
             kind="work",
             record_id="00001",
@@ -279,7 +278,6 @@ def test_publication_build_transaction_dry_run_preserves_payload_shape() -> None
             extra_work_ids=[],
             force=False,
             run_build_operation=lambda **kwargs: (_ for _ in ()).throw(AssertionError("build should not run")),
-            rel_path=lambda path: str(path.relative_to(root)),
         )
 
     assert_false(called, "build operation called")

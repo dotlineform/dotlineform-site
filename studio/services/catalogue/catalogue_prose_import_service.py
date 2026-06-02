@@ -62,7 +62,6 @@ def moment_import_apply_payload(context: CatalogueWriteContext, body: Mapping[st
         context.source_dir,
         body,
         allowed_write_roots=context.allowed_write_roots,
-        backups_dir=context.backups_dir,
         dry_run=context.dry_run,
     )
     moment_id = result.moment_id
@@ -88,8 +87,6 @@ def moment_import_apply_payload(context: CatalogueWriteContext, body: Mapping[st
         payload["activity_context"] = activity_context
     if context.dry_run:
         payload["dry_run"] = True
-    if result.backup_paths:
-        payload["backups"] = [context.rel_path(path) for path in result.backup_paths]
     if not context.dry_run:
         payload["completed_at_utc"] = activity.utc_now()
         if activity_context:

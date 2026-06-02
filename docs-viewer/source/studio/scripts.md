@@ -38,13 +38,13 @@ The current script surface is organized by owner:
 
 - `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
 - `analytics-app/` owns the Local Analytics app server, Analytics route shells, Analytics runtime config, Analytics frontend modules, tag APIs, tag-domain helper services, Data Sharing route/API dispatch, and Analytics tests.
-- `analytics-app/app/server/analytics_app/tag_services/` owns tag-domain source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection used by Analytics.
+- `analytics-app/app/server/analytics_app/tag_services/` owns tag-domain source path contracts, validation, planning, dry-run/write transactions, route constants, and compact activity projection used by Analytics.
 - `data-sharing/` owns headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters. The active browser-facing Data Sharing HTTP endpoints are hosted by Local Analytics.
 - `ui-catalogue-app/` owns the standalone UI Catalogue demo app, demo source, static demo assets, and UI Catalogue tests.
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `docs-viewer/build/` owns Docs Viewer docs and search build implementations.
-- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Studio catalogue/admin route dispatch services.
+- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit and Studio catalogue/admin route dispatch services.
 - `studio/checks/` owns standalone audits, risk checks, and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners when a wrapper is still intentionally supported.
@@ -169,8 +169,6 @@ Catalogue/runtime maintenance:
   Records the retired standalone tag write service and the current Analytics-owned tag API replacement.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
   Run the local Studio catalogue source save service with explicit write allowlists.
-- [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
-  Prune local Studio backup files by newest-N-per-target retention.
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
   Audit typography and color literals across CSS files.
 - [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)

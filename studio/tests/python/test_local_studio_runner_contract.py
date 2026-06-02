@@ -33,7 +33,6 @@ def test_local_studio_runner_starts_python_owned_children() -> None:
 
     assert "studio/app/server/studio/studio_app_server.py" in text
     assert "docs-viewer/services/docs_live_rebuild_watcher.py" in text
-    assert "studio/app/server/studio/studio_backup_retention.py" in text
 
 
 def main() -> None:

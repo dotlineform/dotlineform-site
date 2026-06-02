@@ -85,7 +85,7 @@ Studio owns:
 - catalogue import, save, delete, publication, and build actions
 - catalogue field registry review
 - project state
-- Studio audits, activity, backup retention, and admin pages unless later split out
+- Studio audits, activity, and admin pages unless later split out
 
 Studio should not own:
 

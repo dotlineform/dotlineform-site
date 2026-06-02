@@ -24,7 +24,6 @@ import docs_write_rebuild as write_rebuild  # noqa: E402
 from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
-from docs_data_sharing.write import make_backup_bundle  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
 except ModuleNotFoundError:  # pragma: no cover - supports direct script imports.
@@ -58,7 +57,6 @@ def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
 def documents_data_sharing_dependencies() -> documents_data_sharing_adapter.DocumentsDataSharingDependencies:
     return documents_data_sharing_adapter.DocumentsDataSharingDependencies(
         log_event=log_event,
-        make_backup_bundle=make_backup_bundle,
         perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
     )
 

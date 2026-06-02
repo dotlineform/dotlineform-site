@@ -61,11 +61,11 @@ The headless `data-sharing/` subsystem owns:
 - operation dispatch for `prepare`, `list_returned`, `review`, and `apply`
 - selectable-record dispatch for prepare workflows
 - package I/O and returned JSON handling
-- common path safety checks for package roots, staging roots, review roots, source roots, and backup roots
+- common path safety checks for package roots, staging roots, review roots, and source roots
 - common dry-run and confirmation gates
 - shared path contracts and schemas
 
-Domain adapters own source parsing, validation, review row semantics, write planning, backups, and writes for their data model.
+Domain adapters own source parsing, validation, review row semantics, write planning, and writes for their data model.
 They may call reusable domain helpers, but the shared Analytics shell and local API do not implement domain write logic directly.
 
 ## Headless Subsystem
@@ -201,7 +201,7 @@ Current docs-domain helper package:
 - `docs-viewer/services/docs_data_sharing/package.py`: selectable document records, package generation, and returned-package listing
 - `docs-viewer/services/docs_data_sharing/review.py`: staged package parsing, Markdown preview generation, and review-row shaping
 - `docs-viewer/services/docs_data_sharing/apply.py`: summary and hierarchy apply planning and result payload shaping
-- `docs-viewer/services/docs_data_sharing/write.py`: source writes, backups, and docs/search rebuild follow-through
+- `docs-viewer/services/docs_data_sharing/write.py`: source writes and docs/search rebuild follow-through
 
 Library workflow roots:
 
@@ -209,8 +209,6 @@ Library workflow roots:
 - returned package staging: `var/analytics/data-sharing/library/import-staging/`
 - review artifacts: `var/analytics/data-sharing/library/import-preview/`
 - source root: `docs-viewer/source/library/`
-- backup root: `var/docs/backups/`
-
 The adapter registry validates the first three roots against `var/analytics/data-sharing/<data_domain>/...`; adapters should not add fallback reads for old disposable `var/studio/data-sharing/...` or `var/studio/export-import/...` packages.
 
 The documents adapter is Data Sharing-owned adapter code that a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
@@ -223,7 +221,7 @@ Document Data Sharing uses narrow in-process dependencies:
 - `docs_data_sharing.package` owns selectable document reads, package generation, and returned-package listing.
 - `docs_data_sharing.review` owns staged document package parsing and review-row shaping.
 - `docs_data_sharing.apply` owns summary and hierarchy apply planning.
-- `docs_data_sharing.write` owns document Data Sharing backup bundle creation and delegates source-write rebuild follow-through through an injected callable.
+- `docs_data_sharing.write` delegates source-write rebuild follow-through through an injected callable.
 - `docs_data_sharing.activity` owns document Data Sharing Studio Activity attachment for package creation and apply operations.
 
 The Analytics Data Sharing API injects these helpers into the documents adapter.
@@ -250,7 +248,7 @@ The tags adapter owns:
 - tag registry, alias, and assignment review without writing
 - confirmed apply for selected registry, alias, and applicable assignment rows
 - validation against tag policy, aliases, series, and work membership
-- backups and writes through existing Analytics tag transaction helpers
+- atomic writes through existing Analytics tag transaction helpers
 - activity metadata for tags, aliases, series, works, and files
 
 Tags workflow roots:
@@ -259,8 +257,6 @@ Tags workflow roots:
 - returned package staging: `var/analytics/data-sharing/tags/import-staging/`
 - review output root: `var/analytics/data-sharing/tags/import-preview/`
 - source root: `analytics-app/data/canonical/`
-- backup root: `var/analytics/data-sharing/tags/backups/`
-
 Implemented sharing profiles:
 
 - `tag-registry`
@@ -330,7 +326,7 @@ Portable packages can be thought of as:
 - Data Sharing subsystem: headless registry, adapter config, package contracts, workflow dispatch, path contracts, package I/O, and adapters
 - documents data sharing adapter: document selectable records, package preparation, returned-package review, and document apply behavior for Docs Viewer corpora through reusable docs-domain helpers
 - Analytics Data Sharing module: pages, browser modules, same-origin local API, lifecycle, status, confirmation, and result presentation contracts
-- Analytics tags adapter: tag registry, alias, assignment, validation, review, package, apply, backup, and activity behavior
+- Analytics tags adapter: tag registry, alias, assignment, validation, review, package, apply, and activity behavior
 
 The shared shell must not learn document parsing, tag policy, catalogue relationship validation, or source-write semantics beyond the metadata needed to route, confirm, and present adapter results.
 

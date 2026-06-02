@@ -110,7 +110,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     return temp_dir
 
 
-def test_create_plan_selects_unique_source_path_backup_metadata_and_search_target() -> None:
+def test_create_plan_selects_unique_source_path_and_search_target() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_create(
@@ -124,9 +124,6 @@ def test_create_plan_selects_unique_source_path_backup_metadata_and_search_targe
 
     assert plan.response["doc_id"] == "target-2"
     assert plan.response["record"]["parent_id"] == ""
-    assert plan.backup_operation == "create"
-    assert plan.backup_metadata is not None
-    assert plan.backup_metadata["path"] == "docs-viewer/source/studio/target-2.md"
     assert plan.search_doc_ids == ["target-2"]
     assert plan.source_writes[0].path.name == "target-2.md"
 
@@ -145,12 +142,9 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
                 "ui_status": "ready",
                 "viewable": True,
             },
-        )
+    )
 
     assert plan.response["changes"]["title_changed"] is True
-    assert plan.backup_docs[0].doc_id == "target"
-    assert plan.backup_metadata is not None
-    assert plan.backup_metadata["from_title"] == "Target"
     assert plan.search_doc_ids == ["target", "target-child"]
     assert "title: Renamed Target" in plan.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
@@ -211,9 +205,6 @@ def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() ->
 
     assert plan.response["doc_ids"] == ["target", "target-child"]
     assert plan.response["changed_doc_ids"] == ["target", "target-child"]
-    assert plan.backup_operation == "update-viewability-bulk"
-    assert plan.backup_metadata is not None
-    assert plan.backup_metadata["requested_doc_ids"] == ["target"]
     assert plan.search_doc_ids == ["target", "target-child"]
     for write in plan.source_writes:
         assert "viewable: false" in write.text
@@ -234,8 +225,6 @@ def test_move_plan_noops_when_parent_is_unchanged() -> None:
 
     assert plan.response["record"] == {"doc_id": "sibling", "parent_id": ""}
     assert plan.source_writes == ()
-    assert plan.backup_operation is None
-    assert plan.backup_metadata is None
     assert plan.search_doc_ids == []
 
 
@@ -253,7 +242,6 @@ def test_move_plan_keeps_search_target_for_reparent() -> None:
 
     assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent"}
     assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
-    assert plan.backup_operation is None
     assert plan.search_doc_ids == ["sibling"]
 
 
@@ -271,7 +259,6 @@ def test_move_plan_supports_moving_parent_subtree() -> None:
 
     assert plan.response["record"] == {"doc_id": "target", "parent_id": "parent"}
     assert [write.path.name for write in plan.source_writes] == ["target.md"]
-    assert plan.backup_operation is None
     assert plan.search_doc_ids == ["target", "target-child"]
 
 
@@ -288,7 +275,7 @@ def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
     assert target_preview["inbound_refs"][0]["doc_id"] == "parent"
 
 
-def test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target() -> None:
+def test_delete_apply_plan_selects_doc_delete_path_and_search_target() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_delete_apply(
@@ -300,17 +287,13 @@ def test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target() ->
             },
         )
 
-    assert plan.backup_operation == "delete"
-    assert plan.backup_docs[0].doc_id == "target-child"
-    assert plan.backup_metadata is not None
-    assert plan.backup_metadata["inbound_ref_count"] == 1
     assert plan.source_deletes[0].path.name == "target-child.md"
     assert plan.search_doc_ids == ["target-child"]
 
 
 def main() -> None:
     tests = [
-        test_create_plan_selects_unique_source_path_backup_metadata_and_search_target,
+        test_create_plan_selects_unique_source_path_and_search_target,
         test_metadata_plan_keeps_child_search_target_for_title_changes,
         test_metadata_status_only_plan_suppresses_search_target,
         test_metadata_viewable_plan_writes_current_viewability,
@@ -319,7 +302,7 @@ def main() -> None:
         test_move_plan_keeps_search_target_for_reparent,
         test_move_plan_supports_moving_parent_subtree,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
-        test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
+        test_delete_apply_plan_selects_doc_delete_path_and_search_target,
     ]
     for test in tests:
         test()

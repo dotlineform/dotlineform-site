@@ -66,7 +66,6 @@ class MomentImportApplyResult:
     preview: Dict[str, Any]
     metadata_path: Path
     target_path: Path
-    backup_paths: list[Path]
 
 
 def normalize_moment_id_value(value: Any) -> str:
@@ -241,7 +240,6 @@ def apply_moment_import(
     body: Mapping[str, Any],
     *,
     allowed_write_roots: set[Path],
-    backups_dir: Path,
     dry_run: bool,
 ) -> MomentImportApplyResult:
     request = extract_moment_import_request(body)
@@ -273,10 +271,9 @@ def apply_moment_import(
         metadata_path: moment_metadata_payload(metadata_records),
     }
     moment_id = str(preview.get("moment_id") or moment_id_for_write).strip().lower()
-    backup_paths: list[Path] = []
     if not dry_run:
         transactions.atomic_write_text_no_backup(target_path, text)
-        backup_paths = transactions.atomic_write_many(target_payloads, backups_dir)
+        transactions.atomic_write_many(target_payloads)
 
     return MomentImportApplyResult(
         moment_file=str(preview.get("moment_file") or request.moment_file),
@@ -284,5 +281,4 @@ def apply_moment_import(
         preview=preview,
         metadata_path=metadata_path,
         target_path=target_path,
-        backup_paths=backup_paths,
     )

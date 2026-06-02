@@ -44,7 +44,7 @@ The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
 
 Adapters are Data Sharing-owned modules under the target `data-sharing/data_sharing/adapters/` boundary.
-They can call domain helpers for reads, validation, backups, writes, and rebuild follow-through.
+They can call domain helpers for reads, validation, writes, and rebuild follow-through.
 The documents adapter calls docs-domain helpers; the tags adapter calls Analytics tag helpers.
 Neither adapter should require Data Sharing browser modules to know those helper boundaries.
 
@@ -87,7 +87,6 @@ The registry owns workflow paths that the shared Data Sharing shell needs for di
 - `paths.returned_package_staging_root`
 - `paths.review_output_root`
 - `paths.source_root`
-- `paths.backup_root`
 
 The first Library mapping uses a data-domain-first workflow root:
 

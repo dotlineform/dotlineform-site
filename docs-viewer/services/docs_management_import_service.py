@@ -6,14 +6,12 @@ from typing import Any, Dict
 
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
-from docs_management_context import log_event, make_backup_bundle, make_import_overwrite_backup
+from docs_management_context import log_event
 
 
 def import_source_dependencies() -> import_source_service.ImportSourceDependencies:
     return import_source_service.ImportSourceDependencies(
         log_event=log_event,
-        make_backup_bundle=make_backup_bundle,
-        make_import_overwrite_backup=make_import_overwrite_backup,
         perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
     )
 

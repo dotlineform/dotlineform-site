@@ -346,7 +346,6 @@ def apply_publication_unpublish_cleanup(
     *,
     repo_root: Path,
     source_dir: Path,
-    backups_dir: Path,
     dry_run: bool,
     allowed_write_paths: set[Path],
     kind: str,
@@ -363,10 +362,8 @@ def apply_publication_unpublish_cleanup(
         generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
         return transactions.execute_catalogue_cleanup_transaction(
             repo_root=repo_root,
-            backups_dir=backups_dir,
             dry_run=dry_run,
             allowed_write_paths=allowed_write_paths,
-            backup_label=f"catalogue-unpublish-{kind.replace('_', '-')}",
             payloads={source_path: source_payload, **generated_payloads},
             cleanup=cleanup,
             rebuild_catalogue_search=rebuild_catalogue_search,
@@ -376,10 +373,8 @@ def apply_publication_unpublish_cleanup(
     cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
     return transactions.execute_moment_cleanup_transaction(
         repo_root=repo_root,
-        backups_dir=backups_dir,
         dry_run=dry_run,
         allowed_write_paths=allowed_write_paths,
-        backup_label="catalogue-unpublish-moment",
         metadata_path=source_path,
         metadata_payload=source_payload,
         cleanup=cleanup,
@@ -392,7 +387,6 @@ def run_publication_build_transaction(
     *,
     repo_root: Path,
     source_dir: Path,
-    backups_dir: Path,
     dry_run: bool,
     kind: str,
     record_id: str,
@@ -401,7 +395,6 @@ def run_publication_build_transaction(
     extra_work_ids: list[str],
     force: bool,
     run_build_operation: Callable[..., tuple[bool, Dict[str, Any]]],
-    rel_path: Callable[[Path], str],
 ) -> tuple[bool, Dict[str, Any]]:
     if dry_run:
         return True, {
@@ -413,24 +406,6 @@ def run_publication_build_transaction(
             "summary": "Dry-run publication apply would run the scoped public update after the source write.",
         }
 
-    generated_backup_root = backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{transactions.backup_stamp_now()}"
-    affected = publication_affected_for_record(source_dir, kind, record_id)
-    if kind == "moment":
-        cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
-        backup_candidates = [
-            *cleanup["delete_paths"],
-            repo_root / "assets" / "data" / "moments_index.json",
-            repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
-        ]
-    else:
-        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
-        backup_candidates = [
-            *cleanup["delete_paths"],
-            *cleanup["public_json_updates"],
-            *cleanup["studio_json_updates"],
-            repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
-        ]
-    generated_backups = transactions.backup_transaction_paths(backup_candidates, generated_backup_root, repo_root)
     if kind == "work":
         success, payload = run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
     elif kind == "work_detail":
@@ -439,8 +414,6 @@ def run_publication_build_transaction(
         success, payload = run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
     else:
         success, payload = run_build_operation(work_id="", series_id="", moment_id=record_id, extra_series_ids=[], extra_work_ids=[], detail_uid="", force=force)
-    payload["generated_backup_root"] = rel_path(generated_backup_root) if generated_backups else ""
-    payload["generated_backups"] = [rel_path(path) for path in generated_backups.values()]
     return success, payload
 
 

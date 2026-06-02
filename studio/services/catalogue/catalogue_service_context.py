@@ -15,7 +15,6 @@ from script_logging import append_script_log
 from studio_activity import append_studio_activity
 
 
-BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 
 
@@ -30,7 +29,6 @@ class CatalogueWriteContext:
     moments_path: Path
     allowed_write_paths: set[Path]
     allowed_write_roots: set[Path]
-    backups_dir: Path
     dry_run: bool = False
 
     def rel_path(self, path: Path) -> str:
@@ -61,7 +59,6 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
             (resolved_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
             (resolved_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
-        backups_dir=(resolved_root / BACKUPS_REL_DIR).resolve(),
         dry_run=dry_run,
     )
 

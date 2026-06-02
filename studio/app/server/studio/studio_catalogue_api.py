@@ -69,7 +69,6 @@ from script_logging import append_script_log  # noqa: E402
 from studio_activity import append_studio_activity  # noqa: E402
 
 
-BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 STUDIO_ACTIVITY_FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
 PROJECT_STATE_REPORT_API_PATH = "/studio/api/catalogue/project-state-report"
@@ -214,7 +213,6 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
 
     changed = plan.importable_count > 0
     target_kind = plan.target_kind
-    backup_response_paths: list[str] = []
     if changed and not dry_run:
         updated_records = apply_workbook_import_plan(paths["source_dir"], plan)
         target_path = paths["works_path"] if target_kind == "works" else paths["work_details_path"]
@@ -222,13 +220,11 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
         payload_records = updated_records.works if target_kind == "works" else updated_records.work_details
         if target_path not in paths["allowed_write_paths"]:
             raise ValueError("write target not allowlisted")
-        write_result = execute_source_json_write(
+        execute_source_json_write(
             {target_path: payload_for_map(payload_key, payload_records)},
-            paths["backups_dir"],
             dry_run=dry_run,
             repo_root=repo_root,
         )
-        backup_response_paths = write_result.backups
         refresh_lookup_payloads(repo_root, paths["source_dir"], paths["lookup_dir"])
 
     response_payload: dict[str, Any] = {
@@ -247,8 +243,6 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
         response_payload["would_write"] = changed
     elif changed:
         response_payload["saved_at_utc"] = activity.utc_now()
-        if backup_response_paths:
-            response_payload["backups"] = backup_response_paths
 
     log_event(
         repo_root,
@@ -431,7 +425,6 @@ def catalogue_paths(repo_root: Path) -> dict[str, Any]:
             (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
             (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
-        "backups_dir": (repo_root / BACKUPS_REL_DIR).resolve(),
     }
 
 

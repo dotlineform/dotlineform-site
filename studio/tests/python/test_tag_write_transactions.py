@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify tag write-server backup and atomic JSON write helpers."""
+"""Verify tag write-server atomic JSON write helpers."""
 
 from __future__ import annotations
 
@@ -32,54 +32,39 @@ def assert_equal(actual, expected, label: str) -> None:
         raise AssertionError(f"{label}: expected {expected!r}, got {actual!r}")
 
 
-def test_single_file_write_creates_timestamped_backup() -> None:
+def test_single_file_write_replaces_existing_file() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         target = root / "tag_registry.json"
-        backups_dir = root / "backups"
         write_json(target, {"tags": [{"tag_id": "subject:trees"}]})
 
-        backup_path = transactions.atomic_write(target, {"tags": [{"tag_id": "subject:canopy"}]}, backups_dir)
+        transactions.atomic_write(target, {"tags": [{"tag_id": "subject:canopy"}]})
 
-        if backup_path is None:
-            raise AssertionError("existing file write should return a backup path")
         assert_equal(read_json(target), {"tags": [{"tag_id": "subject:canopy"}]}, "updated target")
-        assert_equal(read_json(backup_path), {"tags": [{"tag_id": "subject:trees"}]}, "backup payload")
-        if not backup_path.name.startswith("tag_registry.json.bak-"):
-            raise AssertionError(f"unexpected backup name: {backup_path.name}")
 
 
-def test_single_file_write_without_existing_file_skips_backup() -> None:
+def test_single_file_write_creates_new_file() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         target = root / "tag_assignments.json"
-        backups_dir = root / "backups"
 
-        backup_path = transactions.atomic_write(target, {"series": {}}, backups_dir)
+        transactions.atomic_write(target, {"series": {}})
 
-        assert_equal(backup_path, None, "new file backup path")
         assert_equal(read_json(target), {"series": {}}, "created target")
-        assert_equal(list(backups_dir.iterdir()), [], "backup files")
 
 
-def test_multi_file_write_creates_backups_with_shared_stamp() -> None:
+def test_multi_file_write_replaces_targets() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         first = root / "tag_registry.json"
         second = root / "tag_aliases.json"
-        backups_dir = root / "backups"
         write_json(first, {"before": 1})
         write_json(second, {"before": 2})
 
-        backup_paths = transactions.atomic_write_many({first: {"after": 1}, second: {"after": 2}}, backups_dir)
+        transactions.atomic_write_many({first: {"after": 1}, second: {"after": 2}})
 
         assert_equal(read_json(first), {"after": 1}, "first target")
         assert_equal(read_json(second), {"after": 2}, "second target")
-        assert_equal(len(backup_paths), 2, "backup count")
-        assert_equal(read_json(backups_dir / backup_paths[0].name), {"before": 1}, "first backup")
-        assert_equal(read_json(backups_dir / backup_paths[1].name), {"before": 2}, "second backup")
-        stamps = {path.name.split(".bak-", 1)[1] for path in backup_paths}
-        assert_equal(len(stamps), 1, "shared backup stamp")
 
 
 def test_multi_file_write_rolls_back_replaced_and_created_files_on_failure() -> None:
@@ -87,7 +72,6 @@ def test_multi_file_write_rolls_back_replaced_and_created_files_on_failure() -> 
         root = Path(tmp)
         existing = root / "tag_registry.json"
         created = root / "tag_aliases.json"
-        backups_dir = root / "backups"
         write_json(existing, {"before": 1})
         original_replace = transactions.os.replace
         calls = 0
@@ -102,7 +86,7 @@ def test_multi_file_write_rolls_back_replaced_and_created_files_on_failure() -> 
         transactions.os.replace = fail_second_replace
         try:
             try:
-                transactions.atomic_write_many({existing: {"after": 1}, created: {"after": 2}}, backups_dir)
+                transactions.atomic_write_many({existing: {"after": 1}, created: {"after": 2}})
             except OSError as exc:
                 if "simulated replace failure" not in str(exc):
                     raise AssertionError(f"unexpected failure: {exc}") from exc
@@ -118,9 +102,9 @@ def test_multi_file_write_rolls_back_replaced_and_created_files_on_failure() -> 
 
 
 def main() -> None:
-    test_single_file_write_creates_timestamped_backup()
-    test_single_file_write_without_existing_file_skips_backup()
-    test_multi_file_write_creates_backups_with_shared_stamp()
+    test_single_file_write_replaces_existing_file()
+    test_single_file_write_creates_new_file()
+    test_multi_file_write_replaces_targets()
     test_multi_file_write_rolls_back_replaced_and_created_files_on_failure()
     print("Tag write transaction tests OK")
 

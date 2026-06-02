@@ -258,8 +258,8 @@ At write time, the service:
 - creates or overwrites the Markdown source doc
 - materializes decoded inline raster media
 - copies source media only when the configured storage mode supports repo-asset writes
-- creates operation backups before source overwrite
 - rebuilds same-scope docs payloads and targeted docs-search entries after successful source writes
+- relies on Git history, host/filesystem backups, or explicit manual copies for source recovery
 
 Inline media extraction plans are checked against the staged source before materialization.
 If the source no longer matches the preview plan, the write fails rather than silently writing mismatched media.

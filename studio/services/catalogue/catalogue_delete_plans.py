@@ -26,7 +26,6 @@ from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metad
 class DeleteApplyPlan:
     kind: str
     record_id: str
-    backup_label: str
     payloads: Dict[Path, Dict[str, Any]]
     cleanup: Dict[str, Any]
     activity_affected: Dict[str, list[str]]
@@ -307,7 +306,6 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         return DeleteApplyPlan(
             kind=kind,
             record_id=record_id,
-            backup_label="catalogue-delete-work",
             payloads=payloads,
             cleanup=cleanup,
             activity_affected={
@@ -329,7 +327,6 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         return DeleteApplyPlan(
             kind=kind,
             record_id=record_id,
-            backup_label="catalogue-delete-work-detail",
             payloads={
                 details_path: payload_for_map("work_details", updated_details),
                 **generated_payloads,
@@ -360,7 +357,6 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         return DeleteApplyPlan(
             kind=kind,
             record_id=record_id,
-            backup_label="catalogue-delete-series",
             payloads={
                 series_path: payload_for_map("series", updated_series),
                 works_path: payload_for_map("works", updated_works),
@@ -381,7 +377,6 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
     return DeleteApplyPlan(
         kind=kind,
         record_id=record_id,
-        backup_label="catalogue-delete-moment",
         payloads={moments_path: moment_metadata_payload(updated_moments)},
         cleanup=cleanup,
         activity_affected=affected,

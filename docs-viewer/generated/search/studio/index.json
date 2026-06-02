@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-49743d62730a3c82c4c18e2547b67206",
-    "generated_at_utc": "2026-06-02T04:13:58Z",
-    "count": 231
+    "version": "blake2b-9d5b1153b92a9cc3ac51735098d8180e",
+    "generated_at_utc": "2026-06-02T05:32:37Z",
+    "count": 230
   },
   "entries": [
     {
@@ -2509,19 +2509,19 @@
       "kind": "doc",
       "title": "Data Sharing",
       "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
       "search_terms": [
         "data-sharing",
         "data",
         "sharing",
         "data sharing",
-        "2026-05-30",
+        "2026-06-02",
         "2026",
-        "05",
-        "30"
+        "06",
+        "02"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-05-30 2026 05 30"
+      "search_text": "data-sharing data sharing data sharing 2026-06-02 2026 06 02"
     },
     {
       "id": "studio-data-sharing",
@@ -3384,10 +3384,10 @@
       "kind": "doc",
       "title": "Management Service",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-30 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -3398,12 +3398,12 @@
         "service",
         "docs viewer",
         "viewer",
-        "2026-05-30",
+        "2026-06-02",
         "2026",
-        "05",
-        "30"
+        "06",
+        "02"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server management service service docs viewer viewer 2026-05-30 2026 05 30"
+      "search_text": "scripts-docs-management-server scripts docs management server management service service docs viewer viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-docs-management-server-data-sharing",
@@ -3493,10 +3493,10 @@
       "kind": "doc",
       "title": "Docs Management Service Operations",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Service",
-      "display_meta": "2026-05-30 • Management Service",
+      "display_meta": "2026-06-02 • Management Service",
       "search_terms": [
         "scripts-docs-management-server-operations",
         "scripts",
@@ -3507,12 +3507,12 @@
         "docs management service operations",
         "service",
         "management service",
-        "2026-05-30",
+        "2026-06-02",
         "2026",
-        "05",
-        "30"
+        "06",
+        "02"
       ],
-      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service management service 2026-05-30 2026 05 30"
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service management service 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-docs-management-server-write-actions",
@@ -4851,31 +4851,6 @@
         "22"
       ],
       "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
-    },
-    {
-      "id": "scripts-studio-backup-retention",
-      "kind": "doc",
-      "title": "Studio Backup Retention",
-      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
-      "search_terms": [
-        "scripts-studio-backup-retention",
-        "scripts",
-        "studio",
-        "backup",
-        "retention",
-        "studio backup retention",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "studio-ready-state",

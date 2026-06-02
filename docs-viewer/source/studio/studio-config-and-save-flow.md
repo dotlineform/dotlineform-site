@@ -134,10 +134,9 @@ Current write-service implementation notes:
 
 - the local tag API owner is `analytics-app/app/server/analytics_app/analytics_api.py`
 - writes are constrained to Studio-owned JSON files
-- server writes create timestamped backups in `var/studio/backups/`
+- server writes use atomic replacement and in-process rollback without writing backup files
 - write activity is logged to `var/studio/logs/studio_analytics_api.log`
 - covered local-server writes also append unified Studio activity rows when the browser supplies valid activity context
-- backup retention is applied at `bin/local-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 
 Catalogue editor local save behavior:
 
@@ -147,9 +146,8 @@ Catalogue editor local save behavior:
 - the server validates the full catalogue source set before writing
 - writes are constrained to allowlisted canonical catalogue source JSON
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
-- backup bundles are written under `var/studio/catalogue/backups/`
+- catalogue writes use atomic replacement and in-process rollback without writing backup bundles
 - activity is logged to `var/studio/catalogue/logs/catalogue_service_context.log` and summarized into `var/studio/activity/activity_log.json`
-- backup retention is applied at `bin/local-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 - bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Management Service
 added_date: 2026-04-24
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: docs-viewer
 viewable: true
 ---
@@ -61,7 +61,7 @@ Links to `/docs/` or the configured Docs Viewer service URL are rendered without
 `docs-viewer/services/docs_management_service.py` dispatches route paths for the standalone Docs Viewer service.
 Focused modules own the workflow behavior behind it:
 
-- `docs-viewer/services/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
+- `docs-viewer/services/docs_management_context.py` owns shared paths, repo/root helpers, CORS origin checks, compact logs, and path formatting.
 - `docs-viewer/services/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
 - `docs-viewer/services/docs_management_capabilities_service.py` owns capability and scope availability payloads.
 - `docs-viewer/services/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, delete apply, and scope lifecycle apply routes.

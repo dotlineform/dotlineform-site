@@ -59,7 +59,7 @@ Tag writes remain allowlisted to:
 - `analytics-app/data/canonical/tag-registry.json`
 - `analytics-app/data/canonical/tag-aliases.json`
 
-Backups remain under `var/studio/backups/`.
+Writes use atomic replacement and in-process rollback without writing backup files.
 Unified activity rows are written through `studio/shared/python/studio_activity.py`.
 
 ## Related References

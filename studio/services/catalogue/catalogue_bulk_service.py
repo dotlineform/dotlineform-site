@@ -119,18 +119,15 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             updated_works[work_id] = updated_record
 
         changed = bool(changed_ids)
-        backup_response_paths: list[str] = []
         if changed:
             target_path = context.works_path.resolve()
             if target_path not in context.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            write_result = transactions.execute_source_json_write(
+            transactions.execute_source_json_write(
                 {target_path: payload_for_map("works", updated_works)},
-                context.backups_dir,
                 dry_run=context.dry_run,
                 repo_root=context.repo_root,
             )
-            backup_response_paths = write_result.backups
 
         payload: dict[str, Any] = {
             "ok": True,
@@ -154,7 +151,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             changed=changed,
             changed_ids=changed_ids,
             changed_field_names=changed_field_names,
-            backup_response_paths=backup_response_paths,
         )
         payload["build_requested"] = bool(apply_build and changed and build_targets)
         if apply_build and changed and build_targets:
@@ -194,18 +190,15 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         updated_details[detail_uid] = updated_record
 
     changed = bool(changed_ids)
-    backup_response_paths = []
     if changed:
         target_path = context.work_details_path.resolve()
         if target_path not in context.allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        write_result = transactions.execute_source_json_write(
+        transactions.execute_source_json_write(
             {target_path: payload_for_map("work_details", updated_details)},
-            context.backups_dir,
             dry_run=context.dry_run,
             repo_root=context.repo_root,
         )
-        backup_response_paths = write_result.backups
 
     payload = {
         "ok": True,
@@ -229,7 +222,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         changed=changed,
         changed_ids=changed_ids,
         changed_field_names=changed_field_names,
-        backup_response_paths=backup_response_paths,
     )
     payload["build_requested"] = bool(apply_build and changed)
     if apply_build and changed:
@@ -246,15 +238,12 @@ def _finish_bulk_payload(
     changed: bool,
     changed_ids: list[str],
     changed_field_names: set[str],
-    backup_response_paths: list[str],
 ) -> None:
     if context.dry_run:
         payload["dry_run"] = True
         payload["would_write"] = changed
     elif changed:
         payload["saved_at_utc"] = activity.utc_now()
-        if backup_response_paths:
-            payload["backups"] = backup_response_paths
 
     log_event(
         context.repo_root,

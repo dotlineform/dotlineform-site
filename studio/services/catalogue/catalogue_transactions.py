@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Catalogue write backup, restore, and atomic JSON write helpers."""
+"""Catalogue atomic JSON write and cleanup transaction helpers."""
 
 from __future__ import annotations
 
-import datetime as dt
 import json
 import os
-import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,18 +15,13 @@ from catalogue import catalogue_cleanup
 
 @dataclass(frozen=True)
 class SourceJsonWriteResult:
-    backup_paths: list[Path]
-    backups: list[str]
+    written_paths: list[Path]
 
 
 @dataclass(frozen=True)
 class CleanupTransactionResult:
     payload: Dict[str, Any]
-    backup_paths: list[Path]
-
-
-def backup_stamp_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
+    written_paths: list[Path]
 
 
 def rel_response_path(path: Path, repo_root: Path) -> str:
@@ -38,7 +31,7 @@ def rel_response_path(path: Path, repo_root: Path) -> str:
         return path.name
 
 
-def response_backup_paths(paths: Iterable[Path], repo_root: Path) -> list[str]:
+def response_written_paths(paths: Iterable[Path], repo_root: Path) -> list[str]:
     return [rel_response_path(path, repo_root) for path in paths]
 
 
@@ -61,19 +54,15 @@ def validate_json_payloads_by_path(payloads_by_path: Mapping[Path, Mapping[str, 
 
 def execute_source_json_write(
     payloads_by_path: Mapping[Path, Mapping[str, Any]],
-    backups_dir: Path,
     *,
     dry_run: bool,
     repo_root: Path,
 ) -> SourceJsonWriteResult:
     payloads = validate_json_payloads_by_path(payloads_by_path)
-    backup_paths: list[Path] = []
+    written_paths: list[Path] = []
     if not dry_run:
-        backup_paths = atomic_write_many(payloads, backups_dir)
-    return SourceJsonWriteResult(
-        backup_paths=backup_paths,
-        backups=response_backup_paths(backup_paths, repo_root),
-    )
+        written_paths = atomic_write_many(payloads)
+    return SourceJsonWriteResult(written_paths=written_paths)
 
 
 def unique_paths(paths: Iterable[Path]) -> list[Path]:
@@ -88,52 +77,37 @@ def unique_paths(paths: Iterable[Path]) -> list[Path]:
     return out
 
 
-def backup_transaction_paths(paths: Iterable[Path], backup_root: Path, repo_root: Path) -> Dict[Path, Path]:
-    backups: Dict[Path, Path] = {}
+def snapshot_transaction_paths(paths: Iterable[Path]) -> Dict[Path, bytes]:
+    snapshots: Dict[Path, bytes] = {}
     for path in catalogue_cleanup.unique_existing_paths(paths):
         resolved = path.resolve()
-        if resolved in backups:
+        if resolved in snapshots:
             continue
-        try:
-            rel_path = Path("repo") / resolved.relative_to(repo_root.resolve())
-        except ValueError:
-            rel_path = Path("external") / path.name
-        backup_path = backup_root / rel_path
-        backup_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, backup_path)
-        backups[resolved] = backup_path
-    return backups
+        snapshots[resolved] = path.read_bytes()
+    return snapshots
 
 
-def restore_transaction_paths(touched_paths: Iterable[Path], backups: Mapping[Path, Path]) -> None:
+def restore_transaction_paths(touched_paths: Iterable[Path], snapshots: Mapping[Path, bytes]) -> None:
     for path in unique_paths(touched_paths):
         resolved = path.resolve()
-        backup_path = backups.get(resolved)
         try:
-            if backup_path and backup_path.exists():
+            if resolved in snapshots:
                 path.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(backup_path, path)
+                path.write_bytes(snapshots[resolved])
             elif path.exists() and path.is_file():
                 path.unlink()
         except OSError:
             pass
 
 
-def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir: Path) -> list[Path]:
-    backups_dir.mkdir(parents=True, exist_ok=True)
-    stamp = backup_stamp_now()
-    bundle_dir = backups_dir / f"catalogue-save-{stamp}"
-    bundle_dir.mkdir(parents=True, exist_ok=False)
-    backups: Dict[Path, Path] = {}
+def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]]) -> list[Path]:
     temp_paths: Dict[Path, Path] = {}
     replaced_paths: list[Path] = []
+    originals: Dict[Path, bytes | None] = {}
 
     try:
         for path, payload in payloads_by_path.items():
-            if path.exists():
-                backup_path = bundle_dir / path.name
-                shutil.copy2(path, backup_path)
-                backups[path] = backup_path
+            originals[path] = path.read_bytes() if path.exists() else None
 
             fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
             temp_path = Path(temp_name)
@@ -147,10 +121,10 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir:
             replaced_paths.append(path)
     except Exception:
         for path in reversed(replaced_paths):
-            backup_path = backups.get(path)
             try:
-                if backup_path and backup_path.exists():
-                    shutil.copy2(backup_path, path)
+                original = originals.get(path)
+                if original is not None:
+                    path.write_bytes(original)
                 elif path.exists():
                     path.unlink()
             except Exception:
@@ -164,7 +138,7 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir:
                 except OSError:
                     pass
 
-    return list(backups.values())
+    return list(payloads_by_path.keys())
 
 
 def ensure_catalogue_delete_payload_scope(
@@ -198,10 +172,8 @@ def ensure_catalogue_delete_payload_scope(
 def execute_catalogue_cleanup_transaction(
     *,
     repo_root: Path,
-    backups_dir: Path,
     dry_run: bool,
     allowed_write_paths: Iterable[Path],
-    backup_label: str,
     payloads: Dict[Path, Dict[str, Any]],
     cleanup: Mapping[str, Any],
     rebuild_catalogue_search: Callable[[Path], Dict[str, Any]],
@@ -211,13 +183,11 @@ def execute_catalogue_cleanup_transaction(
     ensure_catalogue_delete_payload_scope(repo_root, allowed_write_paths, payloads)
     search_index_path = (repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
     rebuild_search = bool(cleanup.get("catalogue_search"))
-    transaction_backup_root: Path | None = None
     deleted_file_count = 0
     search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-    backup_paths: list[Path] = []
+    written_paths: list[Path] = []
 
     if not dry_run:
-        transaction_backup_root = backups_dir / f"{backup_label}-{backup_stamp_now()}"
         touched_paths = unique_paths(
             [
                 *payloads.keys(),
@@ -225,17 +195,16 @@ def execute_catalogue_cleanup_transaction(
                 *([search_index_path] if rebuild_search else []),
             ]
         )
-        transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, repo_root)
+        transaction_snapshots = snapshot_transaction_paths(touched_paths)
         try:
-            backup_paths = atomic_write_many(payloads, backups_dir)
-            backup_paths.extend(transaction_backups.values())
+            written_paths = atomic_write_many(payloads)
             deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
             if rebuild_search:
                 search_rebuild = rebuild_catalogue_search(repo_root)
             if refresh_lookup_payloads is not None:
                 refresh_lookup_payloads()
         except Exception:
-            restore_transaction_paths(touched_paths, transaction_backups)
+            restore_transaction_paths(touched_paths, transaction_snapshots)
             raise
 
     return CleanupTransactionResult(
@@ -247,19 +216,16 @@ def execute_catalogue_cleanup_transaction(
             "catalogue_search_rebuilt": bool(not dry_run and rebuild_search and search_rebuild.get("ok")),
             "would_rebuild_catalogue_search": rebuild_search,
             "search_exit_code": search_rebuild.get("exit_code"),
-            "backup_root": rel_response_path(transaction_backup_root, repo_root) if transaction_backup_root else "",
         },
-        backup_paths=backup_paths,
+        written_paths=written_paths,
     )
 
 
 def execute_moment_cleanup_transaction(
     *,
     repo_root: Path,
-    backups_dir: Path,
     dry_run: bool,
     allowed_write_paths: Iterable[Path],
-    backup_label: str,
     metadata_path: Path,
     metadata_payload: Dict[str, Any],
     cleanup: Mapping[str, Any],
@@ -288,11 +254,9 @@ def execute_moment_cleanup_transaction(
     }
     deleted_file_count = 0
     search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-    transaction_backup_root: Path | None = None
-    backup_paths: list[Path] = []
+    written_paths: list[Path] = []
 
     if not dry_run:
-        transaction_backup_root = backups_dir / f"{backup_label}-{backup_stamp_now()}"
         touched_paths = unique_paths(
             [
                 *payloads.keys(),
@@ -300,14 +264,13 @@ def execute_moment_cleanup_transaction(
                 *(cleanup.get("delete_paths") or []),
             ]
         )
-        transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, repo_root)
+        transaction_snapshots = snapshot_transaction_paths(touched_paths)
         try:
-            backup_paths = atomic_write_many(payloads, backups_dir)
-            backup_paths.extend(transaction_backups.values())
+            written_paths = atomic_write_many(payloads)
             deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
             search_rebuild = rebuild_catalogue_search(repo_root)
         except Exception:
-            restore_transaction_paths(touched_paths, transaction_backups)
+            restore_transaction_paths(touched_paths, transaction_snapshots)
             raise
 
     moments_index_will_update = moments_index_path.exists()
@@ -320,9 +283,8 @@ def execute_moment_cleanup_transaction(
             "catalogue_search_rebuilt": bool(not dry_run and search_rebuild.get("ok")),
             "would_rebuild_catalogue_search": True,
             "search_exit_code": search_rebuild.get("exit_code"),
-            "backup_root": rel_response_path(transaction_backup_root, repo_root) if transaction_backup_root else "",
         },
-        backup_paths=backup_paths,
+        written_paths=written_paths,
     )
 
 

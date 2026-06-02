@@ -9,24 +9,14 @@ import docs_management_mutations as mutations
 import docs_scope_manifest
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
-from docs_management_context import log_event, make_backup_bundle, make_scope_lifecycle_backup, relative_path
+from docs_management_context import log_event
 
 
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
     payload = dict(plan.response)
-    backup_dir = None
     rebuild = None
 
     if not dry_run and plan.has_source_changes:
-        if plan.backup_operation:
-            backup_dir = make_backup_bundle(
-                repo_root,
-                plan.scope,
-                plan.backup_operation,
-                list(plan.backup_docs),
-                plan.backup_metadata,
-            )
-
         def write_operation() -> None:
             for source_write in plan.source_writes:
                 source_model.write_text_atomic(source_write.path, source_write.text)
@@ -63,7 +53,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             log_event(repo_root, plan.log_event_name, plan.log_details)
 
     if plan.include_write_result_keys:
-        payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
         payload["rebuild"] = rebuild
     payload["dry_run"] = dry_run
     return payload
@@ -97,14 +86,12 @@ def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
     scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id"))
     docs_scope_manifest.require_confirmed(body)
     docs_scope_manifest.plan_create_scope_preview(repo_root, body)
-    backup_dir = None if dry_run else make_scope_lifecycle_backup(repo_root, scope_id, "create")
     payload = docs_scope_manifest.apply_create_scope(
         repo_root,
         body,
         dry_run=dry_run,
         rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
     )
-    payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
     if not dry_run:
         log_event(
             repo_root,
@@ -125,14 +112,12 @@ def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
     if not preview.get("allowed"):
         blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
-    backup_dir = None if dry_run else make_scope_lifecycle_backup(repo_root, scope_id, "delete")
     payload = docs_scope_manifest.apply_delete_scope(
         repo_root,
         body,
         dry_run=dry_run,
         rebuild_all_docs_outputs=write_rebuild.rebuild_all_docs_outputs,
     )
-    payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
     if not dry_run:
         log_event(
             repo_root,

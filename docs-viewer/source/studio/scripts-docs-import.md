@@ -127,7 +127,6 @@ Returned-package apply behavior is owned by the documents Data Sharing adapter a
 
 When an apply action writes Library Markdown source:
 
-- the source service creates the configured backup before writing changed source docs
 - the write/rebuild helper rebuilds targeted same-scope Docs Viewer payloads after the source write succeeds
 - docs search is updated for the affected ids when the adapter can provide a targeted set
 - the apply response includes `rebuild.steps`, `rebuild.docs`, `rebuild.search`, and `rebuild.diagnostics`
@@ -169,7 +168,7 @@ Service handler checks live in:
 docs-viewer/tests/python/test_docs_import_service.py
 ```
 
-They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, retired `sort_order` removal, and rebuild diagnostics shape.
+They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, unknown parent warnings, partial selections, no-write dry runs, retired `sort_order` removal, and rebuild diagnostics shape.
 The parser and service checks run in the `docs` profile:
 
 ```bash

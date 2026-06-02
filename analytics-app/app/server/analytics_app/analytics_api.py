@@ -35,7 +35,6 @@ from tag_services import tag_write_transactions as tag_transactions  # noqa: E40
 
 
 ANALYTICS_DATA_DIR = tag_source.TAG_SOURCE_ROOT_REL_PATH
-BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 READ_ENDPOINTS = {
     "/tag-aliases": {
@@ -162,7 +161,6 @@ def analytics_post_response(
 
 def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {assignments_path}
 
     series_id = body.get("series_id")
@@ -191,7 +189,7 @@ def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool =
     else:
         if assignments_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(assignments_path, updated_payload, backups_dir)
+        tag_transactions.atomic_write(assignments_path, updated_payload)
 
     log_event(
         repo_root,
@@ -236,7 +234,6 @@ def import_tag_assignments_response(
 ) -> dict[str, object]:
     assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
     series_index_path = (repo_root / tag_source.SERIES_INDEX_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {assignments_path}
 
     import_assignments = tag_source.sanitize_import_assignments_session(body.get("import_assignments"))
@@ -291,7 +288,7 @@ def import_tag_assignments_response(
     else:
         if assignments_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(assignments_path, updated_payload, backups_dir)
+        tag_transactions.atomic_write(assignments_path, updated_payload)
 
     log_event(
         repo_root,
@@ -320,7 +317,6 @@ def import_tag_assignments_response(
 
 def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {registry_path}
 
     mode = str(body.get("mode") or "").strip().lower()
@@ -349,7 +345,7 @@ def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_r
     else:
         if registry_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(registry_path, updated_payload, backups_dir)
+        tag_transactions.atomic_write(registry_path, updated_payload)
 
     log_event(
         repo_root,
@@ -381,7 +377,6 @@ def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_r
 
 def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {aliases_path}
 
     mode = str(body.get("mode") or "").strip().lower()
@@ -410,7 +405,7 @@ def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_ru
     else:
         if aliases_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(aliases_path, updated_payload, backups_dir)
+        tag_transactions.atomic_write(aliases_path, updated_payload)
 
     log_event(
         repo_root,
@@ -442,7 +437,6 @@ def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_ru
 
 def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {aliases_path}
 
     alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
@@ -468,7 +462,7 @@ def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
     else:
         if aliases_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(aliases_path, updated_payload, backups_dir)
+        tag_transactions.atomic_write(aliases_path, updated_payload)
 
     log_event(
         repo_root,
@@ -501,7 +495,6 @@ def mutate_tag_alias_response(
 ) -> dict[str, object]:
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {aliases_path}
 
     alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
@@ -548,7 +541,7 @@ def mutate_tag_alias_response(
     elif should_write:
         if aliases_path not in allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(aliases_path, aliases_updated, backups_dir)
+        tag_transactions.atomic_write(aliases_path, aliases_updated)
 
     if not preview:
         log_event(
@@ -586,7 +579,6 @@ def promote_tag_alias_response(
 ) -> dict[str, object]:
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {registry_path, aliases_path}
 
     alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
@@ -637,7 +629,7 @@ def promote_tag_alias_response(
             if target not in allowed_write_paths:
                 raise ValueError("write target not allowlisted")
         if payloads_to_write:
-            tag_transactions.atomic_write_many(payloads_to_write, backups_dir)
+            tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
         log_event(
@@ -676,7 +668,6 @@ def demote_tag_response(
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {registry_path, aliases_path, assignments_path}
 
     old_tag_id = tag_source.sanitize_tag_id(body.get("tag_id"), "tag_id")
@@ -729,7 +720,7 @@ def demote_tag_response(
         for target in payloads_to_write:
             if target not in allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write_many(payloads_to_write, backups_dir)
+        tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
         log_event(
@@ -768,7 +759,6 @@ def mutate_tag_response(
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
-    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_write_paths = {registry_path, aliases_path, assignments_path}
 
     action = str(body.get("action") or "").strip().lower()
@@ -878,7 +868,7 @@ def mutate_tag_response(
         for target in payloads_to_write:
             if target not in allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write_many(payloads_to_write, backups_dir)
+        tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
         log_event(

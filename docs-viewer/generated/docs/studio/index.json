@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T04:13:58Z",
+  "generated_at": "2026-06-02T05:34:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -248,7 +248,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 11672
+      "content_text_length": 11636
     },
     {
       "scope": "studio",
@@ -823,7 +823,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
-      "content_text_length": 15140
+      "content_text_length": 15122
     },
     {
       "scope": "studio",
@@ -1406,7 +1406,7 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 12575
+      "content_text_length": 12459
     },
     {
       "scope": "studio",
@@ -1441,14 +1441,14 @@
       "doc_id": "data-sharing",
       "title": "Data Sharing",
       "added_date": "2026-05-13 17:16",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json",
-      "content_text_length": 1646
+      "content_text_length": 1793
     },
     {
       "scope": "studio",
@@ -1462,7 +1462,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 9435
+      "content_text_length": 9635
     },
     {
       "scope": "studio",
@@ -1476,7 +1476,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 14444
+      "content_text_length": 14267
     },
     {
       "scope": "studio",
@@ -1490,7 +1490,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 6541
+      "content_text_length": 6512
     },
     {
       "scope": "studio",
@@ -1578,7 +1578,7 @@
       "source_path": "development-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=development-checklist",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-checklist.json",
-      "content_text_length": 4933
+      "content_text_length": 4924
     },
     {
       "scope": "studio",
@@ -1648,7 +1648,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 10397
+      "content_text_length": 10277
     },
     {
       "scope": "studio",
@@ -1791,7 +1791,7 @@
       "source_path": "docs-viewer-import-source-registry-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json",
-      "content_text_length": 10526
+      "content_text_length": 10584
     },
     {
       "scope": "studio",
@@ -1805,7 +1805,7 @@
       "source_path": "docs-viewer-media-handling.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-media-handling",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-media-handling.json",
-      "content_text_length": 10157
+      "content_text_length": 10201
     },
     {
       "scope": "studio",
@@ -1965,7 +1965,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 7791
+      "content_text_length": 7671
     },
     {
       "scope": "studio",
@@ -1986,14 +1986,14 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Management Service",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 4601
+      "content_text_length": 4592
     },
     {
       "scope": "studio",
@@ -2007,7 +2007,7 @@
       "source_path": "scripts-docs-management-server-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-data-sharing.json",
-      "content_text_length": 1045
+      "content_text_length": 1036
     },
     {
       "scope": "studio",
@@ -2021,7 +2021,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 9179
+      "content_text_length": 9135
     },
     {
       "scope": "studio",
@@ -2035,21 +2035,21 @@
       "source_path": "scripts-docs-management-server-import-rebuild.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-import-rebuild.json",
-      "content_text_length": 7299
+      "content_text_length": 7311
     },
     {
       "scope": "studio",
       "doc_id": "scripts-docs-management-server-operations",
       "title": "Docs Management Service Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "scripts-docs-management-server",
       "hidden": false,
       "viewable": true,
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 4038
+      "content_text_length": 3718
     },
     {
       "scope": "studio",
@@ -2077,7 +2077,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 18339
+      "content_text_length": 18100
     },
     {
       "scope": "studio",
@@ -2732,7 +2732,7 @@
       "source_path": "scripts-catalogue-write-server-build-lookup.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-build-lookup.json",
-      "content_text_length": 15742
+      "content_text_length": 15732
     },
     {
       "scope": "studio",
@@ -2760,7 +2760,7 @@
       "source_path": "scripts-catalogue-write-service-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-service-extraction.json",
-      "content_text_length": 16414
+      "content_text_length": 16396
     },
     {
       "scope": "studio",
@@ -2774,7 +2774,7 @@
       "source_path": "scripts-catalogue-write-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-operations.json",
-      "content_text_length": 8169
+      "content_text_length": 7676
     },
     {
       "scope": "studio",
@@ -2788,7 +2788,7 @@
       "source_path": "scripts-local-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json",
-      "content_text_length": 15716
+      "content_text_length": 15147
     },
     {
       "scope": "studio",
@@ -2802,7 +2802,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 9590
+      "content_text_length": 9544
     },
     {
       "scope": "studio",
@@ -2816,7 +2816,7 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 2303
+      "content_text_length": 2345
     },
     {
       "scope": "studio",
@@ -2862,20 +2862,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "scripts-studio-backup-retention",
-      "title": "Studio Backup Retention",
-      "added_date": "2026-05-04",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "studio",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-studio-backup-retention.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-studio-backup-retention.json",
-      "content_text_length": 2363
-    },
-    {
-      "scope": "studio",
       "doc_id": "studio-ready-state",
       "title": "Studio Ready State",
       "added_date": "2026-05-14",
@@ -2900,7 +2886,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 13929
+      "content_text_length": 13882
     },
     {
       "scope": "studio",
@@ -2914,7 +2900,7 @@
       "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
-      "content_text_length": 9864
+      "content_text_length": 9857
     },
     {
       "scope": "studio",
@@ -3348,7 +3334,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 12799
+      "content_text_length": 12876
     }
   ]
 }

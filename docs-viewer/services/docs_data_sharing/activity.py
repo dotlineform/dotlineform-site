@@ -137,7 +137,6 @@ def maybe_attach_documents_import_apply_activity(
         detail_items=[
             str(payload.get("summary_text") or "Updated imported docs source data.").strip(),
             f"Updated {len(doc_ids)} source doc(s).",
-            f"Backup: {payload.get('backup_dir')}" if payload.get("backup_dir") else "",
         ],
         status=docs_activity_status(ok=bool(payload.get("ok")), errors=errors, warnings=warnings),
     )

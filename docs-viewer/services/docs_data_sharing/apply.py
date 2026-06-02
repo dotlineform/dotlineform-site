@@ -169,7 +169,7 @@ def apply_summary_updates(
     warning_count = len(warnings) + len(skipped)
     error_count = len(errors)
     ok = bool(report.get("ok")) and error_count == 0
-    write_result: Dict[str, Any] = {"backup_dir": "", "rebuild": None}
+    write_result: Dict[str, Any] = {"rebuild": None}
     if ok and confirmed and updates and not dry_run:
         doc_ids = [item["doc_id"] for item in updates]
         write_result = write_document_updates_with_rebuild(
@@ -211,7 +211,6 @@ def apply_summary_updates(
             "errors": error_count,
             "warnings": warning_count,
         },
-        "backup_dir": write_result["backup_dir"],
         "rebuild": write_result["rebuild"],
         "summary_apply_written": bool(ok and confirmed and updates and not dry_run),
         "requires_confirmation": bool(ok and updates and not confirmed),
@@ -280,7 +279,7 @@ def apply_hierarchy_updates(
     warning_count = len(warnings) + len(skipped)
     error_count = len(errors)
     ok = bool(report.get("ok")) and error_count == 0
-    write_result: Dict[str, Any] = {"backup_dir": "", "rebuild": None}
+    write_result: Dict[str, Any] = {"rebuild": None}
     if ok and confirmed and updates and not dry_run:
         doc_ids = [item["doc_id"] for item in updates]
         write_result = write_document_updates_with_rebuild(
@@ -325,7 +324,6 @@ def apply_hierarchy_updates(
             "errors": error_count,
             "warnings": warning_count,
         },
-        "backup_dir": write_result["backup_dir"],
         "rebuild": write_result["rebuild"],
         "hierarchy_apply_written": bool(ok and confirmed and updates and not dry_run),
         "requires_confirmation": bool(ok and updates and not confirmed),

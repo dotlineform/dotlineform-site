@@ -86,8 +86,8 @@ Moment save, publication preview/apply, and delete apply now run through focused
 | --- | --- | --- |
 | `POST /studio/api/catalogue/moment/save` | `catalogue_moment_service.moment_save_payload()` | Owns moment metadata mutation, field-aware build planning, optional build follow-through, logging, and Studio Activity rows. |
 | `POST /studio/api/catalogue/publication-preview` | `catalogue_publication_service.publication_preview_payload()` | Keeps preview request extraction beside apply so `save_published` uses the same record-update helpers. |
-| `POST /studio/api/catalogue/publication-apply` | `catalogue_publication_service.publication_apply_response()` | Coordinates source writes, publication cleanup/build transactions, lookup refresh, backups, and activity rows through existing domain modules. |
-| `POST /studio/api/catalogue/delete-apply` | `catalogue_delete_service.delete_apply_response()` | Coordinates delete apply plans, cleanup transactions, search rebuild, lookup refresh, backups, and activity rows. |
+| `POST /studio/api/catalogue/publication-apply` | `catalogue_publication_service.publication_apply_response()` | Coordinates source writes, publication cleanup/build transactions, lookup refresh, and activity rows through existing domain modules. |
+| `POST /studio/api/catalogue/delete-apply` | `catalogue_delete_service.delete_apply_response()` | Coordinates delete apply plans, cleanup transactions, search rebuild, lookup refresh, and activity rows. |
 
 `studio/app/server/studio/studio_catalogue_api.py` no longer maps these routes through `LEGACY_WRITE_ROUTE_BY_API_PATH`.
 

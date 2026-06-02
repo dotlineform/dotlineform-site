@@ -26,7 +26,6 @@ STUDIO_APP_ACCESS_LOG="${STUDIO_APP_ACCESS_LOG:-0}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
 DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
 DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
-DOTLINEFORM_BACKUP_RETENTION="${DOTLINEFORM_BACKUP_RETENTION:-on}"
 RUNNER_NAME="bin/local-studio"
 
 STUDIO_APP_PID=""
@@ -125,25 +124,12 @@ if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
 else
   echo "Docs Live Watcher: disabled"
 fi
-if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
-  echo "Backup retention: disabled"
-else
-  echo "Backup retention: enabled"
-fi
 echo
 
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio App" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
 fi
 
-if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
-  echo "Skipping Studio backup retention cleanup"
-else
-  "$PYTHON_BIN" studio/app/server/studio/studio_backup_retention.py --write --quiet || {
-    echo "WARNING: Studio backup retention cleanup failed; continuing startup." >&2
-  }
-fi
-echo
 echo "Press Ctrl+C to stop all processes."
 echo
 

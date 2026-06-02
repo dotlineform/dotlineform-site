@@ -86,18 +86,15 @@ def moment_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     normalized_current = mutation_plan.baseline_record
     updated_record = mutation_plan.updated_record
     apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
-    backup_response_paths: list[str] = []
     if changed:
         target_path = context.moments_path.resolve()
         if target_path not in context.allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        write_result = transactions.execute_source_json_write(
+        transactions.execute_source_json_write(
             {target_path: mutation_plan.payload},
-            context.backups_dir,
             dry_run=context.dry_run,
             repo_root=context.repo_root,
         )
-        backup_response_paths = write_result.backups
 
     payload: dict[str, Any] = {
         "ok": True,
@@ -133,8 +130,6 @@ def moment_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         payload["would_write"] = changed
     elif changed:
         payload["saved_at_utc"] = activity.utc_now()
-        if backup_response_paths:
-            payload["backups"] = backup_response_paths
 
     log_event(
         context.repo_root,

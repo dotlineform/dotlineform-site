@@ -50,10 +50,8 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
         metadata_path, metadata_payload = next(iter(plan.payloads.items()))
         transaction_result = transactions.execute_moment_cleanup_transaction(
             repo_root=context.repo_root,
-            backups_dir=context.backups_dir,
             dry_run=context.dry_run,
             allowed_write_paths=context.allowed_write_paths,
-            backup_label=plan.backup_label,
             metadata_path=metadata_path,
             metadata_payload=metadata_payload,
             cleanup=plan.cleanup,
@@ -63,17 +61,14 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
     else:
         transaction_result = transactions.execute_catalogue_cleanup_transaction(
             repo_root=context.repo_root,
-            backups_dir=context.backups_dir,
             dry_run=context.dry_run,
             allowed_write_paths=context.allowed_write_paths,
-            backup_label=plan.backup_label,
             payloads=plan.payloads,
             cleanup=plan.cleanup,
             rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
             refresh_lookup_payloads=lambda: refresh_lookup_payloads(context),
         )
     cleanup_result = transaction_result.payload
-    backup_paths = transaction_result.backup_paths
     payload: dict[str, Any] = {
         "ok": True,
         "kind": kind,
@@ -87,8 +82,6 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
         payload["would_write"] = True
     else:
         payload["saved_at_utc"] = activity.utc_now()
-        if backup_paths:
-            payload["backups"] = [context.rel_path(path) for path in backup_paths]
     if activity_context:
         payload["activity_context"] = activity_context
     if activity_context and not context.dry_run:

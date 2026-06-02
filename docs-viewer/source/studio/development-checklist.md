@@ -87,5 +87,5 @@ When adding or moving repo source:
 - keep Studio source, local services, frontend modules, checks, tests, UI Catalogue, and workflow source under `studio/`
 - keep public Jekyll layouts, includes, route pages, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
 - keep Docs Viewer source, runtime, CSS, config, build code, and services together under `docs-viewer/`
-- keep local working output, backups, staging, and test logs under `var/` or other ignored output paths
+- keep local working output, staging, and test logs under `var/` or other ignored output paths
 - do not reintroduce old source homes such as `assets/studio/`, `assets/docs-viewer/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or `scripts/docs/`

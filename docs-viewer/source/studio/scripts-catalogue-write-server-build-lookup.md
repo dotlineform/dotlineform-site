@@ -61,7 +61,7 @@ Apply behavior:
 
 - writes body-only prose to `_docs_catalogue/moments/<moment_id>.md`
 - writes canonical draft moment metadata to `assets/studio/data/catalogue/moments.json`
-- creates the normal catalogue JSON backup bundle for the metadata write
+- uses the catalogue atomic JSON writer for the metadata write
 - does not run local media generation, the scoped moment generator, or the catalogue search rebuild
 - records Studio Activity when a non-dry-run import writes source
 - when the request includes valid Studio activity context from `/studio/catalogue-moment/`, writes one unified Studio activity row for `import-source-data`

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-operations
 title: Docs Management Service Operations
 added_date: 2026-05-19
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: scripts-docs-management-server
 ---
 # Docs Management Service Operations
@@ -16,18 +16,13 @@ parent_id: scripts-docs-management-server
   - `docs-viewer/source/analysis/**/*.md`
   - `docs-viewer/source/library/*.md`
 - non-source write targets are allowlisted to:
-  - `var/docs/backups/`
   - `var/analytics/data-sharing/<data-domain>/exports/`
   - `var/analytics/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
-- scope create apply creates a backup bundle for the previous scope config and manifest files before writing
-- scope delete apply creates a backup bundle for the previous scope config and manifest files before deleting or changing scope lifecycle state
-- timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
-- backups are operation-scoped rather than full-scope:
-  - `create` writes a manifest-only backup bundle
-  - `delete` backs up only the deleted doc before removal
+- Docs management no longer creates local backup bundles before writes
+- source recovery now relies on Git history, the user's host/filesystem backups, or any explicit manual copy made before a risky operation
 
 ## Operational Notes
 
@@ -37,7 +32,7 @@ parent_id: scripts-docs-management-server
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the Docs management service
-- `var/` is excluded from Jekyll because Docs Viewer management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
+- `var/` is excluded from Jekyll because logs, staged imports, local package artifacts, and watcher-suppression markers are local operational files rather than publishable site input
 - `docs-viewer/bin/docs-viewer` serves Docs Viewer management and generated docs/search reads without starting Jekyll
 
 ## Verification
@@ -46,7 +41,7 @@ Export/import adapter behavior is covered by focused checks:
 
 - `docs-viewer/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
 - `docs-viewer/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
-- `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
+- `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, rebuild output, and confirmation gates.
 - `docs-viewer/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
 - `analytics-app/tests/python/test_analytics_data_sharing_api.py` verifies active adapter resolution, endpoint dispatch, and future stub rejection through the Analytics API boundary.
 - `analytics-app/tests/smoke/data_sharing_review.py` verifies the Analytics Data Sharing review route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.

@@ -92,7 +92,6 @@ def domain_payload(status: str = "active", data_domain: str = "library") -> dict
             "returned_package_staging_root": f"var/analytics/data-sharing/{data_domain}/import-staging",
             "review_output_root": f"var/analytics/data-sharing/{data_domain}/import-preview",
             "source_root": f"docs-viewer/source/{data_domain}",
-            "backup_root": "var/docs/backups",
         },
         "source_write_targets": {
             "documents": f"docs-viewer/source/{data_domain}",

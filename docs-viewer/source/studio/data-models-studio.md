@@ -207,7 +207,7 @@ Current enforcement:
 - the scoped JSON build flow refreshes generated catalogue payloads that tag assignments align against
 - catalogue build and cleanup flows update Analytics tag assignments through the Analytics tag source path contract where catalogue membership changes require sync
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency) checks cross-references between assignments, series membership, and works
-- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) records the migration of tag writes into the Local Analytics API, which constrains writes to Analytics-owned JSON files and creates backups/logs
+- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) records the migration of tag writes into the Local Analytics API, which constrains writes to Analytics-owned JSON files and logs activity
 
 ## Studio Docs Data
 

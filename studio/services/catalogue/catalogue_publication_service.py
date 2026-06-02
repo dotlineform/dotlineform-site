@@ -50,7 +50,6 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
     target_record = dict(preview["target_record"])
     changed = bool(preview.get("changed"))
     source_changed = bool(preview.get("source_changed", changed))
-    source_backups = []
     public_update: dict[str, Any] = {"ok": True, "skipped": True}
     public_update_ok = True
 
@@ -58,7 +57,6 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
         cleanup_result = catalogue_publication.apply_publication_unpublish_cleanup(
             repo_root=context.repo_root,
             source_dir=context.source_dir,
-            backups_dir=context.backups_dir,
             dry_run=context.dry_run,
             allowed_write_paths=context.allowed_write_paths,
             kind=kind,
@@ -75,19 +73,16 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
             blocked_paths = [path for path in source_payloads if path not in context.allowed_write_paths]
             if blocked_paths:
                 raise ValueError("write target not allowlisted")
-            write_result = transactions.execute_source_json_write(
+            transactions.execute_source_json_write(
                 source_payloads,
-                context.backups_dir,
                 dry_run=context.dry_run,
                 repo_root=context.repo_root,
             )
-            source_backups = write_result.backup_paths
             if not context.dry_run and kind != "moment":
                 refresh_lookup_payloads(context)
         public_update_ok, public_update = catalogue_publication.run_publication_build_transaction(
             repo_root=context.repo_root,
             source_dir=context.source_dir,
-            backups_dir=context.backups_dir,
             dry_run=context.dry_run,
             kind=kind,
             record_id=record_id,
@@ -96,7 +91,6 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
             extra_work_ids=list(request.get("extra_work_ids") or []),
             force=bool(request.get("force")),
             run_build_operation=lambda **kwargs: run_build_operation(context, **kwargs),
-            rel_path=context.rel_path,
         )
 
     payload: dict[str, Any] = {
@@ -119,8 +113,6 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
     if context.dry_run:
         payload["dry_run"] = True
         payload["would_write"] = source_changed or action == "unpublish"
-    elif source_backups:
-        payload["backups"] = [context.rel_path(path) for path in source_backups]
     if not context.dry_run and activity_context and activity_profile is not None:
         now_utc = activity.utc_now()
         record_groups = activity.activity_record_groups_from_affected(preview.get("affected"))

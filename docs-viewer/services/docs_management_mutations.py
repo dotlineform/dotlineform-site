@@ -67,9 +67,6 @@ class ScopeRebuild:
 class ManagementMutationPlan:
     scope: str
     response: Dict[str, Any]
-    backup_operation: Optional[str] = None
-    backup_docs: tuple[source_model.ScopeDoc, ...] = ()
-    backup_metadata: Optional[Dict[str, Any]] = None
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
     suppression_reason: Optional[str] = None
@@ -131,13 +128,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
                 "viewable": not hidden,
             },
             "summary_text": f"Created {doc_id}.",
-        },
-        backup_operation="create",
-        backup_metadata={
-            "doc_id": doc_id,
-            "title": title,
-            "path": path,
-            "parent_id": parent_id,
         },
         source_writes=(SourceWrite(target_path, source_text),),
         suppression_reason="docs-create",
@@ -263,19 +253,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "changes": changes,
             "summary_text": f"Updated metadata for {target.doc_id}.",
         },
-        backup_operation="update-metadata",
-        backup_docs=(target,),
-        backup_metadata={
-            "doc_id": target.doc_id,
-            "from_title": target.title,
-            "to_title": title,
-            "from_parent_id": target.parent_id,
-            "to_parent_id": parent_id,
-            "summary_changed": summary_changed,
-            "status_changed": status_changed,
-            "hidden_changed": hidden_changed,
-            "viewable_changed": viewable_changed,
-        },
         source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
         suppression_reason="docs-update-metadata",
         build_doc_ids=[target.doc_id],
@@ -380,17 +357,6 @@ def plan_viewability_update(
     return ManagementMutationPlan(
         scope=scope,
         response=response,
-        backup_operation=operation,
-        backup_docs=tuple(changed_targets),
-        backup_metadata={
-            "requested_doc_ids": requested_doc_ids,
-            "include_descendants": include_descendants,
-            "target_doc_ids": [target.doc_id for target in targets],
-            "changed_doc_ids": [target.doc_id for target in changed_targets],
-            "skipped_doc_ids": [target.doc_id for target in skipped_targets],
-            "to_hidden": next_hidden,
-            "to_viewable": next_viewable,
-        },
         source_writes=tuple(
             SourceWrite(
                 target.path,
@@ -473,9 +439,6 @@ def plan_update_viewability(repo_root: Path, body: Dict[str, Any]) -> Management
     return ManagementMutationPlan(
         scope=plan.scope,
         response=response,
-        backup_operation=plan.backup_operation,
-        backup_docs=plan.backup_docs,
-        backup_metadata=plan.backup_metadata,
         source_writes=plan.source_writes,
         source_deletes=plan.source_deletes,
         suppression_reason=plan.suppression_reason,
@@ -524,7 +487,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "changed_doc_ids": [moving_doc.doc_id] if changed else [],
             "summary_text": f"Moved {moving_doc.doc_id}." if changed else f"No move needed for {moving_doc.doc_id}.",
         },
-        backup_operation=None,
         source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id)),) if changed else (),
         suppression_reason="docs-move",
         build_doc_ids=[moving_doc.doc_id] if changed else [],
@@ -629,13 +591,6 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "warnings": preview["warnings"],
             "inbound_refs": preview["inbound_refs"],
             "summary_text": f"Deleted {target.doc_id}.",
-        },
-        backup_operation="delete",
-        backup_docs=(target,),
-        backup_metadata={
-            "doc_id": target.doc_id,
-            "warnings": preview["warnings"],
-            "inbound_ref_count": len(preview["inbound_refs"]),
         },
         source_deletes=(SourceDelete(target.path),),
         suppression_reason="docs-delete",

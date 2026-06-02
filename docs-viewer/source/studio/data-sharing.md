@@ -2,7 +2,7 @@
 doc_id: data-sharing
 title: Data Sharing
 added_date: "2026-05-13 17:16"
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: ""
 ---
 # Data Sharing
@@ -28,15 +28,16 @@ Default local APIs:
 - `POST /analytics/api/data-sharing/review`
 - `POST /analytics/api/data-sharing/apply`
 
-Runtime packages, returned-package staging, review artifacts, and backups continue to use `var/analytics/data-sharing/<domain>/...` as the local artifact contract.
+Runtime packages, returned-package staging, and review artifacts continue to use `var/analytics/data-sharing/<domain>/...` as the local artifact contract.
 Retired Studio paths under `/studio/data-sharing/...` and `/studio/api/data-sharing/...` should not be recreated.
 
 Current responsibility split:
 
 - Local Analytics owns Data Sharing pages, same-origin API endpoints, runtime config, browser modules, and route readiness.
 - `data-sharing/` stays headless and owns adapter registry/config loading, schemas, package path contracts, package I/O, operation dispatch, dry-run/confirmation gates, and domain adapters.
-- Docs Viewer owns docs-domain helpers for Library generated reads, returned-package review, source writes, backups, and docs/search rebuild follow-through.
-- Analytics tag helpers own tag validation, write planning, backup/write transactions, and activity metadata used by the tags adapter.
+- Docs Viewer owns docs-domain helpers for Library generated reads, returned-package review, source writes, and docs/search rebuild follow-through.
+- Analytics tag helpers own tag validation, write planning, atomic write transactions, and activity metadata used by the tags adapter.
+- Data Sharing apply routes no longer create local backup artifacts; recover changed source through Git history, host/filesystem backups, or explicit manual copies.
 - Local Studio does not serve Data Sharing pages, APIs, config, aliases, proxy handlers, or static shims.
 
 See [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec) for the detailed adapter and endpoint contract.

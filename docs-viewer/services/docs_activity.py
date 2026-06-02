@@ -147,7 +147,6 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
         f"Wrote source file: {payload.get('path')}" if payload.get("path") else "",
         f"Materialized {len(media_written)} inline media file(s)." if media_written else "",
         f"Copied {len(interactive_written)} interactive HTML script file(s)." if interactive_written else "",
-        f"Backup: {payload.get('backup_dir')}" if payload.get("backup_dir") else "",
     ]
     attach_docs_activity(
         repo_root,
@@ -189,7 +188,6 @@ def maybe_attach_documents_import_apply_activity(repo_root: Path, body: Dict[str
         detail_items=[
             str(payload.get("summary_text") or "Updated imported docs source data.").strip(),
             f"Updated {len(doc_ids)} source doc(s).",
-            f"Backup: {payload.get('backup_dir')}" if payload.get("backup_dir") else "",
         ],
         status=docs_activity_status(ok=bool(payload.get("ok")), errors=errors, warnings=warnings),
     )

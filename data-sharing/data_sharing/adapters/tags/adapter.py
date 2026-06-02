@@ -91,10 +91,6 @@ def adapter_source_path(repo_root: Path, adapter: AdapterResolution, key: str) -
     return (repo_root / rel_path).resolve()
 
 
-def backup_root(repo_root: Path, adapter: AdapterResolution) -> Path:
-    return (repo_root / adapter.path("backup_root")).resolve()
-
-
 def resolve_staging_root(repo_root: Path, adapter: AdapterResolution) -> Path:
     return (repo_root / adapter.path("returned_package_staging_root")).resolve()
 
@@ -962,9 +958,8 @@ def apply_registry(
     updated_payload, stats = tag_registry_mutations.apply_registry_import(copy.deepcopy(existing), subset, package.mode, now_utc)
     changed = changed_from_stats(stats, ["added", "overwritten", "removed"])
     target_path = adapter_source_path(repo_root, adapter, "tag_registry")
-    backups: list[Path] = []
     if confirmed and changed and not dry_run:
-        backups = tag_write_transactions.atomic_write_many({target_path: updated_payload}, backup_root(repo_root, adapter))
+        tag_write_transactions.atomic_write_many({target_path: updated_payload})
     summary_text = tag_registry_mutations.build_import_summary_text(stats)
     payload: Dict[str, Any] = {
         "ok": True,
@@ -983,7 +978,6 @@ def apply_registry(
         "errors": [],
         "warnings": [],
         "counts": {"selected": len(selected), "changed": int(changed), "skipped": len(skipped), "errors": 0, "warnings": 0, **stats},
-        "backup_files": [relative_path(repo_root, path) for path in backups],
         "written": bool(confirmed and changed and not dry_run),
         "requires_confirmation": bool(changed and not confirmed),
         "review_rows": rows,
@@ -994,7 +988,7 @@ def apply_registry(
             repo_root,
             body,
             payload,
-            record_groups={"tags": [row["tag_id"] for row in selected_rows], "files": [package.filename, *payload["backup_files"]]},
+            record_groups={"tags": [row["tag_id"] for row in selected_rows], "files": [package.filename]},
             detail_items=[payload["summary_text"], f"Mode: {package.mode}; final tags: {stats.get('final_total')}."],
             status="completed",
         )
@@ -1018,9 +1012,8 @@ def apply_aliases(
     updated_payload, stats = tag_alias_mutations.apply_aliases_import(copy.deepcopy(existing), subset, package.mode, now_utc)
     changed = changed_from_stats(stats, ["added", "overwritten", "removed"])
     target_path = adapter_source_path(repo_root, adapter, "tag_aliases")
-    backups: list[Path] = []
     if confirmed and changed and not dry_run:
-        backups = tag_write_transactions.atomic_write_many({target_path: updated_payload}, backup_root(repo_root, adapter))
+        tag_write_transactions.atomic_write_many({target_path: updated_payload})
     summary_text = tag_registry_mutations.build_import_summary_text(stats, noun="aliases")
     selected_alias_keys = [row["alias"] for row in selected_rows]
     selected_tags = sorted(
@@ -1048,7 +1041,6 @@ def apply_aliases(
         "errors": [],
         "warnings": [],
         "counts": {"selected": len(selected), "changed": int(changed), "skipped": len(skipped), "errors": 0, "warnings": 0, **stats},
-        "backup_files": [relative_path(repo_root, path) for path in backups],
         "written": bool(confirmed and changed and not dry_run),
         "requires_confirmation": bool(changed and not confirmed),
         "review_rows": rows,
@@ -1059,7 +1051,7 @@ def apply_aliases(
             repo_root,
             body,
             payload,
-            record_groups={"aliases": selected_alias_keys, "tags": selected_tags, "files": [package.filename, *payload["backup_files"]]},
+            record_groups={"aliases": selected_alias_keys, "tags": selected_tags, "files": [package.filename]},
             detail_items=[payload["summary_text"], f"Mode: {package.mode}; final aliases: {stats.get('final_total')}."],
             status="completed",
         )
@@ -1091,10 +1083,9 @@ def apply_assignments(
     )
     changed = int(apply_stats.get("applied_series") or 0) > 0
     target_path = adapter_source_path(repo_root, adapter, "tag_assignments")
-    backups: list[Path] = []
     ok = not errors
     if ok and confirmed and changed and not dry_run:
-        backups = tag_write_transactions.atomic_write_many({target_path: updated_payload}, backup_root(repo_root, adapter))
+        tag_write_transactions.atomic_write_many({target_path: updated_payload})
     response_preview = tag_assignment_service.build_assignment_import_preview_response(subset_preview, package.filename, now_utc)
     response_payload = tag_assignment_service.build_assignment_import_apply_response(response_preview, apply_stats)
     groups = selected_assignment_groups(rows, selected)
@@ -1121,7 +1112,6 @@ def apply_assignments(
             "warnings": 0,
             **apply_stats,
         },
-        "backup_files": [relative_path(repo_root, path) for path in backups],
         "written": bool(ok and confirmed and changed and not dry_run),
         "requires_confirmation": bool(ok and changed and not confirmed),
         "review_rows": rows,
@@ -1132,7 +1122,7 @@ def apply_assignments(
             repo_root,
             body,
             payload,
-            record_groups={**groups, "files": [package.filename, *payload["backup_files"]]},
+            record_groups={**groups, "files": [package.filename]},
             detail_items=[payload["summary_text"], f"Applied series: {apply_stats.get('applied_series')}; skipped: {apply_stats.get('skipped_series')}."],
             status="completed",
         )
