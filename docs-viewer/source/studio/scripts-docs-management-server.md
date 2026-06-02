@@ -20,7 +20,7 @@ It serves the built-in `/docs/` manage shell, Docs Viewer runtime/config/static 
 
 `docs-viewer/services/docs_management_service.py` owns the shared Docs Viewer management route dispatcher used by the standalone service.
 Local Studio no longer serves the Docs Viewer `/docs/` shell, Docs Viewer runtime/static/config files, or `/studio/api/docs/...` proxy routes.
-Studio links use the configured Docs Viewer service base URL from `var/local/site.env`.
+Local Studio and Local Analytics do not expose Docs Viewer service-link config or generated-data passthroughs.
 Data Sharing calls use the standalone Local Analytics same-origin API under `/analytics/api/data-sharing/...`.
 Docs Viewer and Local Studio do not provide Data Sharing API compatibility routes.
 
@@ -54,7 +54,7 @@ DOCS_VIEWER_WATCH_ENABLED
 
 `DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only.
 If the configured port is unavailable, startup fails with a clear error instead of falling back to another port.
-Links to `/docs/` or the configured Docs Viewer service URL are rendered without probing service availability; when the service is stopped, they fail normally.
+Open `/docs/` directly through the standalone Docs Viewer service when developer documentation is needed.
 
 ## Responsibilities
 
@@ -73,7 +73,7 @@ Together these modules serve generated docs index, per-doc payload, docs-search,
 
 Endpoint constants live in `docs-viewer/services/docs_management_routes.py`.
 HTTP transport for built-in manage mode lives in `docs-viewer/services/docs_viewer_service.py`.
-Local Studio does not provide a Docs Viewer API adapter; it renders configured peer-service links and consumes configured Docs Viewer service endpoints only for Docs Viewer concerns such as generated reads.
+Local Studio and Local Analytics do not provide Docs Viewer API adapters, peer-service links, or Docs Viewer generated-data passthroughs.
 
 ## Child References
 

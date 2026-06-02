@@ -42,8 +42,7 @@ export function buildStudioShellContract(config, locationLike = currentLocation(
           rootId: "studioApp",
           script: route.script,
           readyStateRouteId: route.readyStateRouteId,
-          title: route.title,
-          docId: route.docId
+          title: route.title
         }
       : null,
     reason: shouldRenderShell ? "" : "route_shell_not_migrated"
@@ -61,7 +60,6 @@ function normalizeRoute(routeId, route) {
     title: normalizeText(route.title),
     path: normalizeText(route.path),
     script: normalizeText(route.script),
-    docId: normalizeText(route.doc_id),
     nav: route.nav === true,
     shellType: normalizeText(route.shell_type),
     readyStateRouteId: normalizeText(route.ready_state_route_id)

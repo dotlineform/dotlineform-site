@@ -8,7 +8,6 @@
         "title": "Studio Home",
         "path": "/studio/",
         "script": "/studio/app/frontend/js/studio-home.js",
-        "doc_id": "local-studio-app",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-home"
@@ -18,7 +17,6 @@
         "title": "Studio Audits",
         "path": "/studio/audits/?mode=manage",
         "script": "/studio/app/frontend/js/studio-audits.js",
-        "doc_id": "studio-audits",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-audits"
@@ -28,7 +26,6 @@
         "title": "Studio Risk",
         "path": "/studio/risk/?mode=manage",
         "script": "/studio/app/frontend/js/studio-risk.js",
-        "doc_id": "site-request-studio-risk-route",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-risk"
@@ -38,7 +35,6 @@
         "title": "Project State",
         "path": "/studio/project-state/?mode=manage",
         "script": "/studio/app/frontend/js/project-state.js",
-        "doc_id": "project-state-page",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "project-state"
@@ -48,7 +44,6 @@
         "title": "Bulk Add Work",
         "path": "/studio/bulk-add-work/?mode=manage",
         "script": "/studio/app/frontend/js/bulk-add-work.js",
-        "doc_id": "bulk-add-work",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "bulk-add-work"
@@ -58,7 +53,6 @@
         "title": "Studio Activity",
         "path": "/studio/activity/?mode=manage",
         "script": "/studio/app/frontend/js/activity-log.js",
-        "doc_id": "studio-activity",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-activity"
@@ -68,7 +62,6 @@
         "title": "Catalogue Field Registry",
         "path": "/studio/catalogue-field-registry/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
-        "doc_id": "catalogue-field-registry-review",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-field-registry"
@@ -78,7 +71,6 @@
         "title": "Catalogue Drafts",
         "path": "/studio/catalogue-status/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-status.js",
-        "doc_id": "catalogue-status",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-status"
@@ -88,7 +80,6 @@
         "title": "Studio Works",
         "path": "/studio/studio-works/?mode=manage",
         "script": "/studio/app/frontend/js/studio-works.js",
-        "doc_id": "studio-works",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "studio-works"
@@ -98,7 +89,6 @@
         "title": "Catalogue Series Editor",
         "path": "/studio/catalogue-series/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-series-editor.js",
-        "doc_id": "catalogue-series-editor",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-series"
@@ -108,7 +98,6 @@
         "title": "Catalogue Work Editor",
         "path": "/studio/catalogue-work/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-work-editor.js",
-        "doc_id": "catalogue-work-editor",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-work"
@@ -118,7 +107,6 @@
         "title": "Catalogue Work Detail Editor",
         "path": "/studio/catalogue-work-detail/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-work-detail-editor.js",
-        "doc_id": "catalogue-work-detail-editor",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-work-detail"
@@ -128,7 +116,6 @@
         "title": "Catalogue Moment Editor",
         "path": "/studio/catalogue-moment/?mode=manage",
         "script": "/studio/app/frontend/js/catalogue-moment-editor.js",
-        "doc_id": "catalogue-moment-editor",
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-moment"
@@ -168,9 +155,6 @@
         "scopes": {
           "library": {
             "index": "/assets/data/docs/scopes/library/index.json"
-          },
-          "studio": {
-            "index": "/docs-viewer/generated/docs/studio/index.json"
           }
         }
       },
@@ -182,9 +166,6 @@
           },
           "library": {
             "index": "/assets/data/search/library/index.json"
-          },
-          "studio": {
-            "index": "/docs-viewer/generated/search/studio/index.json"
           }
         }
       },
@@ -193,7 +174,6 @@
         "catalogue_work_detail_editor": "/studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json",
         "catalogue_series_editor": "/studio/app/frontend/config/ui-text/catalogue-series-editor.json",
         "catalogue_moment_editor": "/studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
-        "docs_viewer": "/docs-viewer/config/ui-text/ui-text.json",
         "activity_log": "/studio/app/frontend/config/ui-text/activity-log.json",
         "bulk_add_work": "/studio/app/frontend/config/ui-text/bulk-add-work.json",
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
@@ -204,14 +184,6 @@
         "studio_risk": "/studio/app/frontend/config/ui-text/studio-risk.json",
         "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
       }
-    }
-  },
-  "external_links": {
-    "docs_viewer": {
-      "base_url": "http://127.0.0.1:8776",
-      "docs_path": "/docs/",
-      "default_mode": "manage",
-      "doc_scope": "studio"
     }
   },
   "catalogue": {

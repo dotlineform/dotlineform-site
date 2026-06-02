@@ -104,24 +104,8 @@ Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps wit
 - UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
 
 The local `/docs/` route is no longer hosted by Local Studio.
-The runtime config exposes the plain Docs Viewer link target for the top-level `docs` view.
-Page implementation links render with `data-studio-doc-view`; the browser resolves those targets from the matching route record's `doc_id`.
-The browser builds external Docs Viewer URLs from `external_links.docs_viewer` plus the route `doc_id`.
-
-## Page-Level Doc Links
-
-Current page-level doc links:
-
-- Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
-- Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
-- Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
-- Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
-- Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
-- Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
-- Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
-- Studio Works -> `/docs/?scope=studio&doc=studio-works`
-- Studio landing and dashboards -> phased-plan and domain-plan docs
-- Library Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
+The runtime config does not expose Docs Viewer link targets, per-route doc IDs, Docs Viewer generated-data passthroughs, or Docs Viewer static assets.
+Use the standalone Docs Viewer service directly for developer documentation.
 
 ## Route Checks
 
@@ -137,6 +121,3 @@ Current focused route shell checks:
 - `studio/tests/smoke/local_studio_app_studio_works_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
 - `studio/tests/smoke/local_studio_app_docs_viewer.py`
-
-Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI.
-Public `/library/` and `/analysis/` are covered by `docs-viewer/tests/smoke/public_docs_viewer_readonly.py`.

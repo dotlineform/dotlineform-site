@@ -42,8 +42,10 @@ def main(argv: list[str] | None = None) -> int:
     server, base_url = start_server()
     try:
         assert_http_status(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", 404)
+        assert_http_status(f"{base_url}/docs-viewer/generated/docs/studio/index.json", 404)
         assert_http_status(f"{base_url}/docs-viewer/runtime/js/docs-viewer.js", 404)
         assert_http_status(f"{base_url}/docs-viewer/static/css/docs-viewer.css", 404)
+        assert_http_status(f"{base_url}/assets/docs/interactive/library/coincidence-salience.html", 404)
 
         with urllib.request.urlopen(f"{base_url}/studio/", timeout=10) as response:
             body = response.read().decode("utf-8")
@@ -56,17 +58,8 @@ def main(argv: list[str] | None = None) -> int:
             runtime_config = json.loads(response.read().decode("utf-8"))
         if "docs" in runtime_config["app"]["runtime"]["services"]:
             raise AssertionError("Local Studio unexpectedly exposed Docs Viewer service endpoints")
-        docs_viewer_links = runtime_config.get("external_links", {}).get("docs_viewer", {})
-        if docs_viewer_links.get("base_url") != "http://127.0.0.1:8776":
-            raise AssertionError("Local Studio did not expose the configured Docs Viewer external link")
-        if docs_viewer_links.get("docs_path") != "/docs/":
-            raise AssertionError("Local Studio did not expose the configured Docs Viewer path")
-        if docs_viewer_links.get("default_mode") != "manage":
-            raise AssertionError("Local Studio did not expose the configured Docs Viewer mode")
-        if docs_viewer_links.get("doc_scope") != "studio":
-            raise AssertionError("Local Studio did not expose the configured Docs Viewer doc scope")
-        if "doc_ids" in docs_viewer_links:
-            raise AssertionError("Local Studio duplicated route doc IDs under Docs Viewer external links")
+        if "external_links" in runtime_config:
+            raise AssertionError("Local Studio unexpectedly exposed Docs Viewer external link config")
         if "docs" in runtime_config.get("app", {}).get("routes", {}):
             raise AssertionError("Local Studio should not expose a Docs header route")
 

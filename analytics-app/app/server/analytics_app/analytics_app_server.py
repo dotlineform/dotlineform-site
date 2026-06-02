@@ -49,7 +49,6 @@ STATIC_PREFIXES = (
     "/assets/work_details/",
     "/assets/works/",
     "/data-sharing/config/",
-    "/docs-viewer/generated/",
     "/analytics/data/",
     "/analytics/app/assets/",
     "/analytics/app/frontend/js/",

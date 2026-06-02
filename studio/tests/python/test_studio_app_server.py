@@ -49,11 +49,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
     assert payload["app"]["routes"]["studio_home"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
-    assert payload["app"]["routes"]["catalogue_work_editor"]["doc_id"] == "catalogue-work-editor"
     assert payload["app"]["routes"]["studio_audits"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["studio_risk"]["path"] == "/studio/risk/?mode=manage"
     assert payload["app"]["routes"]["studio_risk"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["studio_risk"]["doc_id"] == "site-request-studio-risk-route"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["activity"]["shell_type"] == "javascript"
@@ -84,6 +82,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "studio_risk" and view["path"] == "/studio/risk/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
+    assert not any("doc_id" in view for view in runtime["views"])
+    assert not any("docId" in view for view in runtime["views"])
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "activity" and view["path"] == "/studio/activity/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
@@ -98,12 +98,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "analytics" not in runtime["services"]
     assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
-    docs_viewer_links = payload["external_links"]["docs_viewer"]
-    assert docs_viewer_links["base_url"] == "http://127.0.0.1:8776"
-    assert docs_viewer_links["docs_path"] == "/docs/"
-    assert docs_viewer_links["default_mode"] == "manage"
-    assert docs_viewer_links["doc_scope"] == "studio"
-    assert "doc_ids" not in docs_viewer_links
+    assert "external_links" not in payload
+    assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
+    assert "studio" not in runtime["data_paths"].get("docs", {}).get("scopes", {})
+    assert "studio" not in runtime["data_paths"].get("search", {}).get("scopes", {})
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -167,11 +165,6 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     with pytest.raises(RuntimeError, match="project_state: shell route is missing script"):
         validate_studio_route_registry(REPO_ROOT, missing_script)
 
-    missing_doc = json.loads(json.dumps(payload))
-    missing_doc["app"]["routes"]["project_state"]["doc_id"] = ""
-    with pytest.raises(RuntimeError, match="project_state: missing doc_id"):
-        validate_studio_route_registry(REPO_ROOT, missing_doc)
-
     unsupported_shell = json.loads(json.dumps(payload))
     unsupported_shell["app"]["routes"]["project_state"]["shell_type"] = "server"
     with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
@@ -183,7 +176,6 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "title": "Obsolete",
         "path": "/studio/obsolete/?mode=manage",
         "script": "/studio/app/frontend/js/project-state.js",
-        "doc_id": "project-state-page",
         "nav": False,
         "shell_type": "javascript",
         "ready_state_route_id": "obsolete",
@@ -218,7 +210,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
-    assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
+    assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
+    assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
     assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True

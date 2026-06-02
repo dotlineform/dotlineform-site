@@ -11,14 +11,13 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
-    "doc_id",
     "nav",
     "shell_type",
     "ready_state_route_id",
 )
 
 STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("javascript",))
-STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES | frozenset(("external",))
+STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
 STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "studio_home": "/studio/",
@@ -47,7 +46,6 @@ STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
     "title",
     "path",
     "script",
-    "doc_id",
     "nav",
     "shell_type",
     "ready_state_route_id",
@@ -196,10 +194,6 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
                 errors.append(f"{route_id}: no current Studio route serves this shell route")
             elif normalize_route_path(served_path) != normalized_path:
                 errors.append(f"{route_id}: path {path} does not match served route {served_path}")
-
-        doc_id = route.get("doc_id")
-        if not isinstance(doc_id, str) or not doc_id.strip():
-            errors.append(f"{route_id}: missing doc_id")
 
         if not isinstance(route.get("nav"), bool):
             errors.append(f"{route_id}: nav must be boolean")

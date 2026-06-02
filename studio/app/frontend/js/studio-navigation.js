@@ -18,11 +18,6 @@ export function getStudioSites(config) {
   return sites && typeof sites === "object" && !Array.isArray(sites) ? sites : {};
 }
 
-export function getStudioExternalLinks(config) {
-  const links = config && config.external_links;
-  return links && typeof links === "object" && !Array.isArray(links) ? links : {};
-}
-
 export function getStudioViews(config) {
   const views = getStudioRuntime(config).views;
   if (Array.isArray(views)) {
@@ -47,10 +42,6 @@ export function buildStudioViewUrl(config, viewId, params = {}) {
     throw new Error(`Unknown Studio view: ${viewId}`);
   }
 
-  if (isDocsViewerPath(config, view.path)) {
-    return buildDocsViewerUrl(config, view.path, params);
-  }
-
   const url = new URL(view.path, currentOrigin());
   for (const [key, value] of Object.entries(params || {})) {
     if (!key || value == null || value === "") continue;
@@ -73,27 +64,6 @@ export function buildPublicSiteUrl(config, path = "/", params = {}, options = {}
     url.searchParams.set(key, String(value));
   }
   return url.href;
-}
-
-export function buildDocsViewerUrl(config, target = "/docs/", params = {}) {
-  const link = getDocsViewerLinkConfig(config);
-  const baseUrl = normalizeBaseUrl(link.base_url || currentOrigin());
-  const docsPath = normalizePath(link.docs_path || "/docs/");
-  const defaultMode = String(link.default_mode || "manage").trim();
-  const targetUrl = new URL(String(target || docsPath), currentOrigin());
-  const output = new URL(targetUrl.pathname || docsPath, ensureTrailingSlash(baseUrl));
-
-  targetUrl.searchParams.forEach((value, key) => {
-    output.searchParams.set(key, value);
-  });
-  for (const [key, value] of Object.entries(params || {})) {
-    if (!key || value == null || value === "") continue;
-    output.searchParams.set(key, String(value));
-  }
-  if (defaultMode && !output.searchParams.has("mode")) {
-    output.searchParams.set("mode", defaultMode);
-  }
-  return output.href;
 }
 
 export function getStudioSiteBase(config, siteKey) {
@@ -137,7 +107,6 @@ export function openModal(name, params = {}, options = {}) {
 export async function attachStudioNavigation(root = document) {
   const config = await loadStudioConfig();
   const targetRoot = root && typeof root.addEventListener === "function" ? root : document;
-  updateDocsViewerLinks(config, targetRoot);
   targetRoot.addEventListener("click", (event) => {
     const navigateTrigger = event.target && event.target.closest
       ? event.target.closest("[data-studio-navigate]")
@@ -165,16 +134,6 @@ export async function attachStudioNavigation(root = document) {
   return config;
 }
 
-export function updateDocsViewerLinks(config, root = document) {
-  const targetRoot = root && typeof root.querySelectorAll === "function" ? root : document;
-  if (!targetRoot || typeof targetRoot.querySelectorAll !== "function") return;
-  targetRoot.querySelectorAll("a[href]").forEach((link) => {
-    const href = link.getAttribute("href") || "";
-    if (!isDocsViewerPath(config, href)) return;
-    link.setAttribute("href", buildDocsViewerUrl(config, href));
-  });
-}
-
 function readNavigationParams(trigger) {
   const rawParams = trigger.getAttribute("data-studio-params");
   if (!rawParams) return {};
@@ -200,25 +159,6 @@ function normalizeViewId(value) {
 
 function normalizeModalName(value) {
   return String(value || "").trim().replace(/\s+/g, "-").toLowerCase();
-}
-
-function getDocsViewerLinkConfig(config) {
-  const links = getStudioExternalLinks(config);
-  const docsViewer = links.docs_viewer;
-  return docsViewer && typeof docsViewer === "object" && !Array.isArray(docsViewer) ? docsViewer : {};
-}
-
-function isDocsViewerPath(config, path) {
-  const text = String(path || "").trim();
-  if (!text) return false;
-  const docsPath = normalizePath(getDocsViewerLinkConfig(config).docs_path || "/docs/");
-  try {
-    const url = new URL(text, currentOrigin());
-    const normalizedPath = normalizePath(url.pathname);
-    return normalizedPath === docsPath || normalizedPath.startsWith(docsPath);
-  } catch (_error) {
-    return false;
-  }
 }
 
 function isPlainObject(value) {
@@ -250,17 +190,6 @@ function currentCustomEvent() {
 function ensureTrailingSlash(value) {
   const text = String(value || "");
   return text.endsWith("/") ? text : `${text}/`;
-}
-
-function normalizeBaseUrl(value) {
-  const text = String(value || "").trim();
-  return text ? text.replace(/\/+$/, "") : "";
-}
-
-function normalizePath(value) {
-  const text = String(value || "").trim() || "/";
-  const withLeadingSlash = text.startsWith("/") ? text : `/${text}`;
-  return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
 }
 
 if (typeof document !== "undefined") {

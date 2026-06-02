@@ -39,6 +39,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert any(view["id"] == "series_tag_editor" and view["path"] == "/analytics/series-tag-editor/" for view in runtime["views"])
     assert any(view["id"] == "data_sharing_prepare" and view["path"] == "/analytics/data-sharing/prepare/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "data_sharing_review" and view["path"] == "/analytics/data-sharing/review/?mode=manage" for view in runtime["views"])
+    assert "external_links" not in payload
 
     analytics = runtime["services"]["analytics"]
     assert analytics["base"] == "/analytics/api"
@@ -100,6 +101,7 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/data-sharing/config/adapters.json") is True
     assert allowed("/data-sharing/config/library-export-configs.json") is True
     assert allowed("/analytics/data/canonical/tag-registry.json") is True
+    assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
 
     retired_tag_path = "/studio/data/canonical" + "/analytics/tag-registry.json"
     assert allowed(retired_tag_path) is False

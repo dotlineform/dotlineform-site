@@ -40,7 +40,6 @@ from studio_risk_api import risk_delete_response, risk_get_payload, risk_post_re
 STATIC_PREFIXES = (
     "/assets/css/",
     "/assets/data/",
-    "/assets/docs/",
     "/assets/home/",
     "/assets/js/",
     "/assets/moments/",
@@ -48,7 +47,6 @@ STATIC_PREFIXES = (
     "/assets/site/",
     "/assets/work_details/",
     "/assets/works/",
-    "/docs-viewer/generated/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",

@@ -9,7 +9,7 @@ viewable: true
 # Local Studio App
 
 This document defines the operational boundary for the Local Studio app server.
-Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and Docs Viewer integration model.
+Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and sibling-app boundary.
 Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route-local shell ownership.
 Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint groups and server adapter ownership.
 
@@ -54,10 +54,9 @@ The app server does not own:
 Local app views declare the runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 `/studio/runtime-config.json` exposes the local app runtime contract for migrated views:
 
-- `app.routes` route ids, labels, paths, scripts, doc IDs, shell types, ready-state route IDs, and navigation visibility
+- `app.routes` route ids, labels, paths, scripts, shell types, ready-state route IDs, and navigation visibility
 - runtime view records derived from `app.routes`
 - local service endpoints such as `/studio/api/catalogue`
-- plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from checked-in Studio config
 - media and thumbnail bases used by Studio previews
 - pipeline variant, encoding, and workbook metadata from `_data/pipeline.json`
@@ -67,10 +66,9 @@ The browser-side route and navigation contract is documented in [Studio Runtime]
 
 ## Sibling Services
 
-Docs Viewer management is handled by the standalone Docs Viewer service.
-Active Local Studio browser routes use plain external Docs Viewer links from `external_links.docs_viewer` in `studio/app/frontend/config/studio-config.json`.
-Per-page Docs Viewer doc IDs live in `app.routes[*].doc_id` so user-guidance targets can be changed in the route registry without editing Python.
-Local Studio renders Docs Viewer links without probing service availability; when the Docs Viewer service is stopped, the links fail like normal external links.
+Docs Viewer is a standalone developer resource handled by the standalone Docs Viewer service.
+Local Studio does not expose Docs Viewer route metadata, Docs Viewer external-link config, Docs Viewer static/runtime assets, Docs Viewer generated-data passthroughs, or Docs Viewer API adapters.
+Use the standalone Docs Viewer service directly when developer documentation is needed.
 
 Analytics and Data Sharing routes are handled by the standalone Local Analytics app, not Local Studio.
 The active route shells are served by `bin/local-analytics` under `/analytics/...`.
@@ -108,8 +106,7 @@ Current focused Local Studio checks are grouped by ownership:
 - risk evidence: `studio/tests/python/test_risk_evidence_pack.py`
 - navigation/runtime adapter: `studio/tests/smoke/local_studio_navigation_adapter.py`
 - route shells: see [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
-- Docs Viewer service workflows: `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`, `docs-viewer/tests/smoke/docs_viewer_management_ui.py`, `docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`, `docs-viewer/tests/smoke/docs_viewer_management_move_ui.py`, and `docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
-- public Docs Viewer read-only behavior: `docs-viewer/tests/smoke/public_docs_viewer_readonly.py`
+- Docs Viewer boundary: `studio/tests/smoke/local_studio_app_docs_viewer.py`
 - Local Analytics sibling routes and APIs: `analytics-app/tests/python/test_analytics_app_server.py`, `analytics-app/tests/python/test_analytics_data_sharing_api.py`, `analytics-app/tests/smoke/local_analytics_app_tag_routes.py`, and `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
 
 ## Related Docs

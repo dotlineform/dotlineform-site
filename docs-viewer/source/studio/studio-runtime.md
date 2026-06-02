@@ -7,7 +7,7 @@ parent_id: studio
 ---
 # Studio Runtime
 
-This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.
+This document describes the current Studio route shell, shared runtime modules, and sibling-app boundaries.
 Studio route hosting now runs through the local Python Studio app server for active operational routes.
 Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the local server boundary, [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the route inventory, and [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint ownership.
 
@@ -30,7 +30,6 @@ Catalogue search administration should be reached from the Catalogue dashboard, 
 The Studio shell renders:
 
 - the page title
-- the page implementation link when the route registry provides a `doc_id`
 - the route body from the route-local shell module
 
 The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
@@ -38,15 +37,8 @@ The public site uses the user-facing `Works` / `Library` header nav. The only in
 - the site title at top left, which returns to the public site
 - the footer `studio` link, which enters `/studio/`
 
-Studio-originated Library management links should open `/docs/?scope=library&mode=manage` so local management controls are available during admin workflows.
-
-The page implementation link is the page-to-doc bridge for Studio. Each active route points to a scoped Docs Viewer URL in the form:
-
-```text
-/docs/?scope=studio&doc=<doc_id>
-```
-
-This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
+Studio does not render page-level Docs Viewer links or carry Docs Viewer route metadata.
+Developer documentation is reached directly through the standalone Docs Viewer service.
 
 ## Route Registry
 
@@ -59,27 +51,24 @@ Each registered route uses these fields:
 - `title`
 - `path`
 - `script` for shell-rendered routes
-- `doc_id`
 - `nav`
 - `shell_type`
 - `ready_state_route_id`
 
-Current shell types are:
+Current shell type:
 
-- `external` for configured peer routes such as Docs Viewer
 - `javascript` for active Studio routes rendered by the browser shell
 
 `studio/app/server/studio/studio_app_config.py` validates the registry before exposing runtime config.
-Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, missing `doc_id` values, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
+Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
 
 The runtime config exposes the same records as `app.runtime.views` for existing navigation helpers and smoke tests.
-Docs Viewer page links are built from `external_links.docs_viewer` plus each route's `doc_id`; `external_links.docs_viewer` must not duplicate per-route doc IDs.
 
 `studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper for the migration.
 It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
 
 `studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
-For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title/doc-link shell, asks the route-local body renderer for markup, and then imports the configured route script.
+For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title shell, asks the route-local body renderer for markup, and then imports the configured route script.
 Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Studio Works, and the Catalogue editor family use this path.
 Their body markup lives in route-local `*-shell.js` modules, and their existing controllers stay in the configured route scripts.
 
@@ -92,8 +81,6 @@ Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps wit
 
 UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
 
-Page-level doc-link inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
-
 ## Shared Runtime Modules
 
 Shared Studio runtime and wiring currently live in:
@@ -101,11 +88,11 @@ Shared Studio runtime and wiring currently live in:
 - `studio/app/frontend/js/studio-config.js`
   loads the configured runtime URL from `meta[name="dlf-studio-config-url"]`, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state. Local Studio views use `/studio/runtime-config.json`, which the app server builds from checked-in Studio config plus local runtime endpoints.
 - `studio/app/frontend/js/studio-app.js`
-  owns the browser-rendered Studio shell, Docs Viewer page links, and route script import for active Studio-local routes
+  owns the browser-rendered Studio shell and route script import for active Studio-local routes
 - `studio/app/frontend/js/studio-route-body-renderers.js`
   owns the route-id to route-body-renderer mapping for JavaScript-shell routes
 - `studio/app/frontend/js/studio-navigation.js`
-  resolves local Studio route URLs, external Docs Viewer links, public preview links, and modal event dispatch
+  resolves local Studio route URLs, public preview links, and modal event dispatch
 - `studio/app/frontend/js/studio-data.js`
   provides shared JSON loading and common shaping helpers for Studio pages
 - `studio/app/frontend/js/studio-transport.js`
@@ -171,15 +158,15 @@ Static landing and reference routes use `studio/app/frontend/js/studio-static-ro
 
 ## Relation to `/docs/`
 
-Studio no longer owns a separate documentation route. Its docs are served by the shared Docs Viewer, which also serves other docs scopes.
+Studio no longer owns a separate documentation route and does not link to Docs Viewer from its runtime shell.
+Studio developer docs remain authored under the Studio docs scope, but `/docs/` is a self-contained developer resource served by the standalone Docs Viewer service.
 
-Current Studio usage of the Docs Viewer:
+Current boundary:
 
 - Studio section docs live in `docs-viewer/source/studio/`
 - `docs-viewer/build/build_docs.py` builds the Studio docs payload into the Studio docs scope
-- `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio&doc=<doc_id>` opens those docs in the standalone Docs Viewer service
-- Studio page `i` links use those scoped URLs directly
-- the Docs Viewer service owns manage-mode actions such as rebuild beside the docs search input
+- the standalone Docs Viewer service serves `/docs/` when developer documentation is needed
+- Local Studio does not expose Docs Viewer external-link config, route doc IDs, static/runtime assets, generated-data passthroughs, or API adapters
 
 This means Studio documentation changes must stay aligned with the shared Docs Viewer behavior documented in **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** and **[Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)**.
 

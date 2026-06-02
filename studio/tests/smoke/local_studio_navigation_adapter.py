@@ -54,9 +54,7 @@ def main(argv: list[str] | None = None) -> int:
                     const publicLinks = await import("/studio/app/frontend/js/catalogue-public-links.js");
                     const configMod = await import("/studio/app/frontend/js/studio-config.js");
                     const config = await (await fetch("/studio/runtime-config.json")).json();
-                    mod.updateDocsViewerLinks(config, document);
                     const services = mod.getStudioServices(config);
-                    const externalLinks = mod.getStudioExternalLinks(config);
                     const url = mod.buildStudioViewUrl(config, "catalogue_status", {
                         scope: "studio",
                         empty: "",
@@ -92,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
                         openModalDetail = event.detail;
                     }, { once: true });
-                    const modalEvent = mod.openModal("Confirm Delete", { doc_id: "docs-viewer" });
+                    const modalEvent = mod.openModal("Confirm Delete", { work_id: "00001" });
                     const homeLinks = [...document.querySelectorAll(".studioLinkList__item")].map((link) => ({
                         label: link.textContent.trim(),
                         viewId: link.getAttribute("data-studio-navigate"),
@@ -107,10 +105,6 @@ def main(argv: list[str] | None = None) -> int:
                     const topNavTitle = document.querySelector(".site-title a")?.textContent.trim();
                     const topNavHomeHref = document.querySelector(".site-title a")?.getAttribute("href");
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
-                    const docsLink = document.createElement("a");
-                    docsLink.setAttribute("href", "/docs/");
-                    document.body.append(docsLink);
-                    mod.updateDocsViewerLinks(config, document);
 
                     let delegatedModalDetail = null;
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
@@ -119,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
                     const button = document.createElement("button");
                     button.type = "button";
                     button.setAttribute("data-studio-modal", "rename");
-                    button.setAttribute("data-studio-params", JSON.stringify({ doc_id: "docs-viewer" }));
+                    button.setAttribute("data-studio-params", JSON.stringify({ work_id: "00001" }));
                     document.body.append(button);
                     button.click();
 
@@ -128,12 +122,11 @@ def main(argv: list[str] | None = None) -> int:
                         hasThumbnailQualityView: config.app.runtime.views.some((view) => view.id === "thumbnail_quality"),
                         hasThumbnailQualityService: Object.prototype.hasOwnProperty.call(config.app.runtime.services.catalogue || {}, "thumbnail_quality_preview"),
                         hasThumbnailQualityDataPath: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths.studio || {}, "thumbnail_quality_preview"),
-                        hasThumbnailQualityDocId: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "thumbnail_quality"),
+                        hasThumbnailQualityRoute: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "thumbnail_quality"),
                         hasDocsRoute: Object.prototype.hasOwnProperty.call(config.app.routes || {}, "docs"),
-                        docsExternalLink: externalLinks.docs_viewer,
+                        hasExternalLinks: Object.prototype.hasOwnProperty.call(config, "external_links"),
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
-                        rewrittenDocsHref: docsLink.getAttribute("href"),
                         dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
@@ -176,8 +169,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("runtime services unexpectedly exposed retired thumbnail-quality API")
         if result["hasThumbnailQualityDataPath"]:
             raise AssertionError("runtime data paths unexpectedly exposed retired thumbnail-quality data")
-        if result["hasThumbnailQualityDocId"]:
-            raise AssertionError("Docs Viewer links unexpectedly exposed retired thumbnail-quality doc id")
+        if result["hasThumbnailQualityRoute"]:
+            raise AssertionError("runtime routes unexpectedly exposed retired thumbnail-quality")
         if result["hasDocsRoute"]:
             raise AssertionError("runtime routes unexpectedly exposed retired Docs header route")
         if thumbnail_route_status != 404:
@@ -186,22 +179,12 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"retired thumbnail-quality API returned {thumbnail_api_status}, expected 404")
         if thumbnail_data_status != 404:
             raise AssertionError(f"retired thumbnail-quality static data returned {thumbnail_data_status}, expected 404")
-        if result["docsExternalLink"]["base_url"] != "http://127.0.0.1:8776":
-            raise AssertionError(f"unexpected Docs external link base: {result['docsExternalLink']!r}")
-        if result["docsExternalLink"]["docs_path"] != "/docs/":
-            raise AssertionError(f"unexpected Docs external link path: {result['docsExternalLink']!r}")
-        if result["docsExternalLink"]["default_mode"] != "manage":
-            raise AssertionError(f"unexpected Docs external link mode: {result['docsExternalLink']!r}")
-        if result["docsExternalLink"]["doc_scope"] != "studio":
-            raise AssertionError(f"unexpected Docs external link scope: {result['docsExternalLink']!r}")
-        if "doc_ids" in result["docsExternalLink"]:
-            raise AssertionError(f"Docs external link should not duplicate route doc IDs: {result['docsExternalLink']!r}")
+        if result["hasExternalLinks"]:
+            raise AssertionError("runtime config unexpectedly exposed external link config")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
-        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?mode=manage":
-            raise AssertionError(f"unexpected rewritten Docs link: {result['rewrittenDocsHref']!r}")
         expected_top_nav = []
         if result["runtimePrimaryNav"] != expected_top_nav:
             raise AssertionError(f"unexpected runtime primary nav: {result['runtimePrimaryNav']!r}")
@@ -265,7 +248,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")
         if result["delegatedModalDetail"]["name"] != "rename":
             raise AssertionError(f"unexpected delegated modal detail: {result['delegatedModalDetail']!r}")
-        if result["delegatedModalDetail"]["params"]["doc_id"] != "docs-viewer":
+        if result["delegatedModalDetail"]["params"]["work_id"] != "00001":
             raise AssertionError(f"unexpected delegated modal params: {result['delegatedModalDetail']!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")

@@ -80,14 +80,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
         }
       }
     }
-  },
-  "external_links": {
-    "docs_viewer": {
-      "base_url": "http://127.0.0.1:8776",
-      "docs_path": "/docs/",
-      "default_mode": "manage",
-      "doc_scope": "studio"
-    }
   }
 };
 
