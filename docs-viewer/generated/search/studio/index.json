@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-03ec258c3e348ed354966c61ba6dd23a",
-    "generated_at_utc": "2026-06-02T09:45:40Z",
-    "count": 230
+    "version": "blake2b-eec78388406a4d46573fadf95e2ff406",
+    "generated_at_utc": "2026-06-02T10:10:28Z",
+    "count": 232
   },
   "entries": [
     {
@@ -4574,16 +4574,16 @@
       "kind": "doc",
       "title": "Servers",
       "href": "/docs/?scope=studio&doc=servers",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
       "search_terms": [
         "servers",
-        "2026-05-30",
+        "2026-06-02",
         "2026",
-        "05",
-        "30"
+        "06",
+        "02"
       ],
-      "search_text": "servers 2026-05-30 2026 05 30"
+      "search_text": "servers 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-catalogue-write-server",
@@ -4722,10 +4722,10 @@
       "kind": "doc",
       "title": "Local Runners",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-02",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-06-01 • Servers",
+      "display_meta": "2026-06-02 • Servers",
       "search_terms": [
         "scripts-local-studio",
         "scripts",
@@ -4734,12 +4734,12 @@
         "local runners",
         "runners",
         "servers",
-        "2026-06-01",
+        "2026-06-02",
         "2026",
         "06",
-        "01"
+        "02"
       ],
-      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-06-01 2026 06 01"
+      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-06-02 2026 06 02"
     },
     {
       "id": "local-studio-server-architecture",
@@ -4795,43 +4795,21 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-06-01",
-      "display_meta": "2026-06-01",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
       "search_terms": [
         "studio",
-        "2026-06-01",
+        "2026-06-02",
         "2026",
         "06",
-        "01"
+        "02"
       ],
-      "search_text": "studio 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "local-studio-app",
-      "kind": "doc",
-      "title": "Local Studio App",
-      "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-31",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-31 • Studio",
-      "search_terms": [
-        "local-studio-app",
-        "local",
-        "studio",
-        "app",
-        "local studio app",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "local-studio-app local studio app local studio app 2026-05-31 2026 05 31"
+      "search_text": "studio 2026-06-02 2026 06 02"
     },
     {
       "id": "studio-activity",
       "kind": "doc",
-      "title": "Studio Activity",
+      "title": "Activity Report",
       "href": "/docs/?scope=studio&doc=studio-activity",
       "last_updated": "2026-05-22",
       "parent_id": "studio",
@@ -4841,18 +4819,85 @@
         "studio-activity",
         "studio",
         "activity",
-        "studio activity",
+        "activity report",
+        "report",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
+      "search_text": "studio-activity studio activity activity report report 2026-05-22 2026 05 22"
+    },
+    {
+      "id": "local-studio-apis",
+      "kind": "doc",
+      "title": "Local Studio APIs",
+      "href": "/docs/?scope=studio&doc=local-studio-apis",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-02 • Studio",
+      "search_terms": [
+        "local-studio-apis",
+        "local",
+        "studio",
+        "apis",
+        "local studio apis",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "local-studio-apis local studio apis local studio apis 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "local-studio-app",
+      "kind": "doc",
+      "title": "Local Studio App",
+      "href": "/docs/?scope=studio&doc=local-studio-app",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-02 • Studio",
+      "search_terms": [
+        "local-studio-app",
+        "local",
+        "studio",
+        "app",
+        "local studio app",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "local-studio-app local studio app local studio app 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "local-studio-routes",
+      "kind": "doc",
+      "title": "Local Studio Routes",
+      "href": "/docs/?scope=studio&doc=local-studio-routes",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-02 • Studio",
+      "search_terms": [
+        "local-studio-routes",
+        "local",
+        "studio",
+        "routes",
+        "local studio routes",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "local-studio-routes local studio routes local studio routes 2026-06-02 2026 06 02"
     },
     {
       "id": "studio-ready-state",
       "kind": "doc",
-      "title": "Studio Ready State",
+      "title": "Route State",
       "href": "/docs/?scope=studio&doc=studio-ready-state",
       "last_updated": "2026-05-15",
       "parent_id": "studio",
@@ -4863,39 +4908,19 @@
         "studio",
         "ready",
         "state",
-        "studio ready state",
+        "route state",
+        "route",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "studio-runtime",
-      "kind": "doc",
-      "title": "Studio Runtime",
-      "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-06-01",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-06-01 • Studio",
-      "search_terms": [
-        "studio-runtime",
-        "studio",
-        "runtime",
-        "studio runtime",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-06-01 2026 06 01"
+      "search_text": "studio-ready-state studio ready state route state route 2026-05-15 2026 05 15"
     },
     {
       "id": "data-models-studio",
       "kind": "doc",
-      "title": "Studio Scope",
+      "title": "Scope",
       "href": "/docs/?scope=studio&doc=data-models-studio",
       "last_updated": "2026-05-06 20:51",
       "parent_id": "studio",
@@ -4906,7 +4931,6 @@
         "data",
         "models",
         "studio",
-        "studio scope",
         "scope",
         "2026-05-06 20:51",
         "2026",
@@ -4915,7 +4939,28 @@
         "20",
         "51"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "data-models-studio data models studio scope 2026-05-06 20:51 2026 05 06 20 51"
+    },
+    {
+      "id": "studio-runtime",
+      "kind": "doc",
+      "title": "Studio Runtime",
+      "href": "/docs/?scope=studio&doc=studio-runtime",
+      "last_updated": "2026-06-02",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-02 • Studio",
+      "search_terms": [
+        "studio-runtime",
+        "studio",
+        "runtime",
+        "studio runtime",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "studio-runtime studio runtime studio runtime 2026-06-02 2026 06 02"
     },
     {
       "id": "testing",

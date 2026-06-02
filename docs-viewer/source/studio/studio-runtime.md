@@ -2,39 +2,36 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 parent_id: studio
 ---
 # Studio Runtime
 
 This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.
 Studio route hosting now runs through the local Python Studio app server for active operational routes.
+Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the local server boundary, [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the route inventory, and [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint ownership.
 
 ## Route Shell
 
-Legacy Jekyll-hosted Studio pages use:
-
-- `layout: studio`
-- `_layouts/studio.html`
-
-The local Studio app server owns active Studio route URLs directly.
-For active JavaScript-shell local app routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
+The local Studio app server owns active Studio route URLs.
+For JavaScript-shell routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
 `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
-The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
+The browser-rendered Studio shell provides the shared admin-facing navigation model:
 
 - `Catalogue`
 - `Docs`
+- `Admin`
 
 Search is no longer a standalone Studio navigation domain.
 Analytics and Data Sharing are served by the standalone Local Analytics app, not by Local Studio navigation.
 Catalogue search administration should be reached from the Catalogue dashboard, while document search administration should stay inside Docs Viewer manage mode.
 
-The Studio page layout then renders:
+The Studio shell renders:
 
 - the page title
-- the page body content
-- an optional `i` link when `page.studio_page_doc` is present
+- the page implementation link when the route registry provides a `doc_id`
+- the route body from the route-local shell module
 
 The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
 
@@ -43,16 +40,13 @@ The public site uses the user-facing `Works` / `Library` header nav. The only in
 
 Studio-originated Library management links should open `/docs/?scope=library&mode=manage` so local management controls are available during admin workflows.
 
-The `i` link is the page-to-doc bridge for Studio. Each page now points to a scoped Docs Viewer URL in the form:
+The page implementation link is the page-to-doc bridge for Studio. Each active route points to a scoped Docs Viewer URL in the form:
 
 ```text
 /docs/?scope=studio&doc=<doc_id>
 ```
 
 This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
-
-Legacy Jekyll Studio route entry modules no longer use a shared Liquid include.
-Operational Studio route shells are hosted by the local app, and remaining Studio-owned Jekyll-shaped demo pages are cleanup targets for the source-tree move.
 
 ## Route Registry
 
@@ -93,26 +87,12 @@ Their body markup lives in route-local `*-shell.js` modules, and their existing 
 
 Operational Studio route shells are hosted by the local app.
 Active local shells include `/studio/`, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+The maintained mounted-route inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
 Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps with their own route shells.
-
-Remaining Jekyll route inventory:
-
-- `ui-catalogue-app/source/demos/index.md`
 
 UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
 
-Current page-level doc links:
-
-- Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
-- Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
-- Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
-- Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
-- Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
-- Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
-- Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
-- Studio Works -> `/docs/?scope=studio&doc=studio-works`
-- Studio landing and dashboards -> phased-plan and domain-plan docs
-- Library Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
+Page-level doc-link inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
 
 ## Shared Runtime Modules
 
@@ -207,51 +187,13 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 
 `bin/local-studio` is the current Studio route runner.
 
-What it runs before starting long-lived services:
+It starts the local Studio app server and the docs live rebuild watcher.
+It does not start public-site preview, Local Analytics, UI Catalogue, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for all local services.
 
-- required port preflight for the local Studio app
-
-What it starts:
-
-- `studio/app/server/studio/studio_app_server.py`
-- `docs-viewer/services/docs_live_rebuild_watcher.py`
-
-What it does not start:
-
-- catalogue/search regeneration scripts
-- the retired standalone tag write server
-- the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly or `bin/local-all` for all local services
-- the retired standalone Audit Service HTTP wrapper
-
-Current local generated Studio feeds surfaced through this runtime:
-
-- unified Studio activity via `GET /studio/api/catalogue/read?key=activity_log`
-
-Current mutable catalogue data surfaced through this runtime:
-
-- catalogue source records and catalogue lookup/search records are read through Local Studio catalogue API routes backed by `studio/app/server/studio/studio_catalogue_api.py`
-- Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
-- catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of reading stale static source JSON
-
-Current Docs Viewer service integration surfaced through this runtime:
-
-- `POST <DOCS_VIEWER_BASE_URL>/docs/broken-links`
-- `POST <DOCS_VIEWER_BASE_URL>/docs/rebuild`
-
-Current localhost audit integration surfaced through this runtime:
-
-- `GET /studio/api/audits/audits`
-- `POST /studio/api/audits/audits/run`
-
-Current catalogue integration surfaced through this runtime:
-
-- `GET /studio/api/catalogue/health`
-- `GET /studio/api/catalogue/read`
-- editor save/create/delete/publication/build/prose-import/moment API routes under `/studio/api/catalogue/...`
-- workbook import routes under `/studio/api/catalogue/import-preview` and `/studio/api/catalogue/import-apply`
-- `POST /studio/api/catalogue/project-state-report`
-
-The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
+The runner is sufficient for route-shell and Studio write-flow testing, but not a full content-generation pipeline.
+Detailed runner behavior lives in [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio).
+Local server ownership lives in [Local Studio App](/docs/?scope=studio&doc=local-studio-app).
+Endpoint ownership lives in [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis).
 
 ## Current Catalogue UI Baseline
 

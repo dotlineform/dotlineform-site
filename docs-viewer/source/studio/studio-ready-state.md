@@ -1,11 +1,12 @@
 ---
 doc_id: studio-ready-state
-title: Studio Ready State
+title: Route State
 added_date: 2026-05-14
 last_updated: 2026-05-15
 parent_id: studio
+viewable: true
 ---
-# Studio Ready State
+# Studio Route State
 
 This is the technical reference for the implemented Studio route-ready contract.
 

@@ -2,7 +2,7 @@
 doc_id: servers
 title: Servers
 added_date: 2026-04-17
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: ""
 ---
 # Servers
@@ -24,7 +24,9 @@ Read this section in this order:
 
 Current local server scripts:
 
-- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the Studio shell, catalogue APIs, audit APIs, activity/admin pages, and Studio operational routes
+- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the Studio app server boundary and server module ownership
+- **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for Studio shell routes, route-local body modules, retired routes, and route checks
+- **[Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)** for Catalogue, audit, and risk endpoint groups
 - `bin/local-analytics` for Analytics tag routes/APIs and Data Sharing routes/APIs
 - `bin/local-ui-catalogue` for isolated UI Catalogue demos
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode, generated reads, and docs management APIs

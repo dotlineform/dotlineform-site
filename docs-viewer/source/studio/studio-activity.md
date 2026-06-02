@@ -1,9 +1,10 @@
 ---
 doc_id: studio-activity
-title: Studio Activity
+title: Activity Report
 added_date: 2026-05-08
 last_updated: 2026-05-22
 parent_id: studio
+viewable: true
 ---
 # Studio Activity
 

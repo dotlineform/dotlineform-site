@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 parent_id: ""
 ---
 # Studio
@@ -46,8 +46,10 @@ Studio landing and operational routes expose the shared route-ready contract:
 - **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for UI patterns, naming rules, and modal behavior
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that hosts Studio documentation
 - **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract, helper modules, route inventory, and audit coverage
-- **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
-- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server, mounted local routes, local API ownership, and current route-level checks
+- **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell architecture, route registry, shared browser modules, and Docs Viewer integration
+- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server boundary, sibling-service split, runtime config shape, and server module ownership
+- **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route-local shell ownership, retired route notes, page-level doc links, and route checks
+- **[Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)** for `/studio/api/...` endpoint groups and adapter ownership
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 - **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 

@@ -1,9 +1,10 @@
 ---
 doc_id: data-models-studio
-title: Studio Scope
+title: Scope
 added_date: 2026-04-19
 last_updated: "2026-05-06 20:51"
 parent_id: studio
+viewable: true
 ---
 # Studio Scope
 

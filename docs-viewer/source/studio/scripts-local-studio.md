@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 parent_id: servers
 ---
 # Local Runners
@@ -235,6 +235,8 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 - can be disabled with `STUDIO_APP_ENABLED=0`
 - access logging is quiet by default; set `STUDIO_APP_ACCESS_LOG=1` or pass `--access-log` to the app server for detailed request logging
 - related doc: [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+- route inventory: [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
+- endpoint inventory: [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
 
 ### Public Jekyll Preview
 
@@ -378,7 +380,7 @@ At startup the runner prints quick links for:
 - Local Studio App
 - Local Analytics App
 - UI Catalogue App
-- local API ownership
+- Local Studio API ownership
 - Docs Live Watcher status
 - Series Tag Editor in Local Analytics:
   - `http://127.0.0.1:8766/analytics/series-tag-editor/?series=<series_id>`
@@ -433,3 +435,6 @@ If you disable the watcher or want an explicit manual rebuild, use:
 - [Servers](/docs/?scope=studio&doc=servers)
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+- [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
+- [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
