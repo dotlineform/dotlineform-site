@@ -956,18 +956,22 @@
   max-width: var(--docs-viewer-measure);
   margin-left: 0;
   margin-right: auto;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .docsViewer__content a,
 .docsViewer__content code{
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .docsViewer__content pre{
   max-width: 100%;
-  overflow-x: visible;
-  overflow-wrap: anywhere;
+  overflow-x: auto;
+  overflow-wrap: normal;
   white-space: pre-wrap;
+  word-break: normal;
 }
 
 .docsViewer__content table{
@@ -989,6 +993,31 @@
 
 .docsViewer__content th{
   background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__content .docsViewerTable{
+  max-width: 100%;
+  margin: var(--docs-viewer-space-3) 0 var(--docs-viewer-space-4);
+  overflow-x: auto;
+}
+
+.docsViewer__content .docsViewerTable > table{
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  margin: 0;
+  overflow-x: visible;
+}
+
+.docsViewer__content .docsViewerTable--firstColumnMin > table th:first-child,
+.docsViewer__content .docsViewerTable--firstColumnMin > table td:first-child{
+  min-width: var(--docs-viewer-table-first-column, 14ch);
+}
+
+.docsViewer__content .docsViewerTable--nowrapFirstColumn > table th:first-child,
+.docsViewer__content .docsViewerTable--nowrapFirstColumn > table td:first-child{
+  white-space: nowrap;
 }
 
 .docsViewer__panelStatus{

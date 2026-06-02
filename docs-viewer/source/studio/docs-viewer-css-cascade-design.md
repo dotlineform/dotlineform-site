@@ -80,9 +80,35 @@ It should not restyle public host page chrome or override public `assets/css/mai
 - UI status pills
 - search and recently-added results
 - viewer-specific content constraints such as measure width
-- rendered Markdown code blocks should preserve code whitespace while wrapping long lines within the document measure; tables may still scroll horizontally when needed
+- rendered Markdown content should not force mid-word wrapping by default
+- rendered Markdown code blocks should preserve code whitespace and use horizontal overflow when needed
+- tables may still scroll horizontally when needed
 
 It should not define broad site typography or unrelated public-site layout.
+
+## Rendered Table Defaults
+
+Markdown tables do not expose column-width controls.
+Docs Viewer should keep normal Markdown tables readable by default:
+
+- do not force mid-word wrapping in rendered docs content, inline code, links, or table cells
+- keep ordinary Markdown tables horizontally scrollable when the document measure is too narrow
+- use a wrapper class for problem tables that need intrinsic column widths or a minimum width for a specific column
+
+For a table whose first column contains package names, ids, paths, or similar technical labels, wrap the Markdown table in trusted raw HTML:
+
+```md
+<div class="docsViewerTable docsViewerTable--firstColumnMin docsViewerTable--nowrapFirstColumn" style="--docs-viewer-table-first-column: 14ch;">
+
+| Package | Notes |
+| - | - |
+| `beautifulsoup4` | Parser |
+
+</div>
+```
+
+The renderer allows raw HTML in source docs, and Markdown tables inside a raw wrapper are rendered as tables.
+Use the wrapper only where a table needs local width behavior; do not replace ordinary Markdown tables with raw HTML tables unless the table needs markup that Markdown cannot express.
 
 ## Docs Viewer Management Stylesheet Responsibilities
 
