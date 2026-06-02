@@ -27,7 +27,7 @@ Portable Docs Viewer installs that copy the build scripts, Docs Viewer service, 
 
 The current checked-in Python packages are:
 
-| Package | Docs Viewer role | Required when |
+| Package     | Docs Viewer role | Required when |
 | --- | --- | --- |
 | `beautifulsoup4` | Builds the HTML import parse tree through Beautiful Soup. | Using Docs Import for staged HTML. |
 | `lxml` | Parser backend selected by `BeautifulSoup(source_html, "lxml")`. | Using Docs Import for staged HTML. |

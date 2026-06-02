@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4720985dedf3a2fef5f1d4cfe1b0a4e2",
-    "generated_at_utc": "2026-06-02T07:02:00Z",
+    "version": "blake2b-180e9ebca4a090c0fd34c6a27c605c55",
+    "generated_at_utc": "2026-06-02T09:03:52Z",
     "count": 230
   },
   "entries": [
@@ -2979,10 +2979,10 @@
       "kind": "doc",
       "title": "CSS Cascade Design",
       "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "docs-viewer-css-cascade-design",
         "docs",
@@ -2992,12 +2992,12 @@
         "design",
         "css cascade design",
         "docs viewer",
-        "2026-05-25",
+        "2026-06-02",
         "2026",
-        "05",
-        "25"
+        "06",
+        "02"
       ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "docs-viewer-dependencies",

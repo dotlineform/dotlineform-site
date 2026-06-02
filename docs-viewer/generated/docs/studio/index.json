@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T08:30:56Z",
+  "generated_at": "2026-06-02T09:03:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1688,7 +1688,7 @@
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 2722
+      "content_text_length": 2378
     },
     {
       "scope": "studio",
@@ -1723,14 +1723,14 @@
       "doc_id": "docs-viewer-css-cascade-design",
       "title": "CSS Cascade Design",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-css-cascade-design.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-css-cascade-design.json",
-      "content_text_length": 6582
+      "content_text_length": 6750
     },
     {
       "scope": "studio",

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-css-cascade-design
 title: CSS Cascade Design
 added_date: 2026-05-11
-last_updated: 2026-05-25
+last_updated: 2026-06-02
 parent_id: docs-viewer
 viewable: true
 ---
@@ -80,6 +80,7 @@ It should not restyle public host page chrome or override public `assets/css/mai
 - UI status pills
 - search and recently-added results
 - viewer-specific content constraints such as measure width
+- rendered Markdown code blocks should preserve code whitespace while wrapping long lines within the document measure; tables may still scroll horizontally when needed
 
 It should not define broad site typography or unrelated public-site layout.
 

@@ -6,28 +6,39 @@ last_updated: 2026-06-02
 parent_id: docs-viewer
 viewable: true
 ---
-# Docs Broken Links Audit
+# Docs Broken Links Audit Script
 
-Script:
+This script audits Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
 
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope studio
 ```
 
-## Purpose
+JSON output:
+```bash
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope library --json
+```
 
-This script audits Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
+Flags:
 
-It reports missing target links:
+- `--scope NAME` required
+- `--repo-root PATH` override repo-root auto-detection
+- `--json` print the structured payload used by the Docs Viewer report and docs-management endpoint
 
-- `not found`
-  the link target does not resolve to a published docs page
+JSON entries include:
 
-Current link-text rule:
+- `from_page_text`
+- `from_page_url`
+- `from_page_scope`
+- `from_page_doc_id`
+- `from_page_source_path`
+- `link_text`
+- `link_url`
+
+Rules:
 
 - link text is not compared with the current target title
 - changed, shortened, or historically preserved labels are allowed
-- target resolution is still strict
 
 Ignored links:
 
@@ -40,54 +51,20 @@ Ignored links:
 
 The audit reads generated docs payloads rather than raw source Markdown.
 
-Current inputs:
+Inputs:
 
 - `docs-viewer/generated/docs/studio/index.json`
 - `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
-Current model:
+Model:
 
 - the selected scope provides the source docs that are scanned for links
 - both scopes are loaded into the target registry so cross-scope docs links can still resolve when valid
 - unresolved `.md` links left in rendered docs output are treated as `not found`
 
-## Commands
-
-Human-readable summary:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope studio
-```
-
-JSON output:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope library --json
-```
-
-JSON entries include:
-
-- `from_page_text`
-- `from_page_url`
-- `from_page_scope`
-- `from_page_doc_id`
-- `from_page_source_path`
-- `link_text`
-- `link_url`
-
-Flags:
-
-- `--scope NAME`
-  required
-  current values: `studio`, `library`
-- `--repo-root PATH`
-  override repo-root auto-detection
-- `--json`
-  print the structured payload used by the Docs Viewer report and docs-management endpoint
-
-## Docs Viewer Integration
+## Docs Viewer Report
 
 The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same audit logic through the Docs management endpoint `POST /docs/broken-links`. This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. That keeps the browser report thin while leaving the audit reusable from the terminal.
 
