@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-221ab67451132b48ff2a890842c9d824",
-    "generated_at_utc": "2026-06-02T15:27:14Z",
-    "count": 227
+    "version": "blake2b-2704c0a7cebedb010d0438b16db7812c",
+    "generated_at_utc": "2026-06-02T17:55:44Z",
+    "count": 228
   },
   "entries": [
     {
@@ -328,10 +328,10 @@
       "kind": "doc",
       "title": "Projection Contract",
       "href": "/docs/?scope=studio&doc=data-models-projection-contract",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-06-02",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-24 • Architecture",
+      "display_meta": "2026-06-02 • Architecture",
       "search_terms": [
         "data-models-projection-contract",
         "data",
@@ -340,12 +340,12 @@
         "contract",
         "projection contract",
         "architecture",
-        "2026-05-24",
+        "2026-06-02",
         "2026",
-        "05",
-        "24"
+        "06",
+        "02"
       ],
-      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-05-24 2026 05 24"
+      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-audit-projection-contract",
@@ -426,10 +426,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-02",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-31 • Architecture",
+      "display_meta": "2026-06-02 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -437,12 +437,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-05-31",
+        "2026-06-02",
         "2026",
-        "05",
-        "31"
+        "06",
+        "02"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-31 2026 05 31"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-02 2026 06 02"
     },
     {
       "id": "audit",
@@ -1478,10 +1478,10 @@
       "kind": "doc",
       "title": "Public Static Site Build Request",
       "href": "/docs/?scope=studio&doc=site-request-public-static-site-build",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-01 • Change Requests",
+      "display_meta": "2026-06-02 • Change Requests",
       "search_terms": [
         "site-request-public-static-site-build",
         "site",
@@ -1493,12 +1493,38 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-01",
+        "2026-06-02",
         "2026",
         "06",
-        "01"
+        "02"
       ],
-      "search_text": "site-request-public-static-site-build site request public static build public static site build request change requests change requests 2026-06-01 2026 06 01"
+      "search_text": "site-request-public-static-site-build site request public static build public static site build request change requests change requests 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "site-request-public-static-site-build-tasks",
+      "kind": "doc",
+      "title": "Public Static Site Build Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-public-static-site-build-tasks",
+      "last_updated": "2026-06-02",
+      "parent_id": "site-request-public-static-site-build",
+      "parent_title": "Public Static Site Build Request",
+      "display_meta": "2026-06-02 • Public Static Site Build Request",
+      "search_terms": [
+        "site-request-public-static-site-build-tasks",
+        "site",
+        "request",
+        "public",
+        "static",
+        "build",
+        "tasks",
+        "public static site build tasks",
+        "public static site build request",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "site-request-public-static-site-build-tasks site request public static build tasks public static site build tasks public static site build request 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-r2-media-upload-automation",
@@ -5257,21 +5283,21 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-02",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-29 • UI",
+      "display_meta": "2026-06-02 • UI",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
-        "2026-05-29",
+        "2026-06-02",
         "2026",
-        "05",
-        "29"
+        "06",
+        "02"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-06-02 2026 06 02"
     },
     {
       "id": "ui-pattern-action-menu",

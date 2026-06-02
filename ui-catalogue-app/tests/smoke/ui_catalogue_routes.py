@@ -261,6 +261,13 @@ def main(argv: list[str] | None = None) -> int:
                     if nav_item_count:
                         raise AssertionError(f"{route['path']} still renders header nav links")
 
+                page.goto(f"{base_url}/ui-catalogue/palette/", wait_until="domcontentloaded")
+                page.wait_for_selector("#uiCataloguePaletteRoot", timeout=10_000)
+                if page.locator(".uiCataloguePalette__table").count() != 1:
+                    raise AssertionError("/ui-catalogue/palette/ did not render the palette table")
+                if page.locator(".uiCatalogueShellNav__item").count():
+                    raise AssertionError("/ui-catalogue/palette/ still renders header nav links")
+
                 for viewport in ({"width": 1280, "height": 900}, {"width": 390, "height": 844}):
                     modal_results.append(check_modal_shell(page, base_url, viewport))
                     dark_theme_results.append(check_dark_theme(page, base_url, viewport))
@@ -295,6 +302,7 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "base_url": base_url,
                     "routes": len(ROUTES),
+                    "reference_routes": ["/ui-catalogue/palette/"],
                     "modal_viewports": modal_results,
                     "dark_theme_viewports": dark_theme_results,
                 },

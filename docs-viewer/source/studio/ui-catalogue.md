@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: 2026-05-29
+last_updated: 2026-06-02
 parent_id: ui
 viewable: true
 ---
@@ -22,6 +22,10 @@ Published demo pages live under:
 - `/ui-catalogue/demos/primitives/<primitive>/`
 - `/ui-catalogue/demos/patterns/<pattern>/`
 
+Reference pages live under:
+
+- `/ui-catalogue/palette/`
+
 Current demo pages:
 
 - [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/button/)
@@ -38,6 +42,8 @@ The demo links target the default UI Catalogue app port.
 If `UI_CATALOGUE_APP_PORT` is changed from `8767`, adjust the port in the browser URL.
 
 Retired Studio routes such as `/studio/ui-catalogue/demos/`, `/studio/ui-catalogue/button/`, and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the standalone demo route hierarchy.
+The retired public `/palette/` route should not be recreated; palette inspection belongs under `/ui-catalogue/palette/`.
+The palette page currently reads checked-in YAML at `ui-catalogue-app/source/palette/palette.yml`; future refresh work should convert that data to a UI Catalogue-owned JSON/JavaScript refresh path rather than restoring Jekyll data ownership.
 
 ## Demo Namespace
 
@@ -46,6 +52,7 @@ Demo implementation lives outside the production Studio namespace:
 - demo CSS: `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
 - demo JS: `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
 - demo classes: `uiCatalogueDemo*`
+- palette data: `ui-catalogue-app/source/palette/palette.yml`
 
 Do not import `studio/app/assets/css/studio.css` into demo pages to prove a primitive. Do not use `tagStudio*`, `docsViewer*`, or route-local production classes inside rendered demo markup unless the page is explicitly documenting a migration comparison.
 Do not put demo-only fragments in `_includes/`. Demo pages should own their rendered example markup directly.
@@ -82,6 +89,7 @@ The catalogue separates:
 - primitive design
 - page composition
 - interactive demo behavior
+- UI reference data such as the public CSS palette
 - live implementation auditing
 
 Use the catalogue when defining or discussing a shared element before or during implementation. Use UI Audit when checking whether live production pages actually conform to the intended pattern.
@@ -128,6 +136,7 @@ Use this structure for new catalogue work:
 
 - `ui-catalogue-app/source/demos/primitives/<primitive>/index.md`
 - `ui-catalogue-app/source/demos/patterns/<pattern>/index.md`
+- `ui-catalogue-app/source/palette/palette.yml`
 - `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
 - `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
 - `ui-catalogue-app/app/assets/docs/<primitive-or-pattern>/` for reference images

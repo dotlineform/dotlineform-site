@@ -16,7 +16,7 @@ if str(SERVER_DIR) not in sys.path:
 
 from ui_catalogue_app_config import asset_version  # noqa: E402
 from ui_catalogue_app_server import UiCatalogueAppRequestHandler, env_flag, parse_args  # noqa: E402
-from ui_catalogue_app_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view  # noqa: E402
+from ui_catalogue_app_views import UI_CATALOGUE_DEMO_ROUTES, load_palette_items, ui_catalogue_demo_view, ui_catalogue_palette_view  # noqa: E402
 
 
 def test_static_path_policy_serves_only_ui_catalogue_app_assets() -> None:
@@ -53,6 +53,22 @@ def test_demo_routes_render_standalone_shell() -> None:
     assert "/studio/app/" not in html
     assert "/assets/ui-catalogue/" not in html
     assert "/assets/css/main.css" not in html
+
+
+def test_palette_route_renders_from_ui_catalogue_owned_data() -> None:
+    items = load_palette_items(REPO_ROOT)
+    assert items
+    assert items[0]["id"] == "--text"
+
+    html = ui_catalogue_palette_view("test-version", REPO_ROOT)
+
+    assert "Palette | dotlineform UI Catalogue" in html
+    assert "/ui-catalogue/app/assets/css/ui-catalogue-shell.css?v=test-version" in html
+    assert "/ui-catalogue/app/assets/css/ui-catalogue-demo.css?v=test-version" in html
+    assert "ui-catalogue-app/source/palette/palette.yml" in html
+    assert "<td class=\"uiCataloguePalette__id\">--text</td>" in html
+    assert 'href="/palette/"' not in html
+    assert 'href="/assets/css/main.css' not in html
 
 
 def test_access_log_is_opt_in(monkeypatch) -> None:

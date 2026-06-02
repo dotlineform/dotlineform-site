@@ -29,7 +29,7 @@ if str(UI_CATALOGUE_SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(UI_CATALOGUE_SERVER_DIR))
 
 from ui_catalogue_app_config import asset_version  # noqa: E402
-from ui_catalogue_app_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view  # noqa: E402
+from ui_catalogue_app_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view, ui_catalogue_palette_view  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -77,6 +77,9 @@ class UiCatalogueAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/ui-catalogue", "/ui-catalogue/"}:
             self.send_redirect("/ui-catalogue/demos/")
+            return
+        if path in {"/ui-catalogue/palette", "/ui-catalogue/palette/"}:
+            self.send_html(ui_catalogue_palette_view(self.version, self.repo_root))
             return
         for route_path, view_id in UI_CATALOGUE_DEMO_ROUTES.items():
             if path in {route_path.rstrip("/"), route_path}:

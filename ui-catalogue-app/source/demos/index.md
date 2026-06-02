@@ -40,6 +40,12 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/ui-catalogue/demos/patterns/column-links/' | relative_url }}">column links</a></li>
     </ul>
   </section>
+  <section class="uiCatalogueDemoNav__group">
+    <h3 class="uiCatalogueDemoHeading">References</h3>
+    <ul class="uiCatalogueDemoNav__list">
+      <li><a class="uiCatalogueDemoNav__link" href="{{ '/ui-catalogue/palette/' | relative_url }}">palette</a></li>
+    </ul>
+  </section>
 </section>
 </div>
 

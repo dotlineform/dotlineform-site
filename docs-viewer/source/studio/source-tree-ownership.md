@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-05-31
+last_updated: 2026-06-02
 parent_id: architecture
 viewable: true
 ---
@@ -79,9 +79,9 @@ UI Catalogue is an isolated local demo system, not a Local Studio route family.
 
 | Path | Owner / role |
 | --- | --- |
-| `ui-catalogue-app/` | UI Catalogue demo source, demo app server, CSS, JavaScript helpers, reference assets, fixtures, and tests. |
+| `ui-catalogue-app/` | UI Catalogue demo source, palette reference data, demo app server, CSS, JavaScript helpers, reference assets, fixtures, and tests. |
 
-The active demo route namespace is `/ui-catalogue/demos/...`.
+The active route namespaces are `/ui-catalogue/demos/...` for isolated demos and `/ui-catalogue/palette/` for palette reference data.
 Retired Studio-hosted UI Catalogue routes should not be recreated.
 
 ## Docs Viewer

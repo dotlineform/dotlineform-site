@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T15:27:14Z",
+  "generated_at": "2026-06-02T17:57:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -211,14 +211,14 @@
       "doc_id": "data-models-projection-contract",
       "title": "Projection Contract",
       "added_date": "2026-05-23",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-06-02",
       "parent_id": "architecture",
       "hidden": false,
       "viewable": true,
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 10528
+      "content_text_length": 10647
     },
     {
       "scope": "studio",
@@ -267,14 +267,14 @@
       "doc_id": "source-tree-ownership",
       "title": "Source Tree Ownership",
       "added_date": "2026-05-24",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-02",
       "parent_id": "architecture",
       "hidden": false,
       "viewable": true,
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 11286
+      "content_text_length": 11380
     },
     {
       "scope": "studio",
@@ -860,15 +860,30 @@
       "doc_id": "site-request-public-static-site-build",
       "title": "Public Static Site Build Request",
       "added_date": "2026-06-01",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "hidden": false,
       "viewable": true,
       "source_path": "site-request-public-static-site-build.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-public-static-site-build",
-      "ui_status": "draft",
+      "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
-      "content_text_length": 14257
+      "content_text_length": 16143
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-public-static-site-build-tasks",
+      "title": "Public Static Site Build Tasks",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "site-request-public-static-site-build",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-public-static-site-build-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-public-static-site-build-tasks",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build-tasks.json",
+      "content_text_length": 9324
     },
     {
       "scope": "studio",
@@ -3045,14 +3060,14 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-02",
       "parent_id": "ui",
       "hidden": false,
       "viewable": true,
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6453
+      "content_text_length": 7022
     },
     {
       "scope": "studio",

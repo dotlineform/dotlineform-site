@@ -2,7 +2,7 @@
 doc_id: data-models-projection-contract
 title: Projection Contract
 added_date: 2026-05-23
-last_updated: 2026-05-24
+last_updated: 2026-06-02
 parent_id: architecture
 viewable: true
 ---
@@ -91,7 +91,7 @@ Public build configuration is part of the projection contract:
 
 The public Jekyll build should include:
 
-- home, about, recent, palette, and other public site pages
+- home, about, recent, and other public site pages
 - public catalogue pages for works, series, work details, and moments
 - public catalogue JSON projections under `assets/data/` and per-record public payloads
 - public catalogue search output under `assets/data/search/catalogue/`
@@ -104,6 +104,8 @@ The public Jekyll build should include:
 - public read-only Analysis route at `/analysis/`
 - generated Library docs payloads and search under `assets/data/docs/scopes/library/` and `assets/data/search/library/`
 - generated Analysis docs payloads and search under `assets/data/docs/scopes/analysis/` and `assets/data/search/analysis/`
+
+Palette inspection belongs to the standalone UI Catalogue app at `/ui-catalogue/palette/`, not to the public-site build surface.
 
 The public Jekyll build should not include:
 
