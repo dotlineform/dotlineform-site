@@ -2,8 +2,8 @@
 doc_id: search-catalogue-targeted-plan
 title: Catalogue Targeted Search Plan
 added_date: 2026-04-25
-last_updated: "2026-06-01"
-parent_id: search
+last_updated: 2026-06-01
+parent_id: search-catalogue-infrastructure
 ---
 # Catalogue Targeted Search Plan
 

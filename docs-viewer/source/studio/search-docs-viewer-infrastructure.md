@@ -2,7 +2,8 @@
 doc_id: search-docs-viewer-infrastructure
 title: Docs Viewer Infrastructure
 added_date: 2026-06-02
-last_updated: "2026-06-02"
+last_updated: 2026-06-02
+ui_status: review
 parent_id: search
 viewable: true
 ---

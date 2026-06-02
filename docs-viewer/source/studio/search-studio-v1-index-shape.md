@@ -3,7 +3,7 @@ doc_id: search-studio-v1-index-shape
 title: Docs Scope Index Shape
 added_date: 2026-03-31
 last_updated: "2026-05-11 14:10"
-parent_id: search
+parent_id: search-docs-viewer-infrastructure
 viewable: true
 ---
 # Docs Scope Index Shape

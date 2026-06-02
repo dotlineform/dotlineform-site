@@ -3,7 +3,7 @@ doc_id: config-search-build-json
 title: Build Config JSON
 added_date: 2026-04-25
 last_updated: 2026-06-01
-parent_id: search
+parent_id: search-catalogue-infrastructure
 viewable: true
 ---
 # Search Build Config JSON

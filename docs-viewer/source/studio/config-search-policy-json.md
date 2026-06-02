@@ -3,7 +3,7 @@ doc_id: config-search-policy-json
 title: Catalogue Search Policy JSON
 added_date: 2026-03-31
 last_updated: "2026-05-11 14:10"
-parent_id: search
+parent_id: search-catalogue-infrastructure
 viewable: true
 ---
 # Search Policy JSON

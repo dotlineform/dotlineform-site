@@ -3,7 +3,7 @@ doc_id: search-normalisation-rules
 title: Search Normalisation Rules
 added_date: 2026-04-01
 last_updated: 2026-06-01
-parent_id: search
+parent_id: search-catalogue-infrastructure
 ---
 # Search Normalisation Rules
 

@@ -3,7 +3,7 @@ doc_id: search-field-registry-definitions
 title: Search Field Definitions
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: search-field-registry
+parent_id: search-catalogue-infrastructure
 ---
 # Search Field Definitions
 
