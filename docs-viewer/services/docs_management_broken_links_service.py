@@ -20,7 +20,6 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
         {
             "scope": scope,
             "total": int(summary.get("total") or 0),
-            "not_found": int(summary.get("not_found") or 0),
         },
     )
     return payload

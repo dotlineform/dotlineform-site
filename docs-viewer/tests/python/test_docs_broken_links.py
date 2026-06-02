@@ -80,8 +80,11 @@ def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:
     with make_repo(content_html) as temp_path:
         result = docs_broken_links.audit_docs_broken_links(Path(temp_path), "studio")
 
-    assert result["summary"] == {"total": 1, "not_found": 1}
-    assert [entry["linked_page_text"] for entry in result["entries"]] == ["studio:missing-prose"]
+    assert result["summary"] == {"total": 1}
+    assert [entry["link_url"] for entry in result["entries"]] == ["/docs/?scope=studio&doc=missing-prose"]
+    assert result["entries"][0]["from_page_scope"] == "studio"
+    assert result["entries"][0]["from_page_doc_id"] == "source"
+    assert result["entries"][0]["from_page_source_path"] == "source.md"
 
 
 def main() -> None:

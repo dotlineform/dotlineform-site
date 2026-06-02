@@ -86,7 +86,6 @@ def attach_docs_activity(
 def maybe_attach_broken_links_activity(repo_root: Path, body: Dict[str, Any], payload: Dict[str, Any]) -> None:
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
     scope = normalize_scope(payload.get("scope") or body.get("scope"))
-    not_found = int(summary.get("not_found") or 0)
     total = int(summary.get("total") or 0)
     attach_docs_activity(
         repo_root,
@@ -98,9 +97,9 @@ def maybe_attach_broken_links_activity(repo_root: Path, body: Dict[str, Any], pa
         record_groups={"docs": [scope]},
         detail_items=[
             f"Ran broken-links audit for {scope} docs.",
-            f"Checked {total} link reference(s); {not_found} broken.",
+            f"Found {total} broken link(s).",
         ],
-        status="warning" if not_found else "completed",
+        status="warning" if total else "completed",
     )
 
 

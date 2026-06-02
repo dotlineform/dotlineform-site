@@ -2,7 +2,7 @@
 doc_id: scripts-docs-broken-links
 title: Broken Links Audit
 added_date: 2026-04-23
-last_updated: "2026-05-13 20:20"
+last_updated: 2026-06-02
 parent_id: docs-viewer
 viewable: true
 ---
@@ -18,7 +18,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope s
 
 This script audits Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
 
-It reports one problem type:
+It reports missing target links:
 
 - `not found`
   the link target does not resolve to a published docs page
@@ -66,6 +66,16 @@ JSON output:
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope library --json
 ```
+
+JSON entries include:
+
+- `from_page_text`
+- `from_page_url`
+- `from_page_scope`
+- `from_page_doc_id`
+- `from_page_source_path`
+- `link_text`
+- `link_url`
 
 Flags:
 

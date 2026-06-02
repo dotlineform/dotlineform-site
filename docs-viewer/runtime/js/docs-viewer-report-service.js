@@ -68,6 +68,17 @@ export function createDocsViewerReportService(options) {
         payload: payload,
         requireOkEnvelope: true
       }));
+    },
+    openSourceDoc: function (request) {
+      return fetchReportJson("/docs/open-source", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {
+          scope: cleanString(request && request.scope).toLowerCase(),
+          doc_id: cleanString(request && request.docId),
+          editor: cleanString(request && request.editor) === "vscode" ? "vscode" : "default"
+        },
+        requireOkEnvelope: true
+      }));
     }
   };
 }

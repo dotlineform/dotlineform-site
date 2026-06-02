@@ -3453,7 +3453,10 @@ def assert_report_service_contract(page: Page) -> None:
                     return response(true, 200, { ok: true, scopes: [] });
                 }
                 if (url.endsWith('/docs/broken-links')) {
-                    return response(true, 200, { ok: true, entries: [{ problem: 'missing' }] });
+                    return response(true, 200, { ok: true, entries: [{ link_url: '/docs/?scope=studio&doc=missing' }] });
+                }
+                if (url.endsWith('/docs/open-source')) {
+                    return response(true, 200, { ok: true, path: 'docs-viewer/source/studio/source.md' });
                 }
                 return response(false, 404, { error: 'not found' });
             };
@@ -3466,6 +3469,11 @@ def assert_report_service_contract(page: Page) -> None:
                 scope: 'Studio',
                 activityContext: { control_id: 'docsBrokenLinksReportRun' }
             });
+            const openSource = await service.openSourceDoc({
+                scope: 'Studio',
+                docId: 'source',
+                editor: 'vscode'
+            });
             let missingBaseMessage = '';
             try {
                 await module.createDocsViewerReportService({ fetch: fetchImpl }).readSourceConfig();
@@ -3475,7 +3483,8 @@ def assert_report_service_contract(page: Page) -> None:
             return {
                 baseUrl: service.baseUrl,
                 sourceScopes: sourceConfig.scopes.length,
-                brokenProblems: brokenLinks.entries.map((entry) => entry.problem),
+                brokenLinks: brokenLinks.entries.map((entry) => entry.link_url),
+                openSourcePath: openSource.path,
                 requests,
                 missingBaseMessage
             };
@@ -3483,7 +3492,11 @@ def assert_report_service_contract(page: Page) -> None:
     )
     if result["baseUrl"] != "http://127.0.0.1:8789":
         raise AssertionError(f"report service base URL normalization changed: {result!r}")
-    if result["sourceScopes"] != 0 or result["brokenProblems"] != ["missing"]:
+    if (
+        result["sourceScopes"] != 0
+        or result["brokenLinks"] != ["/docs/?scope=studio&doc=missing"]
+        or result["openSourcePath"] != "docs-viewer/source/studio/source.md"
+    ):
         raise AssertionError(f"report service response contract changed: {result!r}")
     if result["requests"] != [
         {
@@ -3503,6 +3516,18 @@ def assert_report_service_contract(page: Page) -> None:
             "body": {
                 "scope": "studio",
                 "activity_context": {"control_id": "docsBrokenLinksReportRun"},
+            },
+        },
+        {
+            "url": "http://127.0.0.1:8789/docs/open-source",
+            "method": "POST",
+            "cache": "no-store",
+            "accept": "application/json",
+            "contentType": "application/json",
+            "body": {
+                "scope": "studio",
+                "doc_id": "source",
+                "editor": "vscode",
             },
         },
     ]:

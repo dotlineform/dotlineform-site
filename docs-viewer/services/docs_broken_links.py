@@ -95,10 +95,6 @@ def normalize_text(value: Any) -> str:
     return WHITESPACE_PATTERN.sub(" ", str(value or "")).strip()
 
 
-def humanize_problem(value: str) -> str:
-    return value.replace("_", " ")
-
-
 def detect_repo_root(explicit_root: str | None = None) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
@@ -222,14 +218,6 @@ def parse_docs_target(resolved_href: str) -> dict[str, str] | None:
     return None
 
 
-def linked_page_text_for_missing(target: dict[str, str], resolved_href: str) -> str:
-    if target.get("kind") == "viewer":
-        scope = normalize_text(target.get("scope"))
-        doc_id = normalize_text(target.get("doc_id"))
-        return f"{scope}:{doc_id}" if scope and doc_id else normalize_text(resolved_href)
-    return normalize_text(target.get("path")) or normalize_text(resolved_href)
-
-
 def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> bool:
     fragment = normalize_text(target.get("fragment"))
     if not fragment:
@@ -275,17 +263,20 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             link_text = normalize_text(anchor.get("text")) or normalize_text(raw_href) or normalize_text(resolved_href)
             from_page_text = doc.meta.title
             from_page_url = doc.meta.viewer_url
+            from_page_scope = doc.meta.scope
+            from_page_doc_id = doc.meta.doc_id
+            from_page_source_path = doc.meta.source_path
 
             if target.get("kind") == "source_markdown":
                 entries.append(
                     {
-                        "problem": "not found",
-                        "linked_page_text": linked_page_text_for_missing(target, resolved_href),
-                        "linked_page_url": resolved_href,
                         "link_text": link_text,
                         "link_url": resolved_href,
                         "from_page_text": from_page_text,
                         "from_page_url": from_page_url,
+                        "from_page_scope": from_page_scope,
+                        "from_page_doc_id": from_page_doc_id,
+                        "from_page_source_path": from_page_source_path,
                     }
                 )
                 continue
@@ -295,33 +286,29 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             if docs_by_key.get((target_scope, target_doc_id)) is None:
                 entries.append(
                     {
-                        "problem": "not found",
-                        "linked_page_text": linked_page_text_for_missing(target, resolved_href),
-                        "linked_page_url": resolved_href,
                         "link_text": link_text,
                         "link_url": resolved_href,
                         "from_page_text": from_page_text,
                         "from_page_url": from_page_url,
+                        "from_page_scope": from_page_scope,
+                        "from_page_doc_id": from_page_doc_id,
+                        "from_page_source_path": from_page_source_path,
                     }
                 )
 
     entries.sort(
         key=lambda item: (
-            item["problem"],
             item["from_page_text"].lower(),
-            item["linked_page_text"].lower(),
             item["link_text"].lower(),
+            item["link_url"].lower(),
         )
     )
-
-    not_found_count = sum(1 for item in entries if item["problem"] == "not found")
 
     return {
         "ok": True,
         "scope": normalized_scope,
         "summary": {
             "total": len(entries),
-            "not_found": not_found_count,
         },
         "entries": entries,
     }
@@ -331,15 +318,12 @@ def print_human_summary(payload: dict[str, Any]) -> None:
     scope = normalize_text(payload.get("scope"))
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
     total = int(summary.get("total") or 0)
-    not_found = int(summary.get("not_found") or 0)
     print(f"Docs broken links for {scope}: {total} issue(s)")
-    print(f"  not found: {not_found}")
     for entry in payload.get("entries") or []:
         if not isinstance(entry, dict):
             continue
         print(
-            f"- {humanize_problem(str(entry.get('problem') or ''))}: "
-            f"{normalize_text(entry.get('link_text'))} -> {normalize_text(entry.get('linked_page_text'))} "
+            f"- {normalize_text(entry.get('link_text'))} -> {normalize_text(entry.get('link_url'))} "
             f"(from {normalize_text(entry.get('from_page_text'))})"
         )
 

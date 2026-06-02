@@ -17,14 +17,7 @@ Use this section for:
 - cross-page runtime ordering rules
 - how the current JSON-led catalogue workflow feeds those runtime surfaces
 
-This section does not try to be the canonical home for:
-
-- UI structure, CSS, or interaction design
-  use [Design](/docs/?scope=studio&doc=design)
-- detailed JSON or worksheet schema documentation
-  keep that in focused data-model docs rather than embedding large schema explanations here
-
-Related references:
+## References
 
 - **[Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)** for the maintained boundary between Studio source, Docs Viewer source, public Jekyll source, generated output, and local working output
 - **[Data Flow](/docs/?scope=studio&doc=data-flow)** for which generated artifacts each public route reads at runtime

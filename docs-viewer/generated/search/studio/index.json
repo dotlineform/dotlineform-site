@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9d5b1153b92a9cc3ac51735098d8180e",
-    "generated_at_utc": "2026-06-02T05:32:37Z",
+    "version": "blake2b-4720985dedf3a2fef5f1d4cfe1b0a4e2",
+    "generated_at_utc": "2026-06-02T07:02:00Z",
     "count": 230
   },
   "entries": [
@@ -2884,10 +2884,10 @@
       "kind": "doc",
       "title": "Broken Links",
       "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-22 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "docs-broken-links",
         "docs",
@@ -2896,22 +2896,22 @@
         "broken links",
         "docs viewer",
         "viewer",
-        "2026-05-22",
+        "2026-06-02",
         "2026",
-        "05",
-        "22"
+        "06",
+        "02"
       ],
-      "search_text": "docs-broken-links docs broken links broken links docs viewer viewer 2026-05-22 2026 05 22"
+      "search_text": "docs-broken-links docs broken links broken links docs viewer viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-docs-broken-links",
       "kind": "doc",
       "title": "Broken Links Audit",
       "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "scripts-docs-broken-links",
         "scripts",
@@ -2922,13 +2922,12 @@
         "audit",
         "docs viewer",
         "viewer",
-        "2026-05-13 20:20",
+        "2026-06-02",
         "2026",
-        "05",
-        "13",
-        "20"
+        "06",
+        "02"
       ],
-      "search_text": "scripts-docs-broken-links scripts docs broken links broken links audit audit docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "scripts-docs-broken-links scripts docs broken links broken links audit audit docs viewer viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "scripts-docs-builder",

@@ -245,7 +245,7 @@ def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:
                 "scope": "studio",
             },
         }
-        payload = {"ok": True, "scope": "studio", "summary": {"total": 4, "not_found": 2}}
+        payload = {"ok": True, "scope": "studio", "summary": {"total": 2}}
 
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
 
@@ -253,7 +253,7 @@ def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:
         entry = activity_entries(repo_root)[0]
         assert entry["status"] == "warning"
         assert entry["record_groups"]["docs"]["sample_ids"] == ["studio"]
-        assert "Checked 4 link reference(s); 2 broken." in entry["detail_items"]
+        assert "Found 2 broken link(s)." in entry["detail_items"]
 
 
 def main() -> None:

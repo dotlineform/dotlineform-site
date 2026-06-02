@@ -1,6 +1,6 @@
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
-const SORT_KEYS = Object.freeze(["problem", "fromPage", "linkedPage", "link"]);
+const SORT_KEYS = Object.freeze(["fromPage", "link"]);
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -42,6 +42,11 @@ function reportService(context) {
   return context && context.reportService && typeof context.reportService.runBrokenLinksAudit === "function"
     ? context.reportService
     : null;
+}
+
+function openSourceService(context) {
+  const service = reportService(context);
+  return service && typeof service.openSourceDoc === "function" ? service : null;
 }
 
 function reportActivityContext(scope) {
@@ -103,16 +108,20 @@ function appendLinkCell(row, state, className, label, href) {
   row.appendChild(link);
 }
 
-function appendTextCell(row, className, text) {
-  const cell = document.createElement("span");
-  cell.className = className;
-  cell.textContent = cleanString(text);
-  row.appendChild(cell);
+function appendSourceCell(row, state, entry) {
+  const link = document.createElement("a");
+  link.className = "docsViewerReport__cellLink docsViewerReport__title";
+  link.href = manageModeHref(entry.from_page_url, state.scopes);
+  link.dataset.openSource = "vscode";
+  link.dataset.scope = cleanString(entry.from_page_scope || state.selectedScope).toLowerCase();
+  link.dataset.docId = cleanString(entry.from_page_doc_id);
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = cleanString(entry.from_page_text) || cleanString(entry.from_page_source_path) || cleanString(entry.from_page_url) || "source";
+  row.appendChild(link);
 }
 
 function sortValue(entry, sortKey) {
-  if (sortKey === "problem") return cleanString(entry.problem);
-  if (sortKey === "linkedPage") return cleanString(entry.linked_page_text || entry.linked_page_url);
   if (sortKey === "link") return cleanString(entry.link_text || entry.link_url);
   return cleanString(entry.from_page_text || entry.from_page_url);
 }
@@ -157,9 +166,7 @@ function renderScopeSelect(state) {
 
 function renderHead(state) {
   clearNode(state.headNode);
-  state.headNode.appendChild(sortButton(state, "problem", "problem"));
   state.headNode.appendChild(sortButton(state, "fromPage", "from page"));
-  state.headNode.appendChild(sortButton(state, "linkedPage", "linked page"));
   state.headNode.appendChild(sortButton(state, "link", "link"));
 }
 
@@ -178,10 +185,8 @@ function renderRows(state) {
   entries.forEach((entry) => {
     const row = document.createElement("li");
     row.className = "docsViewerReport__row";
-    appendTextCell(row, "docsViewerReport__cellMeta", cleanString(entry.problem));
-    appendLinkCell(row, state, "docsViewerReport__cellLink docsViewerReport__title", entry.from_page_text, entry.from_page_url);
-    appendLinkCell(row, state, "docsViewerReport__cellLink", entry.linked_page_text, entry.linked_page_url);
-    appendLinkCell(row, state, "docsViewerReport__cellLink", entry.link_text, entry.link_url);
+    appendSourceCell(row, state, entry);
+    appendLinkCell(row, state, "docsViewerReport__cellLink", entry.link_text, entry.from_page_url);
     state.rowsNode.appendChild(row);
   });
 }
@@ -227,6 +232,24 @@ function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
     runAudit(state, true);
   });
+  state.rowsNode.addEventListener("click", (event) => {
+    const link = event.target instanceof Element ? event.target.closest("[data-open-source]") : null;
+    if (!link) return;
+    const service = openSourceService(state.context);
+    const scope = cleanString(link.getAttribute("data-scope")).toLowerCase();
+    const docId = cleanString(link.getAttribute("data-doc-id"));
+    if (!service || !scope || !docId) return;
+    event.preventDefault();
+    service.openSourceDoc({
+      scope,
+      docId,
+      editor: "vscode"
+    }).then(() => {
+      state.statusNode.textContent = "Opened source in VS Code.";
+    }).catch((error) => {
+      state.statusNode.textContent = error && error.message ? error.message : "Failed to open source in VS Code.";
+    });
+  });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element ? event.target.closest("[data-report-sort]") : null;
     if (!button) return;
@@ -245,7 +268,7 @@ function attachEvents(state) {
 function renderShell(root) {
   clearNode(root);
   root.dataset.reportId = "docs_broken_links";
-  root.dataset.reportColumns = "4";
+  root.dataset.reportColumns = "2";
 
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";

@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: Broken Links
 added_date: 2026-04-23
-last_updated: 2026-05-22
+last_updated: 2026-06-02
 ui_status: report
 parent_id: docs-viewer
 viewable: true
@@ -26,7 +26,7 @@ The scope menu is rendered from the shared Docs Viewer config:
 
 ## What It Checks
 
-The report shows one problem type:
+The report lists missing target links:
 
 - `not found`
   the link points at a docs page that does not exist
@@ -43,16 +43,13 @@ Current rule:
 
 The report table shows:
 
-- `problem`
 - `from page`
-- `linked page`
 - `link`
 
 Current behavior:
 
-- `linked page`, `link`, and `from page` all open in a new tab
-- docs-viewer result links open with `mode=manage` so the target page can be inspected or edited directly
-- when the problem is `not found`, the first two links intentionally point at the failing target so the broken case is visible directly
+- `from page` opens the source Markdown file in Visual Studio Code through the local Docs management service
+- `link` opens the source doc in Docs Viewer with `mode=manage` so the page containing the broken link can be inspected directly
 - all result columns are sortable
 - the default sort is `from page` ascending
 
