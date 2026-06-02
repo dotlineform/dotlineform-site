@@ -31,19 +31,8 @@ var/test-runs/
 .env.local
 var/local/
 
-# Structured docs-log source records
-!studio/workflows/change-requests/logs/
-!studio/workflows/change-requests/logs/entries/
-!studio/workflows/change-requests/logs/entries/*.json
-
-# Generated structured docs-log projections
-studio/workflows/change-requests/generated/*.json
-studio/workflows/change-requests/reports/*.json
-
-# Studio local backup output
+# local output
 var/studio/activity/
-var/studio/backups/
-var/studio/catalogue/backups/
 var/studio/reports/
 var/studio/risk/
 var/docs/
