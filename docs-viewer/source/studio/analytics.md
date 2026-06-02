@@ -2,7 +2,7 @@
 doc_id: analytics
 title: Analytics
 added_date: "2026-05-06 18:19"
-last_updated: 2026-05-30
+last_updated: 2026-06-02
 parent_id: ""
 ---
 # Analytics
@@ -27,7 +27,7 @@ Analytics owns:
 - series tags,
 - series tag editing,
 - Data Sharing routes/APIs,
-- semantic-reference maintenance,
+- semantic-reference product direction and future Analytics-hosted maintenance modules,
 - document analysis,
 - future visualisation workflows.
 
@@ -40,3 +40,9 @@ Current source boundary:
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
 - `analytics-app/data/canonical/` owns canonical tag source data. Raw local browser access, where useful for diagnostics or smoke tests, is under `/analytics/data/canonical/...`.
 - `data-sharing/` owns the headless Data Sharing registry, config, workflow dispatch, package I/O, and domain adapters used by Analytics.
+
+Semantic-reference note:
+
+- current `[[ref:...]]` token parsing, generated relationship artifacts, and the management report are still implemented in Docs Viewer because the tokens are authored in Docs Viewer source documents
+- Analytics owns the direction for future semantic-reference target support, tag integration, editor support data, document analysis, and visualisation/reference modules
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) tracks the boundary alignment work before expanding the feature

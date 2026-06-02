@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T18:26:47Z",
+  "generated_at": "2026-06-02T18:48:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -11,14 +11,14 @@
       "doc_id": "analytics",
       "title": "Analytics",
       "added_date": "2026-05-06 18:19",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-02",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
-      "content_text_length": 1424
+      "content_text_length": 1975
     },
     {
       "scope": "studio",
@@ -680,7 +680,7 @@
       "doc_id": "site-request-docs-semantic-references-v2",
       "title": "Docs Semantic References v2 Request",
       "added_date": "2026-05-27",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "hidden": false,
       "viewable": true,
@@ -688,14 +688,14 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
-      "content_text_length": 10842
+      "content_text_length": 13316
     },
     {
       "scope": "studio",
       "doc_id": "site-request-docs-semantic-references",
       "title": "Docs Semantic References Request",
       "added_date": "2026-05-18",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-02",
       "parent_id": "site-request-docs-semantic-references-v2",
       "hidden": false,
       "viewable": true,
@@ -703,7 +703,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 18441
+      "content_text_length": 20112
     },
     {
       "scope": "studio",
@@ -1845,7 +1845,7 @@
       "doc_id": "docs-viewer-semantic-references",
       "title": "Semantic References",
       "added_date": "2026-05-18",
-      "last_updated": "2026-05-18",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
@@ -1855,7 +1855,7 @@
       "viewer_report": "semantic_references",
       "viewer_report_access": "manage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references.json",
-      "content_text_length": 348
+      "content_text_length": 3777
     },
     {
       "scope": "studio",

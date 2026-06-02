@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-16821c3d818c430c0f8ec7f51023cb7f",
-    "generated_at_utc": "2026-06-02T18:26:08Z",
+    "version": "blake2b-d79964c7db38aa46dd7b654b87c58f97",
+    "generated_at_utc": "2026-06-02T18:48:25Z",
     "count": 229
   },
   "entries": [
@@ -12,16 +12,16 @@
       "kind": "doc",
       "title": "Analytics",
       "href": "/docs/?scope=studio&doc=analytics",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
       "search_terms": [
         "analytics",
-        "2026-05-30",
+        "2026-06-02",
         "2026",
-        "05",
-        "30"
+        "06",
+        "02"
       ],
-      "search_text": "analytics 2026-05-30 2026 05 30"
+      "search_text": "analytics 2026-06-02 2026 06 02"
     },
     {
       "id": "dimension-visualisation-projection",
@@ -1135,10 +1135,10 @@
       "kind": "doc",
       "title": "Docs Semantic References v2 Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
+      "display_meta": "2026-06-02 • Change Requests",
       "search_terms": [
         "site-request-docs-semantic-references-v2",
         "site",
@@ -1151,22 +1151,22 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-27",
+        "2026-06-02",
         "2026",
-        "05",
-        "27"
+        "06",
+        "02"
       ],
-      "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-05-27 2026 05 27"
+      "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-docs-semantic-references",
       "kind": "doc",
       "title": "Docs Semantic References Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-02",
       "parent_id": "site-request-docs-semantic-references-v2",
       "parent_title": "Docs Semantic References v2 Request",
-      "display_meta": "2026-05-19 • Docs Semantic References v2 Request",
+      "display_meta": "2026-06-02 • Docs Semantic References v2 Request",
       "search_terms": [
         "site-request-docs-semantic-references",
         "site",
@@ -1177,12 +1177,12 @@
         "docs semantic references request",
         "docs semantic references v2 request",
         "v2",
-        "2026-05-19",
+        "2026-06-02",
         "2026",
-        "05",
-        "19"
+        "06",
+        "02"
       ],
-      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request docs semantic references v2 request v2 2026-05-19 2026 05 19"
+      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request docs semantic references v2 request v2 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-docs-toolkit-extraction",
@@ -3228,10 +3228,10 @@
       "kind": "doc",
       "title": "Semantic References",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
-      "last_updated": "2026-05-18",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-18 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references",
         "docs",
@@ -3240,12 +3240,12 @@
         "references",
         "semantic references",
         "docs viewer",
-        "2026-05-18",
+        "2026-06-02",
         "2026",
-        "05",
-        "18"
+        "06",
+        "02"
       ],
-      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-05-18 2026 05 18"
+      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "docs-viewer-source-config-report",

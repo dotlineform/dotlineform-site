@@ -2,7 +2,7 @@
 doc_id: site-request-docs-semantic-references
 title: Docs Semantic References Request
 added_date: 2026-05-18
-last_updated: 2026-05-19
+last_updated: 2026-06-02
 ui_status: paused
 parent_id: site-request-docs-semantic-references-v2
 viewable: true
@@ -25,6 +25,15 @@ Implementation note:
 - v1 is implemented in `docs-viewer/build/build_docs.py` for `work`, `series`, and `moment` references.
 - Generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`.
 - The management report is [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references).
+- The follow-on parent request, [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), owns the current alignment work now that Analytics owns the semantic-reference product direction.
+
+Current implementation caveat:
+
+- the v1 design says Docs Viewer should validate supported semantic types/actions, not target-object existence
+- the implemented v1 resolver currently reads catalogue records and records `target_status`
+- missing or non-published targets warn and render as inert spans, not as ordinary route-derived links
+- this is useful as host-aware feedback, but it does not match the clarified v2 model where missing targets are link-health/editor-support concerns rather than parser validity concerns
+- changing that behavior requires code and fixture updates, not just a documentation change
 
 The immediate need is to write a normal inline link to a catalogue work while also recording that the source doc semantically references a stable persisted record such as `work:00638`.
 
@@ -342,6 +351,11 @@ V1 rendering policy:
 The docs builder should not hard-code tag, work, or series policy directly into token parsing.
 Parsing should produce a neutral token object, and the resolver should own registry-specific behavior.
 
+Implemented v1 currently goes further than this target model.
+It uses catalogue records to resolve titles, hrefs, publication status, and missing-target status.
+That means the current generated relationship artifacts can contain `target_status: "missing"` or a non-published catalogue status, and the rendered document can contain an inert span for a syntactically valid target id.
+The v2 request should decide whether to preserve that host-aware validation or refactor it back to route-derived links plus separate broken-link/editor diagnostics.
+
 ## V1 Implementation Plan
 
 ### Task 1. Define Token Parser
@@ -532,6 +546,12 @@ The audit can then report broken semantic-reference hrefs or unsupported semanti
 - actions outside the allowlist warn and render as inert annotated text
 - reverse-reference reports are Docs Viewer reports
 - semantic links are dotlineform/Studio-specific and are not part of portable Docs Viewer core
+
+Implementation caveat:
+
+- the current code does not fully match the first two decisions
+- current missing and non-published catalogue targets are warning states that render as inert spans
+- v2 must either update the implementation and fixtures to match these decisions, or replace these decisions with an explicit host-aware validation policy
 
 ## Acceptance Criteria
 

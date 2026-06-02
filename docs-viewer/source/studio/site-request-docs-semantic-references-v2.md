@@ -2,7 +2,7 @@
 doc_id: site-request-docs-semantic-references-v2
 title: Docs Semantic References v2 Request
 added_date: 2026-05-27
-last_updated: 2026-05-27
+last_updated: 2026-06-02
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -13,7 +13,8 @@ Status:
 
 - proposed
 - this needs to happen **before** [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
-- now a module within Analytics
+- product and maintenance direction now belongs with Analytics
+- current v1 implementation still runs through Docs Viewer build/runtime/report code
 
 ## Summary
 
@@ -32,6 +33,37 @@ Since then, the broader Docs Viewer direction has become clearer:
 - panel modules can display relationship data, but host projects must provide that data unless Docs Viewer later defines document-derived data classes
 
 V2 should first review the v1 implementation against those decisions, then add only the infrastructure needed for the semantic-reference editor and future hosted relationship views.
+
+## Current State Snapshot
+
+As of 2026-06-02, semantic references are split across current implementation ownership and target product ownership.
+
+Current implemented behavior:
+
+- authored `[[ref:...]]` tokens live in Docs Viewer Markdown source, including `docs-viewer/source/analysis/3-symbols.md`
+- parsing, resolving, rendering, diagnostics, and generated relationship artifacts are implemented in `docs-viewer/build/build_docs.py`
+- generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`
+- the management report is still a Docs Viewer report, [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
+- generated report data is read browser-side from `references/index.json` and `references/by-target/`
+
+Target ownership direction:
+
+- Analytics owns the product direction for semantic-reference maintenance, target support, tag integration, document analysis, and future visualisation/reference modules
+- Docs Viewer should continue to own generic source parsing, document rendering, generated docs payloads, and generated docs relationship artifacts while those artifacts are derived from Docs Viewer source documents
+- Analytics-owned modules can consume or extend those artifacts, but should not make portable Docs Viewer core depend on dotlineform-only semantic data
+- if semantic-reference authoring or reference panels become Analytics-hosted workflows, the migration should be explicit about which code moves and which Docs Viewer build contracts remain
+
+Known v1 drift against the clarified model:
+
+- v2 says Docs Viewer should validate supported semantic type/action, not target-object existence
+- current v1 code reads catalogue records and treats missing or non-published targets as warnings with `target_status`
+- current v1 rendering only emits a navigable link when the catalogue record exists and is published; missing or draft records render as inert spans
+- current fixtures also encode the missing/non-published behavior, so alignment is a code-and-test decision, not just a documentation update
+
+This request should therefore start with an explicit v1 alignment decision:
+
+- either keep the current catalogue-aware behavior and document it as intentional host validation
+- or refactor v1 so allowed semantic types/actions always produce route-derived links, leaving missing target detection to link-health audits and Analytics/editor support data
 
 ## Reason
 
