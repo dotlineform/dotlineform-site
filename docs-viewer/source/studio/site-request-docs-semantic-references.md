@@ -11,7 +11,8 @@ viewable: true
 
 Status:
 
-- Implemented v1
+- historical v1 request
+- v1 implementation details are now documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation)
 - affected-doc build input is implemented
 - see remaining follow-up section
 
@@ -22,8 +23,8 @@ Add an authored semantic-reference token for Docs Viewer Markdown.
 
 Implementation note:
 
-- v1 is implemented in `docs-viewer/build/build_docs.py` for `work`, `series`, and `moment` references.
-- Generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`.
+- v1 is implemented, but this document is the original request record, not the current implementation contract.
+- Current implementation details live in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
 - The management report is [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references).
 - The follow-on parent request, [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), owns the current alignment work now that Analytics owns the semantic-reference product direction.
 
@@ -34,6 +35,12 @@ Current implementation caveat:
 - missing or non-published targets warn and render as inert spans, not as ordinary route-derived links
 - this is useful as host-aware feedback, but it does not match the clarified v2 model where missing targets are link-health/editor-support concerns rather than parser validity concerns
 - changing that behavior requires code and fixture updates, not just a documentation change
+
+Historical-request note:
+
+- sections below describe the requested v1 behavior and decisions as originally framed
+- when this document conflicts with [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation), treat the implementation document as the current behavior source of truth
+- when this document conflicts with [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), treat the v2 request as the current planned direction
 
 The immediate need is to write a normal inline link to a catalogue work while also recording that the source doc semantically references a stable persisted record such as `work:00638`.
 

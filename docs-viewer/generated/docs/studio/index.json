@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T18:48:25Z",
+  "generated_at": "2026-06-02T19:58:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -688,7 +688,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
-      "content_text_length": 13316
+      "content_text_length": 15956
     },
     {
       "scope": "studio",
@@ -703,7 +703,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 20112
+      "content_text_length": 20586
     },
     {
       "scope": "studio",
@@ -722,10 +722,25 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-viewer-markdown-editor",
+      "title": "Docs Viewer Markdown Editor Request",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "change-requests",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-markdown-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor.json",
+      "content_text_length": 10132
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
       "title": "Docs Viewer Multi-Panel App Shell Request",
       "added_date": "2026-05-27",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "hidden": false,
       "viewable": true,
@@ -733,7 +748,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 5018
+      "content_text_length": 7915
     },
     {
       "scope": "studio",
@@ -755,7 +770,7 @@
       "doc_id": "site-request-docs-viewer-semantic-reference-editor",
       "title": "Docs Viewer Semantic Reference Editor Request",
       "added_date": "2026-05-27",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "hidden": false,
       "viewable": true,
@@ -763,7 +778,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
-      "content_text_length": 15273
+      "content_text_length": 11965
     },
     {
       "scope": "studio",
@@ -1684,14 +1699,14 @@
       "doc_id": "docs-viewer-panel-hosts",
       "title": "Panel Hosts",
       "added_date": "2026-05-28",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer-panel-hosts.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
-      "content_text_length": 6963
+      "content_text_length": 17277
     },
     {
       "scope": "studio",
@@ -1855,7 +1870,21 @@
       "viewer_report": "semantic_references",
       "viewer_report_access": "manage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references.json",
-      "content_text_length": 3777
+      "content_text_length": 1113
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-semantic-references-implementation",
+      "title": "Semantic References Implementation",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "docs-viewer",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-semantic-references-implementation.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-implementation.json",
+      "content_text_length": 7921
     },
     {
       "scope": "studio",

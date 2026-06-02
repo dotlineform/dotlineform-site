@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-semantic-reference-editor
 title: Docs Viewer Semantic Reference Editor Request
 added_date: 2026-05-27
-last_updated: 2026-05-27
+last_updated: 2026-06-02
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -12,22 +12,18 @@ viewable: true
 Status:
 
 - proposed
-- this can only happen **after** [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
+- depends on [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+- depends on [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), especially the semantic-reference registry
 
 ## Summary
 
-Add a manage-mode Markdown source view that helps authors create Docs Viewer semantic-reference tokens.
+Add semantic-reference token creation tools to the manage-mode Markdown editor.
 
-The v1 workflow is intentionally narrow:
+This request builds on the source editing and rebuild workflow defined in [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor).
+It does not create the Markdown editor itself.
 
-- the document panel can switch from rendered view to editable Markdown source view
-- the user edits the source text normally
-- the user can select text and use semantic-reference controls to wrap that text in a supported token
-- the user saves once by clicking `Rebuild doc`
-- the backend writes the full source, runs a targeted rebuild, and the viewer switches back to rendered view
-
-This is not intended to become a full Markdown editor.
-The special authoring UI should focus on semantic-reference insertion.
+The goal is to let an author select text in the Markdown source buffer, choose a supported semantic target, and insert a valid semantic-reference token into the local editor buffer.
+The edited source is still written and rebuilt only through the Markdown editor's `Rebuild doc` action.
 
 ## Reason
 
@@ -39,92 +35,58 @@ Docs semantic references are currently authored by typing tokens such as:
 
 That syntax is compact and useful, but it is error-prone when authors have to type target kinds, ids, labels, and punctuation manually.
 
-The Docs Viewer already knows the selected document, management mode, and supported generated/catalogue data.
-It can provide a safer local authoring workflow:
+Once the Markdown editor exists, Docs Viewer can provide a constrained local helper:
 
-- load the current Markdown source
-- let the author select the intended label text
-- choose a supported reference target through constrained controls
+- use the current text selection as the visible label
+- choose a supported semantic-reference type
+- choose or enter a target id through registry-driven controls
 - insert the valid token around the selected text
-- rebuild the document through the existing local management/rebuild boundary
+- leave the change in the local editor buffer until the user clicks `Rebuild doc`
 
-The goal is to reduce token authoring errors without hiding the underlying Markdown source model.
-This editor is specific to this repo's Studio/dotlineform semantic links.
-It is not a portable Docs Viewer authoring feature for arbitrary installs.
+The helper should reduce token authoring errors without hiding the underlying Markdown source model.
+It is specific to this repo's dotlineform semantic links and should be omitted from portable installs unless a future host-extension contract provides equivalent registry metadata.
 
 ## Goals
 
-- provide a manage-only Markdown source view for the current document
-- allow normal text editing in the source view
-- add semantic-reference insertion helpers for selected text
-- keep token insertion local in the editor buffer until the user clicks `Rebuild doc`
-- save the full edited source once and rebuild automatically
-- switch back to rendered document view after a successful rebuild
-- show rebuild diagnostics, warnings, and errors in the viewer
-- protect against overwriting external edits with a revision or mtime guard
-- validate front matter/source metadata enough to preserve the Docs Viewer source contract
-- rely on the existing builder for semantic-reference parsing, rendering, and warning behavior
+- add semantic-reference insertion controls to the Markdown source editor
+- use the semantic-reference registry as the source of truth for supported types, actions, ownership, target data, and surfacing
+- allow selected text to be wrapped in a supported semantic-reference token
+- keep token insertion local in the editor buffer until `Rebuild doc`
+- provide target picker/search controls where registry support data exists
+- allow a controlled manual target-id entry path where appropriate
+- rely on the existing builder for token parsing, rendered output, generated relationship artifacts, and warning behavior
+- keep semantic insertion logic in focused browser modules
+- avoid adding repo-specific semantic editing to portable Docs Viewer core
 
 ## Non-Goals
 
+- no Markdown source read/write/rebuild endpoints in this request
+- no standalone Markdown editor implementation in this request
 - no rendered HTML editing
 - no live preview requirement
 - no autosave
-- no application-level undo stack
 - no full Markdown formatting toolbar
-- no custom Markdown linting beyond front matter/source-contract validation
-- no attempt to prevent all possible Markdown authoring mistakes
+- no generic semantic-link engine for downstream installs
 - no public-route authoring UI
 - no broad rewrite of the existing semantic-reference builder pipeline
-- no portable Docs Viewer semantic-link authoring feature
-- no generic semantic-link engine for downstream installs
-
-Native textarea or browser-level undo behavior is acceptable if provided by the browser or editor component.
-The Docs Viewer should not build its own operation history for v1.
+- no graph or reference-panel UI in this slice
+- no requirement to validate target object existence before insertion
 
 ## Product Model
 
-The v1 editor is a manage-mode authoring view.
-It is closer to editing the source file directly than to using a WYSIWYG editor.
-It exists because Studio owns the catalogue works, series, moments, and tags that make dotlineform semantic links meaningful.
+The semantic-reference editor is an optional tool inside the manage-mode Markdown source editor.
 
-The user accepts the normal risks of source editing, including the possibility of malformed Markdown.
-The value added by Docs Viewer is focused semantic-reference insertion, rebuild orchestration, and source-contract validation.
+It should expose:
 
-Initial document panel views:
+- semantic-reference type selection driven by the registry
+- target picker/search or manual target-id entry based on registry support data
+- selected-text label handling
+- token preview or clear insertion summary
+- insert action that mutates only the local editor buffer
+- validation messages for unsupported type/action, missing selected text, missing target id, or unavailable support data
 
-- `rendered`: existing generated document payload view
-- `markdown-source`: manage-only editable Markdown source view
-
-The source view should expose:
-
-- editable source text
-- dirty-state indication
-- `Rebuild doc` action
-- cancel/back-to-rendered action for abandoning unsaved browser-buffer changes
-- semantic-reference insertion controls
-- target picker/search for supported reference kinds
-- rebuild diagnostics after save/rebuild
-
-The action should be named `Rebuild doc`, not `Save`, because the commit point writes source and regenerates the rendered payload.
-
-## V1 Workflow
-
-1. User opens a document in `/docs/?mode=manage`.
-2. User clicks a `Markdown source` or equivalent document-panel view control.
-3. Viewer requests the current source Markdown and source revision token.
-4. Viewer displays the source in an editable source view.
-5. User edits source normally.
-6. User selects text in the source view.
-7. User chooses a semantic-reference kind and target.
-8. Viewer wraps selected text in the matching token in the local editor buffer.
-9. User repeats edits or token insertions as needed.
-10. User clicks `Rebuild doc`.
-11. Frontend sends the full edited source plus source revision token once.
-12. Backend checks the revision token, parses and validates front matter/source metadata, writes the source, and runs a targeted rebuild.
-13. Viewer reloads the generated document payload.
-14. Document panel switches back to rendered view.
-15. Viewer shows rebuild warnings or errors.
+The editor should not write source when a token is inserted.
+The commit point remains the Markdown editor's `Rebuild doc` action.
 
 ## Token Insertion Behavior
 
@@ -147,247 +109,183 @@ the editor inserts:
 [[ref:work:00638|3 symbols]]
 ```
 
-Supported v1 target kinds should follow the current semantic-reference builder contract:
+The inserted syntax should match the current builder grammar documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
 
-- `work`
-- `series`
-- `moment`
+Supported target kinds should come from the semantic-reference registry defined by [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), not from a route-local hard-coded list.
 
 The insertion UI should leave room for future target kinds, such as `tag`, without changing the source-view model.
-Future kinds are still repo-specific Studio/dotlineform integrations unless a separate portable host-extension contract is defined later.
+Future kinds remain repo-specific integrations unless a separate portable host-extension contract is defined later.
 
 The helper should avoid inserting tokens when:
 
 - no text is selected
-- the target kind is unsupported
-- no target id is selected
+- the selected semantic-reference type is unsupported
+- no target id is selected or entered
+- required registry metadata is missing
 - the selected text spans an unsupported region if the source editor can detect that reliably
 
 The backend does not need to validate every body token before writing.
-Docs Viewer should validate allowed semantic types, not whether the submitted target id resolves to a real Studio object.
-For example, `work:00001` and `work:99999` are both valid work references syntactically; a missing object can produce the equivalent of a normal public 404 link.
+Docs Viewer should validate allowed semantic types and actions through builder/registry behavior, not whether the submitted target id resolves to a real object.
+Target picker assistance is not the same as target-existence validation.
 The targeted rebuild should surface builder warnings or errors after the write/rebuild step.
 
-## Source And Backend Boundary
+## Registry And Support Data
 
-The frontend should not write source files directly.
-It should call named management endpoints.
+This request depends on a semantic-reference registry.
 
-Candidate read endpoint:
+The registry should define, for each semantic-reference type:
 
-```text
-GET /docs/source?scope=<scope>&doc=<doc_id>
-```
+- type id and label
+- object owner
+- reference owner
+- allowed actions
+- id normalization policy
+- route helper or route pattern
+- target existence policy
+- target data source for picker/search support
+- eligible surfaces, including source editor controls
+- diagnostics policy
 
-Candidate response:
-
-```json
-{
-  "scope": "studio",
-  "doc_id": "example-doc",
-  "source": "---\ndoc_id: example-doc\n---\n# Example\n",
-  "source_revision": "mtime-or-content-hash"
-}
-```
-
-Candidate rebuild endpoint:
-
-```text
-POST /docs/source/rebuild
-```
-
-Candidate payload:
-
-```json
-{
-  "scope": "studio",
-  "doc_id": "example-doc",
-  "source_revision": "mtime-or-content-hash",
-  "source": "---\ndoc_id: example-doc\n---\n# Example\n"
-}
-```
-
-Backend responsibilities:
-
-- require management mode and write capabilities
-- resolve `scope` and `doc_id` through the configured Docs Viewer source allowlist
-- verify the submitted revision still matches the current source
-- parse front matter
-- preserve required source metadata contracts, especially `doc_id`
-- reject source that would break required front matter structure
-- write the submitted full source once
-- run targeted docs rebuild for the affected doc
-- return rebuild diagnostics, warnings, and generated payload status
-
-Frontend responsibilities:
-
-- render the source view
-- maintain the local edited buffer
-- insert semantic-reference tokens into selected text
-- show dirty state
-- read Studio-owned semantic support data, UI text, modal/options config, and other public-safe support data through modular client-side helpers where practical
-- send the source only when `Rebuild doc` is clicked
-- switch back to rendered view only after successful rebuild/payload reload
-- keep errors visible when save or rebuild fails
+The semantic-reference editor should read registry metadata through a focused browser helper.
+It should not duplicate supported type lists, route patterns, target-data paths, or ownership assumptions inline in route/controller code.
 
 Read-oriented support behavior should stay in browser modules wherever it can safely consume generated JSON or browser config.
-Examples include Studio semantic target lookup, target picker option shaping, modal/view copy, view registration, and supported token-kind metadata.
+Examples include target lookup, target picker option shaping, modal/view copy, view registration, and supported token-kind metadata.
 The backend should not become a general read orchestrator for UI state when the same data can be supplied through generated artifacts or Docs Viewer config.
-Those reads are dotlineform-specific support reads, not part of the portable Docs Viewer core contract.
 
-## Validation Policy
+## Relationship To Markdown Editor
 
-V1 validation should stay intentionally small.
+The Markdown editor request owns:
 
-Validate:
+- source read endpoint
+- source write/rebuild endpoint
+- source revision protection
+- front matter/source-contract validation
+- local source buffer
+- dirty state
+- `Rebuild doc`
+- rendered-view reload
 
-- management capability
-- source revision freshness
-- source path allowlist
-- front matter parseability
-- required front matter fields needed by Docs Viewer
-- `doc_id` consistency
-- semantic type allowlist where token helpers or builder parsing need to reject unsupported kinds
+This request owns:
 
-Do not attempt in v1:
+- semantic-reference controls inside the source editor
+- registry-driven type/action metadata
+- target picker/search behavior
+- token construction and insertion into the local buffer
+- insertion-specific validation messages
 
-- full Markdown validation
-- body token validation before write
-- semantic-reference target existence validation
-- automated Markdown repair
-- custom undo/redo recovery
-
-This accepts the practical risk that a manage-mode user can corrupt Markdown body content.
-That risk is comparable to editing the source file directly.
+The source editor can ship without semantic-reference insertion.
+Semantic-reference insertion should not block basic Markdown source editing.
 
 ## Relationship To Panel And App-Shell Work
 
-This request can be implemented as a manage-only document panel view.
+This request should align with:
 
-It should align with:
-
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
 - [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-
-The source editor does not need a tight adapter boundary.
-It should be grouped as an optional, clearly identifiable module so it can be included in this repo and left out of portable installs.
-If the module is absent or disabled, Docs Viewer core should simply omit the Markdown source view and semantic-token controls.
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
 
 Candidate module folder:
 
 - `docs-viewer/runtime/js/modules/source-editor/`
 
-Candidate files inside that folder:
+Candidate semantic files inside that folder:
 
-- `source-editor.js` for source-view orchestration
 - `semantic-token-editor.js` for token insertion helpers
-- `semantic-target-picker.js` for target selection
-- `semantic-targets.js` for client-side Studio semantic support reads and option normalization
-- management service modules for source read/write/rebuild endpoints
+- `semantic-target-picker.js` for target selection UI
+- `semantic-targets.js` for client-side support reads and option normalization
+- `semantic-reference-registry.js` for registry reads/normalization if not shared elsewhere
 
-`docs-viewer/runtime/js/docs-viewer.js` should remain orchestration only.
-It should initialize or register the source-editor module when available and hand off selected document, scope, rendered-payload reload, and status callbacks.
+The source editor module can register semantic tools when the registry and helper modules are available.
+If the semantic module is absent, disabled, or unsupported for the current install, the Markdown editor should continue to work without semantic-token controls.
 
 ## Proposed Implementation Steps
 
-### 1. Backend Source Read And Rebuild Endpoint
+### 1. Registry Read Helper
 
 Tasks:
 
-- add a management read endpoint for source Markdown
-- add a management write/rebuild endpoint accepting full source plus revision token
-- enforce scope/source allowlists
-- validate front matter and `doc_id` consistency
-- run targeted rebuild after write
-- return structured diagnostics
+- add a browser helper that reads and normalizes the semantic-reference registry
+- expose supported types, actions, target-data source, and source-editor surface availability
+- handle missing or malformed registry data with clear unavailable states
 
 Acceptance:
 
-- source can be read only in manage mode
-- source write is rejected when revision is stale
-- source write is rejected when front matter cannot be parsed
-- successful write rebuilds the selected doc
+- semantic editor controls do not hardcode supported type lists
+- missing registry data disables semantic controls without breaking the Markdown editor
+- diagnostics can explain why semantic insertion is unavailable
 
-### 2. Manage-Only Markdown Source View
+### 2. Target Picker Support
 
 Tasks:
 
-- add a `Markdown source` view/action for selected docs in manage mode
-- load source and revision on entry
-- show editable source text
-- track dirty state
-- support cancel/back to rendered view without writing
-- send full source on `Rebuild doc`
-- switch back to rendered view after successful rebuild
+- load target options from registry-defined browser-safe data sources where available
+- normalize ids, labels, and optional search fields for picker use
+- support manual id entry when the registry allows it
+- handle stale or missing target data without changing builder validity semantics
 
 Acceptance:
 
-- no source is written until `Rebuild doc`
-- successful rebuild reloads rendered document content
-- failed write or rebuild keeps the user in source view with visible diagnostics
+- work, series, and moment target support follows the registry
+- picker behavior can be traced to registry metadata
+- target ids remain opaque host ids
+- target picker assistance does not become target-existence validation
 
-### 3. Semantic Reference Insertion Helper
+### 3. Token Construction And Insertion
 
 Tasks:
 
-- add controls for supported semantic-reference target kinds
-- provide a constrained target picker/search
-- load target picker data through client-side generated-data/config helpers where practical
-- wrap selected source text in the selected token
-- keep all token insertion local until rebuild
+- read selected text from the Markdown editor
+- build a semantic-reference token from selected type, target id, selected text, and action
+- insert the token at the current selection offsets
+- keep the inserted token in the local editor buffer until `Rebuild doc`
+- preserve browser-native undo behavior where practical
 
 Acceptance:
 
-- selected text can be wrapped as a `work`, `series`, or `moment` reference
-- no token insertion happens without selected text and selected target
+- selected text can be wrapped as a supported semantic-reference token
+- no insertion happens without selected text and target id
 - inserted syntax matches the current builder grammar
-- target lookup and option rendering are owned by focused browser modules, not route-controller inline logic
-- target ids are treated as opaque host ids; Docs Viewer does not validate object existence
+- token insertion does not write source or trigger rebuild directly
 
 ### 4. Focused Verification And Docs Follow-Through
 
 Tasks:
 
-- add backend tests for source read, stale revision, invalid front matter, and successful rebuild request shaping
-- add browser smoke coverage for source view, token insertion, rebuild, and rendered-view return
-- update owning Docs Viewer management and semantic-reference docs after implementation
+- add focused tests for registry normalization, target option shaping, and token construction
+- add browser smoke coverage for semantic insertion inside the Markdown editor
+- update semantic-reference implementation and editor docs after implementation
 
 Acceptance:
 
-- tests cover both success and failure paths
-- docs explain that this is a manage-only source editor with semantic-reference tools, not a general Markdown editor
+- tests cover success and unavailable-registry states
+- docs explain that semantic insertion is a repo-specific manage-mode helper layered on the Markdown editor
 
 ## Open Questions
 
-- Should the source editor use a plain textarea first, or a lightweight editor component with line numbers?
-- Where should the target picker read supported work/series/moment options from in this repo?
+- What is the exact semantic-reference registry file path and schema?
+- Should the initial editor expose only `work`, `series`, and `moment`, or include disabled/future `tag` metadata?
+- Should manual target-id entry always be available, or only when enabled by a registry field?
 - Should unsupported selected ranges be blocked in v1, or should token insertion operate only on textarea selection offsets?
-- Should `Rebuild doc` run only a targeted doc rebuild or also refresh related reference buckets as part of the existing targeted rebuild behavior?
 - How should unsupported semantic type warnings be displayed when rebuild succeeds?
-- Should the browser warn before leaving source view with unsaved local changes?
+- Should token insertion expose actions beyond `link` once the registry exists, or keep only `link` for the first slice?
 
 ## Risks
 
-- users can corrupt Markdown body content
-- stale source can be overwritten if revision checks are weak
-- frontend token insertion can produce invalid syntax if escaping rules are incomplete
-- rebuild may fail after source write, leaving source changed but rendered payload stale
-- source editor behavior could grow into an accidental general Markdown editor
-- adding source editing directly to `docs-viewer.js` would increase runtime coupling
+- token insertion can produce invalid syntax if escaping rules are incomplete
 - target lookup, modal copy, and config reads could drift into backend orchestration or inline route-controller logic
 - repo-specific semantic editing could be mistaken for portable Docs Viewer functionality
+- semantic insertion could become coupled to a single UI shape before the Analytics surfacing model is clear
+- registry and builder behavior could diverge if both define supported types independently
 
 Mitigations:
 
-- require revision token checks
-- validate front matter before write
-- keep writes behind management endpoints and source allowlists
-- keep token insertion helpers small and tested
-- keep Studio semantic support reads, target option shaping, modal/view config, and picker behavior in focused client-side modules where practical
+- derive type/action support from the registry
+- keep token construction helpers small and tested
+- keep support reads, option shaping, modal/view config, and picker behavior in focused browser modules
 - document semantic editing as this repo's manage-mode integration, not portable Docs Viewer core
-- rely on builder diagnostics for semantic-reference warnings
-- avoid adding general Markdown formatting tools in v1
-- keep source editor code in focused modules
+- rely on builder diagnostics for semantic-reference warnings after rebuild
+- keep semantic insertion optional so the Markdown editor remains useful without it
 
 ## Verification
 
@@ -400,16 +298,17 @@ $HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_manage
 
 Add focused tests or smoke checks for:
 
-- source read endpoint
-- stale revision rejection
-- front matter validation
-- source write plus targeted rebuild request
-- token insertion helper behavior
-- manage-only source view access
-- rebuild returning to rendered document view
+- semantic-reference registry read/normalization
+- missing registry unavailable state
+- target option normalization
+- manual id entry if enabled
+- token construction
+- token insertion into selected source text
+- no source write before `Rebuild doc`
 
 ## Related References
 
-- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
+- [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation)
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)

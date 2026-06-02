@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d79964c7db38aa46dd7b654b87c58f97",
-    "generated_at_utc": "2026-06-02T18:48:25Z",
-    "count": 229
+    "version": "blake2b-9764fa86125bd6715b1bc96d94354c1f",
+    "generated_at_utc": "2026-06-02T19:58:08Z",
+    "count": 231
   },
   "entries": [
     {
@@ -1214,14 +1214,42 @@
       "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
     },
     {
+      "id": "site-request-docs-viewer-markdown-editor",
+      "kind": "doc",
+      "title": "Docs Viewer Markdown Editor Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor",
+      "last_updated": "2026-06-02",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-02 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-markdown-editor",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "markdown",
+        "editor",
+        "docs viewer markdown editor request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "site-request-docs-viewer-markdown-editor site request docs viewer markdown editor docs viewer markdown editor request change requests change requests 2026-06-02 2026 06 02"
+    },
+    {
       "id": "site-request-docs-viewer-multi-panel-app-shell",
       "kind": "doc",
       "title": "Docs Viewer Multi-Panel App Shell Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-28 • Change Requests",
+      "display_meta": "2026-06-02 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-multi-panel-app-shell",
         "site",
@@ -1236,12 +1264,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-28",
+        "2026-06-02",
         "2026",
-        "05",
-        "28"
+        "06",
+        "02"
       ],
-      "search_text": "site-request-docs-viewer-multi-panel-app-shell site request docs viewer multi panel app shell docs viewer multi-panel app shell request change requests change requests 2026-05-28 2026 05 28"
+      "search_text": "site-request-docs-viewer-multi-panel-app-shell site request docs viewer multi panel app shell docs viewer multi-panel app shell request change requests change requests 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-docs-viewer-runtime-risk-reduction",
@@ -1277,10 +1305,10 @@
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
-      "last_updated": "2026-05-27",
+      "last_updated": "2026-06-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
+      "display_meta": "2026-06-02 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-semantic-reference-editor",
         "site",
@@ -1294,12 +1322,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-27",
+        "2026-06-02",
         "2026",
-        "05",
-        "27"
+        "06",
+        "02"
       ],
-      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-05-27 2026 05 27"
+      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-docs-viewer-workspace-mount-architecture",
@@ -2962,10 +2990,10 @@
       "kind": "doc",
       "title": "Panel Hosts",
       "href": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-02",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-28 • Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
       "search_terms": [
         "docs-viewer-panel-hosts",
         "docs",
@@ -2974,12 +3002,12 @@
         "hosts",
         "panel hosts",
         "docs viewer",
-        "2026-05-28",
+        "2026-06-02",
         "2026",
-        "05",
-        "28"
+        "06",
+        "02"
       ],
-      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-05-28 2026 05 28"
+      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "docs-viewer-portable-setup",
@@ -3246,6 +3274,31 @@
         "02"
       ],
       "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "docs-viewer-semantic-references-implementation",
+      "kind": "doc",
+      "title": "Semantic References Implementation",
+      "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation",
+      "last_updated": "2026-06-02",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-02 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-semantic-references-implementation",
+        "docs",
+        "viewer",
+        "semantic",
+        "references",
+        "implementation",
+        "semantic references implementation",
+        "docs viewer",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "docs-viewer-semantic-references-implementation docs viewer semantic references implementation semantic references implementation docs viewer 2026-06-02 2026 06 02"
     },
     {
       "id": "docs-viewer-source-config-report",

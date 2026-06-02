@@ -2,7 +2,7 @@
 doc_id: docs-viewer-panel-hosts
 title: Panel Hosts
 added_date: 2026-05-28
-last_updated: 2026-05-28
+last_updated: 2026-06-02
 parent_id: docs-viewer
 viewable: true
 ---
@@ -43,6 +43,125 @@ Core ownership:
 | info-panel chrome | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` |
 | read-only metadata info view | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` |
 
+## Implemented Ownership Areas
+
+### App-Shell Boot And Shell Rendering
+
+`docs-viewer-app-shell.js` renders the browser-owned Docs Viewer shell regions: header controls, index panel mount, document shell, management shell hosts, and info-panel mount.
+It also projects shell state such as index layout, document shell visibility, info panel state, and toolbar controls.
+
+Improvement needed:
+
+- keep adding shell chrome through explicit projection helpers rather than route-local DOM mutations
+- avoid putting feature workflow logic into the shell renderer
+
+### Route Config Resolution
+
+`docs-viewer-route-config.js` normalizes route config for public and manage routes.
+It reads panel defaults and hosted-view records from route config and normalizes hosted-view capability metadata.
+
+Improvement needed:
+
+- route config can describe available hosted views, but it does not make arbitrary module loading available
+- future view records need clear schema and ownership before adding new fields
+
+### Access Projection
+
+`docs-viewer-access.js` projects public, manage, and manage-local access intent for browser controls.
+Hosted-view records use this projection to decide whether a view is available to the current route.
+
+Improvement needed:
+
+- client access projection must remain a visibility and UX helper only
+- backend endpoints must still enforce write/read capability server-side
+
+### App Context
+
+`docs-viewer-app-context.js` centralizes current route/app context passed to controllers.
+It prevents each feature from re-reading broad global state in its own way.
+
+Improvement needed:
+
+- future hosted views should receive narrow context objects rather than importing broad runtime state
+
+### View-State Skeleton
+
+`docs-viewer-view-state.js` stores browser-only panel state for the index, document, and info panels.
+It tracks active view ids and mounted/visible state, but it does not own feature rendering.
+
+Current limitation:
+
+- document-panel active view state exists, but document/search/recent/report are still rendered by existing controllers rather than a true document hosted-view switcher
+
+Improvement needed:
+
+- implement explicit document-panel view switching before adding source editor or other document-panel views
+
+### Panel Layout Projection
+
+`docs-viewer-panel-layout.js` projects panel layout from view state and hosted-view capabilities.
+It currently drives index panel normal/collapsed/expanded state, index view switching, document shell projection, info-panel projection, and layout attributes.
+
+Current limitation:
+
+- expanded behavior is proven through a manage-only placeholder index view, not a real graph or workspace module
+
+Improvement needed:
+
+- preserve capability-driven layout decisions rather than checking view ids directly
+- define persistence/URL policy before expanding panel-state behavior
+
+### Hosted-View Registry
+
+`docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in hosted views.
+Built-in records currently include `index-tree`, document/search/recent/report document records, and `metadata-info`.
+
+Current limitation:
+
+- document-panel records are descriptive state records only; they do not yet load/mount independent document hosted-view modules
+- route-config records can describe placeholders and capabilities, but the current runtime is not a generic module loader
+
+Improvement needed:
+
+- define the document-panel hosted-view lifecycle before adding source editor or richer report/document views
+- keep this as repo module hosting, not a plugin system
+
+### Selected-Document Hosted-View Context
+
+`docs-viewer-view-context.js` builds a public-safe selected-document context for hosted views.
+The metadata info view uses this context to render document metadata and parent trail information.
+
+Improvement needed:
+
+- future info views should request only the context/data they need
+- management-only views may receive additional services, but only through explicit capability-gated inputs
+
+### Info-Panel Lifecycle And Chrome
+
+`docs-viewer-info-panel-host.js` is the only implemented lifecycle host for actual load/mount/update/unmount/dispose view modules.
+`docs-viewer-info-panel-renderer.js` owns the info-panel chrome, toolbar, status, close button, and hosted-view body mount.
+`docs-viewer-info-panel-controller.js` binds the document info toggle, close behavior, selected-document updates, and hosted-view context projection.
+
+Current implemented view:
+
+- `metadata-info`
+
+Improvement needed:
+
+- support additional info views only after each has a data contract and access decision
+- keep info-panel lifecycle failures graceful and local to the panel
+
+### Metadata Info View
+
+`docs-viewer-metadata-info-view.js` is the first implemented hosted info view.
+It is read-only and public-safe.
+It renders selected-document metadata such as title, doc id, scope, summary, parent path, dates, UI status, visibility, and route.
+
+Improvement needed:
+
+- do not add edit/save behavior to this view
+- use separate manage-only views or workflows for metadata mutation
+
 The current panel projection still preserves existing two-panel behavior where needed.
 The index panel projects collapsed, normal, and expanded states from the active index hosted view’s capabilities.
 The built-in `index-tree` view supports normal and collapsed states, while the management-route `index-graph` placeholder opts into expanded mode.
@@ -80,21 +199,59 @@ Hosted-view modules are ordinary repo JavaScript modules.
 They are not independent packages, sandboxes, or marketplace plugins.
 Repo-specific modules may know about repo-specific generated data and local service contracts.
 
-Expected view-module shape:
+Current hosted-view record shape:
 
 ```text
 id
 label
 panel
 access
+availability
+renderer
+placeholderText
+capabilities
 load()
-mount(container, context)
-update(context)
+mount()
+update()
 unmount()
 dispose()
 ```
 
-The host provides:
+The normalized record shape exists today in `docs-viewer-hosted-views.js`.
+Access and availability checks also exist today.
+Capabilities for index layout are implemented and documented in [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract).
+
+Current lifecycle implementation:
+
+- info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
+- `metadata-info` is the only real mounted hosted-view module
+- index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
+- document hosted-view records exist for `document-host`, `search-results`, `recent-results`, and `report-host`, but the existing document/search/recent/report controllers still own rendering
+
+The implemented lifecycle shape for info-panel hosted views is:
+
+```text
+load()
+mount(context)
+update(context)
+unmount(context)
+dispose(context)
+```
+
+The context currently contains the `mount` element plus selected-document and route/scope metadata.
+
+What still needs implementation:
+
+- a document-panel host/controller that can switch explicit document-panel views without breaking current document/search/recent/report route behavior
+- a clear module-loading policy for route-config hosted-view records beyond built-in and explicitly imported repo modules
+- toolbar/view-switching projection for document and info panels when more than one view is available
+- a data/context contract for each new info or document hosted view before adding the view
+
+Do not interpret route-config hosted-view records as a completed generic extension system.
+The current implementation supports configured records, capability projection, access checks, and the info-panel lifecycle.
+It does not yet provide a generic view-module loader for arbitrary `module` strings.
+
+For future hosted modules, the host should provide:
 
 - a stable container element
 - selected document and scope context
@@ -176,16 +333,125 @@ The current contract is simpler:
 
 ## Remaining Design Gaps
 
-The current foundation does not yet provide:
+The current foundation is usable, but the items below need clearer implementation requests before more panel work continues.
 
-- a generalized panel toolbar model across index, document, and info panels
-- explicit document-panel view switching for document/search/recent/report/source views
-- a source editor or semantic-reference editor
-- activity or generated relationship info views
-- URL or persistence policy for panel layout state beyond current panel behavior
-- a public contract for optional visualization modules
+### Document-Panel View Switching
 
-Those items should be specified as concrete change requests before implementation.
+Current state:
+
+- document/search/recent/report are represented as hosted-view records and active document-panel view state
+- actual rendering still flows through existing document, search, recent, and report controllers
+- there is no document-panel host equivalent to `docs-viewer-info-panel-host.js`
+
+What this means:
+
+- a future source editor cannot yet plug into a clean document-panel view lifecycle
+- route state for search/recent/report still has to be preserved while any view-switching model is introduced
+
+Request owner:
+
+- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
+
+### Markdown Source Editor
+
+Current state:
+
+- no source editor is implemented
+- source read/write/rebuild endpoints and revision checks are not part of the panel host
+
+What this means:
+
+- source editing should be implemented as a manage-only document-panel view after the document-panel view-switching model is clear enough
+- source writes must remain backend-owned
+
+Request owner:
+
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+
+### Semantic-Reference Token Tools
+
+Current state:
+
+- no semantic-token insertion UI is implemented
+- no semantic-reference registry exists yet
+
+What this means:
+
+- semantic insertion should be layered on the Markdown editor, not combined with source read/write/rebuild
+- the source editor should remain usable when semantic tools are absent
+
+Request owners:
+
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
+- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+
+### Panel Toolbars
+
+Current state:
+
+- index-panel controls are projected through the app shell
+- info panel has close and view-option chrome
+- document panel has existing document/search/report controls, but not a generalized panel-toolbar model
+
+What this means:
+
+- do not add ad hoc toolbar controls per feature
+- define a small toolbar projection model before adding document-panel source editor controls, multiple info views, or graph/index controls
+
+Request owner:
+
+- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
+
+### Additional Info Views
+
+Current state:
+
+- only the public-safe metadata info view is implemented
+- no activity, semantic-reference, relationship, source-status, or build-status info views exist
+
+What this means:
+
+- each new info view needs a data contract, access policy, lifecycle behavior, and failure state
+- operational or write-adjacent views should start manage-only
+
+Request owner:
+
+- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), until split into smaller view-specific requests
+
+### Panel State Persistence And URL Policy
+
+Current state:
+
+- index collapsed/normal state uses current index-panel persistence behavior
+- expanded state is capability-driven and normalized when unsupported by the active index view
+- info-panel open/closed state and active view are browser state, not a durable route contract
+- document-panel view state is not yet a public URL contract
+
+What this means:
+
+- do not add query/hash state for panel layout opportunistically
+- decide which state is local preference, route state, or transient UI state before adding richer panels
+
+Request owner:
+
+- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
+
+### Optional Visualization Modules
+
+Current state:
+
+- the manage-only `index-graph` is a placeholder proving index-view capability projection
+- no real graph, chart, relationship explorer, or external visualization library is implemented
+
+What this means:
+
+- choose the data contract and user workflow before choosing a visualization library
+- heavy visualization code should be lazy-loaded only when the selected view needs it
+- public exposure needs a separate decision
+
+Request owner:
+
+- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), until a visualization-specific request exists
 
 ## Related References
 
@@ -193,4 +459,7 @@ Those items should be specified as concrete change requests before implementatio
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract)
 - [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)

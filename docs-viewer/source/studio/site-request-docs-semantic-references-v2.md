@@ -12,7 +12,8 @@ viewable: true
 Status:
 
 - proposed
-- this needs to happen **before** [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+- this needs to happen **before** semantic-token insertion in [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+- the separate [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor) can define source editing/rebuild behavior without waiting for this registry work
 - product and maintenance direction now belongs with Analytics
 - current v1 implementation still runs through Docs Viewer build/runtime/report code
 
@@ -20,47 +21,34 @@ Status:
 
 Revisit and extend [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references) using the clarified Docs Viewer app/backend and module architecture.
 
-The v1 implementation also needs clear durable documentation under [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) that can be reviewed.
+Current v1 behavior is documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
+Use that implementation doc as the stable baseline for this request.
+The original v1 request is now historical context, not the current implementation contract.
 
-V1 implemented authored `[[ref:...]]` tokens, builder parsing, rendered semantic links, and generated relationship artifacts.
 Since then, the broader Docs Viewer direction has become clearer:
 
 - semantic links are dotlineform/Studio-specific integrations, not portable Docs Viewer core
 - Docs Viewer validates supported semantic types and actions, not target-object existence
 - target ids are opaque host ids; missing objects can behave like ordinary broken public links
+- semantic-reference support needs a concrete registry artifact that defines supported reference types, object ownership, target-data reads, route/surface behavior, and diagnostics
 - browser-safe repo/generated data should be read directly by browser modules where practical
 - manage-mode authoring tools should be optional modules that can be omitted from portable installs
 - panel modules can display relationship data, but host projects must provide that data unless Docs Viewer later defines document-derived data classes
 
-V2 should first review the v1 implementation against those decisions, then add only the infrastructure needed for the semantic-reference editor and future hosted relationship views.
+V2 should first review the v1 implementation against those decisions, then define the semantic-reference registry before adding editor or future hosted relationship views.
 
-## Current State Snapshot
+## Baseline Implementation
 
-As of 2026-06-02, semantic references are split across current implementation ownership and target product ownership.
+The current implementation doc records these baseline facts:
 
-Current implemented behavior:
+- authored `[[ref:...]]` tokens are parsed from Docs Viewer Markdown source
+- the parser, resolver, rendered output, generated artifacts, targeted build behavior, and report runtime are currently Docs Viewer-owned
+- Analytics owns the product direction for future semantic-reference maintenance and modules
+- there is no semantic-reference registry today; supported kinds, actions, ownership assumptions, route construction, and target-data reads are hard-coded in the builder
+- current v1 behavior is catalogue-aware: missing or non-published catalogue targets warn and render as inert spans
+- current v1 generated artifacts include `target_status`
 
-- authored `[[ref:...]]` tokens live in Docs Viewer Markdown source, including `docs-viewer/source/analysis/3-symbols.md`
-- parsing, resolving, rendering, diagnostics, and generated relationship artifacts are implemented in `docs-viewer/build/build_docs.py`
-- generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`
-- the management report is still a Docs Viewer report, [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
-- generated report data is read browser-side from `references/index.json` and `references/by-target/`
-
-Target ownership direction:
-
-- Analytics owns the product direction for semantic-reference maintenance, target support, tag integration, document analysis, and future visualisation/reference modules
-- Docs Viewer should continue to own generic source parsing, document rendering, generated docs payloads, and generated docs relationship artifacts while those artifacts are derived from Docs Viewer source documents
-- Analytics-owned modules can consume or extend those artifacts, but should not make portable Docs Viewer core depend on dotlineform-only semantic data
-- if semantic-reference authoring or reference panels become Analytics-hosted workflows, the migration should be explicit about which code moves and which Docs Viewer build contracts remain
-
-Known v1 drift against the clarified model:
-
-- v2 says Docs Viewer should validate supported semantic type/action, not target-object existence
-- current v1 code reads catalogue records and treats missing or non-published targets as warnings with `target_status`
-- current v1 rendering only emits a navigable link when the catalogue record exists and is published; missing or draft records render as inert spans
-- current fixtures also encode the missing/non-published behavior, so alignment is a code-and-test decision, not just a documentation update
-
-This request should therefore start with an explicit v1 alignment decision:
+V2 starts from that baseline and must make an explicit alignment decision:
 
 - either keep the current catalogue-aware behavior and document it as intentional host validation
 - or refactor v1 so allowed semantic types/actions always produce route-derived links, leaving missing target detection to link-health audits and Analytics/editor support data
@@ -83,9 +71,11 @@ Before adding editor support, target pickers, tag references, graph views, or ri
 
 - audit v1 implementation and docs against the clarified semantic-reference model
 - refactor v1 only where needed to remove stale assumptions about target-existence validation
+- define a concrete semantic-reference registry artifact
 - define the browser-readable Studio support data needed by the semantic-reference editor
 - keep semantic support reads modular and client-side where they can consume generated/static repo artifacts
 - define supported semantic type metadata for editor controls and panel modules
+- make object ownership and surfacing explicit per semantic type
 - clarify how unsupported semantic types/actions are diagnosed
 - preserve existing generated relationship artifacts unless a concrete v2 need requires a schema change
 - keep semantic links and editor tooling repo-specific, not portable Docs Viewer core
@@ -121,6 +111,68 @@ Examples:
 
 The semantic-reference editor should use generated/browser-safe Studio support data to help authors choose real targets, but that picker assistance is not the same as Docs Viewer treating target existence as a validity rule.
 
+## Semantic Reference Registry
+
+V2 needs a concrete registry artifact.
+The registry should be the source of truth for what a semantic reference means in this repo.
+
+The registry should answer:
+
+- what semantic reference types exist
+- what object family each type points at
+- which app or data domain owns those objects
+- which app owns reference maintenance and surfacing
+- how a target id is normalized
+- how a link href is derived
+- whether target existence is validated by the builder, suggested by editor support data, or left to link-health audits
+- which browser-safe data source, local API, or generated artifact supplies labels and picker/search options
+- where the reference can be surfaced, such as rendered docs links, management reports, Analytics views, source editor controls, or future reference panels
+- which actions are allowed for that type
+- what diagnostics are produced for unsupported types, unsupported actions, malformed ids, missing support data, or missing target objects
+
+The registry can be JSON, or a generated JSON artifact if some fields must be derived.
+It should be browser-readable when it contains only public-safe metadata.
+It should not expose protected source data just to make the browser UI convenient.
+
+Possible shape:
+
+```json
+{
+  "schema": "semantic_reference_registry_v1",
+  "types": [
+    {
+      "type": "work",
+      "label": "Work",
+      "object_owner": "studio",
+      "reference_owner": "analytics",
+      "id_policy": "catalogue_work_id",
+      "route_helper": "public_work",
+      "allowed_actions": ["link"],
+      "target_existence_policy": "link_health",
+      "target_data": {
+        "read_mode": "browser_generated_json",
+        "source": "assets/data/works_index.json"
+      },
+      "surfaces": {
+        "rendered_docs_link": true,
+        "docs_report": true,
+        "source_editor_picker": true,
+        "analytics_reference_view": true
+      }
+    }
+  ]
+}
+```
+
+The exact field names can change during implementation, but the artifact should preserve these boundaries:
+
+- type/action support belongs to the registry
+- object ownership is explicit
+- target existence policy is explicit
+- target support data is explicit
+- surfacing is explicit
+- portable Docs Viewer can omit this repo-specific registry and therefore omit repo-specific semantic-reference tools
+
 ## Proposed Implementation Steps
 
 ### 1. Review And Align V1
@@ -140,26 +192,31 @@ Acceptance:
 - unsupported semantic types/actions are clearly separated from missing target objects
 - no new editor or panel work depends on unresolved v1 ambiguity
 
-### 2. Define Supported Semantic Type Metadata
+### 2. Define Semantic Reference Registry
 
 Tasks:
 
-- define a browser-readable metadata shape for supported semantic types
-- include type id, label, route pattern or route helper id, editor availability, and public/manage availability
+- define a browser-readable or generated JSON registry shape for supported semantic reference types
+- include type id, label, object owner, reference owner, id normalization policy, route helper, allowed actions, target existence policy, support-data source, and surfaces
+- define how the registry answers what a semantic reference is and where it can appear
+- define how Docs Viewer, Analytics, and editor modules read the registry without hardcoding inline lists
 - keep the metadata dotlineform-specific unless a future host-extension contract is created
-- decide whether this metadata lives in JS, generated config, or a generated Studio support artifact
+- decide whether the registry lives as static config, generated config, or a generated support artifact
 
 Acceptance:
 
-- editor and panel modules can ask which semantic types are supported without hardcoding inline lists in route code
+- editor, report, Analytics, and panel modules can ask which semantic types are supported without hardcoding inline lists in route code
+- object ownership, reference ownership, target-data source, and surfacing policy are explicit for every type
+- target existence handling is explicit and no longer inferred from builder implementation details
 - unsupported type diagnostics have a single source of truth
-- portable installs can omit this metadata and therefore omit semantic-link authoring features
+- portable installs can omit this registry and therefore omit semantic-link authoring features
 
 ### 3. Define Browser-Safe Target Picker Support Data
 
 Tasks:
 
 - identify the smallest browser-readable Studio support data needed for work, series, and moment target picking
+- define each support-data source through the semantic-reference registry
 - prefer existing generated/static repo artifacts when safe and practical
 - avoid adding local server read endpoints for data already available as browser-safe generated JSON/config
 - define how labels, ids, and optional search fields are normalized for picker use
@@ -170,11 +227,13 @@ Acceptance:
 - source editor can populate target options without server-proxy reads of browser-safe repo data
 - target ids remain opaque host ids
 - target picker support can assist authors without changing Docs Viewer validity semantics
+- picker behavior can be traced back to the registry entry for each semantic type
 
 ### 4. Align Diagnostics And Audits
 
 Tasks:
 
+- derive supported type/action diagnostics from the semantic-reference registry
 - define diagnostics for unsupported semantic types, unsupported actions, malformed tokens, and generated artifact problems
 - define how ordinary broken semantic-link hrefs are handled by existing or future broken-link audits
 - update report language so missing targets are link-health issues, not parser validity errors
@@ -184,12 +243,14 @@ Acceptance:
 - build diagnostics do not imply Docs Viewer validates target existence
 - broken-link auditing can still surface missing public targets where useful
 - semantic-reference reports distinguish unsupported tokens from normal broken hrefs
+- diagnostics are consistent across builder, reports, editor controls, and Analytics consumers because they share the registry
 
 ### 5. Prepare Panel/Module Consumers
 
 Tasks:
 
 - define the read helper surface that future info-panel/reference modules can consume
+- make helper behavior registry-driven where it depends on type, owner, route, support data, or surface availability
 - keep helpers in a clearly identifiable optional module/folder when repo-specific
 - do not introduce D3.js, Cytoscape.js, or graph-specific contracts in this slice
 - document how a missing semantic module is omitted from portable installs
@@ -199,6 +260,7 @@ Acceptance:
 - future panel modules can consume generated relationship artifacts through browser-side helpers
 - portable Docs Viewer core does not require dotlineform semantic modules
 - relationship data remains available for future graph/reference views without prematurely choosing a visualization stack
+- panel/module eligibility can be determined from registry surface metadata
 
 ## Architecture Notes
 
@@ -228,9 +290,11 @@ That contract is out of scope for v2.
 ## Open Questions
 
 - What v1 code currently checks object existence, publication status, or resolver status?
+- What is the exact semantic-reference registry file path and schema?
+- Which registry fields are static config and which, if any, are generated from source data?
+- Should the registry initially include only `work`, `series`, and `moment`, or should it define planned `tag` support as disabled/future metadata?
 - Does the generated relationship artifact schema need a small status field change, or can v2 preserve it unchanged?
 - What existing generated data is enough for work/series/moment picker support?
-- Should supported semantic type metadata live in JS, browser config, or generated support JSON?
 - Should tag support be part of v2, or should v2 only make the current work/series/moment model editor-ready?
 - Should graph/reference panel planning stay in this request, or get its own later request once data and UI needs are clearer?
 

@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-multi-panel-app-shell
 title: Docs Viewer Multi-Panel App Shell Request
 added_date: 2026-05-27
-last_updated: 2026-05-28
+last_updated: 2026-06-02
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 Status:
 
 - partly implemented
-- needs re-specification
+- remaining work is prioritized below
 
 ## Summary
 
@@ -22,7 +22,7 @@ The completed design and implementation material has moved to [Docs Viewer Panel
 That durable doc now owns the current panel regions, hosted-view lifecycle, access gating, read-only metadata info view, and non-plugin module boundary.
 
 This request should no longer carry implemented architecture notes.
-It remains only as a reminder that the unfinished work needs to be reviewed and split into concrete change requests before more implementation.
+It now tracks the remaining multi-panel app-shell priorities that are not already split into smaller requests.
 
 ## Already Moved Out
 
@@ -41,89 +41,148 @@ Completed or durable material now lives in [Docs Viewer Panel Hosts](/docs/?scop
 Do not re-expand this request with that implemented material.
 Update the durable Docs Viewer docs instead when current panel-host behavior changes.
 
-## Remaining Work To Re-Specify
+## Implementation Priorities
 
-The remaining work is too broad for one implementation slice.
-Each item below should become a concrete change request with owner, user-facing outcome, scope, risks, and focused verification.
+The current implementation is documented in [Docs Viewer Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts).
+The priorities below are the remaining multi-panel app-shell requirements that are not already covered by smaller requests.
 
-### Generalized Panel Toolbar
+### Priority 1. Document-Panel Hosted-View Model
 
-Potential scope:
+User-facing outcome:
 
-- define a shared toolbar projection for index, document, and info panels
-- decide which panel controls are icons, menus, segmented controls, or text buttons
+- Docs Viewer can switch the document panel between explicit views without breaking current document, search, recent, and report behavior.
+- The future Markdown source editor can attach as a document-panel view instead of bolting controls onto the existing document renderer.
+
+Current gap:
+
+- `docs-viewer-view-state.js` tracks a document active view id.
+- `docs-viewer-hosted-views.js` has document records for `document-host`, `search-results`, `recent-results`, and `report-host`.
+- There is no document-panel host/controller equivalent to `docs-viewer-info-panel-host.js`.
+- Existing controllers still render document/search/recent/report surfaces directly.
+
+Scope:
+
+- define document-panel view ids and lifecycle
+- decide how document/search/recent/report route state maps to document-panel view state
+- preserve selected-document state independent from document-panel visibility
+- preserve public read-only and local manage behavior
+- define graceful unavailable states for manage-only document-panel views
+
+Open decisions:
+
+- whether document-panel view state is URL-addressable
+- whether hidden document-panel views keep payloads loaded
+- whether report documents remain a document payload mode or become a document-panel hosted view
+
+### Priority 2. Panel Toolbar Projection
+
+User-facing outcome:
+
+- panel controls are predictable across index, document, and info panels.
+- future source editor, info views, and index views can add controls without route-local DOM mutations.
+
+Current gap:
+
+- index controls are projected through app-shell helpers.
+- info panel has close/view-option chrome.
+- document panel still relies on existing document/search/report controls and has no shared panel-toolbar model.
+
+Scope:
+
+- define a small toolbar projection model for index, document, and info panels
+- decide which controls are icon buttons, menus, segmented controls, or text buttons
 - wire controls through explicit panel intents
 - source labels and accessible names from UI text/config
 - keep keyboard focus behavior and mobile layout stable
 
 Open decisions:
 
-- whether the current index controls are enough for now
-- whether the info panel needs only close/hide or a full view selector
-- whether document/search/recent/report should wait for document-panel view work
+- whether the current index controls are sufficient for the next slice
+- whether info panel needs only close/hide plus view selector
+- which document-panel controls are part of panel chrome versus view-specific UI
 
-### Document Panel View Switching
+### Priority 3. Info-View Expansion Contract
 
-Potential scope:
+User-facing outcome:
 
-- decide whether document, search, recent, report, and future source views should become explicit document-panel views
-- define view selection behavior without breaking current route/search/recent/report flows
-- keep selected document state independent from document-panel visibility
-- preserve public read-only and local manage behavior
+- additional info views can be added without weakening public/manage access boundaries or overloading the metadata view.
+
+Current gap:
+
+- only `metadata-info` is implemented.
+- no activity, semantic-reference, relationship, source-status, or build-status info views exist.
+
+Scope:
+
+- define a repeatable data/access/lifecycle checklist for new info views
+- keep operational or write-adjacent views manage-only by default
+- ensure public-safe views receive only public-safe context
+- keep failures local to the info panel
 
 Open decisions:
 
-- whether document-panel view state should be URL-addressable
-- whether hidden document panel state loads payloads in the background
-- how search/recent route state maps to a document-panel view model
+- which info view has enough value to implement first
+- whether semantic-reference information belongs in an info view, Analytics view, report, or source editor companion UI
 
-### Source Editor And Semantic Reference Editor
+### Priority 4. Panel State Persistence And URL Policy
 
-Potential scope:
+User-facing outcome:
 
-- define a manage-only document-panel source editor
-- define any companion info-panel views for references, target search, insertion controls, or validation
-- keep all source writes behind management endpoints
-- decide the generated/reference data contract required by the editor
+- panel state behaves predictably across reloads, route changes, and public/manage routes.
 
-Related active requests:
+Current gap:
 
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
-- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
+- index collapsed/normal state has current persistence behavior.
+- expanded state is capability-driven and normalized when unsupported.
+- info open/closed state and active view are transient browser state.
+- document-panel view state is not a route contract.
 
-### Additional Info Views
-
-Potential scope:
-
-- activity view
-- semantic-reference view
-- generated relationship view
-- source/status view
-- scope health or build-status view
-
-Each view needs a data contract and access decision.
-Uncertain or operational views should start manage-only.
-
-### Optional Visualization Modules
-
-Potential scope:
-
-- decide whether any real use case needs a graph/chart/relationship module
-- choose the data contract before choosing a visualization library
-- lazy-load any heavy dependency only when selected
-- keep module CSS and lifecycle scoped to its panel body
-
-This is not a plugin-system request.
-Do not add plugin manifests, package protocols, marketplaces, generic adapter layers, or automatic third-party asset bundling without a separate architecture request.
-
-### Panel State Persistence
-
-Potential scope:
+Scope:
 
 - decide which panel layout state is local preference
 - decide which state belongs in URL/query/hash
 - define per-scope, per-route, or global persistence behavior
 - preserve current route/document/history behavior
+
+Open decisions:
+
+- whether source editor state should ever be URL-addressable
+- whether expanded index view should persist per scope or per route
+- whether info-panel open state should persist at all
+
+### Priority 5. Optional Visualization Modules
+
+User-facing outcome:
+
+- future graph/chart/relationship views can be evaluated against real data and interaction requirements before choosing a visualization library.
+
+Current gap:
+
+- `index-graph` is a manage-only placeholder that proves capability projection.
+- no real graph, chart, relationship explorer, or external visualization library is implemented.
+
+Scope:
+
+- define the data contract and user workflow first
+- lazy-load heavy dependencies only when selected
+- keep module CSS and lifecycle scoped to the panel body
+- keep public exposure as a separate decision
+
+Open decisions:
+
+- whether the first visualization should be an index graph, semantic-reference explorer, Analytics relationship view, or something else
+- whether graph/reference planning belongs in Docs Viewer, Analytics, or a shared generated-data layer
+
+This is not a plugin-system request.
+Do not add plugin manifests, package protocols, marketplaces, generic adapter layers, or automatic third-party asset bundling without a separate architecture request.
+
+## Split-Out Requests
+
+The following work is related to panels but now has its own request:
+
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor) owns the manage-mode Markdown source editor and source read/write/rebuild workflow.
+- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) owns semantic-token insertion inside the Markdown editor.
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) owns the semantic-reference registry needed by semantic editor and future reference views.
 
 ## Deferred Route Checks
 
@@ -156,3 +215,6 @@ Each request should name:
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
+- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
