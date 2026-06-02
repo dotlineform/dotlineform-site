@@ -14,7 +14,7 @@ Status:
 - in-progress
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - The migration decisions have been resolved and can be used to create an implementation task list.
-- [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) has been completed first so this migration can consume the resulting route contract.
+- [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
 
 ## Task Tracker
 
@@ -44,7 +44,7 @@ GitHub Pages should deploy a generated artifact with `.nojekyll` at the artifact
 It intentionally left Jekyll as the manual public-site preview/build layer until the public site itself could be replaced.
 
 This request should not redesign public routes.
-It should consume the route contract produced by [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification).
+It should consume [Public Route Model](/docs/?scope=studio&doc=public-route-model).
 
 The current public build is still Jekyll-owned:
 
@@ -170,7 +170,7 @@ The public-site builder may read those existing configs and generated outputs as
 
 ### Route Generation
 
-Routes should be generated directly from the simplified public route contract in [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) and from public catalogue projections or generated public data.
+Routes should be generated directly from [Public Route Model](/docs/?scope=studio&doc=public-route-model) and from public catalogue projections or generated public data.
 Jekyll collection stubs are not static-builder inputs.
 
 The builder should emit fixed route shells for the canonical public routes, including `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, and `/analysis/`.
@@ -185,7 +185,7 @@ The first production-equivalent static builder should provide parity for all pub
 The post-simplification public route surface is small enough that the first production-equivalent static builder should not stage only a subset.
 
 Required parity includes the public root and static pages, fixed catalogue shells, query-state catalogue routes, individual moment pages, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
-The route list should be derived from [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) plus current top-level public pages and site-root publishing artifacts that remain intentionally public.
+The route list should be derived from [Public Route Model](/docs/?scope=studio&doc=public-route-model) plus current top-level public pages and site-root publishing artifacts that remain intentionally public.
 `/palette/` is excluded from static public-site parity; palette inspection is owned by the UI Catalogue app at `/ui-catalogue/palette/`.
 
 If a current public route is deliberately excluded, the implementation task list must name it and explain why before production deploy switches to the static builder.

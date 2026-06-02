@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T13:13:52Z",
+  "generated_at": "2026-06-02T18:21:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -80,6 +80,21 @@
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
       "content_text_length": 249
+    },
+    {
+      "scope": "tmp",
+      "doc_id": "github-actions",
+      "title": "github actions",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "github-actions.md",
+      "viewer_url": "/docs/?scope=tmp&doc=github-actions",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-actions.json",
+      "content_text_length": 4102
     },
     {
       "scope": "tmp",

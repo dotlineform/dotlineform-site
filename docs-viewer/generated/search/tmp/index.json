@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-51c0b044d7075d272e597a75b6285a14",
-    "generated_at_utc": "2026-05-31T10:26:13Z",
-    "count": 12
+    "version": "blake2b-7bf1b10699be8514c0d9c34d2786ba43",
+    "generated_at_utc": "2026-06-02T18:21:12Z",
+    "count": 13
   },
   "entries": [
     {
@@ -94,6 +94,25 @@
         "28"
       ],
       "search_text": "emoji 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "github-actions",
+      "kind": "doc",
+      "title": "github actions",
+      "href": "/docs/?scope=tmp&doc=github-actions",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
+      "search_terms": [
+        "github-actions",
+        "github",
+        "actions",
+        "github actions",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "github-actions github actions github actions 2026-06-02 2026 06 02"
     },
     {
       "id": "index-space",

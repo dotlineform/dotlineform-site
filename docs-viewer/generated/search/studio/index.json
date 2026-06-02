@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2704c0a7cebedb010d0438b16db7812c",
-    "generated_at_utc": "2026-06-02T17:55:44Z",
-    "count": 228
+    "version": "blake2b-16821c3d818c430c0f8ec7f51023cb7f",
+    "generated_at_utc": "2026-06-02T18:26:08Z",
+    "count": 229
   },
   "entries": [
     {
@@ -371,6 +371,29 @@
         "30"
       ],
       "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract validation validation architecture 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "public-route-model",
+      "kind": "doc",
+      "title": "Public Route Model",
+      "href": "/docs/?scope=studio&doc=public-route-model",
+      "last_updated": "2026-06-02",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-06-02 • Architecture",
+      "search_terms": [
+        "public-route-model",
+        "public",
+        "route",
+        "model",
+        "public route model",
+        "architecture",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "public-route-model public route model public route model architecture 2026-06-02 2026 06 02"
     },
     {
       "id": "data-models-shared",
