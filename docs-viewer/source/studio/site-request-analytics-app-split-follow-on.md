@@ -34,14 +34,12 @@ Key boundary decisions:
   - fixed the remaining active carryover discovered during verification by moving catalogue cleanup/write allowlists to the Analytics `tag_source_paths` contract
   - renamed the remaining generic Local Studio save utility from `tag-studio-save.js` to `studio-save-utils.js` and updated Studio route imports
   - ran focused Python, pytest, Playwright module, quick-profile, analytics-smoke, stale-reference, and diff checks
-  - created structured docs-log entry `change-2026-05-30-closed-analytics-app-split-follow-on-cleanup`
 
 ### steer for next task
 
 - Follow-on request is closed.
 - Docs source was updated directly; the docs watcher regenerated Studio docs payloads while running.
-- The docs-log helper wrote the structured log entry and rebuilt change-log generated indexes.
-- Historical request/log records were left intact except for the new close-out entry and generated change-log indexes.
+- Historical request records were left intact.
 
 ### baseline verification set
 
@@ -346,7 +344,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 12 | done | Refresh JavaScript and Python inventory docs for the post-follow-on state. Replace stale pre-split `assets/studio/js/tag-*` and `data-sharing-*` inventory rows with actual `analytics-app/app/frontend/js/` rows and rescore maintenance risk. Update Python/Ruby inventory rows for the moved Analytics helper package. |
 | 13 | done | Update durable docs: Analytics, Data Sharing, Data Sharing technical spec, Source Tree Ownership, Run Checks, local setup/runtime docs, projection/data-model docs, tag docs, search docs, and script docs that mention old Studio-owned paths or helper ownership. Update source docs only; do not manually rebuild generated docs payloads. |
 | 14 | done | Run the final focused verification set: Python syntax/import checks, focused tag helper pytest, focused Data Sharing adapter/path pytest, affected catalogue/search/audit tests, `analytics-smoke`, stale-reference scans for retired Studio paths/names, and `git diff --check`. |
-| 15 | done | Close out the follow-on request with moved-path summary, removed old paths, adapter/search ownership decisions, verification results, generated-payload status, remaining risks, and structured docs-log entry. |
+| 15 | done | Close out the follow-on request with moved-path summary, removed old paths, adapter/search ownership decisions, verification results, generated-payload status, and remaining risks. |
 
 ## Close-Out
 
@@ -377,7 +375,6 @@ Verification:
 Generated payload status:
 
 - Studio docs payloads changed because the docs watcher was running after source doc edits
-- change-log generated indexes changed because the structured docs-log helper rebuilt them after writing the close-out entry
 
 Remaining risks:
 

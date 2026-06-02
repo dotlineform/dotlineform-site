@@ -75,5 +75,5 @@ Button state should follow the command lifecycle:
 - status or validation feedback remains adjacent to the command area
 - destructive or write actions use confirmation only when the workflow requires explicit review
 
-Historical button notes from the retired Studio UI rules log now live in structured docs-log entries.
+Historical button notes from the retired Studio UI rules log are no longer a live source; stable guidance belongs in this primitive doc.
 Stable button guidance should move here as that log is retired.

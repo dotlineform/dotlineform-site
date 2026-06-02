@@ -44,14 +44,6 @@
       "presets": []
     },
     {
-      "report_id": "change_history",
-      "title": "Change History",
-      "description": "Displays structured docs-log entries from local generated projections.",
-      "default_access": "manage",
-      "loader_id": "change_history",
-      "presets": []
-    },
-    {
       "report_id": "semantic_references",
       "title": "Semantic References",
       "description": "Displays generated semantic-reference targets and source docs.",

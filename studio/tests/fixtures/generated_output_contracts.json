@@ -23,7 +23,7 @@
       "required_top_level_keys": ["docs", "generated_at", "viewer_options"],
       "viewer_options": {
         "non_loadable_doc_ids": [],
-        "manage_only_tree_root_ids": ["change-history-reports"],
+        "manage_only_tree_root_ids": [],
         "show_updated_date": true
       },
       "doc_entry": {

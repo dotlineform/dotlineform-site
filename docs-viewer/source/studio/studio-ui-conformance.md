@@ -137,9 +137,7 @@ Record:
 - what cleanup has actually been completed
 - what cleanup is still pending
 
-Do not use [Site Change Log](/docs/?scope=studio&doc=site-change-log) as the open remediation tracker.
-
-The site change log should record implemented outcomes only.
+Record completed remediation in the owning UI, primitive, pattern, or request docs rather than in the open audit tracker.
 
 ### 3. Open Decisions
 

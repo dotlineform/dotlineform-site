@@ -95,8 +95,6 @@ Verification completed:
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/studio_operational_route_modules.py --site-root .`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_project_state_route.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_navigation_adapter.py`
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-30-studio-project-state-js-shell.json`
-- `$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write`
 - `rg -n "project_state_view|projectStateRoot" studio/app/server studio/app/frontend/js docs-viewer/source/studio/site-request-studio-javascript-app-shell-slice-2.md docs-viewer/source/studio/local-studio-app.md docs-viewer/source/studio/studio-runtime.md`
 - `git diff --check`
 

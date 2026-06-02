@@ -81,8 +81,6 @@ Verification completed:
 - `node --check studio/app/frontend/js/catalogue-moment-shell.js`
 - `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py -q`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-30-studio-catalogue-editor-js-shells.json`
-- `$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write`
 - `git diff --check`
 
 Generated payload status: docs watcher may regenerate Studio docs/search payloads when source docs change; Codex did not manually rebuild docs payloads for this slice.

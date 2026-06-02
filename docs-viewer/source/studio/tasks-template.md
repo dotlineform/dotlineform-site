@@ -66,6 +66,5 @@ The last tasks should close out the implementation:
     - update statuses,
     - summarize moved paths,
     - record verification results and generated payload status,
-    - create structured docs-log entries,
     - copy durable decisions/contracts into permanent owning docs,
     - note remaining risks or follow-on work before these request docs are marked 'done'.

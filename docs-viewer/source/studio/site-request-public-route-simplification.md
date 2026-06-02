@@ -13,7 +13,7 @@ Status:
 
 - done
 - The cleaner public route model has been implemented while Jekyll remains the public preview/build layer.
-- The child task document records implementation notes, verification, remaining Jekyll collection-output removal conditions, and the structured docs-log entry.
+- The child task document records implementation notes, verification, and remaining Jekyll collection-output removal conditions.
 
 ## Task Tracker
 

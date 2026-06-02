@@ -90,7 +90,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | done | Define the framework checkpoint evidence to collect in slices 2 and 3, including route-module lifecycle complexity, duplicated render/state helpers, modal/form orchestration pressure, build-step need, and smoke-test impact. |
 | 6 | done | Update owning docs for the decided route-registry and shell-contract boundary, including this tracker and the parent request. Do not rebuild docs payloads manually; let the watcher update generated payloads if running. |
 | 7 | done | Run slice verification: focused Python config tests, JavaScript syntax/module checks if new JS is added, stale-reference scan for duplicated route metadata, and `git diff --check`. |
-| 8 | done | Close slice 1 with a handoff to slice 2: selected first route candidate, migration prerequisites, acceptance checks, framework-checkpoint evidence to collect, generated-payload status, known risks, and whether a structured docs-log entry is warranted. |
+| 8 | done | Close slice 1 with a handoff to slice 2: selected first route candidate, migration prerequisites, acceptance checks, framework-checkpoint evidence to collect, generated-payload status, and known risks. |
 
 ## Slice 2 Handoff Requirements
 
@@ -117,9 +117,7 @@ Verification completed:
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/studio_operational_route_modules.py --site-root .`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_navigation_adapter.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_docs_viewer.py`
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-30-studio-route-registry-shell-contract.json`
-- `$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write`
-- `rg -n "external_links\\.docs_viewer\\.doc_ids|doc_ids\\]|doc_ids\\.|\\\"doc_ids\\\"" docs-viewer/source/studio studio/app studio/tests --glob '!studio/workflows/change-requests/logs/**'`
+- `rg -n "external_links\\.docs_viewer\\.doc_ids|doc_ids\\]|doc_ids\\.|\\\"doc_ids\\\"" docs-viewer/source/studio studio/app studio/tests`
 - `git diff --check`
 
 Generated payload status: docs watcher regenerated Studio docs/search payloads while source docs were edited; those generated updates were not manually rebuilt by Codex.
@@ -129,5 +127,3 @@ Known risks:
 - Local Studio still has Python-rendered route bodies, so route body markup duplication will only reduce once slices 2-5 migrate routes.
 - `studio-config.js` still carries a fallback copy of the route registry for static/default config behavior; keep it aligned with checked-in JSON until a generated/default-config strategy replaces the copy.
 - The static `/studio/` home link columns still duplicate route labels and paths. Leave that out of slice 2 unless the shell renderer needs home-link metadata.
-
-Structured docs-log entry: warranted because this slice changes the Studio config contract and route-shell migration boundary.

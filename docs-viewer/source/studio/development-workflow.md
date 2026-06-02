@@ -25,7 +25,6 @@ For any non-trivial change:
 5. Run targeted verification proportional to the blast radius.
 6. Update owning docs and generated payloads when source docs or generated contracts change.
 7. Close out with a concise summary, remaining risks, and follow-up tasks.
-8. Write structured docs-log entries for meaningful completed work. More info: `studio/workflows/change-requests/README.md`.
 
 ## 1. Classify The Work
 
@@ -216,8 +215,7 @@ Use this as the default shape for repo sweeps, replacing `PATTERN` with the reti
 rg -n "PATTERN" \
   bin _config.yml docs-viewer studio scripts assets \
   --glob '!docs-viewer/source/studio/site-change-log*.md' \
-  --glob '!docs-viewer/source/studio/site-request-*.md' \
-  --glob '!studio/workflows/change-requests/logs/**'
+  --glob '!docs-viewer/source/studio/site-request-*.md'
 ```
 
 Run a separate targeted docs sweep only when needed, against current owning docs such as `docs-viewer.md`, `scripts-*.md`, `local-setup.md`, or `source-tree-ownership.md`.
@@ -256,19 +254,6 @@ A close-out should include:
 - request status updates when the work was driven by a change request
 - mark completed tasks clearly
 - mark an owning change request `done` only when durable docs contain the important decisions, verification is recorded, and remaining risks are explicit.
-
-## 8. Record Durable Change History
-
-The source model and authoring workflow for change logs are documented in `studio/workflows/change-requests/README.md`.
-
-- create structured log entries under `studio/workflows/change-requests/logs/entries/` for meaningful completed changes
-- include `change_request_doc_id` when a log entry implements or closes a request
-- include related docs and files so Codex can trace decisions later
-- let generated indexes and reports provide human browsing
-
-Create structured docs-log entries when the work changes durable behavior or closes a meaningful request: runtime behavior, command or service contracts, public routes, generated-data schemas, material workflow/process decisions, or a completed change request that future sessions need to trace.
-Do not create docs-log entries for routine task-row status updates, verification-only slices, small copy fixes, local smoke reruns, mechanical path-reference cleanup, or no-code/no-behavior confirmations.
-For multi-task requests, prefer one close-out log entry at the closure slice instead of one log entry per verification or bookkeeping subtask.
 
 ## Documentation Review Candidates
 

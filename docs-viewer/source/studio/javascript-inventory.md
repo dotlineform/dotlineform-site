@@ -133,7 +133,6 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 69 | `docs-viewer/runtime/js/docs-viewer-search.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
 | 70 | `docs-viewer/runtime/js/docs-viewer-sidebar.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
 | 71 | `docs-viewer/runtime/js/docs-viewer-tree.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 72 | `docs-viewer/runtime/js/reports/change-history-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 73 | `docs-viewer/runtime/js/reports/docs-index-table-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 74 | `docs-viewer/runtime/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 75 | `docs-viewer/runtime/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |

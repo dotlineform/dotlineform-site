@@ -103,8 +103,6 @@ Verification completed:
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_status_route.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_studio_works_route.py`
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-30-studio-catalogue-support-js-shells.json`
-- `$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write`
 - `git diff --check`
 
 Generated payload status: docs watcher regenerated Studio docs/search payloads while source docs were edited; Codex did not manually rebuild docs payloads.

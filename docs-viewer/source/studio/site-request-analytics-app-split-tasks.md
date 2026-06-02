@@ -18,10 +18,6 @@ This is the tracker for implementing [Analytics App Split Request](/docs/?scope=
 - Completed task 16 request close-out:
   - updated the parent request status to done
   - added moved-path, retired route/endpoint, verification, generated-payload, remaining-risk, and no-deferred-cleanup close-out notes
-  - added structured docs-log entries:
-    - `change-2026-05-30-split-analytics-and-data-sharing-into-a-local-analytics-app`
-    - `change-2026-05-30-separated-ui-catalogue-and-retired-thumbnail-quality-from-studio`
-  - rebuilt docs-log generated indexes through the log-entry helper
 - Completed task 15 durable-docs pass:
   - expanded the durable Analytics and Data Sharing docs with current Local Analytics, headless `data-sharing/`, Docs Viewer helper, tag-helper, and Local Studio non-ownership boundaries
   - retargeted Data Sharing overview/spec/config docs to `/analytics/data-sharing/...` and `/analytics/api/data-sharing/...`
@@ -156,6 +152,6 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 13 | done | Update source ownership, runtime dependency, local setup, service launcher, and affected request docs to describe Studio, Analytics, Docs Viewer, UI Catalogue, retired thumbnail tooling, and public-preview boundaries. |
 | 14 | done | Run the final focused verification set and confirm no compatibility layers remain: no old route aliases, no proxy handlers, no dual-read/write fallbacks, no copied static serving shims, and no tests depending on old Studio analytics/data-sharing paths. |
 | 15 | done | Ensure durable documents in `/docs/` have been updated to explain the new service responsibilities, boundaries and architecture. This change request and task tracker will be archived and later deleted. |
-| 16 | done | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, structured docs-log entries, and parent-request status updates. |
+| 16 | done | Close out with moved-path summary, retired Studio routes/endpoints, verification results, generated-payload status, remaining self-contained Analytics risks, and parent-request status updates. |
 
 Close-out must confirm that any cleanup has not been deferred.

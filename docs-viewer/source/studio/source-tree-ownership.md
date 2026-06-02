@@ -47,12 +47,11 @@ The current Studio-owned source homes are:
 | `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
 | `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
-| `studio/workflows/change-requests/` | Structured change-request workflow source, docs-log source entries, generated workflow projections, reports, and helper services. |
 
 Risk operations are Studio-owned.
 Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `studio/checks/`; ignored local risk reports and snapshots should default to `var/studio/risk/`; and any Studio-readable generated risk summaries should use `studio/data/generated/risk/` only when they are deliberately served by Local Studio.
 
-Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
+Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
 
 ## Analytics App
 
@@ -143,7 +142,6 @@ Generated public artifacts remain outside `studio/` when public pages need them.
 Examples include public catalogue JSON, public search indexes, public Docs Viewer payloads for `/library/` and `/analysis/`, public thumbnails, and public route media.
 
 Generated Studio read models remain under `studio/data/generated/` when they are only for Local Studio authoring/review.
-The generated change-history search projection remains under `studio/workflows/change-requests/generated/`.
 Generated committed manage-mode Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local manage-mode runtime use but are not public static assets.
 
 `var/` remains local working output for staging, imports, generated run logs, temporary media derivatives, and test run summaries.
@@ -157,7 +155,6 @@ Current active rules:
 - do not restore `assets/studio/` as a Studio source or local static source path
 - do not restore `assets/docs-viewer/` as Docs Viewer source; public copies are generated/runtime payloads only when explicitly needed
 - do not restore `_docs_catalogue/` for catalogue Markdown source
-- do not restore `_docs_logs/` for structured change-history source
 - do not restore root `tests/`, root check folders, or `scripts/docs/` as active source homes
 - keep `scripts/run_checks.py` deleted; use `studio/commands/run_checks.py`
 - keep public-site validation checks under Studio/Codex test ownership even when they inspect public generated output

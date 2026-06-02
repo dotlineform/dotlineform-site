@@ -487,7 +487,6 @@ Update route references after the unified page is stable:
 - `docs-viewer/source/studio/catalogue-new-work-editor.md` or a replacement compatibility note
 - `docs-viewer/source/studio/studio-runtime.md`
 - `docs-viewer/source/studio/user-guide.md`
-- structured docs-log entries if a reusable Studio mode-toggle rule emerges
 - draft-work list route or dashboard/status documentation, depending on the chosen implementation
 
 Acceptance checks:

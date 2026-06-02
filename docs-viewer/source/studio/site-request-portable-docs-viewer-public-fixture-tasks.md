@@ -87,8 +87,6 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 9 | planned | Keep local manage mode out of this slice. Do not copy management CSS/JS, management shell markup, local service URLs, backend capability checks, source write endpoints, imports, settings, scope lifecycle, delete/move behavior, rebuild behavior, or generated-data service reads into the public fixture. |
 | 10 | planned | Run focused fixture smoke and the proportional public Docs Viewer regression checks. Use elevated localhost/browser permissions for fixture and browser smokes when needed. |
 | 11 | planned | Update owning docs after implementation: this tracker, the portable Docs Viewer request, Docs Viewer Portable Setup if setup instructions change, the app-shell request if the infrastructure sequence status changes, and any fixture/smoke docs introduced by the slice. |
-| 12 | planned | Create or update the structured docs-log entry for this slice and record the entry id in this tracker. |
-
 The closeout for this slice should confirm:
 
 - the fixture lives under an ignored local path and can be recreated consistently

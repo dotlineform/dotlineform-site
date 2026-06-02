@@ -57,7 +57,7 @@ def write_scope_config(root: Path) -> None:
                     "default_doc_id": "parent",
                     "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": ["change-history-reports"],
+                    "manage_only_tree_root_ids": [],
                     "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                 }

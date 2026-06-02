@@ -64,7 +64,7 @@ I reviewed [site-request-studio-source-tree-reorganization.md](/Users/dlf/Develo
 - **Clarify Jekyll/public preview exclusion expectations.**  
   The repo already excludes `studio/`, `assets/ui-catalogue/`, and `assets/studio/` in [_config.yml](/Users/dlf/Developer/dotlineform/dotlineform-site/_config.yml:108). If source files move under `studio/`, spell out whether public preview should ignore all of that tree or whether any projected public artifact is allowed.
 
-- **Call out docs-log/update expectations.**  
-  Given this is a multi-slice reorganization, add that each slice should update this request with status, update owning runtime/UI docs when behavior changes, and create a `_docs_logs` entry at commit points.
+- **Call out update expectations.**
+  Given this is a multi-slice reorganization, add that each slice should update this request with status and update owning runtime/UI docs when behavior changes.
 
 I did not edit the spec. The biggest thing to settle first is the source-vs-served-path model, because it determines whether this is mostly path mapping inside the local server or a projection/build-contract migration.

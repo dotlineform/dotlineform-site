@@ -168,9 +168,6 @@ Current test/check references:
   - patches Docs Viewer rebuild and Python Markdown validation helpers for management workflow smoke coverage
 - `studio/tests/python/test_catalogue_build_commands.py`
   - asserts the Python catalogue search command shape
-- `studio/tests/python/test_docs_logs_indexes.py`
-  - records `docs-viewer/build/build_docs.py` as a related file in docs log index fixtures
-
 ## Goals
 
 - replace the retired Ruby Docs Viewer payload builder with `docs-viewer/build/build_docs.py`, including the current custom Markdown token pipeline

@@ -16,11 +16,6 @@ SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
-DOCS_LOG_PROJECTIONS = {
-    "search-index": "search-index.json",
-}
-
-
 def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
@@ -46,13 +41,6 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
     return repo_root / config.search_output
-
-
-def generated_docs_log_projection_path(repo_root: Path, projection: str) -> Path:
-    filename = DOCS_LOG_PROJECTIONS.get(projection)
-    if filename is None:
-        raise ValueError(f"unsupported docs-log projection: {projection}")
-    return repo_root / "studio/workflows/change-requests" / "generated" / filename
 
 
 def generated_references_index_path(repo_root: Path, scope: str) -> Path:
@@ -95,13 +83,6 @@ def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
         generated_search_index_path(repo_root, scope),
         f"generated search index for {scope}",
-    )
-
-
-def read_generated_docs_log_projection(repo_root: Path, projection: str) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_docs_log_projection_path(repo_root, projection),
-        f"generated docs-log projection {projection}",
     )
 
 

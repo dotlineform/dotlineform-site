@@ -36,9 +36,7 @@ Studio landing and operational routes expose the shared route-ready contract:
 ## Key Documents
 
 - **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
-  end-to-end lifecycle guidance for human and Codex implementation work, including rules for maintaining the site change log.
-- **[Change History Reports](/docs/?scope=studio&doc=change-history-reports&mode=manage)**
-  manage-only structured change-history views generated from `studio/workflows/change-requests/`.
+  end-to-end lifecycle guidance for human and Codex implementation work.
 - **[Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)**
   checked-in dependency sources, critical versus workflow-specific packages, and local/cloud dependency expectations.
 - **[UI Audits](/docs/?scope=studio&doc=ui-audits)**

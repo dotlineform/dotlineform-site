@@ -68,9 +68,8 @@
 - Generated public payloads should not carry derivable URL fields such as catalogue search `href` or moment preview `public_url` unless a documented non-derivable exception is required.
 - Remaining `_works/`, `_series/`, and `_work_details/` collection outputs are Jekyll build-layer artifacts only. Do not treat them as durable route contracts.
 
-## Change Log
+## Documentation
 
-- The source model and authoring workflow for change logs are documented in `studio/workflows/change-requests/README.md`; entry files live under `studio/workflows/change-requests/logs/entries/`.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
 - Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.

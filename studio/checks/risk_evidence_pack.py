@@ -57,7 +57,6 @@ GENERATED_PAYLOAD_ROOTS = (
     "assets/data",
     "docs-viewer/generated",
     "studio/data/generated",
-    "studio/workflows/change-requests/generated",
 )
 SCRIPT_INVENTORY_ROOTS = ("studio", "docs-viewer", "analytics-app", "data-sharing")
 STATIC_METRIC_EXCLUDED_PREFIXES: tuple[tuple[str, ...], ...] = (
@@ -65,8 +64,6 @@ STATIC_METRIC_EXCLUDED_PREFIXES: tuple[tuple[str, ...], ...] = (
     ("docs-viewer", "generated"),
     ("studio", "data", "canonical"),
     ("studio", "data", "generated"),
-    ("studio", "workflows", "change-requests", "generated"),
-    ("studio", "workflows", "change-requests", "reports"),
     ("analytics-app", "data", "canonical"),
 )
 EXCLUDED_DIRS = {

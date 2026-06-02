@@ -92,7 +92,7 @@ Each run directory should contain:
 | `summary.json` | Machine-readable summary grouped by app, area, indicator, evidence source, and close-out relevance. |
 | `static-metrics.json` | Source/config file counts, line counts, import/export counts, dependency direction, and grouped ownership metrics. Generated and canonical data payload roots are excluded so payload size does not distort source metrics. |
 | `static-searches.json` | Repeatable search patterns, matched paths, counts, and excerpts where useful. |
-| `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, docs-log generated indexes, and relevant builder diagnostics. |
+| `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, and relevant builder diagnostics. |
 | `script-family-inventory.json` | Python/Ruby script-family counts, line counts, family totals, and largest-file observations migrated from the legacy script inventory rerun block. |
 | `git-history.json` | Recent touch counts grouped by app, area, file family, and file. |
 | `runtime-checks.json` | Optional allowlisted runtime check profile results. |
@@ -113,7 +113,7 @@ Current producers:
 | Static file metrics | risk runner helper | Source/config file counts, line counts, bytes, and grouped totals by app and file family. Excludes generated and canonical data payload roots. |
 | Import/export scan | risk runner helper | Dependency direction and cross-app coupling evidence inside `static-metrics.json`. |
 | Static searches | risk runner helper | Configurable patterns for stale paths, broad state, retired modules, endpoints, generated paths, and ownership smells. |
-| Generated payload scan | risk runner helper | Generated JSON payload counts, sizes, docs-log generated indexes, and basic shape observations. |
+| Generated payload scan | risk runner helper | Generated JSON payload counts, sizes, and basic shape observations. |
 | Script family inventory | risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc rerun commands from the legacy script inventory. |
 | Git touch counts | risk runner helper | Recent edit concentration grouped by app, area, family, and file. |
 | Subjective notes | manually maintained JSONL or command option | User feedback and reviewer judgement as labelled non-deterministic evidence. |

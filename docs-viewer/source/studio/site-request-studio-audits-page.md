@@ -224,7 +224,7 @@ Finding shape:
 7. Document the new service and route in Studio/runtime/script docs.
 8. Host audit endpoints through the local Studio app runner.
 9. Add targeted smoke coverage for service unavailable, passing audit, and failing audit states.
-10. Update the site change log when the feature is implemented.
+10. Update the owning Studio docs when the feature is implemented.
 
 ## Verification Matrix
 

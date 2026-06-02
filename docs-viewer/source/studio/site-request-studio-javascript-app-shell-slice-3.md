@@ -99,8 +99,6 @@ Verification completed:
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_audits_route.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_activity_route.py`
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/workflows/change-requests/logs/entries/change-2026-05-30-studio-operational-js-shells.json`
-- `$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write`
 - `git diff --check`
 
 Generated payload status: docs watcher regenerated Studio docs/search payloads while source docs were edited; Codex did not manually rebuild docs payloads.

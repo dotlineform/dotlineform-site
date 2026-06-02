@@ -3452,9 +3452,6 @@ def assert_report_service_contract(page: Page) -> None:
                 if (url.endsWith('/docs/source-config')) {
                     return response(true, 200, { ok: true, scopes: [] });
                 }
-                if (url.includes('/docs/generated/docs-log?')) {
-                    return response(true, 200, { entries: [{ id: 'change-1' }] });
-                }
                 if (url.endsWith('/docs/broken-links')) {
                     return response(true, 200, { ok: true, entries: [{ problem: 'missing' }] });
                 }
@@ -3465,7 +3462,6 @@ def assert_report_service_contract(page: Page) -> None:
                 fetch: fetchImpl
             });
             const sourceConfig = await service.readSourceConfig();
-            const changeHistory = await service.readChangeHistory({ scope: 'Studio' });
             const brokenLinks = await service.runBrokenLinksAudit({
                 scope: 'Studio',
                 activityContext: { control_id: 'docsBrokenLinksReportRun' }
@@ -3479,7 +3475,6 @@ def assert_report_service_contract(page: Page) -> None:
             return {
                 baseUrl: service.baseUrl,
                 sourceScopes: sourceConfig.scopes.length,
-                changeIds: changeHistory.entries.map((entry) => entry.id),
                 brokenProblems: brokenLinks.entries.map((entry) => entry.problem),
                 requests,
                 missingBaseMessage
@@ -3488,19 +3483,11 @@ def assert_report_service_contract(page: Page) -> None:
     )
     if result["baseUrl"] != "http://127.0.0.1:8789":
         raise AssertionError(f"report service base URL normalization changed: {result!r}")
-    if result["sourceScopes"] != 0 or result["changeIds"] != ["change-1"] or result["brokenProblems"] != ["missing"]:
+    if result["sourceScopes"] != 0 or result["brokenProblems"] != ["missing"]:
         raise AssertionError(f"report service response contract changed: {result!r}")
     if result["requests"] != [
         {
             "url": "http://127.0.0.1:8789/docs/source-config",
-            "method": "GET",
-            "cache": "no-store",
-            "accept": "application/json",
-            "contentType": "",
-            "body": None,
-        },
-        {
-            "url": "http://127.0.0.1:8789/docs/generated/docs-log?projection=search-index&scope=studio",
             "method": "GET",
             "cache": "no-store",
             "accept": "application/json",

@@ -56,12 +56,6 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    readChangeHistory: function (request) {
-      var scope = cleanString(request && request.scope).toLowerCase();
-      var params = new URLSearchParams({ projection: "search-index" });
-      if (scope) params.set("scope", scope);
-      return fetchReportJson("/docs/generated/docs-log?" + params.toString(), serviceOptions);
-    },
     runBrokenLinksAudit: function (request) {
       var payload = {
         scope: cleanString(request && request.scope).toLowerCase()

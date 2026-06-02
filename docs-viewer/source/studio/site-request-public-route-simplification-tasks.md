@@ -14,7 +14,6 @@ This is the implementation tracker for [Public Route Simplification Request](/do
 ## Next Session Steer
 
 The route simplification request is closed.
-The completed implementation is recorded in structured docs-log entry `change-2026-06-01-closed-public-route-simplification`.
 
 Decisions made in this slice:
 
@@ -89,7 +88,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 11 | done | Add or update `404.html`. Unknown retired routes should show simple "page unavailable" copy with a link back to `/series/`. Do not create broad compatibility redirects for old paths. |
 | 12 | done | Add or update focused public route smoke coverage. Cover the recommended smoke set below using a Jekyll build served from an isolated temporary destination. |
 | 13 | done | Update owning docs after implementation. Update this tracker, the parent route simplification request if the route contract changes during implementation, public route/source ownership docs if route ownership changes materially, and the static-site build request only if its preconditions change. Do not rebuild Docs Viewer payloads manually. |
-| 14 | done | Close out the route simplification request. Confirm no unresolved route-compatibility layers remain, record any still-generated per-record outputs with owner/removal condition, and create a structured docs-log entry if the implementation is meaningful enough to record in change history. |
+| 14 | done | Close out the route simplification request. Confirm no unresolved route-compatibility layers remain and record any still-generated per-record outputs with owner/removal condition. |
 
 ## Recommended Verification
 

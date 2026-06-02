@@ -1,10 +1,8 @@
 {
-  "generated_at": "2026-06-02T05:34:20Z",
+  "generated_at": "2026-06-02T06:35:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": [
-      "change-history-reports"
-    ],
+    "manage_only_tree_root_ids": [],
     "show_updated_date": true
   },
   "docs": [
@@ -164,7 +162,7 @@
       "source_path": "architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/architecture.json",
-      "content_text_length": 1402
+      "content_text_length": 1253
     },
     {
       "scope": "studio",
@@ -248,7 +246,7 @@
       "source_path": "source-tree-ownership.md",
       "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
-      "content_text_length": 11636
+      "content_text_length": 11286
     },
     {
       "scope": "studio",
@@ -319,7 +317,7 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
       "ui_status": "urgent",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 2901
+      "content_text_length": 2799
     },
     {
       "scope": "studio",
@@ -393,7 +391,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 48567
+      "content_text_length": 48404
     },
     {
       "scope": "studio",
@@ -408,7 +406,7 @@
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 34099
+      "content_text_length": 33980
     },
     {
       "scope": "studio",
@@ -528,7 +526,7 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-      "content_text_length": 9135
+      "content_text_length": 9079
     },
     {
       "scope": "studio",
@@ -823,7 +821,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
-      "content_text_length": 15122
+      "content_text_length": 15027
     },
     {
       "scope": "studio",
@@ -838,7 +836,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-follow-on",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-      "content_text_length": 25536
+      "content_text_length": 25118
     },
     {
       "scope": "studio",
@@ -853,7 +851,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-app-split-tasks",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
-      "content_text_length": 15240
+      "content_text_length": 14941
     },
     {
       "scope": "studio",
@@ -898,7 +896,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-work-unified-editor.json",
-      "content_text_length": 23915
+      "content_text_length": 23839
     },
     {
       "scope": "studio",
@@ -943,7 +941,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
       "ui_status": "deferred",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-toolkit-extraction.json",
-      "content_text_length": 6150
+      "content_text_length": 6151
     },
     {
       "scope": "studio",
@@ -1063,7 +1061,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks",
       "ui_status": "urgent",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
-      "content_text_length": 9010
+      "content_text_length": 8895
     },
     {
       "scope": "studio",
@@ -1078,7 +1076,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-public-route-simplification",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification.json",
-      "content_text_length": 11556
+      "content_text_length": 11525
     },
     {
       "scope": "studio",
@@ -1093,7 +1091,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-public-route-simplification-tasks",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification-tasks.json",
-      "content_text_length": 13527
+      "content_text_length": 13295
     },
     {
       "scope": "studio",
@@ -1228,7 +1226,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes.json",
-      "content_text_length": 25092
+      "content_text_length": 24955
     },
     {
       "scope": "studio",
@@ -1243,7 +1241,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-rubyless-app-runtimes-tasks",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes-tasks.json",
-      "content_text_length": 25957
+      "content_text_length": 25599
     },
     {
       "scope": "studio",
@@ -1273,7 +1271,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-audits-page",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-audits-page.json",
-      "content_text_length": 8783
+      "content_text_length": 8786
     },
     {
       "scope": "studio",
@@ -1303,7 +1301,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-1",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-1.json",
-      "content_text_length": 9855
+      "content_text_length": 9368
     },
     {
       "scope": "studio",
@@ -1318,7 +1316,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-2",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-2.json",
-      "content_text_length": 6392
+      "content_text_length": 6141
     },
     {
       "scope": "studio",
@@ -1333,7 +1331,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-3",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-3.json",
-      "content_text_length": 6234
+      "content_text_length": 5984
     },
     {
       "scope": "studio",
@@ -1348,7 +1346,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-4",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-4.json",
-      "content_text_length": 6301
+      "content_text_length": 6045
     },
     {
       "scope": "studio",
@@ -1363,7 +1361,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-5",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-5.json",
-      "content_text_length": 4945
+      "content_text_length": 4690
     },
     {
       "scope": "studio",
@@ -1378,7 +1376,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell-slice-6",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-6.json",
-      "content_text_length": 3167
+      "content_text_length": 2914
     },
     {
       "scope": "studio",
@@ -1462,7 +1460,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 9635
+      "content_text_length": 9603
     },
     {
       "scope": "studio",
@@ -1523,37 +1521,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "change-history-reports",
-      "title": "Change History Reports",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-31",
-      "parent_id": "dev-home",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "change-history-reports.md",
-      "viewer_url": "/docs/?scope=studio&doc=change-history-reports",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/change-history-reports.json",
-      "content_text_length": 1588
-    },
-    {
-      "scope": "studio",
-      "doc_id": "change-history",
-      "title": "Change History",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "change-history-reports",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "change-history.md",
-      "viewer_url": "/docs/?scope=studio&doc=change-history",
-      "ui_status": "report",
-      "viewer_report": "change_history",
-      "viewer_report_access": "manage",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/change-history.json",
-      "content_text_length": 0
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-cloud-environments",
       "title": "Cloud Environments",
       "added_date": "2026-04-14",
@@ -1578,7 +1545,7 @@
       "source_path": "development-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=development-checklist",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-checklist.json",
-      "content_text_length": 4924
+      "content_text_length": 4650
     },
     {
       "scope": "studio",
@@ -1592,7 +1559,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 19326
+      "content_text_length": 18026
     },
     {
       "scope": "studio",
@@ -1676,7 +1643,7 @@
       "source_path": "tasks-template.md",
       "viewer_url": "/docs/?scope=studio&doc=tasks-template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-template.json",
-      "content_text_length": 3379
+      "content_text_length": 3341
     },
     {
       "scope": "studio",
@@ -1891,7 +1858,7 @@
       "viewer_report": "reports_list",
       "viewer_report_access": "public",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5824
+      "content_text_length": 5574
     },
     {
       "scope": "studio",
@@ -1905,7 +1872,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 26912
+      "content_text_length": 26864
     },
     {
       "scope": "studio",
@@ -2091,7 +2058,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 18245
+      "content_text_length": 18203
     },
     {
       "scope": "studio",
@@ -2340,7 +2307,7 @@
       "source_path": "local-setup-public-site-preview.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup-public-site-preview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-public-site-preview.json",
-      "content_text_length": 4759
+      "content_text_length": 4728
     },
     {
       "scope": "studio",
@@ -2830,7 +2797,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4798
+      "content_text_length": 4624
     },
     {
       "scope": "studio",
@@ -3040,7 +3007,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 2121
+      "content_text_length": 2156
     },
     {
       "scope": "studio",
@@ -3082,7 +3049,7 @@
       "source_path": "ui-primitive-input.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-input.json",
-      "content_text_length": 2150
+      "content_text_length": 2132
     },
     {
       "scope": "studio",
@@ -3096,7 +3063,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 3526
+      "content_text_length": 3479
     },
     {
       "scope": "studio",
@@ -3152,7 +3119,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 2853
+      "content_text_length": 2806
     },
     {
       "scope": "studio",
@@ -3166,7 +3133,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3390
+      "content_text_length": 3425
     },
     {
       "scope": "studio",
@@ -3222,7 +3189,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json",
-      "content_text_length": 11875
+      "content_text_length": 11782
     },
     {
       "scope": "studio",

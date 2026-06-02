@@ -61,7 +61,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | new | new | `docs-viewer/runtime/js/docs-viewer-config-service.js` | 1 | 1 | 1 | 1 | 4 | Focused browser-safe Docs Viewer config and UI-text fetch/retry owner consumed by the config controller. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-scope-select-menu.js` | 1 | 1 | 1 | 1 | 4 | Focused custom scope select-menu projection and interaction owner consumed by the config controller. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-asset-url.js` | 1 | 1 | 1 | 1 | 4 | Focused asset-version URL projection helper for static browser assets. |
-| new | new | `docs-viewer/runtime/js/docs-viewer-report-service.js` | 1 | 1 | 1 | 1 | 4 | Focused local report endpoint adapter for source-config, generated docs-log, and broken-links audit reports. |
+| new | new | `docs-viewer/runtime/js/docs-viewer-report-service.js` | 1 | 1 | 1 | 1 | 4 | Focused local report endpoint adapter for source-config and broken-links audit reports. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-document-index-state.js` | 1 | 1 | 1 | 1 | 4 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` | 1 | 1 | 1 | 1 | 4 | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability. |
 | new | new | `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` | 1 | 1 | 1 | 1 | 4 | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes. |
@@ -80,7 +80,6 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 26 | 70 | `docs-viewer/runtime/js/docs-viewer-search.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
 | 27 | 71 | `docs-viewer/runtime/js/docs-viewer-sidebar.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
 | 28 | 72 | `docs-viewer/runtime/js/docs-viewer-tree.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 29 | 73 | `docs-viewer/runtime/js/reports/change-history-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 30 | 74 | `docs-viewer/runtime/js/reports/docs-index-table-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 31 | 75 | `docs-viewer/runtime/js/reports/reports-list-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 32 | 76 | `docs-viewer/runtime/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
@@ -211,7 +210,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused local report endpoint adapter.
 - Current risk score: 4.
-- Keep this module limited to local report endpoint paths, request options, local-server missing-base errors, and response-envelope handling for source-config, generated docs-log, and broken-links audit reports.
+- Keep this module limited to local report endpoint paths, request options, local-server missing-base errors, and response-envelope handling for source-config and broken-links audit reports.
 - Do not move report DOM rendering, table sorting/filtering, activity UI labels, generated-data runtime reads, management writes outside report actions, or management capability truth into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
@@ -423,7 +422,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### Reports, Search, And Bookmarks
 
 - Keep reports self-contained and loaded through the report allowlist.
-- Keep local source-config, generated docs-log, and broken-links endpoint access behind `docs-viewer/runtime/js/docs-viewer-report-service.js`; report modules should consume `context.reportService` rather than `managementBaseUrl` or direct `window.fetch(...)`.
+- Keep local source-config and broken-links endpoint access behind `docs-viewer/runtime/js/docs-viewer-report-service.js`; report modules should consume `context.reportService` rather than `managementBaseUrl` or direct `window.fetch(...)`.
 - Extract shared report table or pager helpers only after at least two reports need the same behavior.
 - Keep search and bookmark storage/controller behavior focused; revisit if grouping, sync, export, or cross-scope behavior is added.
 

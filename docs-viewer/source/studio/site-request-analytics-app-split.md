@@ -73,7 +73,7 @@ A local Jekyll service is only optional public-site preview tooling and must sta
 - no local Jekyll integration with the Analytics service
 - no redesign or feature work for UI Catalogue
 - no active thumbnail-quality workflow replacement
-- no attempt to remove all historical references in old change logs
+- no attempt to remove all historical request references
 
 ## Target Ownership
 
@@ -239,7 +239,6 @@ Generated-payload status:
 
 - source docs were updated as the durable documentation source
 - the local docs watcher regenerated affected `docs-viewer/generated/docs/studio/...` and `docs-viewer/generated/search/studio/index.json` payloads after source edits
-- docs-log generated indexes were rebuilt after structured log entries were written
 - no manual public Jekyll publication step was run as part of this close-out
 
 Remaining risks are self-contained inside the new ownership boundaries rather than deferred split cleanup:

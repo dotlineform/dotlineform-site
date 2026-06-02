@@ -108,5 +108,5 @@ The route owns visibility and invalidation of the `results` action.
 
 ## Migration Notes
 
-Related historical notes from the retired Studio UI rules log now live in structured docs-log entries.
+Related historical notes from the retired Studio UI rules log are no longer a live source; stable guidance belongs in the owning UI docs.
 Move stable guidance here when retiring that log content.

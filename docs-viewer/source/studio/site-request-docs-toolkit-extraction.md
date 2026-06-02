@@ -78,7 +78,7 @@ If Docs Viewer becomes a reusable upstream project, prefer traceable source cont
 Candidate model:
 
 - create or designate an upstream shared Docs Viewer repo as the master source
-- track releases with version tags, a change log, and migration notes
+- track releases with version tags, release notes, and migration notes
 - install into downstream repos with Git subtree or Git submodule while the boundary is still settling
 - keep downstream repos responsible for project-local content, routes, theme adapters, and local config
 - consider package-manager distribution only after the file boundary, command shape, and config contract have stabilized in at least one fixture install

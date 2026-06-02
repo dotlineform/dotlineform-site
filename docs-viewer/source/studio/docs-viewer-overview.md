@@ -85,7 +85,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
 - `docs-viewer/runtime/js/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
 - `docs-viewer/runtime/js/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
-- `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config, generated docs-log, and broken-links audit reports in management-capable contexts
+- `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts
 - `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
@@ -218,7 +218,7 @@ Current report behavior:
 - `viewer_report_scope` selects the generated docs scope the report reads; if omitted, the current viewer scope is used
 - `viewer_report_access` gates reports to public, manage, or local-only contexts
 - report-backed docs remain normal docs in the index, so `parent_id`, title-ordered placement, visibility, bookmarks, and management moves still work normally
-- public/read-only reports consume generated-data callbacks; local/manage reports consume `docs-viewer-report-service.js` for local source-config, generated docs-log, and broken-links audit endpoint access
+- public/read-only reports consume generated-data callbacks; local/manage reports consume `docs-viewer-report-service.js` for local source-config and broken-links audit endpoint access
 - the first report is `docs_index_table`, a scope-aware generated-docs table with filter buttons, sortable columns, and Docs Viewer row links
 - the Library Documents review now uses `viewer_report: docs_index_table` with `viewer_report_scope: library`
 

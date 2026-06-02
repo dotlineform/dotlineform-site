@@ -133,7 +133,7 @@ The 2026-05 split moved the durable Data Sharing boundary to:
 - runtime artifacts under `var/analytics/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
 
 The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config or Local Studio runtime config.
-Generated Docs Viewer payloads are not the source of this documentation slice; source docs and structured docs-log records are updated first.
+Generated Docs Viewer payloads are not the source of this documentation slice; source docs are updated first.
 Codex did not run a manual Docs Viewer payload rebuild for this slice, but the local docs watcher may regenerate the affected Studio JSON payloads after these source docs change.
 
 ## Activity

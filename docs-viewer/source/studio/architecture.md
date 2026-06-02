@@ -32,5 +32,3 @@ Related references:
 - **[Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)** for canonical ordering across generated artifacts and runtime pages
 - **[Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)** for the guardrail on when docs scopes should and should not fork the shared viewer runtime
 - **[Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)** for the live rebuild path that refreshes the main runtime JSON artifacts used by public catalogue pages
-- **[Site Change Log](/docs/?scope=studio&doc=site-change-log)** for the history of meaningful non-search site and Studio changes
-- **[Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)** for maintenance rules and entry format

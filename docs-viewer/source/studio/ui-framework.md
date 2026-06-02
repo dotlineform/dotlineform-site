@@ -90,7 +90,6 @@ Before finishing Studio UI work:
 
 - update `studio_config.json` if visible runtime copy changed
 - update shared docs if the contract changed
-- create a structured docs-log entry for meaningful systemic UI decisions or implementations
 - verify desktop and mobile behavior
 - run `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 

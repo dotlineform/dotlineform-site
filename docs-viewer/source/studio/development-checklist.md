@@ -74,8 +74,6 @@ When changing UI Catalogue demo visibility:
 At closeout:
 
 - update the owning docs and any implementation plan or change request status that changed
-- create a `studio/workflows/change-requests/logs/entries/*.json` entry for meaningful behavior, workflow, runtime, or documentation changes
-- rebuild docs-log generated indexes after adding a log entry unless the slice explicitly defers generated follow-through
 - do not rebuild Docs Viewer payloads unless the slice explicitly calls for that follow-through
 - report generated payload status separately from source-doc edits
 
@@ -88,4 +86,4 @@ When adding or moving repo source:
 - keep public Jekyll layouts, includes, route pages, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
 - keep Docs Viewer source, runtime, CSS, config, build code, and services together under `docs-viewer/`
 - keep local working output, staging, and test logs under `var/` or other ignored output paths
-- do not reintroduce old source homes such as `assets/studio/`, `assets/docs-viewer/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or `scripts/docs/`
+- do not reintroduce old source homes such as `assets/studio/`, `assets/docs-viewer/`, `_docs_catalogue/`, root `tests/`, root check folders, or `scripts/docs/`

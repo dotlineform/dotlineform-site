@@ -71,4 +71,4 @@ Input state should follow the owning page state:
 - changing an input should clear stale result actions when those results depend on the previous input
 - validation feedback should stay near the field or command area that caused it
 
-Historical input guidance from structured UI change-history entries should move here as stable rules are promoted.
+Stable input guidance belongs here when it is promoted from implementation work or review notes.

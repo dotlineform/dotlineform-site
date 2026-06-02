@@ -26,13 +26,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  change_history: {
-    load: function () {
-      return import("./reports/change-history-report.js").then(function (module) {
-        return module.mountChangeHistoryReport;
-      });
-    }
-  },
   semantic_references: {
     load: function () {
       return import("./reports/semantic-references-report.js").then(function (module) {
@@ -74,14 +67,6 @@ const FALLBACK_REPORT_REGISTRY = {
       description: "Displays Docs Viewer source config for all scopes in manage mode.",
       defaultAccess: "manage",
       loaderId: "source_config",
-      presets: []
-    },
-    {
-      reportId: "change_history",
-      title: "Change History",
-      description: "Displays structured docs-log entries from local generated projections.",
-      defaultAccess: "manage",
-      loaderId: "change_history",
       presets: []
     },
     {
