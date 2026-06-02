@@ -92,7 +92,6 @@ Use these defaults before starting page-level modal migration:
 - `document` is for document-like or import-body content that should follow readable measure
 - Studio helper equivalence is available through confirm, detail-confirm, notice, text-input, and choice helpers
 - Docs Viewer may keep portable `docsViewer__*` implementation details, but must match this contract visually and behaviorally
-- page migrations should use this primitive contract plus the page-level tracker in [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern)
 
 ## Anatomy
 
@@ -174,5 +173,3 @@ UI audits for modal-owning pages should check:
 - validation and status-message placement
 - action ownership, especially that writes and reloads remain route-owned
 - parity between Studio and portable Docs Viewer modal implementations where applicable
-
-The modal migration is tracked in [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern).

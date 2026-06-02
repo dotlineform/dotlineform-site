@@ -11,8 +11,6 @@ viewable: true
 This document records the technical design and implementation notes for the Docs Viewer New Scopes Builder.
 It should be populated as the implementation progresses and reviewed fully before the feature is treated as complete.
 
-The product request is tracked in [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button).
-
 ## Purpose
 
 The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/?mode=manage`.

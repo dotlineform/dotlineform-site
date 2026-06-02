@@ -163,4 +163,3 @@ As docs search moves under Docs Viewer, its policy should be documented there or
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
-- [Search Change Log](/docs/?scope=studio&doc=search-change-log)

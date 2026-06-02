@@ -57,4 +57,3 @@ The page root `#projectStateRoot` exposes the shared Studio route-ready contract
 - [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

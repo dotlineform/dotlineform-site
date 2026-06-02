@@ -110,7 +110,6 @@ Follow-on direction:
 - changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
 - changed detail/series save responses now include the same `lookup_refresh` metadata
 - changed moment-save responses include `moment_build_invalidation` instead of `lookup_refresh`; moment publication and delete flows do not emit or perform Studio lookup refresh work
-- track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:
 

@@ -150,4 +150,3 @@ When updating Docs Viewer docs:
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Data Models](/docs/?scope=studio&doc=data-models)
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)

@@ -123,8 +123,6 @@ The shared route-ready contract is implemented on current Studio route shells. T
 
 The dashboard and reference-page routes use a minimal ready contract. For those routes, smoke tests should only treat the root attributes as initial page-shell readiness unless a future feature adds route-specific async behavior or commands.
 
-The rollout history is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
-
 ## Ready-State Audit
 
 Run the ready-state audit after changing Studio route shells, route scripts, or route-ready helpers:

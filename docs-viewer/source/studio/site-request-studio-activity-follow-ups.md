@@ -15,10 +15,8 @@ Status:
 
 ## Summary
 
-This request holds activity-log work that remains outside the closed [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log).
-
 The unified `/studio/activity/` surface is now implemented and is the only active Studio activity report.
-This follow-up exists so optional expansion and cleanup work can be tracked without keeping the original implementation request open.
+This follow-up exists so optional expansion and cleanup work can be tracked.
 
 ## Scope
 

@@ -53,4 +53,3 @@ The `analytics-smoke` profile runs Analytics Data Sharing route and API smokes a
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)

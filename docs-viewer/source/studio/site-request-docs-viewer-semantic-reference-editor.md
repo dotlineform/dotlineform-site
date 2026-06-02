@@ -266,7 +266,6 @@ This request can be implemented as a manage-only document panel view.
 
 It should align with:
 
-- [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell)
 - [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
 
@@ -412,8 +411,5 @@ Add focused tests or smoke checks for:
 ## Related References
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
-- [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell)
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)

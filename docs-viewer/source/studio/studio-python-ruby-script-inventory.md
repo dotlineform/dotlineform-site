@@ -306,7 +306,6 @@ A large file can be low performance risk if it is rarely run, and a small file c
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)

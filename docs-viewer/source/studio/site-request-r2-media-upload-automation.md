@@ -243,5 +243,4 @@ The first catalogue milestone is implemented:
 - [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)
-- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
 - [Docs Images](/docs/?scope=studio&doc=user-guide-docs-images)

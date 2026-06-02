@@ -26,7 +26,7 @@ Summary:
 
 Completed Priority 1 migration on 2026-05-19:
 
-- `docs-viewer/source/studio/studio-ui-rules.md` was removed from the normal Studio docs source. Durable UI guidance should be promoted separately into [UI](/docs/?scope=studio&doc=ui), [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), UI primitive docs, or UI pattern docs when later review identifies stable rules worth preserving as reference material.
+- `docs-viewer/source/studio/studio-ui-rules.md` was removed from the normal Studio docs source. Durable UI guidance should be promoted separately into [UI](/docs/?scope=studio&doc=ui), UI primitive docs, or UI pattern docs when later review identifies stable rules worth preserving as reference material.
 
 Completed non-Priority-1 splits on 2026-05-19:
 

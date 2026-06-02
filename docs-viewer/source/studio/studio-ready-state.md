@@ -9,8 +9,6 @@ parent_id: studio
 
 This is the technical reference for the implemented Studio route-ready contract.
 
-The earlier [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract) is implemented and remains useful as rollout history, but this page is the canonical design and implementation reference.
-
 ## Purpose
 
 Studio pages render asynchronously and often depend on local services, generated lookup payloads, or route-specific module startup. Browser smoke tests and future automation need a stable machine-readable signal for when a route is ready for interaction.
@@ -198,4 +196,3 @@ The `quick` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

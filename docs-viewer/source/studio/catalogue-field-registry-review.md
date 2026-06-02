@@ -70,7 +70,6 @@ It does not:
 
 ## Related References
 
-- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
 - [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
 - [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)

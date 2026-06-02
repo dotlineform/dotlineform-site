@@ -51,7 +51,6 @@ The `quick` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.
 ## Related References
 
 - [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
 - [Studio Audits](/docs/?scope=studio&doc=studio-audits)

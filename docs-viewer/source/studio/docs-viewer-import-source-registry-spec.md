@@ -9,8 +9,6 @@ parent_id: docs-viewer
 
 The Docs Viewer import source registry is the server-side format contract for staged source files imported through Docs Viewer management mode.
 
-It was introduced by [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media) to move Docs Import from an HTML-specific workflow into a format-dispatched ingestion path.
-
 The registry currently lives in `docs-viewer/services/docs_html_import.py`.
 The service boundary that turns previews into source writes lives in `docs-viewer/services/docs_import_source_service.py` and is exposed through the standalone Docs Viewer service.
 
@@ -264,4 +262,3 @@ Keep writes in the service layer so source-write, rebuild, and search behavior r
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
-- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)

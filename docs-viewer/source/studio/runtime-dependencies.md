@@ -225,5 +225,3 @@ For external command-line tools:
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
-- [Docs HTML Import Task](/docs/?scope=studio&doc=ui-request-docs-html-import-task)

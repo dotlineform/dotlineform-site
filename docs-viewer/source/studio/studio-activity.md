@@ -83,6 +83,4 @@ What it is not for:
 
 ## Related References
 
-- **[Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)**
-- **[Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)**
 - **[Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)**

@@ -65,6 +65,5 @@ Unified activity rows are written through `studio/shared/python/studio_activity.
 ## Related References
 
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
-- [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Servers](/docs/?scope=studio&doc=servers)

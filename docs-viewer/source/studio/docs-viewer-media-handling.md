@@ -9,8 +9,6 @@ parent_id: docs-viewer
 
 This document records how Docs Viewer media is represented, imported, staged, and handed off to the configured media store.
 
-It consolidates the durable implementation notes from [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media) with the normal Docs Import media workflow.
-
 ## Boundaries
 
 Docs Viewer media handling covers:
@@ -284,4 +282,3 @@ For Markdown package imports, copy the whole package folder under `var/docs/impo
 - [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)

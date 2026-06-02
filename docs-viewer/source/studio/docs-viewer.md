@@ -79,7 +79,6 @@ Those boundaries are intentional:
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the shared route-shell, include, runtime, and URL/state model.
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) describes the report component purpose, source metadata, JSON registry, and report module allowlist.
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references) is the management report for generated semantic-reference targets and source docs.
-- [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components) records the report component design and first Library Documents use case.
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
 - [Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies) records the Docs Viewer Python dependency boundary, the Docs HTML import parser/sanitizer stack, and the role of `requirements.txt`.
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) records Docs Viewer media path conventions, import staging, standalone media imports, inline raster extraction, SVG handling, and media-copy handoff behavior.
@@ -92,8 +91,5 @@ Those boundaries are intentional:
 - [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) tracks the Docs Viewer-specific browser JavaScript risk scores, priorities, and follow-up tasks.
 - [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec) records the `viewable: true | false` visibility workflow.
 - [Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) documents staged source-format dispatch, preview payloads, media planning, and service write boundaries for Docs Import.
-- [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec) captures the current shared bookmark/favourites request for `/docs/` and `/library/`.
-- [Docs Viewer Favourites Task](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task) breaks that request into implementation work.
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management) records the management-mode contract for local create/delete, structure edits, and draft viewability operations.
 - [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export) documents the `docs_export.py` engine used by the documents Data Sharing adapter.
 - [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import) documents the `docs_import.py` parser and Markdown review renderer used by the documents Data Sharing adapter.

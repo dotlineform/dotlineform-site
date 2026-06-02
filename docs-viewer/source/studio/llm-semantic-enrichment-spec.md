@@ -32,7 +32,6 @@ Current related docs:
 
 - [LLM-Assisted Dimension Recommendation](/docs/?scope=studio&doc=llm-dimension)
 - [Generic LLM Helper Pattern](/docs/?scope=studio&doc=generic-llm-helper-pattern)
-- [Library Semantic Enrichment Spec](/docs/?scope=studio&doc=library-semantic-enrichment-spec)
 - [Tag Editor](/docs/?scope=studio&doc=tag-editor)
 - [Tag Registry](/docs/?scope=studio&doc=tag-registry)
 

@@ -283,4 +283,3 @@ They are still validated through the shared Python Docs Viewer Markdown renderer
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

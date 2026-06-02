@@ -175,8 +175,6 @@ Catalogue/runtime maintenance:
   Run read-only structural and contract checks across generated pages, JSON, and media.
 - [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)
   Define a shared local/cloud runtime contract for Codex Cloud, Codespaces, and R2-backed media workflows.
-- [Legacy Title Sort Fix](/docs/?scope=studio&doc=scripts-fix-missing-title-sort)
-  Backfill legacy `_works` front matter that still depends on numeric `title_sort`.
 
 ## Related References
 

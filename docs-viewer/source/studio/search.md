@@ -38,8 +38,3 @@ Architecture direction:
 - [Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) - operational checks for catalogue and docs-domain search surfaces.
 - [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan) - separates server/watch orchestration from search-owned record generation for future incremental updates.
 - [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan) - additive-only catalogue targeted search boundary and remaining follow-on work.
-
-## Maintenance
-
-- [Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
-- [Change Log](/docs/?scope=studio&doc=search-change-log)

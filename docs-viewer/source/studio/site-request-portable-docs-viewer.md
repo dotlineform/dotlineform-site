@@ -28,8 +28,6 @@ The first target is pragmatic rather than package-manager perfect:
 This request is narrower and more implementation-oriented than [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction).
 It uses the current dotlineform implementation as the first consumer and focuses on making the Docs Viewer self-contained enough to copy into another Jekyll repo.
 
-[Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) completed the first shell/service extraction after Studio localization and source-tree reorganization work.
-
 Current clarification:
 
 - Docs Viewer runtime, server/services, source config, UI text, CSS, assets, build scripts, and Docs Viewer source Markdown now live under the tracked top-level `docs-viewer/` boundary
@@ -549,5 +547,3 @@ For each implementation slice:
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
-- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)

@@ -94,5 +94,3 @@ If this fails, install the pinned packages from `requirements.txt` in the active
 - [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
-- [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
-- [Docs HTML Import Task](/docs/?scope=studio&doc=ui-request-docs-html-import-task)

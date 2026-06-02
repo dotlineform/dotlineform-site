@@ -36,7 +36,7 @@ If a page uses a pattern that has not yet been standardized enough to audit, the
 Use these sources in this order:
 
 1. UI Catalogue docs and isolated demo pages under `/ui-catalogue/demos/`
-2. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+2. [UI Framework](/docs/?scope=studio&doc=ui-framework)
 3. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
 
 Do not treat UI Catalogue demo rendering as a live CSS check. For production conformance, map the demo pattern into the live namespace, then verify the live route through UI Audit.
@@ -293,7 +293,7 @@ Outcome precedence:
 If a user or future Codex session asks to check whether page X conforms to Studio UI standards, the expected reading order is:
 
 1. this document
-2. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+2. [UI Framework](/docs/?scope=studio&doc=ui-framework)
 3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 4. [UI Audits](/docs/?scope=studio&doc=ui-audits)
 5. the page-specific audit doc if one exists under [UI Audits](/docs/?scope=studio&doc=ui-audits)

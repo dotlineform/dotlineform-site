@@ -32,7 +32,7 @@ Use the smallest owning area that explains the change:
 
 - Site architecture or route/runtime behavior: [Architecture](/docs/?scope=studio&doc=architecture)
 - Studio route behavior: [Studio](/docs/?scope=studio&doc=studio)
-- UI primitives, modal patterns, or layout behavior: [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), [UI Framework](/docs/?scope=studio&doc=ui-framework), and [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- UI primitives, modal patterns, or layout behavior: [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - Generated/runtime data contracts: [Data Models](/docs/?scope=studio&doc=data-models)
 - Checked-in config: [Config](/docs/?scope=studio&doc=config)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)

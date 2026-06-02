@@ -254,5 +254,4 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 
 ## Rerun Notes
 
-Use [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan) for batching and slice selection.
 Refresh this table after material browser JavaScript refactors, after adding new route modules, or before starting a new risk-reduction batch.

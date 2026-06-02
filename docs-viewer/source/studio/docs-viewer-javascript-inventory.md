@@ -437,4 +437,3 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
-- [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan)

@@ -48,7 +48,6 @@ The aim is to define dependencies, sequencing, and decision points so each slice
 
 | Workstream | Current artifact | Role | Dependency posture |
 | --- | --- | --- | --- |
-| App shell frontend/backend boundary | [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell) | Defines the browser app, generated data/config, and backend boundary. | Current enabling slice. Do this now before adding panel, source editor, third-party module, or portability runtime surface. |
 | Portable Docs Viewer | [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) | Reduces host integration work and documents portable install shape. | Outcome track; should consume proven app-shell and config/data contracts. |
 | Workspace/local data roots | [Docs Viewer Workspace Mount Architecture Request](/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture) | Defines repo-backed and external/local data workspaces. | Foundation for true local/uncommitted data. Can proceed in parallel with UI work but affects backend/build paths. |
 | Panel architecture and hosted modules | [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell) | Adds index/document/info panel model and pragmatic optional module hosting. | Should follow the app-shell enabling slice, but does not require a full JS shell migration. |
@@ -332,7 +331,6 @@ At the coordination level, verify that new work:
 
 ## Related References
 
-- [Docs Viewer JavaScript App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell)
 - [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
 - [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)

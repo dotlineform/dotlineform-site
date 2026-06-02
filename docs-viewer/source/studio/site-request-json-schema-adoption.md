@@ -102,7 +102,6 @@ Related docs:
 
 - [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
-- [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)
 
 ### Secondary Candidates
 
