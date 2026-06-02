@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-portable-source-shape
-title: Docs Viewer Portable Source Shape
+title: Portable Source Shape
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: docs-viewer-portable-setup
+viewable: true
 ---
 # Docs Viewer Portable Source Shape
 

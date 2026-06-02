@@ -181,6 +181,7 @@ Current document metadata behavior:
 - root-level docs hide the metadata path and let remaining metadata move up
 - the updated date uses `last_updated` only when the active scope's generated `viewer_options.show_updated_date` is not `false`
 - Studio Docs shows the updated date; Library hides it in document view
+- the source `summary` is not shown in the document header metadata row; it remains available in the info panel metadata view
 
 Current sidebar behavior:
 

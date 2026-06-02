@@ -1,38 +1,28 @@
 ---
 doc_id: docs-viewer-view-capability-contract
-title: Docs Viewer View Capability Contract
+title: View Capability Contract
 added_date: 2026-05-29
 last_updated: 2026-05-29
-ui_status: done
+ui_status: ""
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer View Capability Contract
 
-**Status: implemented.**
+This is the model for Docs Viewer panel views, layout rules, and extensible view-specific UI capabilities. The implementation is in the config/runtime path:
 
-This document records the intended model for Docs Viewer panel views, layout rules, and extensible view-specific UI capabilities.
-The first implementation is in the config/runtime path: capabilities normalize from hosted views, panel layout uses the active index view’s capabilities, and management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
+- capabilities normalize from hosted views,
+- panel layout uses the active index view’s capabilities, and
+- management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
 
 ## Purpose
 
 Docs Viewer panels should not hardcode behavior for individual views such as `index-tree`.
 View behavior should come from one durable configuration contract so built-in views and future optional views can declare what they support.
 
-The immediate reason for this contract is the index panel:
-
-- the current `index-tree` view should support normal width and collapsed width
-- the current `index-tree` view should not expose full-width expanded mode
-- a manage-only placeholder `index-graph` view should be added so the capability contract can be tested against a second index view
-- future index views such as a richer `index-graph` may support expanded mode, additional toolbars, filters, or alternate empty/loading states
-
-The rule is view-specific, not panel-specific.
-The index panel can host multiple views over time, and each hosted view may need different layout states and chrome.
+The rule is view-specific, not panel-specific. The index panel can host multiple views over time, and each hosted view may need different layout states and chrome.
 
 ## Contract Location
-
-The durable source of truth should be the Docs Viewer route/view config.
-It does not need to be user-editable, but it should live in one predictable config shape so view rules can be reviewed and changed without editing renderer code.
 
 Current route config lives in:
 
@@ -189,7 +179,7 @@ Behavior:
 Management-enabled Docs Viewer routes expose a small index-view toggle in the management toolbar, immediately to the left of the Actions button.
 The toggle is the practical test surface for the config-driven view contract.
 
-Initial requirements:
+Initial implementation:
 
 - available only in management-enabled Docs Viewer routes
 - switches the active index view between `index-tree` and `index-graph`
@@ -198,22 +188,7 @@ Initial requirements:
 - restores unsupported layout state when switching views; for example, switching from expanded `index-graph` back to `index-tree` should return the index panel to `normal`
 - keeps the tree view as the default index view
 - uses a round icon pill: folder for tree view and web for graph view
-- may use placeholder graph content only; no real graph layout is required for this implementation slice
+- may use placeholder graph content only; no real graph layout is currently implemented.
 
 The toggle lives in Docs Viewer app-shell management toolbar chrome, not inside the tree renderer or index panel body.
 This keeps view selection separate from tree rendering and allows future index views to add their own toolbar capabilities.
-
-## Implementation Notes
-
-The implemented slice covers:
-
-1. capability normalization for hosted-view config records and built-in hosted-view defaults
-2. active index-view capabilities passed into index-panel state projection
-3. unsupported layout states prevented from being selected or persisted
-4. the full expand control hidden for `index-tree`
-5. expanded CSS behavior preserved for views that opt in
-6. a manage-only placeholder `index-graph` hosted view with expanded-mode capability
-7. an index-view toolbar toggle for switching between `index-tree` and `index-graph` when both hosted views are available
-8. focused index-panel module tests and route smoke expectations updated
-
-The implementation should avoid hardcoded checks such as `if viewId === "index-tree"` outside built-in default configuration.

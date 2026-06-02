@@ -26,8 +26,7 @@ export function renderDocsViewerDocumentShell(options = {}) {
   metaCopy.className = "docsViewer__metaCopy";
   metaCopy.append(
     renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small"),
-    renderParagraph(documentRef, "docsViewerUpdated", "docsViewer__updated muted small"),
-    renderParagraph(documentRef, "docsViewerSummary", "docsViewer__summary muted small")
+    renderParagraph(documentRef, "docsViewerUpdated", "docsViewer__updated muted small")
   );
 
   const metaActions = documentRef.createElement("div");

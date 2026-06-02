@@ -76,7 +76,7 @@ It should not restyle public host page chrome or override public `assets/css/mai
 - action button baseline used by public viewer controls
 - status text
 - bookmark row and bookmark controls
-- metadata row, path, updated date, and summary display
+- metadata row, path, updated date, and status/bookmark display
 - UI status pills
 - search and recently-added results
 - viewer-specific content constraints such as measure width

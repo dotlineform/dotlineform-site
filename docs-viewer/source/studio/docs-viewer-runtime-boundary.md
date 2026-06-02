@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-runtime-boundary
-title: Docs Viewer Runtime Boundary
+title: Runtime Boundary
 added_date: 2026-03-31
 last_updated: 2026-05-29
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Runtime Boundary
 

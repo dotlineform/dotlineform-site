@@ -1,9 +1,11 @@
 ---
 doc_id: docs-viewer-dependencies
-title: Docs Viewer Dependencies
+title: Dependencies
 added_date: 2026-05-14
 last_updated: 2026-06-01
+summary: Docs Viewer-specific dependency boundary, especially the parser stack introduced for staged source import.
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Dependencies
 

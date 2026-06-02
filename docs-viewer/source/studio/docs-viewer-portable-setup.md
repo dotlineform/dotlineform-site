@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-portable-setup
-title: Docs Viewer Portable Setup
+title: Portable Setup
 added_date: 2026-05-11
 last_updated: 2026-05-19
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Portable Setup
 

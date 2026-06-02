@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-media-handling
-title: Docs Viewer Media Handling
+title: Media Handling
 added_date: 2026-05-14
 last_updated: 2026-05-18
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Media Handling
 

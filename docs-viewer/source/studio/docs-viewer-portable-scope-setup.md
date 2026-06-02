@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-portable-scope-setup
-title: Docs Viewer Portable Scope Setup
+title: Portable Scope Setup
 added_date: 2026-05-19
 last_updated: 2026-05-25
 parent_id: docs-viewer-portable-setup
+viewable: true
 ---
 # Docs Viewer Portable Scope Setup
 

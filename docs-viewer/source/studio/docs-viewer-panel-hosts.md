@@ -1,6 +1,6 @@
 ---
 doc_id: docs-viewer-panel-hosts
-title: Docs Viewer Panel Hosts
+title: Panel Hosts
 added_date: 2026-05-28
 last_updated: 2026-05-28
 parent_id: docs-viewer

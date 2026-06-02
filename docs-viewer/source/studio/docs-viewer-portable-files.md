@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-portable-files
-title: Docs Viewer Portable File Manifest
+title: Portable File Manifest
 added_date: 2026-05-19
 last_updated: 2026-05-29
 parent_id: docs-viewer-portable-setup
+viewable: true
 ---
 # Docs Viewer Portable File Manifest
 

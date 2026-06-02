@@ -1465,7 +1465,6 @@ def assert_document_shell_render(page: Page) -> None:
                 'docsViewerMeta',
                 'docsViewerPath',
                 'docsViewerUpdated',
-                'docsViewerSummary',
                 'docsViewerStatusPills',
                 'docsViewerBookmarkToggle',
                 'docsViewerContent',
@@ -2988,6 +2987,7 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
                 contentHtml: document.getElementById('content').innerHTML,
                 pathText: document.getElementById('path').textContent,
                 summaryText: document.getElementById('summary').textContent,
+                summaryHidden: document.getElementById('summary').hidden,
                 metaHidden: document.getElementById('meta').hidden,
                 calls
             };
@@ -3003,7 +3003,12 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
         raise AssertionError(f"sidebar renderer management text projection changed: {result!r}")
     if result["contentHtml"] != '<h1 id="part">Child</h1>':
         raise AssertionError(f"document controller payload render changed: {result!r}")
-    if result["pathText"] != "Intro" or result["summaryText"] != "Child summary" or result["metaHidden"] is not False:
+    if (
+        result["pathText"] != "Intro"
+        or result["summaryText"] != ""
+        or result["summaryHidden"] is not True
+        or result["metaHidden"] is not False
+    ):
         raise AssertionError(f"sidebar metadata render changed: {result!r}")
     for expected in ["close-status-menu", "bookmark-ui", "management-ui", "status::false"]:
         if expected not in result["calls"]:

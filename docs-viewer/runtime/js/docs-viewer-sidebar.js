@@ -169,9 +169,8 @@ export function initDocsViewerSidebarRenderer(context) {
       updatedEl.hidden = isDocViewable(doc);
     }
     if (summaryEl) {
-      var summary = String(doc.summary || "").trim();
-      summaryEl.textContent = summary;
-      summaryEl.hidden = !summary;
+      summaryEl.textContent = "";
+      summaryEl.hidden = true;
     }
     meta.hidden = false;
     context.renderBookmarkToggle();

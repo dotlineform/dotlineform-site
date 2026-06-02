@@ -1,9 +1,10 @@
 ---
 doc_id: docs-viewer-reports
-title: Docs Viewer Reports
+title: Reports
 added_date: 2026-05-13
 last_updated: 2026-05-31
 parent_id: docs-viewer
+viewable: true
 viewer_report: reports_list
 viewer_report_access: public
 ---
