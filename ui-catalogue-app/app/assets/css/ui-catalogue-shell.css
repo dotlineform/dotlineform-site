@@ -48,15 +48,13 @@ body.uiCatalogueApp {
   gap: 1rem;
 }
 
-.uiCatalogueShellHeader__actions,
-.uiCatalogueShellNav {
+.uiCatalogueShellHeader__actions {
   display: flex;
   align-items: center;
   gap: 0.45rem;
 }
 
-.uiCatalogueShellTitle a,
-.uiCatalogueShellNav__item {
+.uiCatalogueShellTitle a {
   color: inherit;
   text-decoration: none;
 }
@@ -64,19 +62,6 @@ body.uiCatalogueApp {
 .uiCatalogueShellTitle {
   font-size: var(--font-small);
   font-weight: 700;
-}
-
-.uiCatalogueShellNav__item {
-  border-radius: 6px;
-  padding: 0.3rem 0.5rem;
-  color: var(--ui-catalogue-shell-muted);
-  font-size: var(--font-small);
-}
-
-.uiCatalogueShellNav__item:hover,
-.uiCatalogueShellNav__item:focus-visible {
-  color: var(--ui-catalogue-shell-text);
-  background: var(--ui-catalogue-shell-hover);
 }
 
 .uiCatalogueThemeToggle {
@@ -106,6 +91,10 @@ body.uiCatalogueApp {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
+}
+
+.uiCatalogueThemeToggle__icon[hidden] {
+  display: none !important;
 }
 
 .uiCatalogueShellMain {

@@ -41,6 +41,8 @@ def test_demo_routes_render_standalone_shell() -> None:
     html = ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos")
 
     assert "dotlineform UI catalogue" in html
+    assert 'class="uiCatalogueShellNav__item"' not in html
+    assert ">demos</a>" not in html
     assert "/ui-catalogue/app/assets/css/ui-catalogue-shell.css?v=test-version" in html
     assert "/ui-catalogue/app/assets/css/ui-catalogue-demo.css?v=test-version" in html
     assert "/ui-catalogue/app/assets/js/ui-catalogue-shell.js?v=test-version" in html

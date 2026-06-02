@@ -70,9 +70,6 @@ def ui_catalogue_header() -> str:
     <div class="uiCatalogueShellHeader__inner">
       <div class="uiCatalogueShellTitle"><a href="/ui-catalogue/demos/">dotlineform UI catalogue</a></div>
       <div class="uiCatalogueShellHeader__actions">
-        <nav class="uiCatalogueShellNav" aria-label="UI Catalogue">
-          <a class="uiCatalogueShellNav__item" href="/ui-catalogue/demos/">demos</a>
-        </nav>
         <button class="uiCatalogueThemeToggle" type="button" data-ui-catalogue-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="uiCatalogueThemeToggle__icon" data-ui-catalogue-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
