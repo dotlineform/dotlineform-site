@@ -1,6 +1,5 @@
 ## General behaviour
 
-- use `docs-viewer/source/studio/development-workflow.md` as the primary guide and follow its links to task-specific docs.
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - code changes: summarise the intended change set and ask for confirmation before editing code unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
@@ -9,24 +8,24 @@
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs that flood the transcript.
 - For long-running multi-batch work, or before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to the document at the top of the document for the next Codex session to read.
-
-## UI Guidance
-
-- `docs-viewer/source/studio/ui.md` is the section containing UI guidance and maintenance rules.
-- `docs-viewer/source/studio/ui-catalogue.md` defines the site-wide UI interaction default UI components.
-- Keep UI shell concerns separate from application logic, validation, and mutation behavior.
-
-## Implementation Style
-
-- Prefer shared JS/CSS logic over duplicated inline logic.
-- When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
-- Keep comments concise and implementation-focused.
-- use the apppropriate config file to store UI copy such as labels and status message text. 
 - For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
   - new changes
   - new requirements
   - refactors
 - For trivial or mechanical edits, a short summary is enough.
+
+## Implementation Guidance
+
+- use `docs-viewer/source/studio/development-workflow.md` as the primary implementation guide and follow its links to task-specific docs.
+- `docs-viewer/source/studio/ui.md` is the section containing UI guidance and maintenance rules.
+- `docs-viewer/source/studio/ui-catalogue.md` defines the site-wide UI interaction default UI components.
+
+## UI Implementation Style
+
+- Keep UI shell concerns separate from application logic, validation, and mutation behavior.
+- Prefer shared JS/CSS logic over duplicated inline logic.
+- When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
+- use the apppropriate config file to store UI copy such as labels and status message text. 
 
 ## Script Module Boundaries
 
@@ -39,12 +38,12 @@
   - Javascript: `docs-viewer/source/studio/studio-javascript-payload-inventory.md`
   - Python and public Jekyll/Ruby scripts: `docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
 
-## Studio Documentation and Search
+## Documentation
 
 - Docs source is flat under `docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders.
 - scope `studio` is the reference for live development and maintenance documents.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not source Markdown directly.
-- For routine docs-source edits, do not rebuild doc payloads manually; this is handled by `bin/local-studio` / the docs-watcher. Run the builders only when the task explicitly concerns build behavior, generated payloads, or verification.
+- For routine docs-source edits, do not rebuild doc payloads manually; this is handled by `bin/local-studio` / the docs-watcher.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
 - Docs Viewer payload and search builders are Python entrypoints:
   - docs payloads: `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --write`
@@ -109,11 +108,11 @@
 - For implementation changes, define proportional targeted verification for both:
   - Codex-run checks
   - manual checks
-- Browser smoke tests are only needed when changes have been to the operational site or front end, not when documents have been edited.
+- Browser smoke tests are only needed when non-trivial changes have been to the operational site or front end, not when documents have been edited.
+- For non-trivial UI changes, verify behavior on both desktop and mobile.
 - Codex performs most testing where practical. Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
 - Include changed file paths in summaries.
 - After changing scripts, run a syntax check with the configured interpreter.
-- After UI changes, verify behavior on both desktop and mobile.
 
 ## Tests
 

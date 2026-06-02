@@ -2,7 +2,7 @@
 doc_id: search
 title: Search
 added_date: 2026-03-31
-last_updated: 2026-05-11
+last_updated: "2026-06-02"
 parent_id: ""
 ---
 # Search
@@ -27,6 +27,9 @@ Architecture direction:
 ## Current Implementation
 
 - [Overview](/docs/?scope=studio&doc=search-overview) - a concise overview of the site search subsystem.
+- [Domain Review Patterns](/docs/?scope=studio&doc=search-domain-review-patterns) - shared review questions for separate domain search systems.
+- [Catalogue Infrastructure](/docs/?scope=studio&doc=search-catalogue-infrastructure) - current Catalogue search config, pipeline, ranking, runtime, and targeted-update surfaces.
+- [Docs Viewer Infrastructure](/docs/?scope=studio&doc=search-docs-viewer-infrastructure) - current Docs Viewer search config, pipeline, ranking, runtime, and targeted-update surfaces.
 - [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) - defines the Catalogue-owned `/catalogue/search/` route and entry-point model.
 - [Index Schema](/docs/?scope=studio&doc=search-index-schema) - describes the current catalogue search index shape.
 - [Field Registry](/docs/?scope=studio&doc=search-field-registry) - separates “field exists in schema” from “field participates in search and how.”

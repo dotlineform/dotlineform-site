@@ -23,70 +23,38 @@ docs-viewer/bin/docs-viewer
 ## Purpose
 
 Local Studio, Local Analytics, UI Catalogue, public Jekyll preview, and Docs Viewer have separate launcher commands.
-`bin/local-studio` starts the Local Studio app, Studio catalogue/audit/activity/admin APIs, the docs live rebuild watcher, and Python startup maintenance tasks.
-The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
-`bin/local-studio` does not start the Docs Viewer web service, Local Analytics, UI Catalogue, or Jekyll preview.
-It no longer serves `/docs/`, `/analytics/`, or `/ui-catalogue/`.
-`bin/local-analytics` starts the standalone Local Analytics app for tag and Data Sharing routes/APIs.
-`bin/local-ui-catalogue` starts the standalone UI Catalogue demo app.
-`docs-viewer/bin/docs-viewer` starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
-`bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
-Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site work; the public preview path no longer requires a repo Ruby helper.
-`bin/local-all` is the optional host-owned orchestration runner for starting public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and the Docs Viewer web service together.
 
-The old combined bridge command has been retired.
-Do not use a combined Studio-plus-Jekyll runner for normal single-service work.
+`bin/local-studio` 
+- starts the Local Studio app for Studio catalogue/audit/activity/admin APIs
+- the docs live rebuild watcher
+- UI Catalogue
+- Python startup maintenance tasks.
+
+The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
+
+`bin/local-analytics`
+- starts the standalone Local Analytics app for tag and Data Sharing routes/APIs.
+
+`bin/local-ui-catalogue`
+- starts the standalone UI Catalogue demo app
+- only use if `local-all` isn't running
+
+`docs-viewer/bin/docs-viewer`
+- starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
+
+`bin/public-site-preview` and `bin/public-site-build`
+- public-site Jekyll commands that use `_config.yml` by default.
+- Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site work;
+- `bin/public-site-build` passes any extra arguments through to Jekyll, so an isolated verification build can use:
+  - `bin/public-site-build --destination /tmp/dlf-jekyll-build`
+
+`bin/local-all`
+- orchestration runner
+
 Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal when Studio links need a live public-site preview host.
 Run `bin/local-analytics` when working only on Analytics or Data Sharing.
 Run `bin/local-ui-catalogue` when working only on UI Catalogue demos.
 Run `bin/local-all` when a local session needs the sibling services supervised together.
-
-## Explicit Commands
-
-Run from `dotlineform-site/`:
-
-```bash
-bin/local-all
-```
-
-This starts public-site Live Preview, Local Studio, Local Analytics, UI Catalogue, and the Docs Viewer web service as sibling child processes.
-Each underlying service can still be started independently with its own command.
-
-```bash
-bin/local-studio
-```
-
-This starts the local Studio app without Jekyll.
-
-```bash
-bin/local-analytics
-```
-
-This starts the Local Analytics app without Studio, Jekyll, UI Catalogue, or Docs Viewer.
-
-```bash
-bin/local-ui-catalogue
-```
-
-This starts the UI Catalogue demo app without Studio, Analytics, Jekyll, or Docs Viewer.
-
-For public-site preview, run:
-
-```bash
-bin/public-site-preview
-```
-
-For a public-site build, run:
-
-```bash
-bin/public-site-build
-```
-
-`bin/public-site-build` passes any extra arguments through to Jekyll, so an isolated verification build can use:
-
-```bash
-bin/public-site-build --destination /tmp/dlf-jekyll-build
-```
 
 Each command:
 
@@ -96,19 +64,14 @@ Each command:
 - uses the repo's preferred Ruby/Bundler stack only for explicit public-site preview/build commands
 - otherwise falls back to the corresponding executable on `PATH`
 
-`bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
-`bin/local-studio` does not start Jekyll, Local Analytics, UI Catalogue, or Docs Viewer.
-Start the Docs Viewer web service separately with:
-
-```bash
-docs-viewer/bin/docs-viewer
-```
-
 ## Local Configuration
 
 These runner scripts do not currently take general CLI flags, except for public-site preview/build pass-through behavior documented below.
+
 For local runs, configure repo-specific defaults in `var/local/site.env`.
+
 Values in that file are loaded before defaults are evaluated and win over inherited shell values.
+
 If `var/local/site.env` is absent, the runner falls back to process environment variables.
 
 - `STUDIO_APP_ENABLED`

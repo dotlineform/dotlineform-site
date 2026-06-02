@@ -119,7 +119,7 @@ The public Jekyll build should not include:
 
 `/library/` and `/analysis/` are intentionally public read-only Docs Viewer installs.
 They should keep using public generated docs payloads and public generated docs search.
-`/docs/` is local management infrastructure and should not be published unless a separate curated read-only public docs install is explicitly defined later.
+`/docs/` is local management infrastructure and should not be published.
 
 Generated output paths should stay explicit.
 Adding a new generated family requires naming:
@@ -143,12 +143,6 @@ Existing enforcement is split across several checks and builders:
 - search builders own scope-specific flattened search projections
 - site consistency and field-registry checks catch selected catalogue/source relationship drift
 
-The next Phase 6 slices should keep this mechanical:
-
-1. extend manifest-backed checks when new artifact families appear
-2. tighten source-only field rules only when the current public runtime contract changes
-3. populate new manifest families and field-leak rules as Phase 6 work introduces or retires projections
-
 ## Practical Update Rule
 
 When adding or changing a source field, generated artifact, local API payload, or public runtime JSON:
@@ -156,4 +150,3 @@ When adding or changing a source field, generated artifact, local API payload, o
 - update the owning domain data-model doc
 - update this projection contract if the source/projection boundary changes
 - add or update a check when a source-only field could leak into public output
-- keep generated Docs Viewer payload rebuilds separate from source documentation edits unless the generated payload update is intentionally part of the slice

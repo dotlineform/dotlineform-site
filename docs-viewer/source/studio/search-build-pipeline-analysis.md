@@ -1,9 +1,10 @@
 ---
 doc_id: search-build-pipeline-analysis
-title: Search Build Pipeline Analysis Scope
+title: Analysis Scope
 added_date: 2026-05-19
 last_updated: 2026-06-01
-parent_id: search-build-pipeline
+parent_id: search
+viewable: true
 ---
 # Search Build Pipeline Analysis Scope
 

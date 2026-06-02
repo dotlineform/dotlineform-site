@@ -1,10 +1,10 @@
 {
   "scope": "studio",
   "doc_id": "search-build-pipeline-studio",
-  "title": "Search Build Pipeline Studio Scope",
+  "title": "Studio Scope",
   "added_date": "2026-05-19",
   "last_updated": "2026-06-01",
-  "parent_id": "search-build-pipeline",
+  "parent_id": "search",
   "hidden": false,
   "viewable": true,
   "source_path": "search-build-pipeline-studio.md",

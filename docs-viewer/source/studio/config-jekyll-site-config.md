@@ -3,7 +3,8 @@ doc_id: config-jekyll-site-config
 title: Jekyll Site Config
 added_date: 2026-03-31
 last_updated: 2026-05-29
-parent_id: dev-home
+parent_id: architecture
+viewable: true
 ---
 # Jekyll Site Config
 

@@ -1,9 +1,10 @@
 ---
 doc_id: search-ui-behaviour
-title: Search UI Behaviour
+title: UI Behaviour
 added_date: 2026-03-31
 last_updated: 2026-05-21
 parent_id: search
+viewable: true
 ---
 # Search UI Behaviour
 

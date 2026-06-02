@@ -1,9 +1,10 @@
 ---
 doc_id: config-search-build-json
-title: Search Build Config JSON
+title: Build Config JSON
 added_date: 2026-04-25
-last_updated: "2026-06-01"
+last_updated: 2026-06-01
 parent_id: search
+viewable: true
 ---
 # Search Build Config JSON
 

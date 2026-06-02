@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e3c32c84aefec3fb8093d33b4e76b766",
-    "generated_at_utc": "2026-06-02T11:50:08Z",
-    "count": 228
+    "version": "blake2b-c79d02a87c95f0546a07f4a82d49856c",
+    "generated_at_utc": "2026-06-02T15:05:32Z",
+    "count": 229
   },
   "entries": [
     {
@@ -301,6 +301,29 @@
       "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
+      "id": "config-jekyll-site-config",
+      "kind": "doc",
+      "title": "Jekyll Site Config",
+      "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
+      "last_updated": "2026-05-29",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-05-29 • Architecture",
+      "search_terms": [
+        "config-jekyll-site-config",
+        "config",
+        "jekyll",
+        "site",
+        "jekyll site config",
+        "architecture",
+        "2026-05-29",
+        "2026",
+        "05",
+        "29"
+      ],
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config architecture 2026-05-29 2026 05 29"
+    },
+    {
       "id": "data-models-projection-contract",
       "kind": "doc",
       "title": "Projection Contract",
@@ -323,6 +346,31 @@
         "24"
       ],
       "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "scripts-audit-projection-contract",
+      "kind": "doc",
+      "title": "Projection Contract Validation",
+      "href": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
+      "last_updated": "2026-05-30",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-05-30 • Architecture",
+      "search_terms": [
+        "scripts-audit-projection-contract",
+        "scripts",
+        "audit",
+        "projection",
+        "contract",
+        "projection contract validation",
+        "validation",
+        "architecture",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract validation validation architecture 2026-05-30 2026 05 30"
     },
     {
       "id": "data-models-shared",
@@ -2185,31 +2233,6 @@
       "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-28 2026 05 28"
     },
     {
-      "id": "config-jekyll-site-config",
-      "kind": "doc",
-      "title": "Jekyll Site Config",
-      "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "last_updated": "2026-05-29",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home",
-      "display_meta": "2026-05-29 • Dev Home",
-      "search_terms": [
-        "config-jekyll-site-config",
-        "config",
-        "jekyll",
-        "site",
-        "jekyll site config",
-        "dev home",
-        "dev",
-        "home",
-        "2026-05-29",
-        "2026",
-        "05",
-        "29"
-      ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-29 2026 05 29"
-    },
-    {
       "id": "scripts-run-checks",
       "kind": "doc",
       "title": "Run Checks",
@@ -2278,29 +2301,6 @@
         "01"
       ],
       "search_text": "scripts dev home dev home 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "scripts-audit-projection-contract",
-      "kind": "doc",
-      "title": "Projection Contract Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
-      "last_updated": "2026-05-30",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-30 • Scripts",
-      "search_terms": [
-        "scripts-audit-projection-contract",
-        "scripts",
-        "audit",
-        "projection",
-        "contract",
-        "projection contract audit",
-        "2026-05-30",
-        "2026",
-        "05",
-        "30"
-      ],
-      "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract audit 2026-05-30 2026 05 30"
     },
     {
       "id": "tasks-template",
@@ -3610,16 +3610,181 @@
       "kind": "doc",
       "title": "Search",
       "href": "/docs/?scope=studio&doc=search",
-      "last_updated": "2026-05-11",
-      "display_meta": "2026-05-11",
+      "last_updated": "2026-06-02",
+      "display_meta": "2026-06-02",
       "search_terms": [
         "search",
-        "2026-05-11",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "search 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "search-build-pipeline-analysis",
+      "kind": "doc",
+      "title": "Analysis Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "search-build-pipeline-analysis",
+        "search",
+        "build",
+        "pipeline",
+        "analysis",
+        "analysis scope",
+        "scope",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "search-build-pipeline-analysis search build pipeline analysis analysis scope scope 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "config-search-build-json",
+      "kind": "doc",
+      "title": "Build Config JSON",
+      "href": "/docs/?scope=studio&doc=config-search-build-json",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "config-search-build-json",
+        "config",
+        "search",
+        "build",
+        "json",
+        "build config json",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "config-search-build-json config search build json build config json 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "search-build-pipeline-architecture",
+      "kind": "doc",
+      "title": "Build Pipeline",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "search-build-pipeline-architecture",
+        "search",
+        "build",
+        "pipeline",
+        "architecture",
+        "build pipeline",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "search-build-pipeline-architecture search build pipeline architecture build pipeline 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "search-catalogue-infrastructure",
+      "kind": "doc",
+      "title": "Catalogue Infrastructure",
+      "href": "/docs/?scope=studio&doc=search-catalogue-infrastructure",
+      "last_updated": "2026-06-02",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-02 • Search",
+      "search_terms": [
+        "search-catalogue-infrastructure",
+        "search",
+        "catalogue",
+        "infrastructure",
+        "catalogue infrastructure",
+        "2026-06-02",
+        "2026",
+        "06",
+        "02"
+      ],
+      "search_text": "search-catalogue-infrastructure search catalogue infrastructure catalogue infrastructure 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "search-build-pipeline-catalogue",
+      "kind": "doc",
+      "title": "Catalogue Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "search-build-pipeline-catalogue",
+        "search",
+        "build",
+        "pipeline",
+        "catalogue",
+        "catalogue scope",
+        "scope",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "search-build-pipeline-catalogue search build pipeline catalogue catalogue scope scope 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "search-index-schema",
+      "kind": "doc",
+      "title": "Catalogue Search Index Schema",
+      "href": "/docs/?scope=studio&doc=search-index-schema",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "search-index-schema",
+        "search",
+        "index",
+        "schema",
+        "catalogue search index schema",
+        "catalogue",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "search-index-schema search index schema catalogue search index schema catalogue 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "config-search-policy-json",
+      "kind": "doc",
+      "title": "Catalogue Search Policy JSON",
+      "href": "/docs/?scope=studio&doc=config-search-policy-json",
+      "last_updated": "2026-05-11 14:10",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-11 14:10 • Search",
+      "search_terms": [
+        "config-search-policy-json",
+        "config",
+        "search",
+        "policy",
+        "json",
+        "catalogue search policy json",
+        "catalogue",
+        "2026-05-11 14:10",
         "2026",
         "05",
-        "11"
+        "11",
+        "14",
+        "10"
       ],
-      "search_text": "search 2026-05-11 2026 05 11"
+      "search_text": "config-search-policy-json config search policy json catalogue search policy json catalogue 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
       "id": "search-catalogue-targeted-plan",
@@ -3673,196 +3838,74 @@
       "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
-      "id": "search-incremental-orchestration-plan",
+      "id": "search-docs-viewer-infrastructure",
       "kind": "doc",
-      "title": "Incremental Search Orchestration Plan",
-      "href": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
-      "last_updated": "2026-06-01",
+      "title": "Docs Viewer Infrastructure",
+      "href": "/docs/?scope=studio&doc=search-docs-viewer-infrastructure",
+      "last_updated": "2026-06-02",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-06-01 • Search",
+      "display_meta": "2026-06-02 • Search",
       "search_terms": [
-        "search-incremental-orchestration-plan",
+        "search-docs-viewer-infrastructure",
         "search",
-        "incremental",
-        "orchestration",
-        "plan",
-        "incremental search orchestration plan",
-        "2026-06-01",
+        "docs",
+        "viewer",
+        "infrastructure",
+        "docs viewer infrastructure",
+        "2026-06-02",
         "2026",
         "06",
-        "01"
+        "02"
       ],
-      "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-06-01 2026 06 01"
+      "search_text": "search-docs-viewer-infrastructure search docs viewer infrastructure docs viewer infrastructure 2026-06-02 2026 06 02"
     },
     {
-      "id": "config-search-build-json",
+      "id": "search-domain-review-patterns",
       "kind": "doc",
-      "title": "Search Build Config JSON",
-      "href": "/docs/?scope=studio&doc=config-search-build-json",
-      "last_updated": "2026-06-01",
+      "title": "Domain Review Patterns",
+      "href": "/docs/?scope=studio&doc=search-domain-review-patterns",
+      "last_updated": "2026-06-02",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-06-01 • Search",
+      "display_meta": "2026-06-02 • Search",
       "search_terms": [
-        "config-search-build-json",
-        "config",
+        "search-domain-review-patterns",
         "search",
-        "build",
-        "json",
-        "search build config json",
-        "2026-06-01",
+        "domain",
+        "review",
+        "patterns",
+        "domain review patterns",
+        "2026-06-02",
         "2026",
         "06",
-        "01"
+        "02"
       ],
-      "search_text": "config-search-build-json config search build json search build config json 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "search-build-pipeline",
-      "kind": "doc",
-      "title": "Search Build Pipeline",
-      "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-05-19",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-05-19 • Search",
-      "search_terms": [
-        "search-build-pipeline",
-        "search",
-        "build",
-        "pipeline",
-        "search build pipeline",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "search-build-pipeline-analysis",
-      "kind": "doc",
-      "title": "Search Build Pipeline Analysis Scope",
-      "href": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-06-01 • Search Build Pipeline",
-      "search_terms": [
-        "search-build-pipeline-analysis",
-        "search",
-        "build",
-        "pipeline",
-        "analysis",
-        "search build pipeline analysis scope",
-        "scope",
-        "search build pipeline",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "search-build-pipeline-analysis search build pipeline analysis search build pipeline analysis scope scope search build pipeline 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "search-build-pipeline-architecture",
-      "kind": "doc",
-      "title": "Search Build Pipeline Architecture",
-      "href": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-06-01 • Search Build Pipeline",
-      "search_terms": [
-        "search-build-pipeline-architecture",
-        "search",
-        "build",
-        "pipeline",
-        "architecture",
-        "search build pipeline architecture",
-        "search build pipeline",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "search-build-pipeline-architecture search build pipeline architecture search build pipeline architecture search build pipeline 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "search-build-pipeline-catalogue",
-      "kind": "doc",
-      "title": "Search Build Pipeline Catalogue Scope",
-      "href": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-06-01 • Search Build Pipeline",
-      "search_terms": [
-        "search-build-pipeline-catalogue",
-        "search",
-        "build",
-        "pipeline",
-        "catalogue",
-        "search build pipeline catalogue scope",
-        "scope",
-        "search build pipeline",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "search-build-pipeline-catalogue search build pipeline catalogue search build pipeline catalogue scope scope search build pipeline 2026-06-01 2026 06 01"
+      "search_text": "search-domain-review-patterns search domain review patterns domain review patterns 2026-06-02 2026 06 02"
     },
     {
       "id": "search-build-pipeline-library",
       "kind": "doc",
-      "title": "Search Build Pipeline Library Scope",
+      "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-06-01 • Search Build Pipeline",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
       "search_terms": [
         "search-build-pipeline-library",
         "search",
         "build",
         "pipeline",
         "library",
-        "search build pipeline library scope",
+        "library scope",
         "scope",
-        "search build pipeline",
         "2026-06-01",
         "2026",
         "06",
         "01"
       ],
-      "search_text": "search-build-pipeline-library search build pipeline library search build pipeline library scope scope search build pipeline 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "search-build-pipeline-studio",
-      "kind": "doc",
-      "title": "Search Build Pipeline Studio Scope",
-      "href": "/docs/?scope=studio&doc=search-build-pipeline-studio",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-06-01 • Search Build Pipeline",
-      "search_terms": [
-        "search-build-pipeline-studio",
-        "search",
-        "build",
-        "pipeline",
-        "studio",
-        "search build pipeline studio scope",
-        "scope",
-        "search build pipeline",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "search-build-pipeline-studio search build pipeline studio search build pipeline studio scope scope search build pipeline 2026-06-01 2026 06 01"
+      "search_text": "search-build-pipeline-library search build pipeline library library scope scope 2026-06-01 2026 06 01"
     },
     {
       "id": "search-field-registry",
@@ -3959,28 +4002,6 @@
       "search_text": "search-field-registry-table search field registry table search field registry table search field registry 2026-05-19 2026 05 19"
     },
     {
-      "id": "search-index-schema",
-      "kind": "doc",
-      "title": "Search Index Schema",
-      "href": "/docs/?scope=studio&doc=search-index-schema",
-      "last_updated": "2026-06-01",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-06-01 • Search",
-      "search_terms": [
-        "search-index-schema",
-        "search",
-        "index",
-        "schema",
-        "search index schema",
-        "2026-06-01",
-        "2026",
-        "06",
-        "01"
-      ],
-      "search_text": "search-index-schema search index schema search index schema 2026-06-01 2026 06 01"
-    },
-    {
       "id": "search-normalisation-rules",
       "kind": "doc",
       "title": "Search Normalisation Rules",
@@ -4022,31 +4043,6 @@
         "01"
       ],
       "search_text": "search-overview search overview search overview 2026-06-01 2026 06 01"
-    },
-    {
-      "id": "config-search-policy-json",
-      "kind": "doc",
-      "title": "Search Policy JSON",
-      "href": "/docs/?scope=studio&doc=config-search-policy-json",
-      "last_updated": "2026-05-11 14:10",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-05-11 14:10 • Search",
-      "search_terms": [
-        "config-search-policy-json",
-        "config",
-        "search",
-        "policy",
-        "json",
-        "search policy json",
-        "2026-05-11 14:10",
-        "2026",
-        "05",
-        "11",
-        "14",
-        "10"
-      ],
-      "search_text": "config-search-policy-json config search policy json search policy json 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
       "id": "search-public-ui-contract",
@@ -4096,28 +4092,6 @@
       "search_text": "search-ranking-model search ranking model search ranking model 2026-04-01 2026 04 01"
     },
     {
-      "id": "search-ui-behaviour",
-      "kind": "doc",
-      "title": "Search UI Behaviour",
-      "href": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "last_updated": "2026-05-21",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-05-21 • Search",
-      "search_terms": [
-        "search-ui-behaviour",
-        "search",
-        "ui",
-        "behaviour",
-        "search ui behaviour",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-21 2026 05 21"
-    },
-    {
       "id": "search-validation-checklist",
       "kind": "doc",
       "title": "Search Validation Checklist",
@@ -4138,6 +4112,52 @@
         "01"
       ],
       "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "search-build-pipeline-studio",
+      "kind": "doc",
+      "title": "Studio Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-studio",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-06-01 • Search",
+      "search_terms": [
+        "search-build-pipeline-studio",
+        "search",
+        "build",
+        "pipeline",
+        "studio",
+        "studio scope",
+        "scope",
+        "2026-06-01",
+        "2026",
+        "06",
+        "01"
+      ],
+      "search_text": "search-build-pipeline-studio search build pipeline studio studio scope scope 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "search-ui-behaviour",
+      "kind": "doc",
+      "title": "UI Behaviour",
+      "href": "/docs/?scope=studio&doc=search-ui-behaviour",
+      "last_updated": "2026-05-21",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-21 • Search",
+      "search_terms": [
+        "search-ui-behaviour",
+        "search",
+        "ui",
+        "behaviour",
+        "ui behaviour",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "search-ui-behaviour search ui behaviour ui behaviour 2026-05-21 2026 05 21"
     },
     {
       "id": "studio",

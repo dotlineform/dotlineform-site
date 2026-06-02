@@ -1,9 +1,10 @@
 ---
 doc_id: scripts-audit-projection-contract
-title: Projection Contract Audit
+title: Projection Contract Validation
 added_date: 2026-05-23
 last_updated: 2026-05-30
-parent_id: scripts
+parent_id: architecture
+viewable: true
 ---
 # Projection Contract Audit
 

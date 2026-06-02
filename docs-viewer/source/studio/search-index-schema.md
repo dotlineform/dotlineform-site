@@ -1,9 +1,10 @@
 ---
 doc_id: search-index-schema
-title: Search Index Schema
+title: Catalogue Search Index Schema
 added_date: 2026-04-01
 last_updated: 2026-06-01
 parent_id: search
+viewable: true
 ---
 # Search Index Schema
 

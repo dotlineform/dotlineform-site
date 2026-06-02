@@ -153,19 +153,3 @@ Related status-pill labels and save-state messages live in `docs-viewer/config/u
 - `status_pill_failed`
 
 The status config is scope-aware, while the shared Docs Viewer now fetches its visible copy from the scoped Docs Viewer UI-text payload.
-
-What does not stay here:
-
-- the code that normalizes, caches, and exposes these values
-  that lives in **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
-- Jekyll render-time design selections for static Studio pages such as landing-page panel background images
-  those should live in Jekyll data files such as `_data/studio_panel_images.json`, because page templates can read `site.data` directly at build time
-  that data may define a page-level default width plus per-panel width overrides, and should document the filename pattern used to derive each asset path
-- dedicated `/search/` runtime policy values such as debounce and result batching
-  those live in **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
-- dedicated `/search/` labels, messages, back links, and scope-owned index paths
-  those also live in **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)** so public search can boot without the Studio manifest
-- local write-service endpoint URLs
-  those currently live in `assets/studio/js/studio-transport.js`
-
-For the Studio runtime that uses this config, see **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)**.

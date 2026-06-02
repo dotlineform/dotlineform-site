@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T13:11:14Z",
+  "generated_at": "2026-06-02T15:05:32Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -194,6 +194,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-jekyll-site-config",
+      "title": "Jekyll Site Config",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-29",
+      "parent_id": "architecture",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-jekyll-site-config.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
+      "content_text_length": 2390
+    },
+    {
+      "scope": "studio",
       "doc_id": "data-models-projection-contract",
       "title": "Projection Contract",
       "added_date": "2026-05-23",
@@ -204,7 +218,21 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 11086
+      "content_text_length": 10528
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-audit-projection-contract",
+      "title": "Projection Contract Validation",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-30",
+      "parent_id": "architecture",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-audit-projection-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json",
+      "content_text_length": 2917
     },
     {
       "scope": "studio",
@@ -232,7 +260,7 @@
       "source_path": "site-shell-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json",
-      "content_text_length": 5195
+      "content_text_length": 4335
     },
     {
       "scope": "studio",
@@ -1241,20 +1269,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "config-jekyll-site-config",
-      "title": "Jekyll Site Config",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-29",
-      "parent_id": "dev-home",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-jekyll-site-config.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
-      "content_text_length": 2390
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
@@ -1294,20 +1308,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
       "content_text_length": 9957
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-audit-projection-contract",
-      "title": "Projection Contract Audit",
-      "added_date": "2026-05-23",
-      "last_updated": "2026-05-30",
-      "parent_id": "scripts",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-audit-projection-contract.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json",
-      "content_text_length": 2890
     },
     {
       "scope": "studio",
@@ -1999,7 +1999,7 @@
       "source_path": "scripts-local-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json",
-      "content_text_length": 15068
+      "content_text_length": 13693
     },
     {
       "scope": "studio",
@@ -2076,14 +2076,112 @@
       "doc_id": "search",
       "title": "Search",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-06-02",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "search.md",
       "viewer_url": "/docs/?scope=studio&doc=search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search.json",
-      "content_text_length": 2061
+      "content_text_length": 2392
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-build-pipeline-analysis",
+      "title": "Analysis Scope",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-build-pipeline-analysis.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-analysis.json",
+      "content_text_length": 2501
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-search-build-json",
+      "title": "Build Config JSON",
+      "added_date": "2026-04-25",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-search-build-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-build-json.json",
+      "content_text_length": 3161
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-build-pipeline-architecture",
+      "title": "Build Pipeline",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-build-pipeline-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-architecture.json",
+      "content_text_length": 4631
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-catalogue-infrastructure",
+      "title": "Catalogue Infrastructure",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-catalogue-infrastructure.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-catalogue-infrastructure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-infrastructure.json",
+      "content_text_length": 4770
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-build-pipeline-catalogue",
+      "title": "Catalogue Scope",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-build-pipeline-catalogue.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-catalogue.json",
+      "content_text_length": 4424
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-index-schema",
+      "title": "Catalogue Search Index Schema",
+      "added_date": "2026-04-01",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-index-schema.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-index-schema",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-index-schema.json",
+      "content_text_length": 7433
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-search-policy-json",
+      "title": "Catalogue Search Policy JSON",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-11 14:10",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-search-policy-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-policy-json.json",
+      "content_text_length": 1952
     },
     {
       "scope": "studio",
@@ -2115,115 +2213,45 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-incremental-orchestration-plan",
-      "title": "Incremental Search Orchestration Plan",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-06-01",
+      "doc_id": "search-docs-viewer-infrastructure",
+      "title": "Docs Viewer Infrastructure",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
       "parent_id": "search",
       "hidden": false,
       "viewable": true,
-      "source_path": "search-incremental-orchestration-plan.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-incremental-orchestration-plan.json",
-      "content_text_length": 19568
+      "source_path": "search-docs-viewer-infrastructure.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-docs-viewer-infrastructure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-docs-viewer-infrastructure.json",
+      "content_text_length": 5119
     },
     {
       "scope": "studio",
-      "doc_id": "config-search-build-json",
-      "title": "Search Build Config JSON",
-      "added_date": "2026-04-25",
-      "last_updated": "2026-06-01",
+      "doc_id": "search-domain-review-patterns",
+      "title": "Domain Review Patterns",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
       "parent_id": "search",
       "hidden": false,
       "viewable": true,
-      "source_path": "config-search-build-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-build-json.json",
-      "content_text_length": 3135
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-build-pipeline",
-      "title": "Search Build Pipeline",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-05-19",
-      "parent_id": "search",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-build-pipeline.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline.json",
-      "content_text_length": 1170
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-build-pipeline-analysis",
-      "title": "Search Build Pipeline Analysis Scope",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-build-pipeline-analysis.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-analysis.json",
-      "content_text_length": 2463
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-build-pipeline-architecture",
-      "title": "Search Build Pipeline Architecture",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-build-pipeline-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-architecture.json",
-      "content_text_length": 4595
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-build-pipeline-catalogue",
-      "title": "Search Build Pipeline Catalogue Scope",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-build-pipeline-catalogue.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-catalogue.json",
-      "content_text_length": 4385
+      "source_path": "search-domain-review-patterns.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-domain-review-patterns",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-domain-review-patterns.json",
+      "content_text_length": 4731
     },
     {
       "scope": "studio",
       "doc_id": "search-build-pipeline-library",
-      "title": "Search Build Pipeline Library Scope",
+      "title": "Library Scope",
       "added_date": "2026-05-19",
       "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
+      "parent_id": "search",
       "hidden": false,
       "viewable": true,
       "source_path": "search-build-pipeline-library.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-library.json",
-      "content_text_length": 2428
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-build-pipeline-studio",
-      "title": "Search Build Pipeline Studio Scope",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
-      "parent_id": "search-build-pipeline",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-build-pipeline-studio.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-studio.json",
-      "content_text_length": 2812
+      "content_text_length": 2465
     },
     {
       "scope": "studio",
@@ -2283,20 +2311,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-index-schema",
-      "title": "Search Index Schema",
-      "added_date": "2026-04-01",
-      "last_updated": "2026-06-01",
-      "parent_id": "search",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-index-schema.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-index-schema",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-index-schema.json",
-      "content_text_length": 7412
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-normalisation-rules",
       "title": "Search Normalisation Rules",
       "added_date": "2026-04-01",
@@ -2322,20 +2336,6 @@
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-overview.json",
       "content_text_length": 5020
-    },
-    {
-      "scope": "studio",
-      "doc_id": "config-search-policy-json",
-      "title": "Search Policy JSON",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 14:10",
-      "parent_id": "search",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-search-policy-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-policy-json.json",
-      "content_text_length": 1932
     },
     {
       "scope": "studio",
@@ -2367,20 +2367,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-ui-behaviour",
-      "title": "Search UI Behaviour",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-21",
-      "parent_id": "search",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-ui-behaviour.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ui-behaviour.json",
-      "content_text_length": 12188
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
       "added_date": "2026-04-01",
@@ -2392,6 +2378,34 @@
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-validation-checklist.json",
       "content_text_length": 9468
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-build-pipeline-studio",
+      "title": "Studio Scope",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-06-01",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-build-pipeline-studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-studio.json",
+      "content_text_length": 2848
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-ui-behaviour",
+      "title": "UI Behaviour",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-21",
+      "parent_id": "search",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-ui-behaviour.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ui-behaviour.json",
+      "content_text_length": 12209
     },
     {
       "scope": "studio",
@@ -2727,7 +2741,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 7097
+      "content_text_length": 6106
     },
     {
       "scope": "studio",

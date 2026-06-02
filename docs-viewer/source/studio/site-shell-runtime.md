@@ -36,14 +36,9 @@ It is the shared shell for:
 - analysis docs
 - any non-Studio page using the default layout
 
-Studio application pages use `_layouts/studio.html` instead.
-The local `/docs/` management route is served by the standalone Docs Viewer service, not by Jekyll.
-
 ## Theme Bootstrap
 
 The tiny theme bootstrap remains inline in the `<head>` of `_layouts/default.html`.
-
-Reason:
 
 - it reads `localStorage.theme`
 - it sets `data-theme` on `<html>` before first paint
@@ -92,7 +87,7 @@ Reason:
 
 This is intentionally a minimal static-site mechanism, not a content-hash asset pipeline.
 
-## Public And Studio Nav Split
+## Public Nav
 
 Primary nav items in `_layouts/default.html` are rendered through `_includes/nav_item.html`.
 
@@ -111,21 +106,13 @@ Reason:
 Current default-layout public nav:
 
 - `works` -> `/series/`
+- `analysis` -> `/analysis/`
 - `library` -> `/library/`
 
 Current public active-state rules:
 
 - `/series/`, `/series/<series_id>/`, and `/moments/<moment_id>/` are treated as part of the `works` section
-- `/library/` is treated as the library section
 - there is no separate top-level `moments` nav item
-
-Current Studio-context nav inside `_layouts/default.html`:
-
-- `studio` -> `/studio/`
-- `docs` -> `/docs/?scope=studio&doc=studio`
-
-The default layout switches to that Studio nav when the current page is in Studio docs context.
-Analytics routes are owned by the standalone Local Analytics app and are not part of the default Studio-context nav.
 
 ## Docs Viewer Shell Boundary
 
@@ -137,6 +124,10 @@ Current route shells:
   - Studio docs
   - loads `docs-viewer/generated/docs/studio/index.json`
   - enables inline Studio docs search with `docs-viewer/generated/search/studio/index.json`
+- `/analysis/`
+  - analysis docs
+  - loads `assets/data/docs/scopes/analysis/index.json`
+  - enables inline analysis docs search with `assets/data/search/analysis/index.json`
 - `/library/`
   - library docs
   - loads `assets/data/docs/scopes/library/index.json`
@@ -148,12 +139,3 @@ Current shared docs-viewer layer:
 - `docs-viewer/runtime/js/docs-viewer.js`
 
 The fork/no-fork rule for that shared viewer is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary).
-
-## Maintenance Rule
-
-When changing site-shell behavior:
-
-1. Keep the head theme bootstrap inline unless there is a specific reason to revisit first-paint behavior.
-2. Keep `_layouts/default.html` responsible for shell structure and section-level nav state, not page-specific application logic.
-3. Prefer shared includes when the same nav or viewer-shell pattern appears multiple times.
-4. Treat docs route differences as scope-shell composition unless the viewer model itself has changed.

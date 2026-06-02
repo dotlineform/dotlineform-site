@@ -1,9 +1,10 @@
 ---
 doc_id: config-search-policy-json
-title: Search Policy JSON
+title: Catalogue Search Policy JSON
 added_date: 2026-03-31
 last_updated: "2026-05-11 14:10"
 parent_id: search
+viewable: true
 ---
 # Search Policy JSON
 
