@@ -88,9 +88,9 @@ def main(argv: list[str] | None = None) -> int:
                 expect(root).to_have_attribute("data-studio-busy", "false", timeout=10_000)
                 expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith(DOC_HREF):
-                    raise AssertionError(f"Catalogue Drafts doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("Catalogue Drafts still renders header doc pill")
                 if page.locator(f'.site-nav [data-studio-navigate="{ROUTE_ID}"]').count():
                     raise AssertionError("Catalogue Drafts should not appear as a top-nav item")
                 page.close()

@@ -91,9 +91,9 @@ def main(argv: list[str] | None = None) -> int:
                 data_workbook_path = root.get_attribute("data-workbook-path")
                 if workbook_path != "data/works_bulk_import.xlsx" or data_workbook_path != "data/works_bulk_import.xlsx":
                     raise AssertionError(f"unexpected workbook path: text={workbook_path!r}, data={data_workbook_path!r}")
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=bulk-add-work&mode=manage"):
-                    raise AssertionError(f"bulk-add-work doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("bulk-add-work still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="bulk_add_work"]').count():
                     raise AssertionError("bulk-add-work should not appear as a top-nav item")
                 page.close()

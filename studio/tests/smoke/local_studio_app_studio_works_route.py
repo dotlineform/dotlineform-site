@@ -94,9 +94,9 @@ def main(argv: list[str] | None = None) -> int:
                 if not series_href or not series_href.startswith("http://127.0.0.1:4000/series/"):
                     raise AssertionError(f"series link did not resolve through the public preview base: {series_href!r}")
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-works&mode=manage"):
-                    raise AssertionError(f"studio-works doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("studio-works still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="studio_works"]').count():
                     raise AssertionError("studio-works should not appear as a top-nav item")
                 page.close()

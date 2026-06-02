@@ -281,6 +281,5 @@ They are still validated through the shared Python Docs Viewer Markdown renderer
 
 ## Related References
 
-- [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)

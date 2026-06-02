@@ -37,7 +37,6 @@ export function renderTagAliasesControls(state) {
   state.refs.key.innerHTML = `
     <button type="button" class="analytics__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
-    ${renderGroupInfoControl(state)}
   `;
 }
 
@@ -147,23 +146,6 @@ function groupTitleAttr(state, group) {
   const description = String(state.groupDescriptions.get(group) || "").trim();
   if (!description) return "";
   return `title="${escapeHtml(description)}"`;
-}
-
-function renderGroupInfoControl(state) {
-  const title = aliasesText(state.config, "group_info_title", "Open group descriptions in a new tab");
-  const ariaLabel = aliasesText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
-  return `
-    <a
-      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
-      href="${escapeHtml(state.groupInfoPagePath || "/analytics/tag-groups/")}"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="${escapeHtml(title)}"
-      aria-label="${escapeHtml(ariaLabel)}"
-    >
-      <em>i</em>
-    </a>
-  `;
 }
 
 function sortIndicator(state, key) {

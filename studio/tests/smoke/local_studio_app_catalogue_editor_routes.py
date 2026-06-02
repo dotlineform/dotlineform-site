@@ -121,9 +121,9 @@ def main(argv: list[str] | None = None) -> int:
                     expect(root).to_have_attribute("data-studio-busy", "false", timeout=10_000)
                     expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
                     expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
-                    doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                    if not str(doc_link).endswith(route["doc"]):
-                        raise AssertionError(f"{route['id']} doc link is not manage-mode: {doc_link!r}")
+                    doc_link_count = page.locator(".studioLayout__docLink").count()
+                    if doc_link_count:
+                        raise AssertionError(f"{route['id']} still renders header doc pill")
                     if page.locator(f'.site-nav [data-studio-navigate="{route["id"]}"]').count():
                         raise AssertionError(f"{route['id']} should not appear as a top-nav item")
                 page.close()

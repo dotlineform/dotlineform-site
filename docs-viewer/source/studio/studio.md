@@ -70,10 +70,6 @@ Technical route and workflow docs:
 - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
 - **[Studio Works](/docs/?scope=studio&doc=studio-works)**
 
-## Practical page-use guides
-
-- [User Guide](/docs/?scope=studio&doc=user-guide).
-
 ## Local Development
 
 Use the repo-local runner from `dotlineform-site/`:

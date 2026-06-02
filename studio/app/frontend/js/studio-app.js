@@ -1,5 +1,5 @@
 import { loadStudioConfig } from "./studio-config.js";
-import { buildDocsViewerDocUrl, buildDocsViewerUrl } from "./studio-navigation.js";
+import { buildDocsViewerUrl } from "./studio-navigation.js";
 import { hasStudioRouteBodyRenderer, renderStudioRouteBody } from "./studio-route-body-renderers.js";
 import { buildStudioShellContract, listStudioRoutes } from "./studio-route-registry.js";
 import { initStudioThemeToggle } from "./studio-theme.js";
@@ -41,17 +41,6 @@ function renderStudioShell(config, activeRoute, bodyHtml) {
     <div class="studio">
       <div class="studio__headerRow">
         <h2>${escapeHtml(activeRoute.title)}</h2>
-        <a
-          class="studioLayout__docLink"
-          href="${escapeHtml(buildDocsViewerDocUrl(config, activeRoute.id), true)}"
-          data-studio-doc-view="${escapeHtml(activeRoute.id, true)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Open Studio page implementation notes"
-          aria-label="Open Studio page implementation notes"
-        >
-          <em>i</em>
-        </a>
       </div>
       <div class="studio__content">
         ${bodyHtml}

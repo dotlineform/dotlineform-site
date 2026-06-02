@@ -104,9 +104,9 @@ def main(argv: list[str] | None = None) -> int:
                 expect(page.locator("#studioRiskApp")).to_have_value("docs-viewer")
                 expect(page.locator("#studioRiskArea")).to_have_value("runtime")
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=site-request-studio-risk-route&mode=manage"):
-                    raise AssertionError(f"risk doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("risk still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="studio_risk"]').count():
                     raise AssertionError("risk should not appear as a top-nav item")
 

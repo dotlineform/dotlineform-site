@@ -241,9 +241,9 @@ def main(argv: list[str] | None = None) -> int:
                 for route in ROUTES:
                     page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
                     wait_for_demo_ready(page, route["root"])
-                    doc_link = page.locator(".uiCatalogueShellDocLink").get_attribute("href")
-                    if "mode=manage" not in str(doc_link or ""):
-                        raise AssertionError(f"{route['path']} doc link is not manage-mode: {doc_link!r}")
+                    doc_link_count = page.locator(".uiCatalogueShellDocLink").count()
+                    if doc_link_count:
+                        raise AssertionError(f"{route['path']} still renders header doc pill")
 
                 for viewport in ({"width": 1280, "height": 900}, {"width": 390, "height": 844}):
                     modal_results.append(check_modal_shell(page, base_url, viewport))

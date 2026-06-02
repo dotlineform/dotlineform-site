@@ -129,9 +129,9 @@ def main(argv: list[str] | None = None) -> int:
                 if modal_title != "Activity details" or modal_body != ["Wrote source JSON", "Updated Studio activity feed"]:
                     raise AssertionError(f"unexpected activity modal title: {modal_title!r}")
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-activity&mode=manage"):
-                    raise AssertionError(f"activity doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("activity still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="activity"]').count():
                     raise AssertionError("activity should not appear as a top-nav item")
                 page.close()

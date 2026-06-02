@@ -90,21 +90,6 @@ export function buildDocsViewerUrl(config, target = "/docs/", params = {}) {
   return output.href;
 }
 
-export function buildDocsViewerDocUrl(config, viewId) {
-  const link = getDocsViewerLinkConfig(config);
-  const docIds = link.doc_ids && typeof link.doc_ids === "object" && !Array.isArray(link.doc_ids)
-    ? link.doc_ids
-    : {};
-  const docId = String(docIds[normalizeViewId(viewId)] || "").trim();
-  const docScope = String(link.doc_scope || "studio").trim();
-  const defaultMode = String(link.default_mode || "manage").trim();
-  const params = {};
-  if (docScope) params.scope = docScope;
-  if (docId) params.doc = docId;
-  if (defaultMode) params.mode = defaultMode;
-  return buildDocsViewerUrl(config, link.docs_path || "/docs/", params);
-}
-
 export function getAnalyticsSiteBase(config, siteKey) {
   const sites = getAnalyticsSites(config);
   const site = sites && sites[siteKey];
@@ -178,11 +163,6 @@ export function updateDocsViewerLinks(config, root = document) {
   const targetRoot = root && typeof root.querySelectorAll === "function" ? root : document;
   if (!targetRoot || typeof targetRoot.querySelectorAll !== "function") return;
   targetRoot.querySelectorAll("a[href]").forEach((link) => {
-    const docViewId = link.getAttribute("data-analytics-doc-view") || "";
-    if (docViewId.trim()) {
-      link.setAttribute("href", buildDocsViewerDocUrl(config, docViewId));
-      return;
-    }
     const href = link.getAttribute("href") || "";
     if (!isDocsViewerPath(config, href)) return;
     link.setAttribute("href", buildDocsViewerUrl(config, href));

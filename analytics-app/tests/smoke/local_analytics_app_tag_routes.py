@@ -131,13 +131,13 @@ def main(argv: list[str] | None = None) -> int:
                 root = page.locator(route["root"])
                 mode = root.get_attribute("data-analytics-mode")
                 record_loaded = root.get_attribute("data-analytics-record-loaded")
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
                 if mode != route["mode"]:
                     raise AssertionError(f"{route['path']} expected {route['mode']} mode, got {mode!r}")
                 if record_loaded != "true":
                     raise AssertionError(f"{route['path']} did not report loaded data")
-                if "mode=manage" not in str(doc_link or ""):
-                    raise AssertionError(f"{route['path']} doc link is not manage-mode: {doc_link!r}")
+                if doc_link_count:
+                    raise AssertionError(f"{route['path']} still renders header doc pill")
                 if route["view_id"] == "series_tag_editor":
                     series_id = page.locator("#analytics-tag-editor").get_attribute("data-series-id")
                     if series_id != "036":

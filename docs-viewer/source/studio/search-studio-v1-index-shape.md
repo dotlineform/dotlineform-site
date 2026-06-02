@@ -128,6 +128,5 @@ The Studio and Library artifacts are currently consumed by the shared Docs Viewe
 
 ## Related documents
 
-- [Data Models](/docs/?scope=studio&doc=data-models)
 - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)

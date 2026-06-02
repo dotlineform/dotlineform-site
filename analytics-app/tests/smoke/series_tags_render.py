@@ -143,7 +143,7 @@ def main() -> int:
                         allRows,
                         themeRows,
                         activeFilter: document.querySelector('[data-group="theme"]')?.dataset.state || '',
-                        groupInfoHref: document.querySelector('.analytics__keyInfoBtn')?.getAttribute('href') || '',
+                        groupInfoCount: document.querySelectorAll('.analytics__keyInfoBtn').length,
                         subjectTitle: document.querySelector('[data-group="subject"]')?.getAttribute('title') || ''
                     };
                 }"""
@@ -166,7 +166,7 @@ def main() -> int:
         raise AssertionError(f"local chip output mismatch: {result!r}")
     if result["themeRows"][1]["chips"] != ["old local"] or result["themeRows"][0]["chips"] != []:
         raise AssertionError(f"theme filter output mismatch: {result!r}")
-    if result["activeFilter"] != "active" or result["groupInfoHref"] != "/analytics/tag-groups/":
+    if result["activeFilter"] != "active" or result["groupInfoCount"]:
         raise AssertionError(f"filter controls mismatch: {result!r}")
     if result["subjectTitle"] != "Subject group":
         raise AssertionError(f"group description title mismatch: {result!r}")

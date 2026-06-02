@@ -108,6 +108,5 @@ If you are unsure, start with `/assets/docs/...`. It is the simplest option for 
 
 ## Related References
 
-- [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

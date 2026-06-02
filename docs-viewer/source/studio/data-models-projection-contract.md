@@ -3,7 +3,8 @@ doc_id: data-models-projection-contract
 title: Projection Contract
 added_date: 2026-05-23
 last_updated: 2026-05-24
-parent_id: data-models
+parent_id: architecture
+viewable: true
 ---
 # Projection Contract
 

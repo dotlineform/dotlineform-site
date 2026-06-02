@@ -81,9 +81,9 @@ def main(argv: list[str] | None = None) -> int:
                 expect(page.locator("#fieldRegistryReviewMeta")).to_contain_text("exact", timeout=10_000)
                 expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("details_subfolder"), timeout=10_000)
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=catalogue-field-registry-review&mode=manage"):
-                    raise AssertionError(f"catalogue-field-registry doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("catalogue-field-registry still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="catalogue_field_registry"]').count():
                     raise AssertionError("catalogue-field-registry should not appear as a top-nav item")
                 page.close()

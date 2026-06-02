@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e87d1be115a9a8dd8adf4a0baa89b211",
-    "generated_at_utc": "2026-06-02T11:32:53Z",
-    "count": 229
+    "version": "blake2b-e3c32c84aefec3fb8093d33b4e76b766",
+    "generated_at_utc": "2026-06-02T11:50:08Z",
+    "count": 228
   },
   "entries": [
     {
@@ -301,36 +301,14 @@
       "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
-      "id": "data-models",
-      "kind": "doc",
-      "title": "Data Models",
-      "href": "/docs/?scope=studio&doc=data-models",
-      "last_updated": "2026-05-23",
-      "parent_id": "architecture",
-      "parent_title": "Architecture",
-      "display_meta": "2026-05-23 • Architecture",
-      "search_terms": [
-        "data-models",
-        "data",
-        "models",
-        "data models",
-        "architecture",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "data-models data models data models architecture 2026-05-23 2026 05 23"
-    },
-    {
       "id": "data-models-projection-contract",
       "kind": "doc",
       "title": "Projection Contract",
       "href": "/docs/?scope=studio&doc=data-models-projection-contract",
       "last_updated": "2026-05-24",
-      "parent_id": "data-models",
-      "parent_title": "Data Models",
-      "display_meta": "2026-05-24 • Data Models",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-05-24 • Architecture",
       "search_terms": [
         "data-models-projection-contract",
         "data",
@@ -338,13 +316,13 @@
         "projection",
         "contract",
         "projection contract",
-        "data models",
+        "architecture",
         "2026-05-24",
         "2026",
         "05",
         "24"
       ],
-      "search_text": "data-models-projection-contract data models projection contract projection contract data models 2026-05-24 2026 05 24"
+      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-05-24 2026 05 24"
     },
     {
       "id": "data-models-shared",
@@ -394,29 +372,6 @@
         "29"
       ],
       "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-29 2026 05 29"
-    },
-    {
-      "id": "sorting-architecture",
-      "kind": "doc",
-      "title": "Sorting Architecture",
-      "href": "/docs/?scope=studio&doc=sorting-architecture",
-      "last_updated": "2026-05-09 21:28",
-      "parent_id": "architecture",
-      "parent_title": "Architecture",
-      "display_meta": "2026-05-09 21:28 • Architecture",
-      "search_terms": [
-        "sorting-architecture",
-        "sorting",
-        "architecture",
-        "sorting architecture",
-        "2026-05-09 21:28",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "28"
-      ],
-      "search_text": "sorting-architecture sorting architecture sorting architecture 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "source-tree-ownership",
@@ -5046,6 +5001,31 @@
         "01"
       ],
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped studio 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "sorting-architecture",
+      "kind": "doc",
+      "title": "Series Sorting",
+      "href": "/docs/?scope=studio&doc=sorting-architecture",
+      "last_updated": "2026-05-09 21:28",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-09 21:28 • Studio",
+      "search_terms": [
+        "sorting-architecture",
+        "sorting",
+        "architecture",
+        "series sorting",
+        "series",
+        "studio",
+        "2026-05-09 21:28",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "28"
+      ],
+      "search_text": "sorting-architecture sorting architecture series sorting series studio 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "scripts-srcset-builder",

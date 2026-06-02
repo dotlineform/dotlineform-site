@@ -730,7 +730,7 @@ function renderPromotionGroupKey(state) {
         ${escapeHtml(group)}
       </button>
     `;
-  }).join("") + renderGroupInfoControl(state);
+  }).join("");
 }
 
 function setAliasEditModalMode(state, mode) {
@@ -780,7 +780,7 @@ function renderSelectedGroupKey(state, tagIds) {
   return getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state);
+  }).join("");
 }
 
 function renderSelectedTagChips(state, tagIds, removeAttribute) {
@@ -820,23 +820,6 @@ function renderPopupTagOptions(state, matches, options) {
     chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">&hellip;</span>`);
   }
   return chips.join("");
-}
-
-function renderGroupInfoControl(state) {
-  const title = aliasesText(state.config, "group_info_title", "Open group descriptions in a new tab");
-  const ariaLabel = aliasesText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
-  return `
-    <a
-      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
-      href="${escapeHtml(state.groupInfoPagePath || "")}"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="${escapeHtml(title)}"
-      aria-label="${escapeHtml(ariaLabel)}"
-    >
-      <em>i</em>
-    </a>
-  `;
 }
 
 function groupTitleAttr(state, group) {

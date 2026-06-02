@@ -125,7 +125,6 @@ def studio_home_column_links() -> str:
 def studio_route_view(version: str, view_id: str, body_html: str) -> str:
     view = analytics_views(REPO_ROOT)[view_id]
     escaped_version = html.escape(version, quote=True)
-    escaped_view_id = html.escape(view_id, quote=True)
     title = html.escape(view["title"])
     script = html.escape(view["script"], quote=True)
     return f"""<!doctype html>
@@ -145,17 +144,6 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
     <div class="studio">
       <div class="studio__headerRow">
         <h2>{title}</h2>
-        <a
-          class="studioLayout__docLink"
-          href="/docs/"
-          data-analytics-doc-view="{escaped_view_id}"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Open Analytics page implementation notes"
-          aria-label="Open Analytics page implementation notes"
-        >
-          <em>i</em>
-        </a>
       </div>
       <div class="studio__content">
         {body_html}

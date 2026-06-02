@@ -1,9 +1,10 @@
 ---
 doc_id: sorting-architecture
-title: Sorting Architecture
+title: Series Sorting
 added_date: 2026-03-31
 last_updated: "2026-05-09 21:28"
-parent_id: architecture
+parent_id: studio
+viewable: true
 ---
 # Sorting Architecture
 

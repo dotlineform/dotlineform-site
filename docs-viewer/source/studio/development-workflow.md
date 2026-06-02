@@ -33,7 +33,6 @@ Use the smallest owning area that explains the change:
 - Site architecture or route/runtime behavior: [Architecture](/docs/?scope=studio&doc=architecture)
 - Studio route behavior: [Studio](/docs/?scope=studio&doc=studio)
 - UI primitives, modal patterns, or layout behavior: [UI Framework](/docs/?scope=studio&doc=ui-framework)
-- Generated/runtime data contracts: [Data Models](/docs/?scope=studio&doc=data-models)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - Docs Viewer frontend-app architecture work: [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
@@ -236,7 +235,6 @@ Common follow-through:
 - Docs Viewer source changes under `docs-viewer/source/<scope>/` require same-scope docs-viewer payload follow-through when the generated payload update is part of the slice.
 - Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
 - Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
-- Data contract changes require the relevant child doc under [Data Models](/docs/?scope=studio&doc=data-models).
 
 Do not assume Jekyll alone updates Docs Viewer content.
 Generated docs/search payloads are separate artifacts.

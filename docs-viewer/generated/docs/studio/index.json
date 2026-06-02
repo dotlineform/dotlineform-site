@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T11:32:53Z",
+  "generated_at": "2026-06-02T11:50:08Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -194,25 +194,11 @@
     },
     {
       "scope": "studio",
-      "doc_id": "data-models",
-      "title": "Data Models",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-23",
-      "parent_id": "architecture",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "data-models.md",
-      "viewer_url": "/docs/?scope=studio&doc=data-models",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models.json",
-      "content_text_length": 675
-    },
-    {
-      "scope": "studio",
       "doc_id": "data-models-projection-contract",
       "title": "Projection Contract",
       "added_date": "2026-05-23",
       "last_updated": "2026-05-24",
-      "parent_id": "data-models",
+      "parent_id": "architecture",
       "hidden": false,
       "viewable": true,
       "source_path": "data-models-projection-contract.md",
@@ -247,20 +233,6 @@
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json",
       "content_text_length": 5195
-    },
-    {
-      "scope": "studio",
-      "doc_id": "sorting-architecture",
-      "title": "Sorting Architecture",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 21:28",
-      "parent_id": "architecture",
-      "hidden": false,
-      "viewable": true,
-      "source_path": "sorting-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/sorting-architecture.json",
-      "content_text_length": 2347
     },
     {
       "scope": "studio",
@@ -1223,7 +1195,7 @@
       "viewer_url": "/docs/?scope=studio&doc=dev-home",
       "summary": "This section contains technical reference documents that apply to the repo as a whole.",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/dev-home.json",
-      "content_text_length": 1759
+      "content_text_length": 1664
     },
     {
       "scope": "studio",
@@ -1265,7 +1237,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 17886
+      "content_text_length": 17764
     },
     {
       "scope": "studio",
@@ -1479,7 +1451,7 @@
       "source_path": "user-guide-docs-images.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-images",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-images.json",
-      "content_text_length": 2588
+      "content_text_length": 2575
     },
     {
       "scope": "studio",
@@ -1493,7 +1465,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 12838
+      "content_text_length": 12825
     },
     {
       "scope": "studio",
@@ -1884,7 +1856,7 @@
       "source_path": "docs-viewer-source-organisation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-organisation.json",
-      "content_text_length": 4332
+      "content_text_length": 4232
     },
     {
       "scope": "studio",
@@ -2139,7 +2111,7 @@
       "source_path": "search-studio-v1-index-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-studio-v1-index-shape.json",
-      "content_text_length": 2960
+      "content_text_length": 2946
     },
     {
       "scope": "studio",
@@ -2433,7 +2405,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4803
+      "content_text_length": 4761
     },
     {
       "scope": "studio",
@@ -2924,6 +2896,20 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-build-catalogue-json.json",
       "content_text_length": 11484
+    },
+    {
+      "scope": "studio",
+      "doc_id": "sorting-architecture",
+      "title": "Series Sorting",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-09 21:28",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "sorting-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/sorting-architecture.json",
+      "content_text_length": 2369
     },
     {
       "scope": "studio",

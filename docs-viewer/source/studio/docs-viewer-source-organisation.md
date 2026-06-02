@@ -91,10 +91,6 @@ The current docs set now distinguishes between two different documentation jobs:
 
 - technical reference docs for contracts, implementation details, and generated-output behavior
 - practical user guidance for concrete editing tasks and copy-paste usage examples
-
-Current rule:
-
-- practical how-to guidance should live under [User Guide](/docs/?scope=studio&doc=user-guide)
 - technical subsystem docs should link to that guidance rather than burying task-level instructions inside implementation detail
 
 Example:
@@ -146,7 +142,5 @@ When updating Docs Viewer docs:
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Data Models](/docs/?scope=studio&doc=data-models)

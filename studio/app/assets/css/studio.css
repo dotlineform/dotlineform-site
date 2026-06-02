@@ -399,37 +399,6 @@ html[data-theme="dark"] {
   margin: 0;
 }
 
-.studioLayout__docLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.85rem;
-  min-width: 1.85rem;
-  aspect-ratio: 1 / 1;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel);
-  font-size: var(--font-small);
-  line-height: 1;
-}
-
-.studioLayout__docLink:is(:link, :visited) {
-  color: var(--link);
-  text-decoration: none;
-}
-
-.studioLayout__docLink:hover {
-  color: var(--link-hover);
-  border-color: var(--border-strong);
-  background: var(--panel-2);
-  text-decoration: none;
-}
-
-.studioLayout__docLink:focus-visible {
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-}
-
 .studio__content {
   margin-top: 1rem;
 }
@@ -724,7 +693,6 @@ html[data-theme="dark"] .seriesTagsPage {
 .tagStudioPage__context,
 .tagStudio__panel,
 .tagStudio__popupInner,
-.tagStudio__keyInfoPopup,
 .tagStudioModal__dialog {
   border: 1px solid var(--line, var(--studio-line));
   background: var(--surface, var(--studio-surface));
@@ -2342,62 +2310,6 @@ span.tagStudio__input--readonlyDisplay {
 
 .tagStudio__keyPill {
   text-transform: lowercase;
-}
-
-.tagStudio__keyInfoWrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.tagStudio__keyInfoBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--studio-pill-height);
-  min-width: var(--studio-pill-height);
-  aspect-ratio: 1 / 1;
-  border: 1px solid var(--line, var(--studio-line-chip));
-  border-radius: 999px;
-  padding: 0;
-  background: var(--studio-surface-subtle);
-  cursor: pointer;
-  font-style: italic;
-  line-height: 1;
-  text-decoration: none;
-  text-transform: none;
-  align-self: center;
-}
-
-.tagStudio__keyInfoBtn em {
-  font-style: italic;
-  font-family: Georgia, "Times New Roman", serif;
-}
-
-.tagStudio__keyInfoPopup {
-  position: absolute;
-  top: calc(100% + 0.35rem);
-  right: 0;
-  z-index: 40;
-  width: min(42rem, calc(100vw - 2rem));
-  max-height: min(24rem, calc(100vh - 5rem));
-  overflow: auto;
-  border-radius: var(--studio-radius-md);
-  box-shadow: var(--studio-shadow-pop);
-  padding: var(--studio-surface-padding-md);
-  display: grid;
-  gap: var(--studio-shell-gap-md);
-}
-
-.tagStudioModal .tagStudio__keyInfoPopup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  transform: translate(-50%, -50%);
-  width: min(42rem, calc(100vw - 2rem));
-  max-height: min(24rem, calc(100vh - 2rem));
-  z-index: 1100;
 }
 
 .tagStudio__groupInfoSection {

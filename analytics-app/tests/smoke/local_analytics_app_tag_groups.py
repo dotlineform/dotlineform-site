@@ -85,7 +85,7 @@ def main(argv: list[str] | None = None) -> int:
             mode = page.locator("#tag-groups").get_attribute("data-analytics-mode")
             record_loaded = page.locator("#tag-groups").get_attribute("data-analytics-record-loaded")
             chips = page.locator(".tagGroups__section .analytics__keyPill").all_text_contents()
-            doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+            doc_link_count = page.locator(".studioLayout__docLink").count()
             content_text = page.locator('[data-role="content"]').inner_text()
             browser.close()
 
@@ -98,8 +98,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected record loaded, got {record_loaded!r}")
         if expected_groups - set(chips):
             raise AssertionError(f"missing expected group chips: {sorted(expected_groups - set(chips))}")
-        if not doc_link.startswith("http://127.0.0.1:") or not doc_link.endswith("/docs/?scope=studio&doc=tag-groups&mode=manage"):
-            raise AssertionError(f"unexpected doc link: {doc_link!r}")
+        if doc_link_count:
+            raise AssertionError("Tag Groups still renders header doc pill")
         if "No group descriptions available" in content_text:
             raise AssertionError("Tag Groups rendered empty fallback unexpectedly")
         if not config_requests:

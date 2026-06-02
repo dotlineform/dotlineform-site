@@ -159,7 +159,6 @@ function renderFilters(input) {
     <div class="${UI_CLASS.filters}">
       <button type="button" class="analytics__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(input.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(input.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
-      ${renderGroupInfoControl(input)}
     </div>
   `;
 }
@@ -174,21 +173,6 @@ function groupTitleAttr(input, group) {
   const descriptions = input.groupDescriptions instanceof Map ? input.groupDescriptions : new Map();
   const description = String(descriptions.get(group) || "").trim();
   return description ? `title="${escapeHtml(description)}"` : "";
-}
-
-function renderGroupInfoControl(input) {
-  const href = input.groupInfoPagePath || "";
-  if (!href) return "";
-  return `
-    <a
-      class="${UI_CLASS.keyInfoButton}"
-      href="${escapeHtml(href)}"
-      target="_blank"
-      rel="noopener"
-      title="${escapeHtml(seriesTagsText(input.config, "group_info_title", "Open group descriptions in a new tab"))}"
-      aria-label="${escapeHtml(seriesTagsText(input.config, "group_info_aria_label", "Open group descriptions in a new tab"))}"
-    >i</a>
-  `;
 }
 
 function compareSeriesRows(input, left, right) {

@@ -63,7 +63,6 @@ def main(argv: list[str] | None = None) -> int:
                         zero: 0
                     });
                     const docsViewUrl = mod.buildStudioViewUrl(config, "docs");
-                    const docsDocUrl = mod.buildDocsViewerDocUrl(config, "docs");
                     const workEditorUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_editor", {
                         work: "00001",
                         empty: "",
@@ -111,7 +110,6 @@ def main(argv: list[str] | None = None) -> int:
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
                     const docsLink = document.createElement("a");
                     docsLink.setAttribute("href", "/docs/");
-                    docsLink.setAttribute("data-studio-doc-view", "docs");
                     document.body.append(docsLink);
                     mod.updateDocsViewerLinks(config, document);
 
@@ -137,7 +135,6 @@ def main(argv: list[str] | None = None) -> int:
                         productionBase: mod.getStudioSiteBase(config, "production"),
                         docsViewPath: mod.getStudioView(config, "docs").path,
                         docsViewUrl,
-                        docsDocUrl,
                         rewrittenDocsHref: docsLink.getAttribute("href"),
                         dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
@@ -207,9 +204,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected Docs view path: {result['docsViewPath']!r}")
         if result["docsViewUrl"] != "http://127.0.0.1:8776/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view URL: {result['docsViewUrl']!r}")
-        if result["docsDocUrl"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=docs-viewer&mode=manage":
-            raise AssertionError(f"unexpected Docs doc URL: {result['docsDocUrl']!r}")
-        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=docs-viewer&mode=manage":
+        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?mode=manage":
             raise AssertionError(f"unexpected rewritten Docs link: {result['rewrittenDocsHref']!r}")
         expected_top_nav = ["docs"]
         if result["runtimePrimaryNav"] != expected_top_nav:

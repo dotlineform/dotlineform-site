@@ -46,6 +46,7 @@ def test_demo_routes_render_standalone_shell() -> None:
     assert "/ui-catalogue/app/assets/js/ui-catalogue-shell.js?v=test-version" in html
     assert "/ui-catalogue/app/assets/js/ui-catalogue-demo.js?v=test-version" in html
     assert "/docs/?scope=studio&amp;mode=manage&amp;doc=ui-catalogue" in html
+    assert "uiCatalogueShellDocLink" not in html
     assert "/studio/ui-catalogue/" not in html
     assert "/studio/app/" not in html
     assert "/assets/ui-catalogue/" not in html

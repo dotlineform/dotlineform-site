@@ -90,9 +90,9 @@ def main(argv: list[str] | None = None) -> int:
                 expect(page.locator("#projectStateRunButton")).to_be_enabled(timeout=10_000)
                 expect(page.locator("#projectStateOpenButton")).to_be_enabled(timeout=10_000)
 
-                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-                if not str(doc_link).endswith("/docs/?scope=studio&doc=project-state-page&mode=manage"):
-                    raise AssertionError(f"project-state doc link is not manage-mode: {doc_link!r}")
+                doc_link_count = page.locator(".studioLayout__docLink").count()
+                if doc_link_count:
+                    raise AssertionError("project-state still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="project_state"]').count():
                     raise AssertionError("project-state should not appear as a top-nav item")
                 page.close()

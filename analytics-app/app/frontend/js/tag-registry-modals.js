@@ -728,7 +728,7 @@ function renderTagRegistryNewTagGroupKey(state) {
         ${escapeHtml(group)}
       </button>
     `;
-  }).join("") + renderGroupInfoControl(state);
+  }).join("");
 }
 
 function renderTagRegistryDemoteGroupKey(state, selectedItems) {
@@ -740,7 +740,7 @@ function renderTagRegistryDemoteGroupKey(state, selectedItems) {
   state.refs.demoteGroupKey.innerHTML = getAnalyticsGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state);
+  }).join("");
 }
 
 function renderTagRegistryDemoteTagList(state, selectedItems) {
@@ -815,23 +815,6 @@ function renderDeleteImpactSeriesItem(state, seriesEntries) {
     <li class="${UI_CLASS.deleteImpactItem}">
       <span>${escapeHtml(label)}: </span>${content}
     </li>
-  `;
-}
-
-function renderGroupInfoControl(state) {
-  const title = registryText(state.config, "group_info_title", "Open group descriptions in a new tab");
-  const ariaLabel = registryText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
-  return `
-    <a
-      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
-      href="${escapeHtml(state.groupInfoPagePath || "")}"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="${escapeHtml(title)}"
-      aria-label="${escapeHtml(ariaLabel)}"
-    >
-      <em>i</em>
-    </a>
   `;
 }
 

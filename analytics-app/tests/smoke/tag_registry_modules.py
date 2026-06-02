@@ -163,7 +163,7 @@ def assert_render_output(page: Page) -> None:
                 allLabel: keyButtons[0] ? keyButtons[0].textContent.trim() : '',
                 groupLabels: keyButtons.slice(1).map((button) => button.textContent.trim()),
                 subjectTitle: state.refs.key.querySelector('button[data-group="subject"]')?.getAttribute('title') || '',
-                infoHref: state.refs.key.querySelector('a')?.getAttribute('href') || '',
+                infoLinkCount: state.refs.key.querySelectorAll('a').length,
                 sortHeadings: Array.from(state.refs.list.querySelectorAll('button[data-sort-key]')).map((button) => button.textContent.trim()),
                 rowLabels: rows.map((row) => row.querySelector('[data-tag-id]')?.textContent.trim() || ''),
                 firstRowDescriptionHtml: rows[0]?.querySelector('.tagRegistry__descCol')?.innerHTML.trim() || '',
@@ -180,7 +180,7 @@ def assert_render_output(page: Page) -> None:
         raise AssertionError(f"unexpected group labels: {result!r}")
     if result["subjectTitle"] != "Subject group":
         raise AssertionError(f"group title was not rendered: {result!r}")
-    if result["infoHref"] != "/analytics/tag-groups/":
+    if result["infoLinkCount"]:
         raise AssertionError(f"group info link mismatch: {result!r}")
     if result["sortHeadings"] != ["tag ↑", "description"]:
         raise AssertionError(f"sort headings mismatch: {result!r}")
