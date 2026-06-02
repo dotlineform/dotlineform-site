@@ -175,11 +175,11 @@ function renderRows(state) {
   renderHead(state);
   const entries = state.entries.slice().sort((left, right) => compareEntries(state, left, right));
   state.statusNode.textContent = entries.length === 1
-    ? "1 broken link [" + state.selectedScope + "]"
-    : entries.length + " broken links [" + state.selectedScope + "]";
+    ? "1 broken link" + state.selectedScope + "]"
+    : entries.length + " broken links";
   state.emptyNode.hidden = entries.length > 0;
   if (!entries.length) {
-    state.emptyNode.textContent = "No broken links found for this scope.";
+    state.emptyNode.textContent = "No broken links found in " + state.selectedScope;
     return;
   }
   entries.forEach((entry) => {
@@ -275,7 +275,7 @@ function renderShell(root) {
 
   const label = document.createElement("label");
   label.className = "docsViewerReport__selectLabel";
-  label.textContent = "scope ";
+  label.textContent = "";
 
   const select = document.createElement("select");
   select.className = "docsViewerReport__select";
