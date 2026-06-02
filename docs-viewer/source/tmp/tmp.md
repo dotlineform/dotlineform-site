@@ -8,6 +8,11 @@ ui_status: draft
 
 # tmp
 
+semantic references:
+
+- registry: defines what they are, what they can do, who they involve (like tag registry)
+- assignments: what actual relationships have been defined (like tag assignments)
+
 
 ---
 

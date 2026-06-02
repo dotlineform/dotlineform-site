@@ -5,7 +5,7 @@
     "routes": {
       "studio_home": {
         "label": "home",
-        "title": "Studio Home",
+        "title": "",
         "path": "/studio/",
         "script": "/studio/app/frontend/js/studio-home.js",
         "nav": false,

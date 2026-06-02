@@ -8,34 +8,23 @@ viewable: true
 ---
 # Catalogue Work Editor
 
-Route:
-
-- `/studio/catalogue-work/`
-- focused record selection uses `?work=<work_id>`
-- new draft mode uses `?mode=new`
-
-The route shell is hosted by the local Studio app server.
-The old Jekyll route shell has been retired.
-
-This page edits canonical work source records from `studio/data/canonical/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
+- route: `/studio/catalogue-work/`
+- current record: `?work=<work_id>`
+- draft mode: `?mode=new`
+- source records: `studio/data/canonical/catalogue/works.json`
 
 ## Browser Modules
 
-The route entry module is `studio/app/frontend/js/catalogue-work-editor.js`.
-It owns route startup, focused lookup reads, draft state, validation, dirty state interpretation, modal sequencing, route-ready state, and local-service coordination.
+`studio/app/frontend/js/`
 
-Route-local helpers:
-
-- `studio/app/frontend/js/catalogue-work-fields.js`
-  owns work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers.
-- `studio/app/frontend/js/catalogue-work-form.js`
-  owns editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering.
-- `studio/app/frontend/js/catalogue-work-sections.js`
-  owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
-- `studio/app/frontend/js/catalogue-work-actions.js`
-  owns save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route.
-- `studio/app/frontend/js/catalogue-work-selection.js`
-  owns work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route.
+| Module | Path | Owns |
+| --- | --- | --- |
+| route entry | `catalogue-work-editor.js` | route startup, focused lookup reads, draft state, validation, dirty state interpretation, modal sequencing, route-ready state, and local-service coordination |
+| helper | `catalogue-work-fields.js` | work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers. |
+| helper | `catalogue-work-form.js` | editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering. |
+| helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail. |
+| helper | `catalogue-work-actions.js` | save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
+| helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
 
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
 It does not call write services directly.
