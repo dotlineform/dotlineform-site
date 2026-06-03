@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f766c8c2ea541e174c8636358f73b79f",
-    "generated_at_utc": "2026-06-03T10:52:49Z",
+    "version": "blake2b-63715bcbcb2fb4df3f065b9fdfe5ebfe",
+    "generated_at_utc": "2026-06-03T10:57:56Z",
     "count": 239
   },
   "entries": [
@@ -2408,19 +2408,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-31",
-      "display_meta": "2026-05-31",
+      "last_updated": "2026-06-03",
+      "display_meta": "2026-06-03",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-31",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-31 2026 05 31"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-06-03 2026 06 03"
     },
     {
       "id": "docs-broken-links",
@@ -3116,22 +3116,22 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-31 • Docs Viewer",
+      "display_meta": "2026-06-03 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
         "viewer",
         "reports",
         "docs viewer",
-        "2026-05-31",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-05-31 2026 05 31"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-06-03 2026 06 03"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -4951,10 +4951,10 @@
       "kind": "doc",
       "title": "Data Sharing Config Files",
       "href": "/docs/?scope=studio&doc=config-data-sharing-files",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-data-sharing-files",
         "config",
@@ -4963,22 +4963,22 @@
         "files",
         "data sharing config files",
         "studio",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-data-sharing-files config data sharing files data sharing config files studio 2026-06-02 2026 06 02"
+      "search_text": "config-data-sharing-files config data sharing files data sharing config files studio 2026-06-03 2026 06 03"
     },
     {
       "id": "config-docs-viewer-files",
       "kind": "doc",
       "title": "Docs Viewer Config Files",
       "href": "/docs/?scope=studio&doc=config-docs-viewer-files",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-docs-viewer-files",
         "config",
@@ -4987,12 +4987,12 @@
         "files",
         "docs viewer config files",
         "studio",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-docs-viewer-files config docs viewer files docs viewer config files studio 2026-06-02 2026 06 02"
+      "search_text": "config-docs-viewer-files config docs viewer files docs viewer config files studio 2026-06-03 2026 06 03"
     },
     {
       "id": "local-studio-apis",

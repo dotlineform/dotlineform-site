@@ -130,6 +130,7 @@ Copy:
 - `docs-viewer/config/defaults/docs-viewer-service.json`
 - `docs-viewer/config/routes/docs-viewer-routes.json`
 - `docs-viewer/config/ui-text/ui-text.json`
+- `docs-viewer/config/reports/reports.json`
 - `assets/data/docs/reports.json`
 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
@@ -142,7 +143,8 @@ Each configured scope also carries its Docs Viewer search policy and search inde
 The viewer does not keep a hardcoded fallback scope list.
 Docs Import copy is nested in `docs-viewer/config/ui-text/ui-text.json` under `docs_html_import`.
 Settings-modal copy is also owned by `docs-viewer/config/ui-text/ui-text.json`.
-`assets/data/docs/reports.json` is the browser-visible report metadata registry.
+`docs-viewer/config/reports/reports.json` is the source report metadata registry.
+`assets/data/docs/reports.json` is the browser-visible report metadata projection.
 It lists report ids, titles, descriptions, access defaults, and presets.
 The executable report module allowlist remains in `docs-viewer/runtime/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
 

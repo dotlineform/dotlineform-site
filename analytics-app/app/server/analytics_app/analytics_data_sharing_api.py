@@ -128,10 +128,46 @@ def public_sharing_profile(profile: dict[str, Any]) -> dict[str, object]:
         if isinstance(profile.get("scopes"), list)
         else [],
     }
+    description = str(profile.get("description") or "").strip()
+    if description:
+        payload["description"] = description
     if isinstance(profile.get("target"), dict):
-        payload["target"] = dict(profile["target"])
+        payload["target"] = public_profile_target(profile["target"])
     if isinstance(profile.get("selection"), dict):
-        payload["selection"] = dict(profile["selection"])
+        payload["selection"] = public_profile_selection(profile["selection"])
+    return payload
+
+
+def public_profile_target(target: dict[str, Any]) -> dict[str, object]:
+    return {
+        "format": str(target.get("format") or "").strip(),
+        "supported_formats": [
+            str(item).strip()
+            for item in target.get("supported_formats", [])
+            if str(item).strip()
+        ] if isinstance(target.get("supported_formats"), list) else [],
+    }
+
+
+def public_profile_selection(selection: dict[str, Any]) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "mode": str(selection.get("mode") or "").strip(),
+    }
+    for key in ("supports_missing_summary_only", "default_missing_summary_only"):
+        if key in selection:
+            payload[key] = selection.get(key) is True
+    return payload
+
+
+def public_apply_action(action: dict[str, Any]) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "id": str(action.get("id") or "").strip(),
+        "label": str(action.get("label") or "").strip(),
+        "status": str(action.get("status") or "active").strip(),
+    }
+    for key in ("ui", "confirmation", "result"):
+        if isinstance(action.get(key), dict):
+            payload[key] = dict(action[key])
     return payload
 
 
@@ -181,7 +217,7 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
                 public_capability["sharing_profiles"] = library_profiles
             if isinstance(capability.get("apply_actions"), list):
                 public_capability["apply_actions"] = [
-                    dict(item) for item in capability["apply_actions"] if isinstance(item, dict)
+                    public_apply_action(item) for item in capability["apply_actions"] if isinstance(item, dict)
                 ]
             public_capabilities.append(public_capability)
         public_adapter["capabilities"] = public_capabilities

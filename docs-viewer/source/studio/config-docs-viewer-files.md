@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer-files
 title: Docs Viewer Config Files
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -30,7 +30,7 @@ Docs Viewer config is split by responsibility:
 - default browser config gives the runtime a concrete scope list and display policy
 - service config defines standalone local service defaults, endpoint paths, environment variable names, capability defaults, and local state directories
 - UI text config owns visible Docs Viewer copy
-- report config owns the report registry surfaced through Docs Viewer
+- report config owns source report metadata; route config and the browser runtime consume the generated browser-visible report projection
 - schema files validate infrastructure config shape
 
 ## What Reads Them
@@ -60,5 +60,5 @@ The cleanup review should keep these boundaries strict:
 - keep management-only capabilities absent from public route config
 - keep source scope config separate from generated default browser config
 - update builder tests when a source scope config change should regenerate defaults
-- remove stale docs that still describe Docs Viewer status, scope, or UI text config as living in Studio config
-
+- keep report source metadata in `docs-viewer/config/reports/reports.json`; `assets/data/docs/reports.json` is the browser-visible projection
+- the 2026-06-03 cleanup review found no active owner docs that still describe Docs Viewer status, scope, or UI text config as living in Studio config; historical request docs remain historical context

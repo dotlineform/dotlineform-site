@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-files
 title: Data Sharing Config Files
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -31,6 +31,9 @@ Data Sharing services read the adapter registry to dispatch prepare, list-return
 Library export tooling reads Library export profiles during package preparation.
 Analytics-hosted Data Sharing browser routes read workflow metadata through `/analytics/api/data-sharing/config`; that endpoint publishes a UI-safe registry view and attaches Library sharing profiles to the prepare capability.
 The browser should not fetch these files directly through Analytics static file serving.
+The public config endpoint projects only browser-needed fields.
+It exposes adapter/domain labels, operation status, selection model, sharing profile identity, UI format choices, limited selection UI flags, apply-action UI copy, confirmations, and result display rows.
+It does not expose adapter path contracts, source-write targets, output path patterns, metadata contracts, document field contracts, or activity emit metadata.
 
 ## Edit Class
 
@@ -56,4 +59,5 @@ Further work for subsequent sessions:
 
 - keep `/analytics/api/data-sharing/config` as the only browser-facing Data Sharing config lookup for Analytics-hosted Data Sharing routes
 - keep the public config response on a whitelist of UI-needed fields; do not expose adapter path contracts, source write targets, output path patterns, metadata contracts, or document field contracts to browser routes
+- the 2026-06-03 cleanup review tightened the public config projection so sharing profiles no longer pass through output, metadata, document-field, or non-UI selection internals, and apply actions no longer expose activity emit metadata
 - if the public config response needs more shaping or more domains, move the public-payload helpers out of `analytics_data_sharing_api.py` into a focused module and keep the current static-path and payload-whitelist tests

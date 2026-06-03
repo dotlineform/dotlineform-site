@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 parent_id: ""
 viewable: true
 ---
@@ -34,7 +34,7 @@ The current implementation uses:
 - pure tree and visibility helpers in `docs-viewer/runtime/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `docs-viewer/runtime/js/docs-viewer-search.js`
 - bookmark record and storage helpers in `docs-viewer/runtime/js/docs-viewer-favourites.js`
-- browser-visible report metadata in `assets/data/docs/reports.json`
+- report metadata source in `docs-viewer/config/reports/reports.json`, projected to browser-visible `assets/data/docs/reports.json`
 - report module allowlist and access checks in `docs-viewer/runtime/js/docs-viewer-reports.js`
 - report modules under `docs-viewer/runtime/js/reports/`
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`

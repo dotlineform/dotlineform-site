@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Reports
 added_date: 2026-05-13
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 parent_id: docs-viewer
 viewable: true
 viewer_report: reports_list
@@ -58,11 +58,14 @@ Report state should use report-prefixed URL parameters, such as `report_sort`, s
 
 Report metadata lives in:
 
+- `docs-viewer/config/reports/reports.json`
+
+The browser-visible projection is:
+
 - `assets/data/docs/reports.json`
 
-That JSON file is intentionally browser-visible.
-It describes report ids, titles, descriptions, default access policy, loader ids, and presets.
-It can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
+The source registry describes report ids, titles, descriptions, default access policy, loader ids, and presets.
+The generated browser JSON is intentionally browser-visible and can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
 
 Executable module loading remains allowlisted in:
 
@@ -94,7 +97,7 @@ For requirements, describe the desired behavior in product terms:
 - create a generated-docs inspection list for parent or orphan records
 
 The implementer then decides whether the behavior maps to an existing preset, needs a new preset, or needs a new report module.
-This keeps requirements readable while preserving reusable technical configurations in `assets/data/docs/reports.json`.
+This keeps requirements readable while preserving reusable technical configurations in `docs-viewer/config/reports/reports.json`.
 
 ## Current Reports
 
@@ -130,6 +133,7 @@ Poor report candidates are workflows with writes, long-running operations, broad
 ## Files
 
 - `assets/data/docs/reports.json`
+- `docs-viewer/config/reports/reports.json`
 - `docs-viewer/runtime/js/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/`
 - `docs-viewer/static/css/docs-viewer-reports.css`

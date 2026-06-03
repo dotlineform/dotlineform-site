@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T10:52:49Z",
+  "generated_at": "2026-06-03T10:57:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1373,14 +1373,14 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 9522
+      "content_text_length": 9583
     },
     {
       "scope": "studio",
@@ -1734,7 +1734,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11438
+      "content_text_length": 11562
     },
     {
       "scope": "studio",
@@ -1769,7 +1769,7 @@
       "doc_id": "docs-viewer-reports",
       "title": "Reports",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "docs-viewer",
       "hidden": false,
       "viewable": true,
@@ -1778,7 +1778,7 @@
       "viewer_report": "reports_list",
       "viewer_report_access": "public",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5595
+      "content_text_length": 5755
     },
     {
       "scope": "studio",
@@ -2803,7 +2803,7 @@
       "source_path": "config-cleanup-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json",
-      "content_text_length": 11267
+      "content_text_length": 11683
     },
     {
       "scope": "studio",
@@ -2852,28 +2852,28 @@
       "doc_id": "config-data-sharing-files",
       "title": "Data Sharing Config Files",
       "added_date": "2026-06-02",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-data-sharing-files.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-files.json",
-      "content_text_length": 2747
+      "content_text_length": 3412
     },
     {
       "scope": "studio",
       "doc_id": "config-docs-viewer-files",
       "title": "Docs Viewer Config Files",
       "added_date": "2026-06-02",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-docs-viewer-files.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer-files",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json",
-      "content_text_length": 2849
+      "content_text_length": 3145
     },
     {
       "scope": "studio",

@@ -173,7 +173,20 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     "enabled": True,
                     "scopes": ["library"],
                     "target": {"format": "json", "supported_formats": ["json"]},
-                    "selection": {"mode": "explicit_doc_ids"},
+                    "output": {
+                        "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json",
+                    },
+                    "selection": {
+                        "mode": "explicit_doc_ids",
+                        "include_descendants": True,
+                        "include_non_viewable": True,
+                        "supports_missing_summary_only": True,
+                        "default_missing_summary_only": False,
+                    },
+                    "metadata": {"include": ["export_id", "scope"]},
+                    "document_fields": [
+                        {"source": "doc_id", "output_path": "doc_id"},
+                    ],
                 }
             ],
         },
@@ -246,12 +259,24 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert profile["id"] == "library-smoke"
     assert profile["label"] == "Library smoke"
     assert profile["target"] == {"format": "json", "supported_formats": ["json"]}
-    assert profile["selection"] == {"mode": "explicit_doc_ids"}
+    assert profile["selection"] == {
+        "mode": "explicit_doc_ids",
+        "supports_missing_summary_only": True,
+        "default_missing_summary_only": False,
+    }
     assert "output" not in profile
     assert "metadata" not in profile
     assert "document_fields" not in profile
+    assert "path_pattern" not in json.dumps(profile)
+    assert "include_descendants" not in json.dumps(profile)
+    assert "include_non_viewable" not in json.dumps(profile)
     assert "paths" not in adapter["data_domains"]["library"]
     assert "path_contract" not in prepare
+    apply = next(item for item in adapter["capabilities"] if item["operation"] == "apply")
+    action = apply["apply_actions"][0]
+    assert action["id"] == "summary_apply"
+    assert action["label"] == "Update summaries"
+    assert "activity" not in action
 
 
 def test_selectable_records_returns_documents_without_docs_viewer_http() -> None:
