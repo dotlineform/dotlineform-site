@@ -48,6 +48,13 @@ function selectedDocLabel(context) {
   return cleanString(doc.title) || cleanString(doc.doc_id) || "Selected document";
 }
 
+function sourceFilename(value) {
+  var path = cleanString(value).replace(/\\/g, "/");
+  if (!path) return "";
+  var parts = path.split("/").filter(Boolean);
+  return parts.length ? parts[parts.length - 1] : "";
+}
+
 function openLeavePrompt(root) {
   return openDocsViewerManagementModal({
     root: root,
@@ -97,18 +104,22 @@ function renderEditorShell(context, state) {
   dirty.hidden = true;
 
   var back = document.createElement("button");
-  back.className = "docsViewer__actionButton";
+  back.className = "docsViewerSourceEditor__actionButton";
   back.type = "button";
-  back.textContent = "Back";
+  back.textContent = "×";
+  back.setAttribute("aria-label", "Back");
+  back.title = "Back";
   back.dataset.sourceEditorAction = "back";
 
   var rebuild = document.createElement("button");
-  rebuild.className = "docsViewer__actionButton";
+  rebuild.className = "docsViewerSourceEditor__actionButton";
   rebuild.type = "button";
-  rebuild.textContent = "Rebuild doc";
+  rebuild.textContent = "💾";
+  rebuild.setAttribute("aria-label", "Rebuild doc");
+  rebuild.title = "Rebuild doc";
   rebuild.dataset.sourceEditorAction = "rebuild";
 
-  actions.append(dirty, back, rebuild);
+  actions.append(dirty, rebuild, back);
   header.append(headingGroup, actions);
 
   var status = document.createElement("p");
@@ -136,6 +147,7 @@ function renderEditorShell(context, state) {
   state.root = root;
   state.status = status;
   state.dirty = dirty;
+  state.meta = meta;
   state.back = back;
   state.rebuild = rebuild;
   state.gutter = gutter;
@@ -185,6 +197,9 @@ function loadSource(context, state) {
       state.revision = cleanString(payload.source_revision);
       state.lastCleanBody = normalizeBody(payload.source_body);
       state.loaded = true;
+      if (state.meta) {
+        state.meta.textContent = sourceFilename(payload.path) || selectedDocLabel(context);
+      }
       if (state.textarea) {
         state.textarea.value = state.lastCleanBody;
         state.textarea.focus();
@@ -322,6 +337,7 @@ export function createDocsViewerSourceEditorView() {
     lastCleanBody: "",
     loaded: false,
     rebuild: null,
+    meta: null,
     revision: "",
     root: null,
     status: null,
@@ -331,7 +347,7 @@ export function createDocsViewerSourceEditorView() {
   return {
     mount: function (context) {
       context.mainView.projectToolbar({
-        toolbarHidden: false,
+        toolbarHidden: true,
         metaHidden: true,
         contentHidden: false,
         resultsHidden: true,

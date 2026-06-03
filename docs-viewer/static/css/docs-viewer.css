@@ -601,6 +601,7 @@
 
 .docsViewer__indexViewToggle,
 .docsViewer__infoToggle,
+.docsViewer__documentActionButton,
 .docsViewer__bookmarkToggle{
   box-sizing: border-box;
   flex: 0 0 auto;
@@ -621,7 +622,8 @@
 }
 
 .docsViewer__indexViewToggle[hidden],
-.docsViewer__infoToggle[hidden]{
+.docsViewer__infoToggle[hidden],
+.docsViewer__documentActionButton[hidden]{
   display: none;
 }
 
@@ -631,12 +633,14 @@
 
 .docsViewer__indexViewToggle:hover,
 .docsViewer__infoToggle:hover,
+.docsViewer__documentActionButton:hover,
 .docsViewer__bookmarkToggle:hover{
   background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__indexViewToggle:focus-visible,
 .docsViewer__infoToggle:focus-visible,
+.docsViewer__documentActionButton:focus-visible,
 .docsViewer__bookmarkToggle:focus-visible{
   outline: 2px solid var(--docs-viewer-border-strong);
   outline-offset: 2px;
@@ -644,9 +648,15 @@
 
 .docsViewer__indexViewToggle.is-active,
 .docsViewer__infoToggle.is-active,
+.docsViewer__documentActionButton.is-active,
 .docsViewer__bookmarkToggle.is-active{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__documentActionButton[disabled]{
+  cursor: default;
+  opacity: 0.72;
 }
 
 .docsViewer__infoPanel{

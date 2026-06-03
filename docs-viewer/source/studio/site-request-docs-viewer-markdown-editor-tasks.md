@@ -17,9 +17,14 @@ When the work is complete, move durable architecture notes into the owning Docs 
 
 ### just done
 
+- Follow-up toolbar placement cleanup:
+  - moved selected-document `Edit` and `Markdown source` controls out of the management `Actions` menu
+  - rendered them as icon action pills in the rendered-document main-view toolbar beside status/bookmark controls
+  - kept `Delete`, `Show`, and `hidden` in their existing management surfaces
+
 - Reviewed the current implementation after the previous session and corrected stale task/test/docs state:
   - confirmed the source-editor backend and frontend implementation already covered items 1-11
-  - updated stale app-shell smoke expectations for the now-available manage-only `markdown-source` view and `Markdown source` Actions item
+  - updated stale app-shell smoke expectations for the now-available manage-only `markdown-source` view and selected-document toolbar controls
   - added focused browser-module smoke coverage for source load, logical gutter, dirty undo-to-clean, rebuild success return, and rebuild failure staying in source view
   - moved durable notes into panel-host, runtime-boundary, toolbar-model, JavaScript inventory, and docs-management endpoint docs
   - confirmed the browser rebuild smoke uses mocked services to avoid mutating a real source document during closeout; backend tests cover real write/rebuild command shaping and front matter preservation
@@ -133,3 +138,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 - Passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
 - Passed: `git diff --check`
 - Not run against a real source file: browser click of `Rebuild doc`, to avoid mutating source during closeout. Browser-module smoke covers the frontend rebuild success/failure paths with mocked services; backend tests cover real write/rebuild command shaping and front matter preservation.
+- Follow-up toolbar placement verification passed: `node --check docs-viewer/runtime/js/docs-viewer-main-view-renderer.js docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js docs-viewer/runtime/js/docs-viewer-management.js`
+- Follow-up toolbar placement verification passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/tests/smoke/docs_viewer_management_ui.py`
+- Follow-up toolbar placement verification passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- Follow-up toolbar placement verification passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_ui.py`

@@ -12,18 +12,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
-    id: "docsViewerManageEditButton",
-    action: "edit",
-    emoji: "✏️",
-    label: "Edit"
-  },
-  {
-    id: "docsViewerManageSourceButton",
-    action: "markdown-source",
-    emoji: "☰",
-    label: "Markdown source"
-  },
-  {
     id: "docsViewerManageDeleteButton",
     action: "delete",
     emoji: "🗑️",

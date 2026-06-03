@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-multi-panel-app-shell
 title: Docs Viewer Multi-Panel App Shell Request
 added_date: 2026-05-27
 last_updated: 2026-06-02
-ui_status: draft
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,8 +11,14 @@ viewable: true
 
 Status:
 
-- partly implemented
-- remaining work is prioritized below
+- done
+
+The durable architecture now belongs in
+- `docs-viewer-panel-hosts.md`
+- `docs-viewer-runtime-boundary.md`
+- `docs-viewer-toolbar-model.md`
+
+remaining priorities are deferred to future focused requests.
 
 ## Summary
 

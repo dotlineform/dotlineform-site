@@ -392,6 +392,14 @@ export function initDocsViewerManagement(context) {
     state.managementStatusOwnsViewerStatus = hasManagementStatus;
   }
 
+  function projectDocumentActionButtons(hidden, disabled) {
+    [manageEditButton, manageSourceButton].forEach(function (button) {
+      if (!button) return;
+      button.hidden = Boolean(hidden);
+      button.disabled = Boolean(disabled);
+    });
+  }
+
   function renderManagementUi() {
     if (!manageRow) return;
 
@@ -399,6 +407,7 @@ export function initDocsViewerManagement(context) {
     if (!state.managementMode) {
       syncManagementStatus("", false);
       manageRow.hidden = true;
+      projectDocumentActionButtons(true, true);
       hideManageActionsMenu();
       return;
     }
@@ -424,7 +433,7 @@ export function initDocsViewerManagement(context) {
     }
     syncManagementStatus(noteText, noteIsError);
 
-    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageDeleteButton || !manageViewableButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
     var draftDoc = Boolean(doc && isDocHidden(doc));
@@ -470,10 +479,7 @@ export function initDocsViewerManagement(context) {
       manageSettingsButton.disabled = state.managementBusy || !state.managementAvailable;
     }
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
-    manageEditButton.disabled = !state.managementAvailable || editDisabled;
-    if (manageSourceButton) {
-      manageSourceButton.disabled = !state.managementAvailable || editDisabled;
-    }
+    projectDocumentActionButtons(!state.managementChecked || !state.managementAvailable, !state.managementAvailable || editDisabled);
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {

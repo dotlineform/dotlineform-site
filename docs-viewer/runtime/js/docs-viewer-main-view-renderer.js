@@ -44,6 +44,20 @@ export function renderDocsViewerMainView(options = {}) {
   statusPills.id = "docsViewerStatusPills";
   statusPills.hidden = true;
 
+  const editButton = renderDocumentActionButton(documentRef, {
+    id: "docsViewerManageEditButton",
+    action: "edit",
+    emoji: "✏️",
+    label: "Edit"
+  });
+
+  const sourceButton = renderDocumentActionButton(documentRef, {
+    id: "docsViewerManageSourceButton",
+    action: "markdown-source",
+    emoji: "☰",
+    label: "Markdown source"
+  });
+
   const bookmarkToggle = documentRef.createElement("button");
   bookmarkToggle.className = "docsViewer__bookmarkToggle";
   bookmarkToggle.id = "docsViewerBookmarkToggle";
@@ -54,7 +68,7 @@ export function renderDocsViewerMainView(options = {}) {
   bookmarkToggle.title = "Add bookmark";
   bookmarkToggle.textContent = "☆";
 
-  metaActions.append(statusPills, bookmarkToggle);
+  metaActions.append(statusPills, editButton, sourceButton, bookmarkToggle);
   metaRow.append(metaCopy, metaActions);
   meta.appendChild(metaRow);
   toolbar.appendChild(meta);
@@ -95,6 +109,8 @@ export function findDocsViewerMainViewRefs(options = {}) {
     updatedEl: root.querySelector("#docsViewerUpdated"),
     summaryEl: root.querySelector("#docsViewerSummary"),
     statusPills: root.querySelector("#docsViewerStatusPills"),
+    editButton: root.querySelector("#docsViewerManageEditButton"),
+    sourceButton: root.querySelector("#docsViewerManageSourceButton"),
     bookmarkToggle: root.querySelector("#docsViewerBookmarkToggle"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
@@ -132,6 +148,20 @@ function renderParagraph(documentRef, id, className) {
   paragraph.className = className;
   paragraph.id = id;
   return paragraph;
+}
+
+function renderDocumentActionButton(documentRef, options) {
+  const settings = options || {};
+  const button = documentRef.createElement("button");
+  button.className = "docsViewer__documentActionButton";
+  button.id = settings.id || "";
+  button.type = "button";
+  button.hidden = true;
+  if (settings.action) button.dataset.docsViewerAction = settings.action;
+  button.setAttribute("aria-label", settings.label || "");
+  button.title = settings.label || "";
+  button.textContent = settings.emoji || "";
+  return button;
 }
 
 function applyHidden(element, projection, key) {

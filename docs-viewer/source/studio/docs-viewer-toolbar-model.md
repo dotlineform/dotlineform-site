@@ -63,7 +63,7 @@ Top-bar layout owner: `docs-viewer-top-bar-renderer.js`
 The manage toolbar owns controls that imply management mode, write capability, or local admin behavior:
 
 - Actions menu
-- create, import, edit, delete, settings, rebuild, and scope actions
+- create, import, delete, settings, rebuild, and scope actions
 - viewability controls such as Show/hidden
 - management status affordances when needed
 
@@ -82,12 +82,13 @@ Example controls:
 - breadcrumbs and updated date for `rendered-document`
 - bookmark toggle
 - document status pills
+- manage-mode `Edit` action for the current document
 - manage-mode `Markdown source` action that requests `markdown-source`
 - source-editor actions such as `Rebuild doc` and back when the editor view is active
 
 Implemented owner:
 
-- `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, updated date, status pills, and bookmark toggle in that toolbar.
+- `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, updated date, status pills, edit/source action pills, and bookmark toggle in that toolbar.
 - `docs-viewer/runtime/js/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
 - `docs-viewer/runtime/js/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
 - `docs-viewer/runtime/js/modules/source-editor/source-editor.js` projects the source-editor toolbar/body state and hosts `Rebuild doc` plus back-to-rendered controls in the source view.

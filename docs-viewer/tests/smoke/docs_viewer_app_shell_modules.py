@@ -200,7 +200,6 @@ def assert_management_actions_render(page: Page) -> None:
                 'docsViewerManageDeleteScopeButton',
                 'docsViewerManageImportButton',
                 'docsViewerManageNewButton',
-                'docsViewerManageEditButton',
                 'docsViewerManageDeleteButton',
                 'docsViewerManageViewableButton',
                 'docsViewerDraftToggle'
@@ -257,7 +256,13 @@ def assert_management_actions_render(page: Page) -> None:
         raise AssertionError(f"app shell omitted expected management refs: {result!r}")
     if result["missingShellIds"]:
         raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
-    if result["menuRole"] != "menu" or result["menuItemCount"] != 9 or "markdown-source" not in result["menuActions"]:
+    if (
+        result["menuRole"] != "menu" or
+        result["menuItemCount"] != 7 or
+        "edit" in result["menuActions"] or
+        "markdown-source" in result["menuActions"] or
+        "delete" not in result["menuActions"]
+    ):
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
     if result["actionOrder"][0] != "docsViewerManageActionsButton":
         raise AssertionError(f"manage toolbar should start with the Actions button: {result!r}")
@@ -1521,7 +1526,10 @@ def assert_document_shell_management_shape(page: Page) -> None:
                 infoToggleCount: document.querySelectorAll('#docsViewerInfoToggle').length,
                 bookmarkToggleCount: document.querySelectorAll('#docsViewerBookmarkToggle').length,
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
-                editButtonCount: document.querySelectorAll('#docsViewerManageEditButton').length
+                editButtonCount: document.querySelectorAll('#docsViewerManageEditButton').length,
+                sourceButtonCount: document.querySelectorAll('#docsViewerManageSourceButton').length,
+                editButtonParent: document.querySelector('#docsViewerManageEditButton')?.parentElement?.className || '',
+                sourceButtonParent: document.querySelector('#docsViewerManageSourceButton')?.parentElement?.className || ''
             };
         }"""
     )
@@ -1532,6 +1540,9 @@ def assert_document_shell_management_shape(page: Page) -> None:
         "bookmarkToggleCount": 1,
         "manageRowCount": 1,
         "editButtonCount": 1,
+        "sourceButtonCount": 1,
+        "editButtonParent": "docsViewer__metaActions",
+        "sourceButtonParent": "docsViewer__metaActions",
     }:
         raise AssertionError(f"management main view shape failed: {result!r}")
 
@@ -2066,6 +2077,7 @@ def assert_source_editor_module_contract(page: Page) -> None:
                         ok: true,
                         doc_id: 'doc-a',
                         source_revision: 'sha256:clean',
+                        path: 'docs-viewer/source/studio/doc-a.md',
                         source_body: '# Clean\\n'
                     }),
                     rebuildSource: (payload) => {
@@ -2103,12 +2115,19 @@ def assert_source_editor_module_contract(page: Page) -> None:
 
             const textarea = mount.querySelector('.docsViewerSourceEditor__textarea');
             const gutter = mount.querySelector('.docsViewerSourceEditor__gutter');
+            const meta = mount.querySelector('.docsViewerSourceEditor__meta');
             const dirty = mount.querySelector('.docsViewerSourceEditor__dirty');
+            const back = mount.querySelector('[data-source-editor-action="back"]');
             const rebuild = mount.querySelector('[data-source-editor-action="rebuild"]');
             const initial = {
                 body: textarea.value,
                 gutter: gutter.textContent,
+                metaText: meta.textContent,
                 dirtyHidden: dirty.hidden,
+                backText: back.textContent,
+                backLabel: back.getAttribute('aria-label'),
+                rebuildText: rebuild.textContent,
+                rebuildLabel: rebuild.getAttribute('aria-label'),
                 rebuildDisabled: rebuild.disabled
             };
             input(textarea, '# Changed\\n\\nBody\\n');
@@ -2185,7 +2204,12 @@ def assert_source_editor_module_contract(page: Page) -> None:
     if result["initial"] != {
         "body": "# Clean\n",
         "gutter": "1\n2",
+        "metaText": "doc-a.md",
         "dirtyHidden": True,
+        "backText": "×",
+        "backLabel": "Back",
+        "rebuildText": "💾",
+        "rebuildLabel": "Rebuild doc",
         "rebuildDisabled": False,
     }:
         raise AssertionError(f"source editor initial load failed: {result!r}")

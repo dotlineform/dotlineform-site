@@ -36,12 +36,16 @@ def wait_for_management_ready(page: Page, timeout_ms: int) -> None:
             const root = document.querySelector("#docsViewerRoot");
             const actions = document.querySelector(".docsViewer__manageActions");
             const button = document.querySelector("#docsViewerManageActionsButton");
+            const edit = document.querySelector("#docsViewerManageEditButton");
             return root &&
                 root.dataset.managementBusy !== "true" &&
                 actions &&
                 !actions.hidden &&
                 button &&
-                !button.disabled;
+                !button.disabled &&
+                edit &&
+                !edit.hidden &&
+                !edit.disabled;
         }""",
         timeout=timeout_ms,
     )
@@ -109,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
                 wait_for_doc(page, "ui-smoke-created", args.timeout_ms)
                 wait_for_management_idle(page, args.timeout_ms)
 
-                open_actions_menu(page, args.timeout_ms)
+                wait_for_management_ready(page, args.timeout_ms)
                 page.locator("#docsViewerManageEditButton").click()
                 page.wait_for_selector("#docsViewerMetadataModal:not([hidden])", timeout=args.timeout_ms)
                 page.locator("#docsViewerMetadataTitleInput").fill("UI Smoke Renamed")

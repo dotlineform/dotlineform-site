@@ -321,6 +321,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the focused renderer for management action markup.
 - 2026-05-29 owner note: the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; command behavior remains outside this renderer.
+- 2026-06-03 owner note: selected-document `Edit` and `Markdown source` controls moved to the rendered-document main-view toolbar; this renderer keeps broader management/admin Actions such as create, import, delete, settings, rebuild, and scope lifecycle commands.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
 ### `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`
@@ -337,7 +338,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`
 
 - Added 2026-06-03 as the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- 2026-06-03 owner note: the rendered-document breadcrumbs, updated date, status pills, and bookmark toggle now sit inside the explicit `docsViewerMainViewToolbar` surface while retaining their existing rendered-document IDs for current controllers.
+- 2026-06-03 owner note: the rendered-document breadcrumbs, updated date, status pills, selected-document edit/source action pills, and bookmark toggle now sit inside the explicit `docsViewerMainViewToolbar` surface while retaining their existing rendered-document IDs for current controllers.
 - Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
 - Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, bookmark storage, or search/recent result rendering into it.
 
