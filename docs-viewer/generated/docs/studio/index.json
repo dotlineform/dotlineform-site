@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T10:46:59Z",
+  "generated_at": "2026-06-03T10:52:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2474,14 +2474,14 @@
       "doc_id": "config-analytics-config-json",
       "title": "Analytics Config JSON",
       "added_date": "2026-06-02",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-analytics-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-analytics-config-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json",
-      "content_text_length": 3553
+      "content_text_length": 3872
     },
     {
       "scope": "studio",
@@ -2803,7 +2803,7 @@
       "source_path": "config-cleanup-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json",
-      "content_text_length": 10257
+      "content_text_length": 11267
     },
     {
       "scope": "studio",
@@ -3062,14 +3062,14 @@
       "doc_id": "config-studio-data-configs",
       "title": "Studio Data Config Files",
       "added_date": "2026-06-02",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-studio-data-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-data-configs",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-data-configs.json",
-      "content_text_length": 1774
+      "content_text_length": 2393
     },
     {
       "scope": "studio",

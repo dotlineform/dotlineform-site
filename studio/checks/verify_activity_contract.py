@@ -12,6 +12,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 CONTRACT_REL_PATH = Path("studio/data/config/runtime/activity-contract.json")
 
 EXPECTED_SCHEMA = "activity_contract_v1"
+SURFACE_ROUTE_PREFIXES = {
+    "studio": "/studio/",
+    "docs": "/docs/",
+    "analytics": "/analytics/",
+}
 EXPECTED_BATCH_A_ACTIONS = {
     "catalogue-work": {
         "route": "/studio/catalogue-work/",
@@ -101,6 +106,20 @@ def require_list(row: Mapping[str, Any], key: str, label: str) -> list[Any]:
     return value
 
 
+def activity_surface(route: str, configured_surface: Any) -> str:
+    requested = str(configured_surface or "").strip().lower()
+    if requested and requested not in SURFACE_ROUTE_PREFIXES:
+        fail(f"activity surface must be one of {sorted(SURFACE_ROUTE_PREFIXES)}")
+    inferred = ""
+    for surface, prefix in SURFACE_ROUTE_PREFIXES.items():
+        if route.startswith(prefix):
+            inferred = surface
+            break
+    if requested and inferred and requested != inferred:
+        fail(f"activity surface {requested!r} does not match route {route!r}")
+    return requested or inferred or "studio"
+
+
 def verify_script_purposes(contract: Mapping[str, Any]) -> set[str]:
     purposes = require_mapping(contract, "script_purposes", "activity contract")
     seen: set[str] = set()
@@ -132,13 +151,10 @@ def verify_pages(contract: Mapping[str, Any], purpose_ids: set[str]) -> set[str]
             fail(f"page {page_id} must be an object")
         require_text(page, "label", f"page {page_id}")
         route = require_text(page, "route", f"page {page_id}")
-        surface = str(page.get("surface") or "studio").strip().lower()
-        if surface not in {"studio", "docs"}:
-            fail(f"page {page_id} surface must be studio or docs")
-        if surface == "studio" and not route.startswith("/studio/"):
-            fail(f"page {page_id} route must be a Studio route")
-        if surface == "docs" and not route.startswith("/docs/"):
-            fail(f"page {page_id} route must be a Docs Viewer route")
+        surface = activity_surface(route, page.get("surface"))
+        expected_prefix = SURFACE_ROUTE_PREFIXES[surface]
+        if not route.startswith(expected_prefix):
+            fail(f"page {page_id} route must be a {surface} route")
         actions = require_mapping(page, "actions", f"page {page_id}")
         if not actions:
             fail(f"page {page_id} actions must not be empty")

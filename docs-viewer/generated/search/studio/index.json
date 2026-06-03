@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1bdedeb5e2b1bcead3a7274ef169f331",
-    "generated_at_utc": "2026-06-03T10:43:47Z",
+    "version": "blake2b-f766c8c2ea541e174c8636358f73b79f",
+    "generated_at_utc": "2026-06-03T10:52:49Z",
     "count": 239
   },
   "entries": [
@@ -4294,10 +4294,10 @@
       "kind": "doc",
       "title": "Analytics Config JSON",
       "href": "/docs/?scope=studio&doc=config-analytics-config-json",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-analytics-config-json",
         "config",
@@ -4305,12 +4305,12 @@
         "json",
         "analytics config json",
         "studio",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-analytics-config-json config analytics json analytics config json studio 2026-06-02 2026 06 02"
+      "search_text": "config-analytics-config-json config analytics json analytics config json studio 2026-06-03 2026 06 03"
     },
     {
       "id": "config-analytics-ui-text-json",
@@ -5308,10 +5308,10 @@
       "kind": "doc",
       "title": "Studio Data Config Files",
       "href": "/docs/?scope=studio&doc=config-studio-data-configs",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-studio-data-configs",
         "config",
@@ -5320,12 +5320,12 @@
         "configs",
         "studio data config files",
         "files",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-studio-data-configs config studio data configs studio data config files files 2026-06-02 2026 06 02"
+      "search_text": "config-studio-data-configs config studio data configs studio data config files files 2026-06-03 2026 06 03"
     },
     {
       "id": "studio-runtime",

@@ -9,7 +9,7 @@ from typing import Any, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_DIR = SCRIPT_DIR.parent
-REPO_ROOT = SCRIPTS_DIR.parent
+REPO_ROOT = SCRIPT_DIR.parents[2]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue.catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402

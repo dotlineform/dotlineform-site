@@ -2,7 +2,7 @@
 doc_id: config-analytics-config-json
 title: Analytics Config JSON
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -64,11 +64,12 @@ Completed cleanup:
 - tests assert the removed public route keys stay absent
 - tests assert Analytics route metadata stays out of `paths.routes`
 
-Remaining cleanup review:
+Site data path cleanup review:
 
-- decide whether site data paths should remain in Analytics config or move behind narrower data loaders
-
-Removal should happen only with focused Analytics tests because public-content links may still be used by tag or series views.
+- `paths.data.site.series_index` is retained because `series-tags.js`, `tag-registry.js`, and the series tag editor load the public series index through `loadSiteSeriesIndexJson(...)`
+- `paths.data.site.works_index` is retained because the series tag editor loads the public works index through `loadSiteWorksIndexJson(...)`
+- keeping these two paths in Analytics config makes the browser read dependency explicit; moving them into hidden loader constants would not remove a runtime dependency
+- focused tests assert the runtime site data paths stay present
 
 Subsequent sessions should also keep Data Sharing source config files server-owned.
 Analytics browser routes should continue to use `/analytics/api/data-sharing/config` and should not restore direct `/data-sharing/config/...` reads or Analytics bootstrap keys for those files.

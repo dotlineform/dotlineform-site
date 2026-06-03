@@ -11,7 +11,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def main() -> None:
-    runpy.run_path(str(REPO_ROOT / "scripts" / "catalogue" / "verify_catalogue_field_registry.py"), run_name="__main__")
+    runpy.run_path(str(REPO_ROOT / "studio" / "services" / "catalogue" / "verify_catalogue_field_registry.py"), run_name="__main__")
+
+
+def test_catalogue_field_registry_verifier() -> None:
+    main()
 
 
 if __name__ == "__main__":

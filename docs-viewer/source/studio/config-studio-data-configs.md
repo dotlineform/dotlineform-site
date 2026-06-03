@@ -2,7 +2,7 @@
 doc_id: config-studio-data-configs
 title: Studio Data Config Files
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -31,8 +31,9 @@ Changing rules changes build planning and must be covered by focused catalogue r
 
 ## Activity Contract
 
-`activity-contract.json` defines activity grouping and display contract data for Studio runtime activity.
+`activity-contract.json` defines activity grouping and display contract data for the unified runtime activity feed.
 It belongs to runtime data presentation and activity interpretation, not route boot or service endpoint configuration.
+Current activity surfaces include Local Studio routes, Docs Viewer management actions, Analytics routes, and Analytics-hosted Data Sharing actions.
 
 Edit class: code infrastructure.
 
@@ -46,10 +47,11 @@ For `catalogue-field-registry.json`:
 - remove rules for retired generated outputs
 - keep fallback defaults aligned with catalogue generator behavior
 - keep the file path resolved from `paths.data.studio.catalogue_field_registry` until a narrower resolver replaces that dependency
+- the 2026-06-03 cleanup review retained the current registry payload because the verifier covers the configured artifact family names, source-field coverage, fallback defaults, and representative field-aware build plans
 
 For `activity-contract.json`:
 
 - verify each grouping/status value is still emitted by current services
 - remove retired activity families
 - keep visible copy in route UI-text bundles rather than in the activity contract
-
+- the 2026-06-03 cleanup review retained the current contract rows because the listed Studio, Docs, Analytics, and Data Sharing actions still have live emitters; the verifier now validates Analytics routes as a first-class activity surface
