@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0890bc8dd681e7c6b455ce8a8dcfe1d1",
-    "generated_at_utc": "2026-06-03T13:51:31Z",
-    "count": 240
+    "version": "blake2b-7c894aeb06a8bca4ec6da176a5c04df8",
+    "generated_at_utc": "2026-06-03T14:53:00Z",
+    "count": 241
   },
   "entries": [
     {
@@ -1268,6 +1268,35 @@
         "03"
       ],
       "search_text": "site-request-docs-viewer-pre-editor-work site request docs viewer pre editor work docs viewer pre-editor work request docs viewer markdown editor request markdown 2026-06-03 2026 06 03"
+    },
+    {
+      "id": "site-request-docs-viewer-pre-editor-work-tasks",
+      "kind": "doc",
+      "title": "Docs Viewer Pre-Editor Work Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work-tasks",
+      "last_updated": "2026-06-03",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "parent_title": "Docs Viewer Markdown Editor Request",
+      "display_meta": "2026-06-03 • Docs Viewer Markdown Editor Request",
+      "search_terms": [
+        "site-request-docs-viewer-pre-editor-work-tasks",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "pre",
+        "editor",
+        "work",
+        "tasks",
+        "docs viewer pre-editor work tasks",
+        "docs viewer markdown editor request",
+        "markdown",
+        "2026-06-03",
+        "2026",
+        "06",
+        "03"
+      ],
+      "search_text": "site-request-docs-viewer-pre-editor-work-tasks site request docs viewer pre editor work tasks docs viewer pre-editor work tasks docs viewer markdown editor request markdown 2026-06-03 2026 06 03"
     },
     {
       "id": "site-request-docs-viewer-multi-panel-app-shell",

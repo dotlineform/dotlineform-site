@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T13:55:17Z",
+  "generated_at": "2026-06-03T14:53:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -748,7 +748,22 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work.json",
-      "content_text_length": 6307
+      "content_text_length": 16442
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-pre-editor-work-tasks",
+      "title": "Docs Viewer Pre-Editor Work Tasks",
+      "added_date": "2026-06-03",
+      "last_updated": "2026-06-03",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-pre-editor-work-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work-tasks.json",
+      "content_text_length": 6396
     },
     {
       "scope": "studio",
