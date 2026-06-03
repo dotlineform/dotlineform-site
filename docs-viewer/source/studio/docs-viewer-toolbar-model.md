@@ -85,7 +85,15 @@ Example controls:
 - future `Edit` action that requests `markdown-source`
 - future editor actions such as `Rebuild doc` and cancel/back when the editor view is active
 
-Target owner: main-view toolbar projection through the main-view host and renderer.
+Implemented owner:
+
+- `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, updated date, status pills, and bookmark toggle in that toolbar.
+- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
+
+Current limitation:
+
+- rendered-document, search-results, and recent-results still use existing controllers for content rendering; the toolbar boundary is ready for `markdown-source`, but a full main-view mounted-module lifecycle is still a follow-up.
 
 ## Context Panel Toolbar
 

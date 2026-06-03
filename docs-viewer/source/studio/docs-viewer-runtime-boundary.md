@@ -140,8 +140,8 @@ Current owner map:
 - `docs-viewer/runtime/js/docs-viewer-management.js` owns the management-local facade and orchestration over management action, modal, capability, interaction, scope-lifecycle, service-client, and route-reload contracts. It receives named management state-domain, service-client, and route-reload inputs from the lazy runtime boundary rather than the broad runtime state object.
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view resolution, load, mount, update, unmount, close, dispose, option projection, and graceful absence.
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns the minimal hosted-view record shape, lifecycle method defaults, panel-specific listing, access/availability checks, and built-in hosted-view records through `createDocsViewerBuiltInHostedViews()`.
-- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` owns main-view availability checks, switch-intent handling, and active main-view state projection for `rendered-document`, `search-results`, and `recent-results`.
-- `docs-viewer/runtime/js/docs-viewer-view-context.js` owns public-safe selected-document hosted-view context projection.
+- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` owns main-view availability checks, switch-intent handling, active main-view state projection, main-view toolbar projection handoff, and main-view module-context creation for `rendered-document`, `search-results`, and `recent-results`.
+- `docs-viewer/runtime/js/docs-viewer-view-context.js` owns public-safe selected-document hosted-view context projection and the main-view module context shape with selected document, scope, route access, main-view intent/toolbar/warning helpers, and capability-gated source-editor service slots.
 - `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` owns the first public-safe read-only metadata hosted view.
 - `docs-viewer/runtime/js/docs-viewer-management.js` and its child modules own manage-mode capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, status pills, and write orchestration behind the lazy management boundary.
 
@@ -151,6 +151,7 @@ Lifecycle owner rules:
 - Keep stateless render/project helpers stateless.
 - Public-safe hosted views must mount without management services, backend probes, local generated-read service base URLs, write-capable service handles, or management CSS/JS.
 - Manage-only hosted views may receive explicit management service or capability inputs, but visibility and registration do not imply write authority.
+- Main-view source-editor service slots must be omitted from public contexts and supplied only through explicit management-capable context construction.
 - Backend writes remain behind named management endpoints with server-side validation.
 - Future feature views should attach through panel/controller contracts and explicit context or service inputs, not by modifying route shell markup or reading broad runtime state.
 - Do not turn hosted-view records into a plugin platform, third-party loader, source editor, semantic-reference editor, or visualization extension point without a separate request.

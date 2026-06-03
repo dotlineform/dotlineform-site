@@ -98,7 +98,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 44 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned info-panel chrome renderer and projection applier. |
 | 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
 | 46 | new | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` | 1 | 1 | 1 | 1 | 4 | Public-safe read-only metadata info hosted view. |
-| 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector for metadata and planned future info views. |
+| 47 | new | `docs-viewer/runtime/js/docs-viewer-view-context.js` | 1 | 1 | 1 | 1 | 4 | Selected-document hosted-view context projector plus main-view module context shaping for future central-panel views. |
 | 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
 | 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
 | 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection. |
@@ -337,13 +337,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`
 
 - Added 2026-06-03 as the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- Keep this module limited to rendering `.docsViewer__main`, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
+- 2026-06-03 owner note: the rendered-document breadcrumbs, updated date, status pills, and bookmark toggle now sit inside the explicit `docsViewerMainViewToolbar` surface while retaining their existing rendered-document IDs for current controllers.
+- Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
 - Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, bookmark storage, or search/recent result rendering into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-main-view-host.js`
 
 - Added 2026-06-03 as the focused main-view switch-intent owner.
-- Keep this module limited to resolving main-view hosted-view availability, projecting active main-view state through panel layout, and accepting switch requests for built-in main views.
+- 2026-06-03 owner note: the host now exposes main-view module context creation and a toolbar projection helper, but source-editor service details remain outside the host and are supplied only through explicit context options.
+- Keep this module limited to resolving main-view hosted-view availability, projecting active main-view state through panel layout, accepting switch requests for built-in main views, and passing generic main-view intent/toolbar/warning helpers into module contexts.
 - Do not add source-editor service details, report migration behavior, arbitrary module loading, plugin behavior, or rendered-document/search/recent rendering into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-context.js`
@@ -412,9 +414,10 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the focused selected-document hosted-view context projector.
 - 2026-05-28 lifecycle note: public-safe hosted views should receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
-- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, and display labels from explicit inputs.
+- 2026-06-03 owner note: main-view module contexts now add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings, plus source-editor service slots that are omitted unless route access allows management.
+- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view helper slots from explicit inputs.
 - Future info views should extend or consume this helper rather than adding context shaping directly to `docs-viewer.js`.
-- Do not add DOM rendering, hosted-view lifecycle, URL history mutation, or backend writes to it.
+- Do not add DOM rendering, hosted-view lifecycle, URL history mutation, source-editor service implementation, or backend writes to it.
 
 ### Docs Import And Management
 

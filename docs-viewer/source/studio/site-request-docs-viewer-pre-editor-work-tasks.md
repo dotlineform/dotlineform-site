@@ -28,10 +28,19 @@ When the work is complete, move durable architecture notes into the owning Docs 
   - `docs-viewer-main-view-host.js` owns main-view switch validation and active-view state projection
 - Search and recent now request `search-results` and `recent-results` through the main-view host while existing controllers still render their current panes.
 - Durable docs were updated for the main-view boundary and report-host deferral.
+- Completed the focused toolbar projection and source-editor context preparation slice:
+  - rendered-document breadcrumbs, updated date, status pills, and bookmark/favourite control now sit inside the explicit `docsViewerMainViewToolbar` surface
+  - the main-view renderer exposes `mainView.toolbar` refs and supports `toolbarHidden` projection
+  - the document controller projects toolbar visibility for rendered-document, search-results, recent-results, loading, missing, and error states
+  - the main-view host exposes generic toolbar projection and module-context helpers without source-editor service details
+  - `docs-viewer-view-context.js` defines `createDocsViewerMainViewModuleContext(...)` with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and management-gated `sourceEditorServices`
+  - public main-view contexts omit source-editor services even if a caller supplies them
+  - durable toolbar, panel-host, runtime-boundary, and JavaScript inventory docs were updated
 
 ### steer for next task
 
-- Continue with focused toolbar projection and then source-editor context preparation.
+- Continue with main-view module registration boundary.
+- Define explicit built-in/repo-owned registration for future main-view modules without route-config arbitrary module loading or plugin-system behavior.
 - `mainView` is the policy for the central panel architecture boundary: host, toolbar, view-state, hosted-view registry, route-config panel ids, context contracts, and durable docs.
 - `document` remains only where the code specifically means rendered document payload behavior.
 - Do not add dual-read fields, old-id mappings, compatibility aliases, fallback route-config names, or temporary selector aliases unless the tracker records the justification before implementation and the user confirms that exception.
@@ -98,10 +107,10 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 3 | done | Main-view route/config/state cleanup: update current route config, hosted-view panel ids, view-state domain, and panel-layout contracts to use `mainView`/`main` directly for the central panel. Do not dual-read old and new fields unless task 2 explicitly approved an exception. |
 | 4 | done | Main-view shell/ref cleanup: rename or reshape app-shell and panel refs at the ownership boundary so new host and toolbar code consumes `mainView` refs. Keep existing rendered-document DOM/CSS names only where they specifically own rendered document payload or visual styling that is not part of the host contract. |
 | 5 | done | Main-view host foundation: create the host/controller lifecycle boundary for the central content region; support explicit hosted-view records for `rendered-document`, `search-results`, `recent-results`, and future `markdown-source`; preserve selected-document state independent from main-view visibility. |
-| 6 | in progress | Main-view toolbar projection: move current rendered-document breadcrumbs, updated date, status pill, bookmark/favourite controls, index tree collapse/expand, and info title/close controls into explicit panel toolbar ownership without a visual redesign. |
+| 6 | done | Main-view toolbar projection: move current rendered-document breadcrumbs, updated date, status pill, bookmark/favourite controls, index tree collapse/expand, and info title/close controls into explicit panel toolbar ownership without a visual redesign. |
 | 7 | done | Main-view switch intents: define the hosted-view intent contract so views request replacement views through the host, such as future `rendered-document` `Edit` requesting `markdown-source`; keep direct view-to-view imports/calls out of the contract. |
 | 8 | done | State, unavailable, and lifecycle policies in code: make app/view state the host source of truth; avoid URL as host state; hide manage-only controls on public routes; show simple local warnings for requested views that cannot load; default to unmount/clear hidden views without blocking future per-view retained-state capabilities. |
-| 9 | planned | Source-editor module context preparation: define the explicit main-view module context shape with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and optional source-editor service slots; ensure public contexts omit source-editor services. |
+| 9 | done | Source-editor module context preparation: define the explicit main-view module context shape with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and optional source-editor service slots; ensure public contexts omit source-editor services. |
 | 10 | done | Migrate search and recent: move `search-results` and `recent-results` onto the same main-view hosting mechanism to prove the host with existing user-facing views before implementing `markdown-source`; preserve current search/recent route continuity and behavior. |
 | 11 | planned | Main-view module registration boundary: establish explicit registration for built-in or repo-owned main-view modules without arbitrary route-config module loading or plugin-system behavior. |
 | 12 | in progress | Focused verification: run the agreed checks for public/manage boot, rendered document load, selected-document updates, search/recent continuity, toolbar layout, and any touched JavaScript syntax/import checks; record results in this tracker. |
@@ -123,4 +132,14 @@ When the implementation is complete:
 - Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/tests/smoke/docs_viewer_service_manage.py docs-viewer/tests/smoke/public_docs_viewer_readonly.py`.
 - Passed: `git diff --check`.
 - Passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-document-controller.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-main-view-host.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-view-context.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js`.
+- Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`.
+- Passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`.
+- Passed: `git diff --check`.
+- Blocked: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root .` timed out waiting for `#docsViewerRoot:not([hidden])`; the smoke expects a built public-site root, not the repo root.
+- Blocked: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root _site` reached the route root, then timed out waiting for the expected public document heading; the current `_site` output is not a reliable fresh target for this smoke.
 - Partial: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py` reaches the report section, then fails an existing report-status expectation because the UI reports `27 broken links` rather than including the selected scope. This is outside the main-view migration and report-host migration remains deferred.

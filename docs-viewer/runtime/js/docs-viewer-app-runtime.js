@@ -64,6 +64,7 @@ export function startDocsViewerRuntime(options) {
   var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
   var status = appShellRefs.status;
+  var mainViewToolbar = mainViewRefs.toolbar;
   var meta = mainViewRefs.meta;
   var pathEl = mainViewRefs.pathEl;
   var updatedEl = mainViewRefs.updatedEl;
@@ -133,8 +134,23 @@ export function startDocsViewerRuntime(options) {
   var generatedDataRuntime = composition.generatedDataRuntime;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
   mainViewHost = createDocsViewerMainViewHost({
+    contextOptions: function () {
+      return {
+        allDocsById: appSession.domains.documentIndex.allDocsById,
+        docsById: appSession.domains.documentIndex.docsById,
+        payloadCache: appSession.domains.selectedDocument.payloadCache,
+        routeAccess: routeContext.access,
+        selectedDocId: appSession.domains.selectedDocument.selectedDocId,
+        sourceEditorServices: null,
+        uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
+        viewerScope: viewerScope,
+        viewerTargetDocId: documentIndex.viewerTargetDocId,
+        viewerUrl: viewerUrl
+      };
+    },
     defaultViewId: "rendered-document",
     panelLayout: panelLayout,
+    projectToolbar: projectMainView,
     projectViewState: function () { return panelLayout.projectViewState(); },
     registry: hostedViewRegistry,
     showWarning: setStatus,
@@ -202,6 +218,7 @@ export function startDocsViewerRuntime(options) {
       closeStatusMenu: function () { appSession.domains.management.statusMenuOpen = false; },
       setStatus: setStatus
     },
+    toolbar: mainViewToolbar,
     viewerScope: function () { return viewerScope; },
     viewerUrlForScope: viewerUrlForScope
   });

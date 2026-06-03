@@ -15,6 +15,12 @@ export function renderDocsViewerMainView(options = {}) {
   main.setAttribute("aria-live", "polite");
   main.setAttribute("data-docs-viewer-panel", "main");
 
+  const toolbar = documentRef.createElement("div");
+  toolbar.className = "docsViewer__mainViewToolbar";
+  toolbar.id = "docsViewerMainViewToolbar";
+  toolbar.setAttribute("role", "toolbar");
+  toolbar.setAttribute("aria-label", "Document controls");
+
   const meta = documentRef.createElement("div");
   meta.className = "docsViewer__meta";
   meta.id = "docsViewerMeta";
@@ -51,6 +57,7 @@ export function renderDocsViewerMainView(options = {}) {
   metaActions.append(statusPills, bookmarkToggle);
   metaRow.append(metaCopy, metaActions);
   meta.appendChild(metaRow);
+  toolbar.appendChild(meta);
 
   const content = documentRef.createElement("div");
   content.className = "docsViewer__content content";
@@ -71,7 +78,7 @@ export function renderDocsViewerMainView(options = {}) {
   more.id = "docsViewerMore";
   more.hidden = true;
 
-  main.append(meta, content, resultsStatus, results, more);
+  main.append(toolbar, content, resultsStatus, results, more);
   mount.replaceChildren(main);
 
   return findDocsViewerMainViewRefs({ document: documentRef, root: mount });
@@ -82,6 +89,7 @@ export function findDocsViewerMainViewRefs(options = {}) {
   const root = options.root || documentRef;
   return {
     main: root.querySelector(".docsViewer__main"),
+    toolbar: root.querySelector("#docsViewerMainViewToolbar"),
     meta: root.querySelector("#docsViewerMeta"),
     pathEl: root.querySelector("#docsViewerPath"),
     updatedEl: root.querySelector("#docsViewerUpdated"),
@@ -99,6 +107,7 @@ export function applyDocsViewerMainViewProjection(options = {}) {
   const refs = options.refs || {};
   const projection = options.projection || {};
 
+  applyHidden(refs.toolbar, projection, "toolbarHidden");
   applyHidden(refs.meta, projection, "metaHidden");
   applyHidden(refs.content, projection, "contentHidden");
   applyHidden(refs.resultsStatus, projection, "resultsStatusHidden");

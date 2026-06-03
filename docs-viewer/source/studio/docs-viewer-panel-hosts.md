@@ -93,6 +93,7 @@ It tracks active view ids and mounted/visible state, but it does not own feature
 Current limitation:
 
 - main-view active view state exists, but rendered document/search/recent are still rendered by existing controllers rather than independent mounted hosted-view modules
+- main-view toolbar projection exists for rendered-document controls, but the active main-view module lifecycle is still not fully mounted through the host
 - report rendering remains on the existing document payload/report path pending a later report-specific decision
 
 Improvement needed:
@@ -132,11 +133,22 @@ Improvement needed:
 
 `docs-viewer-view-context.js` builds a public-safe selected-document context for hosted views.
 The metadata info view uses this context to render document metadata and parent trail information.
+It also defines the main-view module context shape for future central-panel views.
+
+The main-view module context contains:
+
+- selected document, parent trail, payload cache entry, canonical URL, scope, UI status label, and route-access projection
+- `mainView.activeViewId`
+- `mainView.requestView(viewId)` for host-mediated switch intents
+- `mainView.projectToolbar(projection)` for active-view toolbar projection
+- `mainView.showWarning(message)` for local host warnings
+- `sourceEditorServices` only when the route access projection allows management
 
 Improvement needed:
 
 - future info views should request only the context/data they need
 - management-only views may receive additional services, but only through explicit capability-gated inputs
+- public contexts must continue to omit source-editor service handles even if a caller accidentally supplies them
 
 ### Info-Panel Lifecycle And Chrome
 
@@ -168,7 +180,7 @@ The current panel projection still preserves existing two-panel behavior where n
 The index panel projects collapsed, normal, and expanded states from the active index hosted view’s capabilities.
 The built-in `index-tree` view supports normal and collapsed states, while the management-route `index-graph` placeholder opts into expanded mode.
 The management toolbar exposes the available index-view switch as a single projected icon pill when more than one index hosted view is available.
-The main-view shell still owns rendered document payload rendering plus search and recent surfaces through the existing document/search controllers.
+The main-view shell owns the central panel, the main-view toolbar surface, rendered document payload rendering, and search/recent surfaces through the existing document/search controllers.
 Reports remain on the existing document payload/report path for now.
 The info panel is a real app-shell panel with a selected-document metadata hosted view.
 
@@ -228,7 +240,7 @@ Current lifecycle implementation:
 - info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
 - `metadata-info` is the only real mounted hosted-view module
 - index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
-- main-view hosted-view records exist for `rendered-document`, `search-results`, and `recent-results`; `docs-viewer-main-view-host.js` validates and projects active main-view state, while existing document/search/recent controllers still own rendering
+- main-view hosted-view records exist for `rendered-document`, `search-results`, and `recent-results`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
 - `report-host` is not part of the main-view migration yet
 
 The implemented lifecycle shape for info-panel hosted views is:

@@ -6,6 +6,7 @@ export function initDocsViewerDocumentController(context) {
   var selectedDocument = context.selectedDocument;
   var statusCommands = context.statusCommands || {};
   var content = context.content;
+  var toolbar = context.toolbar;
   var meta = context.meta;
   var results = context.results;
   var more = context.more;
@@ -162,6 +163,7 @@ export function initDocsViewerDocumentController(context) {
 
   function hideDocPane() {
     projectDocumentShell({
+      toolbarHidden: true,
       metaHidden: true,
       contentHidden: true
     });
@@ -173,6 +175,7 @@ export function initDocsViewerDocumentController(context) {
     if (typeof context.clearResultsStatus === "function") context.clearResultsStatus();
     context.setRecentModeActive(false);
     projectDocumentShell({
+      toolbarHidden: false,
       contentHidden: false,
       resultsHidden: true,
       moreHidden: true,
@@ -183,7 +186,12 @@ export function initDocsViewerDocumentController(context) {
   function renderDocumentStatus(message, isError, options) {
     var settings = options || {};
     showDocPane();
-    if (settings.hideMeta && meta) meta.hidden = true;
+    if (settings.hideMeta) {
+      projectDocumentShell({
+        toolbarHidden: true,
+        metaHidden: true
+      });
+    }
     if (!content) return;
     content.textContent = "";
     var status = document.createElement("p");
@@ -253,6 +261,9 @@ export function initDocsViewerDocumentController(context) {
     if (typeof context.projectDocumentShell === "function") {
       context.projectDocumentShell(projection || {});
       return;
+    }
+    if (toolbar && Object.prototype.hasOwnProperty.call(projection || {}, "toolbarHidden")) {
+      toolbar.hidden = Boolean(projection.toolbarHidden);
     }
     if (meta && Object.prototype.hasOwnProperty.call(projection || {}, "metaHidden")) {
       meta.hidden = Boolean(projection.metaHidden);

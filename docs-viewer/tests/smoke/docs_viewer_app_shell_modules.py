@@ -1602,6 +1602,7 @@ def assert_document_shell_projection(page: Page) -> None:
             module.renderDocsViewerAppShellMainViewState({
                 refs,
                 projection: {
+                    toolbarHidden: true,
                     metaHidden: true,
                     contentHidden: true,
                     resultsStatusText: 'Searching...',
@@ -1624,6 +1625,7 @@ def assert_document_shell_projection(page: Page) -> None:
             });
             const searchProjection = {
                 metaHidden: refs.meta.hidden,
+                toolbarHidden: refs.toolbar.hidden,
                 contentHidden: refs.content.hidden,
                 resultsStatusText: refs.resultsStatus.textContent,
                 resultsStatusHidden: refs.resultsStatus.hidden,
@@ -1638,6 +1640,7 @@ def assert_document_shell_projection(page: Page) -> None:
             module.renderDocsViewerAppShellMainViewState({
                 refs,
                 projection: {
+                    toolbarHidden: false,
                     contentHidden: false,
                     resultsStatusText: '',
                     resultsStatusHidden: true,
@@ -1659,6 +1662,7 @@ def assert_document_shell_projection(page: Page) -> None:
                 }
             });
             const documentProjection = {
+                toolbarHidden: refs.toolbar.hidden,
                 contentHidden: refs.content.hidden,
                 resultsStatusText: refs.resultsStatus.textContent,
                 resultsStatusHidden: refs.resultsStatus.hidden,
@@ -1675,6 +1679,7 @@ def assert_document_shell_projection(page: Page) -> None:
     )
     if result["searchProjection"] != {
         "metaHidden": True,
+        "toolbarHidden": True,
         "contentHidden": True,
         "resultsStatusText": "Searching...",
         "resultsStatusHidden": False,
@@ -1688,6 +1693,7 @@ def assert_document_shell_projection(page: Page) -> None:
     }:
         raise AssertionError(f"search document projection failed: {result!r}")
     if result["documentProjection"] != {
+        "toolbarHidden": False,
         "contentHidden": False,
         "resultsStatusText": "",
         "resultsStatusHidden": True,
@@ -1915,6 +1921,51 @@ def assert_hosted_view_context_contract(page: Page) -> None:
                 selectedDocId: 'missing-doc',
                 viewerScope: 'studio'
             });
+            const mainCalls = [];
+            const manageMain = context.createDocsViewerMainViewModuleContext({
+                allDocsById,
+                docsById,
+                payloadCache,
+                routeAccess: {
+                    allowManagement: true,
+                    publicReadOnly: false,
+                    routeType: 'manage'
+                },
+                selectedDocId: 'child-doc',
+                sourceEditorServices: {
+                    readSource: () => Promise.resolve('# Source')
+                },
+                uiStatusByValue,
+                viewerScope: 'studio',
+                mainView: {
+                    activeViewId: 'rendered-document',
+                    projectToolbar: (projection) => mainCalls.push(`toolbar:${projection.mode}`),
+                    requestView: (viewId) => {
+                        mainCalls.push(`request:${viewId}`);
+                        return true;
+                    },
+                    showWarning: (message) => mainCalls.push(`warning:${message}`)
+                }
+            });
+            const publicMain = context.createDocsViewerMainViewModuleContext({
+                docsById,
+                routeAccess: {
+                    allowManagement: false,
+                    publicReadOnly: true,
+                    routeType: 'public'
+                },
+                selectedDocId: 'child-doc',
+                sourceEditorServices: {
+                    readSource: () => Promise.resolve('# Source')
+                },
+                viewerScope: 'studio',
+                mainView: {
+                    activeViewId: 'markdown-source'
+                }
+            });
+            manageMain.mainView.projectToolbar({ mode: 'edit' });
+            manageMain.mainView.requestView('markdown-source');
+            manageMain.mainView.showWarning('Not available');
             return {
                 selectedDocId: built.selectedDoc && built.selectedDoc.doc_id,
                 payloadDocId: built.payload && built.payload.doc_id,
@@ -1925,7 +1976,20 @@ def assert_hosted_view_context_contract(page: Page) -> None:
                 viewerScope: built.viewerScope,
                 missingSelectedDoc: missing.selectedDoc,
                 missingPayload: missing.payload,
-                fallbackStatus: context.docsViewerStatusLabel('draft', new Map())
+                fallbackStatus: context.docsViewerStatusLabel('draft', new Map()),
+                manageMain: {
+                    selectedDocId: manageMain.selectedDoc && manageMain.selectedDoc.doc_id,
+                    activeViewId: manageMain.mainView.activeViewId,
+                    hasSourceEditorServicesField: Object.prototype.hasOwnProperty.call(manageMain, 'sourceEditorServices'),
+                    hasSourceEditorServices: Boolean(manageMain.sourceEditorServices),
+                    calls: mainCalls
+                },
+                publicMain: {
+                    activeViewId: publicMain.mainView.activeViewId,
+                    hasSourceEditorServicesField: Object.prototype.hasOwnProperty.call(publicMain, 'sourceEditorServices'),
+                    hasSourceEditorServices: Boolean(publicMain.sourceEditorServices),
+                    requestFallback: publicMain.mainView.requestView('rendered-document')
+                }
             };
         }"""
     )
@@ -1944,6 +2008,23 @@ def assert_hosted_view_context_contract(page: Page) -> None:
         "missingSelectedDoc": None,
         "missingPayload": None,
         "fallbackStatus": "draft",
+        "manageMain": {
+            "selectedDocId": "child-doc",
+            "activeViewId": "rendered-document",
+            "hasSourceEditorServicesField": True,
+            "hasSourceEditorServices": True,
+            "calls": [
+                "toolbar:edit",
+                "request:markdown-source",
+                "warning:Not available",
+            ],
+        },
+        "publicMain": {
+            "activeViewId": "markdown-source",
+            "hasSourceEditorServicesField": False,
+            "hasSourceEditorServices": False,
+            "requestFallback": False,
+        },
     }:
         raise AssertionError(f"hosted-view context contract failed: {result!r}")
 

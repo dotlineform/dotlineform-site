@@ -1,6 +1,9 @@
 import {
   listDocsViewerHostedViewsForPanel
 } from "./docs-viewer-hosted-views.js";
+import {
+  createDocsViewerMainViewModuleContext
+} from "./docs-viewer-view-context.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -18,6 +21,7 @@ export function createDocsViewerMainViewHost(options) {
   var registry = settings.registry || null;
   var panelLayout = settings.panelLayout || null;
   var projectViewState = typeof settings.projectViewState === "function" ? settings.projectViewState : function () { return null; };
+  var projectToolbar = typeof settings.projectToolbar === "function" ? settings.projectToolbar : function () {};
   var updatePanelViewState = typeof settings.updatePanelViewState === "function" ? settings.updatePanelViewState : function () {};
   var showWarning = typeof settings.showWarning === "function" ? settings.showWarning : function () {};
   var activeViewId = cleanString(settings.defaultViewId) || "rendered-document";
@@ -49,6 +53,22 @@ export function createDocsViewerMainViewHost(options) {
     updatePanelViewState(projectViewState());
   }
 
+  function contextOptions(overrides) {
+    var base = typeof settings.contextOptions === "function" ? settings.contextOptions() : settings.contextOptions;
+    return Object.assign({}, base || {}, overrides || {}, {
+      mainView: Object.assign({}, base && base.mainView ? base.mainView : {}, overrides && overrides.mainView ? overrides.mainView : {}, {
+        activeViewId: activeViewId,
+        projectToolbar: projectToolbar,
+        requestView: requestView,
+        showWarning: showWarning
+      })
+    });
+  }
+
+  function moduleContext(overrides) {
+    return createDocsViewerMainViewModuleContext(contextOptions(overrides));
+  }
+
   function requestView(viewId, optionsForRequest) {
     var targetViewId = cleanString(viewId);
     var requestSettings = optionsForRequest || {};
@@ -74,6 +94,8 @@ export function createDocsViewerMainViewHost(options) {
 
   return {
     activeViewId: function () { return activeViewId; },
+    moduleContext: moduleContext,
+    projectToolbar: projectToolbar,
     requestView: requestView,
     viewOptions: viewOptions
   };

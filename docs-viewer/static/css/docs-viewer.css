@@ -545,9 +545,17 @@
   display: none;
 }
 
-.docsViewer__meta{
+.docsViewer__mainViewToolbar{
   max-width: var(--docs-viewer-measure);
   margin: 0 0 var(--docs-viewer-space-4);
+}
+
+.docsViewer__mainViewToolbar[hidden]{
+  display: none;
+}
+
+.docsViewer__meta{
+  margin: 0;
 }
 
 .docsViewer__metaRow{
