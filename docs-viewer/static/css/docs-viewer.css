@@ -83,7 +83,7 @@
 
 [data-docs-viewer-index-panel-mount],
 [data-docs-viewer-management-shell-mount],
-[data-docs-viewer-document-shell-mount],
+[data-docs-viewer-main-view-mount],
 [data-docs-viewer-info-panel-mount]{
   display: contents;
 }

@@ -80,7 +80,7 @@ def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeou
     if state["managementActions"]:
         raise AssertionError(f"{route} info panel exposed management controls: {state!r}")
     if overlap:
-        raise AssertionError(f"{route} info panel overlaps document panel at viewport {viewport!r}")
+        raise AssertionError(f"{route} info panel overlaps main view panel at viewport {viewport!r}")
     page.locator("#docsViewerInfoPanelClose").click()
     page.wait_for_function(
         """() => document.querySelector("#docsViewerInfoPanel")?.hidden === true""",

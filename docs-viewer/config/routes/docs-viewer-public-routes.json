@@ -29,7 +29,7 @@
       },
       "panels": {
         "index": { "enabled": true, "default_state": "normal" },
-        "document": { "enabled": true, "default_view": "document" },
+        "main": { "enabled": true, "default_view": "rendered-document" },
         "info": { "enabled": true, "default_view": "metadata-info" }
       },
       "hosted_views": {
@@ -64,7 +64,7 @@
       },
       "panels": {
         "index": { "enabled": true, "default_state": "normal" },
-        "document": { "enabled": true, "default_view": "document" },
+        "main": { "enabled": true, "default_view": "rendered-document" },
         "info": { "enabled": true, "default_view": "metadata-info" }
       },
       "hosted_views": {

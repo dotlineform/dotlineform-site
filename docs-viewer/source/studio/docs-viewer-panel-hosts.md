@@ -2,7 +2,7 @@
 doc_id: docs-viewer-panel-hosts
 title: Panel Hosts
 added_date: 2026-05-28
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: docs-viewer
 viewable: true
 ---
@@ -18,11 +18,11 @@ The current app shell provides:
 
 - header controls
 - index panel shell and index-panel chrome
-- document shell and document/search/recent/report mounts
+- main-view shell and rendered-document/search/recent mounts
 - info panel shell
 - management action shell and management-only modal/context-menu hosts
 - route config and access projection
-- view-state skeleton for index, document, and info slots
+- view-state skeleton for index, main-view, and info slots
 - hosted-view registration and lifecycle helpers
 - selected-document context for hosted views
 - read-only metadata info view
@@ -38,6 +38,7 @@ Core ownership:
 | view-state skeleton | `docs-viewer/runtime/js/docs-viewer-view-state.js` |
 | current panel projection | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` |
 | hosted-view records and access checks | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` |
+| main-view host state and switch validation | `docs-viewer/runtime/js/docs-viewer-main-view-host.js` |
 | selected-document hosted-view context | `docs-viewer/runtime/js/docs-viewer-view-context.js` |
 | info-panel lifecycle | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` |
 | info-panel chrome | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` |
@@ -47,8 +48,8 @@ Core ownership:
 
 ### App-Shell Boot And Shell Rendering
 
-`docs-viewer-app-shell.js` renders the browser-owned Docs Viewer shell regions: header controls, index panel mount, document shell, management shell hosts, and info-panel mount.
-It also projects shell state such as index layout, document shell visibility, info panel state, and toolbar controls.
+`docs-viewer-app-shell.js` renders the browser-owned Docs Viewer shell regions: header controls, index panel mount, main-view mount, management shell hosts, and info-panel mount.
+It also projects shell state such as index layout, main-view visibility, info panel state, and toolbar controls.
 
 Improvement needed:
 
@@ -86,21 +87,22 @@ Improvement needed:
 
 ### View-State Skeleton
 
-`docs-viewer-view-state.js` stores browser-only panel state for the index, document, and info panels.
+`docs-viewer-view-state.js` stores browser-only panel state for the index, main-view, and info panels.
 It tracks active view ids and mounted/visible state, but it does not own feature rendering.
 
 Current limitation:
 
-- document-panel active view state exists, but document/search/recent/report are still rendered by existing controllers rather than a true document hosted-view switcher
+- main-view active view state exists, but rendered document/search/recent are still rendered by existing controllers rather than independent mounted hosted-view modules
+- report rendering remains on the existing document payload/report path pending a later report-specific decision
 
 Improvement needed:
 
-- implement explicit document-panel view switching before adding source editor or other document-panel views
+- finish explicit main-view lifecycle before adding source editor or other main-view modules
 
 ### Panel Layout Projection
 
 `docs-viewer-panel-layout.js` projects panel layout from view state and hosted-view capabilities.
-It currently drives index panel normal/collapsed/expanded state, index view switching, document shell projection, info-panel projection, and layout attributes.
+It currently drives index panel normal/collapsed/expanded state, index view switching, main-view projection, info-panel projection, and layout attributes.
 
 Current limitation:
 
@@ -114,16 +116,16 @@ Improvement needed:
 ### Hosted-View Registry
 
 `docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in hosted views.
-Built-in records currently include `index-tree`, document/search/recent/report document records, and `metadata-info`.
+Built-in records currently include `index-tree`, `rendered-document`, `search-results`, `recent-results`, and `metadata-info`.
 
 Current limitation:
 
-- document-panel records are descriptive state records only; they do not yet load/mount independent document hosted-view modules
+- main-view records update active main-view state through `docs-viewer-main-view-host.js`, but rendered/search/recent rendering still delegates to existing controllers
 - route-config records can describe placeholders and capabilities, but the current runtime is not a generic module loader
 
 Improvement needed:
 
-- define the document-panel hosted-view lifecycle before adding source editor or richer report/document views
+- finish the main-view hosted-view lifecycle before adding source editor or richer main-view modules
 - keep this as repo module hosting, not a plugin system
 
 ### Selected-Document Hosted-View Context
@@ -166,7 +168,8 @@ The current panel projection still preserves existing two-panel behavior where n
 The index panel projects collapsed, normal, and expanded states from the active index hosted view’s capabilities.
 The built-in `index-tree` view supports normal and collapsed states, while the management-route `index-graph` placeholder opts into expanded mode.
 The management toolbar exposes the available index-view switch as a single projected icon pill when more than one index hosted view is available.
-The document shell still owns document payload rendering plus search, recent, and report surfaces through the existing document/search/report controllers.
+The main-view shell still owns rendered document payload rendering plus search and recent surfaces through the existing document/search controllers.
+Reports remain on the existing document payload/report path for now.
 The info panel is a real app-shell panel with a selected-document metadata hosted view.
 
 ## Panel Model
@@ -174,16 +177,15 @@ The info panel is a real app-shell panel with a selected-document metadata hoste
 Docs Viewer has three conceptual panel regions:
 
 - index
-- document
+- main
 - info
 
-The selected document is app state, not just document-panel visibility.
+The selected document is app state, not just main-view visibility.
 The info panel can render selected-document context without moving document payload loading or metadata editing into the info view.
 
 Current DOM projection uses panel-related data attributes such as:
 
 - `data-index-panel-state`
-- `data-document-panel-state`
 - `data-info-panel-state`
 - `data-viewer-layout`
 
@@ -226,7 +228,8 @@ Current lifecycle implementation:
 - info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
 - `metadata-info` is the only real mounted hosted-view module
 - index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
-- document hosted-view records exist for `document-host`, `search-results`, `recent-results`, and `report-host`, but the existing document/search/recent/report controllers still own rendering
+- main-view hosted-view records exist for `rendered-document`, `search-results`, and `recent-results`; `docs-viewer-main-view-host.js` validates and projects active main-view state, while existing document/search/recent controllers still own rendering
+- `report-host` is not part of the main-view migration yet
 
 The implemented lifecycle shape for info-panel hosted views is:
 
@@ -242,10 +245,10 @@ The context currently contains the `mount` element plus selected-document and ro
 
 What still needs implementation:
 
-- a document-panel host/controller that can switch explicit document-panel views without breaking current document/search/recent/report route behavior
+- a full main-view hosted-view lifecycle that can mount independent main-view modules without breaking current rendered-document/search/recent route behavior
 - a clear module-loading policy for route-config hosted-view records beyond built-in and explicitly imported repo modules
-- toolbar/view-switching projection for document and info panels when more than one view is available
-- a data/context contract for each new info or document hosted view before adding the view
+- toolbar/view-switching projection for main and info panels when more than one view is available
+- a data/context contract for each new info or main-view hosted view before adding the view
 
 Do not interpret route-config hosted-view records as a completed generic extension system.
 The current implementation supports configured records, capability projection, access checks, and the info-panel lifecycle.

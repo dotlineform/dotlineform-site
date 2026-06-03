@@ -123,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
             page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=args.timeout_ms)
             page.wait_for_selector("#docsViewerContent:not([hidden])", timeout=args.timeout_ms)
             page.wait_for_function(
-                """() => document.querySelector("#docsViewerContent h1")?.id === "docs-viewer" """,
+                """() => document.querySelector("#docsViewerContent h1")?.textContent?.trim() === "Docs Viewer" """,
                 timeout=args.timeout_ms,
             )
             page.wait_for_function(
@@ -229,7 +229,7 @@ def main(argv: list[str] | None = None) -> int:
                     const activeLink = document.querySelector('#docsViewerNav a[data-doc-id="docs-viewer-overview"]');
                     return root?.dataset.indexPanelState === "normal" &&
                         root?.dataset.indexPanelView === "index-tree" &&
-                        heading?.id === "docs-viewer-overview" &&
+                        heading?.textContent?.trim() === "Docs Viewer Overview" &&
                         activeLink?.classList.contains("is-active") &&
                         activeLink?.getAttribute("aria-current") === "page";
                 }""",
@@ -238,7 +238,7 @@ def main(argv: list[str] | None = None) -> int:
             tree_url = page.url
             page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
             page.wait_for_function(
-                """() => document.querySelector("#docsViewerContent h1")?.id === "docs-viewer" """,
+                """() => document.querySelector("#docsViewerContent h1")?.textContent?.trim() === "Docs Viewer" """,
                 timeout=args.timeout_ms,
             )
             root_attrs = page.locator("#docsViewerRoot").evaluate(
@@ -351,7 +351,7 @@ def main(argv: list[str] | None = None) -> int:
                 },
                 "panels": {
                     "index": {"enabled": True, "default_state": "normal"},
-                    "document": {"enabled": True, "default_view": "document"},
+                    "main": {"enabled": True, "default_view": "rendered-document"},
                     "info": {"enabled": True, "default_view": "metadata-info"},
                 },
                 "hosted_views": {

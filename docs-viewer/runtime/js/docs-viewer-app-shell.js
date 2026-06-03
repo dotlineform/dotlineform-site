@@ -5,11 +5,11 @@ import {
   applyDocsViewerViewerToolbarProjection
 } from "./docs-viewer-viewer-toolbar-renderer.js";
 import {
-  applyDocsViewerDocumentShellProjection,
-  documentShellMount,
-  findDocsViewerDocumentShellRefs,
-  renderDocsViewerDocumentShell
-} from "./docs-viewer-document-shell-renderer.js";
+  applyDocsViewerMainViewProjection,
+  findDocsViewerMainViewRefs,
+  mainViewMount,
+  renderDocsViewerMainView
+} from "./docs-viewer-main-view-renderer.js";
 import {
   applyDocsViewerIndexPanelProjection,
   findDocsViewerIndexPanelRefs,
@@ -105,7 +105,7 @@ function appShellResult(parts) {
     topBar: parts.topBar,
     viewerToolbar: parts.viewerToolbar,
     headerControls: parts.headerControls,
-    documentShell: parts.documentShell,
+    mainView: parts.mainView,
     infoPanel: parts.infoPanel,
     indexPanel: parts.indexPanel,
     routeContext: parts.routeContext,
@@ -126,10 +126,10 @@ export function initDocsViewerAppShell(options) {
     routeContext: routeContext
   });
   var headerControls = topBar && topBar.viewerToolbar;
-  var documentShell = renderDocsViewerDocumentShell({
+  var mainView = renderDocsViewerMainView({
     document: documentRef,
     root: root,
-    mount: settings.documentShellMount || documentShellMount(root)
+    mount: settings.mainViewMount || mainViewMount(root)
   });
   var indexPanel = renderDocsViewerIndexPanelShell({
     document: documentRef,
@@ -154,7 +154,7 @@ export function initDocsViewerAppShell(options) {
       headerControls: headerControls,
       topBar: topBar && topBar.topBar,
       viewerToolbar: topBar && topBar.viewerToolbar,
-      documentShell: documentShell,
+      mainView: mainView,
       infoPanel: infoPanel,
       indexPanel: indexPanel,
       routeContext: routeContext,
@@ -183,7 +183,7 @@ export function initDocsViewerAppShell(options) {
         headerControls: headerControls,
         topBar: topBar && topBar.topBar,
         viewerToolbar: topBar && topBar.viewerToolbar,
-        documentShell: documentShell,
+        mainView: mainView,
         infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
@@ -197,7 +197,7 @@ export function initDocsViewerAppShell(options) {
         headerControls: headerControls,
         topBar: topBar && topBar.topBar,
         viewerToolbar: topBar && topBar.viewerToolbar,
-        documentShell: documentShell,
+        mainView: mainView,
         infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
@@ -207,9 +207,9 @@ export function initDocsViewerAppShell(options) {
     });
 }
 
-export function getDocsViewerAppShellDocumentRefs(options) {
+export function getDocsViewerAppShellMainViewRefs(options) {
   var settings = options || {};
-  return findDocsViewerDocumentShellRefs({
+  return findDocsViewerMainViewRefs({
     document: settings.document || document,
     root: settings.root || null
   });
@@ -258,7 +258,7 @@ export function getDocsViewerAppShellRefs(options) {
       infoToggle: documentRef.getElementById("docsViewerInfoToggle")
     },
     indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
-    documentShell: getDocsViewerAppShellDocumentRefs({ root: root, document: documentRef }),
+    mainView: getDocsViewerAppShellMainViewRefs({ root: root, document: documentRef }),
     infoPanel: getDocsViewerAppShellInfoPanelRefs({ root: root, document: documentRef }),
     managementShell: getDocsViewerAppShellManagementShellRefs({ root: root, document: documentRef }),
     status: documentRef.getElementById("docsViewerStatus"),
@@ -276,8 +276,8 @@ export function renderDocsViewerAppShellIndexPanelState(options) {
   applyDocsViewerIndexPanelProjection(options || {});
 }
 
-export function renderDocsViewerAppShellDocumentState(options) {
-  applyDocsViewerDocumentShellProjection(options || {});
+export function renderDocsViewerAppShellMainViewState(options) {
+  applyDocsViewerMainViewProjection(options || {});
 }
 
 export function renderDocsViewerAppShellViewerToolbarState(options) {

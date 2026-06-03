@@ -44,16 +44,16 @@ function normalizeRouteType(value, allowManagement) {
 function normalizePanelDefaults(rawPanels) {
   var panels = rawPanels && typeof rawPanels === "object" && !Array.isArray(rawPanels) ? rawPanels : {};
   var index = panels.index && typeof panels.index === "object" ? panels.index : {};
-  var documentPanel = panels.document && typeof panels.document === "object" ? panels.document : {};
+  var mainPanel = panels.main && typeof panels.main === "object" ? panels.main : {};
   var info = panels.info && typeof panels.info === "object" ? panels.info : {};
   return {
     index: {
       enabled: index.enabled !== false,
       defaultState: cleanString(index.default_state || index.defaultState) || "normal"
     },
-    document: {
-      enabled: documentPanel.enabled !== false,
-      defaultView: cleanString(documentPanel.default_view || documentPanel.defaultView) || "document"
+    main: {
+      enabled: mainPanel.enabled !== false,
+      defaultView: cleanString(mainPanel.default_view || mainPanel.defaultView) || "rendered-document"
     },
     info: {
       enabled: info.enabled !== false,
@@ -75,7 +75,7 @@ function normalizeHostedViews(rawHostedViews) {
       return {
         id: id,
         label: cleanString(record.label) || id,
-        panel: cleanString(record.panel) || "document",
+        panel: cleanString(record.panel) || "main",
         access: cleanString(record.access) || "public",
         availability: cleanString(record.availability) || "available",
         module: cleanString(record.module),

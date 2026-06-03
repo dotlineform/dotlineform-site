@@ -337,7 +337,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <p id="docsViewerStatus"></p>
                   <div id="docsViewerBookmarkRow"></div>
@@ -407,7 +407,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                     recentButton: refs.headerControls.recentButton?.id || '',
                     searchInput: refs.headerControls.searchInput?.id || '',
                     nav: refs.indexPanel.nav?.id || '',
-                    content: refs.documentShell.content?.id || '',
+                    content: refs.mainView.content?.id || '',
                     infoBody: refs.infoPanel.body?.id || '',
                     status: refs.status?.id || '',
                     bookmarkRow: refs.bookmarkRow?.id || '',
@@ -611,7 +611,7 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
                     },
                     "panels": {
                       "index": { "enabled": true, "default_state": "normal" },
-                      "document": { "enabled": true, "default_view": "document" },
+                      "main": { "enabled": true, "default_view": "rendered-document" },
                       "info": { "enabled": true, "default_view": "metadata-info" }
                     },
                     "hosted_views": {
@@ -681,7 +681,7 @@ def assert_route_config_registry_resolution(page: Page) -> None:
                 >
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
@@ -742,7 +742,7 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                 <section id="docsViewerRoot">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <p id="docsViewerStatus"></p>
@@ -788,7 +788,7 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                 appShellReadyPromise: typeof context.appShellReady.then === 'function',
                 searchInputId: context.appShellRefs.headerControls.searchInput?.id || '',
                 navId: context.appShellRefs.indexPanel.nav?.id || '',
-                contentId: context.appShellRefs.documentShell.content?.id || '',
+                contentId: context.appShellRefs.mainView.content?.id || '',
                 infoBodyId: context.appShellRefs.infoPanel.body?.id || '',
                 manageRowCount: document.querySelectorAll('#docsViewerManageRow').length,
                 contextMenuCount: document.querySelectorAll('#docsViewerContextMenu').length,
@@ -952,7 +952,7 @@ def assert_app_composition_contract(page: Page) -> None:
                     <section id="docsViewerRoot">
                       <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                       <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                      <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                      <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                       <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                       <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
                       <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
@@ -1143,7 +1143,7 @@ def assert_app_boot_management_context_contract(page: Page) -> None:
                 <section id="docsViewerRoot">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
@@ -1229,7 +1229,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                 <section id="docsViewerRoot">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="true"></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                   <p id="docsViewerStatus"></p>
                   <div id="docsViewerBookmarkRow"></div>
@@ -1276,7 +1276,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                 routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
                 viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
                 navCount: document.querySelectorAll('#docsViewerNav').length,
-                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                mainViewCount: document.querySelectorAll('.docsViewer__main').length,
                 activeDocId: activeLink?.dataset.docId || '',
                 activeDocText: activeLink?.textContent.trim() || ''
             };
@@ -1296,7 +1296,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
         raise AssertionError(f"app boot exposed retired runtime internals: {result!r}")
     if result["hasInitialLoadPromise"] is not True or result["routeId"] != "analysis-public":
         raise AssertionError(f"app boot did not return the intended runtime contract: {result!r}")
-    if result["viewerToolbarCount"] != 1 or result["navCount"] != 1 or result["documentShellCount"] != 1:
+    if result["viewerToolbarCount"] != 1 or result["navCount"] != 1 or result["mainViewCount"] != 1:
         raise AssertionError(f"single-start boot duplicated shell markup: {result!r}")
     if result["activeDocId"] != "analysis" or result["activeDocText"] != "Analysis":
         raise AssertionError(f"single-start boot did not complete initial route load: {result!r}")
@@ -1455,12 +1455,12 @@ def assert_document_shell_render(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
             const returned = await module.initDocsViewerAppShell({ root, document });
-            const refs = module.getDocsViewerAppShellDocumentRefs({ root, document });
+            const refs = module.getDocsViewerAppShellMainViewRefs({ root, document });
             const ids = [
                 'docsViewerMeta',
                 'docsViewerPath',
@@ -1473,7 +1473,7 @@ def assert_document_shell_render(page: Page) -> None:
                 'docsViewerMore'
             ];
             return {
-                returnedContentId: returned.documentShell && returned.documentShell.content && returned.documentShell.content.id,
+                returnedContentId: returned.mainView && returned.mainView.content && returned.mainView.content.id,
                 refContentId: refs.content && refs.content.id,
                 mainCount: document.querySelectorAll('.docsViewer__main').length,
                 missingIds: ids.filter((id) => !document.getElementById(id)),
@@ -1498,7 +1498,7 @@ def assert_document_shell_render(page: Page) -> None:
         "resultsHidden": True,
         "moreHidden": True,
     }:
-        raise AssertionError(f"document shell render failed: {result!r}")
+        raise AssertionError(f"main view render failed: {result!r}")
 
 
 def assert_document_shell_management_shape(page: Page) -> None:
@@ -1507,7 +1507,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerManageActionsMount" data-docs-viewer-management-actions-mount></div>
                 </section>
             `;
@@ -1515,7 +1515,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
             const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
             await module.initDocsViewerAppShell({ root, document, routeContext });
             return {
-                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                mainViewCount: document.querySelectorAll('.docsViewer__main').length,
                 statusPillsCount: document.querySelectorAll('#docsViewerStatusPills').length,
                 infoToggleCount: document.querySelectorAll('#docsViewerInfoToggle').length,
                 bookmarkToggleCount: document.querySelectorAll('#docsViewerBookmarkToggle').length,
@@ -1525,14 +1525,14 @@ def assert_document_shell_management_shape(page: Page) -> None:
         }"""
     )
     if result != {
-        "documentShellCount": 1,
+        "mainViewCount": 1,
         "statusPillsCount": 1,
         "infoToggleCount": 0,
         "bookmarkToggleCount": 1,
         "manageRowCount": 1,
         "editButtonCount": 1,
     }:
-        raise AssertionError(f"management document shell shape failed: {result!r}")
+        raise AssertionError(f"management main view shape failed: {result!r}")
 
 
 def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
@@ -1554,7 +1554,7 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
                 <section id="docsViewerRoot" class="docsViewer" data-allow-management="true">
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
@@ -1590,16 +1590,16 @@ def assert_document_shell_projection(page: Page) -> None:
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="false">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                 </section>
             `;
             const root = document.getElementById('docsViewerRoot');
             await module.initDocsViewerAppShell({ root, document });
             const shellRefs = module.getDocsViewerAppShellRefs({ root, document });
-            const refs = shellRefs.documentShell;
+            const refs = shellRefs.mainView;
             const toolbarRefs = shellRefs.viewerToolbar;
             refs.more.innerHTML = '<button>More</button>';
-            module.renderDocsViewerAppShellDocumentState({
+            module.renderDocsViewerAppShellMainViewState({
                 refs,
                 projection: {
                     metaHidden: true,
@@ -1635,7 +1635,7 @@ def assert_document_shell_projection(page: Page) -> None:
                 infoToggleExpanded: toolbarRefs.infoToggle.getAttribute('aria-expanded'),
                 infoToggleLabel: toolbarRefs.infoToggle.getAttribute('aria-label')
             };
-            module.renderDocsViewerAppShellDocumentState({
+            module.renderDocsViewerAppShellMainViewState({
                 refs,
                 projection: {
                     contentHidden: false,
@@ -1960,7 +1960,7 @@ def assert_panel_layout_contract(page: Page) -> None:
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
@@ -2009,11 +2009,11 @@ def assert_panel_layout_contract(page: Page) -> None:
                 storageScope: 'studio',
                 indexPanelRefs: refs.indexPanel,
                 indexViewToggleRefs: refs.viewerToolbar,
-                documentShellRefs: refs.documentShell,
+                mainViewRefs: refs.mainView,
                 infoPanelRefs: refs.infoPanel,
                 panels: {
                     index: { enabled: true, defaultState: 'normal' },
-                    document: { enabled: true, defaultView: 'document-host' },
+                    main: { enabled: true, defaultView: 'rendered-document' },
                     info: { enabled: true, defaultView: 'metadata-info' }
                 },
                 hostedViewRegistry: registry,
@@ -2070,8 +2070,8 @@ def assert_panel_layout_contract(page: Page) -> None:
             available = false;
             const unavailableToggleState = layout.toggleIndexPanelState();
             layout.renderIndexPanelState();
-            refs.documentShell.more.innerHTML = '<button>More</button>';
-            layout.projectDocumentShell({
+            refs.mainView.more.innerHTML = '<button>More</button>';
+            layout.projectMainView({
                 contentHidden: true,
                 resultsStatusText: 'Recent docs',
                 resultsStatusHidden: false,
@@ -2079,14 +2079,14 @@ def assert_panel_layout_contract(page: Page) -> None:
                 moreHidden: false
             });
             const recentProjection = {
-                contentHidden: refs.documentShell.content.hidden,
-                resultsStatusText: refs.documentShell.resultsStatus.textContent,
-                resultsStatusHidden: refs.documentShell.resultsStatus.hidden,
-                resultsHidden: refs.documentShell.results.hidden,
-                moreHidden: refs.documentShell.more.hidden,
-                moreHtml: refs.documentShell.more.innerHTML
+                contentHidden: refs.mainView.content.hidden,
+                resultsStatusText: refs.mainView.resultsStatus.textContent,
+                resultsStatusHidden: refs.mainView.resultsStatus.hidden,
+                resultsHidden: refs.mainView.results.hidden,
+                moreHidden: refs.mainView.more.hidden,
+                moreHtml: refs.mainView.more.innerHTML
             };
-            layout.projectDocumentShell({ moreHidden: true, clearMore: true });
+            layout.projectMainView({ moreHidden: true, clearMore: true });
             layout.projectInfoPanel({
                 activeViewId: 'metadata-info',
                 label: 'Document metadata',
@@ -2119,7 +2119,7 @@ def assert_panel_layout_contract(page: Page) -> None:
                 unavailableToggleState,
                 unavailableProjectedState: root.dataset.indexPanelState,
                 recentProjection,
-                moreAfterClear: refs.documentShell.more.innerHTML,
+                moreAfterClear: refs.mainView.more.innerHTML,
                 openInfoProjection,
                 closedInfoProjection
             };
@@ -2220,7 +2220,7 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             const registry = hostedViews.registerDocsViewerHostedViews(
                 hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
                 hostedViews.createDocsViewerBuiltInHostedViews().concat([
-                    { id: 'manage-source', label: 'Source', panel: 'document', access: 'manage', availability: 'available' },
+                    { id: 'manage-source', label: 'Source', panel: 'main', access: 'manage', availability: 'available' },
                     { id: 'disabled-info', label: 'Info', panel: 'info', access: 'public', availability: 'disabled' }
                 ])
             );
@@ -2229,7 +2229,7 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
                 indexPanelState: 'expanded',
                 panels: {
                     index: { enabled: true, defaultState: 'normal' },
-                    document: { enabled: true, defaultView: 'document-host' },
+                    main: { enabled: true, defaultView: 'rendered-document' },
                     info: { enabled: false, defaultView: 'metadata-info' }
                 }
             });
@@ -2238,7 +2238,7 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             });
             const updated = viewStateModule.updateDocsViewerViewState(state, {
                 indexPanelState: 'normal',
-                documentViewId: 'search-results',
+                mainViewId: 'search-results',
                 infoMounted: true
             });
             const updatedProjection = viewStateModule.projectDocsViewerViewState(updated, {
@@ -2247,14 +2247,14 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             return {
                 projected,
                 updatedProjection,
-                documentHost: registry.resolve('document-host'),
+                documentHost: registry.resolve('rendered-document'),
                 missing: registry.resolve('not-registered'),
                 manageSource: registry.resolve('manage-source'),
                 disabledInfo: registry.resolve('disabled-info'),
                 metadataInfo: registry.resolve('metadata-info'),
                 registeredIds: registry.list().map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
                 infoViewIds: hostedViews.listDocsViewerHostedViewsForPanel(registry, 'info').map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
-                documentViewIds: registry.listByPanel('document').map((view) => view.id).sort()
+                mainViewIds: registry.listByPanel('main').map((view) => view.id).sort()
             };
         }"""
     )
@@ -2266,11 +2266,11 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             "state": "expanded",
             "activeViewId": "index-tree",
         },
-        "document": {
-            "panel": "document",
+        "main": {
+            "panel": "main",
             "visible": False,
             "mounted": True,
-            "activeViewId": "document-host",
+            "activeViewId": "rendered-document",
         },
         "info": {
             "panel": "info",
@@ -2280,12 +2280,12 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         },
     }:
         raise AssertionError(f"view state expanded projection failed: {result!r}")
-    if result["updatedProjection"]["document"]["visible"] is not True:
-        raise AssertionError(f"view state did not restore document panel: {result!r}")
-    if result["updatedProjection"]["document"]["activeViewId"] != "search-results":
-        raise AssertionError(f"view state did not update active document view: {result!r}")
+    if result["updatedProjection"]["main"]["visible"] is not True:
+        raise AssertionError(f"view state did not restore main view panel: {result!r}")
+    if result["updatedProjection"]["main"]["activeViewId"] != "search-results":
+        raise AssertionError(f"view state did not update active main view: {result!r}")
     if result["documentHost"]["available"] is not True or result["documentHost"]["registered"] is not True:
-        raise AssertionError(f"document hosted view should resolve as available: {result!r}")
+        raise AssertionError(f"rendered-document hosted view should resolve as available: {result!r}")
     if result["missing"] != {
         "id": "not-registered",
         "view": None,
@@ -2302,8 +2302,8 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"hosted view registry listing lost built-in views: {result!r}")
     if result["infoViewIds"] != ["disabled-info:disabled", "metadata-info:yes"]:
         raise AssertionError(f"hosted view panel listing changed: {result!r}")
-    if "document-host" not in result["documentViewIds"] or "search-results" not in result["documentViewIds"]:
-        raise AssertionError(f"document hosted view panel listing changed: {result!r}")
+    if "rendered-document" not in result["mainViewIds"] or "search-results" not in result["mainViewIds"]:
+        raise AssertionError(f"main hosted view panel listing changed: {result!r}")
 
 
 def assert_route_workflow_contract(page: Page, base_url: str) -> None:
@@ -2955,7 +2955,7 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
                 managementBaseUrl: () => '',
                 meta: document.getElementById('meta'),
                 more: document.getElementById('more'),
-                projectDocumentShell: (projection) => calls.push(`shell:${Object.keys(projection).sort().join(',')}`),
+                projectMainView: (projection) => calls.push(`shell:${Object.keys(projection).sort().join(',')}`),
                 renderBookmarkToggle: () => calls.push('bookmark-toggle'),
                 renderBookmarkUi: () => calls.push('bookmark-ui'),
                 renderManagementUi: () => calls.push('management-ui'),
@@ -3662,7 +3662,7 @@ def assert_info_panel_controller_contract(page: Page) -> None:
                 documentIndex,
                 infoToggle: document.getElementById('infoToggle'),
                 panelView,
-                projectDocumentShell: (projection) => shellProjections.push(projection),
+                projectMainView: (projection) => shellProjections.push(projection),
                 projectInfoPanel: (projection) => projections.push(projection),
                 projectViewState: () => ({ info: 'open' }),
                 refs: {
@@ -3792,7 +3792,7 @@ def assert_render_is_idempotent(page: Page) -> None:
                   ></div>
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
                   <div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>
-                  <div id="docsViewerDocumentShellMount" data-docs-viewer-document-shell-mount></div>
+                  <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
                   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
                 </section>
             `;
@@ -3817,9 +3817,9 @@ def assert_render_is_idempotent(page: Page) -> None:
                 navCount: document.querySelectorAll('#docsViewerNav').length,
                 toggleCount: document.querySelectorAll('#docsViewerSidebarToggle').length,
                 indexMountChildCount: document.querySelector('[data-docs-viewer-index-panel-mount]').children.length,
-                documentShellCount: document.querySelectorAll('.docsViewer__main').length,
+                mainViewCount: document.querySelectorAll('.docsViewer__main').length,
                 documentContentCount: document.querySelectorAll('#docsViewerContent').length,
-                documentMountChildCount: document.querySelector('[data-docs-viewer-document-shell-mount]').children.length,
+                mainViewMountChildCount: document.querySelector('[data-docs-viewer-main-view-mount]').children.length,
                 infoPanelCount: document.querySelectorAll('#docsViewerInfoPanel').length,
                 infoBodyCount: document.querySelectorAll('#docsViewerInfoPanelBody').length,
                 infoMountChildCount: document.querySelector('[data-docs-viewer-info-panel-mount]').children.length
@@ -3843,9 +3843,9 @@ def assert_render_is_idempotent(page: Page) -> None:
         "navCount": 1,
         "toggleCount": 1,
         "indexMountChildCount": 1,
-        "documentShellCount": 1,
+        "mainViewCount": 1,
         "documentContentCount": 1,
-        "documentMountChildCount": 1,
+        "mainViewMountChildCount": 1,
         "infoPanelCount": 1,
         "infoBodyCount": 1,
         "infoMountChildCount": 1,

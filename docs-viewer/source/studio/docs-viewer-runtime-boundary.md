@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-29
+last_updated: 2026-06-03
 parent_id: docs-viewer
 viewable: true
 ---
@@ -53,8 +53,9 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
 - `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` for management-only context menu, metadata modal, import modal, settings modal, and import host refs rendered only when route access allows management UI
-- `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for app-shell panel projection and the index/document/info view-state skeleton
+- `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for app-shell panel projection and the index/main/info view-state skeleton
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, panel-specific listing, access/availability checks, built-in hosted-view records, and graceful absence
+- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` for main-view hosted-view availability checks, active main-view state projection, and switch-intent handling for `rendered-document`, `search-results`, and `recent-results`
 - `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` for app-shell-owned info-panel chrome and projection attributes
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` for info-panel hosted-view option projection, load, mount, update, unmount, close, and graceful absence behavior
 - `docs-viewer/runtime/js/docs-viewer-view-context.js` for explicit selected-document hosted-view context projection shared by metadata and planned future info views
@@ -68,7 +69,7 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-search-controller.js` for inline-search and recently-added controller ownership: search index loading, result rendering, recent rendering, search debounce behavior, explicit search/recent state-domain input, route command consumption, more-results behavior, and pane command requests
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, bookmark events, selected-document bookmark UI projection, explicit route command consumption, and search-reset command consumption when opening a bookmark
 - `docs-viewer/runtime/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js` for document pane visibility, loading/missing/error states, final payload rendering, selected-document projection, generated-data-backed report reads, report-service handoff, and report mount context from explicit route-session, scope-config, selected-document, generated-data, and status command inputs
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` for rendered-document visibility, loading/missing/error states, final payload rendering, selected-document projection, existing search/recent pane projection handoff, generated-data-backed report reads, report-service handoff, and report mount context from explicit route-session, scope-config, selected-document, generated-data, and status command inputs
 - `docs-viewer/runtime/js/docs-viewer-sidebar.js` for tree sidebar rendering, breadcrumb metadata rendering, expanded-row projection, selected-document highlighting, and scope-config management text/date display from explicit document-index, selected-document, and scope-config inputs
 - `docs-viewer/runtime/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
 - `docs-viewer/runtime/js/docs-viewer-router.js` for low-level URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate helper behavior, and payload-load helper behavior imported by the route workflow owner
@@ -128,7 +129,7 @@ Current owner map:
 - `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route-link and popstate binding, URL/history helpers, route application, index/payload workflow handoff, and the private route command contract for search/recent, bookmarks, startup index loading, and management reloads.
 - `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns search/recent binding, generated search reads, debounce, result/recent rendering, route command consumption, and pane command requests from explicit state-domain inputs.
 - `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark storage initialization, bookmark binding, rendering, document-load route command consumption, and search-reset command consumption from explicit bookmark/document/search inputs.
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane projection, payload rendering, loading/missing/error states, generated-data report read handoff, and local report-service handoff from explicit route-session, scope-config, selected-document, generated-data, and status command inputs.
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns rendered-document pane projection, payload rendering, loading/missing/error states, existing search/recent pane projection handoff, generated-data report read handoff, and local report-service handoff from explicit route-session, scope-config, selected-document, generated-data, and status command inputs.
 - `docs-viewer/runtime/js/docs-viewer-report-service.js` owns browser-side local report endpoint paths, request options, local-server missing-base errors, and response-envelope differences for source-config and broken-links audit reports.
 - `docs-viewer/runtime/js/docs-viewer-sidebar.js` owns sidebar tree and document metadata rendering from explicit document-index, selected-document, and scope-config inputs.
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns info toggle/toolbar binding, selected-document hosted-view context projection, host open/close/update handoff, view-state projection sync, and toggle projection from explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs.
@@ -139,6 +140,7 @@ Current owner map:
 - `docs-viewer/runtime/js/docs-viewer-management.js` owns the management-local facade and orchestration over management action, modal, capability, interaction, scope-lifecycle, service-client, and route-reload contracts. It receives named management state-domain, service-client, and route-reload inputs from the lazy runtime boundary rather than the broad runtime state object.
 - `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view resolution, load, mount, update, unmount, close, dispose, option projection, and graceful absence.
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns the minimal hosted-view record shape, lifecycle method defaults, panel-specific listing, access/availability checks, and built-in hosted-view records through `createDocsViewerBuiltInHostedViews()`.
+- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` owns main-view availability checks, switch-intent handling, and active main-view state projection for `rendered-document`, `search-results`, and `recent-results`.
 - `docs-viewer/runtime/js/docs-viewer-view-context.js` owns public-safe selected-document hosted-view context projection.
 - `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` owns the first public-safe read-only metadata hosted view.
 - `docs-viewer/runtime/js/docs-viewer-management.js` and its child modules own manage-mode capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, status pills, and write orchestration behind the lazy management boundary.
@@ -181,7 +183,7 @@ Current app-shell route handoff boundary:
 
 - route config is the preferred durable route/app shape for new app-shell work
 - the shared and standalone route shells expose only `data-route-id` and `data-route-config-url` as boot route context
-- the shared and standalone route shells provide app mounts for header controls, index panel, management shell, document shell, and info panel; management-only context-menu and modal markup is no longer authored in the route shell templates
+- the shared and standalone route shells provide app mounts for header controls, index panel, management shell, main view, and info panel; management-only context-menu and modal markup is no longer authored in the route shell templates
 - `docs-viewer/config/routes/docs-viewer-routes.json` is the local service route-config registry for `/docs/`, `/library/`, and `/analysis/`
 - `docs-viewer/config/routes/docs-viewer-public-routes.json` is the Jekyll-published public route-config registry for `/library/` and `/analysis/`; it intentionally omits the local `/docs/` management route and manage-only hosted views
 - `docs-viewer/runtime/js/docs-viewer-route-config.js` fetches that registry and resolves the current `docs_viewer_route_config_v1` record; route config resolution no longer reads inline config scripts or legacy `#docsViewerRoot` data attributes
@@ -190,6 +192,7 @@ Current app-shell route handoff boundary:
 - backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow
 - the first info-panel hosted view is read-only and public-safe; source paths, local filesystem actions, editable metadata saves, semantic references, and activity history remain outside the info-panel metadata view contract
 - info-panel hosted views can be listed and switched through the app-shell toolbar; disabled, unavailable, missing, and access-blocked views stay graceful and do not create write authority
+- main-view route config uses the `main` panel key and `rendered-document` as the default central view; `panels.document` and `document-host` are retired rather than compatibility aliases
 
 ## What should stay scope-specific
 

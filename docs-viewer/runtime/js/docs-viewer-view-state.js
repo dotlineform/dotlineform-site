@@ -5,16 +5,16 @@ function cleanString(value) {
 function normalizePanelDefaults(rawPanels) {
   var panels = rawPanels && typeof rawPanels === "object" ? rawPanels : {};
   var index = panels.index && typeof panels.index === "object" ? panels.index : {};
-  var documentPanel = panels.document && typeof panels.document === "object" ? panels.document : {};
+  var mainPanel = panels.main && typeof panels.main === "object" ? panels.main : {};
   var info = panels.info && typeof panels.info === "object" ? panels.info : {};
   return {
     index: {
       enabled: index.enabled !== false,
       defaultState: cleanString(index.defaultState || index.default_state) || "normal"
     },
-    document: {
-      enabled: documentPanel.enabled !== false,
-      defaultView: cleanString(documentPanel.defaultView || documentPanel.default_view) || "document"
+    main: {
+      enabled: mainPanel.enabled !== false,
+      defaultView: cleanString(mainPanel.defaultView || mainPanel.default_view) || "rendered-document"
     },
     info: {
       enabled: info.enabled !== false,
@@ -37,11 +37,11 @@ export function createDocsViewerViewState(options) {
         mounted: panelDefaults.index.enabled,
         activeViewId: cleanString(settings.indexViewId) || "index-tree"
       },
-      document: {
-        id: "document",
-        enabled: panelDefaults.document.enabled,
-        mounted: panelDefaults.document.enabled,
-        activeViewId: cleanString(settings.documentViewId) || panelDefaults.document.defaultView
+      main: {
+        id: "main",
+        enabled: panelDefaults.main.enabled,
+        mounted: panelDefaults.main.enabled,
+        activeViewId: cleanString(settings.mainViewId) || panelDefaults.main.defaultView
       },
       info: {
         id: "info",
@@ -61,7 +61,7 @@ export function updateDocsViewerViewState(viewState, patch) {
     mode: cleanString(changes.mode) || current.mode,
     panels: {
       index: Object.assign({}, current.panels.index),
-      document: Object.assign({}, current.panels.document),
+      main: Object.assign({}, current.panels.main),
       info: Object.assign({}, current.panels.info)
     }
   };
@@ -71,8 +71,8 @@ export function updateDocsViewerViewState(viewState, patch) {
   if (changes.indexViewId) {
     next.panels.index.activeViewId = cleanString(changes.indexViewId);
   }
-  if (changes.documentViewId) {
-    next.panels.document.activeViewId = cleanString(changes.documentViewId);
+  if (changes.mainViewId) {
+    next.panels.main.activeViewId = cleanString(changes.mainViewId);
   }
   if (changes.infoViewId) {
     next.panels.info.activeViewId = cleanString(changes.infoViewId);
@@ -96,11 +96,11 @@ export function projectDocsViewerViewState(viewState, options) {
       state: cleanString(indexProjection.activeState) || state.panels.index.state,
       activeViewId: state.panels.index.activeViewId
     },
-    document: {
-      panel: "document",
-      visible: Boolean(state.panels.document.enabled && documentPaneVisible),
-      mounted: Boolean(state.panels.document.mounted),
-      activeViewId: state.panels.document.activeViewId
+    main: {
+      panel: "main",
+      visible: Boolean(state.panels.main.enabled && documentPaneVisible),
+      mounted: Boolean(state.panels.main.mounted),
+      activeViewId: state.panels.main.activeViewId
     },
     info: {
       panel: "info",

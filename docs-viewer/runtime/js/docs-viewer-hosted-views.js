@@ -129,30 +129,23 @@ export function createDocsViewerBuiltInHostedViews() {
       }
     },
     {
-      id: "document-host",
+      id: "rendered-document",
       label: "Document",
-      panel: "document",
+      panel: "main",
       access: "public",
       availability: "available"
     },
     {
       id: "search-results",
       label: "Search results",
-      panel: "document",
+      panel: "main",
       access: "public",
       availability: "available"
     },
     {
       id: "recent-results",
       label: "Recently added",
-      panel: "document",
-      access: "public",
-      availability: "available"
-    },
-    {
-      id: "report-host",
-      label: "Report",
-      panel: "document",
+      panel: "main",
       access: "public",
       availability: "available"
     },

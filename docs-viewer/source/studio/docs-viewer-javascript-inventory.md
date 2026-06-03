@@ -87,13 +87,14 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 34 | 152 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management viewability target workflow helper. |
 | 35 | 153 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, current-key persistence, toggle projection, and document-pane visibility helper. |
 | 36 | 154 | `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index panel chrome renderer and projection applier. |
-| 37 | new | `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned document shell, read-only metadata chrome, and narrow document/search/recent projection applier. |
+| 37 | new | `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned main-view shell, rendered-document metadata chrome, and narrow rendered/search/recent projection applier. |
 | 38 | new | `docs-viewer/runtime/js/docs-viewer-app-context.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route context assembly from route config/access projection and mutable route-context projection. |
-| 39 | new | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned panel projection handoff for index state, current document/search/recent visibility, and the view-state skeleton. |
+| 39 | new | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned panel projection handoff for index state, current main-view visibility, and the view-state skeleton. |
 | 40 | new | `docs-viewer/runtime/js/docs-viewer-route-config.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper. |
 | 41 | new | `docs-viewer/runtime/js/docs-viewer-access.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned static public/manage/manage-local access projection and hosted-view access check. |
 | 42 | new | `docs-viewer/runtime/js/docs-viewer-view-state.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index/document/info view-state skeleton and projection helper. |
 | 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, built-in hosted-view records, availability/access checks, and graceful absence. |
+| 43a | new | `docs-viewer/runtime/js/docs-viewer-main-view-host.js` | 1 | 1 | 1 | 1 | 4 | Main-view switch-intent and availability owner for rendered-document, search-results, and recent-results. |
 | 44 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned info-panel chrome renderer and projection applier. |
 | 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
 | 46 | new | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` | 1 | 1 | 1 | 1 | 4 | Public-safe read-only metadata info hosted view. |
@@ -112,9 +113,11 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; `docs-viewer.js` only initializes that owner before existing route boot and waits for it before management/theme binding.
 - 2026-05-31 owner note: top-bar layout now lives in `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, and viewer toolbar controls live in `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`. The index-view toggle and info/context toggle are viewer-toolbar controls rather than management-action or document-meta controls.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
-- 2026-05-27 owner note: document shell composition moved to `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved document/meta/search-result IDs. The entry module still orchestrates route boot and passes document-shell refs to focused controllers.
+- 2026-06-03 owner note: main-view shell composition now lives in `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`, coordinated by the app shell before runtime controllers read the preserved rendered-document metadata/search-result IDs. The app-shell boundary exposes `mainView` refs rather than `documentShell` refs.
 - 2026-05-27 owner note: route dataset normalization and access flag projection moved to `docs-viewer/runtime/js/docs-viewer-app-context.js`; shell ref grouping moved behind `docs-viewer/runtime/js/docs-viewer-app-shell.js`; panel projection handoff moved to `docs-viewer/runtime/js/docs-viewer-panel-layout.js`. The entry module still owns route boot orchestration, config loading, payload loading, search/recent rendering handoff, bookmark behavior, and lazy management controller loading.
-- 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/document/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
+- 2026-06-03 owner note: route config, view state, and hosted-view records now use the `main` panel and `rendered-document` view id directly. `panels.document` and `document-host` were retired rather than kept as compatibility aliases.
+- 2026-06-03 owner note: main-view switch validation and active-view projection moved to `docs-viewer/runtime/js/docs-viewer-main-view-host.js` for `rendered-document`, `search-results`, and `recent-results`; report-host migration remains deferred.
+- 2026-05-27 owner note: route config resolution moved to `docs-viewer/runtime/js/docs-viewer-route-config.js`, static access projection moved to `docs-viewer/runtime/js/docs-viewer-access.js`, the index/main/info skeleton moved to `docs-viewer/runtime/js/docs-viewer-view-state.js`, and hosted-view registration moved to `docs-viewer/runtime/js/docs-viewer-hosted-views.js`. `docs-viewer.js` instantiates those owners but still does not own their contracts.
 - 2026-05-27 owner note: info-panel chrome moved to `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`, hosted-view lifecycle moved to `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, selected-document context projection moved to `docs-viewer/runtime/js/docs-viewer-view-context.js`, and metadata rendering moved to `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`. `docs-viewer.js` now passes explicit route/viewer inputs into the context helper and wires open/close events, but should not absorb panel DOM composition, lifecycle, context shaping, or metadata presentation.
 - 2026-05-27 owner note: management-only context-menu and modal shell markup moved to `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`, dynamically imported by the app shell only when route access allows management UI. The private app runtime coordinator passes the rendered refs into the lazy management controller after app-shell initialization while management workflows and backend capability checks stay in the management modules.
 - 2026-05-27 owner note: app boot ownership moved to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, and route/document workflow ownership later moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`. `docs-viewer.js` should remain an import-and-start wrapper.
@@ -292,7 +295,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-27 as the app-shell owner for management action-area coordination.
 - Current scope is intentionally narrow: render top-bar layout through `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, render viewer toolbar controls through `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`, render index panel chrome through `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, clear the management toolbar mount, import `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js` only when route intent allows management, and return the rendered surfaces before existing management/theme binding continues.
-- It also renders the document shell through `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved IDs.
+- It also renders the main-view shell through `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved rendered-document/search/recent IDs.
 - It also renders the info panel shell through `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`; lifecycle and metadata presentation stay in the focused info-panel host/view modules.
 - It also clears and renders the management shell mount through `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` only when route access allows management UI.
 - The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
@@ -331,11 +334,17 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the focused renderer for index panel shell chrome.
 - Keep this module limited to rendering the sidebar container, toolbar controls, nav mount, and applying index-panel projection to DOM refs. Do not move tree row rendering, drag/drop behavior, search/recent behavior, or document payload rendering into it.
 
-### `docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js`
+### `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`
 
-- Added 2026-05-27 as the focused renderer for document shell chrome.
-- Keep this module limited to rendering `.docsViewer__main`, read-only metadata chrome, document/search/recent result mounts, and applying the current narrow document/search/recent/results-status projection to DOM refs.
+- Added 2026-06-03 as the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
+- Keep this module limited to rendering `.docsViewer__main`, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
 - Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, bookmark storage, or search/recent result rendering into it.
+
+### `docs-viewer/runtime/js/docs-viewer-main-view-host.js`
+
+- Added 2026-06-03 as the focused main-view switch-intent owner.
+- Keep this module limited to resolving main-view hosted-view availability, projecting active main-view state through panel layout, and accepting switch requests for built-in main views.
+- Do not add source-editor service details, report migration behavior, arbitrary module loading, plugin behavior, or rendered-document/search/recent rendering into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-app-context.js`
 

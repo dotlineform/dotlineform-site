@@ -10,7 +10,7 @@ import {
   listDocsViewerHostedViewsForPanel
 } from "./docs-viewer-hosted-views.js";
 import {
-  renderDocsViewerAppShellDocumentState,
+  renderDocsViewerAppShellMainViewState,
   renderDocsViewerAppShellIndexViewToggleState,
   renderDocsViewerAppShellInfoPanelState,
   renderDocsViewerAppShellIndexPanelState,
@@ -42,7 +42,7 @@ export function createDocsViewerPanelLayout(options) {
   var storage = settings.storage || null;
   var indexPanelRefs = settings.indexPanelRefs || {};
   var indexViewToggleRefs = settings.indexViewToggleRefs || {};
-  var documentShellRefs = settings.documentShellRefs || {};
+  var mainViewRefs = settings.mainViewRefs || {};
   var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var hostedViewRegistry = settings.hostedViewRegistry || null;
@@ -64,6 +64,20 @@ export function createDocsViewerPanelLayout(options) {
     return indexViews().filter(function (view) {
       return view.available !== false;
     });
+  }
+
+  function mainViews() {
+    return listDocsViewerHostedViewsForPanel(hostedViewRegistry, "main");
+  }
+
+  function availableMainViews() {
+    return mainViews().filter(function (view) {
+      return view.available !== false;
+    });
+  }
+
+  function fallbackMainView() {
+    return availableMainViews()[0] || null;
   }
 
   function fallbackIndexView() {
@@ -211,9 +225,9 @@ export function createDocsViewerPanelLayout(options) {
     return indexPanelState;
   }
 
-  function projectDocumentShell(projection) {
-    renderDocsViewerAppShellDocumentState({
-      refs: documentShellRefs,
+  function projectMainView(projection) {
+    renderDocsViewerAppShellMainViewState({
+      refs: mainViewRefs,
       projection: projection || {}
     });
     renderDocsViewerAppShellViewerToolbarState({
@@ -264,14 +278,29 @@ export function createDocsViewerPanelLayout(options) {
     return resolved.view;
   }
 
+  function setActiveMainView(viewId) {
+    var targetViewId = String(viewId || "").trim();
+    var resolved = hostedViewRegistry && typeof hostedViewRegistry.resolve === "function"
+      ? hostedViewRegistry.resolve(targetViewId)
+      : null;
+    if (!resolved || !resolved.view) {
+      return fallbackMainView();
+    }
+    viewState = updateDocsViewerViewState(viewState, {
+      mainViewId: resolved.view.id
+    });
+    return resolved.view;
+  }
+
   return {
     expandIndexPanelState: expandIndexPanelState,
     indexPanelState: function () { return indexPanelState; },
     projectInfoPanel: projectInfoPanel,
-    projectDocumentShell: projectDocumentShell,
+    projectMainView: projectMainView,
     projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,
     setActiveIndexView: setActiveIndexView,
+    setActiveMainView: setActiveMainView,
     setStorageScope: setStorageScope,
     toggleIndexPanelState: toggleIndexPanelState
   };

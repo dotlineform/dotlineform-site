@@ -2,7 +2,7 @@
 doc_id: docs-viewer-toolbar-model
 title: Toolbar Model
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 parent_id: docs-viewer
 viewable: true
 ---
@@ -20,7 +20,7 @@ The model is:
 - top bar: layout container for top-level toolbar groups
 - viewer toolbar: read, navigation, search, and layout/context controls
 - manage toolbar: management, write, and admin controls
-- document toolbar: controls for the current selected document
+- main-view toolbar: controls for the active central-panel view
 - context panel toolbar: view switching inside the context/info panel
 
 ## Top Bar
@@ -72,17 +72,20 @@ Its presence must still depend on route access and management UI availability.
 
 Owner: `docs-viewer-manage-toolbar-renderer.js`
 
-## Document Toolbar
+## Main-View Toolbar
 
-The document toolbar owns controls for the current selected document.
+The main-view toolbar owns controls for the active central-panel view.
+When the active view is `rendered-document`, it can contain document-specific controls.
 
 Example controls:
 
+- breadcrumbs and updated date for `rendered-document`
 - bookmark toggle
 - document status pills
-- future document-specific actions that are not global viewer layout controls
+- future `Edit` action that requests `markdown-source`
+- future editor actions such as `Rebuild doc` and cancel/back when the editor view is active
 
-Owner: `docs-viewer-document-toolbar-renderer.js`
+Target owner: main-view toolbar projection through the main-view host and renderer.
 
 ## Context Panel Toolbar
 
@@ -110,5 +113,7 @@ Target owner:
 Use:
 
 - "context panel" when describing the broader role. The current implementation may keep `infoPanel` names until a focused rename is worth the churn.
+- "main view" for the central panel that can host rendered documents, search results, recent results, and future editor views.
+- "document" only when the active view or controller specifically owns rendered document payload behavior.
 - "toolbar" only when referring to one of the named toolbar surfaces in this document.
 - "row" for layout only, not for ownership.

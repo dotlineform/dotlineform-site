@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-markdown-editor
 title: Docs Viewer Markdown Editor Request
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -73,11 +73,12 @@ Docs Viewer should not build its own operation history for this slice.
 
 ## Product Model
 
-The Markdown editor is a manage-mode document-panel view.
+The Markdown editor is a manage-mode main-view hosted view.
+It is acceptable for user-facing copy to say document panel when the active view is a rendered document, but the internal architecture uses main-view terminology for the central panel.
 
-Initial document panel views:
+Initial main-view views:
 
-- `rendered`: existing generated document payload view
+- `rendered-document`: existing generated document payload view
 - `markdown-source`: manage-only editable Markdown source view
 
 The source view should expose:
@@ -93,7 +94,7 @@ The action should be named `Rebuild doc`, not `Save`, because the commit point w
 ## Workflow
 
 1. User opens a document in `/docs/?mode=manage`.
-2. User clicks a `Markdown source` or equivalent document-panel view control.
+2. User clicks a `Markdown source` or equivalent main-view control.
 3. Viewer requests the current source Markdown and source revision token.
 4. Viewer displays the source in an editable source view.
 5. User edits source normally.
@@ -101,7 +102,7 @@ The action should be named `Rebuild doc`, not `Save`, because the commit point w
 7. Frontend sends the full edited source plus source revision token once.
 8. Backend checks the revision token, parses and validates front matter/source metadata, writes the source, and runs a targeted rebuild.
 9. Viewer reloads the generated document payload.
-10. Document panel switches back to rendered view.
+10. Main view switches back to rendered document view.
 11. Viewer shows rebuild warnings or errors.
 
 ## Source And Backend Boundary
@@ -189,7 +190,7 @@ That risk is comparable to editing the source file directly.
 
 ## Relationship To Panel And App-Shell Work
 
-This request can be implemented as a manage-only document panel view.
+This request can be implemented as a manage-only main-view hosted view.
 
 It should align with:
 

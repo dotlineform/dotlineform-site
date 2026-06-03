@@ -34,6 +34,9 @@ import {
   createDocsViewerInfoPanelController
 } from "./docs-viewer-info-panel-controller.js";
 import {
+  createDocsViewerMainViewHost
+} from "./docs-viewer-main-view-host.js";
+import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
@@ -58,24 +61,24 @@ export function startDocsViewerRuntime(options) {
   var indexViewToggle = viewerToolbarRefs.indexViewToggle;
   var sidebarToggle = indexPanelRefs.sidebarToggle;
   var sidebarExpand = indexPanelRefs.sidebarExpand;
-  var documentShellRefs = appShellRefs.documentShell;
+  var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
   var status = appShellRefs.status;
-  var meta = documentShellRefs.meta;
-  var pathEl = documentShellRefs.pathEl;
-  var updatedEl = documentShellRefs.updatedEl;
-  var summaryEl = documentShellRefs.summaryEl;
+  var meta = mainViewRefs.meta;
+  var pathEl = mainViewRefs.pathEl;
+  var updatedEl = mainViewRefs.updatedEl;
+  var summaryEl = mainViewRefs.summaryEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
   var infoToggle = viewerToolbarRefs.infoToggle;
-  var bookmarkToggle = documentShellRefs.bookmarkToggle;
-  var statusPills = documentShellRefs.statusPills;
-  var content = documentShellRefs.content;
+  var bookmarkToggle = mainViewRefs.bookmarkToggle;
+  var statusPills = mainViewRefs.statusPills;
+  var content = mainViewRefs.content;
   var scopeSelect = appShellRefs.headerControls.scopeSelect;
   var recentButton = appShellRefs.headerControls.recentButton;
   var searchInput = appShellRefs.headerControls.searchInput;
-  var resultsStatus = documentShellRefs.resultsStatus;
-  var results = documentShellRefs.results;
-  var more = documentShellRefs.more;
+  var resultsStatus = mainViewRefs.resultsStatus;
+  var results = mainViewRefs.results;
+  var more = mainViewRefs.more;
 
   var allowManagement = routeContext.access.allowManagement;
   var allowScopeQuery = routeContext.access.allowScopeQuery;
@@ -122,12 +125,21 @@ export function startDocsViewerRuntime(options) {
   var routeWorkflow = null;
   var documentIndex = null;
   var infoPanelController = null;
+  var mainViewHost = null;
 
   var appSession = composition.appSession;
   var state = appSession.state;
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
+  mainViewHost = createDocsViewerMainViewHost({
+    defaultViewId: "rendered-document",
+    panelLayout: panelLayout,
+    projectViewState: function () { return panelLayout.projectViewState(); },
+    registry: hostedViewRegistry,
+    showWarning: setStatus,
+    updatePanelViewState: function (viewState) { appSession.domains.panelView.viewState = viewState; }
+  });
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
     documentIndex: appSession.domains.documentIndex,
@@ -150,7 +162,7 @@ export function startDocsViewerRuntime(options) {
     documentIndex: appSession.domains.documentIndex,
     infoToggle: infoToggle,
     panelView: appSession.domains.panelView,
-    projectDocumentShell: projectDocumentShell,
+    projectMainView: projectMainView,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: infoPanelRefs,
@@ -172,7 +184,7 @@ export function startDocsViewerRuntime(options) {
     managementBaseUrl: function () { return managementBaseUrl; },
     meta: meta,
     more: more,
-    projectDocumentShell: projectDocumentShell,
+    projectDocumentShell: projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,
     renderBookmarkUi: renderBookmarkUi,
     renderManagementUi: renderManagementUi,
@@ -541,15 +553,15 @@ export function startDocsViewerRuntime(options) {
   }
 
   function clearResultsStatus() {
-    projectDocumentShell({
+    projectMainView({
       resultsStatusText: "",
       resultsStatusHidden: true,
       resultsStatusError: false
     });
   }
 
-  function projectDocumentShell(projection) {
-    panelLayout.projectDocumentShell(projection || {});
+  function projectMainView(projection) {
+    panelLayout.projectMainView(projection || {});
   }
 
   function syncBusyState() {
@@ -613,25 +625,34 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hideDocPane() {
-    documentController.hideDocPane();
+    mainViewHost.requestView("rendered-document", {
+      onAccepted: function () { documentController.hideDocPane(); }
+    });
     updateInfoPanel();
   }
 
   function showDocPane() {
-    documentController.showDocPane();
+    mainViewHost.requestView("rendered-document", {
+      onAccepted: function () { documentController.showDocPane(); }
+    });
   }
 
   function showSearchPane() {
-    documentController.showSearchPane();
+    mainViewHost.requestView("search-results", {
+      onAccepted: function () { documentController.showSearchPane(); }
+    });
     updateInfoPanel();
   }
 
   function showRecentPane() {
-    documentController.showRecentPane();
+    mainViewHost.requestView("recent-results", {
+      onAccepted: function () { documentController.showRecentPane(); }
+    });
     updateInfoPanel();
   }
 
   function renderPayload(doc, payload, hash) {
+    mainViewHost.requestView("rendered-document", { warn: false });
     documentController.renderPayload(doc, payload, hash);
     updateInfoPanel();
   }
@@ -644,16 +665,19 @@ export function startDocsViewerRuntime(options) {
   }
 
   function handleMissingDoc() {
+    mainViewHost.requestView("rendered-document", { warn: false });
     documentController.handleMissingDoc();
     updateInfoPanel();
   }
 
   function renderDocLoadingState(doc) {
+    mainViewHost.requestView("rendered-document", { warn: false });
     documentController.renderDocLoadingState(doc);
     updateInfoPanel();
   }
 
   function handlePayloadError(error) {
+    mainViewHost.requestView("rendered-document", { warn: false });
     documentController.handlePayloadError(error);
     updateInfoPanel();
   }

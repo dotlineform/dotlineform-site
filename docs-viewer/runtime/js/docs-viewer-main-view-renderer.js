@@ -1,18 +1,19 @@
-const DOCUMENT_SHELL_MOUNT_SELECTOR = "[data-docs-viewer-document-shell-mount]";
+const MAIN_VIEW_MOUNT_SELECTOR = "[data-docs-viewer-main-view-mount]";
 
-export function documentShellMount(root) {
+export function mainViewMount(root) {
   if (!root) return null;
-  return root.querySelector(DOCUMENT_SHELL_MOUNT_SELECTOR);
+  return root.querySelector(MAIN_VIEW_MOUNT_SELECTOR);
 }
 
-export function renderDocsViewerDocumentShell(options = {}) {
+export function renderDocsViewerMainView(options = {}) {
   const documentRef = options.document || document;
   const mount = options.mount || null;
-  if (!mount) return findDocsViewerDocumentShellRefs({ document: documentRef, root: options.root });
+  if (!mount) return findDocsViewerMainViewRefs({ document: documentRef, root: options.root });
 
   const main = documentRef.createElement("article");
   main.className = "docsViewer__main";
   main.setAttribute("aria-live", "polite");
+  main.setAttribute("data-docs-viewer-panel", "main");
 
   const meta = documentRef.createElement("div");
   meta.className = "docsViewer__meta";
@@ -73,10 +74,10 @@ export function renderDocsViewerDocumentShell(options = {}) {
   main.append(meta, content, resultsStatus, results, more);
   mount.replaceChildren(main);
 
-  return findDocsViewerDocumentShellRefs({ document: documentRef, root: mount });
+  return findDocsViewerMainViewRefs({ document: documentRef, root: mount });
 }
 
-export function findDocsViewerDocumentShellRefs(options = {}) {
+export function findDocsViewerMainViewRefs(options = {}) {
   const documentRef = options.document || document;
   const root = options.root || documentRef;
   return {
@@ -94,7 +95,7 @@ export function findDocsViewerDocumentShellRefs(options = {}) {
   };
 }
 
-export function applyDocsViewerDocumentShellProjection(options = {}) {
+export function applyDocsViewerMainViewProjection(options = {}) {
   const refs = options.refs || {};
   const projection = options.projection || {};
 
