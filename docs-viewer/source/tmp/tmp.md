@@ -13,11 +13,20 @@ semantic references:
 - registry: defines what they are, what they can do, who they involve (like tag registry)
 - assignments: what actual relationships have been defined (like tag assignments)
 
+a lot of this is already in the request docs, just needs tidying up. see also chatgpt notes - need to import them
+
 
 ---
 
-we are working on docs-viewer/source/studio/site-request-docs-viewer-markdown-editor.md
-please proceed with the tasks
+
+
+
+
+---
+
+split out css to separate view-specific files. css is only loaded when a view first needs it.
+this keeps the css modular and easier to maintain.
+do you agree this is a sensible approach?
 
 
 

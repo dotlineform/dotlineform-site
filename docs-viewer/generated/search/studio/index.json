@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7bdef16343c2737573a66ad1354efa84",
-    "generated_at_utc": "2026-06-03T18:36:39Z",
-    "count": 242
+    "version": "blake2b-d26c4b83ac672cc498bf4cfa7819a66c",
+    "generated_at_utc": "2026-06-03T21:09:31Z",
+    "count": 244
   },
   "entries": [
     {
@@ -1131,6 +1131,35 @@
       "search_text": "site-request-catalogue-work-unified-editor site request catalogue work unified editor catalogue work unified editor request change requests change requests 2026-05-02 2026 05 02"
     },
     {
+      "id": "site-request-data-sharing-docs-internal-index",
+      "kind": "doc",
+      "title": "Data Sharing Docs Internal Index Request",
+      "href": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index",
+      "last_updated": "2026-06-03",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-03 • Change Requests",
+      "search_terms": [
+        "site-request-data-sharing-docs-internal-index",
+        "site",
+        "request",
+        "data",
+        "sharing",
+        "docs",
+        "internal",
+        "index",
+        "data sharing docs internal index request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-03",
+        "2026",
+        "06",
+        "03"
+      ],
+      "search_text": "site-request-data-sharing-docs-internal-index site request data sharing docs internal index data sharing docs internal index request change requests change requests 2026-06-03 2026 06 03"
+    },
+    {
       "id": "site-request-docs-semantic-references-v2",
       "kind": "doc",
       "title": "Docs Semantic References v2 Request",
@@ -1354,6 +1383,35 @@
         "02"
       ],
       "search_text": "site-request-docs-viewer-multi-panel-app-shell site request docs viewer multi panel app shell docs viewer multi-panel app shell request change requests change requests 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "site-request-docs-viewer-public-index-slimming",
+      "kind": "doc",
+      "title": "Docs Viewer Public Index Slimming Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
+      "last_updated": "2026-06-03",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-03 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-public-index-slimming",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "index",
+        "slimming",
+        "docs viewer public index slimming request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-03",
+        "2026",
+        "06",
+        "03"
+      ],
+      "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-03 2026 06 03"
     },
     {
       "id": "site-request-docs-viewer-runtime-risk-reduction",
