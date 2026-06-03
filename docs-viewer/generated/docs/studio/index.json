@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T20:12:52Z",
+  "generated_at": "2026-06-03T20:47:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -615,7 +615,7 @@
       "parent_id": "site-request-docs-viewer-markdown-editor",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work-tasks.json",
-      "content_text_length": 15895
+      "content_text_length": 15842
     },
     {
       "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
@@ -2498,7 +2498,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json",
-      "content_text_length": 8873
+      "content_text_length": 9249
     },
     {
       "doc_id": "testing-pytest",

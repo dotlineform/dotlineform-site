@@ -66,7 +66,7 @@ Use the smallest checks that match each implementation slice.
 
 Codex sandbox note: local service, browser, and temporary localhost checks may need elevated permissions even when the product code is healthy.
 
-Closeout note: do not treat `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` as required local verification for this pre-editor work. Public desktop/mobile deploy validation is expected to move to GitHub Actions soon, making this local public-site smoke redundant. Until that deploy smoke exists, use focused module smoke plus targeted runtime checks for pre-editor slices unless the change specifically touches public route generation or deploy behavior.
+Superseded closeout note, 2026-06-03: shared Docs Viewer runtime or management-boundary changes must verify the public read-only artifact path with `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` against a fresh temporary Jekyll build. Focused module smokes alone can miss public-build exclusions because the source tree still serves management-only modules.
 
 ### general steer
 
@@ -136,7 +136,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 - Durable decisions have moved to the owning Docs Viewer docs, especially panel hosts, runtime boundary, toolbar model, and JavaScript inventory.
 - The Markdown editor request can proceed against the stable main-view host boundary: `markdown-source` should replace the disabled manage-only placeholder, consume the explicit main-view module context, and use host-mediated switch intents rather than URL state or management-controller reach-through.
 - Report-host migration remains deferred. Reports stay on the existing document payload/report path until a future requirement needs shared main-view lifecycle or toolbar behavior.
-- Public desktop/mobile route coverage is not required through `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` for this closeout. Use focused module smoke plus targeted runtime checks for pre-editor slices until deploy validation replaces the old local public-site smoke.
+- Superseded, 2026-06-03: public desktop/mobile route coverage through `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` is required when shared runtime, route shell, public config, or management-only module boundaries change. Run it against a fresh temporary Jekyll build, not the repo root or a stale `_site` output.
 - This tracker and the temporary pre-editor request can be deleted once the Markdown editor work has absorbed these implementation steers or the user confirms the temporary planning docs are no longer needed.
 
 ## Verification Log

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import sys
 import tempfile
 
@@ -19,9 +20,58 @@ if str(DOCS_SERVICE_DIR) not in sys.path:
 import docs_viewer_service  # noqa: E402
 
 
+STATIC_IMPORT_PATTERN = re.compile(
+    r"(?:import|export)\s+(?:(?:[^'\"]+?)\s+from\s+)?[\"']([^\"']+)[\"']",
+    re.DOTALL,
+)
+
+
 def write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def jekyll_excludes(repo_root: Path) -> set[str]:
+    excludes: set[str] = set()
+    in_exclude = False
+    for line in (repo_root / "_config.yml").read_text(encoding="utf-8").splitlines():
+        if line == "exclude:":
+            in_exclude = True
+            continue
+        if in_exclude and line and not line.startswith("  "):
+            break
+        if in_exclude and line.startswith("  - "):
+            excludes.add(line.removeprefix("  - ").strip())
+    return excludes
+
+
+def static_module_imports(path: Path) -> list[str]:
+    return [match.group(1) for match in STATIC_IMPORT_PATTERN.finditer(path.read_text(encoding="utf-8"))]
+
+
+def public_entry_static_import_graph(repo_root: Path, entry: Path) -> set[Path]:
+    visited: set[Path] = set()
+    pending = [entry]
+    while pending:
+        current = pending.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+        for specifier in static_module_imports(current):
+            if not specifier.startswith("."):
+                continue
+            target = (current.parent / specifier).resolve()
+            if target.suffix:
+                module_path = target
+            else:
+                module_path = target.with_suffix(".js")
+            try:
+                module_path.relative_to(repo_root)
+            except ValueError:
+                continue
+            if module_path.exists() and module_path not in visited:
+                pending.append(module_path)
+    return visited
 
 
 def test_load_service_config_reads_static_site_env() -> None:
@@ -62,6 +112,19 @@ def test_load_service_config_reads_static_site_env() -> None:
     assert config.management_enabled is True
     assert config.generated_reads_enabled is False
     assert config.watch_enabled is False
+
+
+def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer.js"
+    graph = public_entry_static_import_graph(REPO_ROOT, entry)
+    excluded = jekyll_excludes(REPO_ROOT)
+    blocked = sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in graph
+        if path.relative_to(REPO_ROOT).as_posix() in excluded
+    )
+
+    assert blocked == []
 
 
 @pytest.mark.parametrize(

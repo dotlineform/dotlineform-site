@@ -40,10 +40,6 @@ import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
-  readManagedDocSource,
-  rebuildManagedDocSource
-} from "./docs-viewer-management-client.js";
-import {
   DOCS_VIEWER_RUNTIME_DEFAULTS,
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
@@ -532,12 +528,19 @@ export function startDocsViewerRuntime(options) {
   }
 
   function sourceEditorServices() {
+    function managementClient() {
+      return import("./docs-viewer-management-client.js");
+    }
     return {
       readSource: function (docId) {
-        return readManagedDocSource(docId, sourceEditorClientOptions());
+        return managementClient().then(function (module) {
+          return module.readManagedDocSource(docId, sourceEditorClientOptions());
+        });
       },
       rebuildSource: function (payload) {
-        return rebuildManagedDocSource(payload, sourceEditorClientOptions());
+        return managementClient().then(function (module) {
+          return module.rebuildManagedDocSource(payload, sourceEditorClientOptions());
+        });
       },
       reloadRenderedDoc: function (docId) {
         return reloadGeneratedDoc(docId);

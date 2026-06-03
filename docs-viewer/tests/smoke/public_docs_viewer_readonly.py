@@ -32,15 +32,32 @@ def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
 
 
-def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeout_ms: int, viewport: dict[str, int]) -> None:
-    page.set_viewport_size(viewport)
-    page.goto(route_url(base_url, route), wait_until="domcontentloaded")
+def wait_for_rendered_doc(page, doc_id: str, title: str, timeout_ms: int) -> None:
     page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
     page.wait_for_function(
-        """docId => document.querySelector("#docsViewerContent h1")?.id === docId""",
+        """expected => document.querySelector("#docsViewerContent h1")?.textContent.trim() === expected""",
+        arg=title,
+        timeout=timeout_ms,
+    )
+    page.wait_for_function(
+        """docId => document.querySelector(".docsViewer__navLink.is-active")?.dataset.docId === docId""",
         arg=doc_id,
         timeout=timeout_ms,
     )
+
+
+def assert_info_panel_route(
+    page,
+    base_url: str,
+    route: str,
+    doc_id: str,
+    title: str,
+    timeout_ms: int,
+    viewport: dict[str, int],
+) -> None:
+    page.set_viewport_size(viewport)
+    page.goto(route_url(base_url, route), wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, doc_id, title, timeout_ms)
     initial_url = page.url
     page.locator("#docsViewerInfoToggle").click()
     page.wait_for_selector("#docsViewerInfoPanel:not([hidden])", timeout=timeout_ms)
@@ -53,7 +70,7 @@ def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeou
         """root => ({
             infoPanelState: root.dataset.infoPanelState || "",
             layout: root.dataset.viewerLayout || "",
-            selectedHeading: document.querySelector("#docsViewerContent h1")?.id || "",
+            selectedHeading: document.querySelector("#docsViewerContent h1")?.textContent.trim() || "",
             panelTitle: document.querySelector(".docsViewer__metadataInfoTitle")?.textContent || "",
             docIdValue: document.querySelector(".docsViewer__metadataInfoIdValue")?.textContent || "",
             routeHref: document.querySelector(".docsViewer__metadataInfoRow a")?.getAttribute("href") || "",
@@ -73,7 +90,7 @@ def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeou
         raise AssertionError(f"{route} info panel changed URL: {initial_url!r} -> {page.url!r}")
     if state["infoPanelState"] != "open" or state["toggleExpanded"] != "true":
         raise AssertionError(f"{route} info panel did not open: {state!r}")
-    if state["selectedHeading"] != doc_id or state["docIdValue"] != doc_id:
+    if state["selectedHeading"] != title or state["docIdValue"] != doc_id:
         raise AssertionError(f"{route} info panel lost selected document context: {state!r}")
     if not state["panelTitle"] or not state["routeHref"]:
         raise AssertionError(f"{route} info panel omitted metadata title/link: {state!r}")
@@ -90,10 +107,10 @@ def assert_info_panel_route(page, base_url: str, route: str, doc_id: str, timeou
         """root => ({
             infoPanelState: root.dataset.infoPanelState || "",
             toggleExpanded: document.querySelector("#docsViewerInfoToggle")?.getAttribute("aria-expanded") || "",
-            selectedHeading: document.querySelector("#docsViewerContent h1")?.id || ""
+            selectedHeading: document.querySelector("#docsViewerContent h1")?.textContent.trim() || ""
         })"""
     )
-    if closed != {"infoPanelState": "closed", "toggleExpanded": "false", "selectedHeading": doc_id}:
+    if closed != {"infoPanelState": "closed", "toggleExpanded": "false", "selectedHeading": title}:
         raise AssertionError(f"{route} info panel did not close cleanly: {closed!r}")
 
 
@@ -109,16 +126,21 @@ def main() -> int:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
             errors: list[str] = []
+            request_failures: list[str] = []
+            http_failures: list[str] = []
             page.on("pageerror", lambda exc: errors.append(str(exc)))
+            page.on("requestfailed", lambda request: request_failures.append(f"{request.url}: {request.failure}"))
+            page.on(
+                "response",
+                lambda response: http_failures.append(f"{response.status}: {response.url}") if response.status >= 400 else None,
+            )
 
-            for route, doc_id in [("/library/?doc=library", "library"), ("/analysis/?doc=analysis", "analysis")]:
+            for route, doc_id, title in [
+                ("/library/?doc=library", "library", "Library"),
+                ("/analysis/?doc=analysis", "analysis", "Analysis"),
+            ]:
                 page.goto(route_url(base_url, route), wait_until="domcontentloaded")
-                page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=args.timeout_ms)
-                page.wait_for_function(
-                    """docId => document.querySelector("#docsViewerContent h1")?.id === docId""",
-                    arg=doc_id,
-                    timeout=args.timeout_ms,
-                )
+                wait_for_rendered_doc(page, doc_id, title, args.timeout_ms)
                 root_attrs = page.locator("#docsViewerRoot").evaluate(
                     """async root => {
                         const routeConfigUrl = root.dataset.routeConfigUrl || "";
@@ -187,6 +209,7 @@ def main() -> int:
                     base_url,
                     route,
                     doc_id,
+                    title,
                     args.timeout_ms,
                     {"width": 1280, "height": 900},
                 )
@@ -195,6 +218,7 @@ def main() -> int:
                     base_url,
                     route,
                     doc_id,
+                    title,
                     args.timeout_ms,
                     {"width": 390, "height": 780},
                 )
@@ -202,6 +226,10 @@ def main() -> int:
             browser.close()
             if errors:
                 raise AssertionError(f"page errors during public Docs Viewer read-only smoke: {errors!r}")
+            if request_failures:
+                raise AssertionError(f"request failures during public Docs Viewer read-only smoke: {request_failures!r}")
+            if http_failures:
+                raise AssertionError(f"HTTP failures during public Docs Viewer read-only smoke: {http_failures!r}")
         print(f"public Docs Viewer read-only OK: {base_url}/library/ and {base_url}/analysis/")
         return 0
     finally:
