@@ -1,5 +1,8 @@
 ## General behaviour
 
+- compatibility aliases as prohibited unless justified before implementation with removal criteria.
+- if you find any compatibility layers during new feature development, report and fix immediately if non-trivial.
+- tests and documents are not contracts to be used when deciding how or if to implement new code. the tests and documents should always follow the current development objectives and principles, not become blockers or reasons to change approach unless called out and agreed.
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - code changes: summarise the intended change set and ask for confirmation before editing code unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
