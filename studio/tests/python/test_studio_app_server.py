@@ -97,6 +97,19 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "external_links" not in payload
     assert "catalogue" not in payload
     assert set(runtime["data_paths"]) == {"studio", "ui_text"}
+    assert set(runtime["data_paths"]["studio"]) == {
+        "catalogue_works",
+        "catalogue_work_details",
+        "catalogue_series",
+        "catalogue_moments",
+        "catalogue_lookup_work_search",
+        "catalogue_lookup_series_search",
+        "catalogue_lookup_work_detail_search",
+        "catalogue_lookup_work_base",
+        "catalogue_lookup_work_detail_base",
+        "catalogue_lookup_series_base",
+        "catalogue_field_registry",
+    }
     assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"

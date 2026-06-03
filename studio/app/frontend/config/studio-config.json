@@ -125,7 +125,6 @@
   "paths": {
     "data": {
       "studio": {
-        "activity_log": "/studio/data/generated/activity/activity-log.json",
         "catalogue_works": "/studio/data/canonical/catalogue/works.json",
         "catalogue_work_details": "/studio/data/canonical/catalogue/work_details.json",
         "catalogue_series": "/studio/data/canonical/catalogue/series.json",

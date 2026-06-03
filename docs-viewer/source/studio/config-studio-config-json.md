@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -97,10 +97,17 @@ Validation catches:
 ### `paths.data.studio`
 
 Studio data-path lookup.
-The current primary use is catalogue static fallback data, catalogue lookup payloads, activity log data, and `catalogue_field_registry`.
+The current keys are active browser static fallback or config-file read inputs:
+
+- `catalogue_works`, `catalogue_work_details`, `catalogue_series`, and `catalogue_moments`: canonical catalogue source fallback reads used when the Local Studio catalogue API is unavailable
+- `catalogue_lookup_work_search`, `catalogue_lookup_series_search`, and `catalogue_lookup_work_detail_search`: generated lookup search fallback payloads for catalogue editor modals
+- `catalogue_lookup_work_base`, `catalogue_lookup_series_base`, and `catalogue_lookup_work_detail_base`: generated lookup record fallback bases for opening catalogue editor records
+- `catalogue_field_registry`: field-registry review UI input and the current service resolver path for catalogue field build planning
 
 Server-backed catalogue reads should prefer the Local Studio catalogue API when available.
 Static paths are fallback/runtime asset paths, not write contracts.
+The Studio activity route reads `activity_log` through the Local Studio catalogue API, so `paths.data.studio.activity_log` is not exposed as a browser fallback path.
+Do not add source-write targets, adapter contracts, generated metadata payloads, or inactive build outputs here.
 `catalogue_lookup_meta` is not exposed because no active Local Studio route consumes the generated lookup metadata payload.
 
 ### `paths.data.ui_text`
@@ -117,9 +124,12 @@ Completed cleanup:
 - unused `studio-config.js` helper exports for site data, Docs scope data, search scope indexes, and search policy paths have been removed
 - public moment URL construction now lives with the public catalogue link helper instead of generic Studio route lookup
 - focused tests assert that runtime `data_paths` exposes only `studio` and `ui_text`
+- focused tests assert the active `paths.data.studio` key set so this browser-facing surface does not widen silently
 - unused `paths.data.ui_text.site_series_index` and its orphaned `site-series-index.json` bundle have been removed
 - unused `paths.data.studio.catalogue_lookup_meta` has been removed
+- unused `paths.data.studio.activity_log` has been removed; `activity_log` remains an active catalogue API read key, not a Studio config path
 - `catalogue.series_type_options` has been removed from broad Studio bootstrap config; the Series editor owns its current option list in `catalogue-series-fields.js`
+- the 2026-06-03 `paths.data.studio` review retained the catalogue source fallback reads, generated lookup fallback reads, and `catalogue_field_registry` because active call sites still consume those browser read paths
 
 Recommended verification for the cleanup pass:
 
