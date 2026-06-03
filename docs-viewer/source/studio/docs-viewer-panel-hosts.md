@@ -118,7 +118,7 @@ Improvement needed:
 
 `docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in and repo-owned hosted views.
 Built-in records currently include `index-tree`, `rendered-document`, `search-results`, `recent-results`, and `metadata-info`.
-Repo-owned main-view records currently include the manage-only disabled `markdown-source` placeholder.
+Repo-owned main-view records currently include the manage-only `markdown-source` source editor.
 `createDocsViewerDefaultHostedViews()` is the code-owned default registration surface.
 `createDocsViewerRouteHostedViews(...)` admits route-config records only as non-reserved metadata records, strips `module` strings, and prevents route config from overriding built-in or repo-owned ids.
 
@@ -129,7 +129,7 @@ Current limitation:
 
 Improvement needed:
 
-- finish the main-view hosted-view lifecycle before adding source editor or richer main-view modules
+- keep the main-view lifecycle boundary stable as richer main-view modules are added
 - keep this as repo module hosting, not a plugin system
 
 ### Selected-Document Hosted-View Context
@@ -245,7 +245,7 @@ Current lifecycle implementation:
 - info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
 - `metadata-info` is the only real mounted hosted-view module
 - index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
-- main-view hosted-view records exist for `rendered-document`, `search-results`, `recent-results`, and disabled manage-only `markdown-source`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
+- main-view hosted-view records exist for `rendered-document`, `search-results`, `recent-results`, and manage-only `markdown-source`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
 - `report-host` is not part of the main-view migration yet
 
 The implemented lifecycle shape for info-panel hosted views is:
@@ -260,10 +260,9 @@ dispose(context)
 
 The context currently contains the `mount` element plus selected-document and route/scope metadata.
 
-What still needs implementation:
+Current follow-up needs:
 
-- a full main-view hosted-view lifecycle that can mount independent main-view modules without breaking current rendered-document/search/recent route behavior
-- a concrete source-editor module implementation that turns the code-owned `markdown-source` placeholder from disabled to available
+- keep independently mounted main-view modules from breaking current rendered-document/search/recent route behavior
 - toolbar/view-switching projection for main and info panels when more than one view is available
 - a data/context contract for each new info or main-view hosted view before adding the view
 
@@ -362,11 +361,11 @@ Current state:
 - rendered-document, search, and recent are represented as main-view hosted-view records and active main-view state
 - actual rendering still flows through existing document, search, recent, and report controllers
 - `docs-viewer-main-view-host.js` owns switch validation, active main-view projection, toolbar projection, unavailable warnings, and explicit main-view module context creation
-- there is no full main-view mounted-module lifecycle equivalent to `docs-viewer-info-panel-host.js`
+- the manage-only `markdown-source` module mounts through the main-view host while existing rendered/search/recent views continue to use their controllers
 
 What this means:
 
-- a future source editor should replace the disabled manage-only `markdown-source` placeholder and use the explicit main-view module context
+- source-editor service access stays behind explicit manage-capable main-view context construction
 - route state for rendered documents, search, and recent should remain stable while independently mounted main-view modules are added
 - reports remain on the existing document payload/report path until a future requirement needs shared main-view lifecycle or toolbar behavior
 
@@ -378,12 +377,13 @@ Request owner:
 
 Current state:
 
-- no source editor is implemented
-- source read/write/rebuild endpoints and revision checks are not part of the panel host
+- `markdown-source` is implemented as a manage-only main-view hosted module under `docs-viewer/runtime/js/modules/source-editor/`
+- the editor reads and writes only the Markdown body, preserving existing front matter
+- source read/write/rebuild endpoints and revision checks are backend-owned and are not part of the panel host
 
 What this means:
 
-- source editing should be implemented as a manage-only main-view hosted view by replacing the disabled `markdown-source` placeholder
+- source editing stays a manage-only hosted view and must not become public route UI
 - source writes must remain backend-owned
 
 Request owner:

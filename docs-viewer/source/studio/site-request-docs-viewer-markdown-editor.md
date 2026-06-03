@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-markdown-editor
 title: Docs Viewer Markdown Editor Request
 added_date: 2026-06-02
 last_updated: 2026-06-03
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 - prerequisite for [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
 - implementation tracker: [Docs Viewer Markdown Editor Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor-tasks)
 

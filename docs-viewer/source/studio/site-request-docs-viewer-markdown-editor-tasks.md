@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-markdown-editor-tasks
 title: Docs Viewer Markdown Editor Tasks
 added_date: 2026-06-03
 last_updated: 2026-06-03
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-markdown-editor
 viewable: true
 ---
@@ -16,6 +16,13 @@ When the work is complete, move durable architecture notes into the owning Docs 
 ## Status
 
 ### just done
+
+- Reviewed the current implementation after the previous session and corrected stale task/test/docs state:
+  - confirmed the source-editor backend and frontend implementation already covered items 1-11
+  - updated stale app-shell smoke expectations for the now-available manage-only `markdown-source` view and `Markdown source` Actions item
+  - added focused browser-module smoke coverage for source load, logical gutter, dirty undo-to-clean, rebuild success return, and rebuild failure staying in source view
+  - moved durable notes into panel-host, runtime-boundary, toolbar-model, JavaScript inventory, and docs-management endpoint docs
+  - confirmed the browser rebuild smoke uses mocked services to avoid mutating a real source document during closeout; backend tests cover real write/rebuild command shaping and front matter preservation
 
 - Implemented and cleaned up the first source-editor slice:
   - added management-only `/docs/source` and `/docs/source/rebuild` endpoints
@@ -45,7 +52,7 @@ When the work is complete, move durable architecture notes into the owning Docs 
 - Start with backend source-body read/write/rebuild contracts so the frontend has stable endpoint shapes.
 - Keep source-body mutation separate from metadata/front matter mutation.
 - Keep the main-view host generic; do not make it know source-editor service details.
-- Replace the disabled manage-only `markdown-source` placeholder through the code-owned hosted-view registration boundary.
+- Keep `markdown-source` registered through the code-owned hosted-view registration boundary.
 - Do not add arbitrary route-config module loading, plugin behavior, or third-party editor dependencies.
 - Preserve current rendered document, search, recent, and report behavior while adding the editor.
 
@@ -88,22 +95,33 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 7 | done | Source-editor state and workflow module: load source body/revision on entry, store the normalized last-clean body, compute dirty state by direct normalized body comparison, keep revision token separate, and project toolbar/status state. |
 | 8 | done | First-party native editor wrapper: render native text editing with repo-owned line-number gutter, no soft wrap, logical-line numbering, horizontal scrolling, selection/cursor helpers, and vertical scroll sync. |
 | 9 | done | Dirty leave modal: use the simple UI Catalogue modal for dirty in-app leave attempts with `Do you want to save changes?`, `Yes`, and `No`; `Yes` runs `Rebuild doc`, `No` discards the local buffer, and browser reload/tab close uses native unload warning where available. |
-| 10 | in progress | Rebuild and return workflow: implement `Rebuild doc` submit, pending/disabled states, diagnostics rendering, success payload reload, switch back to `rendered-document`, and failure behavior that keeps the user in `markdown-source`. |
+| 10 | done | Rebuild and return workflow: implement `Rebuild doc` submit, pending/disabled states, diagnostics rendering, success payload reload, switch back to `rendered-document`, and failure behavior that keeps the user in `markdown-source`. |
 | 11 | done | Access, unavailable, and continuity checks: hide source actions on public routes, show local unavailable warnings for unavailable manage-only source view requests, preserve selected-document state, and verify rendered/search/recent/report continuity. |
-| 12 | in progress | Focused frontend verification: run module syntax checks and focused manage/public browser smokes for source action visibility, source load, line-number gutter, dirty comparison including undo-to-clean, dirty modal `Yes`/`No`, rebuild success return, rebuild failure, and desktop/mobile layout. |
-| 13 | planned | Durable docs closeout: update owning Docs Viewer management, runtime boundary, panel host, toolbar, JavaScript inventory, and testing docs where behavior changed; record generated payload status and remaining risks. |
-| 14 | planned | Final request closeout: update this tracker and the parent request statuses, record changed files and commands run, confirm open questions are resolved, confirm no third-party editor dependency was added, and note any deferred follow-up work. |
+| 12 | done | Focused frontend verification: run module syntax checks and focused manage/public browser smokes for source action visibility, source load, line-number gutter, dirty comparison including undo-to-clean, dirty modal `Yes`/`No`, rebuild success return, rebuild failure, and desktop/mobile layout. |
+| 13 | done | Durable docs closeout: update owning Docs Viewer management, runtime boundary, panel host, toolbar, JavaScript inventory, and testing docs where behavior changed; record generated payload status and remaining risks. |
+| 14 | done | Final request closeout: update this tracker and the parent request statuses, record changed files and commands run, confirm open questions are resolved, confirm no third-party editor dependency was added, and note any deferred follow-up work. |
 
 ## Closeout Notes
 
-When the implementation is complete:
+- Changed implementation/test files in this closeout pass:
+  - `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`
 
-- Update this tracker with changed files, decisions made, commands run, generated payload status, and known risks.
-- Confirm durable decisions have moved to permanent Docs Viewer docs.
-- Confirm source editing is body-only and metadata/front matter remains in manage-mode Actions.
-- Confirm `Rebuild doc` refreshes both targeted docs payload and targeted docs search for the selected doc.
-- Confirm public routes do not expose authoring UI or source-editor services.
-- Confirm no third-party full editor dependency was introduced.
+- Changed durable docs in this closeout pass:
+  - `docs-viewer/source/studio/docs-viewer-panel-hosts.md`
+  - `docs-viewer/source/studio/docs-viewer-runtime-boundary.md`
+  - `docs-viewer/source/studio/docs-viewer-toolbar-model.md`
+  - `docs-viewer/source/studio/docs-viewer-javascript-inventory.md`
+  - `docs-viewer/source/studio/scripts-docs-management-server-generated-reads.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-markdown-editor.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-markdown-editor-tasks.md`
+
+- Durable decisions moved to permanent Docs Viewer docs.
+- Source editing is body-only; metadata/front matter remains in manage-mode Actions.
+- `Rebuild doc` refreshes both targeted docs payload and targeted docs search for the selected doc through the backend source service.
+- Public routes do not expose authoring UI or source-editor services; `markdown-source` resolves as manage-only.
+- No third-party full editor dependency was introduced.
+- Generated payload status: source docs were edited and generated docs/search payloads were not manually rebuilt by Codex; the running docs-watcher regenerated the corresponding generated JSON.
+- Remaining risk: browser verification uses mocked source-editor services for rebuild success/failure to avoid mutating a real source file; backend tests cover real write/rebuild command shaping and front matter preservation.
 
 ## Verification Log
 
@@ -111,4 +129,7 @@ When the implementation is complete:
 - Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_management_routes.py docs-viewer/services/docs_management_source_service.py docs-viewer/services/docs_management_read_service.py docs-viewer/services/docs_management_service.py docs-viewer/services/docs_management_capabilities_service.py docs-viewer/services/docs_viewer_service.py`
 - Passed: `node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-hosted-views.js docs-viewer/runtime/js/docs-viewer-main-view-host.js docs-viewer/runtime/js/docs-viewer-management.js docs-viewer/runtime/js/docs-viewer-management-actions.js docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js docs-viewer/runtime/js/docs-viewer-management-client.js docs-viewer/runtime/js/docs-viewer-view-context.js docs-viewer/runtime/js/modules/source-editor/source-editor.js`
 - Passed focused browser smoke on temporary Docs Viewer service `http://127.0.0.1:8790/docs/`: manage `Markdown source` action visible, source editor loads, logical gutter starts `1,2,3`, dirty state appears, dirty leave `No` returns to rendered document, mobile editor visible, and public route keeps management row hidden.
-- Not yet run: browser click of `Rebuild doc` against a real source file, to avoid mutating source during the cleanup pass. Backend tests cover write/rebuild command shaping and front matter preservation.
+- Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/services/docs_management_source_service.py docs-viewer/services/docs_management_routes.py docs-viewer/services/docs_management_read_service.py docs-viewer/services/docs_management_service.py`
+- Passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- Passed: `git diff --check`
+- Not run against a real source file: browser click of `Rebuild doc`, to avoid mutating source during closeout. Browser-module smoke covers the frontend rebuild success/failure paths with mocked services; backend tests cover real write/rebuild command shaping and front matter preservation.

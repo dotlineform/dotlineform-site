@@ -386,7 +386,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
 - 2026-05-28 lifecycle note: hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
 - 2026-05-28 owner note: built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
-- 2026-06-03 owner note: `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for built-in and repo-owned records, including disabled manage-only `markdown-source`; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
+- 2026-06-03 owner note: `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for built-in and repo-owned records, including manage-only `markdown-source`; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
 - Keep this module limited to records, lifecycle method names, built-in/repo-owned hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
 - Do not turn it into a plugin system, arbitrary dependency loader, panel toolbar renderer, route-config module loader, or third-party visualization owner.
 
@@ -419,6 +419,12 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view helper slots from explicit inputs.
 - Future info views should extend or consume this helper rather than adding context shaping directly to `docs-viewer.js`.
 - Do not add DOM rendering, hosted-view lifecycle, URL history mutation, source-editor service implementation, or backend writes to it.
+
+### `docs-viewer/runtime/js/modules/source-editor/source-editor.js`
+
+- Added 2026-06-03 as the manage-only Markdown source body editor module for the `markdown-source` main hosted view.
+- Keep this module limited to source-body view orchestration, native textarea/gutter rendering, dirty-state projection, dirty leave confirmation, `Rebuild doc` submission, diagnostics display, rendered-payload reload handoff, and back-to-rendered switching.
+- Do not add front matter editing, metadata writes, semantic-reference target picking, generated-data builder ownership, third-party editor dependencies, route URL state, or public-route source services to it.
 
 ### Docs Import And Management
 

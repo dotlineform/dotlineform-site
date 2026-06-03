@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ea3abacb2f9f998d2996924da774e4b1",
-    "generated_at_utc": "2026-06-03T17:51:31Z",
+    "version": "blake2b-7bdef16343c2737573a66ad1354efa84",
+    "generated_at_utc": "2026-06-03T18:36:39Z",
     "count": 242
   },
   "entries": [
@@ -2895,10 +2895,10 @@
       "kind": "doc",
       "title": "Docs Management Service Generated Reads",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-06-03",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Service",
-      "display_meta": "2026-05-26 • Management Service",
+      "display_meta": "2026-06-03 • Management Service",
       "search_terms": [
         "scripts-docs-management-server-generated-reads",
         "scripts",
@@ -2910,12 +2910,12 @@
         "docs management service generated reads",
         "service",
         "management service",
-        "2026-05-26",
+        "2026-06-03",
         "2026",
-        "05",
-        "26"
+        "06",
+        "03"
       ],
-      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management service generated reads service management service 2026-05-26 2026 05 26"
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management service generated reads service management service 2026-06-03 2026 06 03"
     },
     {
       "id": "scripts-docs-management-server-import-rebuild",

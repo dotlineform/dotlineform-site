@@ -233,6 +233,7 @@ def assert_management_actions_render(page: Page) -> None:
                 missingShellIds: shellIds.filter((id) => !document.getElementById(id)),
                 menuRole: document.getElementById('docsViewerManageActionsMenu')?.getAttribute('role') || '',
                 menuItemCount: document.querySelectorAll('#docsViewerManageActionsMenu [role="menuitem"]').length,
+                menuActions: Array.from(document.querySelectorAll('#docsViewerManageActionsMenu [role="menuitem"]')).map((node) => node.dataset.docsViewerAction || ''),
                 actionOrder: Array.from(document.querySelector('.docsViewer__manageActions').children).map((node) => node.id || node.querySelector('[id]')?.id || ''),
                 contextActionCount: document.querySelectorAll('#docsViewerContextMenu [data-context-action]').length,
                 metadataDialogLabel: document.querySelector('#docsViewerMetadataModal [role="dialog"]')?.getAttribute('aria-labelledby') || '',
@@ -256,7 +257,7 @@ def assert_management_actions_render(page: Page) -> None:
         raise AssertionError(f"app shell omitted expected management refs: {result!r}")
     if result["missingShellIds"]:
         raise AssertionError(f"app shell omitted expected management shell refs: {result!r}")
-    if result["menuRole"] != "menu" or result["menuItemCount"] != 8:
+    if result["menuRole"] != "menu" or result["menuItemCount"] != 9 or "markdown-source" not in result["menuActions"]:
         raise AssertionError(f"app shell did not render the expected Actions menu: {result!r}")
     if result["actionOrder"][0] != "docsViewerManageActionsButton":
         raise AssertionError(f"manage toolbar should start with the Actions button: {result!r}")
@@ -2029,6 +2030,194 @@ def assert_hosted_view_context_contract(page: Page) -> None:
         raise AssertionError(f"hosted-view context contract failed: {result!r}")
 
 
+def assert_source_editor_module_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/modules/source-editor/source-editor.js');
+
+            async function waitFor(predicate) {
+                const deadline = Date.now() + 1000;
+                while (Date.now() < deadline) {
+                    if (predicate()) return true;
+                    await new Promise((resolve) => setTimeout(resolve, 10));
+                }
+                return false;
+            }
+
+            function input(textarea, value) {
+                textarea.value = value;
+                textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            const mount = document.createElement('div');
+            document.body.replaceChildren(mount);
+            const toolbarCalls = [];
+            const requestCalls = [];
+            const reloadCalls = [];
+            const rebuildCalls = [];
+            const view = module.createDocsViewerSourceEditorView();
+            await view.mount({
+                mount,
+                selectedDoc: { doc_id: 'doc-a', title: 'Doc A' },
+                viewerScope: 'studio',
+                routeAccess: { allowManagement: true, routeType: 'manage' },
+                sourceEditorServices: {
+                    readSource: () => Promise.resolve({
+                        ok: true,
+                        doc_id: 'doc-a',
+                        source_revision: 'sha256:clean',
+                        source_body: '# Clean\\n'
+                    }),
+                    rebuildSource: (payload) => {
+                        rebuildCalls.push(payload);
+                        return Promise.resolve({
+                            ok: true,
+                            doc_id: 'doc-a',
+                            source_revision: 'sha256:rebuilt',
+                            summary_text: 'Rebuilt doc-a.',
+                            rebuild: {
+                                docs: { mode: 'targeted' },
+                                search: { mode: 'targeted' }
+                            }
+                        });
+                    },
+                    reloadRenderedDoc: (docId) => {
+                        reloadCalls.push(docId);
+                        return Promise.resolve(null);
+                    }
+                },
+                mainView: {
+                    activeViewId: 'markdown-source',
+                    projectToolbar: (projection) => toolbarCalls.push(projection),
+                    requestView: (viewId, options) => {
+                        requestCalls.push({
+                            viewId,
+                            force: Boolean(options && options.force),
+                            warn: options && Object.prototype.hasOwnProperty.call(options, 'warn') ? options.warn : null
+                        });
+                        return true;
+                    },
+                    showWarning: () => {}
+                }
+            });
+
+            const textarea = mount.querySelector('.docsViewerSourceEditor__textarea');
+            const gutter = mount.querySelector('.docsViewerSourceEditor__gutter');
+            const dirty = mount.querySelector('.docsViewerSourceEditor__dirty');
+            const rebuild = mount.querySelector('[data-source-editor-action="rebuild"]');
+            const initial = {
+                body: textarea.value,
+                gutter: gutter.textContent,
+                dirtyHidden: dirty.hidden,
+                rebuildDisabled: rebuild.disabled
+            };
+            input(textarea, '# Changed\\n\\nBody\\n');
+            const dirtyAfterChange = !dirty.hidden;
+            input(textarea, '# Clean\\n');
+            const dirtyAfterUndo = !dirty.hidden;
+            input(textarea, '# Changed\\n');
+            rebuild.click();
+            const successReturned = await waitFor(() => requestCalls.length === 1);
+            const success = {
+                successReturned,
+                rebuildCalls,
+                reloadCalls,
+                requestCalls,
+                statusText: mount.querySelector('.docsViewerSourceEditor__status').textContent,
+                dirtyHidden: dirty.hidden
+            };
+            view.dispose({ mount });
+
+            const failureMount = document.createElement('div');
+            document.body.replaceChildren(failureMount);
+            const failureRequestCalls = [];
+            const failureView = module.createDocsViewerSourceEditorView();
+            await failureView.mount({
+                mount: failureMount,
+                selectedDoc: { doc_id: 'doc-b', title: 'Doc B' },
+                viewerScope: 'studio',
+                routeAccess: { allowManagement: true, routeType: 'manage' },
+                sourceEditorServices: {
+                    readSource: () => Promise.resolve({
+                        ok: true,
+                        doc_id: 'doc-b',
+                        source_revision: 'sha256:clean-b',
+                        source_body: '# Clean B\\n'
+                    }),
+                    rebuildSource: () => Promise.reject(new Error('targeted rebuild failed')),
+                    reloadRenderedDoc: () => Promise.resolve(null)
+                },
+                mainView: {
+                    activeViewId: 'markdown-source',
+                    projectToolbar: () => {},
+                    requestView: (viewId) => {
+                        failureRequestCalls.push(viewId);
+                        return true;
+                    },
+                    showWarning: () => {}
+                }
+            });
+            const failureTextarea = failureMount.querySelector('.docsViewerSourceEditor__textarea');
+            input(failureTextarea, '# Broken\\n');
+            failureMount.querySelector('[data-source-editor-action="rebuild"]').click();
+            const failureVisible = await waitFor(() => {
+                const status = failureMount.querySelector('.docsViewerSourceEditor__status');
+                return status && status.classList.contains('is-error') && status.textContent.includes('targeted rebuild failed');
+            });
+            const failure = {
+                failureVisible,
+                requestCalls: failureRequestCalls,
+                statusText: failureMount.querySelector('.docsViewerSourceEditor__status').textContent,
+                sourceStillMounted: Boolean(failureMount.querySelector('[data-docs-viewer-source-editor]'))
+            };
+            failureView.dispose({ mount: failureMount });
+
+            return {
+                initial,
+                dirtyAfterChange,
+                dirtyAfterUndo,
+                success,
+                failure,
+                toolbarCallCount: toolbarCalls.length
+            };
+        }"""
+    )
+    if result["initial"] != {
+        "body": "# Clean\n",
+        "gutter": "1\n2",
+        "dirtyHidden": True,
+        "rebuildDisabled": False,
+    }:
+        raise AssertionError(f"source editor initial load failed: {result!r}")
+    if result["dirtyAfterChange"] is not True or result["dirtyAfterUndo"] is not False:
+        raise AssertionError(f"source editor dirty comparison failed: {result!r}")
+    if result["success"]["successReturned"] is not True:
+        raise AssertionError(f"source editor rebuild did not return to rendered view: {result!r}")
+    if result["success"]["rebuildCalls"] != [
+        {
+            "doc_id": "doc-a",
+            "source_revision": "sha256:clean",
+            "source_body": "# Changed\n",
+        }
+    ]:
+        raise AssertionError(f"source editor rebuild payload changed: {result!r}")
+    if result["success"]["reloadCalls"] != ["doc-a"] or result["success"]["requestCalls"] != [
+        {"viewId": "rendered-document", "force": True, "warn": False}
+    ]:
+        raise AssertionError(f"source editor success return workflow failed: {result!r}")
+    if "Rebuilt doc-a." not in result["success"]["statusText"] or result["success"]["dirtyHidden"] is not True:
+        raise AssertionError(f"source editor success diagnostics/dirty state failed: {result!r}")
+    if result["failure"] != {
+        "failureVisible": True,
+        "requestCalls": [],
+        "statusText": "targeted rebuild failed",
+        "sourceStillMounted": True,
+    }:
+        raise AssertionError(f"source editor failure behavior changed: {result!r}")
+    if result["toolbarCallCount"] < 1:
+        raise AssertionError(f"source editor did not project main-view toolbar state: {result!r}")
+
+
 def assert_panel_layout_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2385,8 +2574,8 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"missing hosted view should be graceful: {result!r}")
     if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
         raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
-    if result["markdownSource"]["registered"] is not True or result["markdownSource"]["reason"] != "disabled":
-        raise AssertionError(f"repo-owned markdown-source view should be registered but disabled: {result!r}")
+    if result["markdownSource"]["registered"] is not True or result["markdownSource"]["reason"] != "access":
+        raise AssertionError(f"repo-owned markdown-source view should be registered but manage-only on public routes: {result!r}")
     if result["metadataInfo"]["available"] is not True or result["metadataInfo"]["registered"] is not True:
         raise AssertionError(f"built-in metadata info view should be public and available: {result!r}")
     if result["routeHostedViews"] != [
@@ -3991,6 +4180,7 @@ def main() -> int:
             assert_document_shell_projection(page)
             assert_info_panel_shell_and_metadata_lifecycle(page)
             assert_hosted_view_context_contract(page)
+            assert_source_editor_module_contract(page)
             assert_panel_layout_contract(page)
             assert_view_state_and_hosted_view_contract(page)
             assert_route_workflow_contract(page, base_url)

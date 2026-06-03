@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-generated-reads
 title: Docs Management Service Generated Reads
 added_date: 2026-05-19
-last_updated: 2026-05-26
+last_updated: 2026-06-03
 parent_id: scripts-docs-management-server
 ---
 # Docs Management Service Generated Reads
@@ -26,6 +26,8 @@ Exposed endpoints:
 - `GET /docs/source-config`
 - `GET /docs/source-config-settings`
 - `POST /docs/source-config-settings`
+- `GET /docs/source`
+- `POST /docs/source/rebuild`
 - `GET /docs/import-source-files`
 - `GET /docs/import-html-files`
 - `POST /docs/import-source`
@@ -53,6 +55,7 @@ Current behavior:
 - generated Docs Viewer JSON read helpers are owned by `docs-viewer/services/docs_generated_reads.py`
 - source config report payloads are owned by `docs-viewer/services/docs_source_config_report.py`
 - source config settings allowlist, validation payloads, and allowlisted source-config writes are owned by `docs-viewer/services/docs_source_config_settings.py`
+- source-body read/write/rebuild validation for the Markdown source editor is owned by `docs-viewer/services/docs_management_source_service.py`
 - docs-specific Studio Activity row construction is owned by `docs-viewer/services/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `docs-viewer/services/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `docs-viewer/services/docs_import_source_service.py`; the server binds the existing log and rebuild helpers and keeps activity append timing
@@ -64,12 +67,13 @@ Current behavior:
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/local-studio` is running
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
 - serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
+- serves selected-document Markdown source bodies and accepts body-only source rebuild requests for the manage-mode Markdown source editor
 - creates and deletes source docs under the current scope root
 - creates Studio docs without `viewable` unless a hidden state is needed
 - creates Analysis docs as `viewable: false`
 - creates Library docs as `viewable: false`
 - writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values
-- rebuilds scope-owned docs payloads after successful writes, using targeted docs payload ids when the mutation planner can provide an explicit safe set
+- rebuilds scope-owned docs payloads after successful writes, using targeted docs payload ids when the mutation planner or source-editor endpoint can provide an explicit safe set
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
 - coordinates successful source writes with the docs live watcher so `bin/local-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
 
@@ -91,6 +95,7 @@ Docs payload rebuild behavior:
 
 - create, source import create/overwrite, metadata, viewability, move, normalize order, delete, and Library returned-package apply writes pass explicit docs payload ids into `./docs-viewer/build/build_docs.py --scope <scope> --write --only-doc-ids <ids>`
 - source-config settings writes and explicit `POST /docs/rebuild` remain full same-scope docs payload rebuilds
+- source-editor body writes target the selected doc id only because the endpoint preserves front matter and does not mutate parent/title/status/viewability metadata
 - rebuild responses include `rebuild.docs.mode`, `rebuild.docs.doc_ids`, and `rebuild.docs.reason` alongside the existing `rebuild.search` object so callers can tell whether docs payloads used targeted mode or a full fallback
 
 `GET /capabilities` reports:
@@ -172,5 +177,33 @@ Source-config settings behavior:
   "changes": {
     "show_updated_date": false
   }
+}
+```
+
+Markdown source editor endpoints:
+
+- `GET /docs/source?scope=<scope>&doc_id=<doc_id>`
+- `GET /docs/source?scope=<scope>&doc=<doc_id>`
+- `POST /docs/source/rebuild`
+
+Markdown source editor behavior:
+
+- resolves `scope` and `doc_id` through the configured Docs Viewer source model
+- reads only the selected source document body and returns a `sha256:<digest>` revision token for stale-write protection
+- verifies existing front matter can be parsed and that existing `doc_id` matches the requested document
+- preserves the existing front matter block exactly during body-only writes
+- normalizes submitted source-body line endings to `\n`
+- rejects stale `source_revision` values before writing
+- after a successful write, runs targeted docs payload rebuild and targeted docs-search update for the selected doc id
+- returns structured rebuild diagnostics under `rebuild.docs` and `rebuild.search`
+
+`POST /docs/source/rebuild` expects:
+
+```json
+{
+  "scope": "studio",
+  "doc_id": "example-doc",
+  "source_revision": "sha256:...",
+  "source_body": "# Example\n"
 }
 ```
