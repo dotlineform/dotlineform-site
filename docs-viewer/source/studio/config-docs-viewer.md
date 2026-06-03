@@ -43,7 +43,7 @@ Each scope entry owns:
 - `default_doc_id`: default document for the route
 - `allow_nested_source`: whether source Markdown may live below nested folders
 - `non_loadable_doc_ids`: tree nodes that should not load as documents
-- `manage_only_tree_root_ids`: tree roots hidden from public routes
+- `manage_only_tree_root_ids`: tree roots excluded from public routes
 - `show_updated_date`: whether the viewer should show updated-date metadata
 - `allow_unresolved_parent_ids`: whether unknown parent ids are tolerated
 - `import_media_storage`: Docs Import media save behavior for that scope

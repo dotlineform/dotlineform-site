@@ -1,12 +1,8 @@
 {
-  "scope": "studio",
   "doc_id": "ui",
   "title": "UI",
   "added_date": "2026-05-05",
   "last_updated": "2026-05-15",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "ui.md",
   "viewer_url": "/docs/?scope=studio&doc=ui",
   "content_html": "<h1>UI</h1>\n<p>This section describes the site's shared UI design approach, audit and maintenance.</p>\n<p>Detailed implementation guidance is in <a href=\"/docs/?scope=studio&amp;doc=ui-catalogue\">UI Catalogue</a>, the index for named primitives, composition patterns, and isolated demo pages.</p>\n"

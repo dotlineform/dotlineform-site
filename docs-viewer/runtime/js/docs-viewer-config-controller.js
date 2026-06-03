@@ -287,9 +287,9 @@ export function initDocsViewerConfigController(context) {
     scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
-    var hiddenColor = String(getConfigValue(config, "docs_viewer.hidden_nav_color") || getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
-    if (hiddenColor) {
-      root.style.setProperty("--docs-viewer-draft-color", hiddenColor);
+    var nonViewableColor = String(getConfigValue(config, "docs_viewer.non_viewable_nav_color") || "").trim();
+    if (nonViewableColor) {
+      root.style.setProperty("--docs-viewer-draft-color", nonViewableColor);
     }
     if (recentButton) {
       var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");

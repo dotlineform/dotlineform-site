@@ -153,7 +153,6 @@ def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]
             "doc_id": doc.doc_id,
             "title": doc.title,
             "parent_id": doc.parent_id,
-            "hidden": doc.hidden,
             "viewable": doc.viewable,
             "sort_key": scope_doc_sort_key(doc),
         }

@@ -59,20 +59,20 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_doc(
         repo_root,
-        "hidden-doc.md",
+        "non-viewable-doc.md",
         {
-            "doc_id": "hidden-doc",
-            "title": "Hidden Doc",
+            "doc_id": "non-viewable-doc",
+            "title": "Non-viewable Doc",
             "viewable": False,
         },
         scope="scratch",
     )
     write_doc(
         repo_root,
-        "hidden-doc.md",
+        "non-viewable-doc.md",
         {
-            "doc_id": "hidden-doc",
-            "title": "Hidden Doc",
+            "doc_id": "non-viewable-doc",
+            "title": "Non-viewable Doc",
             "viewable": False,
         },
     )
@@ -82,7 +82,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "child",
             "title": "Child",
-            "parent_id": "hidden-doc",
+            "parent_id": "non-viewable-doc",
             "viewable": True,
         },
     )
@@ -161,10 +161,10 @@ def write_generated_docs(root: Path) -> None:
     docs = [
         {
             "scope": "studio",
-            "doc_id": "hidden-doc",
-            "title": "Hidden Doc",
+            "doc_id": "non-viewable-doc",
+            "title": "Non-viewable Doc",
             "viewable": False,
-            "content_url": "/docs-viewer/generated/docs/studio/by-id/hidden-doc.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json",
         },
         {
             "scope": "studio",
@@ -185,7 +185,7 @@ def write_generated_docs(root: Path) -> None:
             "docs": docs,
         },
     )
-    write_json(root / "docs-viewer/generated/docs/studio/by-id/hidden-doc.json", {"doc_id": "hidden-doc"})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json", {"doc_id": "non-viewable-doc"})
     write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
@@ -260,15 +260,15 @@ def test_hidden_doc_is_editable_in_dry_run() -> None:
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "hidden-doc",
-                "title": "Hidden Doc",
+                "doc_id": "non-viewable-doc",
+                "title": "Non-viewable Doc",
                 "parent_id": "",
             },
             dry_run=True,
         )
 
     assert result["ok"] is True
-    assert result["doc_id"] == "hidden-doc"
+    assert result["doc_id"] == "non-viewable-doc"
     assert result["record"]["parent_id"] == ""
 
 
@@ -301,21 +301,21 @@ def test_hidden_doc_viewability_can_be_changed_in_dry_run() -> None:
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "hidden-doc",
+                "doc_id": "non-viewable-doc",
                 "viewable": True,
             },
             dry_run=True,
         )
 
     assert result["ok"] is True
-    assert result["changed_doc_ids"] == ["hidden-doc"]
+    assert result["changed_doc_ids"] == ["non-viewable-doc"]
     assert result["records"][0]["viewable"] is True
 
 
 def test_hidden_parent_delete_is_blocked_only_by_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "hidden-doc")
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "non-viewable-doc")
 
     assert result["allowed"] is False
     assert result["blockers"] == ["1 child docs still depend on this parent"]

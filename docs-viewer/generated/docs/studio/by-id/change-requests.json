@@ -1,12 +1,8 @@
 {
-  "scope": "studio",
   "doc_id": "change-requests",
   "title": "Change Requests",
   "added_date": "2026-04-28",
   "last_updated": "2026-05-25",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "change-requests.md",
   "viewer_url": "/docs/?scope=studio&doc=change-requests",
   "content_html": "<h1>Change Requests</h1>\n<p>This section stores proposed and in-progress feature or infrastructure changes.</p>\n<p>Use it for:</p>\n<ul>\n<li>product and workflow requests</li>\n<li>implementation planning requests</li>\n<li>UI request specs and task breakdowns</li>\n<li>request docs that should remain easy to find without being merged into stable reference docs yet</li>\n</ul>\n<p>Do not use it for:</p>\n<ul>\n<li>stable runtime documentation</li>\n<li>stable design-system rules</li>\n<li>script reference docs</li>\n<li>changelog entries for already-completed work</li>\n</ul>\n"

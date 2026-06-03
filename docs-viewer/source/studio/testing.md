@@ -64,7 +64,7 @@ Avoid permanent tests that only name every retired key.
 If a retired-key assertion remains, pair it with the positive owner contract it protects, such as the allowed route surface, allowed browser payload shape, or server-only write boundary.
 
 Retire or rewrite tests when the behavior they cover is obsolete, duplicated, or better expressed through a focused owner module.
-Examples of current retired shapes include legacy Docs `hidden` source input, Docs Viewer Markdown changelog migration, and catalogue media-section migration runners.
+Examples of current retired shapes include the old Docs visibility source input, Docs Viewer Markdown changelog migration, and catalogue media-section migration runners.
 
 Keep Studio and Docs Viewer smoke responsibilities separate:
 

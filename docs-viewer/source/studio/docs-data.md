@@ -41,7 +41,7 @@ Purpose:
 Current content families:
 
 - one row per generated Studio doc
-- identity, title, added/update dates, optional `summary`, optional `ui_status`, ordering, `viewable`, source path, viewer URL, and per-doc content URL
+- identity, title, added/update dates, optional `summary`, optional `ui_status`, optional non-empty `parent_id`, optional `viewable: false`, source path, viewer URL, and per-doc content URL
 - `viewer_options` for scope-level display behavior such as keeping document-view updated dates visible
 
 Current site mapping:

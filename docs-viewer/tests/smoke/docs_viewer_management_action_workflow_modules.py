@@ -39,9 +39,9 @@ def install_fixture(page: Page) -> None:
             const actions = await import('/docs-viewer/runtime/js/docs-viewer-management-actions.js');
             const management = await import('/docs-viewer/runtime/js/docs-viewer-management.js');
             const docs = [
-                { doc_id: 'root', title: 'Root', parent_id: '', hidden: true },
+                { doc_id: 'root', title: 'Root', parent_id: '', viewable: false },
                 { doc_id: 'parent', title: 'Parent', parent_id: 'root', viewable: false },
-                { doc_id: 'current', title: 'Current', parent_id: 'parent', hidden: true },
+                { doc_id: 'current', title: 'Current', parent_id: 'parent', viewable: false },
                 { doc_id: 'child-a', title: 'Child A', parent_id: 'current' },
                 { doc_id: 'child-b', title: 'Child B', parent_id: 'child-a' },
                 { doc_id: 'sibling', title: 'Sibling', parent_id: 'parent' }

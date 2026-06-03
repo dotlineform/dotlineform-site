@@ -116,7 +116,7 @@ Use the wrapper only where a table needs local width behavior; do not replace or
 It should own management-only surfaces:
 
 - management toolbar row
-- hidden/viewable toggle controls
+- non-viewable/viewable toggle controls
 - drag/drop index states
 - undo move button
 - context menu

@@ -93,7 +93,7 @@ They are useful when configuring a report-backed source doc, but they are not in
 For requirements, describe the desired behavior in product terms:
 
 - create a public A-Z list of Library docs by title
-- create a management report that shows hidden docs first with title and `doc_id`
+- create a management report that shows non-viewable docs first with title and `doc_id`
 - create a generated-docs inspection list for parent or orphan records
 
 The implementer then decides whether the behavior maps to an existing preset, needs a new preset, or needs a new report module.
@@ -122,7 +122,7 @@ It uses the local Docs API endpoint `POST /docs/broken-links` and replaces the r
 Good report candidates are compact, read-oriented views over generated docs data:
 
 - docs index tables
-- hidden or non-viewable docs lists
+- non-viewable docs lists
 - parent, child, or orphan inspection lists
 - recently updated or recently added variants
 - public A-Z indexes

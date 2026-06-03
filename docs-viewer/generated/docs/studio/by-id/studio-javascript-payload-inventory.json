@@ -1,14 +1,11 @@
 {
-  "scope": "studio",
   "doc_id": "studio-javascript-payload-inventory",
   "title": "Retired JavaScript Inventory Policy",
   "added_date": "2026-05-14",
   "last_updated": "2026-05-31",
-  "parent_id": "studio-risk-analysis-policy",
-  "hidden": false,
-  "viewable": true,
   "source_path": "studio-javascript-payload-inventory.md",
   "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+  "parent_id": "studio-risk-analysis-policy",
   "ui_status": "retired",
   "content_html": "<h1>Retired JavaScript Inventory Policy</h1>\n<p>This policy document has been retired.</p>\n<p>Use <a href=\"/docs/?scope=studio&amp;doc=studio-risk-analysis-policy\">Studio Risk Analysis Policy</a> for the active general, frontend, and backend risk-analysis policy.</p>\n<p>Current frontend evidence remains in:</p>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=javascript-inventory\">Javascript Inventory</a></li>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-javascript-inventory\">Docs Viewer JavaScript Inventory</a></li>\n</ul>\n<p>Current backend evidence remains in:</p>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=studio-python-ruby-script-inventory\">Studio Python And Ruby Script Inventory</a></li>\n</ul>\n<p>The old <code>studio-javascript-payload-inventory</code> <code>doc_id</code> is preserved only so existing links resolve to this retirement notice.</p>\n"
 }

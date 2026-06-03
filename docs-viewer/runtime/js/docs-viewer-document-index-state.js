@@ -1,8 +1,8 @@
 import {
   buildChildrenMap,
-  hasHiddenAncestor,
+  hasNonViewableAncestor,
   compareDocs,
-  isDocHidden,
+  isDocNonViewable,
   isDocViewable
 } from "./docs-viewer-tree.js";
 
@@ -24,8 +24,8 @@ export function createDocsViewerDocumentIndexState(options) {
 
   function shouldIncludeDoc(doc) {
     if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
-    if (!state.managementMode) return isDocViewable(doc) && !hasHiddenAncestor(doc, state.allDocsById);
-    return isDocViewable(doc) || state.showHidden;
+    if (!state.managementMode) return isDocViewable(doc) && !hasNonViewableAncestor(doc, state.allDocsById);
+    return isDocViewable(doc) || state.showNonViewable;
   }
 
   function applyDocVisibility() {
@@ -42,7 +42,7 @@ export function createDocsViewerDocumentIndexState(options) {
     );
     state.childrenByParent = buildChildrenMap(state.docs, {
       managementMode: state.managementMode,
-      showHidden: state.showHidden
+      showNonViewable: state.showNonViewable
     });
   }
 
@@ -53,13 +53,13 @@ export function createDocsViewerDocumentIndexState(options) {
     return null;
   }
 
-  function syncHiddenVisibilityForRequestedDoc(getCurrentDocId) {
+  function syncNonViewableVisibilityForRequestedDoc(getCurrentDocId) {
     if (!state.managementMode) return;
     var requestedDocId = typeof getCurrentDocId === "function" ? getCurrentDocId() : "";
     if (!requestedDocId) return;
     var requestedDoc = findAllDocById(requestedDocId);
-    if (requestedDoc && isDocHidden(requestedDoc)) {
-      state.showHidden = true;
+    if (requestedDoc && isDocNonViewable(requestedDoc)) {
+      state.showNonViewable = true;
     }
   }
 
@@ -134,7 +134,7 @@ export function createDocsViewerDocumentIndexState(options) {
     isNonLoadableDoc: isNonLoadableDoc,
     resolveLoadableDocId: resolveLoadableDocId,
     statusForIndexDoc: statusForIndexDoc,
-    syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc,
+    syncNonViewableVisibilityForRequestedDoc: syncNonViewableVisibilityForRequestedDoc,
     viewerTargetDocId: viewerTargetDocId
   };
 }

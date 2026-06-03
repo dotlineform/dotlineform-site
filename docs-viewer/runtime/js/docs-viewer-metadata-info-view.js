@@ -49,7 +49,7 @@ function parentPathLabel(context) {
 
 function visibilityLabel(doc) {
   if (!doc) return "Not set";
-  if (doc.hidden === true || doc.viewable === false) return "Hidden";
+  if (doc.viewable === false) return "Non-viewable";
   return "Visible";
 }
 

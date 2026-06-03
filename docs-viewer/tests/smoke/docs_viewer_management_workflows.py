@@ -269,7 +269,7 @@ def create_fixture_repo(target_root: Path) -> None:
             "analysis": "docs-viewer/source/analysis",
         }[scope]
         write_doc(target_root / source_root / f"{default_doc}.md", doc_id=default_doc, title=default_doc.replace("-", " ").title())
-    write_doc(target_root / "docs-viewer/source/studio" / "hidden-doc.md", doc_id="hidden-doc", title="Hidden Doc")
+    write_doc(target_root / "docs-viewer/source/studio" / "non-viewable-doc.md", doc_id="non-viewable-doc", title="Non-viewable Doc")
     write_doc(target_root / "docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc")
     write_doc(target_root / "docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc")
     (target_root / "var" / "docs" / "import-staging").mkdir(parents=True)
@@ -291,7 +291,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
             front_matter, body = source_model.parse_source(path)
             doc_id = str(front_matter.get("doc_id") or path.stem).strip()
             title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
-            hidden = source_model.doc_is_hidden(front_matter)
             docs.append(
                 SimpleNamespace(
                     doc_id=doc_id,
@@ -299,8 +298,7 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                     front_matter=dict(front_matter),
                     ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                     parent_id=str(front_matter.get("parent_id") or "").strip(),
-                    hidden=hidden,
-                    viewable=not hidden,
+                    viewable=source_model.doc_is_viewable(front_matter),
                     body=body,
                 )
             )
@@ -315,7 +313,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                 "summary": str(doc.front_matter.get("summary") or ""),
                 "ui_status": doc.ui_status,
                 "parent_id": doc.parent_id,
-                "hidden": doc.hidden,
                 "viewable": doc.viewable,
                 "content_url": content_url,
             }

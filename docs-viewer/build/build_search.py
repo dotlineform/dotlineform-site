@@ -231,16 +231,16 @@ class DocsViewerSearchDataBuilder:
             parent_id = normalize_text(row.get("parent_id"))
             if doc_id and parent_id:
                 by_parent.setdefault(parent_id, []).append(doc_id)
-        hidden = set(roots)
+        manage_only = set(roots)
         queue = list(roots)
         while queue:
             current = queue.pop(0)
             for child_id in by_parent.get(current, []):
-                if child_id in hidden:
+                if child_id in manage_only:
                     continue
-                hidden.add(child_id)
+                manage_only.add(child_id)
                 queue.append(child_id)
-        return hidden
+        return manage_only
 
     def build_docs_entries(self, docs: list[SearchDocRecord]) -> list[dict[str, Any]]:
         title_by_id = {doc.doc_id: doc.title for doc in docs}

@@ -32,7 +32,6 @@ class ScopeDoc:
     title: str
     ui_status: str
     parent_id: str
-    hidden: bool
     viewable: bool
 
 
@@ -144,11 +143,7 @@ def write_text_atomic(path: Path, text: str) -> None:
 
 
 def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
-    return not doc_is_hidden(front_matter)
-
-
-def doc_is_hidden(front_matter: Dict[str, Any]) -> bool:
-    return not front_matter_boolean(front_matter, "viewable", True)
+    return front_matter_boolean(front_matter, "viewable", True)
 
 
 def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:
@@ -166,10 +161,6 @@ def normalize_ui_status(value: Any) -> str:
 
 def default_viewable_for_scope(scope: str) -> bool:
     return scope not in {"analysis", "library"}
-
-
-def default_hidden_for_scope(scope: str) -> bool:
-    return not default_viewable_for_scope(scope)
 
 
 def normalize_scope(scope: Any) -> str:
@@ -200,7 +191,7 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
-        hidden = doc_is_hidden(front_matter)
+        viewable = doc_is_viewable(front_matter)
         docs.append(
             ScopeDoc(
                 scope=scope,
@@ -212,8 +203,7 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 title=title,
                 ui_status=ui_status,
                 parent_id=parent_id,
-                hidden=hidden,
-                viewable=not hidden,
+                viewable=viewable,
             )
         )
     validate_scope_docs(

@@ -38,20 +38,20 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_doc(
         repo_root,
-        "hidden-doc.md",
+        "non-viewable-doc.md",
         {
-            "doc_id": "hidden-doc",
-            "title": "Hidden Doc",
+            "doc_id": "non-viewable-doc",
+            "title": "Non-viewable Doc",
             "viewable": False,
         },
         scope="scratch",
     )
     write_doc(
         repo_root,
-        "hidden-doc.md",
+        "non-viewable-doc.md",
         {
-            "doc_id": "hidden-doc",
-            "title": "Hidden Doc",
+            "doc_id": "non-viewable-doc",
+            "title": "Non-viewable Doc",
             "viewable": False,
         },
     )
@@ -183,9 +183,7 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
             },
         )
 
-    assert plan.response["record"]["hidden"] is True
     assert plan.response["record"]["viewable"] is False
-    assert plan.response["changes"]["hidden_changed"] is True
     assert "viewable: false" in plan.source_writes[0].text
     assert "hidden:" not in plan.source_writes[0].text
 

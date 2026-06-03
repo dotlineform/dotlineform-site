@@ -63,7 +63,6 @@ class DocRecord:
     summary: str
     ui_status: str
     parent_id: str
-    hidden: bool
     viewable: bool
     source_path: str
     viewer_url: str
@@ -356,7 +355,7 @@ class DocsDataBuilder:
             added_date = str(front_matter.get("added_date") or last_updated).strip()
             summary = normalize_text(front_matter.get("summary"))
             ui_status = str(front_matter.get("ui_status") or "").strip()
-            hidden = not front_matter_boolean(front_matter, "viewable", True)
+            viewable = front_matter_boolean(front_matter, "viewable", True)
             docs.append(
                 DocRecord(
                     scope_id=self.scope_id,
@@ -367,8 +366,7 @@ class DocsDataBuilder:
                     summary=summary,
                     ui_status=ui_status,
                     parent_id=parent_id,
-                    hidden=hidden,
-                    viewable=not hidden,
+                    viewable=viewable,
                     source_path=relative_path,
                     viewer_url=self.viewer_url_for(doc_id),
                     content_url=self.content_url_for(doc_id),
@@ -436,17 +434,18 @@ class DocsDataBuilder:
 
     def metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
         entry = {
-            "scope": doc.scope_id,
             "doc_id": doc.doc_id,
             "title": doc.title,
             "added_date": doc.added_date,
             "last_updated": doc.last_updated,
-            "parent_id": self.effective_parent_id(doc, docs),
-            "hidden": doc.hidden,
-            "viewable": doc.viewable,
             "source_path": doc.source_path,
             "viewer_url": doc.viewer_url,
         }
+        parent_id = self.effective_parent_id(doc, docs)
+        if parent_id:
+            entry["parent_id"] = parent_id
+        if not doc.viewable:
+            entry["viewable"] = False
         if doc.summary:
             entry["summary"] = doc.summary
         if doc.ui_status:

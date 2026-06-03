@@ -1,6 +1,6 @@
 import {
   buildChildrenMap,
-  isDocHidden
+  isDocNonViewable
 } from "./docs-viewer-tree.js";
 import {
   readSourceConfigSettings
@@ -61,7 +61,7 @@ function createDocsViewerManagementStateFacade(domains) {
     searchRouteActive: sources.searchRecent,
     searchVisibleCount: sources.searchRecent,
     selectedDocId: sources.selectedDocument,
-    showHidden: sources.documentIndex,
+    showNonViewable: sources.documentIndex,
     statusMenuOpen: sources.management,
     uiStatusByValue: sources.scopeConfig,
     uiStatuses: sources.scopeConfig
@@ -125,8 +125,8 @@ export function initDocsViewerManagement(context) {
   var metadataSummaryInput = shellRef("metadataSummaryInput", "docsViewerMetadataSummaryInput");
   var metadataStatusLabel = shellRef("metadataStatusLabel", "docsViewerMetadataStatusLabel");
   var metadataStatusInput = shellRef("metadataStatusInput", "docsViewerMetadataStatusInput");
-  var metadataHiddenInput = shellRef("metadataHiddenInput", "docsViewerMetadataHiddenInput");
-  var metadataHiddenLabel = shellRef("metadataHiddenLabel", "docsViewerMetadataHiddenLabel");
+  var metadataNonViewableInput = shellRef("metadataNonViewableInput", "docsViewerMetadataNonViewableInput");
+  var metadataNonViewableLabel = shellRef("metadataNonViewableLabel", "docsViewerMetadataNonViewableLabel");
   var metadataParentInput = shellRef("metadataParentInput", "docsViewerMetadataParentInput");
   var metadataParentPopup = shellRef("metadataParentPopup", "docsViewerMetadataParentPopup");
   var metadataCancelButton = shellRef("metadataCancelButton", "docsViewerMetadataCancelButton");
@@ -269,7 +269,7 @@ export function initDocsViewerManagement(context) {
     var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
     var docsByParent = buildChildrenMap(state.allDocs, {
       managementMode: state.managementMode,
-      showHidden: state.showHidden
+      showNonViewable: state.showNonViewable
     });
     function pushChildren(parentId, depth) {
       (docsByParent.get(parentId) || []).forEach(function (candidate) {
@@ -436,7 +436,7 @@ export function initDocsViewerManagement(context) {
     if (!manageRebuildButton || !manageNewButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
-    var draftDoc = Boolean(doc && isDocHidden(doc));
+    var draftDoc = Boolean(doc && isDocNonViewable(doc));
     var editDisabled = (
       state.managementBusy ||
       !doc ||
@@ -484,7 +484,7 @@ export function initDocsViewerManagement(context) {
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {
       draftToggle.disabled = !state.managementAvailable || state.managementBusy;
-      draftToggle.checked = state.showHidden;
+      draftToggle.checked = state.showNonViewable;
     }
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
@@ -556,7 +556,7 @@ export function initDocsViewerManagement(context) {
 
   function metadataPayloadFromModal() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput) return null;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataNonViewableInput || !metadataParentInput) return null;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -576,7 +576,7 @@ export function initDocsViewerManagement(context) {
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
       ui_status: selectedStatus,
-      viewable: !metadataHiddenInput.checked,
+      viewable: !metadataNonViewableInput.checked,
       parent_id: parentId
     };
   }
@@ -668,7 +668,7 @@ export function initDocsViewerManagement(context) {
 
   function handleDraftToggleChange() {
     if (!draftToggle) return;
-    state.showHidden = Boolean(draftToggle.checked);
+    state.showNonViewable = Boolean(draftToggle.checked);
     state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
     context.applyDocVisibility();
     context.renderSidebar();
@@ -703,7 +703,7 @@ export function initDocsViewerManagement(context) {
         manageNewScopeButton: manageNewScopeButton,
         manageSettingsButton: manageSettingsButton,
         manageViewableButton: manageViewableButton,
-        metadataHiddenLabel: metadataHiddenLabel,
+        metadataNonViewableLabel: metadataNonViewableLabel,
         metadataStatusInput: metadataStatusInput,
         metadataStatusLabel: metadataStatusLabel,
         settingsHeading: settingsHeading,
@@ -942,7 +942,7 @@ export function initDocsViewerManagement(context) {
       metadataCancelButton: metadataCancelButton,
       metadataDocId: metadataDocId,
       metadataForm: metadataForm,
-      metadataHiddenInput: metadataHiddenInput,
+      metadataNonViewableInput: metadataNonViewableInput,
       metadataModal: metadataModal,
       metadataParentInput: metadataParentInput,
       metadataParentPopup: metadataParentPopup,
@@ -963,7 +963,7 @@ export function initDocsViewerManagement(context) {
       currentSelectedDoc: currentSelectedDoc,
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: hideManageActionsMenu,
-      isDocHidden: isDocHidden,
+      isDocNonViewable: isDocNonViewable,
       metadataParentOptions: metadataParentOptions,
       onImportOpen: initializeImportModal,
       onMetadataSubmit: confirmMetadataModal,

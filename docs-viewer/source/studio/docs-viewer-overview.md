@@ -86,7 +86,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
 - `docs-viewer/runtime/js/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
 - `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts
-- `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including hidden/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
+- `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including non-viewable/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
 - `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
 - `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
 - `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
@@ -226,7 +226,7 @@ Current report behavior:
 Current visibility behavior:
 
 - generated docs indexes can carry `viewable: false` rows that remain generated and manageable
-- source front matter uses `viewable: false` for non-viewable docs; `hidden` is not part of the current source schema
+- source front matter uses `viewable: false` for non-viewable docs and omits `viewable` for the default viewable state
 - public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
 - public/default viewer discovery also excludes descendants of a non-viewable parent, without changing descendant `viewable` values
 

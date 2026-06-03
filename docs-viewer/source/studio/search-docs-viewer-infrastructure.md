@@ -171,7 +171,7 @@ Docs Viewer-specific review should ask:
 
 - Are doc title, parent title, date, and id enough for real docs lookup?
 - Should headings, summaries, or body excerpts enter search, and what payload cost would that add?
-- Are hidden, non-viewable, and manage-only docs filtered correctly?
+- Are non-viewable and manage-only docs filtered correctly?
 - Does ranking reflect document lookup rather than catalogue lookup?
 - Do results open in the correct Docs Viewer scope and route mode?
 - Are targeted updates safe for source renames, parent changes, and visibility changes?

@@ -211,7 +211,7 @@ def assert_management_actions_render(page: Page) -> None:
                 'docsViewerMetadataTitleInput',
                 'docsViewerMetadataSummaryInput',
                 'docsViewerMetadataStatusInput',
-                'docsViewerMetadataHiddenInput',
+                'docsViewerMetadataNonViewableInput',
                 'docsViewerMetadataParentInput',
                 'docsViewerMetadataParentPopup',
                 'docsViewerMetadataCancelButton',
@@ -872,7 +872,7 @@ def assert_app_session_contract(page: Page) -> None:
                 indexPanelSource: session.domains.panelView.indexPanelState.source,
                 viewStateInfoOpen: session.domains.panelView.viewState.info.open,
                 defaultManagementText: session.domains.management.managementText.copyLinkLabel,
-                docHiddenEmoji: session.domains.management.managementText.docHiddenEmoji,
+                docNonViewableEmoji: session.domains.management.managementText.docNonViewableEmoji,
                 documentIndexFields: session.domains.documentIndex.fields.slice(0, 3)
             };
         }"""
@@ -907,7 +907,7 @@ def assert_app_session_contract(page: Page) -> None:
         raise AssertionError(f"app session support/hosted view defaults failed: {result!r}")
     if result["indexPanelSource"] != "stub" or result["viewStateInfoOpen"] is not False:
         raise AssertionError(f"app session panel defaults failed: {result!r}")
-    if result["defaultManagementText"] != "Copy Link" or result["docHiddenEmoji"] != "🚫":
+    if result["defaultManagementText"] != "Copy Link" or result["docNonViewableEmoji"] != "🚫":
         raise AssertionError(f"app session management text defaults changed: {result!r}")
     if result["documentIndexFields"] != ["allDocs", "allDocsById", "docs"]:
         raise AssertionError(f"app session document index domain fields changed: {result!r}")
@@ -2779,7 +2779,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                         return () => calls.push('busy-stop');
                     }
                 },
-                syncHiddenVisibilityForRequestedDoc: () => calls.push('sync-hidden'),
+                syncNonViewableVisibilityForRequestedDoc: () => calls.push('sync-non-viewable'),
                 updateInfoPanel: () => calls.push('info'),
                 viewerBaseUrl: () => '/library/',
                 viewerPathname: () => '/library/',
@@ -2890,7 +2890,7 @@ def assert_search_controller_contract(page: Page) -> None:
                 docs: [
                     { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true },
                     { doc_id: 'second', title: 'Second Guide', parent_id: 'intro', added_date: '2026-05-26', viewable: true },
-                    { doc_id: 'hidden', title: 'Hidden Guide', parent_id: '', added_date: '2026-05-28', viewable: false }
+                    { doc_id: 'non-viewable', title: 'Non-viewable Guide', parent_id: '', added_date: '2026-05-28', viewable: false }
                 ],
                 docsById: new Map([
                     ['intro', { doc_id: 'intro', title: 'Intro Guide', parent_id: '', added_date: '2026-05-27', viewable: true }],
@@ -3209,7 +3209,7 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
             const docs = [
                 { doc_id: 'intro', title: 'Intro', parent_id: '', last_updated: '2026-05-28', viewable: true },
                 { doc_id: 'child', title: 'Child', parent_id: 'intro', summary: 'Child summary', viewable: true },
-                { doc_id: 'hidden', title: 'Hidden', parent_id: '', hidden: true, viewable: false }
+                { doc_id: 'non-viewable', title: 'Non-viewable', parent_id: '', viewable: false }
             ];
             const documentIndex = {
                 docs,
@@ -3231,8 +3231,8 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
                     ['studio', { scope_id: 'studio', indexUrl: '/assets/data/docs/scopes/studio/index.json' }]
                 ]),
                 managementText: {
-                    metadataHiddenLabel: 'hidden',
-                    docHiddenEmoji: 'H'
+                    metadataNonViewableLabel: 'non-viewable',
+                    docNonViewableEmoji: 'H'
                 },
                 showUpdatedDate: true
             };
@@ -3298,7 +3298,7 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
                 expanded: Array.from(documentIndex.expandedDocIds),
                 activeHref: document.querySelector('.docsViewer__navLink.is-active')?.getAttribute('href') || '',
                 rootHref: document.querySelector('[data-doc-id="intro"]')?.getAttribute('href') || '',
-                hiddenTitle: document.querySelector('[data-doc-id="hidden"]')?.getAttribute('title') || '',
+                nonViewableTitle: document.querySelector('[data-doc-id="non-viewable"]')?.getAttribute('title') || '',
                 contentHtml: document.getElementById('content').innerHTML,
                 pathText: document.getElementById('path').textContent,
                 summaryText: document.getElementById('summary').textContent,
@@ -3314,7 +3314,7 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
         raise AssertionError(f"sidebar renderer did not use document-index expansion state: {result!r}")
     if result["activeHref"] != "/docs/?doc=child" or result["rootHref"] != "/docs/?doc=child":
         raise AssertionError(f"sidebar renderer route URL projection changed: {result!r}")
-    if result["hiddenTitle"] != "hidden":
+    if result["nonViewableTitle"] != "non-viewable":
         raise AssertionError(f"sidebar renderer management text projection changed: {result!r}")
     if result["contentHtml"] != '<h1 id="part">Child</h1>':
         raise AssertionError(f"document controller payload render changed: {result!r}")
@@ -3864,8 +3864,8 @@ def assert_document_index_state_contract(page: Page) -> None:
                 allDocs: [
                     { doc_id: 'root', title: 'Root', viewable: true },
                     { doc_id: 'child', parent_id: 'root', title: 'Child', viewable: true },
-                    { doc_id: 'hidden-root', title: 'Hidden', hidden: true, viewable: true },
-                    { doc_id: 'hidden-child', parent_id: 'hidden-root', title: 'Hidden child', viewable: true },
+                    { doc_id: 'non-viewable-root', title: 'Non-viewable', viewable: false },
+                    { doc_id: 'non-viewable-child', parent_id: 'non-viewable-root', title: 'Non-viewable child', viewable: true },
                     { doc_id: 'draft-root', title: 'Draft root', viewable: true },
                     { doc_id: 'draft-child', parent_id: 'draft-root', title: 'Draft child', viewable: true }
                 ],
@@ -3876,7 +3876,7 @@ def assert_document_index_state_contract(page: Page) -> None:
                 manageOnlyTreeRootIds: new Set(['draft-root']),
                 managementMode: false,
                 nonLoadableDocIds: new Set(['root']),
-                showHidden: false,
+                showNonViewable: false,
                 uiStatusByValue: new Map([['planned', { label: 'Planned' }]])
             };
             const publicIndex = module.createDocsViewerDocumentIndexState({ state: publicState });
@@ -3892,23 +3892,23 @@ def assert_document_index_state_contract(page: Page) -> None:
                 docs: [],
                 docsById: new Map(),
                 managementMode: true,
-                showHidden: false,
+                showNonViewable: false,
                 nonLoadableDocIds: new Set(['root']),
                 manageOnlyTreeRootIds: new Set(['draft-root'])
             });
             const manageIndex = module.createDocsViewerDocumentIndexState({ state: manageState });
             manageIndex.applyDocVisibility();
-            manageIndex.syncHiddenVisibilityForRequestedDoc(() => 'hidden-root');
+            manageIndex.syncNonViewableVisibilityForRequestedDoc(() => 'non-viewable-root');
             manageIndex.applyDocVisibility();
             return {
                 publicDocs,
                 defaultDoc,
                 rootTarget,
                 missingTarget,
-                publicHiddenStatus: publicIndex.statusForIndexDoc(publicState.allDocsById.get('hidden-root')),
-                manageShowHidden: manageState.showHidden,
+                publicNonViewableStatus: publicIndex.statusForIndexDoc(publicState.allDocsById.get('non-viewable-root')),
+                manageShowNonViewable: manageState.showNonViewable,
                 manageDocs: manageState.docs.map((doc) => doc.doc_id),
-                findHidden: manageIndex.findAllDocById('hidden-root')?.doc_id || ''
+                findNonViewable: manageIndex.findAllDocById('non-viewable-root')?.doc_id || ''
             };
         }"""
     )
@@ -3917,10 +3917,10 @@ def assert_document_index_state_contract(page: Page) -> None:
         "defaultDoc": "child",
         "rootTarget": "child",
         "missingTarget": "missing",
-        "publicHiddenStatus": None,
-        "manageShowHidden": True,
-        "manageDocs": ["child", "draft-child", "draft-root", "hidden-root", "hidden-child", "root"],
-        "findHidden": "hidden-root",
+        "publicNonViewableStatus": None,
+        "manageShowNonViewable": True,
+        "manageDocs": ["child", "draft-child", "draft-root", "non-viewable-root", "non-viewable-child", "root"],
+        "findNonViewable": "non-viewable-root",
     }:
         raise AssertionError(f"document-index state contract changed unexpectedly: {result!r}")
 

@@ -1,13 +1,10 @@
 {
-  "scope": "studio",
   "doc_id": "config-analytics-ui-text-json",
   "title": "Analytics UI Text Config",
   "added_date": "2026-06-02",
   "last_updated": "2026-06-03",
-  "parent_id": "studio",
-  "hidden": false,
-  "viewable": true,
   "source_path": "config-analytics-ui-text-json.md",
   "viewer_url": "/docs/?scope=studio&doc=config-analytics-ui-text-json",
+  "parent_id": "studio",
   "content_html": "<h1>Analytics UI Text Config</h1>\n<p>Config files:</p>\n<ul>\n<li><code>analytics-app/app/frontend/config/ui-text/data-sharing-prepare.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/data-sharing-review.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/series-tag-editor.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/series-tags.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/tag-aliases.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/tag-groups.json</code></li>\n<li><code>analytics-app/app/frontend/config/ui-text/tag-registry.json</code></li>\n</ul>\n<h2>Contract Role</h2>\n<p>These files hold route-scoped visible copy for Local Analytics and Analytics-hosted Data Sharing pages.\nThey are the Analytics equivalent of Local Studio UI-text bundles.</p>\n<p>They do not own service endpoints, tag data schemas, Data Sharing adapter rules, or public route contracts.</p>\n<h2>What Reads Them</h2>\n<p>Analytics frontend modules load the bundle URL configured in <code>analytics-app/app/frontend/config/analytics-config.json</code> under <code>paths.data.ui_text</code>.\nThe route then reads strings by scoped key with caller fallbacks.</p>\n<p>Data Sharing prepare/review copy belongs here only for the Analytics-hosted route surface.\nAdapter behavior, source-write policy, export profiles, and import review rules belong in <code>data-sharing/config/...</code> and the Data Sharing service modules.</p>\n<h2>Edit Class</h2>\n<p>These files are maintainer-editable copy config.\nChanging copy is low risk.\nChanging keys requires updating the route module and its focused tests.</p>\n<h2>Cleanup Review</h2>\n<p>For each bundle:</p>\n<ul>\n<li>verify the route remains active in <code>analytics-config.json</code></li>\n<li>remove unused keys by searching route modules for the scoped key prefix</li>\n<li>keep Data Sharing operation copy separate from Data Sharing adapter capability config</li>\n<li>remove retired-route bundles only after route config and server exposure are retired</li>\n</ul>\n<p>Current cleanup status:</p>\n<ul>\n<li>CFG-006 in <a href=\"/docs/?scope=studio&amp;doc=config-cleanup-implementation-plan\">Config Cleanup Implementation Plan</a> audited active Analytics UI-text bundles and removed stale route-surface keys that no active route module reads</li>\n</ul>\n"
 }

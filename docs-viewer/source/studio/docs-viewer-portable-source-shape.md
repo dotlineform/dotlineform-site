@@ -26,7 +26,7 @@ Important fields:
 - `parent_id`: parent document id; blank means top-level
 - `summary`: optional short summary
 - `ui_status`: optional viewer status pill
-- `viewable`: `false` keeps the doc generated but hidden from read-only public views
+- `viewable`: `false` keeps the doc generated but excluded from read-only public views
 - `last_updated`: display/search metadata
 - `added_date`: recently-added metadata
 

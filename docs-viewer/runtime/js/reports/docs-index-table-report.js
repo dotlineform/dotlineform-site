@@ -1,8 +1,8 @@
 const PRESETS = {
   library_documents_admin: {
-    columns: ["title", "doc_id", "hidden"],
-    filters: ["hidden"],
-    sortable: ["title", "doc_id", "hidden"],
+    columns: ["title", "doc_id", "viewable"],
+    filters: ["non_viewable"],
+    sortable: ["title", "doc_id", "viewable"],
     defaultSort: "doc_id",
     defaultDir: "asc",
     linkMode: "manage"
@@ -36,10 +36,10 @@ function docAddedDate(doc) {
 }
 
 function docIsViewable(doc) {
-  return doc && doc.viewable === true;
+  return Boolean(doc) && doc.viewable !== false;
 }
 
-function docIsHidden(doc) {
+function docIsNonViewable(doc) {
   return !docIsViewable(doc);
 }
 
@@ -59,12 +59,12 @@ function docIsParent(state, doc) {
 
 function filterCounts(state) {
   return {
-    hidden: state.docs.filter((doc) => docIsHidden(doc)).length
+    non_viewable: state.docs.filter((doc) => docIsNonViewable(doc)).length
   };
 }
 
 function docMatchesFilters(state, doc) {
-  if (state.activeFilters.has("hidden") && !docIsHidden(doc)) return false;
+  if (state.activeFilters.has("non_viewable") && !docIsNonViewable(doc)) return false;
   if (state.activeFilters.has("parent") && !docIsParent(state, doc)) return false;
   return true;
 }
@@ -78,9 +78,9 @@ function compareDocs(state, a, b) {
   } else if (state.sortKey === "title") {
     av = docTitle(a);
     bv = docTitle(b);
-  } else if (state.sortKey === "hidden") {
-    av = docIsHidden(a) ? "1" : "0";
-    bv = docIsHidden(b) ? "1" : "0";
+  } else if (state.sortKey === "viewable") {
+    av = docIsViewable(a) ? "1" : "0";
+    bv = docIsViewable(b) ? "1" : "0";
   } else {
     av = docId(a);
     bv = docId(b);
@@ -194,8 +194,8 @@ function appendDataCell(state, row, doc, column) {
     cell.className = "docsViewerReport__viewable" + (docIsViewable(doc) ? " is-viewable" : "");
     cell.setAttribute("aria-label", docIsViewable(doc) ? "viewable" : "not viewable");
     row.appendChild(cell);
-  } else if (column === "hidden") {
-    appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__hidden", docIsHidden(doc) ? "hidden" : "");
+  } else if (column === "non_viewable") {
+    appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__viewable", docIsNonViewable(doc) ? "non-viewable" : "");
   } else {
     appendLinkCell(row, state, "docsViewerReport__cellLink docsViewerReport__title", doc, docTitle(doc));
   }

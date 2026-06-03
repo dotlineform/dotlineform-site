@@ -274,8 +274,8 @@ export function startDocsViewerRuntime(options) {
       setStatus: setStatus,
       startBusy: startBusy
     },
-    syncHiddenVisibilityForRequestedDoc: function () {
-      documentIndex.syncHiddenVisibilityForRequestedDoc(getCurrentDocId);
+    syncNonViewableVisibilityForRequestedDoc: function () {
+      documentIndex.syncNonViewableVisibilityForRequestedDoc(getCurrentDocId);
     },
     updateInfoPanel: updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },

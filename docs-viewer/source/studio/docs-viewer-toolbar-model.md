@@ -64,7 +64,7 @@ The manage toolbar owns controls that imply management mode, write capability, o
 
 - Actions menu
 - create, import, delete, settings, rebuild, and scope actions
-- viewability controls such as Show/hidden
+- viewability controls such as Show / non-viewable
 - management status affordances when needed
 
 The manage toolbar may sit next to the viewer toolbar in the same top bar.

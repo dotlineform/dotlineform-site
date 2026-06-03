@@ -15,17 +15,14 @@ import docs_source_model as source_model
 def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
     doc_id = str(doc.get("doc_id") or "").strip()
     title = str(doc.get("title") or doc_id).strip()
-    viewable = bool(doc.get("viewable", True))
-    hidden = bool(doc.get("hidden", False))
+    viewable = doc.get("viewable") is not False
     published = doc.get("published") is not False
-    selectable = bool(doc_id and published and viewable and not hidden)
+    selectable = bool(doc_id and published and viewable)
     issues: list[Dict[str, str]] = []
     if not published:
         issues.append({"level": "warning", "message": "Document is not published."})
     if not viewable:
         issues.append({"level": "warning", "message": "Document is not viewable."})
-    if hidden:
-        issues.append({"level": "warning", "message": "Document is hidden."})
     return {
         "id": doc_id,
         "doc_id": doc_id,
@@ -35,7 +32,6 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
         "parent_id": str(doc.get("parent_id") or "").strip(),
         "published": published,
         "viewable": viewable,
-        "hidden": hidden,
         "selectable": selectable,
         "children": [],
         "issues": issues,

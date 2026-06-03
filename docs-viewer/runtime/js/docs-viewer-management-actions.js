@@ -10,7 +10,7 @@ import {
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
 import {
-  isDocHidden,
+  isDocNonViewable,
   isDocViewable
 } from "./docs-viewer-tree.js";
 import {
@@ -125,7 +125,7 @@ export function createDocsViewerManagementActionController(options) {
       title: String(doc.title || "").trim(),
       summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
       ui_status: String(uiStatus || "").trim(),
-      hidden: isDocHidden(doc),
+      viewable: !isDocNonViewable(doc),
       parent_id: String(doc.parent_id || "").trim()
     };
   }
@@ -413,7 +413,7 @@ export function createDocsViewerManagementActionController(options) {
     var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
     setManagementMessage("Showing " + countText + "...", false);
 
-    updateManagedDocsViewability(targetDocIds, false, managementClientOptions())
+    updateManagedDocsViewability(targetDocIds, true, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
         return reloadDocsIndex(doc.doc_id, "");

@@ -138,7 +138,7 @@ Route shells should point at it with `data-route-config-url` and identify themse
 For standalone local manage mode, the Docs Viewer service serves this registry path with local loopback management/generated-read base URLs injected at request time.
 
 `docs-viewer/config/defaults/docs-viewer-config.json` is projected from `docs-viewer/config/scopes/docs_scopes.json`.
-It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
+It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, non-viewable-doc styling, non-viewable-doc emoji, and per-scope UI-status options.
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
 Docs Import copy is nested in `docs-viewer/config/ui-text/ui-text.json` under `docs_html_import`.

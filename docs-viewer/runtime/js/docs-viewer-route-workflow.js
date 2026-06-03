@@ -280,7 +280,7 @@ export function initDocsViewerRouteWorkflow(context) {
       setRecentModeActive: context.setRecentModeActive,
       setStatus: setStatus,
       state: state,
-      syncHiddenVisibilityForRequestedDoc: context.syncHiddenVisibilityForRequestedDoc
+      syncNonViewableVisibilityForRequestedDoc: context.syncNonViewableVisibilityForRequestedDoc
     });
     if (typeof context.updateInfoPanel === "function") {
       context.updateInfoPanel();
@@ -297,7 +297,7 @@ export function initDocsViewerRouteWorkflow(context) {
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    context.syncHiddenVisibilityForRequestedDoc();
+    context.syncNonViewableVisibilityForRequestedDoc();
     context.applyDocVisibility();
 
     context.renderSidebar();

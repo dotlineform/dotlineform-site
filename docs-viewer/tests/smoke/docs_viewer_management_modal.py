@@ -83,8 +83,8 @@ def install_modal_fixture(page: Page) -> None:
                         <select class="docsViewer__fieldInput docsViewer__fieldInput--listbox" id="docsViewerMetadataStatusInput" name="ui_status"></select>
                       </label>
                       <label class="docsViewer__field docsViewer__field--checkbox">
-                        <input class="docsViewer__checkboxInput" id="docsViewerMetadataHiddenInput" name="hidden" type="checkbox">
-                        <span class="docsViewer__fieldLabel" id="docsViewerMetadataHiddenLabel">hidden</span>
+                        <input class="docsViewer__checkboxInput" id="docsViewerMetadataNonViewableInput" name="non_viewable" type="checkbox">
+                        <span class="docsViewer__fieldLabel" id="docsViewerMetadataNonViewableLabel">non-viewable</span>
                       </label>
                       <div class="docsViewer__field docsViewer__field--parent">
                         <label class="docsViewer__fieldLabel" for="docsViewerMetadataParentInput">parent</label>
@@ -206,7 +206,7 @@ def install_modal_fixture(page: Page) -> None:
                 metadataCancelButton: document.getElementById('docsViewerMetadataCancelButton'),
                 metadataDocId: document.getElementById('docsViewerMetadataDocId'),
                 metadataForm: document.getElementById('docsViewerMetadataForm'),
-                metadataHiddenInput: document.getElementById('docsViewerMetadataHiddenInput'),
+                metadataNonViewableInput: document.getElementById('docsViewerMetadataNonViewableInput'),
                 metadataModal: document.getElementById('docsViewerMetadataModal'),
                 metadataParentInput: document.getElementById('docsViewerMetadataParentInput'),
                 metadataParentPopup: document.getElementById('docsViewerMetadataParentPopup'),
@@ -233,7 +233,7 @@ def install_modal_fixture(page: Page) -> None:
                     currentSelectedDoc: () => state.docsById.get('current-doc'),
                     hideContextMenu: () => {},
                     hideManageActionsMenu: () => {},
-                    isDocHidden: doc => Boolean(doc.hidden),
+                    isDocNonViewable: doc => doc.viewable === false,
                     metadataParentOptions: () => [
                         { value: '', label: 'Top level' },
                         { value: 'parent-doc', label: 'Parent Doc' }
@@ -1206,7 +1206,7 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     <button id="docsViewerManageViewableButton" type="button">Show</button>
                   </div>
                 </div>
-                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show hidden</label>
+                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show non-viewable</label>
                 <nav id="docsViewerNav"></nav>
                 <p id="docsViewerStatus"></p>
               </main>
@@ -1251,7 +1251,7 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     unavailableNote: 'Manage mode unavailable.'
                 },
                 searchRouteActive: false,
-                showHidden: true,
+                showNonViewable: true,
                 uiStatuses: [],
                 managementMessage: '',
                 managementMessageIsError: false,
@@ -1360,7 +1360,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                     </div>
                   </div>
                 </div>
-                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show hidden</label>
+                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show non-viewable</label>
                 <nav id="docsViewerNav">
                   <div class="docsViewer__navRow" data-doc-row-id="current-doc">
                     <span class="docsViewer__toggleSpacer"></span>
@@ -1383,8 +1383,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
                       <input id="docsViewerMetadataTitleInput" name="title" required>
                       <textarea id="docsViewerMetadataSummaryInput" name="summary"></textarea>
                       <select id="docsViewerMetadataStatusInput" name="ui_status"></select>
-                      <input id="docsViewerMetadataHiddenInput" name="hidden" type="checkbox">
-                      <span id="docsViewerMetadataHiddenLabel">hidden</span>
+                      <input id="docsViewerMetadataNonViewableInput" name="non_viewable" type="checkbox">
+                      <span id="docsViewerMetadataNonViewableLabel">non-viewable</span>
                       <input id="docsViewerMetadataParentInput" name="parent_id">
                       <div id="docsViewerMetadataParentPopup" hidden></div>
                       <button id="docsViewerMetadataCancelButton" type="button">Cancel</button>
@@ -1412,8 +1412,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
             `;
 
             const docs = [
-                { doc_id: 'current-doc', title: 'Current Doc', parent_id: '', hidden: false },
-                { doc_id: 'other-doc', title: 'Other Doc', parent_id: '', hidden: false }
+                { doc_id: 'current-doc', title: 'Current Doc', parent_id: '', viewable: true },
+                { doc_id: 'other-doc', title: 'Other Doc', parent_id: '', viewable: true }
             ];
             const status = document.getElementById('docsViewerStatus');
             const state = {
@@ -1435,9 +1435,9 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 managementText: {
                     checkingNote: 'Checking manage mode...',
                     clearSearchNote: 'Clear search to manage the current doc.',
-                    docHiddenEmoji: 'H',
+                    docNonViewableEmoji: 'H',
                     importCancelButton: 'Cancel',
-                    metadataHiddenLabel: 'hidden',
+                    metadataNonViewableLabel: 'non-viewable',
                     metadataParentInvalid: 'Invalid parent.',
                     metadataParentNoMatches: 'No matches.',
                     metadataParentRootOption: 'Root',
@@ -1458,7 +1458,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 searchRouteActive: false,
                 searchQuery: '',
                 searchVisibleCount: 0,
-                showHidden: true,
+                showNonViewable: true,
                 uiStatuses: [],
                 uiStatusByValue: new Map(),
                 managementMessage: '',

@@ -87,7 +87,7 @@ Purpose:
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `viewable`, viewer URL, per-doc content URL, and `content_text_length`
+- identity, added/update dates, optional `summary`, optional `ui_status`, optional non-empty `parent_id`, optional `viewable: false`, viewer URL, per-doc content URL, and `content_text_length`
 - `viewer_options` for scope-level display behavior such as hiding document-view updated dates
 
 Current site mapping:

@@ -58,7 +58,7 @@ It should optimize for:
 
 - title, summary, headings, and document text
 - document hierarchy and parent titles
-- `hidden` / `viewable` filtering
+- viewability filtering
 - recently-added ordering
 - opening results inside the active Docs Viewer route
 

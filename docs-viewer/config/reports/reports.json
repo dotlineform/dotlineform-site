@@ -11,11 +11,11 @@
         {
           "preset_id": "library_documents_admin",
           "title": "Library Documents Admin",
-          "description": "Management report for reviewing Library documents by title, doc_id, and hidden status.",
+          "description": "Management report for reviewing Library documents by title, doc_id, and viewability.",
           "default_scope": "library",
-          "columns": ["title", "doc_id", "hidden"],
-          "filters": ["hidden"],
-          "sortable": ["title", "doc_id", "hidden"]
+          "columns": ["title", "doc_id", "viewable"],
+          "filters": ["non_viewable"],
+          "sortable": ["title", "doc_id", "viewable"]
         },
         {
           "preset_id": "az_index",

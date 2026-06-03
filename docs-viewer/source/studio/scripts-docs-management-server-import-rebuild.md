@@ -22,7 +22,7 @@ Request behavior:
 - `scope` must be one of the configured scope ids in `docs-viewer/config/scopes/docs_scopes.json`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
-- new Studio docs omit `viewable` unless a hidden state is needed
+- new Studio docs omit `viewable`, which defaults them to viewable
 - new Analysis docs write `viewable: false`
 - new Library docs write `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
@@ -86,7 +86,7 @@ Import behavior:
 - keeps `replacement_title` as a compatibility fallback for older callers
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
-- new Studio imports omit `viewable` unless a hidden state is needed
+- new Studio imports omit `viewable`, which defaults them to viewable
 - new Analysis imports write `viewable: false`
 - new Library imports write `viewable: false`
 - preserves blank `parent_id`; the generated index places the new imported doc by title among root siblings

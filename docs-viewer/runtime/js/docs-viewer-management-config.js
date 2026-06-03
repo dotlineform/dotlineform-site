@@ -87,12 +87,12 @@ function applyManagementText(config, state, context) {
   MANAGEMENT_TEXT_KEYS.forEach(function (entry) {
     state.managementText[entry[0]] = context.getConfigText(config, entry[1], state.managementText[entry[0]]);
   });
-  state.managementText.metadataHiddenLabel = context.getConfigText(
+  state.managementText.metadataNonViewableLabel = context.getConfigText(
     config,
-    "docs_viewer.metadata_hidden_label",
-    context.getConfigText(config, "docs_viewer.metadata_viewable_label", state.managementText.metadataHiddenLabel)
+    "docs_viewer.metadata_non_viewable_label",
+    state.managementText.metadataNonViewableLabel
   );
-  state.managementText.docHiddenEmoji = String(context.getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
+  state.managementText.docNonViewableEmoji = String(context.getConfigValue(config, "docs_viewer.doc_non_viewable_emoji") || state.managementText.docNonViewableEmoji);
 }
 
 function setButtonLabel(button, label) {
@@ -124,8 +124,8 @@ export function applyDocsViewerManagementConfig(options) {
   if (refs.draftLabel) {
     refs.draftLabel.textContent = context.getConfigText(
       config,
-      "docs_viewer.hidden_toggle_label",
-      context.getConfigText(config, "docs_viewer.draft_toggle_label", "show hidden")
+      "docs_viewer.non_viewable_toggle_label",
+      "show non-viewable"
     );
   }
   if (refs.draftToggle) {
@@ -133,8 +133,8 @@ export function applyDocsViewerManagementConfig(options) {
       "aria-label",
       context.getConfigText(
         config,
-        "docs_viewer.hidden_toggle_aria_label",
-        context.getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show hidden docs")
+        "docs_viewer.non_viewable_toggle_aria_label",
+        "Show non-viewable docs"
       )
     );
   }
@@ -171,8 +171,8 @@ export function applyDocsViewerManagementConfig(options) {
   if (refs.metadataStatusLabel) {
     refs.metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
   }
-  if (refs.metadataHiddenLabel) {
-    refs.metadataHiddenLabel.textContent = state.managementText.metadataHiddenLabel;
+  if (refs.metadataNonViewableLabel) {
+    refs.metadataNonViewableLabel.textContent = state.managementText.metadataNonViewableLabel;
   }
   if (state.metadataEditingDocId && refs.metadataStatusInput && modalController) {
     var metadataDoc = state.docsById.get(state.metadataEditingDocId);

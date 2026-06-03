@@ -93,8 +93,8 @@
   ],
   "docs_viewer": {
     "recently_added_limit": 10,
-    "hidden_nav_color": "var(--muted)",
-    "doc_hidden_emoji": "🚫",
+    "non_viewable_nav_color": "var(--muted)",
+    "doc_non_viewable_emoji": "🚫",
     "scope_type_badges": {
       "public": {
         "label": "Public",

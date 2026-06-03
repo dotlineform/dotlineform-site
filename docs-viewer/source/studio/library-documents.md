@@ -41,7 +41,7 @@ Columns:
 
 - `title`
 - `doc_id`
-- `hidden`
+- `viewable`
 
 All displayed columns are sortable.
 
@@ -51,9 +51,9 @@ Both the `doc_id` and `title` links open the `/docs/` management shell with `sco
 
 The page exposes one filter pill:
 
-- `hidden`
+- `non_viewable`
 
-`hidden` shows records where `viewable` is `false`.
+`non_viewable` shows records where `viewable` is `false`.
 
 ## Availability
 

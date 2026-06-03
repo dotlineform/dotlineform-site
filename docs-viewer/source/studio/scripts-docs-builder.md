@@ -80,8 +80,9 @@ Jekyll remains a separate public-site preview/build verification layer.
 - every `.md` file under `docs-viewer/source/analysis/` is included in generated docs payloads, including nested docs
 - nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
 - nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id` and `parent_id`
-- add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
+- add front matter with `viewable: false` to generate a doc but keep it out of public/default tree, search, and recently-added views
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
+- generated index rows omit default fields such as empty `parent_id`, default row `scope`, and `viewable: true`; non-viewable rows include `viewable: false`
 - generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
 - Library source docs may temporarily contain imported `parent_id` values that do not resolve to current Library docs; the builder preserves those values in source but emits them as root-level generated relationships so `/library/` remains navigable
 - if front matter is omitted, the builder falls back to:
@@ -105,7 +106,7 @@ Jekyll remains a separate public-site preview/build verification layer.
 - `parent_id`
   empty string for a top-level doc
 - `viewable`
-  optional boolean; set `false` to keep a generated doc hidden from public/default Docs Viewer discovery
+  optional boolean; set `false` to keep a generated doc out of public/default Docs Viewer discovery
 
 Index tree ordering is generated from source metadata: root siblings and each parent’s child list are sorted case-insensitively by `title`, with `doc_id` as a stable tie-breaker.
 

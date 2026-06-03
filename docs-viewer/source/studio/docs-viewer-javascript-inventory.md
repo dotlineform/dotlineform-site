@@ -220,7 +220,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused document-index projection owner.
 - Current risk score: 4.
-- Keep this module limited to all-doc/doc map projection, public/manage visibility filtering, hidden/manage-only tree handling, non-loadable fallback resolution, default-doc resolution, and index status projection.
+- Keep this module limited to all-doc/doc map projection, public/manage visibility filtering, non-viewable/manage-only tree handling, non-loadable fallback resolution, default-doc resolution, and index status projection.
 - Do not move route URL state, sidebar DOM rendering, document payload loading, search/recent rendering, or management writes into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`

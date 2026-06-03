@@ -109,7 +109,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     }
     if not source_model.default_viewable_for_scope(scope):
         front_matter["viewable"] = False
-    hidden = source_model.default_hidden_for_scope(scope)
+    viewable = source_model.default_viewable_for_scope(scope)
     source_text = source_model.format_source(front_matter, f"# {title}\n")
     path = relative_path(repo_root, target_path)
 
@@ -124,8 +124,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
                 "doc_id": doc_id,
                 "title": title,
                 "parent_id": parent_id,
-                "hidden": hidden,
-                "viewable": not hidden,
+                "viewable": viewable,
             },
             "summary_text": f"Created {doc_id}.",
         },
@@ -173,18 +172,14 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
     viewable_was_provided = "viewable" in body
-    current_hidden = target.hidden
     current_viewable = target.viewable
     viewable = source_model.front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
-    hidden = not viewable
     viewable_changed = viewable_was_provided and viewable != current_viewable
-    hidden_changed = viewable_changed
     changes = {
         "title_changed": title_changed,
         "parent_changed": parent_changed,
         "summary_changed": summary_changed,
         "status_changed": status_changed,
-        "hidden_changed": hidden_changed,
         "viewable_changed": viewable_changed,
     }
     if not any(changes.values()):
@@ -201,7 +196,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                     "parent_id": target.parent_id,
                     "summary": current_summary,
                     "ui_status": current_ui_status,
-                    "hidden": current_hidden,
                     "viewable": current_viewable,
                 },
                 "changes": dict.fromkeys(changes.keys(), False),
@@ -226,7 +220,10 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         else:
             updated_front_matter.pop("ui_status", None)
     if viewable_was_provided:
-        updated_front_matter["viewable"] = viewable
+        if viewable:
+            updated_front_matter.pop("viewable", None)
+        else:
+            updated_front_matter["viewable"] = False
     updated_front_matter["parent_id"] = parent_id
     updated_front_matter.pop("sort_order", None)
 
@@ -247,7 +244,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                 "parent_id": parent_id,
                 "summary": summary,
                 "ui_status": ui_status,
-                "hidden": hidden,
                 "viewable": viewable,
             },
             "changes": changes,
@@ -265,7 +261,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "parent_changed": parent_changed,
             "summary_changed": summary_changed,
             "status_changed": status_changed,
-            "hidden_changed": hidden_changed,
             "viewable_changed": viewable_changed,
         },
         include_write_result_keys=True,
@@ -324,9 +319,8 @@ def plan_viewability_update(
     requested_doc_ids: list[str],
     include_descendants: bool,
 ) -> ManagementMutationPlan:
-    next_hidden = not next_viewable
-    changed_targets = [target for target in targets if target.hidden != next_hidden]
-    skipped_targets = [target for target in targets if target.hidden == next_hidden]
+    changed_targets = [target for target in targets if target.viewable != next_viewable]
+    skipped_targets = [target for target in targets if target.viewable == next_viewable]
     changed_doc_ids = {target.doc_id for target in changed_targets}
 
     response = {
@@ -338,7 +332,6 @@ def plan_viewability_update(
         "records": [
             {
                 "doc_id": target.doc_id,
-                "hidden": next_hidden if target.doc_id in changed_doc_ids else target.hidden,
                 "viewable": next_viewable if target.doc_id in changed_doc_ids else target.viewable,
                 "path": relative_path(repo_root, target.path),
             }
@@ -378,7 +371,6 @@ def plan_viewability_update(
             "requested_count": len(requested_doc_ids),
             "target_count": len(targets),
             "changed_count": len(changed_targets),
-            "to_hidden": next_hidden,
             "to_viewable": next_viewable,
         },
         include_write_result_keys=True,
@@ -428,7 +420,6 @@ def plan_update_viewability(repo_root: Path, body: Dict[str, Any]) -> Management
     response["path"] = relative_path(repo_root, target.path)
     response["record"] = {
         "doc_id": target.doc_id,
-        "hidden": not next_viewable if target.viewable != next_viewable else target.hidden,
         "viewable": next_viewable if target.viewable != next_viewable else target.viewable,
     }
     response["summary_text"] = (

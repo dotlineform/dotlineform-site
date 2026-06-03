@@ -69,7 +69,7 @@ Current behavior:
 - serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
 - serves selected-document Markdown source bodies and accepts body-only source rebuild requests for the manage-mode Markdown source editor
 - creates and deletes source docs under the current scope root
-- creates Studio docs without `viewable` unless a hidden state is needed
+- creates Studio docs without `viewable`, which defaults them to viewable
 - creates Analysis docs as `viewable: false`
 - creates Library docs as `viewable: false`
 - writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values

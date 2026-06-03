@@ -23,7 +23,7 @@ export function buildChildrenMap(docs, options) {
   }));
   docs.forEach(function (doc) {
     var parentId = doc.parent_id || "";
-    if (settings.managementMode && !settings.showHidden && parentId && !visibleDocIds.has(parentId)) {
+    if (settings.managementMode && !settings.showNonViewable && parentId && !visibleDocIds.has(parentId)) {
       parentId = "";
     }
     if (!childrenByParent.has(parentId)) {
@@ -38,18 +38,15 @@ export function buildChildrenMap(docs, options) {
 }
 
 export function isDocViewable(doc) {
-  return !isDocHidden(doc);
+  return !isDocNonViewable(doc);
 }
 
-export function isDocHidden(doc) {
+export function isDocNonViewable(doc) {
   if (!doc) return false;
-  if (Object.prototype.hasOwnProperty.call(doc, "hidden")) {
-    return doc.hidden === true;
-  }
   return doc.viewable === false;
 }
 
-export function hasHiddenAncestor(doc, docsById) {
+export function hasNonViewableAncestor(doc, docsById) {
   if (!doc || !doc.parent_id || !docsById) return false;
   var visited = new Set([doc.doc_id]);
   var current = docsById.get(doc.parent_id);

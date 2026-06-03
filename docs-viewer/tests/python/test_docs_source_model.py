@@ -45,7 +45,6 @@ def make_doc(
         title=str(front_matter["title"]),
         ui_status="",
         parent_id=parent_id,
-        hidden=False,
         viewable=True,
     )
 

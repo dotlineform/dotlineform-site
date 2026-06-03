@@ -17,10 +17,10 @@ When the work is complete, move durable architecture notes into the owning Docs 
 
 ### just done
 
-- Follow-up toolbar placement cleanup:
+  - Follow-up toolbar placement cleanup:
   - moved selected-document `Edit` and `Markdown source` controls out of the management `Actions` menu
   - rendered them as icon action pills in the rendered-document main-view toolbar beside status/bookmark controls
-  - kept `Delete`, `Show`, and `hidden` in their existing management surfaces
+  - kept `Delete`, `Show`, and non-viewable controls in their existing management surfaces
 
 - Reviewed the current implementation after the previous session and corrected stale task/test/docs state:
   - confirmed the source-editor backend and frontend implementation already covered items 1-11

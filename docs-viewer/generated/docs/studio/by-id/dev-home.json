@@ -1,12 +1,8 @@
 {
-  "scope": "studio",
   "doc_id": "dev-home",
   "title": "Dev Home",
   "added_date": "2026-04-19",
   "last_updated": "2026-05-23",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "dev-home.md",
   "viewer_url": "/docs/?scope=studio&doc=dev-home",
   "summary": "This section contains technical reference documents that apply to the repo as a whole.",

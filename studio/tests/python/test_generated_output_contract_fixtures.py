@@ -97,14 +97,11 @@ def test_docs_viewer_index_contract_fixture() -> None:
     assert_required_keys(
         doc_entry,
         [
-            "scope",
             "doc_id",
             "title",
             "added_date",
             "last_updated",
             "parent_id",
-            "hidden",
-            "viewable",
             "source_path",
             "viewer_url",
             "content_url",
@@ -112,7 +109,6 @@ def test_docs_viewer_index_contract_fixture() -> None:
         ],
         "docs index entry",
     )
-    assert_equal(doc_entry["scope"], "studio", "docs index entry scope")
     assert_contains(doc_entry["viewer_url"], "scope=studio", "viewer URL scope")
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "content URL by-id path")
     assert_true(isinstance(doc_entry["content_text_length"], int), "content text length type")

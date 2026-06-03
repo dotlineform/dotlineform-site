@@ -59,7 +59,7 @@ Analytics tag registry, aliases, assignments, and groups are local Analytics sou
 
 Docs source files are the canonical authored content.
 Generated Docs Viewer payloads are projections of that source.
-`viewable: false` can remain generated for manage-mode review while staying hidden from public/default tree discovery and search.
+`viewable: false` can remain generated for manage-mode review while staying out of public/default tree discovery and search.
 
 The public site may publish Library and Analysis Docs Viewer payloads and search.
 It must not publish Studio docs payloads or Studio docs search unless a separate public Studio docs surface is intentionally defined.

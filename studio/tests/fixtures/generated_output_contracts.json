@@ -27,14 +27,11 @@
         "show_updated_date": true
       },
       "doc_entry": {
-        "scope": "studio",
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
         "parent_id": "site-request-rubyless-app-runtimes",
-        "hidden": false,
-        "viewable": true,
         "source_path": "contract-fixture.md",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
@@ -50,27 +47,21 @@
     "by_id_json": {
       "path_pattern": "<docs_scope.output>/by-id/<doc_id>.json",
       "required_top_level_keys": [
-        "scope",
         "doc_id",
         "title",
         "added_date",
         "last_updated",
         "parent_id",
-        "hidden",
-        "viewable",
         "source_path",
         "viewer_url",
         "content_html"
       ],
       "payload": {
-        "scope": "studio",
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
         "parent_id": "site-request-rubyless-app-runtimes",
-        "hidden": false,
-        "viewable": true,
         "source_path": "contract-fixture.md",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
         "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">request link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[ref:work:00638]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"

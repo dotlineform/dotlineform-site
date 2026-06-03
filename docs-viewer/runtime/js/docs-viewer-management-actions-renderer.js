@@ -76,7 +76,7 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>',
   '    <label class="docsViewer__draftToggle">',
   '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">',
-  '      <span class="docsViewer__draftLabel">hidden</span>',
+  '      <span class="docsViewer__draftLabel">non-viewable</span>',
   '    </label>',
   '  </div>',
   '  <button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">',

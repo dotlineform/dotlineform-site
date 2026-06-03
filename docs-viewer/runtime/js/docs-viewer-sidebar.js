@@ -1,5 +1,5 @@
 import {
-  isDocHidden,
+  isDocNonViewable,
   isDocViewable
 } from "./docs-viewer-tree.js";
 
@@ -67,7 +67,7 @@ export function initDocsViewerSidebarRenderer(context) {
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
-      if (isDocHidden(doc)) {
+      if (isDocNonViewable(doc)) {
         row.className += " is-draft";
       }
       row.dataset.docRowId = doc.doc_id;
@@ -97,9 +97,9 @@ export function initDocsViewerSidebarRenderer(context) {
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
-      if (isDocHidden(doc)) {
+      if (isDocNonViewable(doc)) {
         link.setAttribute("data-draft-doc", "true");
-        link.title = managementTextValue("metadataHiddenLabel");
+        link.title = managementTextValue("metadataNonViewableLabel");
       }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -116,11 +116,11 @@ export function initDocsViewerSidebarRenderer(context) {
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
       }
-      if (isDocHidden(doc)) {
+      if (isDocNonViewable(doc)) {
         var draftIcon = document.createElement("span");
         draftIcon.className = "docsViewer__draftPrefix";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = managementTextValue("docHiddenEmoji");
+        draftIcon.textContent = managementTextValue("docNonViewableEmoji");
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));
@@ -157,15 +157,15 @@ export function initDocsViewerSidebarRenderer(context) {
       pathEl.appendChild(link);
     });
 
-    var hiddenLabel = managementTextValue("metadataHiddenLabel");
+    var nonViewableLabel = managementTextValue("metadataNonViewableLabel");
     if (!showUpdatedDate()) {
-      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
+      updatedEl.textContent = isDocNonViewable(doc) ? nonViewableLabel : "";
       updatedEl.hidden = isDocViewable(doc);
     } else if (doc.last_updated) {
-      updatedEl.textContent = (isDocHidden(doc) ? hiddenLabel + " • " : "") + "Updated " + doc.last_updated;
+      updatedEl.textContent = (isDocNonViewable(doc) ? nonViewableLabel + " • " : "") + "Updated " + doc.last_updated;
       updatedEl.hidden = false;
     } else {
-      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
+      updatedEl.textContent = isDocNonViewable(doc) ? nonViewableLabel : "";
       updatedEl.hidden = isDocViewable(doc);
     }
     if (summaryEl) {

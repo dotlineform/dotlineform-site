@@ -9,7 +9,7 @@ parent_id: docs-viewer
 
 ## Purpose
 
-This spec defines a generated-but-hidden workflow for docs scopes in the shared Docs Viewer.
+This spec defines a generated-but-non-viewable workflow for docs scopes in the shared Docs Viewer.
 
 The immediate use case is Library growth.
 Many Library docs may be imported before their final parent-child structure is known.
@@ -18,7 +18,7 @@ If every imported doc is immediately viewable, the public `/library/` viewer can
 The desired workflow is:
 
 - import or create Library docs as generated but not publicly viewable
-- keep non-viewable docs hidden from the public/default viewer
+- keep non-viewable docs out of the public/default viewer
 - allow manage mode to show non-viewable docs when requested
 - make selected docs viewable when they are ready
 - avoid creating a parallel manage-only docs index if the existing index can carry the needed state
@@ -35,7 +35,7 @@ viewable: false
 
 Docs Viewer source no longer uses a separate `published` front-matter field.
 Every Markdown source doc in a configured scope is included in generated docs payloads.
-Use `viewable: false` when a generated doc should be reviewable in manage mode but hidden from public/default discovery.
+Use `viewable: false` when a generated doc should be reviewable in manage mode but excluded from public/default discovery.
 
 There is no docs `status` field.
 The docs builder and management flow support `viewable`.
@@ -47,7 +47,7 @@ The current visibility workflow uses `viewable: true | false` as the source fiel
 Direction:
 
 - `viewable: true` means visible in the public/default viewer
-- `viewable: false` means generated and reviewable in manage mode, but hidden from public/default discovery
+- `viewable: false` means generated and reviewable in manage mode, but excluded from public/default discovery
 - absence of `viewable` should default to `true` for existing docs
 - no `status` field should be added yet
 
@@ -72,7 +72,7 @@ Recommended working states:
 ```
 
 ```yaml
-# Generated and manageable, but hidden from public/default discovery.
+# Generated and manageable, but excluded from public/default discovery.
 viewable: false
 ```
 
@@ -83,8 +83,8 @@ The preferred design is one generated docs index per scope.
 Direction:
 
 - keep `assets/data/docs/scopes/<scope>/index.json` as the single docs index artifact
-- include `viewable: true | false` on each index row
-- do not create a separate manage-only hidden-doc index
+- omit `viewable` on viewable index rows and include `viewable: false` only for non-viewable rows
+- do not create a separate manage-only non-viewable-doc index
 - let the Docs Viewer filter rows based on route/mode state
 
 Reasons:
@@ -135,7 +135,7 @@ Default/public mode:
 Manage mode:
 
 - default view can still show viewable docs only, to avoid clutter
-- a `show non-viewable` toggle can include hidden generated docs in the tree
+- a `show non-viewable` toggle can include non-viewable generated docs in the tree
 - direct manage-mode links to a non-viewable doc should auto-enable the draft tree state
 - non-viewable rows should be visually marked
 - when non-viewable docs are shown, tree ancestors needed to reach selected non-viewable docs should also be visible
@@ -143,7 +143,7 @@ Manage mode:
 
 Possible display labels:
 
-- hidden badge on tree rows
+- non-viewable badge on tree rows
 - non-viewable marker in metadata row
 - `Make viewable` or `Show on site` button in the manage action row when the selected doc has `viewable: false`
 
@@ -191,7 +191,7 @@ Required behavior:
 
 - parse `viewable` from source front matter
 - default missing `viewable` to `true`
-- include `viewable: true | false` in generated index rows for generated docs
+- omit default `viewable: true` in generated docs JSON and include `viewable: false` only for non-viewable docs
 - generate per-doc payloads for every source doc
 - validate `parent_id` references across the generated source set
 - preserve deterministic sorting
@@ -223,7 +223,7 @@ Direction:
 Reasons:
 
 - search is a public/default discovery surface
-- the immediate need is hidden-doc review in manage mode, not hidden-doc search
+- the immediate need is non-viewable-doc review in manage mode, not non-viewable-doc search
 - keeping search viewable-only reduces accidental public exposure
 
 ## Import And Create Defaults
@@ -234,7 +234,7 @@ Recommended defaults:
 
 - Library imports: `viewable: false`
 - Library new docs in manage mode: `viewable: false`
-- Studio docs new docs: omit `viewable` unless a hidden state is needed
+- Studio new docs: omit `viewable`, which defaults them to viewable
 
 Reasons:
 
@@ -261,7 +261,7 @@ Generated docs index row should include:
 }
 ```
 
-Both fields should be included for every generated row so consumers do not need to infer absence.
+The generated index omits `viewable` for default viewable rows and includes `viewable: false` only for non-viewable rows.
 
 No `status` field should be introduced until there is a concrete need for more than pipeline inclusion and public/default visibility gating.
 
@@ -269,8 +269,8 @@ No `status` field should be introduced until there is a concrete need for more t
 
 ### Phase 1. Schema and builder contract
 
-- parse and emit `viewable`
-- include `viewable` in docs index rows
+- parse `viewable`
+- include `viewable: false` in docs index rows only for non-viewable docs
 - generate per-doc payloads for all source docs
 - update docs data-model docs
 - update docs builder docs
@@ -297,7 +297,7 @@ Status: implemented.
 ### Phase 4. Make-viewable action
 
 - add make-selected-doc-viewable button
-- write `viewable: true` through the Docs Viewer service
+- remove `viewable` through the Docs Viewer service so the source returns to the default viewable state
 - rebuild docs and search
 - reload viewer state
 
@@ -315,9 +315,9 @@ The immediate-viewability option remains deferred.
 
 ## Risks
 
-- non-viewable metadata and payloads exist in generated assets even if hidden from public UI
+- non-viewable metadata and payloads exist in generated assets even if excluded from public UI
 - public filtering must be reliable because non-viewable rows are in the single index
-- consumers other than the Docs Viewer may accidentally expose hidden docs if they ignore `viewable`
+- consumers other than the Docs Viewer may accidentally expose non-viewable docs if they ignore `viewable`
 - viewable children under non-viewable parents can make the public tree ambiguous
 - visibility toggles can clutter manage mode if the UI is not restrained
 - the extra source field adds schema and validation surface area

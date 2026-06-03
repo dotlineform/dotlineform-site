@@ -146,8 +146,8 @@ export function applyViewerRoute(options) {
   if (state && typeof settings.managementModeActive === "function") {
     state.managementMode = settings.managementModeActive();
   }
-  if (typeof settings.syncHiddenVisibilityForRequestedDoc === "function") {
-    settings.syncHiddenVisibilityForRequestedDoc();
+  if (typeof settings.syncNonViewableVisibilityForRequestedDoc === "function") {
+    settings.syncNonViewableVisibilityForRequestedDoc();
   }
   if (typeof settings.applyDocVisibility === "function") {
     settings.applyDocVisibility();
