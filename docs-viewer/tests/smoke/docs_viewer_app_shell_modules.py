@@ -2300,11 +2300,17 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
             });
             const registry = hostedViews.registerDocsViewerHostedViews(
                 hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
-                hostedViews.createDocsViewerBuiltInHostedViews().concat([
+                hostedViews.createDocsViewerDefaultHostedViews().concat([
                     { id: 'manage-source', label: 'Source', panel: 'main', access: 'manage', availability: 'available' },
                     { id: 'disabled-info', label: 'Info', panel: 'info', access: 'public', availability: 'disabled' }
                 ])
             );
+            const routeHostedViews = hostedViews.createDocsViewerRouteHostedViews([
+                { id: 'rendered-document', label: 'Override document', panel: 'main', access: 'public', availability: 'available', module: './unexpected.js' },
+                { id: 'route-tool', label: 'Route tool', panel: 'main', access: 'public', availability: 'available', module: './route-tool.js' }
+            ], {
+                reservedRecords: hostedViews.createDocsViewerDefaultHostedViews()
+            });
             const state = viewStateModule.createDocsViewerViewState({
                 routeId: 'library-public',
                 indexPanelState: 'expanded',
@@ -2331,8 +2337,10 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
                 documentHost: registry.resolve('rendered-document'),
                 missing: registry.resolve('not-registered'),
                 manageSource: registry.resolve('manage-source'),
+                markdownSource: registry.resolve('markdown-source'),
                 disabledInfo: registry.resolve('disabled-info'),
                 metadataInfo: registry.resolve('metadata-info'),
+                routeHostedViews,
                 registeredIds: registry.list().map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
                 infoViewIds: hostedViews.listDocsViewerHostedViewsForPanel(registry, 'info').map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
                 mainViewIds: registry.listByPanel('main').map((view) => view.id).sort()
@@ -2377,8 +2385,21 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"missing hosted view should be graceful: {result!r}")
     if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
         raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
+    if result["markdownSource"]["registered"] is not True or result["markdownSource"]["reason"] != "disabled":
+        raise AssertionError(f"repo-owned markdown-source view should be registered but disabled: {result!r}")
     if result["metadataInfo"]["available"] is not True or result["metadataInfo"]["registered"] is not True:
         raise AssertionError(f"built-in metadata info view should be public and available: {result!r}")
+    if result["routeHostedViews"] != [
+        {
+            "id": "route-tool",
+            "label": "Route tool",
+            "panel": "main",
+            "access": "public",
+            "availability": "available",
+            "module": "",
+        }
+    ]:
+        raise AssertionError(f"route hosted-view registration boundary failed: {result!r}")
     if "metadata-info:yes" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
         raise AssertionError(f"hosted view registry listing lost built-in views: {result!r}")
     if result["infoViewIds"] != ["disabled-info:disabled", "metadata-info:yes"]:

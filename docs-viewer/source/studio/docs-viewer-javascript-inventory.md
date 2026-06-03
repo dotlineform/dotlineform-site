@@ -93,7 +93,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 40 | new | `docs-viewer/runtime/js/docs-viewer-route-config.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper. |
 | 41 | new | `docs-viewer/runtime/js/docs-viewer-access.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned static public/manage/manage-local access projection and hosted-view access check. |
 | 42 | new | `docs-viewer/runtime/js/docs-viewer-view-state.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index/document/info view-state skeleton and projection helper. |
-| 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, built-in hosted-view records, availability/access checks, and graceful absence. |
+| 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, built-in/repo-owned records, route-record filtering, availability/access checks, and graceful absence. |
 | 43a | new | `docs-viewer/runtime/js/docs-viewer-main-view-host.js` | 1 | 1 | 1 | 1 | 4 | Main-view switch-intent and availability owner for rendered-document, search-results, and recent-results. |
 | 44 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned info-panel chrome renderer and projection applier. |
 | 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
@@ -386,8 +386,9 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
 - 2026-05-28 lifecycle note: hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
 - 2026-05-28 owner note: built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
-- Keep this module limited to records, lifecycle method names, built-in hosted-view records, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
-- Do not turn it into a plugin system, dependency loader, panel toolbar renderer, or third-party visualization owner.
+- 2026-06-03 owner note: `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for built-in and repo-owned records, including disabled manage-only `markdown-source`; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
+- Keep this module limited to records, lifecycle method names, built-in/repo-owned hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
+- Do not turn it into a plugin system, arbitrary dependency loader, panel toolbar renderer, route-config module loader, or third-party visualization owner.
 
 ### `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
 

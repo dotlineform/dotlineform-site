@@ -36,11 +36,17 @@ When the work is complete, move durable architecture notes into the owning Docs 
   - `docs-viewer-view-context.js` defines `createDocsViewerMainViewModuleContext(...)` with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and management-gated `sourceEditorServices`
   - public main-view contexts omit source-editor services even if a caller supplies them
   - durable toolbar, panel-host, runtime-boundary, and JavaScript inventory docs were updated
+- Completed the main-view module registration boundary:
+  - `createDocsViewerDefaultHostedViews()` is the code-owned registration surface for built-in and repo-owned hosted views
+  - disabled manage-only `markdown-source` is registered as a repo-owned main-view placeholder
+  - `createDocsViewerRouteHostedViews(...)` strips route-config `module` strings and prevents route config from overriding default ids
+  - app composition now registers default hosted views first, then filtered route-config metadata records
+  - no arbitrary route-config module loading or plugin behavior was added
 
 ### steer for next task
 
-- Continue with main-view module registration boundary.
-- Define explicit built-in/repo-owned registration for future main-view modules without route-config arbitrary module loading or plugin-system behavior.
+- Continue with focused verification and closeout documentation.
+- Confirm no additional implementation slice is needed before the Markdown editor request starts.
 - `mainView` is the policy for the central panel architecture boundary: host, toolbar, view-state, hosted-view registry, route-config panel ids, context contracts, and durable docs.
 - `document` remains only where the code specifically means rendered document payload behavior.
 - Do not add dual-read fields, old-id mappings, compatibility aliases, fallback route-config names, or temporary selector aliases unless the tracker records the justification before implementation and the user confirms that exception.
@@ -114,7 +120,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 8 | done | State, unavailable, and lifecycle policies in code: make app/view state the host source of truth; avoid URL as host state; hide manage-only controls on public routes; show simple local warnings for requested views that cannot load; default to unmount/clear hidden views without blocking future per-view retained-state capabilities. |
 | 9 | done | Source-editor module context preparation: define the explicit main-view module context shape with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and optional source-editor service slots; ensure public contexts omit source-editor services. |
 | 10 | done | Migrate search and recent: move `search-results` and `recent-results` onto the same main-view hosting mechanism to prove the host with existing user-facing views before implementing `markdown-source`; preserve current search/recent route continuity and behavior. |
-| 11 | planned | Main-view module registration boundary: establish explicit registration for built-in or repo-owned main-view modules without arbitrary route-config module loading or plugin-system behavior. |
+| 11 | done | Main-view module registration boundary: establish explicit registration for built-in or repo-owned main-view modules without arbitrary route-config module loading or plugin-system behavior. |
 | 12 | in progress | Focused verification: run the agreed checks for public/manage boot, rendered document load, selected-document updates, search/recent continuity, toolbar layout, and any touched JavaScript syntax/import checks; record results in this tracker. |
 | 13 | in progress | Durable docs closeout: move durable architecture notes into owning Docs Viewer docs, update inventory rows where needed, record the report-host migration follow-up decision, and remove this temporary task tracker plus the pre-editor request when no longer needed. |
 | 14 | deferred | Report-host main-view migration: defer unless implementation reveals a direct need. Current report behavior works; revisit after pre-editor work if reports need shared toolbar projection, shared lifecycle behavior, or cleaner replacement semantics. |
@@ -140,6 +146,8 @@ When the implementation is complete:
 - Passed: `node --check docs-viewer/runtime/js/docs-viewer-main-view-host.js`.
 - Passed: `node --check docs-viewer/runtime/js/docs-viewer-view-context.js`.
 - Passed: `node --check docs-viewer/runtime/js/docs-viewer-app-runtime.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-hosted-views.js`.
+- Passed: `node --check docs-viewer/runtime/js/docs-viewer-app-composition.js`.
 - Passed: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`.
 - Passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`.
 - Passed: `git diff --check`.

@@ -116,13 +116,16 @@ Improvement needed:
 
 ### Hosted-View Registry
 
-`docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in hosted views.
+`docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in and repo-owned hosted views.
 Built-in records currently include `index-tree`, `rendered-document`, `search-results`, `recent-results`, and `metadata-info`.
+Repo-owned main-view records currently include the manage-only disabled `markdown-source` placeholder.
+`createDocsViewerDefaultHostedViews()` is the code-owned default registration surface.
+`createDocsViewerRouteHostedViews(...)` admits route-config records only as non-reserved metadata records, strips `module` strings, and prevents route config from overriding built-in or repo-owned ids.
 
 Current limitation:
 
 - main-view records update active main-view state through `docs-viewer-main-view-host.js`, but rendered/search/recent rendering still delegates to existing controllers
-- route-config records can describe placeholders and capabilities, but the current runtime is not a generic module loader
+- route-config records can describe placeholders and capabilities, but the current runtime is not a generic module loader and does not load route-config `module` strings
 
 Improvement needed:
 
@@ -234,13 +237,15 @@ dispose()
 The normalized record shape exists today in `docs-viewer-hosted-views.js`.
 Access and availability checks also exist today.
 Capabilities for index layout are implemented and documented in [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract).
+Default records are code-owned by `createDocsViewerDefaultHostedViews()`.
+Route-config records are filtered through `createDocsViewerRouteHostedViews(...)`; they cannot override default ids and cannot carry module-loader strings into the runtime registry.
 
 Current lifecycle implementation:
 
 - info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
 - `metadata-info` is the only real mounted hosted-view module
 - index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
-- main-view hosted-view records exist for `rendered-document`, `search-results`, and `recent-results`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
+- main-view hosted-view records exist for `rendered-document`, `search-results`, `recent-results`, and disabled manage-only `markdown-source`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
 - `report-host` is not part of the main-view migration yet
 
 The implemented lifecycle shape for info-panel hosted views is:
@@ -258,13 +263,13 @@ The context currently contains the `mount` element plus selected-document and ro
 What still needs implementation:
 
 - a full main-view hosted-view lifecycle that can mount independent main-view modules without breaking current rendered-document/search/recent route behavior
-- a clear module-loading policy for route-config hosted-view records beyond built-in and explicitly imported repo modules
+- a concrete source-editor module implementation that turns the code-owned `markdown-source` placeholder from disabled to available
 - toolbar/view-switching projection for main and info panels when more than one view is available
 - a data/context contract for each new info or main-view hosted view before adding the view
 
 Do not interpret route-config hosted-view records as a completed generic extension system.
 The current implementation supports configured records, capability projection, access checks, and the info-panel lifecycle.
-It does not yet provide a generic view-module loader for arbitrary `module` strings.
+It intentionally does not provide a generic view-module loader for arbitrary `module` strings.
 
 For future hosted modules, the host should provide:
 

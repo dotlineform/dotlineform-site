@@ -39,6 +39,25 @@ function normalizeHostedView(record) {
   };
 }
 
+function hostedViewIdSet(records) {
+  var ids = new Set();
+  (records || []).forEach(function (record) {
+    var id = cleanString(record && record.id);
+    if (id) ids.add(id);
+  });
+  return ids;
+}
+
+function routeHostedViewRecord(record) {
+  var view = record && typeof record === "object" ? record : {};
+  var id = cleanString(view.id);
+  if (!id) return null;
+  return Object.assign({}, view, {
+    id: id,
+    module: ""
+  });
+}
+
 export function createDocsViewerHostedViewRegistry(options) {
   var settings = options || {};
   var accessProjection = settings.accessProjection || {};
@@ -163,6 +182,31 @@ export function createDocsViewerBuiltInHostedViews() {
       }
     }
   ];
+}
+
+export function createDocsViewerRepoMainViewHostedViews() {
+  return [
+    {
+      id: "markdown-source",
+      label: "Source",
+      panel: "main",
+      access: "manage",
+      availability: "disabled",
+      module: "repo:markdown-source"
+    }
+  ];
+}
+
+export function createDocsViewerDefaultHostedViews() {
+  return createDocsViewerBuiltInHostedViews().concat(createDocsViewerRepoMainViewHostedViews());
+}
+
+export function createDocsViewerRouteHostedViews(records, options) {
+  var settings = options || {};
+  var reservedIds = hostedViewIdSet(settings.reservedRecords || createDocsViewerDefaultHostedViews());
+  return (records || []).map(routeHostedViewRecord).filter(function (record) {
+    return record && !reservedIds.has(record.id);
+  });
 }
 
 export function registerDocsViewerHostedViews(registry, records) {
