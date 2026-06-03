@@ -122,7 +122,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 10 | done | Migrate search and recent: move `search-results` and `recent-results` onto the same main-view hosting mechanism to prove the host with existing user-facing views before implementing `markdown-source`; preserve current search/recent route continuity and behavior. |
 | 11 | done | Main-view module registration boundary: establish explicit registration for built-in or repo-owned main-view modules without arbitrary route-config module loading or plugin-system behavior. |
 | 12 | in progress | Focused verification: run the agreed checks for public/manage boot, rendered document load, selected-document updates, search/recent continuity, toolbar layout, and any touched JavaScript syntax/import checks; record results in this tracker. |
-| 13 | in progress | Durable docs closeout: move durable architecture notes into owning Docs Viewer docs, update inventory rows where needed, record the report-host migration follow-up decision, and remove this temporary task tracker plus the pre-editor request when no longer needed. |
+| 13 | in progress | Durable docs closeout: move durable architecture notes into owning Docs Viewer docs, update inventory rows where needed, record the report-host migration follow-up decision. update the markdown editor request with any implementation steers it needs to integrate with the new panel architecture. |
 | 14 | deferred | Report-host main-view migration: defer unless implementation reveals a direct need. Current report behavior works; revisit after pre-editor work if reports need shared toolbar projection, shared lifecycle behavior, or cleaner replacement semantics. |
 
 ## Closeout Notes
