@@ -2,7 +2,7 @@
 doc_id: studio-risk-analysis-policy
 title: Studio Risk Analysis Policy
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 ui_status: review
 parent_id: audit
 viewable: true
@@ -202,6 +202,7 @@ Useful indicators:
 - code is physically too long to navigate efficiently, increasing human context switching and AI token/context cost
 - the same concept is updated in several places without a clear owner
 - sibling route or service families use inconsistent patterns for the same responsibility
+- app config, runtime config, generated defaults, UI text, and service/domain config disagree about which layer owns a route, path, payload field, or workflow copy
 
 Evidence of improvement:
 
@@ -210,6 +211,7 @@ Evidence of improvement:
 - future related changes have an obvious destination
 - sibling route or service families now follow the same boundary pattern
 - focused checks cover behavior that previously required full route or service boot
+- browser-facing config surfaces are narrowed to active owner contracts, with server-only config kept behind services or source loaders
 
 ### Workflow Risk
 
@@ -263,6 +265,7 @@ Useful indicators:
 
 - active paths, scores, current owners, and priority rows disagree across inventories
 - retired paths remain mixed with active owners
+- config keys, generated config payloads, or public config endpoint fields have ownership docs but no active consumer evidence
 - frontend and backend evidence is separated in a way that obscures the app-level priority
 - a performance claim is plausible but unmeasured
 - the dashboard duplicates long tables instead of pointing to evidence
@@ -271,6 +274,7 @@ Evidence of improvement:
 
 - app-owned inventories agree with the dashboard
 - stale retired paths are clearly marked as retired
+- config cleanup records active consumers, browser-visible/server-only classification, retained keys, removed keys, and owner reasons
 - diagnostics exist before optimization work is prioritised
 - the next action and close-out evidence are concrete
 

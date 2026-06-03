@@ -2,7 +2,7 @@
 doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
-last_updated: 2026-05-28
+last_updated: 2026-06-03
 parent_id: dev-home
 viewable: true
 ---
@@ -79,6 +79,33 @@ For browser JavaScript maintenance-risk work, use [Studio Risk Analysis Policy](
 For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
 If the work needs a task tracker, create one from [Tasks Template](/docs/?scope=studio&doc=tasks-template).
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
+
+### Config Cleanup Gate
+
+Use this gate before pruning, moving, or widening checked-in app config, UI-text config, generated-default config, or browser-visible runtime config.
+
+Before editing, classify each key or payload field under review:
+
+- browser bootstrap config
+- browser-safe static fallback read
+- runtime-injected server config
+- server-only source, write, adapter, or path contract
+- generated output or report projection
+- UI text or operation-owned workflow copy
+- historical, transitional, or unconsumed key
+
+Default rules:
+
+- Start every cleanup slice with active call-site scans across code, config loaders, server routes, services, tests, and generated-default pipelines. Historical request docs can explain why a key existed, but they are not proof of current ownership.
+- Remove a key only when no active route, service, test, generated-default pipeline, or documented operator workflow consumes it.
+- Do not move server-only source paths, write targets, adapter path contracts, output patterns, metadata contracts, activity emit metadata, or source-write scope into browser bootstrap config.
+- Keep browser public/config endpoints on explicit whitelists when they project domain config. Passing through nested source config is not an acceptable shortcut.
+- Keep UI copy in route UI-text bundles unless the string is operation-owned workflow metadata.
+- When a cleanup preserves a browser-visible surface, prefer a positive owner-contract test that asserts the allowed key set or whitelisted payload shape.
+- Update the owning config doc in the same slice with removed keys, retained keys, owner, and reason.
+
+Good cleanup outcomes include a narrower browser-facing payload, a clearer static-fallback contract, a server-only config path removed from public projection, or a focused test that prevents the surface from widening silently.
+Poor cleanup outcomes include compatibility aliases for retired paths, hiding active paths in unowned constants, deleting keys based only on historical docs, or keeping a broad payload because tests or fixtures still depend on it.
 
 ### JavaScript Maintenance Gate
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T10:57:56Z",
+  "generated_at": "2026-06-03T11:05:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -411,7 +411,7 @@
       "doc_id": "studio-risk-analysis-policy",
       "title": "Studio Risk Analysis Policy",
       "added_date": "2026-05-31",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "audit",
       "hidden": false,
       "viewable": true,
@@ -419,7 +419,7 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-analysis-policy",
       "ui_status": "review",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
-      "content_text_length": 22276
+      "content_text_length": 22837
     },
     {
       "scope": "studio",
@@ -561,7 +561,7 @@
       "doc_id": "studio-risk-evidence-pack",
       "title": "Studio Risk Evidence Pack",
       "added_date": "2026-05-31",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "studio-risk-operations",
       "hidden": false,
       "viewable": true,
@@ -569,7 +569,7 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-      "content_text_length": 9079
+      "content_text_length": 9762
     },
     {
       "scope": "studio",
@@ -980,7 +980,7 @@
       "doc_id": "studio-risk-evidence-producer-roadmap",
       "title": "Studio Risk Evidence Producer Roadmap",
       "added_date": "2026-05-31",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "site-request-risk-evidence-producers",
       "hidden": false,
       "viewable": true,
@@ -988,7 +988,7 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-risk-evidence-producer-roadmap",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-producer-roadmap.json",
-      "content_text_length": 3358
+      "content_text_length": 3925
     },
     {
       "scope": "studio",
@@ -1303,14 +1303,14 @@
       "doc_id": "development-workflow",
       "title": "Development Workflow",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-03",
       "parent_id": "dev-home",
       "hidden": false,
       "viewable": true,
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 17764
+      "content_text_length": 19848
     },
     {
       "scope": "studio",
@@ -3118,14 +3118,14 @@
       "doc_id": "testing",
       "title": "Testing",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-03",
       "parent_id": "",
       "hidden": false,
       "viewable": true,
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json",
-      "content_text_length": 8071
+      "content_text_length": 8868
     },
     {
       "scope": "studio",

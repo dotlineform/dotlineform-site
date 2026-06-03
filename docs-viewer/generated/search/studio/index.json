@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-63715bcbcb2fb4df3f065b9fdfe5ebfe",
-    "generated_at_utc": "2026-06-03T10:57:56Z",
+    "version": "blake2b-5c9d97d6d2390aab9d7f8992849ab407",
+    "generated_at_utc": "2026-06-03T11:05:37Z",
     "count": 239
   },
   "entries": [
@@ -662,10 +662,10 @@
       "kind": "doc",
       "title": "Studio Risk Analysis Policy",
       "href": "/docs/?scope=studio&doc=studio-risk-analysis-policy",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-31 • Audit",
+      "display_meta": "2026-06-03 • Audit",
       "search_terms": [
         "studio-risk-analysis-policy",
         "studio",
@@ -674,12 +674,12 @@
         "policy",
         "studio risk analysis policy",
         "audit",
-        "2026-05-31",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "studio-risk-analysis-policy studio risk analysis policy studio risk analysis policy audit 2026-05-31 2026 05 31"
+      "search_text": "studio-risk-analysis-policy studio risk analysis policy studio risk analysis policy audit 2026-06-03 2026 06 03"
     },
     {
       "id": "docs-viewer-javascript-inventory",
@@ -923,10 +923,10 @@
       "kind": "doc",
       "title": "Studio Risk Evidence Pack",
       "href": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "studio-risk-operations",
       "parent_title": "Studio Risk Operations",
-      "display_meta": "2026-05-31 • Studio Risk Operations",
+      "display_meta": "2026-06-03 • Studio Risk Operations",
       "search_terms": [
         "studio-risk-evidence-pack",
         "studio",
@@ -936,12 +936,12 @@
         "studio risk evidence pack",
         "studio risk operations",
         "operations",
-        "2026-05-31",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack studio risk operations operations 2026-05-31 2026 05 31"
+      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack studio risk operations operations 2026-06-03 2026 06 03"
     },
     {
       "id": "change-requests",
@@ -1694,10 +1694,10 @@
       "kind": "doc",
       "title": "Studio Risk Evidence Producer Roadmap",
       "href": "/docs/?scope=studio&doc=studio-risk-evidence-producer-roadmap",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-03",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-05-31 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-03 • Risk Evidence Producers Request",
       "search_terms": [
         "studio-risk-evidence-producer-roadmap",
         "studio",
@@ -1709,12 +1709,12 @@
         "risk evidence producers request",
         "producers",
         "request",
-        "2026-05-31",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "studio-risk-evidence-producer-roadmap studio risk evidence producer roadmap studio risk evidence producer roadmap risk evidence producers request producers request 2026-05-31 2026 05 31"
+      "search_text": "studio-risk-evidence-producer-roadmap studio risk evidence producer roadmap studio risk evidence producer roadmap risk evidence producers request producers request 2026-06-03 2026 06 03"
     },
     {
       "id": "studio-risk-route-exposure-evidence",
@@ -2290,10 +2290,10 @@
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=development-workflow",
-      "last_updated": "2026-05-28",
+      "last_updated": "2026-06-03",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-28 • Dev Home",
+      "display_meta": "2026-06-03 • Dev Home",
       "search_terms": [
         "development-workflow",
         "development",
@@ -2302,12 +2302,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-28",
+        "2026-06-03",
         "2026",
-        "05",
-        "28"
+        "06",
+        "03"
       ],
-      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-28 2026 05 28"
+      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-06-03 2026 06 03"
     },
     {
       "id": "scripts-run-checks",
@@ -5400,16 +5400,16 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-05-28",
-      "display_meta": "2026-05-28",
+      "last_updated": "2026-06-03",
+      "display_meta": "2026-06-03",
       "search_terms": [
         "testing",
-        "2026-05-28",
+        "2026-06-03",
         "2026",
-        "05",
-        "28"
+        "06",
+        "03"
       ],
-      "search_text": "testing 2026-05-28 2026 05 28"
+      "search_text": "testing 2026-06-03 2026 06 03"
     },
     {
       "id": "testing-pytest",

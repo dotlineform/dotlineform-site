@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-05-28
+last_updated: 2026-06-03
 parent_id: ""
 ---
 # Testing
@@ -52,6 +52,16 @@ Tests should assert current owner contracts, not preserve historical compatibili
 Useful compatibility lessons should become explicit architecture guards when they protect the current design.
 For example, Docs Viewer app-shell smokes may assert that the public runtime handle does not expose broad state, composition, session, management, or route-workflow bridges.
 That is a current architecture guard, not a reason to keep old runtime APIs.
+
+Config cleanup can leave durable tests when the surface matters.
+Prefer positive owner-contract assertions such as:
+
+- runtime config exposes only the current browser-facing data-path key set
+- public config endpoints return whitelisted UI-needed fields, not source-write paths or adapter internals
+- generated-default, route-registry, or activity-contract verifiers still run through pytest collection
+
+Avoid permanent tests that only name every retired key.
+If a retired-key assertion remains, pair it with the positive owner contract it protects, such as the allowed route surface, allowed browser payload shape, or server-only write boundary.
 
 Retire or rewrite tests when the behavior they cover is obsolete, duplicated, or better expressed through a focused owner module.
 Examples of current retired shapes include legacy Docs `hidden` source input, Docs Viewer Markdown changelog migration, and catalogue media-section migration runners.
@@ -127,6 +137,7 @@ Current conventions:
 - avoid network access
 - use temporary directories or small fixtures when repo data would make the test brittle
 - keep direct script execution working where practical for narrow opt-in checks
+- when a direct verifier script belongs in `run_checks.py` or pytest, wrap it with a real `test_*` function so pytest collection cannot silently skip it
 - add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` when it covers a repeated risk
 
 See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.

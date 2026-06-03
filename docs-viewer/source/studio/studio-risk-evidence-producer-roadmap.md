@@ -2,7 +2,7 @@
 doc_id: studio-risk-evidence-producer-roadmap
 title: Studio Risk Evidence Producer Roadmap
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 ui_status: draft
 parent_id: site-request-risk-evidence-producers
 viewable: true
@@ -27,6 +27,7 @@ This document tracks implementation status for evidence producers named by [Stud
 | Lighthouse | deferred | [Studio Risk Runtime Browser Evidence](/docs/?scope=studio&doc=studio-risk-runtime-browser-evidence) | Needs allowlisted target config and local runner dependency decision. |
 | Route exposure | planned | [Studio Risk Route Exposure Evidence](/docs/?scope=studio&doc=studio-risk-route-exposure-evidence) | Artifact is in the contract but currently omitted by the runner. |
 | Script/generated artifact purpose | planned | [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) | Should classify whether scripts and generated outputs are consumed by active workflows, not merely owned. |
+| Config consumer/visibility evidence | planned | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Should classify config keys and projected payload fields by active consumer, browser-visible/server-only boundary, whitelist status, and likely keep/move/remove action. |
 | Subjective notes | manual | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | JSONL copy/validation exists; review workflow can be improved later. |
 | Compact generated risk summary | deferred | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Not needed while Studio risk route reads run summaries through the API. |
 
@@ -42,7 +43,8 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 4 | planned | Add summary support for route exposure warnings and browser target/Lighthouse results. |
 | 5 | planned | Decide whether subjective notes need a Studio UI capture flow or should remain file-based JSONL. |
 | 6 | planned | Add purpose/consumer evidence for scripts and generated artifacts so unused speculative outputs are visible before they become accepted contracts. |
-| 7 | deferred | Define compact generated risk summary only if the risk route needs a stable generated read model. |
+| 7 | planned | Add config consumer/visibility evidence for app config, UI-text config, generated-default config, browser runtime config, and public config endpoint projections. |
+| 8 | deferred | Define compact generated risk summary only if the risk route needs a stable generated read model. |
 
 ## Implementation Order
 
@@ -53,4 +55,5 @@ Recommended order:
 3. Runtime browser target checks using Playwright for console, request, and readiness summaries.
 4. Lighthouse target execution after the dependency and URL contracts are stable.
 5. Script/generated artifact purpose checks that distinguish active workflow consumers from ownership-only artifacts.
-6. Optional compact generated summary if the Studio route needs current-state reads beyond recent run summaries.
+6. Config consumer/visibility checks that distinguish active browser-visible fields, server-only contracts, whitelisted projections, and unconsumed keys.
+7. Optional compact generated summary if the Studio route needs current-state reads beyond recent run summaries.

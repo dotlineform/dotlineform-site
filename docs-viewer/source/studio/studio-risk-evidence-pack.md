@@ -2,7 +2,7 @@
 doc_id: studio-risk-evidence-pack
 title: Studio Risk Evidence Pack
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-03
 ui_status: draft
 parent_id: studio-risk-operations
 viewable: true
@@ -32,18 +32,21 @@ Producer implementation backlog is tracked in [Risk Evidence Producers Request](
 
 ## Evidence Validity
 
-Risk evidence must test whether scripts and generated artifacts have an active workflow purpose.
-Ownership is necessary but not sufficient: a script or generated file can be correctly owned and still be harmful if its contract is speculative, unused, or duplicative.
+Risk evidence must test whether scripts, config keys, generated config payloads, and generated artifacts have an active workflow purpose.
+Ownership is necessary but not sufficient: a script, config key, or generated file can be correctly owned and still be harmful if its contract is speculative, unused, duplicated, or exposed to the wrong runtime surface.
 
-For script and generated-artifact evidence, summaries should distinguish:
+For script, config, and generated-artifact evidence, summaries should distinguish:
 
 - consumed by an active runtime, report, build, test, or documented operator workflow
 - retained only as source-of-truth input
+- browser-visible config or payload field with a current UI/runtime consumer
+- server-only source path, write target, adapter contract, output pattern, metadata contract, or activity-emitter field
 - transitional evidence with a retirement or migration task
 - unconsumed output that should be removed, stopped at the producer, or replaced with a smaller contract
 
 Temporary generated artifacts still need a consumer or explicit cleanup path.
 Do not treat "has an owner" as proof that the artifact should continue to exist.
+For browser-visible config evidence, record whether the field is part of an explicit whitelist or broad pass-through projection.
 
 ## Output Location
 
@@ -93,6 +96,7 @@ Each run directory should contain:
 | `static-metrics.json` | Source/config file counts, line counts, import/export counts, dependency direction, and grouped ownership metrics. Generated and canonical data payload roots are excluded so payload size does not distort source metrics. |
 | `static-searches.json` | Repeatable search patterns, matched paths, counts, and excerpts where useful. |
 | `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, and relevant builder diagnostics. |
+| `config-consumers.json` | Optional future artifact that lists config keys and payload fields, owner docs, active consumers, browser-visible/server-only classification, public-projection whitelist status, and likely action. |
 | `script-family-inventory.json` | Python/Ruby script-family counts, line counts, family totals, and largest-file observations migrated from the legacy script inventory rerun block. |
 | `git-history.json` | Recent touch counts grouped by app, area, file family, and file. |
 | `runtime-checks.json` | Optional allowlisted runtime check profile results. |
@@ -207,4 +211,4 @@ Command-line Codex runs do not need to append activity unless they are invoked t
 ## Future Producers
 
 Future producer implementation is intentionally tracked outside this durable contract.
-Use [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) for route exposure, browser target, Lighthouse, subjective-note workflow, and compact generated-summary tasks.
+Use [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) for route exposure, browser target, Lighthouse, subjective-note workflow, config consumer/visibility evidence, and compact generated-summary tasks.
