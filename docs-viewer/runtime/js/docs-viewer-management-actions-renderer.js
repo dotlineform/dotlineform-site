@@ -18,6 +18,12 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Edit"
   },
   {
+    id: "docsViewerManageSourceButton",
+    action: "markdown-source",
+    emoji: "☰",
+    label: "Markdown source"
+  },
+  {
     id: "docsViewerManageDeleteButton",
     action: "delete",
     emoji: "🗑️",

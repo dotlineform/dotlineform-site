@@ -12,6 +12,7 @@ from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
 from docs_management_capabilities_service import capabilities_payload
+from docs_management_source_service import read_source_body
 
 
 def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
@@ -74,6 +75,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root,
             docs_api_query_value(params, "scope"),
         )
+    if path == routes.SOURCE_BODY_PATH:
+        return read_source_body(repo_root, params)
     if path in {routes.IMPORT_SOURCE_FILES_PATH, routes.IMPORT_HTML_FILES_PATH}:
         return import_source_service.handle_import_source_files(repo_root)
     if docs_api_query_value(params, "scope"):

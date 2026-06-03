@@ -59,12 +59,14 @@ export function createDocsViewerMainViewModuleContext(options = {}) {
   const mainView = options.mainView && typeof options.mainView === "object" ? options.mainView : {};
 
   const context = Object.assign({}, base, {
+    mount: options.mount || null,
     mainView: {
       activeViewId: cleanString(mainView.activeViewId),
       projectToolbar: typeof mainView.projectToolbar === "function" ? mainView.projectToolbar : noop,
       requestView: typeof mainView.requestView === "function" ? mainView.requestView : function () { return false; },
       showWarning: typeof mainView.showWarning === "function" ? mainView.showWarning : noop
-    }
+    },
+    requestedViewId: cleanString(options.requestedViewId)
   });
   if (routeAccess.allowManagement) {
     context.sourceEditorServices = options.sourceEditorServices || null;

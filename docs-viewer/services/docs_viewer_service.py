@@ -176,11 +176,18 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-access.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-context.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-runtime.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-shell.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-hosted-views.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-main-view-host.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions-renderer.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-client.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "modules" / "source-editor" / "source-editor.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-route-config.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-top-bar-renderer.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-context.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-viewer-toolbar-renderer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-state.js",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-base.css",
@@ -274,6 +281,7 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
     capabilities["generated_data_reads"] = bool(capabilities.get("generated_data_reads")) and config.generated_reads_enabled
     if not config.management_enabled:
         for key in (
+            "source_editor",
             "source_config_settings_writes",
             "html_import",
             "docs_export",
@@ -340,6 +348,13 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         if path in GENERATED_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
+        if path == routes.SOURCE_BODY_PATH:
+            if not self.config.management_enabled:
+                self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
             return

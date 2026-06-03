@@ -79,6 +79,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "source_config_reads": True,
             "source_config_settings_reads": True,
             "source_config_settings_writes": True,
+            "source_editor": True,
             "html_import": True,
             "docs_export": True,
             "library_import": True,

@@ -60,7 +60,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_generated_read_payload,
     docs_management_get_payload,
 )
-from docs_management_source_service import detect_preferred_markdown_app, open_source_doc  # noqa: E402
+from docs_management_source_service import detect_preferred_markdown_app, open_source_doc, rebuild_source_body  # noqa: E402
 
 
 def docs_management_post_response(
@@ -70,6 +70,8 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
+    if path == routes.SOURCE_REBUILD_PATH:
+        return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
     if path == routes.BROKEN_LINKS_PATH:

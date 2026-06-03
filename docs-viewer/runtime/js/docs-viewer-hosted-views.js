@@ -188,11 +188,17 @@ export function createDocsViewerRepoMainViewHostedViews() {
   return [
     {
       id: "markdown-source",
-      label: "Source",
+      label: "Markdown source",
       panel: "main",
       access: "manage",
-      availability: "disabled",
-      module: "repo:markdown-source"
+      availability: "available",
+      module: "repo:markdown-source",
+      load: function () {
+        return import("./modules/source-editor/source-editor.js")
+          .then(function (module) {
+            return module.createDocsViewerSourceEditorView();
+          });
+      }
     }
   ];
 }

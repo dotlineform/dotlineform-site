@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T17:51:41Z",
+  "generated_at": "2026-06-03T18:22:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -748,7 +748,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor-tasks",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor-tasks.json",
-      "content_text_length": 8494
+      "content_text_length": 10963
     },
     {
       "scope": "studio",

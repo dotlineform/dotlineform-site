@@ -112,6 +112,7 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
+  var manageSourceButton = document.getElementById("docsViewerManageSourceButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var statusPills = document.getElementById("docsViewerStatusPills");
@@ -470,6 +471,9 @@ export function initDocsViewerManagement(context) {
     }
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageEditButton.disabled = !state.managementAvailable || editDisabled;
+    if (manageSourceButton) {
+      manageSourceButton.disabled = !state.managementAvailable || editDisabled;
+    }
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {
@@ -787,6 +791,13 @@ export function initDocsViewerManagement(context) {
       manageEditButton.addEventListener("click", function () {
         hideManageActionsMenu();
         openMetadataModal().then(actionController.handleEditMetadataSave);
+      });
+    }
+    if (manageSourceButton) {
+      manageSourceButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        actionController.handleMarkdownSource();
       });
     }
     if (manageDeleteButton) {

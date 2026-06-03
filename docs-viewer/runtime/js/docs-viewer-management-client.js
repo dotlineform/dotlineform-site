@@ -76,6 +76,20 @@ export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", scopedPayload({}, options), options);
 }
 
+export function readManagedDocSource(docId, options) {
+  var settings = options || {};
+  var scope = encodeURIComponent(String(settings.scope || "").trim());
+  var targetDocId = encodeURIComponent(String(docId || "").trim());
+  var query = [];
+  if (scope) query.push("scope=" + scope);
+  if (targetDocId) query.push("doc_id=" + targetDocId);
+  return fetchManagementJson("/docs/source" + (query.length ? "?" + query.join("&") : ""), "GET", undefined, options);
+}
+
+export function rebuildManagedDocSource(payload, options) {
+  return fetchManagementJson("/docs/source/rebuild", "POST", scopedPayload(payload, options), options);
+}
+
 export function readSourceConfigSettings(options) {
   var settings = options || {};
   var scope = encodeURIComponent(String(settings.scope || "").trim());

@@ -28,6 +28,8 @@
     "generated_reference_target": "/docs/generated/reference-target",
     "source_config": "/docs/source-config",
     "source_config_settings": "/docs/source-config-settings",
+    "source_body": "/docs/source",
+    "source_rebuild": "/docs/source/rebuild",
     "import_source_files": "/docs/import-source-files",
     "import_html_files": "/docs/import-html-files",
     "open_source": "/docs/open-source",

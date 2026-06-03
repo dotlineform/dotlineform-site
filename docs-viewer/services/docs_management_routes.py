@@ -19,6 +19,8 @@ SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 IMPORT_HTML_FILES_PATH = "/docs/import-html-files"
 
+SOURCE_BODY_PATH = "/docs/source"
+SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 IMPORT_SOURCE_PATH = "/docs/import-source"
@@ -51,11 +53,13 @@ GET_PATHS = (
     GENERATED_REFERENCE_TARGET_ALT_PATH,
     SOURCE_CONFIG_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
+    SOURCE_BODY_PATH,
     IMPORT_SOURCE_FILES_PATH,
     IMPORT_HTML_FILES_PATH,
 )
 
 POST_PATHS = (
+    SOURCE_REBUILD_PATH,
     OPEN_SOURCE_PATH,
     BROKEN_LINKS_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,

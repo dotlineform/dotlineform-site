@@ -307,6 +307,13 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
+  function handleMarkdownSource() {
+    var doc = currentSelectedDoc();
+    if (!doc || typeof context.requestMainView !== "function") return;
+    hideContextMenu();
+    context.requestMainView("markdown-source");
+  }
+
   function handleSettingsSave() {
     var modalController = getModalController();
     var settingsFieldState = modalController ? modalController.getSettingsFieldState() : null;
@@ -492,6 +499,7 @@ export function createDocsViewerManagementActionController(options) {
     handleCreateRelatedDoc: handleCreateRelatedDoc,
     handleDeleteDoc: handleDeleteDoc,
     handleEditMetadataSave: handleEditMetadataSave,
+    handleMarkdownSource: handleMarkdownSource,
     handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,

@@ -40,6 +40,10 @@ import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
+  readManagedDocSource,
+  rebuildManagedDocSource
+} from "./docs-viewer-management-client.js";
+import {
   DOCS_VIEWER_RUNTIME_DEFAULTS,
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
@@ -141,7 +145,7 @@ export function startDocsViewerRuntime(options) {
         payloadCache: appSession.domains.selectedDocument.payloadCache,
         routeAccess: routeContext.access,
         selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-        sourceEditorServices: null,
+        sourceEditorServices: allowManagement ? sourceEditorServices() : null,
         uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
         viewerScope: viewerScope,
         viewerTargetDocId: documentIndex.viewerTargetDocId,
@@ -149,6 +153,7 @@ export function startDocsViewerRuntime(options) {
       };
     },
     defaultViewId: "rendered-document",
+    mount: content,
     panelLayout: panelLayout,
     projectToolbar: projectMainView,
     projectViewState: function () { return panelLayout.projectViewState(); },
@@ -391,6 +396,7 @@ export function startDocsViewerRuntime(options) {
       },
       searchInput: searchInput,
       setStatus: setStatus,
+      requestMainView: function (viewId) { return mainViewHost.requestView(viewId); },
       markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     },
@@ -485,6 +491,60 @@ export function startDocsViewerRuntime(options) {
 
   function loadViewerConfig() {
     return configController.loadViewerConfig();
+  }
+
+  function sourceEditorClientOptions() {
+    return {
+      baseUrl: managementBaseUrl,
+      scope: viewerScope,
+      serverNotConfiguredError: getConfigText(
+        appSession.domains.scopeConfig.viewerConfig || {},
+        "docs_viewer.manage_server_not_configured_error",
+        "Local docs-management server is not configured."
+      ),
+      fetch: function (url, options) {
+        return window.fetch(url, options);
+      }
+    };
+  }
+
+  function reloadGeneratedDoc(targetDocId) {
+    var selectedDocument = appSession.domains.selectedDocument;
+    var searchRecent = appSession.domains.searchRecent;
+    selectedDocument.payloadCache.clear();
+    searchRecent.searchEntries = [];
+    searchRecent.searchLoaded = false;
+    searchRecent.searchRequestPromise = null;
+    selectedDocument.reloadNonce = String(Date.now());
+    selectedDocument.reloadExpectedDocId = String(targetDocId || "").trim();
+    searchRecent.searchQuery = "";
+    searchRecent.searchVisibleCount = SEARCH_BATCH_SIZE;
+    searchRecent.searchRouteActive = false;
+    cancelSearchDebounce();
+    if (searchInput) searchInput.value = "";
+    if (routeWorkflowCommands && typeof routeWorkflowCommands.setHistory === "function" && targetDocId) {
+      routeWorkflowCommands.setHistory(targetDocId, "", "", "replace");
+    }
+    if (routeWorkflowCommands && typeof routeWorkflowCommands.loadIndex === "function") {
+      return routeWorkflowCommands.loadIndex();
+    }
+    return Promise.resolve(null);
+  }
+
+  function sourceEditorServices() {
+    return {
+      readSource: function (docId) {
+        return readManagedDocSource(docId, sourceEditorClientOptions());
+      },
+      rebuildSource: function (payload) {
+        return rebuildManagedDocSource(payload, sourceEditorClientOptions());
+      },
+      reloadRenderedDoc: function (docId) {
+        return reloadGeneratedDoc(docId);
+      },
+      setStatus: setStatus,
+      startBusy: startBusy
+    };
   }
 
   function renderBookmarkUi() {
