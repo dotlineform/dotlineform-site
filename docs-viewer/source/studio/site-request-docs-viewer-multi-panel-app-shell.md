@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-multi-panel-app-shell
 title: Docs Viewer Multi-Panel App Shell Request
 added_date: 2026-05-27
 last_updated: 2026-06-02
-ui_status: in-progress
+ui_status: draft
 parent_id: change-requests
 viewable: true
 ---

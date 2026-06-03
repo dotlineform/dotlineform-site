@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T13:37:21Z",
+  "generated_at": "2026-06-03T13:55:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -737,6 +737,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-viewer-pre-editor-work",
+      "title": "Docs Viewer Pre-Editor Work Request",
+      "added_date": "2026-06-03",
+      "last_updated": "2026-06-03",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-pre-editor-work.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work",
+      "ui_status": "in-progress",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work.json",
+      "content_text_length": 6307
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
       "title": "Docs Viewer Multi-Panel App Shell Request",
       "added_date": "2026-05-27",
@@ -746,7 +761,7 @@
       "viewable": true,
       "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
-      "ui_status": "in-progress",
+      "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
       "content_text_length": 7915
     },
