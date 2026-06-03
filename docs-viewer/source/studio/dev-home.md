@@ -11,11 +11,11 @@ viewable: true
 
 This section contains technical design guidance for the repo, which is the source for the dotlineform website and deployed via GitHub Pages. The site is served on the domain [dotlineform.com](https://www.dotlineform.com).
 
-The repo also contains the locally run web app **[Studio](/docs/?scope=studio&doc=studio)**, which manages the data for the site.
+The repo also contains locally run web apps:
 
-## Docs Viewer
-
-**[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
+- **[Studio](/docs/?scope=studio&doc=studio)**, which manages the data for the site.
+- **[Analytics](/docs/?scope=studio&doc=analytics)**, which adds a semantic tagging layer to catalogue data.
+- **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
 
 Note on document structure:
 
@@ -39,4 +39,4 @@ Note on document structure:
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)**
   the shared docs module used by `/docs/` and other installed scopes (e.g. `/library/`).
 - **[Search](/docs/?scope=studio&doc=search)**
-  dedicated catalogue search plus inline docs-domain search.
+  dedicated catalogue and docs search engines.

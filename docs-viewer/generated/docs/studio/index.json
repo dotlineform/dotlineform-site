@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T11:05:37Z",
+  "generated_at": "2026-06-03T13:37:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -746,7 +746,7 @@
       "viewable": true,
       "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
-      "ui_status": "draft",
+      "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
       "content_text_length": 7915
     },
@@ -1268,7 +1268,7 @@
       "viewer_url": "/docs/?scope=studio&doc=dev-home",
       "summary": "This section contains technical reference documents that apply to the repo as a whole.",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/dev-home.json",
-      "content_text_length": 1664
+      "content_text_length": 1707
     },
     {
       "scope": "studio",

@@ -17,6 +17,12 @@ semantic references:
 ---
 
 
+we need to implement site-request-docs-viewer-markdown-editor.md
+but first the infrastructure needs updating. what are the priorities to do in site-request-docs-viewer-multi-panel-app-shell.md so that we can then move onto the editor request?
+
+---
+
+
 docs viewer config:
 
 how to update config through manage-mode
