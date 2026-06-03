@@ -81,6 +81,13 @@ Initial main-view views:
 - `rendered-document`: existing generated document payload view
 - `markdown-source`: manage-only editable Markdown source view
 
+Implementation steer:
+
+- Register the source editor through the code-owned hosted-view registration boundary, replacing the current disabled manage-only `markdown-source` placeholder when the module is ready.
+- Use the explicit main-view module context for selected document, scope, route access, `mainView.requestView(...)`, toolbar projection, warnings, and capability-gated source-editor services.
+- Do not load arbitrary route-config `module` strings, reach into the lazy management controller for source-editor services, or make `markdown-source` URL state.
+- Keep report behavior unchanged unless the source editor creates a concrete need to migrate reports into the main-view lifecycle.
+
 The source view should expose:
 
 - editable source text

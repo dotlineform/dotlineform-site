@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-pre-editor-work-tasks
 title: Docs Viewer Pre-Editor Work Tasks
 added_date: 2026-06-03
 last_updated: 2026-06-03
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-docs-viewer-markdown-editor
 viewable: true
 ---
@@ -121,19 +121,23 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 9 | done | Source-editor module context preparation: define the explicit main-view module context shape with selected document, scope, route access, `mainView` intent/toolbar/warning helpers, and optional source-editor service slots; ensure public contexts omit source-editor services. |
 | 10 | done | Migrate search and recent: move `search-results` and `recent-results` onto the same main-view hosting mechanism to prove the host with existing user-facing views before implementing `markdown-source`; preserve current search/recent route continuity and behavior. |
 | 11 | done | Main-view module registration boundary: establish explicit registration for built-in or repo-owned main-view modules without arbitrary route-config module loading or plugin-system behavior. |
-| 12 | in progress | Focused verification: run the agreed checks for public/manage boot, rendered document load, selected-document updates, search/recent continuity, toolbar layout, and any touched JavaScript syntax/import checks; record results in this tracker. |
-| 13 | in progress | Durable docs closeout: move durable architecture notes into owning Docs Viewer docs, update inventory rows where needed, record the report-host migration follow-up decision. update the markdown editor request with any implementation steers it needs to integrate with the new panel architecture. |
+| 12 | done | Focused verification: run the agreed checks for public/manage boot, rendered document load, selected-document updates, search/recent continuity, toolbar layout, and any touched JavaScript syntax/import checks; record results in this tracker. |
+| 13 | done | Durable docs closeout: move durable architecture notes into owning Docs Viewer docs, update inventory rows where needed, record the report-host migration follow-up decision. update the markdown editor request with any implementation steers it needs to integrate with the new panel architecture. |
 | 14 | deferred | Report-host main-view migration: defer unless implementation reveals a direct need. Current report behavior works; revisit after pre-editor work if reports need shared toolbar projection, shared lifecycle behavior, or cleaner replacement semantics. |
 
 ## Closeout Notes
 
-When the implementation is complete:
-
-- Update this tracker with changed files, decisions made, commands run, and known risks.
-- Confirm durable decisions have moved to permanent Docs Viewer docs.
-- Confirm the Markdown editor request can proceed with a stable main-view host environment.
-- Confirm public desktop/mobile route coverage has either moved to GitHub Actions deploy validation or the old local `public_docs_viewer_readonly.py` smoke has been explicitly retired from the required local closeout set.
-- Delete this tracker and the pre-editor request once their temporary planning purpose is complete.
+- Changed files for the closeout slice:
+  - `docs-viewer/source/studio/docs-viewer-panel-hosts.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-multi-panel-app-shell.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-pre-editor-work.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-markdown-editor.md`
+  - `docs-viewer/source/studio/site-request-docs-viewer-pre-editor-work-tasks.md`
+- Durable decisions have moved to the owning Docs Viewer docs, especially panel hosts, runtime boundary, toolbar model, and JavaScript inventory.
+- The Markdown editor request can proceed against the stable main-view host boundary: `markdown-source` should replace the disabled manage-only placeholder, consume the explicit main-view module context, and use host-mediated switch intents rather than URL state or management-controller reach-through.
+- Report-host migration remains deferred. Reports stay on the existing document payload/report path until a future requirement needs shared main-view lifecycle or toolbar behavior.
+- Public desktop/mobile route coverage is not required through `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` for this closeout. Use focused module smoke plus targeted runtime checks for pre-editor slices until deploy validation replaces the old local public-site smoke.
+- This tracker and the temporary pre-editor request can be deleted once the Markdown editor work has absorbed these implementation steers or the user confirms the temporary planning docs are no longer needed.
 
 ## Verification Log
 
@@ -154,3 +158,7 @@ When the implementation is complete:
 - Blocked: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root .` timed out waiting for `#docsViewerRoot:not([hidden])`; the smoke expects a built public-site root, not the repo root.
 - Blocked: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root _site` reached the route root, then timed out waiting for the expected public document heading; the current `_site` output is not a reliable fresh target for this smoke.
 - Partial: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py` reaches the report section, then fails an existing report-status expectation because the UI reports `27 broken links` rather than including the selected scope. This is outside the main-view migration and report-host migration remains deferred.
+- Passed closeout: `git diff --check`.
+- Passed closeout: terminology scan found only intended `document-host`/`panels.document` retirement and compatibility-gate notes, not active contract usage.
+- Passed closeout: changed-file sanitization scan found only expected source/semantic revision-token wording, not credentials or local absolute paths.
+- Docs watcher regenerated the matching published Docs Viewer JSON payloads from the source edits; these generated changes were not manually rebuilt.

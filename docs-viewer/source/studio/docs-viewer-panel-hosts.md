@@ -355,22 +355,24 @@ The current contract is simpler:
 
 The current foundation is usable, but the items below need clearer implementation requests before more panel work continues.
 
-### Document-Panel View Switching
+### Main-View Mounted-Module Lifecycle
 
 Current state:
 
-- document/search/recent/report are represented as hosted-view records and active document-panel view state
+- rendered-document, search, and recent are represented as main-view hosted-view records and active main-view state
 - actual rendering still flows through existing document, search, recent, and report controllers
-- there is no document-panel host equivalent to `docs-viewer-info-panel-host.js`
+- `docs-viewer-main-view-host.js` owns switch validation, active main-view projection, toolbar projection, unavailable warnings, and explicit main-view module context creation
+- there is no full main-view mounted-module lifecycle equivalent to `docs-viewer-info-panel-host.js`
 
 What this means:
 
-- a future source editor cannot yet plug into a clean document-panel view lifecycle
-- route state for search/recent/report still has to be preserved while any view-switching model is introduced
+- a future source editor should replace the disabled manage-only `markdown-source` placeholder and use the explicit main-view module context
+- route state for rendered documents, search, and recent should remain stable while independently mounted main-view modules are added
+- reports remain on the existing document payload/report path until a future requirement needs shared main-view lifecycle or toolbar behavior
 
 Request owner:
 
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
+- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
 
 ### Markdown Source Editor
 
@@ -381,7 +383,7 @@ Current state:
 
 What this means:
 
-- source editing should be implemented as a manage-only document-panel view after the document-panel view-switching model is clear enough
+- source editing should be implemented as a manage-only main-view hosted view by replacing the disabled `markdown-source` placeholder
 - source writes must remain backend-owned
 
 Request owner:
@@ -411,12 +413,13 @@ Current state:
 
 - index-panel controls are projected through the app shell
 - info panel has close and view-option chrome
-- document panel has existing document/search/report controls, but not a generalized panel-toolbar model
+- the main-view toolbar surface owns the current rendered-document metadata controls while preserving existing rendered-document controller IDs
+- search, recent, and reports still use their existing controls
 
 What this means:
 
 - do not add ad hoc toolbar controls per feature
-- define a small toolbar projection model before adding document-panel source editor controls, multiple info views, or graph/index controls
+- add source-editor toolbar actions through the main-view toolbar projection model rather than route-local DOM mutations
 
 Request owner:
 
@@ -445,7 +448,7 @@ Current state:
 - index collapsed/normal state uses current index-panel persistence behavior
 - expanded state is capability-driven and normalized when unsupported by the active index view
 - info-panel open/closed state and active view are browser state, not a durable route contract
-- document-panel view state is not yet a public URL contract
+- main-view state beyond existing rendered-document/search/recent route continuity is not a public URL contract
 
 What this means:
 

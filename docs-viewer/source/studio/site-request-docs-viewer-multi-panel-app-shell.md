@@ -46,33 +46,33 @@ Update the durable Docs Viewer docs instead when current panel-host behavior cha
 The current implementation is documented in [Docs Viewer Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts).
 The priorities below are the remaining multi-panel app-shell requirements that are not already covered by smaller requests.
 
-### Priority 1. Document-Panel Hosted-View Model
+### Priority 1. Main-View Hosted-View Lifecycle
 
 User-facing outcome:
 
-- Docs Viewer can switch the document panel between explicit views without breaking current document, search, recent, and report behavior.
-- The future Markdown source editor can attach as a document-panel view instead of bolting controls onto the existing document renderer.
+- Docs Viewer can switch the main view between explicit views without breaking current document, search, recent, and report behavior.
+- The future Markdown source editor can attach as a main-view hosted view instead of bolting controls onto the existing document renderer.
 
 Current gap:
 
-- `docs-viewer-view-state.js` tracks a document active view id.
-- `docs-viewer-hosted-views.js` has document records for `document-host`, `search-results`, `recent-results`, and `report-host`.
-- There is no document-panel host/controller equivalent to `docs-viewer-info-panel-host.js`.
-- Existing controllers still render document/search/recent/report surfaces directly.
+- `docs-viewer-main-view-host.js` validates switch requests and projects active main-view state for `rendered-document`, `search-results`, and `recent-results`.
+- `docs-viewer-hosted-views.js` has main-view records for `rendered-document`, `search-results`, `recent-results`, and disabled manage-only `markdown-source`.
+- Existing document, search, recent, and report controllers still own their current rendering behavior.
+- There is no full main-view lifecycle equivalent to `docs-viewer-info-panel-host.js` for independently mounted main-view modules.
 
 Scope:
 
-- define document-panel view ids and lifecycle
-- decide how document/search/recent/report route state maps to document-panel view state
-- preserve selected-document state independent from document-panel visibility
+- finish the main-view mounted-module lifecycle
+- preserve existing document/search/recent route behavior while the host owns replacement intents
+- preserve selected-document state independent from main-view visibility
 - preserve public read-only and local manage behavior
-- define graceful unavailable states for manage-only document-panel views
+- define graceful unavailable states for manage-only main-view views
 
 Open decisions:
 
-- whether document-panel view state is URL-addressable
-- whether hidden document-panel views keep payloads loaded
-- whether report documents remain a document payload mode or become a document-panel hosted view
+- whether any future main-view state beyond current document/search/recent route continuity should be URL-addressable
+- whether hidden main-view modules keep payloads loaded
+- whether report documents remain a document payload mode or become a main-view hosted view
 
 ### Priority 2. Panel Toolbar Projection
 
@@ -85,11 +85,12 @@ Current gap:
 
 - index controls are projected through app-shell helpers.
 - info panel has close/view-option chrome.
-- document panel still relies on existing document/search/report controls and has no shared panel-toolbar model.
+- the main-view toolbar surface owns the current rendered-document metadata controls while preserving existing rendered-document controller IDs.
+- search, recent, and reports still use their existing controls.
 
 Scope:
 
-- define a small toolbar projection model for index, document, and info panels
+- extend the toolbar projection model for index, main, and info panels only when a concrete view needs it
 - decide which controls are icon buttons, menus, segmented controls, or text buttons
 - wire controls through explicit panel intents
 - source labels and accessible names from UI text/config
@@ -99,7 +100,7 @@ Open decisions:
 
 - whether the current index controls are sufficient for the next slice
 - whether info panel needs only close/hide plus view selector
-- which document-panel controls are part of panel chrome versus view-specific UI
+- which main-view controls are part of panel chrome versus view-specific UI
 
 ### Priority 3. Info-View Expansion Contract
 
@@ -135,7 +136,7 @@ Current gap:
 - index collapsed/normal state has current persistence behavior.
 - expanded state is capability-driven and normalized when unsupported.
 - info open/closed state and active view are transient browser state.
-- document-panel view state is not a route contract.
+- main-view state beyond existing rendered-document/search/recent route continuity is not a route contract.
 
 Scope:
 

@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-pre-editor-work
 title: Docs Viewer Pre-Editor Work Request
 added_date: 2026-06-03
 last_updated: 2026-06-03
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-docs-viewer-markdown-editor
 viewable: true
 ---
@@ -11,8 +11,15 @@ viewable: true
 
 Status:
 
-- proposed
+- implemented
 - child request of [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
+
+Implementation note:
+
+- The pre-editor main-view host, toolbar projection, switch-intent contract, route/config cleanup, source-editor module context, and code-owned hosted-view registration boundary are implemented.
+- `rendered-document`, `search-results`, and `recent-results` are registered as current main-view records; `markdown-source` is registered as a disabled manage-only repo-owned placeholder.
+- Existing document/search/recent controllers still render their content. A full mounted-module lifecycle for independent main-view modules remains a follow-up for the Markdown source editor implementation.
+- `report-host` migration remains deferred; reports stay on the existing document payload/report path unless a later requirement needs shared main-view toolbar/lifecycle behavior.
 
 ## Summary
 

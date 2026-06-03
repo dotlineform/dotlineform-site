@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T17:02:53Z",
+  "generated_at": "2026-06-03T17:07:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -733,7 +733,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor.json",
-      "content_text_length": 10319
+      "content_text_length": 11006
     },
     {
       "scope": "studio",
@@ -746,9 +746,9 @@
       "viewable": true,
       "source_path": "site-request-docs-viewer-pre-editor-work.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work.json",
-      "content_text_length": 16442
+      "content_text_length": 17229
     },
     {
       "scope": "studio",
@@ -761,9 +761,9 @@
       "viewable": true,
       "source_path": "site-request-docs-viewer-pre-editor-work-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-pre-editor-work-tasks",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work-tasks.json",
-      "content_text_length": 14511
+      "content_text_length": 15895
     },
     {
       "scope": "studio",
@@ -778,7 +778,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 7915
+      "content_text_length": 8318
     },
     {
       "scope": "studio",
@@ -1736,7 +1736,7 @@
       "source_path": "docs-viewer-panel-hosts.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
-      "content_text_length": 19311
+      "content_text_length": 19862
     },
     {
       "scope": "studio",
