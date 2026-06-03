@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T17:08:56Z",
+  "generated_at": "2026-06-03T17:51:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -733,7 +733,22 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor.json",
-      "content_text_length": 11009
+      "content_text_length": 17008
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-markdown-editor-tasks",
+      "title": "Docs Viewer Markdown Editor Tasks",
+      "added_date": "2026-06-03",
+      "last_updated": "2026-06-03",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-markdown-editor-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor-tasks.json",
+      "content_text_length": 8494
     },
     {
       "scope": "studio",
