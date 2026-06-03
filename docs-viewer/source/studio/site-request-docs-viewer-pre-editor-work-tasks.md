@@ -60,6 +60,8 @@ Use the smallest checks that match each implementation slice.
 
 Codex sandbox note: local service, browser, and temporary localhost checks may need elevated permissions even when the product code is healthy.
 
+Closeout note: do not treat `docs-viewer/tests/smoke/public_docs_viewer_readonly.py` as required local verification for this pre-editor work. Public desktop/mobile deploy validation is expected to move to GitHub Actions soon, making this local public-site smoke redundant. Until that deploy smoke exists, use focused module smoke plus targeted runtime checks for pre-editor slices unless the change specifically touches public route generation or deploy behavior.
+
 ### general steer
 
 - Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow), especially the Docs Viewer App Architecture Gate and JavaScript Maintenance Gate.
@@ -124,6 +126,7 @@ When the implementation is complete:
 - Update this tracker with changed files, decisions made, commands run, and known risks.
 - Confirm durable decisions have moved to permanent Docs Viewer docs.
 - Confirm the Markdown editor request can proceed with a stable main-view host environment.
+- Confirm public desktop/mobile route coverage has either moved to GitHub Actions deploy validation or the old local `public_docs_viewer_readonly.py` smoke has been explicitly retired from the required local closeout set.
 - Delete this tracker and the pre-editor request once their temporary planning purpose is complete.
 
 ## Verification Log
