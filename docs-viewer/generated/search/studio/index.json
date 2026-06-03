@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-250a0ffd2c05eb34f8ab73f81661314e",
-    "generated_at_utc": "2026-06-03T10:34:03Z",
+    "version": "blake2b-093531fb11188578798c8a8d1eaf445c",
+    "generated_at_utc": "2026-06-03T10:39:32Z",
     "count": 239
   },
   "entries": [
@@ -4317,10 +4317,10 @@
       "kind": "doc",
       "title": "Analytics UI Text Config",
       "href": "/docs/?scope=studio&doc=config-analytics-ui-text-json",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-analytics-ui-text-json",
         "config",
@@ -4330,12 +4330,12 @@
         "json",
         "analytics ui text config",
         "studio",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-analytics-ui-text-json config analytics ui text json analytics ui text config studio 2026-06-02 2026 06 02"
+      "search_text": "config-analytics-ui-text-json config analytics ui text json analytics ui text config studio 2026-06-03 2026 06 03"
     },
     {
       "id": "bulk-add-work",

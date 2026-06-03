@@ -1,7 +1,5 @@
 {
   "load_failed_error": "Failed to load tag data from /analytics/data/canonical/tag-registry.json and /analytics/data/canonical/tag-aliases.json.",
-  "import_file_label": "import file",
-  "import_mode_label": "mode",
   "import_mode_option_add": "add (no overwrite)",
   "import_mode_option_merge": "add + overwrite",
   "import_mode_option_replace": "replace entire registry",
@@ -13,8 +11,6 @@
   "search_label": "Search tags",
   "search_placeholder": "search",
   "all_tags_filter": "All tags [{count}]",
-  "group_info_title": "Open group descriptions in a new tab",
-  "group_info_aria_label": "Open group descriptions in a new tab",
   "empty_state": "none",
   "selected_file_template": "Selected: {filename}",
   "table_heading_tag": "tag",

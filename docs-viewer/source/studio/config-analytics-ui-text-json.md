@@ -2,7 +2,7 @@
 doc_id: config-analytics-ui-text-json
 title: Analytics UI Text Config
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -48,3 +48,6 @@ For each bundle:
 - keep Data Sharing operation copy separate from Data Sharing adapter capability config
 - remove retired-route bundles only after route config and server exposure are retired
 
+Current cleanup status:
+
+- CFG-006 in [Config Cleanup Implementation Plan](/docs/?scope=studio&doc=config-cleanup-implementation-plan) audited active Analytics UI-text bundles and removed stale route-surface keys that no active route module reads

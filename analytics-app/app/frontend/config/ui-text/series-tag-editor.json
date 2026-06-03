@@ -28,7 +28,6 @@
   "work_summary_added": "Added {count} work{plural}.",
   "work_summary_not_in_series": "Not in this series: {list}.",
   "work_summary_invalid": "Invalid work id: {list}.",
-  "select_work_before_tags": "Select a work before adding tags.",
   "tag_input_required": "Enter a tag or alias.",
   "tag_multiple_matches": "Multiple matches for \"{input}\": {candidate_ids}{suffix}. Choose one from autocomplete.",
   "tag_unknown_error": "Unknown tag: \"{input}\".",
