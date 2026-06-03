@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-479fec0f1ec0f9dcc351e177791b118f",
-    "generated_at_utc": "2026-06-02T22:09:18Z",
-    "count": 238
+    "version": "blake2b-250a0ffd2c05eb34f8ab73f81661314e",
+    "generated_at_utc": "2026-06-03T10:34:03Z",
+    "count": 239
   },
   "entries": [
     {
@@ -4855,6 +4855,30 @@
       "search_text": "studio-config-and-save-flow studio config and save flow config and save flow 2026-06-02 2026 06 02"
     },
     {
+      "id": "config-cleanup-implementation-plan",
+      "kind": "doc",
+      "title": "Config Cleanup Implementation Plan",
+      "href": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
+      "last_updated": "2026-06-03",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-03 • Studio",
+      "search_terms": [
+        "config-cleanup-implementation-plan",
+        "config",
+        "cleanup",
+        "implementation",
+        "plan",
+        "config cleanup implementation plan",
+        "studio",
+        "2026-06-03",
+        "2026",
+        "06",
+        "03"
+      ],
+      "search_text": "config-cleanup-implementation-plan config cleanup implementation plan config cleanup implementation plan studio 2026-06-03 2026 06 03"
+    },
+    {
       "id": "config-files-inventory",
       "kind": "doc",
       "title": "Config Files Inventory",
@@ -5329,10 +5353,10 @@
       "kind": "doc",
       "title": "Studio UI Text Config",
       "href": "/docs/?scope=studio&doc=config-studio-ui-text-json",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-03 • Studio",
       "search_terms": [
         "config-studio-ui-text-json",
         "config",
@@ -5341,12 +5365,12 @@
         "text",
         "json",
         "studio ui text config",
-        "2026-06-02",
+        "2026-06-03",
         "2026",
         "06",
-        "02"
+        "03"
       ],
-      "search_text": "config-studio-ui-text-json config studio ui text json studio ui text config 2026-06-02 2026 06 02"
+      "search_text": "config-studio-ui-text-json config studio ui text json studio ui text config 2026-06-03 2026 06 03"
     },
     {
       "id": "thumbnail-quality-page",

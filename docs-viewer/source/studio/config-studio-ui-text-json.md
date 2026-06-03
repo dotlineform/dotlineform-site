@@ -2,7 +2,7 @@
 doc_id: config-studio-ui-text-json
 title: Studio UI Text Config
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 parent_id: studio
 viewable: true
 ---
@@ -58,3 +58,4 @@ For each bundle:
 Current cleanup status:
 
 - `site-series-index.json` was removed after active call-site review found no Local Studio route consuming `paths.data.ui_text.site_series_index`
+- CFG-001 in [Config Cleanup Implementation Plan](/docs/?scope=studio&doc=config-cleanup-implementation-plan) audited active Local Studio UI-text bundles and removed five stale `catalogue-work-editor.json` keys that no active route module reads

@@ -77,6 +77,8 @@ Every config contract review should answer:
 
 ## Cleanup Queue
 
+Use [Config Cleanup Implementation Plan](/docs/?scope=studio&doc=config-cleanup-implementation-plan) as the consolidated implementation tracker.
+
 The first cleanup queue is:
 
 - Local Studio: `paths.routes` values, unused site/docs/search helper exports, `paths.data.studio.catalogue_lookup_meta`, `paths.data.ui_text.site_series_index`, and broad `catalogue.series_type_options` have been removed; continue reviewing remaining `paths.data.studio` and `paths.data.ui_text` keys only with active call-site scans and focused tests

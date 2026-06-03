@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T22:46:18Z",
+  "generated_at": "2026-06-03T10:34:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2793,6 +2793,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-cleanup-implementation-plan",
+      "title": "Config Cleanup Implementation Plan",
+      "added_date": "2026-06-03",
+      "last_updated": "2026-06-03",
+      "parent_id": "studio",
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-cleanup-implementation-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json",
+      "content_text_length": 9522
+    },
+    {
+      "scope": "studio",
       "doc_id": "config-files-inventory",
       "title": "Config Files Inventory",
       "added_date": "2026-06-02",
@@ -2803,7 +2817,7 @@
       "source_path": "config-files-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=config-files-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json",
-      "content_text_length": 6411
+      "content_text_length": 6495
     },
     {
       "scope": "studio",
@@ -3076,14 +3090,14 @@
       "doc_id": "config-studio-ui-text-json",
       "title": "Studio UI Text Config",
       "added_date": "2026-06-02",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-03",
       "parent_id": "studio",
       "hidden": false,
       "viewable": true,
       "source_path": "config-studio-ui-text-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-ui-text-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-ui-text-json.json",
-      "content_text_length": 2345
+      "content_text_length": 2526
     },
     {
       "scope": "studio",

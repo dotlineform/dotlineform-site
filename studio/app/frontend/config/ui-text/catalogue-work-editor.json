@@ -4,7 +4,6 @@
   "search_placeholder": "find work id(s): 00001, 00003-00005",
   "search_empty": "Enter a work id.",
   "search_no_match": "No matching work ids.",
-  "search_multiple_matches": "Choose a work from the list.",
   "missing_work_param": "Search for a work by work id.",
   "unknown_work_error": "Unknown work id: {work_id}.",
   "open_button": "Open",
@@ -144,10 +143,8 @@
   "details_new_link": "new work detail →",
   "details_new_unavailable_draft": "Publish this work before adding work details.",
   "details_search_placeholder": "find detail by id",
-  "details_search_empty": "Enter a detail id for this work.",
   "details_search_no_match": "No matching detail ids for this work.",
   "details_empty": "No work details for this work.",
-  "details_open_label": "Open detail editor",
   "details_more_count": "showing {visible} of {total}",
   "details_section_blank": "root",
   "details_search_results": "matching details",
@@ -180,8 +177,6 @@
   "entry_modal_save_button": "Save",
   "entry_modal_cancel_button": "Cancel",
   "entry_modal_delete_button": "Delete",
-  "summary_readonly_label": "generated",
-  "summary_rebuild_label": "runtime",
   "summary_rebuild_needed": "public update failed in this session",
   "summary_rebuild_current": "source and public catalogue are aligned in this session"
 }
