@@ -83,8 +83,8 @@ Current entrypoints and shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
 - `docs-viewer/runtime/js/docs-viewer-router.js` for low-level URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate helper behavior, and payload-load helper behavior imported by the route workflow owner
 - `_includes/docs_viewer_shell.html`
-- `docs-viewer/static/css/docs-viewer-base.css` for portable Docs Viewer tokens and shell utilities
-- `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css` for reusable viewer styling
+- `docs-viewer/static/css/docs-viewer.css` for basic/public viewer styling, portable Docs Viewer tokens, and shell utilities loaded by public Jekyll routes and the local manage shell
+- `docs-viewer/static/css/docs-viewer-reports.css` for report styling loaded by the local manage shell until a report is explicitly promoted to public
 - `docs-viewer/static/css/docs-viewer-management.css` for management-only shell and modal styling
 
 The shell loads the entrypoint as an ES module.
@@ -96,10 +96,9 @@ The returned app handle also does not expose broad app/session state, app-compos
 
 Current CSS base boundary:
 
-- public `/library/` and `/analysis/` routes intentionally get `assets/css/main.css` from the public site layout, then load Docs Viewer-owned CSS through the shared include
-- standalone local `/docs/` gets Docs Viewer-owned base CSS from the Docs Viewer service shell, then loads reusable viewer CSS and management CSS
-- `docs-viewer/static/css/docs-viewer-base.css` supplies portable Docs Viewer tokens and shell utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling inside `.docsViewer`
-- `docs-viewer/static/css/docs-viewer.css` defines viewer component tokens with Docs Viewer theme-token and host-token fallbacks
+- public `/library/` and `/analysis/` routes intentionally get `assets/css/main.css` from the public site layout, then load Docs Viewer-owned basic viewer CSS through the shared include
+- standalone local `/docs/` gets Docs Viewer-owned basic viewer CSS from the Docs Viewer service shell, then loads report CSS and management CSS
+- `docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks
 
 Because Docs Viewer has public read-only installs and a planned portable shell, reusable Docs Viewer code should not depend on Studio CSS or unrelated public-site page classes.
 Standalone Docs Viewer pages should use the Docs Viewer-owned base layer for page-level shell defaults, while public Jekyll routes may continue to inherit their public host base intentionally.

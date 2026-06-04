@@ -33,7 +33,7 @@ Current exclusions include local operational and non-site inputs such as:
 - mutable Studio activity and catalogue source/lookup data that local Studio reads through localhost services
 - Docs Viewer local service files under `docs-viewer/bin/`, `docs-viewer/services/`, and `docs-viewer/shell/`
 - Docs Viewer source/config inputs that are not browser-safe public route assets
-- Docs Viewer local/manage-only runtime modules, HTML import modules, management CSS, and the full local route registry; public Jekyll routes publish the shared read-only runtime/CSS plus `docs-viewer/config/routes/docs-viewer-public-routes.json`
+- Docs Viewer local/manage-only runtime modules, HTML import modules, management CSS, report CSS, and the full local route registry; public Jekyll routes publish the public read-only runtime, basic viewer CSS, and `docs-viewer/config/routes/docs-viewer-public-routes.json`
 
 ## What calls it
 

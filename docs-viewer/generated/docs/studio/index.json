@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T15:23:10Z",
+  "generated_at": "2026-06-04T16:03:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -160,7 +160,7 @@
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "parent_id": "architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
-      "content_text_length": 2390
+      "content_text_length": 2416
     },
     {
       "doc_id": "data-models-projection-contract",
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 37687
+      "content_text_length": 40359
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -1186,7 +1186,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 10235
+      "content_text_length": 10295
     },
     {
       "doc_id": "docs-broken-links",
@@ -1244,7 +1244,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-css-cascade-design.json",
-      "content_text_length": 7929
+      "content_text_length": 7795
     },
     {
       "doc_id": "docs-viewer-dependencies",
@@ -1465,7 +1465,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "parent_id": "docs-viewer-portable-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11619
+      "content_text_length": 11677
     },
     {
       "doc_id": "docs-viewer-portable-scope-setup",
@@ -1511,7 +1511,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 33219
+      "content_text_length": 33287
     },
     {
       "doc_id": "docs-viewer-scopes",

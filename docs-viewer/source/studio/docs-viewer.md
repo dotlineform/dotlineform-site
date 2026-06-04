@@ -43,8 +43,8 @@ The current implementation uses:
 - browser-safe Docs Viewer route records in `docs-viewer/config/routes/docs-viewer-routes.json`
 - Docs Viewer public UI text in `docs-viewer/config/ui-text/public.json`
 - Docs Viewer manage UI text in `docs-viewer/config/ui-text/manage.json`
-- Docs Viewer base CSS in `docs-viewer/static/css/docs-viewer-base.css`
-- reusable Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css`
+- basic/public Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css`
+- report CSS in `docs-viewer/static/css/docs-viewer-reports.css`, loaded by the local manage shell until a report is explicitly promoted to public
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 - a management-only stylesheet in `docs-viewer/static/css/docs-viewer-management.css`, loaded only by management-enabled shells
 - a standalone service runner at `docs-viewer/bin/docs-viewer`, using `var/local/site.env` for the static local Docs Viewer host, port, base URL, and capability flags
@@ -57,7 +57,7 @@ Public viewer routes are read-only:
 
 The CSS base contract is explicit.
 Public `/library/` and `/analysis/` intentionally inherit `assets/css/main.css` from the public site layout so generated docs content keeps host prose and media styling.
-The shared Docs Viewer include also loads `docs-viewer/static/css/docs-viewer-base.css`, which supplies Docs Viewer-owned tokens and small utilities required by the viewer shell.
+The shared Docs Viewer include also loads `docs-viewer/static/css/docs-viewer.css`, which supplies Docs Viewer-owned tokens, small utilities, and public reader, index, main, info, search, and bookmark surfaces.
 Standalone/local Docs Viewer shells can opt into the base page layer with a Docs Viewer shell body class instead of depending on Studio CSS or dotlineform public `main.css`.
 
 This section documents the current Docs Viewer implementation as a common module.

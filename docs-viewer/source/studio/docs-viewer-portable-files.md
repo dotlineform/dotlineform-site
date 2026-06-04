@@ -112,13 +112,13 @@ For Docs Import inside the management modal, also copy:
 
 Copy:
 
-- `docs-viewer/static/css/docs-viewer-base.css`
 - `docs-viewer/static/css/docs-viewer.css`
 - `docs-viewer/static/css/docs-viewer-reports.css`
 - `docs-viewer/static/css/docs-viewer-management.css`
 
 The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
-The viewer include now loads Docs Viewer-owned CSS for the portable base contract, shell, controls, index, search, results, bookmarks, status menu, report components, management surfaces, and the transitional Docs Import form/control primitives.
+The public viewer include loads Docs Viewer-owned CSS for the portable base contract, public shell, controls, index, search, results, and bookmarks through `docs-viewer/static/css/docs-viewer.css`.
+The local manage shell loads the basic viewer stylesheet, report stylesheet, management stylesheet, and transitional Docs Import form/control primitives.
 Public read-only routes may intentionally inherit public host CSS; standalone/local Docs Viewer shells should not require public `assets/css/main.css`.
 
 ### Config And UI Text

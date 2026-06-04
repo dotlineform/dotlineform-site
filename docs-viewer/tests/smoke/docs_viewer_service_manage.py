@@ -272,6 +272,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             studio_css_count = page.locator('link[href*="/studio/app/assets/css/studio.css"]').count()
             main_css_count = page.locator('link[href*="/assets/css/main.css"]').count()
+            viewer_css_count = page.locator('link[href*="/docs-viewer/static/css/docs-viewer.css"]').count()
             base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
             management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
             docs_script_count = page.locator('script[src*="docs-viewer-manage.js"]').count()
@@ -417,10 +418,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected delete preview blocker status, got {delete_blocker_text!r}")
         if main_css_count or studio_css_count:
             raise AssertionError(f"standalone Docs Viewer shell should not load host CSS: main={main_css_count}, studio={studio_css_count}")
-        if base_css_count != 1 or management_css_count != 1 or docs_script_count != 1:
+        if viewer_css_count != 1 or base_css_count or management_css_count != 1 or docs_script_count != 1:
             raise AssertionError(
                 "unexpected Docs Viewer asset counts: "
-                f"base={base_css_count}, management={management_css_count}, script={docs_script_count}"
+                f"viewer={viewer_css_count}, base={base_css_count}, management={management_css_count}, script={docs_script_count}"
             )
         if query_value(final_url, "mode") != "manage":
             raise AssertionError(f"expected mode=manage in URL, got {final_url}")

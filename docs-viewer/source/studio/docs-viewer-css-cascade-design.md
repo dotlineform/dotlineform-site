@@ -19,20 +19,17 @@ Docs Viewer should provide its own portable base contract plus shell, navigation
 The intended cascade for public Jekyll routes is:
 
 1. host layout stylesheet, currently `assets/css/main.css`
-2. Docs Viewer base stylesheet, `docs-viewer/static/css/docs-viewer-base.css`
-3. Docs Viewer public stylesheet, `docs-viewer/static/css/docs-viewer.css`
-4. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
+2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
 
 The intended cascade for local or standalone management routes is:
 
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
-2. Docs Viewer base stylesheet, `docs-viewer/static/css/docs-viewer-base.css`
-3. Docs Viewer public stylesheet, `docs-viewer/static/css/docs-viewer.css`
-4. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
-5. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-management.css`
+2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
+3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
+4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-management.css`
 
 Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
-Docs Viewer does not require the public stylesheet to function.
+Docs Viewer does not require the public host stylesheet to function.
 The Docs Viewer include adds only Docs Viewer-owned stylesheets.
 
 ## Host Stylesheet Responsibilities
@@ -54,21 +51,14 @@ Generated docs HTML is rendered inside:
 The `content` class is intentional.
 It lets generated markdown output inherit the host project's document typography and media behavior instead of requiring Docs Viewer to recreate every prose rule.
 
-## Docs Viewer Base Stylesheet Responsibilities
+## Docs Viewer Basic Stylesheet Responsibilities
 
-`docs-viewer/static/css/docs-viewer-base.css` owns the small portable base contract required by Docs Viewer shells:
+`docs-viewer/static/css/docs-viewer.css` owns the basic/public viewer contract:
 
 - Docs Viewer-prefixed font, type scale, spacing, color, radius, and container tokens with host-token fallbacks
 - `.docsViewer`-scoped utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling
 - minimal monospace inheritance for code blocks rendered inside the viewer shell
 - opt-in standalone shell body/container defaults for Docs Viewer-owned service pages
-
-It should not restyle public host page chrome or override public `assets/css/main.css` tokens on `/library/` and `/analysis/`.
-
-## Docs Viewer Public Stylesheet Responsibilities
-
-`docs-viewer/static/css/docs-viewer.css` should own reusable viewer UI:
-
 - `.docsViewer` grid and responsive shell
 - sidebar/index layout
 - nav rows, toggles, active states, and collapsed index state
@@ -77,14 +67,16 @@ It should not restyle public host page chrome or override public `assets/css/mai
 - status text
 - bookmark row and bookmark controls
 - metadata row, path, updated date, and status/bookmark display
-- UI status pills
 - search and recently-added results
 - viewer-specific content constraints such as measure width
 - rendered Markdown content should not force mid-word wrapping by default
 - rendered Markdown code blocks should preserve code whitespace and use horizontal overflow when needed
 - tables may still scroll horizontally when needed
 
-It should not define broad site typography or unrelated public-site layout.
+It should not restyle public host page chrome, override public `assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report selectors.
+
+The next CSS extraction task moves manage-only controls out of `docs-viewer/static/css/docs-viewer.css` into a manage layer.
+Until then, `docs-viewer/static/css/docs-viewer.css` still carries some manage-adjacent controls such as selected-document status pills that are composed only by manage-owned modules.
 
 ## Rendered Table Defaults
 

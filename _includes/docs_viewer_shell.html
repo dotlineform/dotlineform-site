@@ -1,9 +1,4 @@
-<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-base.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-reports.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-{%- if include.allow_management -%}
-<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-{%- endif -%}
 {%- assign docs_viewer_route_config_url = include.route_config_url | default: site.docs_viewer_route_config_url | default: '/docs-viewer/config/routes/docs-viewer-routes.json' -%}
 
 <section

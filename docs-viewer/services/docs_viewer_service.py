@@ -195,13 +195,13 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-context.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-viewer-toolbar-renderer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-state.js",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-base.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-management.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
-        repo_root / "docs-viewer" / "config" / "ui-text" / "ui-text.json",
+        repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
+        repo_root / "docs-viewer" / "config" / "ui-text" / "public.json",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"

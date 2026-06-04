@@ -213,7 +213,11 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
     assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
     assert "/docs-viewer/runtime/js/docs-viewer-manage.js?v=test-version" in rendered
+    assert "/docs-viewer/static/css/docs-viewer.css?v=test-version" in rendered
+    assert "/docs-viewer/static/css/docs-viewer-reports.css?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-management.css?v=test-version" in rendered
+    assert "/docs-viewer/static/css/docs-viewer-base.css" not in rendered
+    assert "/docs-viewer/static/css/docs-viewer-public.css" not in rendered
     assert "/studio/api/docs" not in rendered
     assert "/studio/app/assets/css/studio.css" not in rendered
     assert "{%" not in rendered

@@ -164,7 +164,10 @@ def main() -> int:
                         };
                     }"""
                 )
+                viewer_css_count = page.locator('link[href*="/docs-viewer/static/css/docs-viewer.css"]').count()
                 base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
+                public_css_count = page.locator('link[href*="docs-viewer-public.css"]').count()
+                report_css_count = page.locator('link[href*="docs-viewer-reports.css"]').count()
                 management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
                 studio_css_count = page.locator('link[href*="assets/studio/"], link[href*="studio/app/"]').count()
                 studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
@@ -180,6 +183,16 @@ def main() -> int:
                     url
                     for url in resource_urls
                     if "/docs-viewer/runtime/js/docs-viewer-management" in url
+                ]
+                blocked_css_urls = [
+                    url
+                    for url in resource_urls
+                    if (
+                        "/docs-viewer/static/css/docs-viewer-base.css" in url
+                        or "/docs-viewer/static/css/docs-viewer-public.css" in url
+                        or "/docs-viewer/static/css/docs-viewer-reports.css" in url
+                        or "/docs-viewer/static/css/docs-viewer-management.css" in url
+                    )
                 ]
 
                 if root_attrs["allowManagement"] == "true":
@@ -206,8 +219,14 @@ def main() -> int:
                     raise AssertionError(f"{route} public route registry exposed management routes: {root_attrs!r}")
                 if root_attrs["hostedViewIds"]:
                     raise AssertionError(f"{route} public route registry exposed hosted manage-only views: {root_attrs!r}")
-                if base_css_count != 1:
-                    raise AssertionError(f"{route} expected one Docs Viewer base stylesheet, got {base_css_count}")
+                if viewer_css_count != 1:
+                    raise AssertionError(f"{route} expected one Docs Viewer stylesheet, got {viewer_css_count}")
+                if base_css_count:
+                    raise AssertionError(f"{route} loaded retired Docs Viewer base CSS")
+                if public_css_count:
+                    raise AssertionError(f"{route} loaded temporary Docs Viewer public CSS")
+                if report_css_count:
+                    raise AssertionError(f"{route} loaded report CSS")
                 if management_css_count:
                     raise AssertionError(f"{route} loaded management CSS")
                 if studio_css_count or studio_script_count:
@@ -218,6 +237,8 @@ def main() -> int:
                     raise AssertionError(f"{route} rendered management document controls")
                 if management_js_urls:
                     raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
+                if blocked_css_urls:
+                    raise AssertionError(f"{route} loaded blocked Docs Viewer CSS: {blocked_css_urls!r}")
 
                 assert_info_panel_route(
                     page,
