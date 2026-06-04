@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-51f4a150f0729afc9911f1fd7e39a4f9",
-    "generated_at_utc": "2026-06-04T16:57:40Z",
-    "count": 247
+    "version": "blake2b-8411d6e4afd66ba5ecb2aa3616744bf5",
+    "generated_at_utc": "2026-06-04T18:05:38Z",
+    "count": 246
   },
   "entries": [
     {
@@ -1241,34 +1241,6 @@
         "07"
       ],
       "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
-    },
-    {
-      "id": "docs-viewer-info-panel",
-      "kind": "doc",
-      "title": "Docs Viewer Info Panel",
-      "href": "/docs/?scope=studio&doc=docs-viewer-info-panel",
-      "last_updated": "2026-06-04 11:43",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-04 11:43 • Change Requests",
-      "search_terms": [
-        "docs-viewer-info-panel",
-        "docs",
-        "viewer",
-        "info",
-        "panel",
-        "docs viewer info panel",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-04 11:43",
-        "2026",
-        "06",
-        "04",
-        "11",
-        "43"
-      ],
-      "search_text": "docs-viewer-info-panel docs viewer info panel docs viewer info panel change requests change requests 2026-06-04 11:43 2026 06 04 11 43"
     },
     {
       "id": "site-request-docs-viewer-markdown-editor",

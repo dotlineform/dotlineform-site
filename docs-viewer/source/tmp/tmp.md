@@ -8,6 +8,22 @@ ui_status: draft
 
 # tmp
 
+we are working on `site-request-docs-viewer-public-index-slimming.md`,
+please review the request and proposed tasks and identify any areas or tasks that are missing or need clarification.
+
+
+'Define whether public by-id payloads are in scope for reader-facing metadata slimming. Public info-panel hydration from by-id may still expose or depend on fields produced by the current shared metadata entry, such as source_path, viewer_url, ui_status, and management/report-related fields.'
+
+yes. the info panel should read from by-id payloads, not public index rows, not index.json. this should be a consistent principle for both local and public routes.
+
+For public read-only routes, the info panel should display only public reader-facing document data:
+
+- title
+- summary
+- last updated
+
+---
+
 ## source
 
 all scopes:
@@ -32,13 +48,6 @@ e.g. for `library`:
 
 `index.json` should only contain what is necessary to build the index tree view
 `by-id` for public scopes should only contain what is needed
-
----
-
-
-we are working on `site-request-docs-viewer-public-manage-entrypoints.md`,
-please continue with the tasks.
-
 
 ---
 

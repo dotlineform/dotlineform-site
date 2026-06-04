@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T17:45:19Z",
+  "generated_at": "2026-06-04T18:05:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -582,17 +582,6 @@
       "content_text_length": 5870
     },
     {
-      "doc_id": "docs-viewer-info-panel",
-      "title": "Docs Viewer Info Panel",
-      "added_date": "2026-06-04 11:43",
-      "last_updated": "2026-06-04 11:43",
-      "source_path": "docs-viewer-info-panel.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-info-panel",
-      "parent_id": "change-requests",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json",
-      "content_text_length": 1120
-    },
-    {
       "doc_id": "site-request-docs-viewer-markdown-editor",
       "title": "Docs Viewer Markdown Editor Request",
       "added_date": "2026-06-02",
@@ -662,7 +651,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 12293
+      "content_text_length": 15431
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
