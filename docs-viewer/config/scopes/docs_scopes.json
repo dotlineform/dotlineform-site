@@ -136,6 +136,11 @@
           "emoji": "🔄"
         },
         {
+          "ui_status": "planned",
+          "label": "planned",
+          "emoji": "🧭"
+        },
+        {
           "ui_status": "paused",
           "label": "Paused",
           "emoji": "⏸️"

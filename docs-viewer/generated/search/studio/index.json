@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8411d6e4afd66ba5ecb2aa3616744bf5",
-    "generated_at_utc": "2026-06-04T18:05:38Z",
-    "count": 246
+    "version": "blake2b-cd278e5cf7e10f1fc6b70c0ec50e4fdf",
+    "generated_at_utc": "2026-06-04T20:47:36Z",
+    "count": 247
   },
   "entries": [
     {
@@ -1135,10 +1135,10 @@
       "kind": "doc",
       "title": "Data Sharing Docs Internal Index Request",
       "href": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-03 • Change Requests",
+      "display_meta": "2026-06-04 • Change Requests",
       "search_terms": [
         "site-request-data-sharing-docs-internal-index",
         "site",
@@ -1152,12 +1152,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-03",
+        "2026-06-04",
         "2026",
         "06",
-        "03"
+        "04"
       ],
-      "search_text": "site-request-data-sharing-docs-internal-index site request data sharing docs internal index data sharing docs internal index request change requests change requests 2026-06-03 2026 06 03"
+      "search_text": "site-request-data-sharing-docs-internal-index site request data sharing docs internal index data sharing docs internal index request change requests change requests 2026-06-04 2026 06 04"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
@@ -2470,10 +2470,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-06-04",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-23 • Dev Home",
+      "display_meta": "2026-06-04 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -2482,12 +2482,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-23",
+        "2026-06-04",
         "2026",
-        "05",
-        "23"
+        "06",
+        "04"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-05-23 2026 05 23"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-04 2026 06 04"
     },
     {
       "id": "development-workflow",
@@ -2584,28 +2584,57 @@
       "search_text": "scripts dev home dev home 2026-06-01 2026 06 01"
     },
     {
-      "id": "tasks-template",
+      "id": "task-template",
       "kind": "doc",
-      "title": "Tasks Template",
-      "href": "/docs/?scope=studio&doc=tasks-template",
-      "last_updated": "2026-05-26",
+      "title": "Task Template",
+      "href": "/docs/?scope=studio&doc=task-template",
+      "last_updated": "2026-06-04 20:59",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-26 • Dev Home",
+      "display_meta": "2026-06-04 20:59 • Dev Home",
       "search_terms": [
-        "tasks-template",
-        "tasks",
+        "task-template",
+        "task",
         "template",
-        "tasks template",
+        "task template",
         "dev home",
         "dev",
         "home",
-        "2026-05-26",
+        "2026-06-04 20:59",
         "2026",
-        "05",
+        "06",
+        "04",
+        "20",
+        "59"
+      ],
+      "search_text": "task-template task template task template dev home dev home 2026-06-04 20:59 2026 06 04 20 59"
+    },
+    {
+      "id": "tasks-tracker-template",
+      "kind": "doc",
+      "title": "Tasks Tracker Template",
+      "href": "/docs/?scope=studio&doc=tasks-tracker-template",
+      "last_updated": "2026-06-04 20:26",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-06-04 20:26 • Dev Home",
+      "search_terms": [
+        "tasks-tracker-template",
+        "tasks",
+        "tracker",
+        "template",
+        "tasks tracker template",
+        "dev home",
+        "dev",
+        "home",
+        "2026-06-04 20:26",
+        "2026",
+        "06",
+        "04",
+        "20",
         "26"
       ],
-      "search_text": "tasks-template tasks template tasks template dev home dev home 2026-05-26 2026 05 26"
+      "search_text": "tasks-tracker-template tasks tracker template tasks tracker template dev home dev home 2026-06-04 20:26 2026 06 04 20 26"
     },
     {
       "id": "docs-viewer",

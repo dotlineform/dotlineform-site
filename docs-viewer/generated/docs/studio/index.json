@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T18:05:38Z",
+  "generated_at": "2026-06-04T21:05:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -537,13 +537,13 @@
       "doc_id": "site-request-data-sharing-docs-internal-index",
       "title": "Data Sharing Docs Internal Index Request",
       "added_date": "2026-06-03",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "source_path": "site-request-data-sharing-docs-internal-index.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index",
       "parent_id": "change-requests",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-      "content_text_length": 5189
+      "content_text_length": 7733
     },
     {
       "doc_id": "site-request-docs-semantic-references-v2",
@@ -651,7 +651,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 15431
+      "content_text_length": 18116
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1105,12 +1105,12 @@
       "doc_id": "development-checklist",
       "title": "Development Checklist",
       "added_date": "2026-05-23",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-06-04",
       "source_path": "development-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=development-checklist",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-checklist.json",
-      "content_text_length": 4650
+      "content_text_length": 12570
     },
     {
       "doc_id": "development-workflow",
@@ -1121,7 +1121,7 @@
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 19848
+      "content_text_length": 19048
     },
     {
       "doc_id": "scripts-run-checks",
@@ -1157,15 +1157,26 @@
       "content_text_length": 9957
     },
     {
-      "doc_id": "tasks-template",
-      "title": "Tasks Template",
-      "added_date": "2026-05-26",
-      "last_updated": "2026-05-26",
-      "source_path": "tasks-template.md",
-      "viewer_url": "/docs/?scope=studio&doc=tasks-template",
+      "doc_id": "task-template",
+      "title": "Task Template",
+      "added_date": "2026-06-04 20:59",
+      "last_updated": "2026-06-04 20:59",
+      "source_path": "task-template.md",
+      "viewer_url": "/docs/?scope=studio&doc=task-template",
       "parent_id": "dev-home",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-template.json",
-      "content_text_length": 3341
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/task-template.json",
+      "content_text_length": 1140
+    },
+    {
+      "doc_id": "tasks-tracker-template",
+      "title": "Tasks Tracker Template",
+      "added_date": "2026-06-04 20:26",
+      "last_updated": "2026-06-04 20:26",
+      "source_path": "tasks-tracker-template.md",
+      "viewer_url": "/docs/?scope=studio&doc=tasks-tracker-template",
+      "parent_id": "dev-home",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
+      "content_text_length": 3362
     },
     {
       "doc_id": "docs-viewer",

@@ -1,34 +1,18 @@
 ---
-doc_id: tasks-template
-title: Tasks Template
-added_date: 2026-05-26
-last_updated: 2026-05-26
-ui_status: ""
+doc_id: tasks-tracker-template
+title: Tasks Tracker Template
+added_date: "2026-06-04 20:26"
+last_updated: "2026-06-04 20:26"
 parent_id: dev-home
-viewable: true
 ---
+
 # [Implementation Name]
 
 This is the tracker for implementing [link to request document].
 
-## Status
-
-### just done
-
-- bullet points to state what was delivered in the last completed task
-- only include older tasks where context is relevant and important
-- refresh this section at the completion of a task
-
-### steer for next task
-
-- bullet points stating:
-    - what is the next task to be delivered
-    - what concerns or risks need to be addressed
-    - what technical details are important to be considered
-
 ### baseline verification set
 
-State the verification set for before and after extraction slices, to be run only when the touched area warrants it.
+State the baseline verification set for before and after extraction slices, to be run only when the touched area warrants it.
 
 For example:
 
@@ -44,24 +28,48 @@ Codex sandbox note: local service, browser, and temporary localhost checks will 
 
 ### general steer
 
-- This section should highlight key points from the original proposal.
+- This section should highlight key points from the original request.
 - Development guidances in `development-workflow.md` need to be followed or called out if there is conflict with the implementation.
-- Prefer direct reference updates over compatibility shims for old paths.
+- Implement direct reference updates instead of compatibility shims for old paths.
 - Use sibling docs for large inventories, target layouts, contract tables, or path maps so this tracker remains a concise sequential task list.
 
 ## Implementation Tasks
 
-Work through the table by ID order. A `deferred` row is intentionally out of the implementation path and includes the reason in the action. Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
+- This section lists the tasks needed to implement the request.
+- Work through the table by ID order. A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
+- Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
-| ID | status | action |
+**Each task** is described in its own sibling document, based on the template `task-template.md`.
+
+| ID | status | title |
 | --- | --- | --- |
-| 1 | planned | description + key deliverables |
+| 1 | planned | title and link to task document |
 
-The last tasks should close out the implementation:
+The last tasks should close out the implementation with the following named tasks:
 
+| ID | status | title |
+| --- | --- | --- |
+| - | planned | update docs |
+| - | planned | cleanup |
+| - | planned | verification |
+| - | planned | close out |
+
+### task: update docs
 - Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe any changed boundary, service config, route ownership, runner behavior, service ownership, and retired current-state assumptions.
+
+### task: cleanup
 - confirm any removed paths or artifacts are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic.
-- Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks.
+
+### task: verification
+- Run the appropriate final verification set, which may include:
+    - quick profile,
+    - Docs Viewer smoke profile,
+    - focused Local Studio integration smokes,
+    - public Jekyll build, public scope checks,
+    - syntax/import checks,
+    - any changed-doc link/path checks.
+
+### task: close out
 - Close out the parent request and this tracker:
     - update statuses,
     - summarize moved paths,

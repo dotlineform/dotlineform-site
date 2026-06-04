@@ -10,9 +10,8 @@ viewable: true
 
 This document is the repo-specific lifecycle guide for major new features, behavior changes, refactors, and meaningful documentation changes.
 
-- Use it to decide what to read, what to update, and how to close work out.
-- It is intentionally a router to focused docs rather than a replacement for them.
-- Detailed implementation rules that are too specific for this lifecycle guide live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
+- Use it to decide what to read, what to update, and how to close work out. It is intentionally a router to focused docs rather than a replacement for them.
+- Detailed implementation rules live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
 
 ## Fast Path
 
@@ -20,7 +19,7 @@ For any non-trivial change:
 
 1. Classify the work: feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change. Read the owning section docs before editing.
 2. Decide whether the work needs a change request. Change requests are documented under [Change Requests](/docs/?scope=studio&doc=change-requests).
-3. Use [Tasks Template](/docs/?scope=studio&doc=tasks-template) as the template for tracking tasks. This becomes a child documemnt of the owning change request document.
+3. Use [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template) as the template for tracking tasks. This becomes a child documemnt of the owning change request document.
 4. Keep implementation scoped to the owning runtime, script, data model, or UI primitive.
 5. Run targeted verification proportional to the blast radius.
 6. Update owning docs and generated payloads when source docs or generated contracts change.
@@ -40,8 +39,6 @@ Use the smallest owning area that explains the change:
 - Source tree ownership or source/public boundary behavior: [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - Local setup, dependency, or environment behavior: [Local Setup](/docs/?scope=studio&doc=local-setup) and [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - Test strategy and check profiles: [Testing](/docs/?scope=studio&doc=testing), [Run Checks](/docs/?scope=studio&doc=scripts-run-checks), and [Pytest](/docs/?scope=studio&doc=testing-pytest)
-
-If the owning area is unclear, start with [Site Docs](/docs/?scope=studio&doc=dev-home), then narrow from there.
 
 ## 2. Decide Whether A Change Request Is Needed
 
@@ -71,13 +68,19 @@ Prefer existing repo boundaries:
 - Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
 - Keep source docs under the owning scope and use Docs Viewer links for published doc references.
 
-For local Studio route migration, public-link resolver adoption, Studio route URL builders, and UI Catalogue demo visibility, use [Development Checklist](/docs/?scope=studio&doc=development-checklist).
-For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
-For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
-For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
-For browser JavaScript maintenance-risk work, use [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
-For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
-If the work needs a task tracker, create one from [Tasks Template](/docs/?scope=studio&doc=tasks-template).
+### Suggested References
+
+This is a list of the most common references within the documenattion:
+
+- For local Studio route migration, public-link resolver adoption, Studio route URL builders, and UI Catalogue demo visibility, use [Development Checklist](/docs/?scope=studio&doc=development-checklist).
+- For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
+- For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
+- For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
+- For browser JavaScript maintenance-risk work, use [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
+- For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+
+If the work needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template).
+
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
 ### Config Cleanup Gate
@@ -94,7 +97,7 @@ Before editing, classify each key or payload field under review:
 - UI text or operation-owned workflow copy
 - historical, transitional, or unconsumed key
 
-Default rules:
+## Default rules
 
 - Start every cleanup slice with active call-site scans across code, config loaders, server routes, services, tests, and generated-default pipelines. Historical request docs can explain why a key existed, but they are not proof of current ownership.
 - Remove a key only when no active route, service, test, generated-default pipeline, or documented operator workflow consumes it.
@@ -105,11 +108,12 @@ Default rules:
 - Update the owning config doc in the same slice with removed keys, retained keys, owner, and reason.
 
 Good cleanup outcomes include a narrower browser-facing payload, a clearer static-fallback contract, a server-only config path removed from public projection, or a focused test that prevents the surface from widening silently.
+
 Poor cleanup outcomes include compatibility aliases for retired paths, hiding active paths in unowned constants, deleting keys based only on historical docs, or keeping a broad payload because tests or fixtures still depend on it.
 
 ### JavaScript Maintenance Gate
 
-Use this gate before changing browser JavaScript files with maintenance score 2, total risk score 6 or higher, or recent churn that suggests ownership drift.
+Use this gate before changing browser JavaScript files:
 
 Before editing, answer:
 
@@ -119,17 +123,16 @@ Before editing, answer:
 - Is there a focused module smoke check for behavior that moved out of route boot?
 - Does the inventory score need revisiting after the slice?
 
-Default rules:
+Refactoring: default rules:
 
-- Do not add a new complete responsibility to a maintenance-score-2 file unless the same slice creates or extends the focused owner for that responsibility.
+- Do not add a new complete responsibility to a file unless the same slice creates or extends the focused owner for that responsibility.
 - Prefer explicit input/output helpers over helper functions that read or mutate a broad route `state` object directly.
 - Define the owning surface before adding new UI behavior; do not let the current renderer or route shell become the owner by default.
-- Avoid cosmetic splits that only move tiny helpers. Extract around stable ownership boundaries such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic.
-- Rescore only when future changes have a clearer destination, behavior has focused checks, or route-load/input-time work was actually reduced.
+- When refactoring, extract around stable ownership boundaries such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic.
 
-Batch sizing:
+Refactoring: batch sizing:
 
-- Work by route family or coherent runtime surface, not by strict inventory rank.
+- Work by route family or coherent runtime surface
 - A good batch usually moves one complete responsibility out of one route shell, applies one shared route-family pattern across sibling files, or installs one shared helper plus the routes that already need it.
 - A batch is too small when it only moves local helpers without changing ownership, testability, route-load behavior, or future-change destination.
 - A batch is too large when it spans unrelated route families, mixes public runtime and Studio-only risk, or requires several independent browser workflows to verify safely.
@@ -146,7 +149,7 @@ Task definition checklist:
 - inventory rows to revisit after verification
 - owning docs and generated-payload follow-through
 
-For score-6 or score-7 controllers, leave a lightweight owner note in the relevant inventory or child doc when touched:
+For high risk controllers, leave a lightweight owner note in the relevant inventory or child doc when touched:
 
 - what remains in the controller
 - what moved to a focused owner
@@ -162,7 +165,12 @@ Useful checks and follow-through:
 ### Docs Viewer App Architecture Gate
 
 Use this gate before changing Docs Viewer runtime/app architecture, especially work related to app session, state domains, service adapters, app composition, public/manage context, controller lifecycle, panels, hosted views, or management/backend contracts.
-The current architecture is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+
+The current architecture is documented in:
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary),
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+
 Use durable owner docs for current rules and follow-up notes, not a change request document.
 
 Before editing, answer:
@@ -256,15 +264,6 @@ Avoid permanent tests that only enumerate historical "do not restore this old pa
 ## 6. Update Docs And Generated Artifacts
 
 When behavior changes, update the owning reference doc in the same change.
-
-Common follow-through:
-
-- Docs Viewer source changes under `docs-viewer/source/<scope>/` require same-scope docs-viewer payload follow-through when the generated payload update is part of the slice.
-- Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
-- Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
-
-Do not assume Jekyll alone updates Docs Viewer content.
-Generated docs/search payloads are separate artifacts.
 
 ## 7. Close Out The Work
 
