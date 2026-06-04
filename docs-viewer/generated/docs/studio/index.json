@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T13:48:32Z",
+  "generated_at": "2026-06-04T14:00:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 31359
+      "content_text_length": 33279
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
