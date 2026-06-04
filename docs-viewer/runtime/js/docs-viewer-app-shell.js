@@ -60,6 +60,21 @@ function emptyManagementShell(documentRef) {
   return {};
 }
 
+function managementShellRenderers(settings) {
+  return settings.managementShellRenderers || {};
+}
+
+function canRenderManagementShell(renderers) {
+  return Boolean(
+    renderers
+    && (
+      typeof renderers.renderActions === "function"
+      || typeof renderers.renderShell === "function"
+      || typeof renderers.renderDocumentActions === "function"
+    )
+  );
+}
+
 function appShellResult(parts) {
   if (parts.root) {
     parts.root.__docsViewerAppShellManagementShellRefs = parts.managementShell || {};
@@ -82,6 +97,7 @@ export function initDocsViewerAppShell(options) {
   var root = settings.root;
   var documentRef = settings.document || document;
   var routeContext = routeContextFor(settings);
+  var renderers = managementShellRenderers(settings);
   var topBar = renderDocsViewerTopBar({
     document: documentRef,
     root: root,
@@ -112,7 +128,7 @@ export function initDocsViewerAppShell(options) {
   if (shellMount) {
     shellMount.replaceChildren();
   }
-  if (!managementAllowed(routeContext)) {
+  if (!managementAllowed(routeContext) || !canRenderManagementShell(renderers)) {
     return Promise.resolve(appShellResult({
       headerControls: headerControls,
       topBar: topBar && topBar.topBar,
@@ -127,26 +143,23 @@ export function initDocsViewerAppShell(options) {
     }));
   }
 
-  return Promise.all([
-    actionMount ? import("./docs-viewer-management-actions-renderer.js") : Promise.resolve(null),
-    shellMount ? import("./docs-viewer-management-shell-renderer.js") : Promise.resolve(null),
-    import("./docs-viewer-management-document-actions-renderer.js")
-  ])
-    .then(function (modules) {
-      var actionsModule = modules[0];
-      var shellModule = modules[1];
-      var documentActionsModule = modules[2];
-      var row = actionsModule ? actionsModule.renderDocsViewerManagementActions({
+  return Promise.resolve()
+    .then(function () {
+      var row = actionMount && typeof renderers.renderActions === "function"
+        ? renderers.renderActions({
         document: documentRef,
         mount: actionMount
-      }) : null;
-      var managementShell = shellModule ? shellModule.renderDocsViewerManagementShell({
+        })
+        : null;
+      var managementShell = shellMount && typeof renderers.renderShell === "function"
+        ? renderers.renderShell({
         document: documentRef,
         root: root,
         mount: shellMount
-      }) : emptyManagementShell(documentRef);
-      if (documentActionsModule && typeof documentActionsModule.renderDocsViewerManagementDocumentActions === "function") {
-        documentActionsModule.renderDocsViewerManagementDocumentActions({
+        })
+        : emptyManagementShell(documentRef);
+      if (typeof renderers.renderDocumentActions === "function") {
+        renderers.renderDocumentActions({
           document: documentRef,
           root: root
         });

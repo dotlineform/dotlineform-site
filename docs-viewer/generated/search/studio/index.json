@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f893f69376f80986404b360b519089e8",
-    "generated_at_utc": "2026-06-04T16:38:17Z",
+    "version": "blake2b-51f4a150f0729afc9911f1fd7e39a4f9",
+    "generated_at_utc": "2026-06-04T16:57:40Z",
     "count": 247
   },
   "entries": [
@@ -1417,10 +1417,10 @@
       "kind": "doc",
       "title": "Docs Viewer Public Index Slimming Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-03 • Change Requests",
+      "display_meta": "2026-06-04 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-public-index-slimming",
         "site",
@@ -1434,12 +1434,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-03",
+        "2026-06-04",
         "2026",
         "06",
-        "03"
+        "04"
       ],
-      "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-03 2026 06 03"
+      "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-04 2026 06 04"
     },
     {
       "id": "site-request-docs-viewer-public-manage-entrypoints",

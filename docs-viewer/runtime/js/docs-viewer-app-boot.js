@@ -70,6 +70,7 @@ export function resolveDocsViewerAppBootContext(options) {
     var appShellReady = initDocsViewerAppShell({
       root: root,
       document: documentRef,
+      managementShellRenderers: settings.managementShellRenderers,
       routeContext: routeContext
     });
     return appShellReady.then(function (appShellResult) {

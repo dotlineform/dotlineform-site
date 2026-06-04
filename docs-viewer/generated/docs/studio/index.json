@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T16:49:23Z",
+  "generated_at": "2026-06-04T17:09:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -341,7 +341,7 @@
       "parent_id": "studio-risk-analysis-policy",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 55881
+      "content_text_length": 56967
     },
     {
       "doc_id": "javascript-inventory",
@@ -656,13 +656,13 @@
       "doc_id": "site-request-docs-viewer-public-index-slimming",
       "title": "Docs Viewer Public Index Slimming Request",
       "added_date": "2026-06-03",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "source_path": "site-request-docs-viewer-public-index-slimming.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
       "parent_id": "change-requests",
-      "ui_status": "draft",
+      "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 5185
+      "content_text_length": 12351
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 50726
+      "content_text_length": 54152
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -1511,7 +1511,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 34216
+      "content_text_length": 34816
     },
     {
       "doc_id": "docs-viewer-scopes",

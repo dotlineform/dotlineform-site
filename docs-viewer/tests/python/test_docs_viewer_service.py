@@ -150,6 +150,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
 
     assert "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js" not in graph_paths
     assert "docs-viewer/runtime/js/docs-viewer-management-document-reports.js" not in graph_paths
+    assert "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js" not in graph_paths
     assert "docs-viewer/runtime/js/docs-viewer-report-service.js" not in graph_paths
     assert "docs-viewer/runtime/js/docs-viewer-reports.js" not in graph_paths
     assert not [
@@ -165,7 +166,11 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifier
     blocked_fragments = [
         "./docs-html-import.js",
         "./docs-viewer-scope-lifecycle.js",
+        "./docs-viewer-management-actions-renderer.js",
+        "./docs-viewer-management-document-actions-renderer.js",
         "./docs-viewer-management-document-reports.js",
+        "./docs-viewer-management-shell-composition.js",
+        "./docs-viewer-management-shell-renderer.js",
         "./docs-viewer-report-service.js",
         "./docs-viewer-reports.js",
         "./modules/source-editor/source-editor.js",
@@ -193,6 +198,9 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifier
 def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
     source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-app-shell.js").read_text(encoding="utf-8")
     blocked_fragments = [
+        "./docs-viewer-management-actions-renderer.js",
+        "./docs-viewer-management-document-actions-renderer.js",
+        "./docs-viewer-management-shell-renderer.js",
         "docsViewerContextMenu",
         "docsViewerMetadataModal",
         "docsViewerImportModal",
@@ -202,6 +210,18 @@ def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
     ]
 
     assert [fragment for fragment in blocked_fragments if fragment in source] == []
+
+
+def test_manage_shell_composition_owns_manage_shell_renderer_imports() -> None:
+    source = (
+        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js"
+    ).read_text(encoding="utf-8")
+    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js").read_text(encoding="utf-8")
+
+    assert "./docs-viewer-management-actions-renderer.js" in source
+    assert "./docs-viewer-management-document-actions-renderer.js" in source
+    assert "./docs-viewer-management-shell-renderer.js" in source
+    assert "createDocsViewerManagementShellRenderers" in manage_entry
 
 
 def test_manage_hosted_views_module_owns_source_editor_view_import() -> None:

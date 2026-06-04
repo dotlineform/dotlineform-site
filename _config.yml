@@ -143,6 +143,7 @@ exclude:
   - docs-viewer/runtime/js/docs-viewer-management-modals.js
   - docs-viewer/runtime/js/docs-viewer-management-parent-picker.js
   - docs-viewer/runtime/js/docs-viewer-management-render.js
+  - docs-viewer/runtime/js/docs-viewer-management-shell-composition.js
   - docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js
   - docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js
   - docs-viewer/services/

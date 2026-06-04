@@ -123,6 +123,8 @@ def assert_header_controls_management_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true" data-allow-scope-query="true">
                   <div
@@ -136,7 +138,7 @@ def assert_header_controls_management_render(page: Page) -> None:
             `;
             const root = document.getElementById('docsViewerRoot');
             const routeContext = { access: { allowScopeQuery: true, canLoadManagementUi: true } };
-            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
             return {
                 returnedHeaderClass: returned.headerControls && returned.headerControls.className,
                 returnedRowId: returned.managementActions && returned.managementActions.id,
@@ -181,6 +183,8 @@ def assert_management_actions_render(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
@@ -189,7 +193,7 @@ def assert_management_actions_render(page: Page) -> None:
             `;
             const root = document.getElementById('docsViewerRoot');
             const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
-            const returned = await module.initDocsViewerAppShell({ root, document, routeContext });
+            const returned = await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
             const ids = [
                 'docsViewerManageRow',
                 'docsViewerManageActionsButton',
@@ -323,6 +327,8 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
         """async () => {
             const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
             const shell = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             window.history.replaceState({}, '', '/docs/?scope=studio&doc=intro&mode=manage&import=1');
             document.body.innerHTML = `
                 <section
@@ -383,7 +389,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 managementModeValue: 'manage',
                 routeConfig
             });
-            await shell.initDocsViewerAppShell({ root, document, routeContext: route });
+            await shell.initDocsViewerAppShell({ root, document, routeContext: route, managementShellRenderers });
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
             const updated = context.updateDocsViewerRouteContext(route, {
                 viewerScope: 'library',
@@ -1144,6 +1150,8 @@ def assert_app_boot_management_context_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const boot = await import('/docs-viewer/runtime/js/docs-viewer-app-boot.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             window.history.replaceState({}, '', '/docs/?scope=studio&doc=dev-home&mode=manage&import=1');
             document.body.innerHTML = `
                 <section id="docsViewerRoot">
@@ -1189,6 +1197,7 @@ def assert_app_boot_management_context_contract(page: Page) -> None:
                 document,
                 window,
                 assetVersion: 'boot-smoke',
+                managementShellRenderers,
                 routeConfig
             });
             return {
@@ -1512,6 +1521,8 @@ def assert_document_shell_management_shape(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
                   <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount></div>
@@ -1520,7 +1531,7 @@ def assert_document_shell_management_shape(page: Page) -> None:
             `;
             const root = document.getElementById('docsViewerRoot');
             const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
-            await module.initDocsViewerAppShell({ root, document, routeContext });
+            await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
             return {
                 mainViewCount: document.querySelectorAll('.docsViewer__main').length,
                 statusPillsCount: document.querySelectorAll('#docsViewerStatusPills').length,
@@ -1574,6 +1585,8 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
                 });
             }
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" class="docsViewer" data-allow-management="true">
                   <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
@@ -1583,7 +1596,7 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
             `;
             const root = document.getElementById('docsViewerRoot');
             const routeContext = { access: { allowScopeQuery: false, canLoadManagementUi: true } };
-            await module.initDocsViewerAppShell({ root, document, routeContext });
+            await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
             await new Promise((resolve) => requestAnimationFrame(resolve));
             const indexRect = document.querySelector('.docsViewer__sidebar').getBoundingClientRect();
             const documentRect = document.querySelector('.docsViewer__main').getBoundingClientRect();
@@ -2261,6 +2274,8 @@ def assert_panel_layout_contract(page: Page) -> None:
             const panels = await import('/docs-viewer/runtime/js/docs-viewer-panel-layout.js');
             const hostedViews = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
             const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true">
                   <div id="docsViewerHeaderControlsMount" data-docs-viewer-header-controls-mount data-enable-search="false"></div>
@@ -2274,6 +2289,7 @@ def assert_panel_layout_contract(page: Page) -> None:
             await shell.initDocsViewerAppShell({
                 root,
                 document,
+                managementShellRenderers,
                 routeContext: { access: { allowScopeQuery: false, canLoadManagementUi: true } }
             });
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
@@ -4108,6 +4124,8 @@ def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
+            const managementComposition = await import('/docs-viewer/runtime/js/docs-viewer-management-shell-composition.js');
+            const managementShellRenderers = managementComposition.createDocsViewerManagementShellRenderers();
             document.body.innerHTML = `
                 <section id="docsViewerRoot" data-allow-management="true" data-allow-scope-query="true">
                   <div
@@ -4123,8 +4141,8 @@ def assert_render_is_idempotent(page: Page) -> None:
             `;
             const root = document.getElementById('docsViewerRoot');
             const routeContext = { access: { allowScopeQuery: true, canLoadManagementUi: true } };
-            await module.initDocsViewerAppShell({ root, document, routeContext });
-            await module.initDocsViewerAppShell({ root, document, routeContext });
+            await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
+            await module.initDocsViewerAppShell({ root, document, routeContext, managementShellRenderers });
             return {
                 viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
                 scopeSelectCount: document.querySelectorAll('#docsViewerScopeSelect').length,
