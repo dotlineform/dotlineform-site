@@ -141,7 +141,8 @@ Manage can reuse public-style reader modules through shared core or shared reade
 
 ### Shared Core
 
-Shared core should stay small and intentionally public-safe unless it is placed under an explicit manage namespace.
+Shared core should stay small and public-safe.
+Manage-only reusable code can exist, but it is not shared core; it belongs in manage-owned modules that the public entrypoint cannot import accidentally.
 
 Good shared-core candidates:
 
@@ -204,7 +205,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 7 | planned | Split public and manage CSS loading so public routes do not load report or management styling unless the specific public surface needs it. |
 | 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted. |
 | 9 | planned | Ensure public main-view rendering omits management-only hidden controls rather than rendering disabled or hidden manage DOM. |
-| 10 | planned | Keep shared core modules public-safe or move manage-only shared code under an explicit manage namespace. |
+| 10 | planned | Keep shared core modules public-safe and move reusable manage-only behavior into manage-owned modules outside shared core. |
 | 11 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
 | 12 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
 | 13 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
