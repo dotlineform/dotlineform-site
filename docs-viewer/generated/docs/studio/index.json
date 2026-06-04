@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T13:02:05Z",
+  "generated_at": "2026-06-04T13:19:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -674,7 +674,19 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 24736
+      "content_text_length": 26473
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
+      "title": "Docs Viewer Public/Manage Entrypoint Baseline Inventory",
+      "added_date": "2026-06-04",
+      "last_updated": "2026-06-04",
+      "source_path": "site-request-docs-viewer-public-manage-entrypoints-baseline.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline",
+      "parent_id": "site-request-docs-viewer-public-manage-entrypoints",
+      "ui_status": "draft",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints-baseline.json",
+      "content_text_length": 5800
     },
     {
       "doc_id": "site-request-docs-viewer-runtime-risk-reduction",

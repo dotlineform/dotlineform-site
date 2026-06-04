@@ -10,7 +10,7 @@ parent_id: change-requests
 
 Status:
 
-- draft
+- in progress
 
 ## Summary
 
@@ -316,14 +316,15 @@ Implement this request as a sequence of slices rather than one broad rewrite.
 Suggested order:
 
 1. Establish the public/manage entrypoint and shell boundary.
-2. Remove compatibility aliases or silent fallback paths discovered in the touched boot/config/data surfaces.
-3. Add load/import tests that prove public routes do not request manage-only JS, CSS, UI text, report registry data, or management DOM.
-4. Split public/manage UI text and CSS along the new boundary.
-5. Move report runtime, report CSS, and report registry loading behind the manage entrypoint.
-6. Remove public DOM creation for hidden manage-only controls.
-7. Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer.
-8. Use the new public nav/tree payload to unblock public index slimming work.
-9. Update runtime, reports, index-payload, and JavaScript inventory docs after each implemented slice.
+2. Complete [Docs Viewer Public/Manage Entrypoint Baseline Inventory](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline).
+3. Remove compatibility aliases or silent fallback paths discovered in the touched boot/config/data surfaces.
+4. Add load/import tests that prove public routes do not request manage-only JS, CSS, UI text, report registry data, or management DOM.
+5. Split public/manage UI text and CSS along the new boundary.
+6. Move report runtime, report CSS, and report registry loading behind the manage entrypoint.
+7. Remove public DOM creation for hidden manage-only controls.
+8. Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer.
+9. Use the new public nav/tree payload to unblock public index slimming work.
+10. Update runtime, reports, index-payload, and JavaScript inventory docs after each implemented slice.
 
 The nav/tree payload work should be part of this lighter-public-install program, but it should come after the entrypoint/shell split.
 Doing it first would make the new payloads fit the existing broad runtime, preserving the ambiguity this request is trying to remove.
@@ -335,22 +336,22 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 1 | done | Record the public/manage install policy in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary). |
-| 2 | planned | Inventory current public route loads for JS modules, CSS files, route config, UI text, report registry, generated docs data, and generated search data. |
-| 3 | planned | Define the target public entrypoint import graph and the target manage entrypoint import graph. |
-| 4 | planned | Create a public shell renderer or public shell path that renders only public controls and public panel mounts. |
-| 5 | planned | Create a manage shell renderer or manage shell path that keeps the full current management-capable shell. |
-| 6 | planned | Split public and manage UI text so public routes do not load management/import/scope lifecycle copy. |
-| 7 | planned | Split public and manage CSS loading so public routes do not load report or management styling unless the specific public surface needs it. |
-| 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted. |
-| 9 | planned | Ensure public main-view rendering omits management-only hidden controls rather than rendering disabled or hidden manage DOM. |
-| 10 | planned | Keep shared core modules public-safe and move reusable manage-only behavior into manage-owned modules outside shared core. |
-| 11 | planned | Audit touched shared modules to remove public/manage mode switches, manage capability switches, hidden manage controls, and disabled manage behavior; move manage-only behavior into manage-owned modules. |
-| 12 | planned | Remove compatibility aliases and silent fallback paths discovered in touched boot/config/data surfaces, or document a named blocker with removal criteria before adjacent behavior is added. |
-| 13 | planned | Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer after the entrypoint/shell boundary is in place. |
-| 14 | planned | Coordinate public nav/tree payload follow-through with [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming). |
-| 15 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
-| 16 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
-| 17 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
+| 2 | planned | Complete [Docs Viewer Public/Manage Entrypoint Baseline Inventory](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline), including current public route loads, manage route loads, shared static import graph, JSON/config/data loads, CSS loads/selectors, public/manage DOM controls, fallback/compatibility paths, and current index tree construction. |
+| 3 | planned | Define the target public entrypoint import graph and the target manage entrypoint import graph, citing baseline sections: Current Public Route Loads, Current Manage Route Loads, and Current Shared Static Import Graph. |
+| 4 | planned | Create a public shell renderer or public shell path that renders only public controls and public panel mounts, citing baseline sections: Current Public DOM Controls and Current Public Route Loads. |
+| 5 | planned | Create a manage shell renderer or manage shell path that keeps the full current management-capable shell, citing baseline sections: Current Manage DOM Controls and Current Manage Route Loads. |
+| 6 | planned | Split public and manage UI text so public routes do not load management/import/scope lifecycle copy, citing baseline sections: Current JSON Config And Data Loads and Current Public Route Loads. |
+| 7 | planned | Split public and manage CSS loading so public routes do not load report or management styling unless the specific public surface needs it, citing baseline sections: Current CSS Loads And Selectors and Current Public Route Loads. |
+| 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted, citing baseline sections: Current Public Route Loads, Current Manage Route Loads, and Current JSON Config And Data Loads. |
+| 9 | planned | Ensure public main-view rendering omits management-only hidden controls rather than rendering disabled or hidden manage DOM, citing baseline sections: Current Public DOM Controls and Current CSS Loads And Selectors. |
+| 10 | planned | Keep shared core modules public-safe and move reusable manage-only behavior into manage-owned modules outside shared core, citing baseline section: Current Shared Static Import Graph. |
+| 11 | planned | Audit touched shared modules to remove public/manage mode switches, manage capability switches, hidden manage controls, and disabled manage behavior; move manage-only behavior into manage-owned modules, citing baseline sections: Current Shared Static Import Graph and Current Fallback And Compatibility Paths. |
+| 12 | planned | Remove compatibility aliases and silent fallback paths discovered in touched boot/config/data surfaces, or document a named blocker with removal criteria before adjacent behavior is added, citing baseline section: Current Fallback And Compatibility Paths. |
+| 13 | planned | Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer after the entrypoint/shell boundary is in place, citing baseline sections: Current Index Tree Construction, Current JSON Config And Data Loads, and Current Shared Static Import Graph. |
+| 14 | planned | Coordinate public nav/tree payload follow-through with [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming), citing baseline sections: Current Index Tree Construction and Current JSON Config And Data Loads. |
+| 15 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls, citing baseline sections: Current Public Route Loads, Current Public DOM Controls, Current CSS Loads And Selectors, and Current JSON Config And Data Loads. |
+| 16 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint, citing baseline sections: Current Manage Route Loads and Current Manage DOM Controls. |
+| 17 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented, citing changed baseline sections and implementation decisions. |
 
 ## Acceptance Criteria
 
@@ -386,6 +387,7 @@ Generated payload updates are handled by the local docs watcher or `bin/local-st
 ## Related Docs
 
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Public/Manage Entrypoint Baseline Inventory](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline)
 - [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming)
 - [Docs Viewer Runtime Risk Reduction Request](/docs/?scope=studio&doc=site-request-docs-viewer-runtime-risk-reduction)
 - [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports)

@@ -33,6 +33,12 @@ e.g. for `library`:
 `index.json` should only contain what is necessary to build the index tree view
 `by-id` for public scopes should only contain what is needed
 
+---
+
+
+we are working on `site-request-docs-viewer-public-manage-entrypoints.md`,
+please proceed with the tasks.
+
 
 docs viewer: proposed change requests `` and `` seek to address the different needs of public and local scopes. but they don't fully address the fundamental goal that public scopes should be as lightweight as possible. lightweight in terms of only loading the data, javascript and css that they need, i.e. public scopes do not load anything that is only used in local/manage scopes.
 the management toolbar is already blocked from public scopes, but what about the panel views? are they silently loading code that is subsequently not runnable?

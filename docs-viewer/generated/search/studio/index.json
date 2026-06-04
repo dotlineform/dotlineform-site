@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-af50dd3befd97466a2c87b4aaedcda15",
-    "generated_at_utc": "2026-06-04T12:00:31Z",
-    "count": 246
+    "version": "blake2b-ae9430f347f3dd84d89642c0eb4e565c",
+    "generated_at_utc": "2026-06-04T13:16:49Z",
+    "count": 247
   },
   "entries": [
     {
@@ -1471,6 +1471,37 @@
         "04"
       ],
       "search_text": "site-request-docs-viewer-public-manage-entrypoints site request docs viewer public manage entrypoints docs viewer public/manage entrypoint split request entrypoint split change requests change requests 2026-06-04 2026 06 04"
+    },
+    {
+      "id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
+      "kind": "doc",
+      "title": "Docs Viewer Public/Manage Entrypoint Baseline Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline",
+      "last_updated": "2026-06-04",
+      "parent_id": "site-request-docs-viewer-public-manage-entrypoints",
+      "parent_title": "Docs Viewer Public/Manage Entrypoint Split Request",
+      "display_meta": "2026-06-04 • Docs Viewer Public/Manage Entrypoint Split Request",
+      "search_terms": [
+        "site-request-docs-viewer-public-manage-entrypoints-baseline",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "manage",
+        "entrypoints",
+        "baseline",
+        "docs viewer public/manage entrypoint baseline inventory",
+        "entrypoint",
+        "inventory",
+        "docs viewer public/manage entrypoint split request",
+        "split",
+        "2026-06-04",
+        "2026",
+        "06",
+        "04"
+      ],
+      "search_text": "site-request-docs-viewer-public-manage-entrypoints-baseline site request docs viewer public manage entrypoints baseline docs viewer public/manage entrypoint baseline inventory entrypoint inventory docs viewer public/manage entrypoint split request split 2026-06-04 2026 06 04"
     },
     {
       "id": "site-request-docs-viewer-runtime-risk-reduction",
