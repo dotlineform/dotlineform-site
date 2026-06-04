@@ -395,6 +395,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the focused route config resolver and route/scope projection helper.
 - Keep this module limited to the durable route config shape, browser-safe route-config registry loading/resolution, explicit route-config normalization for tests/boot callers, and projection of scope config into route globals.
 - 2026-05-28 owner note: inline route-config scripts and legacy `#docsViewerRoot` route data-attribute fallback were removed. Route shells must use the registry contract; focused tests must pass explicit route config or route context rather than relying on shell data as a synthetic config source.
+- 2026-06-04 owner note: route-config camelCase field aliases and object-map route registries were removed. The module now resolves only the `docs_viewer_route_config_v1` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
 - Do not add config fetching, URL history changes, payload loading, or backend capability checks to it.
 
 ### `docs-viewer/runtime/js/docs-viewer-access.js`

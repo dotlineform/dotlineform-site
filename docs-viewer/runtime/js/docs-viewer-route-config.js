@@ -16,15 +16,13 @@ function cleanBaseUrl(value) {
   return cleanString(value).replace(/\/+$/, "");
 }
 
-function firstPresent() {
-  for (var i = 0; i < arguments.length; i += 1) {
-    if (arguments[i] !== undefined && arguments[i] !== null) return arguments[i];
-  }
-  return undefined;
-}
-
 function normalizeBoolean(value) {
   return value === true || value === "true";
+}
+
+function configuredValue(primary, secondary) {
+  if (primary !== undefined && primary !== null) return primary;
+  return secondary;
 }
 
 function normalizePath(value) {
@@ -49,15 +47,15 @@ function normalizePanelDefaults(rawPanels) {
   return {
     index: {
       enabled: index.enabled !== false,
-      defaultState: cleanString(index.default_state || index.defaultState) || "normal"
+      defaultState: cleanString(index.default_state) || "normal"
     },
     main: {
       enabled: mainPanel.enabled !== false,
-      defaultView: cleanString(mainPanel.default_view || mainPanel.defaultView) || "rendered-document"
+      defaultView: cleanString(mainPanel.default_view) || "rendered-document"
     },
     info: {
       enabled: info.enabled !== false,
-      defaultView: cleanString(info.default_view || info.defaultView) || "metadata-info"
+      defaultView: cleanString(info.default_view) || "metadata-info"
     }
   };
 }
@@ -80,7 +78,7 @@ function normalizeHostedViews(rawHostedViews) {
         availability: cleanString(record.availability) || "available",
         module: cleanString(record.module),
         renderer: cleanString(record.renderer),
-        placeholderText: cleanString(record.placeholder_text || record.placeholderText),
+        placeholderText: cleanString(record.placeholder_text),
         capabilities: normalizeHostedViewCapabilities(record.capabilities)
       };
     }).filter(Boolean)
@@ -113,21 +111,12 @@ function normalizeRegistryRoutes(payload) {
     throw new Error("Docs Viewer route config registry has an unsupported schema.");
   }
   if (Array.isArray(payload.routes)) return payload.routes;
-  if (payload.routes && typeof payload.routes === "object") {
-    return Object.keys(payload.routes).map(function (key) {
-      var record = payload.routes[key];
-      if (record && typeof record === "object" && !Array.isArray(record) && !record.route_id) {
-        return Object.assign({ route_id: key }, record);
-      }
-      return record;
-    });
-  }
-  throw new Error("Docs Viewer route config registry requires routes.");
+  throw new Error("Docs Viewer route config registry requires routes array.");
 }
 
 function pathMatchesRoute(windowRef, routeRecord) {
   if (!windowRef || !windowRef.location || !routeRecord) return false;
-  var routePath = cleanString(routeRecord.route_path || routeRecord.routePath || routeRecord.viewer_base_url || routeRecord.viewerBaseUrl);
+  var routePath = cleanString(routeRecord.route_path || routeRecord.viewer_base_url);
   if (!routePath) return false;
   try {
     var currentPath = windowRef.location.pathname.replace(/\/+$/, "/") || "/";
@@ -149,7 +138,7 @@ function routeConfigFromRegistryPayload(payload, options) {
   var selected = null;
   if (requestedRouteId) {
     selected = routes.find(function (record) {
-      return cleanString(record.route_id || record.routeId) === requestedRouteId;
+      return cleanString(record.route_id) === requestedRouteId;
     }) || null;
   }
   if (!selected) {
@@ -180,49 +169,54 @@ function fetchRouteConfigRegistry(url, options) {
   });
 }
 
+function requireRouteConfigField(value, fieldName) {
+  var cleaned = cleanString(value);
+  if (!cleaned) {
+    throw new Error("Docs Viewer route config requires " + fieldName + ".");
+  }
+  return cleaned;
+}
+
 export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
   var resolvedSource = routeConfigSource(settings);
   var rawConfig = resolvedSource.config || {};
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
-  var allowManagement = normalizeBoolean(firstPresent(
-    access.allow_management,
-    access.allowManagement,
-    rawConfig.allow_management,
-    rawConfig.allowManagement
-  ));
-  var allowScopeQuery = normalizeBoolean(
-    firstPresent(access.allow_scope_query, access.allowScopeQuery, rawConfig.allow_scope_query, rawConfig.allowScopeQuery)
-  );
-  var routeType = normalizeRouteType(firstPresent(rawConfig.route_type, rawConfig.routeType), allowManagement);
+  var allowManagement = normalizeBoolean(configuredValue(access.allow_management, rawConfig.allow_management));
+  var allowScopeQuery = normalizeBoolean(configuredValue(access.allow_scope_query, rawConfig.allow_scope_query));
+  var routeType = normalizeRouteType(rawConfig.route_type, allowManagement);
   var docsPaths = rawConfig.docs_paths && typeof rawConfig.docs_paths === "object" ? rawConfig.docs_paths : {};
   var configUrls = rawConfig.config_urls && typeof rawConfig.config_urls === "object" ? rawConfig.config_urls : {};
+  var schemaVersion = cleanString(rawConfig.schema_version) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA;
+  if (schemaVersion !== DOCS_VIEWER_ROUTE_CONFIG_SCHEMA) {
+    throw new Error("Docs Viewer route config has an unsupported schema.");
+  }
   return {
-    schemaVersion: cleanString(firstPresent(rawConfig.schema_version, rawConfig.schemaVersion)) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA,
+    schemaVersion: schemaVersion,
     source: resolvedSource.source,
-    routeId: cleanString(firstPresent(rawConfig.route_id, rawConfig.routeId)) || routeType,
+    routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
     routeType: routeType,
-    defaultScopeId: cleanString(firstPresent(rawConfig.default_scope_id, rawConfig.defaultScopeId)),
-    defaultDocId: cleanString(firstPresent(rawConfig.default_doc_id, rawConfig.defaultDocId)),
-    includeScopeParam: normalizeBoolean(firstPresent(rawConfig.include_scope_param, rawConfig.includeScopeParam)),
+    defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
+    defaultDocId: requireRouteConfigField(rawConfig.default_doc_id, "default_doc_id"),
+    includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
     allowScopeQuery: allowScopeQuery,
-    viewerBaseUrl: cleanString(firstPresent(rawConfig.viewer_base_url, rawConfig.viewerBaseUrl)),
-    generatedBaseUrl: cleanString(firstPresent(rawConfig.generated_base_url, rawConfig.generatedBaseUrl)),
-    docsViewerConfigUrl: cleanString(firstPresent(configUrls.docs_viewer, configUrls.docsViewer)),
-    uiTextUrl: cleanString(firstPresent(configUrls.ui_text, configUrls.uiText)),
+    viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
+    generatedBaseUrl: cleanString(rawConfig.generated_base_url),
+    docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
+    uiTextUrl: requireRouteConfigField(configUrls.ui_text, "config_urls.ui_text"),
     reportRegistryUrl: cleanString(configUrls.report_registry),
-    indexUrl: normalizePath(firstPresent(docsPaths.index_url, docsPaths.indexUrl)),
-    searchIndexUrl: normalizePath(firstPresent(docsPaths.search_index_url, docsPaths.searchIndexUrl)),
+    indexUrl: normalizePath(requireRouteConfigField(docsPaths.index_url, "docs_paths.index_url")),
+    searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
     access: {
       allowManagement: allowManagement,
       allowScopeQuery: allowScopeQuery,
       managementBaseUrl: allowManagement
-        ? cleanBaseUrl(firstPresent(access.management_base_url, access.managementBaseUrl))
+        ? cleanBaseUrl(access.management_base_url)
         : "",
-      managementModeValue: cleanString(access.management_mode_value || access.managementModeValue) || "manage"
+      managementModeValue: cleanString(access.management_mode_value) || "manage"
     },
     panels: normalizePanelDefaults(rawConfig.panels),
-    hostedViews: normalizeHostedViews(rawConfig.hosted_views || rawConfig.hostedViews)
+    hostedViews: normalizeHostedViews(rawConfig.hosted_views)
   };
 }
 

@@ -678,6 +678,136 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
         raise AssertionError(f"route config fallback removal contract failed: {result!r}")
 
 
+def assert_route_config_rejects_compatibility_aliases(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const routeConfig = await import('/docs-viewer/runtime/js/docs-viewer-route-config.js');
+            let camelMessage = '';
+            try {
+                routeConfig.resolveDocsViewerRouteConfig({
+                    routeConfig: {
+                        schemaVersion: 'docs_viewer_route_config_v1',
+                        routeId: 'library-public',
+                        routeType: 'public',
+                        defaultScopeId: 'library',
+                        defaultDocId: 'library',
+                        includeScopeParam: false,
+                        viewerBaseUrl: '/library/',
+                        docsPaths: {
+                            indexUrl: '/assets/data/docs/scopes/library/index.json',
+                            searchIndexUrl: '/assets/data/search/library/index.json'
+                        },
+                        configUrls: {
+                            docsViewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                            uiText: '/docs-viewer/config/ui-text/public.json'
+                        },
+                        access: {
+                            allowManagement: false,
+                            allowScopeQuery: false,
+                            managementBaseUrl: ''
+                        }
+                    }
+                });
+            } catch (error) {
+                camelMessage = error && error.message ? error.message : String(error);
+            }
+
+            document.body.innerHTML = '<section id="docsViewerRoot" data-route-id="library"></section>';
+            const root = document.getElementById('docsViewerRoot');
+            let registryMessage = '';
+            try {
+                await routeConfig.resolveDocsViewerRouteConfigAsync({
+                    root,
+                    document,
+                    window,
+                    routeConfigUrl: '/route-config-map.json',
+                    fetch: () => Promise.resolve({
+                        ok: true,
+                        json: () => Promise.resolve({
+                            schema_version: 'docs_viewer_route_config_registry_v1',
+                            routes: {
+                                library: {
+                                    schema_version: 'docs_viewer_route_config_v1',
+                                    route_id: 'library',
+                                    route_path: '/library/',
+                                    route_type: 'public',
+                                    default_scope_id: 'library',
+                                    default_doc_id: 'library',
+                                    viewer_base_url: '/library/',
+                                    docs_paths: {
+                                        index_url: '/assets/data/docs/scopes/library/index.json',
+                                        search_index_url: '/assets/data/search/library/index.json'
+                                    },
+                                    config_urls: {
+                                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                                        ui_text: '/docs-viewer/config/ui-text/public.json'
+                                    }
+                                }
+                            }
+                        })
+                    })
+                });
+            } catch (error) {
+                registryMessage = error && error.message ? error.message : String(error);
+            }
+
+            const nested = routeConfig.resolveDocsViewerRouteConfig({
+                routeConfig: {
+                    schema_version: 'docs_viewer_route_config_v1',
+                    route_id: 'analysis-public',
+                    route_type: 'public',
+                    default_scope_id: 'analysis',
+                    default_doc_id: 'analysis',
+                    include_scope_param: false,
+                    viewer_base_url: '/analysis/',
+                    docs_paths: {
+                        index_url: '/assets/data/docs/scopes/analysis/index.json',
+                        search_index_url: '/assets/data/search/analysis/index.json'
+                    },
+                    config_urls: {
+                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                        ui_text: '/docs-viewer/config/ui-text/public.json'
+                    },
+                    panels: {
+                        index: { enabled: true, defaultState: 'collapsed' },
+                        main: { enabled: true, defaultView: 'custom-main' },
+                        info: { enabled: true, defaultView: 'custom-info' }
+                    },
+                    hostedViews: {
+                        records: [
+                            { id: 'ignored-hosted-view', label: 'Ignored hosted view', panel: 'info' }
+                        ]
+                    },
+                    hosted_views: {
+                        records: [
+                            { id: 'alias-placeholder', label: 'Alias placeholder', panel: 'info', placeholderText: 'Alias text' }
+                        ]
+                    }
+                }
+            });
+            return {
+                camelMessage,
+                registryMessage,
+                nestedIndexState: nested.panels.index.defaultState,
+                nestedMainView: nested.panels.main.defaultView,
+                nestedInfoView: nested.panels.info.defaultView,
+                nestedHostedViewCount: nested.hostedViews.records.length,
+                nestedPlaceholderText: nested.hostedViews.records[0]?.placeholderText || ''
+            };
+        }"""
+    )
+    if result != {
+        "camelMessage": "Docs Viewer route config requires route_id.",
+        "registryMessage": "Docs Viewer route config registry requires routes array.",
+        "nestedIndexState": "normal",
+        "nestedMainView": "rendered-document",
+        "nestedInfoView": "metadata-info",
+        "nestedHostedViewCount": 1,
+        "nestedPlaceholderText": "",
+    }:
+        raise AssertionError(f"route config compatibility alias rejection failed: {result!r}")
+
+
 def assert_route_config_registry_resolution(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -4218,6 +4348,7 @@ def main() -> int:
             assert_route_context_and_shell_refs(page)
             assert_route_config_explicit_and_access_projection(page)
             assert_route_config_requires_explicit_or_registry_config(page)
+            assert_route_config_rejects_compatibility_aliases(page)
             assert_route_config_registry_resolution(page)
             assert_app_session_contract(page)
             assert_app_composition_contract(page)
