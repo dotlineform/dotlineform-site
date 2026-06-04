@@ -152,6 +152,37 @@ def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
     assert [fragment for fragment in blocked_fragments if fragment in source] == []
 
 
+def test_basic_docs_viewer_css_excludes_manage_selectors() -> None:
+    source = (REPO_ROOT / "docs-viewer/static/css/docs-viewer.css").read_text(encoding="utf-8")
+    blocked_fragments = [
+        "data-docs-viewer-management-shell-mount",
+        "docsViewer__manageToolbarMount",
+        "docsViewer__statusPills",
+        "docsViewer__statusMenu",
+        "docsViewerImport",
+        "docsViewerSourceEditor",
+        "docsViewerScopeLifecycle",
+        "docsViewerReport",
+    ]
+
+    assert [fragment for fragment in blocked_fragments if fragment in source] == []
+
+
+def test_manage_docs_viewer_css_owns_manage_selectors() -> None:
+    source = (REPO_ROOT / "docs-viewer/static/css/docs-viewer-manage.css").read_text(encoding="utf-8")
+    required_fragments = [
+        "data-docs-viewer-management-shell-mount",
+        "docsViewer__manageToolbarMount",
+        "docsViewer__statusPills",
+        "docsViewer__statusMenu",
+        "docsViewerImport",
+        "docsViewerSourceEditor",
+        "docsViewerScopeLifecycle",
+    ]
+
+    assert [fragment for fragment in required_fragments if fragment not in source] == []
+
+
 def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:
     source = (
         REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js"
@@ -215,7 +246,7 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert "/docs-viewer/runtime/js/docs-viewer-manage.js?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer.css?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-reports.css?v=test-version" in rendered
-    assert "/docs-viewer/static/css/docs-viewer-management.css?v=test-version" in rendered
+    assert "/docs-viewer/static/css/docs-viewer-manage.css?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-base.css" not in rendered
     assert "/docs-viewer/static/css/docs-viewer-public.css" not in rendered
     assert "/studio/api/docs" not in rendered
@@ -249,7 +280,7 @@ def test_manage_shell_can_disable_management_markup_by_capability_flag() -> None
     assert manage_route["access"]["allow_management"] is False
     assert manage_route["access"]["management_base_url"] == ""
     assert 'data-allow-management="false"' in rendered
-    assert "docs-viewer-management.css" not in rendered
+    assert "docs-viewer-manage.css" not in rendered
     assert "docsViewerManagementShellMount" not in rendered
     assert "docsViewerManageActionsButton" not in rendered
 
@@ -302,6 +333,10 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is True
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
+    assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
+    assert allowed("/docs-viewer/static/css/docs-viewer-public.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
     assert allowed("/assets/docs/library/img/example.png") is True

@@ -274,7 +274,7 @@ def main(argv: list[str] | None = None) -> int:
             main_css_count = page.locator('link[href*="/assets/css/main.css"]').count()
             viewer_css_count = page.locator('link[href*="/docs-viewer/static/css/docs-viewer.css"]').count()
             base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
-            management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
+            management_css_count = page.locator('link[href*="docs-viewer-manage.css"]').count()
             docs_script_count = page.locator('script[src*="docs-viewer-manage.js"]').count()
 
             page.locator("#docsViewerInfoToggle").click()

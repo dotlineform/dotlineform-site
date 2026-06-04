@@ -168,7 +168,7 @@ def main() -> int:
                 base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
                 public_css_count = page.locator('link[href*="docs-viewer-public.css"]').count()
                 report_css_count = page.locator('link[href*="docs-viewer-reports.css"]').count()
-                management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
+                management_css_count = page.locator('link[href*="docs-viewer-manage.css"]').count()
                 studio_css_count = page.locator('link[href*="assets/studio/"], link[href*="studio/app/"]').count()
                 studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
                 manage_actions_count = page.locator(".docsViewer__manageActions").count()
@@ -191,7 +191,7 @@ def main() -> int:
                         "/docs-viewer/static/css/docs-viewer-base.css" in url
                         or "/docs-viewer/static/css/docs-viewer-public.css" in url
                         or "/docs-viewer/static/css/docs-viewer-reports.css" in url
-                        or "/docs-viewer/static/css/docs-viewer-management.css" in url
+                        or "/docs-viewer/static/css/docs-viewer-manage.css" in url
                     )
                 ]
 

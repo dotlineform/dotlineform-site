@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T16:03:11Z",
+  "generated_at": "2026-06-04T16:09:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 40359
+      "content_text_length": 42136
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -758,7 +758,7 @@
       "parent_id": "change-requests",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 30795
+      "content_text_length": 30852
     },
     {
       "doc_id": "site-request-portable-docs-viewer-public-fixture-tasks",
@@ -1186,7 +1186,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 10295
+      "content_text_length": 10291
     },
     {
       "doc_id": "docs-broken-links",
@@ -1244,7 +1244,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-css-cascade-design.json",
-      "content_text_length": 7795
+      "content_text_length": 7620
     },
     {
       "doc_id": "docs-viewer-dependencies",
@@ -1465,7 +1465,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "parent_id": "docs-viewer-portable-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11677
+      "content_text_length": 11673
     },
     {
       "doc_id": "docs-viewer-portable-scope-setup",
@@ -1511,7 +1511,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 33287
+      "content_text_length": 33283
     },
     {
       "doc_id": "docs-viewer-scopes",
@@ -2732,7 +2732,7 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "parent_id": "ui-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 7575
+      "content_text_length": 7571
     },
     {
       "doc_id": "ui-primitive-panel",

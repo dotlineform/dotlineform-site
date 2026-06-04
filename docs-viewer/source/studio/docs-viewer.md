@@ -46,7 +46,7 @@ The current implementation uses:
 - basic/public Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css`
 - report CSS in `docs-viewer/static/css/docs-viewer-reports.css`, loaded by the local manage shell until a report is explicitly promoted to public
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
-- a management-only stylesheet in `docs-viewer/static/css/docs-viewer-management.css`, loaded only by management-enabled shells
+- a management-only stylesheet in `docs-viewer/static/css/docs-viewer-manage.css`, loaded only by management-enabled shells
 - a standalone service runner at `docs-viewer/bin/docs-viewer`, using `var/local/site.env` for the static local Docs Viewer host, port, base URL, and capability flags
 
 Public viewer routes are read-only:

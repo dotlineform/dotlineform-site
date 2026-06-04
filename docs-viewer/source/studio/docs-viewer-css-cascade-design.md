@@ -26,7 +26,7 @@ The intended cascade for local or standalone management routes is:
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
 2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
 3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
-4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-management.css`
+4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
 
 Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
 Docs Viewer does not require the public host stylesheet to function.
@@ -73,10 +73,7 @@ It lets generated markdown output inherit the host project's document typography
 - rendered Markdown code blocks should preserve code whitespace and use horizontal overflow when needed
 - tables may still scroll horizontally when needed
 
-It should not restyle public host page chrome, override public `assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report selectors.
-
-The next CSS extraction task moves manage-only controls out of `docs-viewer/static/css/docs-viewer.css` into a manage layer.
-Until then, `docs-viewer/static/css/docs-viewer.css` still carries some manage-adjacent controls such as selected-document status pills that are composed only by manage-owned modules.
+It should not restyle public host page chrome, override public `assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report, import, source-editor, scope-lifecycle, settings, management-shell, or status mutation/menu selectors.
 
 ## Rendered Table Defaults
 
@@ -104,10 +101,11 @@ Use the wrapper only where a table needs local width behavior; do not replace or
 
 ## Docs Viewer Management Stylesheet Responsibilities
 
-`docs-viewer/static/css/docs-viewer-management.css` should only load when `allow_management=true`.
+`docs-viewer/static/css/docs-viewer-manage.css` should only load when `allow_management=true`.
 It should own management-only surfaces:
 
 - management toolbar row
+- selected-document status mutation/menu controls
 - non-viewable/viewable toggle controls
 - drag/drop index states
 - undo move button
@@ -171,7 +169,7 @@ The public site stylesheet still owns:
 - generic responsive image rules
 - unrelated Studio, Catalogue, and public-site UI
 
-Management-only styles live in `docs-viewer/static/css/docs-viewer-management.css`:
+Management-only styles live in `docs-viewer/static/css/docs-viewer-manage.css`:
 
 - management-only `.docsViewer*` rules
 - only the `tagStudio*` form/control rules required by the Docs Import modal

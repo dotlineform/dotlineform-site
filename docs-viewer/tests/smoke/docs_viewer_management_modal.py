@@ -38,7 +38,7 @@ def install_modal_fixture(page: Page) -> None:
         """async () => {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = '/docs-viewer/static/css/docs-viewer-management.css';
+            css.href = '/docs-viewer/static/css/docs-viewer-manage.css';
             const cssLoaded = new Promise((resolve, reject) => {
                 css.addEventListener('load', resolve, { once: true });
                 css.addEventListener('error', reject, { once: true });
@@ -1521,7 +1521,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
 
 def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
-    page.goto(route_url(base_url, "/docs-viewer/static/css/docs-viewer-management.css"), wait_until="domcontentloaded")
+    page.goto(route_url(base_url, "/docs-viewer/static/css/docs-viewer-manage.css"), wait_until="domcontentloaded")
     install_modal_fixture(page)
     run_metadata_modal_check(page)
     run_import_modal_check(page)

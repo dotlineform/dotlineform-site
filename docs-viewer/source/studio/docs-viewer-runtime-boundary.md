@@ -85,7 +85,7 @@ Current entrypoints and shared implementation:
 - `_includes/docs_viewer_shell.html`
 - `docs-viewer/static/css/docs-viewer.css` for basic/public viewer styling, portable Docs Viewer tokens, and shell utilities loaded by public Jekyll routes and the local manage shell
 - `docs-viewer/static/css/docs-viewer-reports.css` for report styling loaded by the local manage shell until a report is explicitly promoted to public
-- `docs-viewer/static/css/docs-viewer-management.css` for management-only shell and modal styling
+- `docs-viewer/static/css/docs-viewer-manage.css` for management-only shell and modal styling
 
 The shell loads the entrypoint as an ES module.
 Extracted helper modules must not import the entrypoint or mutate private runtime coordinator state directly.

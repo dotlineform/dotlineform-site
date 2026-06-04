@@ -58,6 +58,9 @@ STATIC_FILES = {
 }
 RETIRED_STATIC_PATHS = {
     "/docs-viewer/runtime/js/docs-viewer.js",
+    "/docs-viewer/static/css/docs-viewer-base.css",
+    "/docs-viewer/static/css/docs-viewer-management.css",
+    "/docs-viewer/static/css/docs-viewer-public.css",
 }
 MAX_BODY_BYTES = 1024 * 1024
 GENERATED_READ_PATHS = {
@@ -197,7 +200,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-state.js",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-management.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
@@ -212,7 +215,7 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
     escaped_version = html.escape(version, quote=True)
     allow_management = "true" if config.management_enabled else "false"
     management_stylesheet = (
-        f'<link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-management.css?v={escaped_version}">'
+        f'<link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-manage.css?v={escaped_version}">'
         if config.management_enabled
         else ""
     )

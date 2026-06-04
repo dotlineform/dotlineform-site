@@ -155,7 +155,7 @@ Ownership decisions for this slice:
 | --- | --- | --- | --- |
 | Docs Viewer shell | `_includes/docs_viewer_shell.html` | Docs Viewer package plus consuming route adapter | Keep the viewer shell include as the route integration boundary until the route-adapter slice defines templates. Docs Import modal markup lives inside that shell rather than a migrated standalone-page include. |
 | Docs Viewer runtime JS | `docs-viewer/runtime/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `docs-viewer/runtime/js/`. |
-| Docs Viewer CSS | `docs-viewer/static/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `docs-viewer/static/css/`; public CSS extraction is still a later slice. |
+| Docs Viewer CSS | `docs-viewer/static/css/docs-viewer.css`, `docs-viewer/static/css/docs-viewer-manage.css`, `docs-viewer/static/css/docs-viewer-reports.css` | Docs Viewer | Basic/public viewer CSS, management CSS, and report CSS live under `docs-viewer/static/css/`. |
 | Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json` | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; generate browser-facing defaults through the Docs Viewer builder. |
 | Docs Viewer public UI text | `docs-viewer/config/ui-text/public.json` | Docs Viewer | Public reader copy lives under Docs Viewer config. |
 | Docs Viewer manage UI text | `docs-viewer/config/ui-text/manage.json` | Docs Viewer | Management, Docs Import, settings, scope lifecycle, and mutation copy lives under Docs Viewer config. |
@@ -210,7 +210,7 @@ Tasks:
 
 - create `docs-viewer/runtime/js/`, `docs-viewer/static/css/`, `docs-viewer/config/defaults/`, and `docs-viewer/config/ui-text/` (done)
 - move existing `assets/js/docs-viewer*.js` modules into `docs-viewer/runtime/js/` (done)
-- move `assets/css/docs-viewer-management.css` into `docs-viewer/static/css/` (done)
+- move `assets/css/docs-viewer-manage.css` into `docs-viewer/static/css/` (done)
 - add a Docs Viewer-owned public CSS file under `docs-viewer/static/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice (not needed in this slice)
 - move Docs Viewer UI text needed by the current runtime into `docs-viewer/config/ui-text/` (done)
 - update `_includes/docs_viewer_shell.html`, route pages, and module imports to load from the new Docs Viewer paths (done through the shared include)
@@ -258,17 +258,18 @@ Target CSS cascade:
 
 - the consuming Jekyll layout continues to load the host stylesheet, currently `assets/css/main.css`
 - the Docs Viewer include always loads `docs-viewer/static/css/docs-viewer.css`
-- management mode also loads `docs-viewer/static/css/docs-viewer-management.css`
+- management mode also loads `docs-viewer/static/css/docs-viewer-manage.css`
 - management mode no longer loads `assets/studio/css/studio.css`
 
 The host stylesheet remains responsible for site tokens, base typography, prose/document rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
-Docs Viewer styles should define the viewer shell, index, controls, search, results, bookmarks, status pills, and management surfaces while consuming host tokens through CSS custom properties with portable fallbacks.
+Docs Viewer styles should define the viewer shell, index, controls, search, results, and bookmarks while consuming host tokens through CSS custom properties with portable fallbacks.
+Manage-only CSS should define status pills and management surfaces.
 
 Tasks:
 
 - create `docs-viewer/static/css/docs-viewer.css` for public Docs Viewer shell/component styles (done)
 - move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `docs-viewer/static/css/docs-viewer.css` (done)
-- keep management-only styles in `docs-viewer/static/css/docs-viewer-management.css` (done)
+- keep management-only styles in `docs-viewer/static/css/docs-viewer-manage.css` (done)
 - copy the narrow `tagStudio*` form/control styles used by Docs Import into Docs Viewer management CSS as a transitional dependency (done)
 - remove `assets/studio/css/studio.css` from `_includes/docs_viewer_shell.html` (done)
 - keep generic host styles such as font tokens, `.content`, document typography, and responsive image defaults in `assets/css/main.css` (done)
