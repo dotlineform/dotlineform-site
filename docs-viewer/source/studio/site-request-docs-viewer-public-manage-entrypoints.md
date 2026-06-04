@@ -146,8 +146,8 @@ Manage-only reusable code can exist, but it is not shared core; it belongs in ma
 
 Good shared-core candidates:
 
-- docs index normalization
-- generated-data read helpers that do not probe local services unless called through a manage service context
+- generated docs index parsing and public-safe record projection
+- static generated-data read helpers for browser-visible JSON assets
 - route and URL helpers
 - tree helpers
 - search normalization/scoring
@@ -160,6 +160,7 @@ Poor shared-core candidates:
 
 - management client calls
 - local-service capability probing
+- local-service generated reads
 - source editor services
 - imports and write workflows
 - report modules that read local endpoints
@@ -190,6 +191,80 @@ The local/manage app can keep all report support.
 Public should have no report runtime, report CSS, or report registry load until a specific public-safe report is selected.
 When a report is promoted, only that report loader, its public-safe data source, the minimum report renderer/CSS, and route config should move into the public entrypoint.
 
+## No Compatibility Or Silent Fallbacks
+
+This refactor should not add compatibility aliases, legacy route/config field fallbacks, broad shared-entrypoint aliases, or silent alternate data paths.
+
+Code should fail visibly when required public assets or manage capabilities are missing.
+It should not hide failures or inaccessible data by trying another source and rendering as if the primary contract succeeded.
+
+Allowed outcomes:
+
+- public route shows a visible error when a required public config, nav/tree payload, docs payload, search payload, CSS, or entrypoint asset is missing
+- manage route shows a clear unavailable state when a local management service or capability is unavailable
+- a report or view shows an explicit unavailable state when it is not public or not available in the current route
+
+Disallowed outcomes:
+
+- public route tries a local generated-read service and silently falls back to static JSON
+- manage route silently falls back to a public payload when local manage data is inaccessible
+- runtime keeps legacy shared entrypoint aliases so old and new public/manage boot paths both work indefinitely
+- route/config readers accept old field names without a separately approved migration plan and removal criteria
+- missing public data is hidden by rendering a partial tree, document, or report as if it succeeded
+
+If an implementation slice discovers a compatibility path, it should remove it in that slice or stop and document a named blocker with owner, reason, and removal criteria before adding adjacent behavior.
+
+## Public Index Panel Data
+
+The public index panel should do the least possible runtime shaping.
+
+For public routes, tree construction should move toward build-time projection rather than browser-time grouping of flat records.
+The browser should load a public nav/tree payload that is already ordered and already filtered for public read-only navigation.
+
+Build time should own:
+
+- parent/child tree construction
+- root and sibling ordering
+- public viewability filtering
+- compact public nav record projection
+- optional path, depth, or trail fields only when a public reader surface needs them
+
+Public runtime should own:
+
+- loading the public nav/tree payload
+- rendering tree rows
+- expanding and collapsing UI state
+- highlighting the selected doc
+- routing to selected documents
+
+This should not be implemented before the public/manage entrypoint and shell boundary exists.
+The first slice should make the public deliverable real.
+After that, the public nav/tree payload can target the public entrypoint directly instead of being folded into the current broad shared runtime.
+
+This nav/tree work is related to, but distinct from, [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming).
+The entrypoint split creates the public runtime boundary.
+The nav/tree payload then gives the public index panel a purpose-built data contract.
+The public index slimming request can remove or narrow flat public index fields once public navigation no longer depends on browser-time tree construction.
+
+## Implementation Steer
+
+Implement this request as a sequence of slices rather than one broad rewrite.
+
+Suggested order:
+
+1. Establish the public/manage entrypoint and shell boundary.
+2. Remove compatibility aliases or silent fallback paths discovered in the touched boot/config/data surfaces.
+3. Add load/import tests that prove public routes do not request manage-only JS, CSS, UI text, report registry data, or management DOM.
+4. Split public/manage UI text and CSS along the new boundary.
+5. Move report runtime, report CSS, and report registry loading behind the manage entrypoint.
+6. Remove public DOM creation for hidden manage-only controls.
+7. Add the build-time public nav/tree payload and switch the public index panel to render that payload.
+8. Use the new public nav/tree payload to unblock public index slimming work.
+9. Update runtime, reports, index-payload, and JavaScript inventory docs after each implemented slice.
+
+The public nav/tree payload should be part of this lighter-public-install program, but it should come after the entrypoint/shell split.
+Doing it first would make the new payload fit the existing broad runtime, preserving the ambiguity this request is trying to remove.
+
 ## Implementation Tasks
 
 Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
@@ -206,9 +281,12 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted. |
 | 9 | planned | Ensure public main-view rendering omits management-only hidden controls rather than rendering disabled or hidden manage DOM. |
 | 10 | planned | Keep shared core modules public-safe and move reusable manage-only behavior into manage-owned modules outside shared core. |
-| 11 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
-| 12 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
-| 13 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
+| 11 | planned | Remove compatibility aliases and silent fallback paths discovered in touched boot/config/data surfaces, or document a named blocker with removal criteria before adjacent behavior is added. |
+| 12 | planned | Add a build-time public nav/tree payload and switch the public index panel to render that tree-ready payload after the entrypoint/shell boundary is in place. |
+| 13 | planned | Coordinate public nav/tree payload follow-through with [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming). |
+| 14 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
+| 15 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
+| 16 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
 
 ## Acceptance Criteria
 
@@ -219,6 +297,9 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 - public DOM does not contain management toolbar hosts, hidden edit/source buttons, import hosts, settings controls, scope lifecycle controls, or management-only status controls
 - manage route still loads management toolbar, management shell hosts, source editor, imports, reports, settings, status mutation, scope lifecycle, and local-service behavior where currently available
 - shared core modules remain reusable without carrying management authority or public route leakage
+- public index-panel rendering can use a tree-ready public nav payload rather than doing full flat-index tree construction in the browser
+- required public assets and manage capabilities fail visibly when missing rather than silently falling back to alternate data paths
+- touched boot/config/data surfaces do not retain compatibility aliases or legacy field fallbacks unless a separately approved migration plan has named removal criteria
 - public promotion policy is documented and tested with at least one negative assertion that catches accidental public asset widening
 
 ## Verification

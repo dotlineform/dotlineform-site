@@ -110,7 +110,7 @@ Current scope-owned data:
 Docs Viewer should split public and local/manage deliverables at the entrypoint and shell-composition level, while keeping shared lower-level core modules where they are genuinely common.
 
 This is not a full codebase fork.
-The public and manage installs should not duplicate core infrastructure such as docs index normalization, tree helpers, route helpers, generated-data reads, search normalization, URL builders, and renderer primitives.
+The public and manage installs should not duplicate core infrastructure such as generated docs index parsing and public-safe record projection, tree helpers, route helpers, generated-data reads, search normalization, URL builders, and renderer primitives.
 Those shared modules remain appropriate when they have no local-service, write-authority, management UI, or manage-only CSS/config dependency.
 
 The durable boundary is:
