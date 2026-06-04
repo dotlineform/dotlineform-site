@@ -41,7 +41,8 @@ The current implementation uses:
 - browser-safe Docs Viewer settings in `docs-viewer/config/defaults/docs-viewer-config.json`, projected from `docs-viewer/config/scopes/docs_scopes.json`
 - public read-only Docs Viewer config source in `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - browser-safe Docs Viewer route records in `docs-viewer/config/routes/docs-viewer-routes.json`
-- Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
+- Docs Viewer public UI text in `docs-viewer/config/ui-text/public.json`
+- Docs Viewer manage UI text in `docs-viewer/config/ui-text/manage.json`
 - Docs Viewer base CSS in `docs-viewer/static/css/docs-viewer-base.css`
 - reusable Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`

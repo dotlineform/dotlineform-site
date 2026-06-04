@@ -59,7 +59,7 @@ function configText(config, path, fallback, tokens = {}) {
   return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
-async function loadDocsViewerText(textUrl = "/docs-viewer/config/ui-text/ui-text.json") {
+async function loadDocsViewerText(textUrl = "/docs-viewer/config/ui-text/manage.json") {
   const response = await fetch(textUrl, {
     headers: { Accept: "application/json" },
     cache: "default"
@@ -361,7 +361,7 @@ export async function initDocsHtmlImport(options = {}) {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json");
+    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/manage.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
     state.managementBaseUrl = normalizeText(options.managementBaseUrl);
     const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptionsForState(state))

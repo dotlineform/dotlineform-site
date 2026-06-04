@@ -336,7 +336,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                   data-search-index-url="/assets/data/search/studio/index.json"
                   data-default-doc-id="dev-home"
                   data-include-scope-param="true"
-                  data-ui-text-url="/docs-viewer/config/ui-text/ui-text.json"
+                  data-ui-text-url="/docs-viewer/config/ui-text/manage.json"
                   data-report-registry-url="/assets/data/docs/reports.json"
                   data-management-base-url="http://127.0.0.1:8789/"
                 >
@@ -366,7 +366,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 },
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
-                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    ui_text: '/docs-viewer/config/ui-text/manage.json',
                     report_registry: '/assets/data/docs/reports.json'
                 },
                 access: {
@@ -505,7 +505,7 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 },
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
-                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    ui_text: '/docs-viewer/config/ui-text/public.json',
                     report_registry: '/assets/data/docs/reports.json'
                 },
                 access: {
@@ -607,7 +607,7 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
                     },
                     "config_urls": {
                       "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-                      "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+                      "ui_text": "/docs-viewer/config/ui-text/public.json",
                       "report_registry": "/assets/data/docs/reports.json"
                     },
                     "access": {
@@ -769,7 +769,7 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                 },
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
-                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    ui_text: '/docs-viewer/config/ui-text/public.json',
                     report_registry: '/assets/data/docs/reports.json'
                 },
                 access: {
@@ -936,7 +936,7 @@ def assert_app_composition_contract(page: Page) -> None:
                     },
                     config_urls: {
                         docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
-                        ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                        ui_text: '/docs-viewer/config/ui-text/public.json',
                         report_registry: '/assets/data/docs/reports.json'
                     },
                     access: {
@@ -1014,7 +1014,7 @@ def assert_app_composition_contract(page: Page) -> None:
                     },
                     config_urls: {
                         docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
-                        ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                        ui_text: '/docs-viewer/config/ui-text/manage.json',
                         report_registry: '/assets/data/docs/reports.json'
                     },
                     access: {
@@ -1174,7 +1174,7 @@ def assert_app_boot_management_context_contract(page: Page) -> None:
                 },
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-config.json',
-                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    ui_text: '/docs-viewer/config/ui-text/manage.json',
                     report_registry: '/assets/data/docs/reports.json'
                 },
                 access: {
@@ -1255,7 +1255,7 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                 },
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
-                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    ui_text: '/docs-viewer/config/ui-text/public.json',
                     report_registry: '/assets/data/docs/reports.json'
                 },
                 access: {
@@ -3711,7 +3711,7 @@ def assert_service_context_contract(page: Page) -> None:
                     generatedBaseUrl: 'http://127.0.0.1:8789',
                     managementBaseUrl: 'http://127.0.0.1:8789',
                     reportRegistryUrl: '/assets/data/docs/reports.json',
-                    uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json'
+                    uiTextUrl: '/docs-viewer/config/ui-text/public.json'
                 }
             });
             const manageContext = module.createDocsViewerServiceContext({
@@ -3721,7 +3721,7 @@ def assert_service_context_contract(page: Page) -> None:
                     generatedBaseUrl: 'http://127.0.0.1:8789/',
                     managementBaseUrl: 'http://127.0.0.1:8789/',
                     reportRegistryUrl: '/assets/data/docs/reports.json',
-                    uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json'
+                    uiTextUrl: '/docs-viewer/config/ui-text/manage.json'
                 }
             });
             return {

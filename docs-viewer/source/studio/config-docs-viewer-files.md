@@ -17,7 +17,8 @@ Config files:
 - `docs-viewer/config/defaults/docs-viewer-config.json`
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
-- `docs-viewer/config/ui-text/ui-text.json`
+- `docs-viewer/config/ui-text/public.json`
+- `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
 - `docs-viewer/config/schema/docs-viewer-service.schema.json`
 
@@ -29,7 +30,7 @@ Docs Viewer config is split by responsibility:
 - route config defines how a browser route maps to a scope, access mode, generated payload URLs, config URLs, panel defaults, and hosted views
 - default browser config gives the runtime a concrete scope list and display policy
 - service config defines standalone local service defaults, endpoint paths, environment variable names, capability defaults, and local state directories
-- UI text config owns visible Docs Viewer copy
+- UI text config owns route-specific visible Docs Viewer copy
 - report config owns source report metadata; route config and the browser runtime consume the generated browser-visible report projection
 - schema files validate infrastructure config shape
 
@@ -43,7 +44,8 @@ The local management route uses the management route registry and local browser 
 
 `docs-viewer/services/docs_viewer_service.py` reads service defaults and injects local service base URLs and capabilities for the management route.
 
-Docs Viewer UI modules read `docs-viewer/config/ui-text/ui-text.json` for visible text.
+Docs Viewer UI modules read the route-owned UI text bundle declared by `config_urls.ui_text`.
+Public route records use `docs-viewer/config/ui-text/public.json`; the local management route uses `docs-viewer/config/ui-text/manage.json`.
 
 ## Edit Class
 

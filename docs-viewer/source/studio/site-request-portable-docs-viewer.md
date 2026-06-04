@@ -157,7 +157,8 @@ Ownership decisions for this slice:
 | Docs Viewer runtime JS | `docs-viewer/runtime/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `docs-viewer/runtime/js/`. |
 | Docs Viewer CSS | `docs-viewer/static/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `docs-viewer/static/css/`; public CSS extraction is still a later slice. |
 | Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json` | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; generate browser-facing defaults through the Docs Viewer builder. |
-| Docs Viewer UI text | `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under Docs Viewer config. |
+| Docs Viewer public UI text | `docs-viewer/config/ui-text/public.json` | Docs Viewer | Public reader copy lives under Docs Viewer config. |
+| Docs Viewer manage UI text | `docs-viewer/config/ui-text/manage.json` | Docs Viewer | Management, Docs Import, settings, scope lifecycle, and mutation copy lives under Docs Viewer config. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `docs-viewer/build/build_search.py`, `docs-viewer/config/scopes/docs_scopes.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
 | Docs Viewer local service | `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, and adjacent Docs Viewer service modules | Docs Viewer | Keep the standalone service and management dispatcher under `docs-viewer/services/`; the old `docs_management_server.py` entrypoint is removed. |
@@ -187,7 +188,7 @@ Tasks:
 - define the target locations for Docs Viewer runtime JS, CSS, browser config, UI text, generated docs payloads, and local management scripts
 - keep `docs-viewer/config/scopes/docs_scopes.json` as the source-side docs scope registry unless a later slice intentionally replaces it
 - define a browser-facing Docs Viewer config location such as `docs-viewer/config/defaults/docs-viewer-config.json`
-- define a Docs Viewer UI text location such as `docs-viewer/config/ui-text/ui-text.json`
+- define Docs Viewer UI text locations such as `docs-viewer/config/ui-text/public.json` and `docs-viewer/config/ui-text/manage.json`
 - identify which files should move in the next implementation slice and which broader Studio/Catalogue files should stay put for now
 - update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) only if the current install instructions need a terminology or ownership clarification
 

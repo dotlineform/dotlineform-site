@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T14:08:45Z",
+  "generated_at": "2026-06-04T15:23:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 35099
+      "content_text_length": 37687
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -758,7 +758,7 @@
       "parent_id": "change-requests",
       "ui_status": "paused",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 30576
+      "content_text_length": 30795
     },
     {
       "doc_id": "site-request-portable-docs-viewer-public-fixture-tasks",
@@ -770,7 +770,7 @@
       "parent_id": "site-request-portable-docs-viewer",
       "ui_status": "urgent",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
-      "content_text_length": 8902
+      "content_text_length": 8908
     },
     {
       "doc_id": "site-request-public-route-simplification",
@@ -1186,7 +1186,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 10158
+      "content_text_length": 10235
     },
     {
       "doc_id": "docs-broken-links",
@@ -1233,7 +1233,7 @@
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 8827
+      "content_text_length": 9338
     },
     {
       "doc_id": "docs-viewer-css-cascade-design",
@@ -1465,7 +1465,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "parent_id": "docs-viewer-portable-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 11581
+      "content_text_length": 11619
     },
     {
       "doc_id": "docs-viewer-portable-scope-setup",
@@ -2305,7 +2305,7 @@
       "viewer_url": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
       "parent_id": "studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json",
-      "content_text_length": 11683
+      "content_text_length": 11737
     },
     {
       "doc_id": "config-files-inventory",
@@ -2316,7 +2316,7 @@
       "viewer_url": "/docs/?scope=studio&doc=config-files-inventory",
       "parent_id": "studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json",
-      "content_text_length": 6495
+      "content_text_length": 6625
     },
     {
       "doc_id": "config-studio-config-js",
@@ -2360,7 +2360,7 @@
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer-files",
       "parent_id": "studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json",
-      "content_text_length": 3145
+      "content_text_length": 3343
     },
     {
       "doc_id": "local-studio-apis",

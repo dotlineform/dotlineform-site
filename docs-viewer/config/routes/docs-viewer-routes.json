@@ -24,7 +24,7 @@
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
-        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "ui_text": "/docs-viewer/config/ui-text/manage.json",
         "report_registry": "/assets/data/docs/reports.json"
       },
       "panels": {
@@ -74,7 +74,7 @@
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "ui_text": "/docs-viewer/config/ui-text/public.json",
         "report_registry": "/assets/data/docs/reports.json"
       },
       "panels": {
@@ -109,7 +109,7 @@
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+        "ui_text": "/docs-viewer/config/ui-text/public.json",
         "report_registry": "/assets/data/docs/reports.json"
       },
       "panels": {

@@ -129,7 +129,8 @@ Copy:
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
 - `docs-viewer/config/routes/docs-viewer-routes.json`
-- `docs-viewer/config/ui-text/ui-text.json`
+- `docs-viewer/config/ui-text/public.json`
+- `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
 - `assets/data/docs/reports.json`
 
@@ -141,8 +142,8 @@ For standalone local manage mode, the Docs Viewer service serves this registry p
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, non-viewable-doc styling, non-viewable-doc emoji, and per-scope UI-status options.
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
-Docs Import copy is nested in `docs-viewer/config/ui-text/ui-text.json` under `docs_html_import`.
-Settings-modal copy is also owned by `docs-viewer/config/ui-text/ui-text.json`.
+Docs Import copy is nested in `docs-viewer/config/ui-text/manage.json` under `docs_html_import`.
+Settings-modal copy is also owned by `docs-viewer/config/ui-text/manage.json`.
 `docs-viewer/config/reports/reports.json` is the source report metadata registry.
 `assets/data/docs/reports.json` is the browser-visible report metadata projection.
 It lists report ids, titles, descriptions, access defaults, and presets.

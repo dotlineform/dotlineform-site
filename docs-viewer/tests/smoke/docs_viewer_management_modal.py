@@ -989,7 +989,7 @@ def run_import_result_rows_check(page: Page) -> None:
               <p id="docsHtmlImportBootStatus">loading docs import...</p>
             `;
             const responses = {
-                '/docs-viewer/config/ui-text/ui-text.json': {
+                '/docs-viewer/config/ui-text/manage.json': {
                     docs_html_import: {
                         script_file_result_type: 'script file'
                     }
@@ -1040,7 +1040,7 @@ def run_import_result_rows_check(page: Page) -> None:
                 root: document.getElementById('docsHtmlImportRoot'),
                 bootStatus: document.getElementById('docsHtmlImportBootStatus'),
                 docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
-                uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json',
+                uiTextUrl: '/docs-viewer/config/ui-text/manage.json',
                 managementBaseUrl: 'http://docs-management.test',
                 persistScope: false
             });

@@ -37,7 +37,12 @@ e.g. for `library`:
 
 
 we are working on `site-request-docs-viewer-public-manage-entrypoints.md`,
-please proceed with the tasks.
+please continue with the tasks.
+
+
+
+
+
 
 
 docs viewer: proposed change requests `` and `` seek to address the different needs of public and local scopes. but they don't fully address the fundamental goal that public scopes should be as lightweight as possible. lightweight in terms of only loading the data, javascript and css that they need, i.e. public scopes do not load anything that is only used in local/manage scopes.

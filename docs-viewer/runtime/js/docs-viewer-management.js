@@ -300,7 +300,7 @@ export function initDocsViewerManagement(context) {
           bootStatus: importBootStatus,
           initialScope: scope || viewerScope(),
           docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
-          uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/ui-text.json",
+          uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/manage.json",
           managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
           routePath: "/docs/",
           hideIntro: true

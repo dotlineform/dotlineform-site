@@ -14,7 +14,7 @@ Browser-safe route records live in `docs-viewer/config/routes/docs-viewer-routes
 Browser-safe scope, display, and search settings live in `docs-viewer/config/defaults/docs-viewer-config.json`.
 Public read-only route defaults live in `docs-viewer/config/defaults/docs-viewer-public-config.json`.
 Standalone local service defaults and schema live in `docs-viewer/config/defaults/docs-viewer-service.json` and `docs-viewer/config/schema/docs-viewer-service.schema.json`.
-Visible viewer and import copy lives in `docs-viewer/config/ui-text/ui-text.json`.
+Visible viewer copy lives in `docs-viewer/config/ui-text/public.json` for public read-only routes and `docs-viewer/config/ui-text/manage.json` for the local management route.
 Site-wide media token resolution stays in `_config.yml`.
 Local Docs Viewer service host, port, base URL, and capability flags are host runtime settings in `var/local/site.env`, not checked-in Docs Viewer defaults.
 
@@ -119,7 +119,7 @@ Each route record owns:
 - default scope and default doc
 - viewer base URL and scope-query policy
 - generated docs/search URL defaults
-- Docs Viewer config, UI text, and report registry URLs
+- Docs Viewer config, route-owned UI text, and report registry URLs
 - static access intent, panel defaults, and hosted-view records
 
 Static public route config must not contain credentials, local filesystem paths, or write authority.
@@ -153,9 +153,14 @@ Use per-scope `meta` for compact operational context such as `public scope` or `
 
 ## UI Text
 
-`docs-viewer/config/ui-text/ui-text.json` owns visible Docs Viewer and Docs Import copy.
-Use it for labels, button text, status text, modal copy, and error strings that belong to the reusable viewer.
-Do not put Studio-only copy or workflow-specific service contracts here.
+`docs-viewer/config/ui-text/public.json` owns public read-only Docs Viewer copy.
+It currently includes only reader-facing public-entrypoint text consumed during public route execution.
+
+`docs-viewer/config/ui-text/manage.json` owns local/manage Docs Viewer copy, including management actions, settings, import workflow, scope lifecycle, status mutation, source-management, and manage-only modal text.
+
+Route records choose the bundle through `config_urls.ui_text`.
+Do not point public route records at the manage bundle, and do not keep shared compatibility UI-text paths for retired bundles.
+Do not put Studio-only copy or workflow-specific service contracts in either UI text bundle.
 
 ## Jekyll Site Config
 

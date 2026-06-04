@@ -146,6 +146,8 @@ def main() -> int:
                         const routeConfigUrl = root.dataset.routeConfigUrl || "";
                         const payload = await fetch(routeConfigUrl).then(response => response.json());
                         const routeConfig = payload.routes.find(record => record.route_id === root.dataset.routeId) || {};
+                        const uiTextUrl = routeConfig.config_urls?.ui_text || "";
+                        const uiText = await fetch(uiTextUrl).then(response => response.json());
                         return {
                             allowManagement: root.dataset.allowManagement || "",
                             managementBaseUrl: root.dataset.managementBaseUrl || "",
@@ -154,6 +156,8 @@ def main() -> int:
                             routeId: root.dataset.routeId || "",
                             routeConfigUrl,
                             routeConfig,
+                            uiTextUrl,
+                            uiText,
                             routeIds: (payload.routes || []).map(record => record.route_id),
                             managementRouteCount: (payload.routes || []).filter(record => record.access?.allow_management === true).length,
                             hostedViewIds: (payload.routes || []).flatMap(record => (record.hosted_views?.records || []).map(view => view.id))
@@ -192,6 +196,12 @@ def main() -> int:
                     raise AssertionError(f"{route} route config unexpectedly allows management: {root_attrs!r}")
                 if root_attrs["routeConfig"].get("viewer_base_url") not in {"/library/", "/analysis/"}:
                     raise AssertionError(f"{route} route config has unexpected viewer base URL: {root_attrs!r}")
+                if root_attrs["routeConfig"].get("config_urls", {}).get("ui_text") != "/docs-viewer/config/ui-text/public.json":
+                    raise AssertionError(f"{route} route config did not use public UI text: {root_attrs!r}")
+                if root_attrs["uiTextUrl"] != "/docs-viewer/config/ui-text/public.json":
+                    raise AssertionError(f"{route} loaded unexpected UI text URL: {root_attrs!r}")
+                if root_attrs["uiText"] != {"recently_added_button": "recently added"}:
+                    raise AssertionError(f"{route} public UI text widened unexpectedly: {root_attrs!r}")
                 if root_attrs["managementRouteCount"] or "docs-manage" in root_attrs["routeIds"]:
                     raise AssertionError(f"{route} public route registry exposed management routes: {root_attrs!r}")
                 if root_attrs["hostedViewIds"]:

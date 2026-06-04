@@ -246,6 +246,8 @@ def main(argv: list[str] | None = None) -> int:
                     const routeConfigUrl = root.dataset.routeConfigUrl || "";
                     const payload = await fetch(routeConfigUrl).then(response => response.json());
                     const routeConfig = payload.routes.find(record => record.route_id === root.dataset.routeId) || {};
+                    const uiTextUrl = routeConfig.config_urls?.ui_text || "";
+                    const uiText = await fetch(uiTextUrl).then(response => response.json());
                     return {
                         allowManagement: root.dataset.allowManagement || "",
                         allowScopeQuery: root.dataset.allowScopeQuery || "",
@@ -254,6 +256,14 @@ def main(argv: list[str] | None = None) -> int:
                         routeId: root.dataset.routeId || "",
                         routeConfigUrl,
                         routeConfig,
+                        uiTextUrl,
+                        uiText: {
+                            recently_added_button: uiText.recently_added_button || "",
+                            scope_new_button: uiText.scope_new_button || "",
+                            scope_delete_menu_button: uiText.scope_delete_menu_button || "",
+                            settings_button: uiText.settings_button || "",
+                            import_button: uiText.docs_html_import?.import_button || ""
+                        },
                         configUrl: root.dataset.docsViewerConfigUrl || "",
                         generatedBaseUrl: root.dataset.generatedBaseUrl || "",
                         managementBaseUrl: root.dataset.managementBaseUrl || ""
@@ -346,7 +356,7 @@ def main(argv: list[str] | None = None) -> int:
                 },
                 "config_urls": {
                     "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
-                    "ui_text": "/docs-viewer/config/ui-text/ui-text.json",
+                    "ui_text": "/docs-viewer/config/ui-text/manage.json",
                     "report_registry": "/assets/data/docs/reports.json",
                 },
                 "panels": {
@@ -372,6 +382,14 @@ def main(argv: list[str] | None = None) -> int:
                         }
                     ]
                 },
+            },
+            "uiTextUrl": "/docs-viewer/config/ui-text/manage.json",
+            "uiText": {
+                "recently_added_button": "recently added",
+                "scope_new_button": "New scope",
+                "scope_delete_menu_button": "Delete scope",
+                "settings_button": "Settings",
+                "import_button": "Import",
             },
             "configUrl": "",
             "generatedBaseUrl": "",

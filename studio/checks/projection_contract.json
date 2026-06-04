@@ -293,7 +293,7 @@
       "repo_paths": [
         "docs-viewer/runtime/js/*.js",
         "docs-viewer/static/css/*.css",
-        "docs-viewer/config/ui-text/ui-text.json",
+        "docs-viewer/config/ui-text/public.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json"
       ],
       "public_output": {
@@ -301,6 +301,7 @@
         "paths": [
           "docs-viewer/runtime/js/docs-viewer-public.js",
           "docs-viewer/static/css/docs-viewer.css",
+          "docs-viewer/config/ui-text/public.json",
           "docs-viewer/config/defaults/docs-viewer-public-config.json"
         ]
       },
@@ -313,7 +314,8 @@
         "docs-viewer/runtime/js/docs-viewer-management*.js",
         "docs-viewer/runtime/js/docs-html-import*.js",
         "docs-viewer/static/css/docs-viewer-management.css",
-        "docs-viewer/config/defaults/docs-viewer-config.json"
+        "docs-viewer/config/defaults/docs-viewer-config.json",
+        "docs-viewer/config/ui-text/manage.json"
       ],
       "public_output": {
         "policy": "allowed",
@@ -321,7 +323,8 @@
           "docs-viewer/runtime/js/docs-viewer-management*.js",
           "docs-viewer/runtime/js/docs-html-import*.js",
           "docs-viewer/static/css/docs-viewer-management.css",
-          "docs-viewer/config/defaults/docs-viewer-config.json"
+          "docs-viewer/config/defaults/docs-viewer-config.json",
+          "docs-viewer/config/ui-text/manage.json"
         ]
       },
       "owner_doc": "docs-viewer-management"
