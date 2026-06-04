@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T17:16:47Z",
+  "generated_at": "2026-06-04T17:23:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -672,9 +672,9 @@
       "source_path": "site-request-docs-viewer-public-manage-entrypoints.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints",
       "parent_id": "change-requests",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 56047
+      "content_text_length": 57891
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",

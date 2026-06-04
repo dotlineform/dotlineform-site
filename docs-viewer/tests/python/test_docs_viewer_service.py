@@ -195,6 +195,59 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifier
     assert matches == {}
 
 
+def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -> None:
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    graph = public_entry_static_import_graph(REPO_ROOT, entry)
+    graph_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in graph
+    }
+    blocked_exact = {
+        "docs-viewer/runtime/js/docs-html-import.js",
+        "docs-viewer/runtime/js/docs-html-import-modals.js",
+        "docs-viewer/runtime/js/docs-html-import-render.js",
+        "docs-viewer/runtime/js/docs-html-import-workflow.js",
+        "docs-viewer/runtime/js/docs-viewer-manage.js",
+        "docs-viewer/runtime/js/docs-viewer-management-client.js",
+        "docs-viewer/runtime/js/docs-viewer-report-service.js",
+        "docs-viewer/runtime/js/docs-viewer-reports.js",
+        "docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js",
+        "docs-viewer/runtime/js/modules/source-editor/source-editor.js",
+    }
+    blocked_prefixes = (
+        "docs-viewer/runtime/js/docs-viewer-management-",
+        "docs-viewer/runtime/js/reports/",
+    )
+
+    assert sorted(graph_paths & blocked_exact) == []
+    assert sorted(
+        path
+        for path in graph_paths
+        if path.startswith(blocked_prefixes)
+    ) == []
+
+
+def test_manage_docs_viewer_entry_static_graph_includes_manage_owned_modules() -> None:
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js"
+    graph = public_entry_static_import_graph(REPO_ROOT, entry)
+    graph_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in graph
+    }
+    required_paths = {
+        "docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js",
+        "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js",
+        "docs-viewer/runtime/js/docs-viewer-management-document-reports.js",
+        "docs-viewer/runtime/js/docs-viewer-management-hosted-views.js",
+        "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js",
+        "docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js",
+        "docs-viewer/runtime/js/docs-viewer-report-service.js",
+        "docs-viewer/runtime/js/docs-viewer-reports.js",
+    }
+
+    assert sorted(required_paths - graph_paths) == []
+
+
 def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
     source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-app-shell.js").read_text(encoding="utf-8")
     blocked_fragments = [

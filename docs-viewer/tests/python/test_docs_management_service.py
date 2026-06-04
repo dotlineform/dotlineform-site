@@ -657,6 +657,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "docs_viewer_readonly_route.html" in route_text
     assert "docs_viewer_management_route.html" not in route_text
     assert "allow_management" not in route_text
+    assert "docs-viewer/runtime/js/docs-viewer-manage.js" not in route_text
+    assert "docs-viewer/static/css/docs-viewer-manage.css" not in route_text
+    assert "docs-viewer/static/css/docs-viewer-reports.css" not in route_text
     assert source_payload["scopes"][1]["scope_id"] == "research"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/research/"
     assert source_payload["scopes"][1]["output"] == "assets/data/docs/scopes/research"
@@ -665,8 +668,14 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
+    recorded_paths = {file["path"] for file in records["research"]["files"]}
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert any(file["path"] == "research/index.md" and file["kind"] == "route_file" for file in records["research"]["files"])
+    assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths
+    assert "docs-viewer/runtime/js/docs-viewer-manage.js" not in recorded_paths
+    assert "docs-viewer/static/css/docs-viewer.css" not in recorded_paths
+    assert "docs-viewer/static/css/docs-viewer-manage.css" not in recorded_paths
+    assert "docs-viewer/config/routes/docs-viewer-public-routes.json" not in recorded_paths
 
 
 def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
