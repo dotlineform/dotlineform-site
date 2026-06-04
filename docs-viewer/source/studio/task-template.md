@@ -18,6 +18,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 - bullet points stating:
     - what concerns or risks need to be addressed
     - what technical details are important to be considered
+    - relationship to previous / next tasks
 
 ## Purpose
 
@@ -38,6 +39,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
     - expected design
     - how it should be implemented
     - what policies it must adhere to
+- if guidance has already been provided in a previous task, include a brief summary here and link to the previous task.
 
 ## Proposed verification set
 
@@ -54,3 +56,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 - list any follow-on tasks that need to be created
 - list any issues that were found during this task which need to be addressed
+
+## task close
+
+- add a handoff note to the following task.

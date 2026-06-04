@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T21:20:00Z",
+  "generated_at": "2026-06-04T21:59:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1165,7 +1165,7 @@
       "viewer_url": "/docs/?scope=studio&doc=task-template",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/task-template.json",
-      "content_text_length": 1311
+      "content_text_length": 1529
     },
     {
       "doc_id": "tasks-tracker-template",
