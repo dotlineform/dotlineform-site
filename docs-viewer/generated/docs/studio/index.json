@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T16:28:47Z",
+  "generated_at": "2026-06-04T16:41:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -335,13 +335,13 @@
       "doc_id": "docs-viewer-javascript-inventory",
       "title": "Docs Viewer JavaScript Inventory",
       "added_date": "2026-05-20",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-04",
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "parent_id": "studio-risk-analysis-policy",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 54325
+      "content_text_length": 55881
     },
     {
       "doc_id": "javascript-inventory",
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 45437
+      "content_text_length": 48437
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -1511,7 +1511,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 33832
+      "content_text_length": 34216
     },
     {
       "doc_id": "docs-viewer-scopes",

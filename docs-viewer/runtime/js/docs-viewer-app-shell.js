@@ -56,51 +56,14 @@ function managementShellMount(root) {
   return root.querySelector("[data-docs-viewer-management-shell-mount]");
 }
 
-function nodeById(documentRef, id) {
-  return documentRef.getElementById(id);
-}
-
-function findDocsViewerManagementShellRefs(options) {
-  var settings = options || {};
-  var documentRef = settings.document || document;
-  return {
-    contextMenu: nodeById(documentRef, "docsViewerContextMenu"),
-    metadataModal: nodeById(documentRef, "docsViewerMetadataModal"),
-    metadataForm: nodeById(documentRef, "docsViewerMetadataForm"),
-    metadataDocId: nodeById(documentRef, "docsViewerMetadataDocId"),
-    metadataTitleInput: nodeById(documentRef, "docsViewerMetadataTitleInput"),
-    metadataSummaryInput: nodeById(documentRef, "docsViewerMetadataSummaryInput"),
-    metadataStatusLabel: nodeById(documentRef, "docsViewerMetadataStatusLabel"),
-    metadataStatusInput: nodeById(documentRef, "docsViewerMetadataStatusInput"),
-    metadataNonViewableInput: nodeById(documentRef, "docsViewerMetadataNonViewableInput"),
-    metadataNonViewableLabel: nodeById(documentRef, "docsViewerMetadataNonViewableLabel"),
-    metadataParentInput: nodeById(documentRef, "docsViewerMetadataParentInput"),
-    metadataParentPopup: nodeById(documentRef, "docsViewerMetadataParentPopup"),
-    metadataCancelButton: nodeById(documentRef, "docsViewerMetadataCancelButton"),
-    metadataSaveButton: nodeById(documentRef, "docsViewerMetadataSaveButton"),
-    importModal: nodeById(documentRef, "docsViewerImportModal"),
-    importRoot: nodeById(documentRef, "docsHtmlImportRoot"),
-    importBootStatus: nodeById(documentRef, "docsHtmlImportBootStatus"),
-    settingsModal: nodeById(documentRef, "docsViewerSettingsModal"),
-    settingsForm: nodeById(documentRef, "docsViewerSettingsForm"),
-    settingsHeading: nodeById(documentRef, "docsViewerSettingsHeading"),
-    settingsScope: nodeById(documentRef, "docsViewerSettingsScope"),
-    settingsUpdatedInput: nodeById(documentRef, "docsViewerSettingsUpdatedInput"),
-    settingsUpdatedLabel: nodeById(documentRef, "docsViewerSettingsUpdatedLabel"),
-    settingsWarnings: nodeById(documentRef, "docsViewerSettingsWarnings"),
-    settingsStatus: nodeById(documentRef, "docsViewerSettingsStatus"),
-    settingsCancelButton: nodeById(documentRef, "docsViewerSettingsCancelButton"),
-    settingsSaveButton: nodeById(documentRef, "docsViewerSettingsSaveButton")
-  };
-}
-
 function emptyManagementShell(documentRef) {
-  return findDocsViewerManagementShellRefs({
-    document: documentRef
-  });
+  return {};
 }
 
 function appShellResult(parts) {
+  if (parts.root) {
+    parts.root.__docsViewerAppShellManagementShellRefs = parts.managementShell || {};
+  }
   return {
     topBar: parts.topBar,
     viewerToolbar: parts.viewerToolbar,
@@ -158,6 +121,7 @@ export function initDocsViewerAppShell(options) {
       infoPanel: infoPanel,
       indexPanel: indexPanel,
       routeContext: routeContext,
+      root: root,
       managementActions: null,
       managementShell: null
     }));
@@ -199,6 +163,7 @@ export function initDocsViewerAppShell(options) {
         infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
+        root: root,
         managementActions: row,
         managementShell: managementShell
       });
@@ -213,6 +178,7 @@ export function initDocsViewerAppShell(options) {
         infoPanel: infoPanel,
         indexPanel: indexPanel,
         routeContext: routeContext,
+        root: root,
         managementActions: null,
         managementShell: null
       });
@@ -245,10 +211,10 @@ export function getDocsViewerAppShellInfoPanelRefs(options) {
 
 export function getDocsViewerAppShellManagementShellRefs(options) {
   var settings = options || {};
-  return findDocsViewerManagementShellRefs({
-    document: settings.document || document,
-    root: settings.root || null
-  });
+  var root = settings.root || null;
+  return root && root.__docsViewerAppShellManagementShellRefs
+    ? root.__docsViewerAppShellManagementShellRefs
+    : {};
 }
 
 export function getDocsViewerAppShellRefs(options) {

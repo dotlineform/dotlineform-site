@@ -137,6 +137,7 @@ exclude:
   - docs-viewer/runtime/js/docs-viewer-management-client.js
   - docs-viewer/runtime/js/docs-viewer-management-config.js
   - docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js
+  - docs-viewer/runtime/js/docs-viewer-management-hosted-views.js
   - docs-viewer/runtime/js/docs-viewer-management-interactions.js
   - docs-viewer/runtime/js/docs-viewer-management-modal-shell.js
   - docs-viewer/runtime/js/docs-viewer-management-modals.js

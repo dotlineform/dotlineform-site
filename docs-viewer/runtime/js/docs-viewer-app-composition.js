@@ -153,7 +153,10 @@ export function createDocsViewerAppComposition(options) {
   var routeHostedViews = routeConfig.hostedViews && Array.isArray(routeConfig.hostedViews.records)
     ? routeConfig.hostedViews.records
     : [];
-  var defaultHostedViews = createDocsViewerDefaultHostedViews();
+  var entrypointHostedViews = Array.isArray(settings.entrypointHostedViews)
+    ? settings.entrypointHostedViews
+    : [];
+  var defaultHostedViews = createDocsViewerDefaultHostedViews().concat(entrypointHostedViews);
 
   var hostedViewRegistry = registerDocsViewerHostedViews(
     createDocsViewerHostedViewRegistry({ accessProjection: access }),

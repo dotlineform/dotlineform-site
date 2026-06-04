@@ -4,7 +4,11 @@ import {
 import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
+import {
+  createDocsViewerManagementHostedViews
+} from "./docs-viewer-management-hosted-views.js";
 
 startDocsViewerManageApp({
+  entrypointHostedViews: createDocsViewerManagementHostedViews(),
   mountDocumentExtras: mountDocsViewerManageDocumentExtras
 });

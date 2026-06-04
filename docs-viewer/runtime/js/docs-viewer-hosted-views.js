@@ -184,27 +184,8 @@ export function createDocsViewerBuiltInHostedViews() {
   ];
 }
 
-export function createDocsViewerRepoMainViewHostedViews() {
-  return [
-    {
-      id: "markdown-source",
-      label: "Markdown source",
-      panel: "main",
-      access: "manage",
-      availability: "available",
-      module: "repo:markdown-source",
-      load: function () {
-        return import("./modules/source-editor/source-editor.js")
-          .then(function (module) {
-            return module.createDocsViewerSourceEditorView();
-          });
-      }
-    }
-  ];
-}
-
 export function createDocsViewerDefaultHostedViews() {
-  return createDocsViewerBuiltInHostedViews().concat(createDocsViewerRepoMainViewHostedViews());
+  return createDocsViewerBuiltInHostedViews();
 }
 
 export function createDocsViewerRouteHostedViews(records, options) {

@@ -79,6 +79,7 @@ export function resolveDocsViewerAppBootContext(options) {
         window: windowRef,
         assetVersion: assetVersion,
         routeContext: routeContext,
+        entrypointHostedViews: settings.entrypointHostedViews,
         mountDocumentExtras: settings.mountDocumentExtras,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,

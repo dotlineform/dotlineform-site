@@ -113,6 +113,7 @@ export function startDocsViewerRuntime(options) {
     routeContext: routeContext,
     appShellRefs: appShellRefs,
     assetVersion: assetVersion,
+    entrypointHostedViews: settings.entrypointHostedViews,
     viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable
   });

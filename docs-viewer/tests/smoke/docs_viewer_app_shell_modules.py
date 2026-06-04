@@ -2610,8 +2610,8 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"missing hosted view should be graceful: {result!r}")
     if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
         raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
-    if result["markdownSource"]["registered"] is not True or result["markdownSource"]["reason"] != "access":
-        raise AssertionError(f"repo-owned markdown-source view should be registered but manage-only on public routes: {result!r}")
+    if result["markdownSource"]["registered"] is not False or result["markdownSource"]["reason"] != "missing":
+        raise AssertionError(f"public default hosted views should not register markdown-source: {result!r}")
     if result["metadataInfo"]["available"] is not True or result["metadataInfo"]["registered"] is not True:
         raise AssertionError(f"built-in metadata info view should be public and available: {result!r}")
     if result["routeHostedViews"] != [

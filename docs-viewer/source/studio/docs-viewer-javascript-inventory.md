@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-31
+last_updated: 2026-06-04
 ui_status: reference
 parent_id: studio-risk-analysis-policy
 viewable: true
@@ -24,7 +24,7 @@ When a Docs Viewer row becomes actionable, move the app-level evidence into the 
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 57
+- Docs Viewer browser JavaScript files in this focused app-shell snapshot: 58
 - Files above target score 4: 14
 - General risk themes: private app runtime coordination, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and future feature panels that must attach to focused owners instead of the app runtime coordinator.
 
@@ -35,7 +35,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 7 | 0 |
 | 6 | 7 |
 | 5 | 7 |
-| 4 | 43 |
+| 4 | 44 |
 
 ## Current Priorities
 
@@ -94,7 +94,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 40 | new | `docs-viewer/runtime/js/docs-viewer-route-config.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper. |
 | 41 | new | `docs-viewer/runtime/js/docs-viewer-access.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned static public/manage/manage-local access projection and hosted-view access check. |
 | 42 | new | `docs-viewer/runtime/js/docs-viewer-view-state.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index/document/info view-state skeleton and projection helper. |
-| 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, built-in/repo-owned records, route-record filtering, availability/access checks, and graceful absence. |
+| 43 | new | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned hosted-view registration shape, public-safe built-in records, route-record filtering, availability/access checks, and graceful absence. |
+| 43b | new | `docs-viewer/runtime/js/docs-viewer-management-hosted-views.js` | 1 | 1 | 1 | 1 | 4 | Manage-owned hosted-view records, currently the `markdown-source` source-editor view supplied by the manage entrypoint. |
 | 43a | new | `docs-viewer/runtime/js/docs-viewer-main-view-host.js` | 1 | 1 | 1 | 1 | 4 | Main-view switch-intent and availability owner for rendered-document, search-results, and recent-results. |
 | 44 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned info-panel chrome renderer and projection applier. |
 | 45 | new | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` | 1 | 1 | 1 | 1 | 4 | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence. |
@@ -104,7 +105,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
 | 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection. |
 | 51 | new | `docs-viewer/runtime/js/docs-viewer-public.js` | 1 | 1 | 1 | 1 | 4 | Public Docs Viewer entrypoint wrapper that imports and starts the public app boot owner. |
-| 52 | new | `docs-viewer/runtime/js/docs-viewer-manage.js` | 1 | 1 | 1 | 1 | 4 | Manage Docs Viewer entrypoint wrapper that imports and starts the manage app boot owner. |
+| 52 | new | `docs-viewer/runtime/js/docs-viewer-manage.js` | 1 | 1 | 1 | 1 | 4 | Manage Docs Viewer entrypoint wrapper that imports manage-owned document extras, manage-owned hosted views, and starts the manage app boot owner. |
 
 ## Follow-Up Notes
 
@@ -113,6 +114,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current risk score: 4.
 - These files are the route-specific ES module entrypoint wrappers loaded by public and manage route shells.
 - 2026-06-04 owner note: `docs-viewer/runtime/js/docs-viewer.js` was retired as a shared boot path. Public route shells now load `docs-viewer-public.js`; the local `/docs/` service shell now loads `docs-viewer-manage.js`.
+- 2026-06-04 owner note: the manage entrypoint now supplies manage-owned hosted views through `docs-viewer/runtime/js/docs-viewer-management-hosted-views.js`; the public entrypoint does not import the `markdown-source` source-editor hosted view.
 - 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; the entrypoint wrappers initialize that owner before existing route boot and wait for it before management/theme binding.
 - 2026-05-31 owner note: top-bar layout now lives in `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, and viewer toolbar controls live in `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`. The index-view toggle and info/context toggle are viewer-toolbar controls rather than management-action or document-meta controls.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
@@ -153,6 +155,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: service-context projection moved to `docs-viewer/runtime/js/docs-viewer-service-context.js`; public contexts strip management base URLs and local generated-read service base URLs before controllers are assembled.
 - 2026-05-28 owner note: route workflow, search controller, and document controller now consume named generated-data read methods instead of assembling fetch/reload/capability bundles locally.
 - 2026-05-28 owner note: runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing moved to `docs-viewer/runtime/js/docs-viewer-app-composition.js`.
+- 2026-06-04 owner note: entrypoint-owned hosted-view records are threaded from boot/runtime settings into app composition. This keeps manage-only hosted views out of the public entrypoint static graph while preserving shared registry primitives.
 - 2026-05-28 owner note: the returned app handle was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`. Broad `state`, app-composition internals, app-session internals, the management lazy loader, and route workflow bridges are no longer returned; search/recent, bookmarks, startup index loading, and management reloads now consume the private route workflow command contract instead of one-off runtime wrappers.
 - 2026-05-28 owner note: `compatibilityBridge` was removed from app-session, and `composition.state` was removed from app-composition. Focused tests now assert named state-domain and composition owner contracts rather than temporary compatibility aliases.
 - 2026-06-04 owner note: report mounting moved out of shared document-controller construction. The manage entrypoint now supplies a `mountDocumentExtras` hook; public entrypoint startup does not import report runtime, report service, report modules, or report registry data.
@@ -404,9 +407,18 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
 - 2026-05-28 lifecycle note: hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
 - 2026-05-28 owner note: built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
-- 2026-06-03 owner note: `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for built-in and repo-owned records, including manage-only `markdown-source`; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
-- Keep this module limited to records, lifecycle method names, built-in/repo-owned hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
+- 2026-06-03 owner note: `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for public-safe built-in records; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
+- 2026-06-04 owner note: manage-only `markdown-source` moved out of this shared hosted-view registry and into `docs-viewer/runtime/js/docs-viewer-management-hosted-views.js`, which is imported by the manage entrypoint.
+- Keep this module limited to records, lifecycle method names, public-safe built-in hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering, panel state, source editing, or management services.
 - Do not turn it into a plugin system, arbitrary dependency loader, panel toolbar renderer, route-config module loader, or third-party visualization owner.
+
+### `docs-viewer/runtime/js/docs-viewer-management-hosted-views.js`
+
+- Added 2026-06-04 as the manage-owned hosted-view record owner.
+- Current risk score: 4.
+- This module currently defines the `markdown-source` main hosted view and lazy-loads `docs-viewer/runtime/js/modules/source-editor/source-editor.js`.
+- Keep this module loaded only through `docs-viewer/runtime/js/docs-viewer-manage.js`; public entrypoints must not import it or the source-editor module.
+- Do not move public hosted-view registration, route-config hosted-view filtering, panel state, or source-editor service implementation into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
 

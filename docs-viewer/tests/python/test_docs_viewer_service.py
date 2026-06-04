@@ -146,6 +146,62 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     ]
 
 
+def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifiers() -> None:
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    graph = public_entry_static_import_graph(REPO_ROOT, entry)
+    blocked_fragments = [
+        "./docs-html-import.js",
+        "./docs-viewer-scope-lifecycle.js",
+        "./docs-viewer-management-document-reports.js",
+        "./docs-viewer-report-service.js",
+        "./docs-viewer-reports.js",
+        "./modules/source-editor/source-editor.js",
+        "/assets/data/docs/reports.json",
+        "docsHtmlImportRoot",
+        "docsViewerSettingsModal",
+        "docsViewerSourceEditor",
+        "openCreateScopeFlow",
+        "openDeleteScopeFlow",
+        "scopeCreateSupported",
+        "scopeDeleteSupported",
+    ]
+    matches: dict[str, list[str]] = {}
+
+    for path in graph:
+        relative_path = path.relative_to(REPO_ROOT).as_posix()
+        source = path.read_text(encoding="utf-8")
+        found = [fragment for fragment in blocked_fragments if fragment in source]
+        if found:
+            matches[relative_path] = found
+
+    assert matches == {}
+
+
+def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
+    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-app-shell.js").read_text(encoding="utf-8")
+    blocked_fragments = [
+        "docsViewerContextMenu",
+        "docsViewerMetadataModal",
+        "docsViewerImportModal",
+        "docsHtmlImportRoot",
+        "docsViewerSettingsModal",
+        "docsViewerSettingsUpdatedInput",
+    ]
+
+    assert [fragment for fragment in blocked_fragments if fragment in source] == []
+
+
+def test_manage_hosted_views_module_owns_source_editor_view_import() -> None:
+    source = (
+        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-hosted-views.js"
+    ).read_text(encoding="utf-8")
+    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js").read_text(encoding="utf-8")
+
+    assert "./modules/source-editor/source-editor.js" in source
+    assert "markdown-source" in source
+    assert "createDocsViewerManagementHostedViews" in manage_entry
+
+
 def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
     source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-main-view-renderer.js").read_text(encoding="utf-8")
     blocked_fragments = [

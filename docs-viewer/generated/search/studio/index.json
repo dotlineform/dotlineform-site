@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-225f8e4e68e6748948de9c295ed50208",
-    "generated_at_utc": "2026-06-04T16:25:24Z",
+    "version": "blake2b-f893f69376f80986404b360b519089e8",
+    "generated_at_utc": "2026-06-04T16:38:17Z",
     "count": 247
   },
   "entries": [
@@ -686,10 +686,10 @@
       "kind": "doc",
       "title": "Docs Viewer JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-05-31",
+      "last_updated": "2026-06-04",
       "parent_id": "studio-risk-analysis-policy",
       "parent_title": "Studio Risk Analysis Policy",
-      "display_meta": "2026-05-31 • Studio Risk Analysis Policy",
+      "display_meta": "2026-06-04 • Studio Risk Analysis Policy",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -702,12 +702,12 @@
         "risk",
         "analysis",
         "policy",
-        "2026-05-31",
+        "2026-06-04",
         "2026",
-        "05",
-        "31"
+        "06",
+        "04"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-31 2026 05 31"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory studio risk analysis policy studio risk analysis policy 2026-06-04 2026 06 04"
     },
     {
       "id": "javascript-inventory",
