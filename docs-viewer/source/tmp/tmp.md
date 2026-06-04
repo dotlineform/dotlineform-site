@@ -34,8 +34,34 @@ e.g. for `library`:
 `by-id` for public scopes should only contain what is needed
 
 
-- public scopes do not load any code that is used for local/manage scopes.
+docs viewer: proposed change requests `` and `` seek to address the different needs of public and local scopes. but they don't fully address the fundamental goal that public scopes should be as lightweight as possible. lightweight in terms of only loading the data, javascript and css that they need, i.e. public scopes do not load anything that is only used in local/manage scopes.
+the management toolbar is already blocked from public scopes, but what about the panel views? are they silently loading code that is subsequently not runnable?
+- are they loading javascript for controls that will never be visible?
+- are they loading css that will never be used because the associated controls do not exist in the public scope?
 
+
+essentially I am not sure what is the best option:
+
+1. split the public and local implementations completely. local docs viewer contains all functionality, public is a completely separate codebase, with no shared components.
+
+pros:
+- no chance of code or functionality 'leakage'
+- public scopes can go in their own direction
+- testing is simplified because it has a single, stable set of assertions
+
+cons:
+- common infrastructure is duplicated, doubling maintenance
+- behaviour needs to be carefully tracked if it diverges
+
+2. continue along the lines of splitting obvious artifacts into public/local versions (e.g. config, manage mode toolbars) and dealing with the rest by access-aware decisions in the code
+
+pros:
+- single point of maintenance for common infrastructure and functionality
+- predicatble behaviour
+
+cons:
+- increasingly complicated and fragile decision points and workflows
+- testing is more complicated because it needs to be scope aware
 
 ---
 

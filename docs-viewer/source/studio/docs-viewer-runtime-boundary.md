@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 parent_id: docs-viewer
 viewable: true
 ---
@@ -16,6 +16,10 @@ This document records the current boundary between:
 - the shared Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer.js`
 
 It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
+
+It also records the public/manage promotion policy for Docs Viewer runtime work.
+Public read-only installs should be lightweight deliverables that import only the data, JavaScript, CSS, and browser-visible config they need.
+Local/manage installs can keep the full management surface, local-service workflows, report tooling, source editing, imports, and scope lifecycle behavior.
 
 ## Current boundary
 
@@ -100,6 +104,50 @@ Current scope-owned data:
 - `docs-viewer/generated/docs/studio/`
 - `assets/data/docs/scopes/library/`
 - `assets/data/docs/scopes/analysis/`
+
+## Public And Manage Install Policy
+
+Docs Viewer should split public and local/manage deliverables at the entrypoint and shell-composition level, while keeping shared lower-level core modules where they are genuinely common.
+
+This is not a full codebase fork.
+The public and manage installs should not duplicate core infrastructure such as docs index normalization, tree helpers, route helpers, generated-data reads, search normalization, URL builders, and renderer primitives.
+Those shared modules remain appropriate when they have no local-service, write-authority, management UI, or manage-only CSS/config dependency.
+
+The durable boundary is:
+
+- public surface is only what the public entrypoint imports, the public shell renders, and public route/config records expose
+- manage surface is only what the manage entrypoint imports, the manage shell renders, and management capability checks plus server-side endpoints authorize
+- shared core is not public surface by itself
+- route config and hosted-view records are visibility and composition metadata, not proof that a module, stylesheet, report, service, or data payload belongs in public
+
+Default feature flow:
+
+1. Build new Docs Viewer capabilities in local/manage first unless the request is explicitly public-only.
+2. Keep the capability behind the manage entrypoint, management shell, management UI text, management CSS, and management service contracts.
+3. Promote a capability to public only through a named public-promotion step.
+4. In that promotion step, choose the exact public modules, CSS, config, data contract, route records, and tests.
+5. Add tests that prove manage-only assets and data do not load on public routes after promotion.
+
+Promotion should be explicit because public scopes are public-reader installs, not local tools with disabled controls.
+Do not implement a new feature by adding it to one broad runtime and then hiding it from public with scattered mode checks.
+Access checks still matter for graceful unavailable states, but they are not a substitute for not shipping manage-only assets to public routes.
+
+Reports are the reference example.
+The manage install can keep the full report framework, local-service reports, source/config audits, semantic-reference reports, broken-link audits, and admin tables.
+Public installs should not load report runtime, report CSS, or report registry data until a specific public report is promoted.
+When that happens, only the selected public-safe report loader, public-safe data source, minimum report renderer/CSS, route config, and asset-load tests should move across.
+Manage-only reports must remain absent from public entrypoint imports and public route loads.
+
+Public promotion acceptance should include:
+
+- public route network/import assertions for JS, CSS, route config, UI text, report metadata, and generated data
+- public DOM assertions that management controls, source-editor controls, import hosts, settings controls, scope lifecycle controls, and local-service status surfaces are not rendered
+- manage smoke coverage proving the full management surface still loads through the manage entrypoint
+- source docs describing what was promoted and why it is public-safe
+
+Related implementation request:
+
+- [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints)
 
 ## Controller And Hosted-View Lifecycle Contract
 

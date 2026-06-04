@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 parent_id: ""
 viewable: true
 ---
@@ -85,6 +85,7 @@ Those boundaries are intentional:
 - [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) records the technical design, route-creation model, publishing choices, and implementation notes for the local New scope workflow.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and generated title ordering.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
+- [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints) specifies the planned infrastructure split for lightweight public installs, local/manage installs, shared core modules, and explicit public promotion.
 - [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) records the current panel regions, hosted-view lifecycle, info-panel metadata view, access gating, and non-plugin module boundary.
 - [Toolbar Model](/docs/?scope=studio&doc=docs-viewer-toolbar-model) records the target top-bar, viewer-toolbar, manage-toolbar, main-view-toolbar, and context-panel-toolbar model.
 - [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) records the config-driven model for hosted-view capabilities, panel layout states, index-view switching, and future index-view toolbar rules.

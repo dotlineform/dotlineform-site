@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8414d33dda11297a26b1044a30831b5d",
-    "generated_at_utc": "2026-06-04T10:43:53Z",
-    "count": 245
+    "version": "blake2b-af50dd3befd97466a2c87b4aaedcda15",
+    "generated_at_utc": "2026-06-04T12:00:31Z",
+    "count": 246
   },
   "entries": [
     {
@@ -1442,6 +1442,37 @@
       "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-03 2026 06 03"
     },
     {
+      "id": "site-request-docs-viewer-public-manage-entrypoints",
+      "kind": "doc",
+      "title": "Docs Viewer Public/Manage Entrypoint Split Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints",
+      "last_updated": "2026-06-04",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-04 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-public-manage-entrypoints",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "manage",
+        "entrypoints",
+        "docs viewer public/manage entrypoint split request",
+        "entrypoint",
+        "split",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-04",
+        "2026",
+        "06",
+        "04"
+      ],
+      "search_text": "site-request-docs-viewer-public-manage-entrypoints site request docs viewer public manage entrypoints docs viewer public/manage entrypoint split request entrypoint split change requests change requests 2026-06-04 2026 06 04"
+    },
+    {
       "id": "site-request-docs-viewer-runtime-risk-reduction",
       "kind": "doc",
       "title": "Docs Viewer Runtime Risk Reduction Request",
@@ -2578,19 +2609,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-06-03",
-      "display_meta": "2026-06-03",
+      "last_updated": "2026-06-04",
+      "display_meta": "2026-06-04",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-06-03",
+        "2026-06-04",
         "2026",
         "06",
-        "03"
+        "04"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-06-03 2026 06 03"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-06-04 2026 06 04"
     },
     {
       "id": "docs-broken-links",
@@ -3308,10 +3339,10 @@
       "kind": "doc",
       "title": "Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-03 • Docs Viewer",
+      "display_meta": "2026-06-04 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -3320,12 +3351,12 @@
         "boundary",
         "runtime boundary",
         "docs viewer",
-        "2026-06-03",
+        "2026-06-04",
         "2026",
         "06",
-        "03"
+        "04"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary runtime boundary docs viewer 2026-06-03 2026 06 03"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary runtime boundary docs viewer 2026-06-04 2026 06 04"
     },
     {
       "id": "docs-viewer-scopes",
