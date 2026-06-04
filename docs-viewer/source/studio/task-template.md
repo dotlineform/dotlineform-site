@@ -25,6 +25,8 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 ## Deliverables
 
+[any deliverables that need ongoing revision or should become part of durable documentation should be created as sibling documents that are linked to from this document]
+
 - state the expected deliverables:
     - changed or new functionality
     - changed or new scripts, config, setup files
