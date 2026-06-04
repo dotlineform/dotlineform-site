@@ -3,9 +3,8 @@ doc_id: site-request-docs-viewer-public-manage-entrypoints
 title: Docs Viewer Public/Manage Entrypoint Split Request
 added_date: 2026-06-04
 last_updated: 2026-06-04
-ui_status: draft
+ui_status: in-progress
 parent_id: change-requests
-viewable: true
 ---
 # Docs Viewer Public/Manage Entrypoint Split Request
 
@@ -44,7 +43,7 @@ This creates a controlled path:
 
 - reduce public route JavaScript, CSS, config, UI-text, and data payloads to public needs only
 - prevent accidental public loading of manage-only modules, report tooling, local-service code, source editing, imports, settings, scope lifecycle, or management controls
-- keep common infrastructure in shared core modules rather than duplicating route parsing, generated-data reads, tree helpers, search helpers, URL helpers, and renderer primitives
+- keep common infrastructure in shared core modules rather than duplicating route parsing, generated-data reads, payload-agnostic tree view-model/rendering primitives, search helpers, URL helpers, and renderer primitives
 - make public promotion a deliberate implementation step with named assets and tests
 - keep current visible behavior for public `/library/`, public `/analysis/`, and local/manage `/docs/`
 - make tests simpler by asserting public entrypoint loads and manage entrypoint loads separately
@@ -143,17 +142,20 @@ Manage can reuse public-style reader modules through shared core or shared reade
 
 Shared core should stay small and public-safe.
 Manage-only reusable code can exist, but it is not shared core; it belongs in manage-owned modules that the public entrypoint cannot import accidentally.
+Shared modules must be stable primitives used consistently by both public and manage.
+They should not branch on public/manage mode, accept public/manage capability switches, or contain disabled manage behavior for public routes.
+Manage mode is built on top through manage-owned composition.
 
 Good shared-core candidates:
 
 - generated docs index parsing and public-safe record projection
 - static generated-data read helpers for browser-visible JSON assets
 - route and URL helpers
-- tree helpers
+- payload-agnostic tree view-model and rendering primitives
 - search normalization/scoring
 - result rendering primitives
 - asset-version URL helpers
-- public-safe hosted-view context helpers
+- reader-facing hosted-view context helpers with no manage-only slots
 - generic DOM projection helpers with no manage-only controls
 
 Poor shared-core candidates:
@@ -167,6 +169,54 @@ Poor shared-core candidates:
 - scope lifecycle workflows
 - management modals, menus, settings, status mutation, or source-opening behavior
 - UI text bundles that include manage-only copy
+
+## Indicative JSON And CSS Artifact Split
+
+This table is indicative.
+Exact file names can change during implementation, but the public/manage ownership should not.
+
+| current artifact | current role | future public artifact | future manage artifact | action |
+| --- | --- | --- | --- | --- |
+| `docs-viewer/config/routes/docs-viewer-public-routes.json` | Public route registry for `/library/` and `/analysis/`. | Keep as the public route registry; remove fields for artifacts public does not load, such as report registry, until promoted. | None. | Narrow. |
+| `docs-viewer/config/routes/docs-viewer-routes.json` | Local service route registry for `/docs/`, plus public route records. | None. Public routes should not load this registry. | Keep as the manage/service route registry, or split to `docs-viewer-manage-routes.json` if that makes ownership clearer. | Manage-owned. |
+| `docs-viewer/config/defaults/docs-viewer-public-config.json` | Browser-visible public scope config. | Keep as public config and narrow to public scopes/features. | None. | Narrow. |
+| `docs-viewer/config/defaults/docs-viewer-config.json` | Local/manage Docs Viewer config with local scopes and richer status/config data. | None. | Keep as manage config, or rename/split only if needed for clarity. | Manage-owned. |
+| `docs-viewer/config/ui-text/ui-text.json` | Shared UI text, currently includes public and manage copy. | New public UI text bundle, for example `docs-viewer/config/ui-text/public.json`. | New manage UI text bundle, for example `docs-viewer/config/ui-text/manage.json`. | Split. |
+| `docs-viewer/config/reports/reports.json` | Source report registry. | No public projection unless a specific public report is promoted. | Keep as report source registry for manage/report tooling. | Manage-owned until promotion. |
+| `assets/data/docs/reports.json` | Browser-visible report registry projection. | Do not load on public routes until a specific public report is promoted; later use a public report projection if needed. | Keep for manage report runtime. | Move behind manage entrypoint. |
+| `assets/data/docs/scopes/<scope>/index.json` | Public flat docs index used for tree construction and document selection. | Narrow or replace for public runtime after nav/tree payload exists. | Not used by manage except as static public data. | Slim after nav/tree slice. |
+| Public nav/tree payload | Not present. | New tree-ready payload using the shared tree shape, for example `assets/data/docs/scopes/<scope>/nav.json`. | None. | New. |
+| `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` | Public rendered document payload. | Keep as selected-document payload, with reader-facing metadata only where possible. | Manage can still read public by-id payloads when viewing public scopes, but manage source/edit data comes from manage endpoints. | Mostly unchanged. |
+| `assets/data/search/<scope>/index.json` | Public docs search index for public scopes. | Keep if public search remains enabled. | Manage uses local generated search for local scopes. | Mostly unchanged. |
+| `docs-viewer/generated/docs/<scope>/index.json` | Local/manage generated docs index for local scopes such as `studio`. | None. | Narrow or replace for manage navigation after manage nav/tree payload exists; keep only if other manage features still require the rich flat projection. | Review after nav/tree slice. |
+| Manage nav/tree payload | Not present. | None. | New richer tree-ready payload using the same shared tree shape, for example `docs-viewer/generated/docs/<scope>/nav.json`; include manage-only fields only after confirming context-menu, drag/drop, status, or viewability needs. | New. |
+| `docs-viewer/generated/search/<scope>/index.json` | Local/manage generated search index for local scopes such as `studio`. | None. | Keep manage/local search projection. | Manage-owned. |
+| `docs-viewer/static/css/docs-viewer-base.css` | Docs Viewer base tokens and utilities. | Keep only if it remains public-safe. | Manage can also load it. | Shared public-safe. |
+| `docs-viewer/static/css/docs-viewer.css` | Shared viewer, panel, search, toolbar, and some manage-adjacent control styling. | Split or narrow to public reader/index/main/info/search styles, for example `docs-viewer-public.css`. | Manage can load public-safe reader CSS plus manage-only CSS. | Split/narrow. |
+| `docs-viewer/static/css/docs-viewer-reports.css` | Report styling currently loaded by the shared shell. | Do not load until a specific public report is promoted; then load only the minimum public report CSS. | Load through the manage entrypoint/report runtime. | Move behind manage entrypoint. |
+| `docs-viewer/static/css/docs-viewer-management.css` | Management-only shell, action, modal, and workflow styling. | None. | Keep manage-only. | Unchanged. |
+| `assets/css/main.css` | Host public-site layout/prose CSS inherited by public Jekyll routes. | Unchanged host CSS outside Docs Viewer split. | Not part of local Docs Viewer manage shell. | Out of scope. |
+
+## Shared Modules Are Stable Primitives
+
+Shared modules are not lowest-common-denominator implementations with public/manage branches.
+They are stable primitives applied consistently by both entrypoints.
+
+For a shared module:
+
+- public and manage should call the same primitive for the same primitive behavior
+- public/manage mode should not be an input
+- public/manage capability switches should not be an input
+- manage-only actions, services, controls, fields, context menus, drag/drop, and mutation behavior should not live inside it
+- disabled or hidden manage behavior should not be embedded for public routes
+
+Manage-only behavior is additive.
+The manage entrypoint may load manage-owned modules that compose around or above shared primitives.
+Those manage-owned modules can add context menus, drag/drop, status/viewability controls, source/metadata actions, local-service calls, and management-specific UI.
+They should not require the shared primitive to become mode-aware.
+
+Applied to the index panel, the shared tree renderer should own only the stable tree behavior.
+The manage index layer can add right-click menus or management actions around that rendered tree, but the shared renderer should not receive a mode flag or manage capability map to decide what kind of tree it is.
 
 ## Public Promotion Policy
 
@@ -214,36 +264,49 @@ Disallowed outcomes:
 
 If an implementation slice discovers a compatibility path, it should remove it in that slice or stop and document a named blocker with owner, reason, and removal criteria before adding adjacent behavior.
 
-## Public Index Panel Data
+## Index Panel Tree Data
 
-The public index panel should do the least possible runtime shaping.
+The index panel should do the least possible runtime shaping in both public and manage installs.
 
-For public routes, tree construction should move toward build-time projection rather than browser-time grouping of flat records.
-The browser should load a public nav/tree payload that is already ordered and already filtered for public read-only navigation.
+Both public and manage routes should move toward build-time tree projection rather than browser-time grouping of flat records.
+The browser should load a nav/tree payload that is already ordered and already filtered for the current install.
 
 Build time should own:
 
 - parent/child tree construction
 - root and sibling ordering
-- public viewability filtering
+- public viewability filtering for public payloads
+- manage visibility/loadability projection for manage payloads
 - compact public nav record projection
-- optional path, depth, or trail fields only when a public reader surface needs them
+- richer manage nav record projection only where confirmed manage behavior needs it
+- optional path, depth, or trail fields only when a reader or manage surface needs them
 
-Public runtime should own:
+Runtime should own:
 
-- loading the public nav/tree payload
+- loading the route-appropriate nav/tree payload
 - rendering tree rows
 - expanding and collapsing UI state
 - highlighting the selected doc
 - routing to selected documents
 
+The shared module should be a payload-agnostic tree renderer over a stable tree view model, not a public index owner or a manage index owner.
+Public and manage entrypoints should provide their own loaders/adapters:
+
+- public: `assets/data/docs/scopes/<scope>/nav.json` to public index view model
+- manage: `docs-viewer/generated/docs/<scope>/nav.json` or equivalent richer payload to manage index view model
+
+The basic tree shape should be the same where possible.
+The manage payload can include optional manage-only fields or side payload references only after confirming what right-click menus, drag/drop, status indicators, viewability controls, or source/metadata actions actually need.
+Manage-only behavior should layer on top of the shared tree renderer through manage-owned modules.
+The shared tree renderer should not receive a public/manage mode, receive a manage capability map, know how to open context menus, mutate status, call management services, or handle source/edit workflows.
+
 This should not be implemented before the public/manage entrypoint and shell boundary exists.
 The first slice should make the public deliverable real.
-After that, the public nav/tree payload can target the public entrypoint directly instead of being folded into the current broad shared runtime.
+After that, public and manage nav/tree payloads can target their entrypoints directly instead of being folded into the current broad shared runtime.
 
 This nav/tree work is related to, but distinct from, [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming).
 The entrypoint split creates the public runtime boundary.
-The nav/tree payload then gives the public index panel a purpose-built data contract.
+The nav/tree payloads then give the index panel purpose-built data contracts.
 The public index slimming request can remove or narrow flat public index fields once public navigation no longer depends on browser-time tree construction.
 
 ## Implementation Steer
@@ -258,12 +321,12 @@ Suggested order:
 4. Split public/manage UI text and CSS along the new boundary.
 5. Move report runtime, report CSS, and report registry loading behind the manage entrypoint.
 6. Remove public DOM creation for hidden manage-only controls.
-7. Add the build-time public nav/tree payload and switch the public index panel to render that payload.
+7. Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer.
 8. Use the new public nav/tree payload to unblock public index slimming work.
 9. Update runtime, reports, index-payload, and JavaScript inventory docs after each implemented slice.
 
-The public nav/tree payload should be part of this lighter-public-install program, but it should come after the entrypoint/shell split.
-Doing it first would make the new payload fit the existing broad runtime, preserving the ambiguity this request is trying to remove.
+The nav/tree payload work should be part of this lighter-public-install program, but it should come after the entrypoint/shell split.
+Doing it first would make the new payloads fit the existing broad runtime, preserving the ambiguity this request is trying to remove.
 
 ## Implementation Tasks
 
@@ -281,12 +344,13 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted. |
 | 9 | planned | Ensure public main-view rendering omits management-only hidden controls rather than rendering disabled or hidden manage DOM. |
 | 10 | planned | Keep shared core modules public-safe and move reusable manage-only behavior into manage-owned modules outside shared core. |
-| 11 | planned | Remove compatibility aliases and silent fallback paths discovered in touched boot/config/data surfaces, or document a named blocker with removal criteria before adjacent behavior is added. |
-| 12 | planned | Add a build-time public nav/tree payload and switch the public index panel to render that tree-ready payload after the entrypoint/shell boundary is in place. |
-| 13 | planned | Coordinate public nav/tree payload follow-through with [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming). |
-| 14 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
-| 15 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
-| 16 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
+| 11 | planned | Audit touched shared modules to remove public/manage mode switches, manage capability switches, hidden manage controls, and disabled manage behavior; move manage-only behavior into manage-owned modules. |
+| 12 | planned | Remove compatibility aliases and silent fallback paths discovered in touched boot/config/data surfaces, or document a named blocker with removal criteria before adjacent behavior is added. |
+| 13 | planned | Add build-time public and manage nav/tree payloads and switch the index panel to render the route-appropriate tree-ready payload through a payload-agnostic tree renderer after the entrypoint/shell boundary is in place. |
+| 14 | planned | Coordinate public nav/tree payload follow-through with [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming). |
+| 15 | planned | Add public-route tests that assert absence of manage-only JS, CSS, UI text, report registry, source editor, import, settings, scope lifecycle, and management controls. |
+| 16 | planned | Add manage-route smoke coverage proving current management behavior still loads through the manage entrypoint. |
+| 17 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports), and related runtime docs after the split is implemented. |
 
 ## Acceptance Criteria
 
@@ -297,7 +361,8 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 - public DOM does not contain management toolbar hosts, hidden edit/source buttons, import hosts, settings controls, scope lifecycle controls, or management-only status controls
 - manage route still loads management toolbar, management shell hosts, source editor, imports, reports, settings, status mutation, scope lifecycle, and local-service behavior where currently available
 - shared core modules remain reusable without carrying management authority or public route leakage
-- public index-panel rendering can use a tree-ready public nav payload rather than doing full flat-index tree construction in the browser
+- shared core modules do not branch on public/manage mode or receive manage capability switches; manage-only behavior is composed above them through manage-owned modules
+- public and manage index-panel rendering can use route-appropriate tree-ready nav payloads rather than doing full flat-index tree construction in the browser
 - required public assets and manage capabilities fail visibly when missing rather than silently falling back to alternate data paths
 - touched boot/config/data surfaces do not retain compatibility aliases or legacy field fallbacks unless a separately approved migration plan has named removal criteria
 - public promotion policy is documented and tested with at least one negative assertion that catches accidental public asset widening
