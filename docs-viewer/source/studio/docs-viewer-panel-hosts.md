@@ -413,7 +413,7 @@ Current state:
 
 - index-panel controls are projected through the app shell
 - info panel has close and view-option chrome
-- the main-view toolbar surface owns the current rendered-document metadata controls while preserving existing rendered-document controller IDs
+- the shared main-view toolbar surface owns public-safe rendered-document metadata and bookmark controls, while manage-only status/edit/source controls are composed by the manage-owned document-actions renderer
 - search, recent, and reports still use their existing controls
 
 What this means:

@@ -165,11 +165,13 @@ export function initDocsViewerAppShell(options) {
 
   return Promise.all([
     actionMount ? import("./docs-viewer-management-actions-renderer.js") : Promise.resolve(null),
-    shellMount ? import("./docs-viewer-management-shell-renderer.js") : Promise.resolve(null)
+    shellMount ? import("./docs-viewer-management-shell-renderer.js") : Promise.resolve(null),
+    import("./docs-viewer-management-document-actions-renderer.js")
   ])
     .then(function (modules) {
       var actionsModule = modules[0];
       var shellModule = modules[1];
+      var documentActionsModule = modules[2];
       var row = actionsModule ? actionsModule.renderDocsViewerManagementActions({
         document: documentRef,
         mount: actionMount
@@ -179,6 +181,16 @@ export function initDocsViewerAppShell(options) {
         root: root,
         mount: shellMount
       }) : emptyManagementShell(documentRef);
+      if (documentActionsModule && typeof documentActionsModule.renderDocsViewerManagementDocumentActions === "function") {
+        documentActionsModule.renderDocsViewerManagementDocumentActions({
+          document: documentRef,
+          root: root
+        });
+        mainView = findDocsViewerMainViewRefs({
+          document: documentRef,
+          root: root
+        });
+      }
       return appShellResult({
         headerControls: headerControls,
         topBar: topBar && topBar.topBar,

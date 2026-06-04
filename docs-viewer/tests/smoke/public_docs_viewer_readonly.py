@@ -166,6 +166,9 @@ def main() -> int:
                 studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
                 manage_actions_count = page.locator(".docsViewer__manageActions").count()
                 manage_button_count = page.locator("#docsViewerManageActionsButton").count()
+                manage_document_control_count = page.locator(
+                    "#docsViewerManageEditButton, #docsViewerManageSourceButton, #docsViewerStatusPills"
+                ).count()
                 resource_urls = page.evaluate(
                     """() => performance.getEntriesByType('resource').map(entry => entry.name)"""
                 )
@@ -201,6 +204,8 @@ def main() -> int:
                     raise AssertionError(f"{route} loaded Studio-only assets")
                 if manage_actions_count or manage_button_count:
                     raise AssertionError(f"{route} rendered management controls")
+                if manage_document_control_count:
+                    raise AssertionError(f"{route} rendered management document controls")
                 if management_js_urls:
                     raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
 

@@ -127,6 +127,43 @@ def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -
     assert blocked == []
 
 
+def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    graph = public_entry_static_import_graph(REPO_ROOT, entry)
+    graph_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in graph
+    }
+
+    assert "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js" not in graph_paths
+
+
+def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
+    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-main-view-renderer.js").read_text(encoding="utf-8")
+    blocked_fragments = [
+        "docsViewerManageEditButton",
+        "docsViewerManageSourceButton",
+        "docsViewerStatusPills",
+        "Markdown source",
+        "markdown-source",
+        "dataset.docsViewerAction",
+    ]
+
+    assert [fragment for fragment in blocked_fragments if fragment in source] == []
+
+
+def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:
+    source = (
+        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js"
+    ).read_text(encoding="utf-8")
+
+    assert "docsViewerManageEditButton" in source
+    assert "docsViewerManageSourceButton" in source
+    assert "docsViewerStatusPills" in source
+    assert "Markdown source" in source
+    assert "markdown-source" in source
+
+
 @pytest.mark.parametrize(
     ("host", "base_url", "message"),
     [

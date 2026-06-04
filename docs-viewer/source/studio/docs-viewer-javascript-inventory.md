@@ -88,6 +88,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 35 | 153 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, current-key persistence, toggle projection, and document-pane visibility helper. |
 | 36 | 154 | `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned index panel chrome renderer and projection applier. |
 | 37 | new | `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned main-view shell, rendered-document metadata chrome, and narrow rendered/search/recent projection applier. |
+| 37a | new | `docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js` | 1 | 1 | 1 | 1 | 4 | Manage-owned selected-document status/edit/source controls rendered above the shared main-view toolbar surface. |
 | 38 | new | `docs-viewer/runtime/js/docs-viewer-app-context.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route context assembly from route config/access projection and mutable route-context projection. |
 | 39 | new | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned panel projection handoff for index state, current main-view visibility, and the view-state skeleton. |
 | 40 | new | `docs-viewer/runtime/js/docs-viewer-route-config.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper. |
@@ -340,9 +341,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`
 
 - Added 2026-06-03 as the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- 2026-06-03 owner note: the rendered-document breadcrumbs, updated date, status pills, selected-document edit/source action pills, and bookmark toggle now sit inside the explicit `docsViewerMainViewToolbar` surface while retaining their existing rendered-document IDs for current controllers.
+- 2026-06-04 owner note: the shared main-view renderer is public-safe and no longer defines selected-document status pills or edit/source controls; those manage-only controls are rendered by `docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js`.
 - Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
-- Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, bookmark storage, or search/recent result rendering into it.
+- Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, selected-document edit/source controls, bookmark storage, or search/recent result rendering into it.
+
+### `docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js`
+
+- Added 2026-06-04 as the manage-owned renderer for selected-document status pills, `Edit`, and `Markdown source` controls.
+- Keep this module loaded only through manage-capable shell composition; public entrypoints and public-safe shared renderers must not import it statically or duplicate its control ids/labels.
+- Keep command behavior in `docs-viewer/runtime/js/docs-viewer-management.js` and its action/controller children.
 
 ### `docs-viewer/runtime/js/docs-viewer-main-view-host.js`
 

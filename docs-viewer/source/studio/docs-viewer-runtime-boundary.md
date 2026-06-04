@@ -61,6 +61,7 @@ Current entrypoints and shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
 - `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` for management-only context menu, metadata modal, import modal, settings modal, and import host refs rendered only when route access allows management UI
+- `docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js` for management-only selected-document status pills, `Edit`, and `Markdown source` controls rendered only through manage-capable shell composition; public-safe main-view chrome must not define or hide these controls
 - `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for app-shell panel projection and the index/main/info view-state skeleton
 - `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, panel-specific listing, access/availability checks, built-in hosted-view records, and graceful absence
 - `docs-viewer/runtime/js/docs-viewer-main-view-host.js` for main-view hosted-view availability checks, active main-view state projection, and switch-intent handling for `rendered-document`, `search-results`, and `recent-results`
@@ -195,6 +196,7 @@ Current owner map:
 - `docs-viewer/runtime/js/docs-viewer-main-view-host.js` owns main-view availability checks, switch-intent handling, active main-view state projection, main-view toolbar projection handoff, and main-view module-context creation for `rendered-document`, `search-results`, `recent-results`, and manage-only mounted modules such as `markdown-source`.
 - `docs-viewer/runtime/js/docs-viewer-view-context.js` owns public-safe selected-document hosted-view context projection and the main-view module context shape with selected document, scope, route access, main-view intent/toolbar/warning helpers, and capability-gated source-editor service slots.
 - `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` owns the first public-safe read-only metadata hosted view.
+- `docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js` owns manage-only selected-document status/edit/source controls above the shared main-view toolbar surface.
 - `docs-viewer/runtime/js/modules/source-editor/source-editor.js` owns manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior.
 - `docs-viewer/runtime/js/docs-viewer-management.js` and its child modules own manage-mode capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, status pills, and write orchestration behind the lazy management boundary.
 
