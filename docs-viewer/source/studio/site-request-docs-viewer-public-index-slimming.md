@@ -96,7 +96,7 @@ Public scope index rows should be as close as possible to:
 - `title`
 - `parent_id`, only when non-empty
 - `viewable: false`, only when needed
-- `ui_status`, only if the public tree still displays status indicators
+- `ui_status`
 - `content_url`
 - fields needed for public route features such as recently-added, only after confirming there is no better source
 

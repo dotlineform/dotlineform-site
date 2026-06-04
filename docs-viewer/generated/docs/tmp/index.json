@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T15:25:04Z",
+  "generated_at": "2026-06-04T17:36:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -133,7 +133,7 @@
       "viewer_url": "/docs/?scope=tmp&doc=tmp",
       "ui_status": "draft",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "content_text_length": 6305
+      "content_text_length": 4621
     },
     {
       "doc_id": "studio",

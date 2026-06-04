@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T17:23:25Z",
+  "generated_at": "2026-06-04T17:45:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -662,7 +662,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 12351
+      "content_text_length": 12293
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
