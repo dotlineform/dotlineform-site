@@ -136,20 +136,65 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     }
 
     assert "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js" not in graph_paths
+    assert "docs-viewer/runtime/js/docs-viewer-management-document-reports.js" not in graph_paths
+    assert "docs-viewer/runtime/js/docs-viewer-report-service.js" not in graph_paths
+    assert "docs-viewer/runtime/js/docs-viewer-reports.js" not in graph_paths
+    assert not [
+        path
+        for path in graph_paths
+        if path.startswith("docs-viewer/runtime/js/reports/")
+    ]
 
 
 def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
     source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-main-view-renderer.js").read_text(encoding="utf-8")
     blocked_fragments = [
+        "createDocsViewerReportService",
+        "docs-viewer-reports.js",
         "docsViewerManageEditButton",
         "docsViewerManageSourceButton",
         "docsViewerStatusPills",
         "Markdown source",
         "markdown-source",
+        "reportRegistryUrl",
         "dataset.docsViewerAction",
+        "viewer_report",
     ]
 
     assert [fragment for fragment in blocked_fragments if fragment in source] == []
+
+
+def test_manage_document_reports_module_owns_report_runtime_imports() -> None:
+    source = (
+        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-document-reports.js"
+    ).read_text(encoding="utf-8")
+
+    assert "createDocsViewerReportService" in source
+    assert "mountDocsViewerReport" in source
+    assert "viewer_report" in source
+    assert "reportRegistryUrl" in source
+
+
+def test_report_runtime_has_no_fallback_registry() -> None:
+    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-reports.js").read_text(encoding="utf-8")
+
+    assert "FALLBACK_REPORT_REGISTRY" not in source
+    assert '"/assets/data/docs/reports.json"' not in source
+    assert "Report registry is not configured." in source
+
+
+def test_public_route_config_excludes_report_registry() -> None:
+    public_payload = json.loads(
+        (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8")
+    )
+    manage_payload = json.loads(
+        (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8")
+    )
+
+    for payload in (public_payload, manage_payload):
+        for route in payload["routes"]:
+            if route["route_id"] in {"library", "analysis"}:
+                assert "report_registry" not in route["config_urls"]
 
 
 def test_basic_docs_viewer_css_excludes_manage_selectors() -> None:

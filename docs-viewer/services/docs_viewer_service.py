@@ -191,6 +191,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions-renderer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-client.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-document-reports.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-document-actions-renderer.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "modules" / "source-editor" / "source-editor.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-route-config.js",

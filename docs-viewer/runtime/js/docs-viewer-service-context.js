@@ -28,10 +28,6 @@ export function createDocsViewerServiceContext(options) {
       docsViewerConfigUrl: cleanString(routeContext.docsViewerConfigUrl),
       uiTextUrl: cleanString(routeContext.uiTextUrl)
     },
-    reports: {
-      authority: "browser-safe config asset",
-      reportRegistryUrl: cleanString(routeContext.reportRegistryUrl)
-    },
     management: allowManagement
       ? {
         authority: "management backend capability/write endpoint",

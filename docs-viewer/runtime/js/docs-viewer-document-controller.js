@@ -1,5 +1,3 @@
-import { createDocsViewerReportService } from "./docs-viewer-report-service.js";
-
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
   var scopeConfigState = context.scopeConfig;
@@ -15,21 +13,8 @@ export function initDocsViewerDocumentController(context) {
     return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
   }
 
-  function currentScopeConfigs() {
-    return scopeConfigState && Array.isArray(scopeConfigState.scopeConfigs) ? scopeConfigState.scopeConfigs : [];
-  }
-
-  function currentReportRegistryUrl() {
-    return typeof context.reportRegistryUrl === "function" ? context.reportRegistryUrl() : context.reportRegistryUrl;
-  }
-
   function currentManagementBaseUrl() {
     return typeof context.managementBaseUrl === "function" ? context.managementBaseUrl() : context.managementBaseUrl;
-  }
-
-  function scopeConfig(scope) {
-    var targetScope = String(scope || currentViewerScope() || "").trim().toLowerCase();
-    return scopeConfigState && scopeConfigState.scopeConfigsById ? scopeConfigState.scopeConfigsById.get(targetScope) : null;
   }
 
   function managementModeActive() {
@@ -48,105 +33,25 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function fetchDocsIndexForScope(scope) {
-    var targetScope = String(scope || currentViewerScope() || "").trim().toLowerCase();
-    var targetConfig = scopeConfig(targetScope);
-    if (!targetConfig || !targetConfig.indexUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return context.generatedData.readScopeIndex({
-      scopeConfig: targetConfig,
-      viewerScope: targetScope,
-      reloadNonce: "",
-      reloadExpectedDocId: ""
-    });
-  }
-
-  function docsScopeDataBaseUrl(scope) {
-    var targetConfig = scopeConfig(scope);
-    var indexUrl = targetConfig ? String(targetConfig.indexUrl || "") : "";
-    return indexUrl.replace(/\/index\.json(?:[?#].*)?$/, "");
-  }
-
-  function referenceTargetSlug(target) {
-    var bucketUrl = String(target && target.bucket_url || "").trim();
-    if (bucketUrl) {
-      try {
-        var url = new URL(bucketUrl, window.location.origin);
-        var filename = url.pathname.split("/").pop() || "";
-        if (filename.slice(-5) === ".json") return filename.slice(0, -5);
-      } catch (error) {
-        // Fall through to the target id encoding below.
-      }
-    }
-    return encodeURIComponent(String(target && target.target_id || "").trim());
-  }
-
-  function fetchDocsReferencesIndexForScope(scope) {
-    var targetScope = String(scope || currentViewerScope() || "").trim().toLowerCase();
-    var baseUrl = docsScopeDataBaseUrl(targetScope);
-    if (!baseUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return context.generatedData.readReferencesIndex({
-      baseUrl: baseUrl,
-      viewerScope: targetScope
-    });
-  }
-
-  function fetchDocsReferenceTargetForScope(scope, target) {
-    var targetScope = String(scope || currentViewerScope() || "").trim().toLowerCase();
-    var targetKind = String(target && target.target_kind || "").trim();
-    var targetSlug = referenceTargetSlug(target);
-    var staticUrl = String(target && target.bucket_url || "").trim();
-    if (!staticUrl) {
-      var baseUrl = docsScopeDataBaseUrl(targetScope);
-      staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + targetSlug + ".json";
-    }
-    return context.generatedData.readReferenceTarget({
-      staticUrl: staticUrl,
-      targetKind: targetKind,
-      targetSlug: targetSlug,
-      viewerScope: targetScope
-    });
-  }
-
-  function reportContext(doc, payload) {
-    var reportManagementBaseUrl = currentManagementBaseUrl();
-    return {
+  function mountDocumentExtras(doc, payload) {
+    if (typeof context.mountDocumentExtras !== "function") return;
+    Promise.resolve(context.mountDocumentExtras({
       allowManagement: context.allowManagement,
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
       content: content,
       doc: doc,
-      fetchDocsReferenceTarget: fetchDocsReferenceTargetForScope,
-      fetchDocsReferencesIndex: fetchDocsReferencesIndexForScope,
-      fetchDocsIndex: fetchDocsIndexForScope,
+      generatedData: context.generatedData,
+      managementBaseUrl: currentManagementBaseUrl(),
       managementMode: managementModeActive(),
       payload: payload,
-      reportRegistryUrl: currentReportRegistryUrl(),
-      reportService: reportManagementBaseUrl
-        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
-        : null,
+      routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
+      scopeConfigState: scopeConfigState,
       setStatus: setStatus,
-      scopeConfigs: currentScopeConfigs().slice(),
       viewerScope: currentViewerScope(),
       viewerUrlForScope: context.viewerUrlForScope
-    };
-  }
-
-  function payloadHasReport(payload) {
-    return Boolean(payload && String(payload.viewer_report || "").trim());
-  }
-
-  function maybeMountDocsViewerReport(doc, payload) {
-    if (!payloadHasReport(payload)) return;
-    import("./docs-viewer-reports.js")
-      .then(function (module) {
-        return module.mountDocsViewerReport(reportContext(doc, payload));
-      })
-      .catch(function (error) {
-        console.warn("docs_viewer: report controller unavailable", error);
-      });
+    })).catch(function (error) {
+      console.warn("docs_viewer: document extras unavailable", error);
+    });
   }
 
   function scrollToHash(hash) {
@@ -228,7 +133,7 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     context.renderMeta(doc);
     content.innerHTML = payload.content_html || "";
-    maybeMountDocsViewerReport(doc, payload);
+    mountDocumentExtras(doc, payload);
     document.title = doc.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();

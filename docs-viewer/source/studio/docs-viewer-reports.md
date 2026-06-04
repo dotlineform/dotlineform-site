@@ -2,11 +2,11 @@
 doc_id: docs-viewer-reports
 title: Reports
 added_date: 2026-05-13
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 parent_id: docs-viewer
 viewable: true
 viewer_report: reports_list
-viewer_report_access: public
+viewer_report_access: manage
 ---
 # Docs Viewer Reports
 
@@ -33,19 +33,22 @@ Fields:
 
 - `viewer_report`: report id from the report metadata registry
 - `viewer_report_scope`: optional generated docs scope the report reads; defaults to the current viewer scope when omitted
-- `viewer_report_access`: optional access gate; supported values are `public`, `manage`, and `local`
+- `viewer_report_access`: optional access gate; supported values are `public`, `manage`, and `local`; `public` requires a named public-promotion slice before a public route loads report assets
 - `viewer_report_preset`: optional report-specific preset id
 
 If a report is not available in the current context, the document pane shows a small unavailable state instead of failing silently.
 
 ## Runtime Design
 
-The Docs Viewer document controller detects report metadata on the loaded document payload, creates a small report context, and delegates to the report controller.
+The manage Docs Viewer entrypoint opts into report mounting through `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`.
+The shared document controller renders the document payload and calls an optional document-extras hook; it does not import report runtime, report services, or report modules.
+Public entrypoints do not provide that hook, and public route config does not expose the report registry until a specific public report is promoted.
+
 The entry runtime wires the document controller but does not own report filtering, sorting, row rendering, or report-specific data shaping.
 
 The report controller:
 
-- loads the browser-visible report metadata registry
+- loads the report metadata registry supplied by the manage route config
 - normalizes report and preset metadata
 - checks the requested report id against the executable module allowlist
 - applies the report access policy
@@ -60,12 +63,13 @@ Report metadata lives in:
 
 - `docs-viewer/config/reports/reports.json`
 
-The browser-visible projection is:
+The browser-visible projection used by the manage route is:
 
 - `assets/data/docs/reports.json`
 
 The source registry describes report ids, titles, descriptions, default access policy, loader ids, and presets.
-The generated browser JSON is intentionally browser-visible and can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
+The generated browser JSON is browser-visible when the manage route loads it and can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
+Public `/library/` and `/analysis/` route configs do not reference this registry.
 
 Executable module loading remains allowlisted in:
 
@@ -134,6 +138,7 @@ Poor report candidates are workflows with writes, long-running operations, broad
 
 - `assets/data/docs/reports.json`
 - `docs-viewer/config/reports/reports.json`
+- `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`
 - `docs-viewer/runtime/js/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/`
 - `docs-viewer/static/css/docs-viewer-reports.css`

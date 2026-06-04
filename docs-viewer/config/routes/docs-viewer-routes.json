@@ -74,8 +74,7 @@
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "ui_text": "/docs-viewer/config/ui-text/public.json",
-        "report_registry": "/assets/data/docs/reports.json"
+        "ui_text": "/docs-viewer/config/ui-text/public.json"
       },
       "panels": {
         "index": { "enabled": true, "default_state": "normal" },
@@ -109,8 +108,7 @@
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "ui_text": "/docs-viewer/config/ui-text/public.json",
-        "report_registry": "/assets/data/docs/reports.json"
+        "ui_text": "/docs-viewer/config/ui-text/public.json"
       },
       "panels": {
         "index": { "enabled": true, "default_state": "normal" },

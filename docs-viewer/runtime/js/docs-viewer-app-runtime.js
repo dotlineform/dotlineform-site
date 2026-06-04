@@ -93,7 +93,6 @@ export function startDocsViewerRuntime(options) {
   var viewerPathname = routeContext.viewerPathname;
   var searchIndexUrl = routeContext.searchIndexUrl;
   var uiTextUrl = routeContext.uiTextUrl;
-  var reportRegistryUrl = routeContext.reportRegistryUrl;
   var managementBaseUrl = routeContext.managementBaseUrl;
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
@@ -200,6 +199,7 @@ export function startDocsViewerRuntime(options) {
     hasActiveQuery: hasActiveQuery,
     managementBaseUrl: function () { return managementBaseUrl; },
     meta: meta,
+    mountDocumentExtras: settings.mountDocumentExtras,
     more: more,
     projectDocumentShell: projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,
@@ -209,8 +209,8 @@ export function startDocsViewerRuntime(options) {
     renderSearchMode: renderSearchMode,
     renderSidebar: renderSidebar,
     renderStatusPills: renderStatusPills,
-    reportRegistryUrl: function () { return reportRegistryUrl; },
     results: results,
+    routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,

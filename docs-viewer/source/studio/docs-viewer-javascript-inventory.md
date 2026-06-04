@@ -155,6 +155,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - 2026-05-28 owner note: runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, document-index state creation, public/manage startup phase records, startup authority records, and initial startup sequencing moved to `docs-viewer/runtime/js/docs-viewer-app-composition.js`.
 - 2026-05-28 owner note: the returned app handle was narrowed to `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`. Broad `state`, app-composition internals, app-session internals, the management lazy loader, and route workflow bridges are no longer returned; search/recent, bookmarks, startup index loading, and management reloads now consume the private route workflow command contract instead of one-off runtime wrappers.
 - 2026-05-28 owner note: `compatibilityBridge` was removed from app-session, and `composition.state` was removed from app-composition. Focused tests now assert named state-domain and composition owner contracts rather than temporary compatibility aliases.
+- 2026-06-04 owner note: report mounting moved out of shared document-controller construction. The manage entrypoint now supplies a `mountDocumentExtras` hook; public entrypoint startup does not import report runtime, report service, report modules, or report registry data.
 - 2026-05-28 lifecycle note: this file remains the private app coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle. Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
 - This module now remains the runtime coordinator for focused controller construction, config handoff, focused-controller callback handoff, event handler definitions, private management/startup callback handoff, and the small returned app handle.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
@@ -209,8 +210,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused public/manage service-context projection owner.
 - Current risk score: 4.
-- Keep this module limited to projecting static route context into generated-read, config, report, and management service surfaces.
-- Public contexts must continue to omit management base URLs, local generated-read service base URLs, backend probes, and management service adapters. Do not move capability truth or write authority into this module.
+- Keep this module limited to projecting static route context into generated-read, config, and management service surfaces.
+- Public contexts must continue to omit report registry loads, management base URLs, local generated-read service base URLs, backend probes, and management service adapters. Do not move capability truth or write authority into this module.
 
 ### `docs-viewer/runtime/js/docs-viewer-report-service.js`
 
@@ -283,9 +284,9 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 5.
 - 2026-05-28 owner note: this controller now consumes explicit route-session, scope-config, selected-document, generated-data, and status command inputs instead of `context.state`.
-- 2026-05-28 owner note: local report endpoint access moved to `docs-viewer/runtime/js/docs-viewer-report-service.js`; this controller now passes a report-service adapter through report context instead of `managementBaseUrl`.
-- Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, generated-data-backed report read handoff, and report-service handoff.
-- Do not move URL/history primitives, tree visibility projection, sidebar DOM rendering, search/recent rendering, local report endpoint ownership, backend writes, or management action behavior into it.
+- 2026-06-04 owner note: report metadata interpretation, generated-data report reads, and local report-service handoff moved to manage-owned `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`; this shared controller now calls only an optional document-extras hook supplied by the entrypoint.
+- Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, and optional document-extras hook invocation.
+- Do not move URL/history primitives, tree visibility projection, sidebar DOM rendering, search/recent rendering, report runtime imports, local report endpoint ownership, backend writes, or management action behavior into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-sidebar.js`
 
@@ -350,6 +351,13 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-06-04 as the manage-owned renderer for selected-document status pills, `Edit`, and `Markdown source` controls.
 - Keep this module loaded only through manage-capable shell composition; public entrypoints and public-safe shared renderers must not import it statically or duplicate its control ids/labels.
 - Keep command behavior in `docs-viewer/runtime/js/docs-viewer-management.js` and its action/controller children.
+
+### `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`
+
+- Added 2026-06-04 as the manage-owned document report mounting module.
+- Keep this module loaded only through `docs-viewer/runtime/js/docs-viewer-manage.js`; public entrypoints must not import it statically or expose the report registry route-config field.
+- Keep report metadata detection, report-context construction, generated-data report reads, report registry URL handoff, and local report-service creation here before delegating to `docs-viewer/runtime/js/docs-viewer-reports.js`.
+- Do not move report runtime imports or local report-service construction back into shared public-safe document rendering.
 
 ### `docs-viewer/runtime/js/docs-viewer-main-view-host.js`
 
@@ -451,6 +459,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### Reports, Search, And Bookmarks
 
 - Keep reports self-contained and loaded through the report allowlist.
+- Keep report mounting behind the manage entrypoint until a named public-promotion slice defines a public-safe report loader, registry/data input, CSS, route config, and asset-load tests.
 - Keep local source-config and broken-links endpoint access behind `docs-viewer/runtime/js/docs-viewer-report-service.js`; report modules should consume `context.reportService` rather than `managementBaseUrl` or direct `window.fetch(...)`.
 - Extract shared report table or pager helpers only after at least two reports need the same behavior.
 - Keep search and bookmark storage/controller behavior focused; revisit if grouping, sync, export, or cross-scope behavior is added.

@@ -2,8 +2,6 @@ import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
 
-const REPORT_REGISTRY_URL = "/assets/data/docs/reports.json";
-
 const REPORT_LOADERS = {
   docs_index_table: {
     load: function () {
@@ -41,58 +39,6 @@ const REPORT_LOADERS = {
     }
   }
 };
-
-const FALLBACK_REPORT_REGISTRY = {
-  schema: "docs_viewer_reports_v1",
-  reports: [
-    {
-      reportId: "docs_index_table",
-      title: "Docs Index Table",
-      description: "Displays a sortable Docs Viewer index table for a selected docs scope.",
-      defaultAccess: "public",
-      loaderId: "docs_index_table",
-      presets: []
-    },
-    {
-      reportId: "reports_list",
-      title: "Reports List",
-      description: "Displays the configured Docs Viewer report metadata from the report registry.",
-      defaultAccess: "public",
-      loaderId: "reports_list",
-      presets: []
-    },
-    {
-      reportId: "source_config",
-      title: "Source Config",
-      description: "Displays Docs Viewer source config for all scopes in manage mode.",
-      defaultAccess: "manage",
-      loaderId: "source_config",
-      presets: []
-    },
-    {
-      reportId: "semantic_references",
-      title: "Semantic References",
-      description: "Displays generated semantic-reference targets and source docs.",
-      defaultAccess: "manage",
-      loaderId: "semantic_references",
-      presets: []
-    },
-    {
-      reportId: "docs_broken_links",
-      title: "Docs Broken Links",
-      description: "Runs the Docs Viewer broken-links audit for a selected scope.",
-      defaultAccess: "manage",
-      loaderId: "docs_broken_links",
-      presets: []
-    }
-  ],
-  reportsById: new Map()
-};
-FALLBACK_REPORT_REGISTRY.reportsById = new Map(
-  FALLBACK_REPORT_REGISTRY.reports.map(function (report) {
-    return [report.reportId, report];
-  })
-);
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -146,11 +92,15 @@ function normalizeReportRegistry(payload) {
 }
 
 function reportRegistryUrl(context) {
-  return cleanString(context && context.reportRegistryUrl) || REPORT_REGISTRY_URL;
+  return cleanString(context && context.reportRegistryUrl);
 }
 
 function loadReportRegistry(context) {
-  return fetch(appendAssetVersion(reportRegistryUrl(context)), {
+  const registryUrl = reportRegistryUrl(context);
+  if (!registryUrl) {
+    return Promise.reject(new Error("Report registry is not configured."));
+  }
+  return fetch(appendAssetVersion(registryUrl), {
     headers: { Accept: "application/json" },
     cache: "default"
   })
@@ -158,10 +108,7 @@ function loadReportRegistry(context) {
       if (!response.ok) throw new Error("Failed to load report registry.");
       return response.json();
     })
-    .then(normalizeReportRegistry)
-    .catch(function () {
-      return FALLBACK_REPORT_REGISTRY;
-    });
+    .then(normalizeReportRegistry);
 }
 
 function normalizeReportMetadata(payload) {

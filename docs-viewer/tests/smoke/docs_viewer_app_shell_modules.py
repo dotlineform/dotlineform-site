@@ -1562,6 +1562,17 @@ def assert_management_shell_mount_does_not_shift_document(page: Page) -> None:
                     document.head.appendChild(link);
                 });
             }
+            if (!document.querySelector('link[data-docs-viewer-manage-css-smoke]')) {
+                await new Promise((resolve, reject) => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = '/docs-viewer/static/css/docs-viewer-manage.css';
+                    link.dataset.docsViewerManageCssSmoke = 'true';
+                    link.onload = resolve;
+                    link.onerror = reject;
+                    document.head.appendChild(link);
+                });
+            }
             const module = await import('/docs-viewer/runtime/js/docs-viewer-app-shell.js');
             document.body.innerHTML = `
                 <section id="docsViewerRoot" class="docsViewer" data-allow-management="true">
@@ -3710,7 +3721,6 @@ def assert_service_context_contract(page: Page) -> None:
                     docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
                     generatedBaseUrl: 'http://127.0.0.1:8789',
                     managementBaseUrl: 'http://127.0.0.1:8789',
-                    reportRegistryUrl: '/assets/data/docs/reports.json',
                     uiTextUrl: '/docs-viewer/config/ui-text/public.json'
                 }
             });
@@ -3720,7 +3730,6 @@ def assert_service_context_contract(page: Page) -> None:
                     docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
                     generatedBaseUrl: 'http://127.0.0.1:8789/',
                     managementBaseUrl: 'http://127.0.0.1:8789/',
-                    reportRegistryUrl: '/assets/data/docs/reports.json',
                     uiTextUrl: '/docs-viewer/config/ui-text/manage.json'
                 }
             });
@@ -3729,7 +3738,7 @@ def assert_service_context_contract(page: Page) -> None:
                 publicGeneratedBase: publicContext.generatedRead.baseUrl,
                 publicManagement: publicContext.management,
                 publicConfigAuthority: publicContext.config.authority,
-                publicReportAuthority: publicContext.reports.authority,
+                publicReports: publicContext.reports || null,
                 manageReadOnly: manageContext.access.publicReadOnly,
                 manageGeneratedBase: manageContext.generatedRead.baseUrl,
                 manageManagementBase: manageContext.management && manageContext.management.baseUrl,
@@ -3742,7 +3751,7 @@ def assert_service_context_contract(page: Page) -> None:
         "publicGeneratedBase": "",
         "publicManagement": None,
         "publicConfigAuthority": "browser-safe config asset",
-        "publicReportAuthority": "browser-safe config asset",
+        "publicReports": None,
         "manageReadOnly": False,
         "manageGeneratedBase": "http://127.0.0.1:8789",
         "manageManagementBase": "http://127.0.0.1:8789",

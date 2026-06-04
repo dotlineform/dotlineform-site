@@ -210,7 +210,7 @@ export function resolveDocsViewerRouteConfig(options) {
     generatedBaseUrl: cleanString(firstPresent(rawConfig.generated_base_url, rawConfig.generatedBaseUrl)),
     docsViewerConfigUrl: cleanString(firstPresent(configUrls.docs_viewer, configUrls.docsViewer)),
     uiTextUrl: cleanString(firstPresent(configUrls.ui_text, configUrls.uiText)),
-    reportRegistryUrl: cleanString(firstPresent(configUrls.report_registry, configUrls.reportRegistry)),
+    reportRegistryUrl: cleanString(configUrls.report_registry),
     indexUrl: normalizePath(firstPresent(docsPaths.index_url, docsPaths.indexUrl)),
     searchIndexUrl: normalizePath(firstPresent(docsPaths.search_index_url, docsPaths.searchIndexUrl)),
     access: {

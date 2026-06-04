@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ae9430f347f3dd84d89642c0eb4e565c",
-    "generated_at_utc": "2026-06-04T13:16:49Z",
+    "version": "blake2b-225f8e4e68e6748948de9c295ed50208",
+    "generated_at_utc": "2026-06-04T16:25:24Z",
     "count": 247
   },
   "entries": [
@@ -3348,22 +3348,22 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-03 • Docs Viewer",
+      "display_meta": "2026-06-04 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
         "viewer",
         "reports",
         "docs viewer",
-        "2026-06-03",
+        "2026-06-04",
         "2026",
         "06",
-        "03"
+        "04"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-06-03 2026 06 03"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-06-04 2026 06 04"
     },
     {
       "id": "docs-viewer-runtime-boundary",

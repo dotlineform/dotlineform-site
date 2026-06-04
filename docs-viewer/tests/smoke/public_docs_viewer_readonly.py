@@ -156,6 +156,7 @@ def main() -> int:
                             routeId: root.dataset.routeId || "",
                             routeConfigUrl,
                             routeConfig,
+                            reportRegistryUrl: routeConfig.config_urls?.report_registry || "",
                             uiTextUrl,
                             uiText,
                             routeIds: (payload.routes || []).map(record => record.route_id),
@@ -184,6 +185,20 @@ def main() -> int:
                     for url in resource_urls
                     if "/docs-viewer/runtime/js/docs-viewer-management" in url
                 ]
+                report_runtime_urls = [
+                    url
+                    for url in resource_urls
+                    if (
+                        "/docs-viewer/runtime/js/docs-viewer-reports.js" in url
+                        or "/docs-viewer/runtime/js/docs-viewer-report-service.js" in url
+                        or "/docs-viewer/runtime/js/reports/" in url
+                    )
+                ]
+                report_registry_urls = [
+                    url
+                    for url in resource_urls
+                    if "/assets/data/docs/reports.json" in url
+                ]
                 blocked_css_urls = [
                     url
                     for url in resource_urls
@@ -211,6 +226,8 @@ def main() -> int:
                     raise AssertionError(f"{route} route config has unexpected viewer base URL: {root_attrs!r}")
                 if root_attrs["routeConfig"].get("config_urls", {}).get("ui_text") != "/docs-viewer/config/ui-text/public.json":
                     raise AssertionError(f"{route} route config did not use public UI text: {root_attrs!r}")
+                if root_attrs["reportRegistryUrl"]:
+                    raise AssertionError(f"{route} exposed report registry URL: {root_attrs!r}")
                 if root_attrs["uiTextUrl"] != "/docs-viewer/config/ui-text/public.json":
                     raise AssertionError(f"{route} loaded unexpected UI text URL: {root_attrs!r}")
                 if root_attrs["uiText"] != {"recently_added_button": "recently added"}:
@@ -237,6 +254,10 @@ def main() -> int:
                     raise AssertionError(f"{route} rendered management document controls")
                 if management_js_urls:
                     raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
+                if report_runtime_urls:
+                    raise AssertionError(f"{route} loaded report runtime JS: {report_runtime_urls!r}")
+                if report_registry_urls:
+                    raise AssertionError(f"{route} loaded report registry data: {report_registry_urls!r}")
                 if blocked_css_urls:
                     raise AssertionError(f"{route} loaded blocked Docs Viewer CSS: {blocked_css_urls!r}")
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T16:09:23Z",
+  "generated_at": "2026-06-04T16:28:47Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -341,7 +341,7 @@
       "parent_id": "studio-risk-analysis-policy",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 53090
+      "content_text_length": 54325
     },
     {
       "doc_id": "javascript-inventory",
@@ -674,7 +674,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-      "content_text_length": 42136
+      "content_text_length": 45437
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
@@ -1493,14 +1493,14 @@
       "doc_id": "docs-viewer-reports",
       "title": "Reports",
       "added_date": "2026-05-13",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-04",
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "parent_id": "docs-viewer",
       "viewer_report": "reports_list",
-      "viewer_report_access": "public",
+      "viewer_report_access": "manage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5751
+      "content_text_length": 6345
     },
     {
       "doc_id": "docs-viewer-runtime-boundary",
@@ -1511,7 +1511,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 33283
+      "content_text_length": 33832
     },
     {
       "doc_id": "docs-viewer-scopes",
