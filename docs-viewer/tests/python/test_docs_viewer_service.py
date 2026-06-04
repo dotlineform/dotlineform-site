@@ -127,6 +127,19 @@ def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -
     assert blocked == []
 
 
+def test_public_readonly_route_include_uses_public_entrypoint_contract() -> None:
+    readonly_include = (REPO_ROOT / "_includes/docs_viewer_readonly_route.html").read_text(encoding="utf-8")
+    shell_include = (REPO_ROOT / "_includes/docs_viewer_shell.html").read_text(encoding="utf-8")
+
+    assert "route_config_url='/docs-viewer/config/routes/docs-viewer-public-routes.json'" in readonly_include
+    assert "allow_management=false" in readonly_include
+    assert "docs_viewer_management_route.html" not in readonly_include
+    assert "docs-viewer/static/css/docs-viewer.css" in shell_include
+    assert "docs-viewer/static/css/docs-viewer-manage.css" not in shell_include
+    assert "docs-viewer/static/css/docs-viewer-reports.css" not in shell_include
+    assert "default: '/docs-viewer/runtime/js/docs-viewer-public.js'" in shell_include
+
+
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:
     entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)

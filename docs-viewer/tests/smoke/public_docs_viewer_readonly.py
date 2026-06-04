@@ -177,6 +177,9 @@ def main() -> int:
                 manage_document_control_count = page.locator(
                     "#docsViewerManageEditButton, #docsViewerManageSourceButton, #docsViewerStatusPills"
                 ).count()
+                scope_lifecycle_control_count = page.locator(
+                    "#docsViewerManageNewScopeButton, #docsViewerManageDeleteScopeButton, .docsViewerScopeLifecycle"
+                ).count()
                 resource_urls = page.evaluate(
                     """() => performance.getEntriesByType('resource').map(entry => entry.name)"""
                 )
@@ -193,6 +196,11 @@ def main() -> int:
                         or "/docs-viewer/runtime/js/docs-viewer-report-service.js" in url
                         or "/docs-viewer/runtime/js/reports/" in url
                     )
+                ]
+                scope_lifecycle_urls = [
+                    url
+                    for url in resource_urls
+                    if "/docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js" in url
                 ]
                 report_registry_urls = [
                     url
@@ -252,10 +260,14 @@ def main() -> int:
                     raise AssertionError(f"{route} rendered management controls")
                 if manage_document_control_count:
                     raise AssertionError(f"{route} rendered management document controls")
+                if scope_lifecycle_control_count:
+                    raise AssertionError(f"{route} rendered scope lifecycle controls")
                 if management_js_urls:
                     raise AssertionError(f"{route} loaded management-only JS: {management_js_urls!r}")
                 if report_runtime_urls:
                     raise AssertionError(f"{route} loaded report runtime JS: {report_runtime_urls!r}")
+                if scope_lifecycle_urls:
+                    raise AssertionError(f"{route} loaded scope lifecycle JS: {scope_lifecycle_urls!r}")
                 if report_registry_urls:
                     raise AssertionError(f"{route} loaded report registry data: {report_registry_urls!r}")
                 if blocked_css_urls:
