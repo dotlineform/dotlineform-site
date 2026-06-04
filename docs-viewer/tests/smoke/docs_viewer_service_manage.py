@@ -264,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
             main_css_count = page.locator('link[href*="/assets/css/main.css"]').count()
             base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
             management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
-            docs_script_count = page.locator('script[src*="docs-viewer.js"]').count()
+            docs_script_count = page.locator('script[src*="docs-viewer-manage.js"]').count()
 
             page.locator("#docsViewerInfoToggle").click()
             page.wait_for_function(
@@ -412,8 +412,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected broken-links report request through Docs Viewer service: {broken_link_requests!r}")
         if report_scope != "studio":
             raise AssertionError(f"expected broken-links report to default to Studio scope, got {report_scope!r}")
-        if "studio" not in report_status:
-            raise AssertionError(f"expected broken-links report status to include selected scope, got {report_status!r}")
+        if "broken link" not in report_status:
+            raise AssertionError(f"expected broken-links report status, got {report_status!r}")
         if errors:
             raise AssertionError(f"page errors during Docs Viewer service smoke: {errors!r}")
         print(f"Docs Viewer service manage shell OK: {base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage")

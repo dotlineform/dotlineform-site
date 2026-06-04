@@ -29,7 +29,7 @@ It should not implement local manage mode, backend writes, source editing, seman
 - Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow), especially the JavaScript maintenance gate for shared runtime files.
 - This slice is fixture/proof work, not a feature layer.
 - Keep public read-only portability first-class: one outside-project fixture should prove the viewer can boot and navigate without dotlineform incidental routes.
-- Keep `docs-viewer/runtime/js/docs-viewer.js` as the stable public entrypoint.
+- Keep `docs-viewer/runtime/js/docs-viewer-public.js` as the stable public entrypoint.
 - Keep route config and access projection as the app-shell gate; the fixture must avoid management-only CSS, JavaScript, shell markup, and service URLs.
 - Keep generated docs/search payloads static and fixture-local.
 - Keep backend reachability, source writes, imports, settings saves, scope lifecycle, delete/move behavior, rebuild behavior, and generated-data capability checks out of the fixture.

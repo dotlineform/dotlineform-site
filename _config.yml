@@ -128,6 +128,7 @@ exclude:
   - docs-viewer/runtime/js/docs-html-import-modals.js
   - docs-viewer/runtime/js/docs-html-import-render.js
   - docs-viewer/runtime/js/docs-html-import-workflow.js
+  - docs-viewer/runtime/js/docs-viewer-manage.js
   - docs-viewer/runtime/js/docs-viewer-management.js
   - docs-viewer/runtime/js/docs-viewer-management-action-workflow.js
   - docs-viewer/runtime/js/docs-viewer-management-actions.js

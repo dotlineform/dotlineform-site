@@ -137,3 +137,15 @@ export function startDocsViewerApp(options) {
   });
   return root.__docsViewerAppBootPromise;
 }
+
+export function startDocsViewerPublicApp(options) {
+  return startDocsViewerApp(Object.assign({}, options || {}, {
+    appKind: "public"
+  }));
+}
+
+export function startDocsViewerManageApp(options) {
+  return startDocsViewerApp(Object.assign({}, options || {}, {
+    appKind: "manage"
+  }));
+}

@@ -102,15 +102,17 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 48 | new | `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` | 1 | 1 | 1 | 1 | 4 | App-shell-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer. |
 | 49 | new | `docs-viewer/runtime/js/docs-viewer-app-boot.js` | 1 | 1 | 1 | 1 | 4 | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
 | 50 | new | `docs-viewer/runtime/js/docs-viewer-app-session.js` | 1 | 1 | 1 | 1 | 4 | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection. |
-| 51 | new | `docs-viewer/runtime/js/docs-viewer.js` | 1 | 1 | 1 | 1 | 4 | Stable Docs Viewer entrypoint wrapper that imports and starts the app boot owner. |
+| 51 | new | `docs-viewer/runtime/js/docs-viewer-public.js` | 1 | 1 | 1 | 1 | 4 | Public Docs Viewer entrypoint wrapper that imports and starts the public app boot owner. |
+| 52 | new | `docs-viewer/runtime/js/docs-viewer-manage.js` | 1 | 1 | 1 | 1 | 4 | Manage Docs Viewer entrypoint wrapper that imports and starts the manage app boot owner. |
 
 ## Follow-Up Notes
 
-### `docs-viewer/runtime/js/docs-viewer.js`
+### `docs-viewer/runtime/js/docs-viewer-public.js` And `docs-viewer/runtime/js/docs-viewer-manage.js`
 
 - Current risk score: 4.
-- This file is now the shared ES module entrypoint wrapper loaded by route shells.
-- 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; `docs-viewer.js` only initializes that owner before existing route boot and waits for it before management/theme binding.
+- These files are the route-specific ES module entrypoint wrappers loaded by public and manage route shells.
+- 2026-06-04 owner note: `docs-viewer/runtime/js/docs-viewer.js` was retired as a shared boot path. Public route shells now load `docs-viewer-public.js`; the local `/docs/` service shell now loads `docs-viewer-manage.js`.
+- 2026-05-27 owner note: management action-area shell coordination moved to `docs-viewer/runtime/js/docs-viewer-app-shell.js`; the entrypoint wrappers initialize that owner before existing route boot and wait for it before management/theme binding.
 - 2026-05-31 owner note: top-bar layout now lives in `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`, and viewer toolbar controls live in `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`. The index-view toggle and info/context toggle are viewer-toolbar controls rather than management-action or document-meta controls.
 - 2026-05-27 owner note: index panel chrome composition moved to `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`, coordinated by the app shell before `docs-viewer.js` reads the preserved `docsViewerSidebarToggle`, `docsViewerSidebarExpand`, and `docsViewerNav` IDs.
 - 2026-06-03 owner note: main-view shell composition now lives in `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js`, coordinated by the app shell before runtime controllers read the preserved rendered-document metadata/search-result IDs. The app-shell boundary exposes `mainView` refs rather than `documentShell` refs.
@@ -451,7 +453,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 1. Refresh [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) first using the parent inventory scoring model.
 2. Copy the Docs Viewer subset into this document and preserve the category columns.
 3. Update follow-up notes only for files whose risk category changed or where new implementation work is planned.
-4. Keep `docs-viewer/runtime/js/docs-viewer.js` separate from the all-script implementation plan unless the user explicitly starts that shared-runtime track.
+4. Keep `docs-viewer/runtime/js/docs-viewer-public.js` and `docs-viewer/runtime/js/docs-viewer-manage.js` separate from the all-script implementation plan unless the user explicitly starts that entrypoint track.
 
 ## Related References
 

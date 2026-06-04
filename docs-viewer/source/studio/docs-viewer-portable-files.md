@@ -41,7 +41,7 @@ The retired Jekyll `docs/index.md` management adapter should not be restored.
 
 Copy the shared viewer runtime files:
 
-- `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-public.js`
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js`
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js`
 - `docs-viewer/runtime/js/docs-viewer-app-session.js`

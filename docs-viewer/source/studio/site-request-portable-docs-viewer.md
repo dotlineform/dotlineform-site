@@ -229,14 +229,14 @@ Acceptance:
 
 Status: implemented.
 
-Current scope data is split between `docs-viewer/config/scopes/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `docs-viewer/runtime/js/docs-viewer.js`, search config, and import-service allowlists.
+Current scope data is split between `docs-viewer/config/scopes/docs_scopes.json`, `_includes/docs_viewer_shell.html`, the Docs Viewer public/manage entrypoints, search config, and import-service allowlists.
 
 Tasks:
 
 - create a Docs Viewer-owned browser config (done)
 - generate or load the management scope list from scope config (done)
 - remove hardcoded scope options from `_includes/docs_viewer_shell.html` (done)
-- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `docs-viewer/runtime/js/docs-viewer.js` (done)
+- remove hardcoded `DOCS_ROUTE_SCOPES` entries from the Docs Viewer runtime entrypoint path (done)
 - make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven (done)
 - remove remaining hardcoded scope lists that the generated config replaces in the same slice (done for viewer runtime, Docs Import scope options, management URLs, docs-source validation, docs rebuild loops, live rebuild watching, and broken-link route parsing)
 

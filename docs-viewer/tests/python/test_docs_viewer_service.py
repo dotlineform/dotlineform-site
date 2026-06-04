@@ -115,7 +115,7 @@ def test_load_service_config_reads_static_site_env() -> None:
 
 
 def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     excluded = jekyll_excludes(REPO_ROOT)
     blocked = sorted(
@@ -175,7 +175,7 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert manage_route["access"]["allow_scope_query"] is True
     assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
     assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
-    assert "/docs-viewer/runtime/js/docs-viewer.js?v=test-version" in rendered
+    assert "/docs-viewer/runtime/js/docs-viewer-manage.js?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-management.css?v=test-version" in rendered
     assert "/studio/api/docs" not in rendered
     assert "/studio/app/assets/css/studio.css" not in rendered
@@ -257,7 +257,9 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:
         return docs_viewer_service.DocsViewerRequestHandler.is_allowed_static_path(object(), path)
 
-    assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is True
+    assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is True
+    assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is True
+    assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is True

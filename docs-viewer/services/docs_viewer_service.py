@@ -56,6 +56,9 @@ STATIC_FILES = {
     "/safari-pinned-tab.svg",
     "/site.webmanifest",
 }
+RETIRED_STATIC_PATHS = {
+    "/docs-viewer/runtime/js/docs-viewer.js",
+}
 MAX_BODY_BYTES = 1024 * 1024
 GENERATED_READ_PATHS = {
     routes.GENERATED_INDEX_PATH,
@@ -173,7 +176,8 @@ def validate_service_config(config: DocsViewerServiceConfig) -> None:
 def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-public.js",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-manage.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-access.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-context.js",
         repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-runtime.js",
@@ -393,6 +397,8 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def is_allowed_static_path(self, path: str) -> bool:
+        if path in RETIRED_STATIC_PATHS:
+            return False
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
 
     def origin_allowed_for_local_api(self) -> bool:

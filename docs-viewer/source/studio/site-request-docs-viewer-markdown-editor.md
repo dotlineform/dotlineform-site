@@ -261,7 +261,7 @@ Candidate files inside that folder:
 - source editor state/render modules as needed
 - management service modules for source read/write/rebuild endpoints
 
-`docs-viewer/runtime/js/docs-viewer.js` should remain orchestration only.
+The manage Docs Viewer runtime should remain orchestration only.
 It should initialize or register the source-editor module when available and hand off selected document, scope, rendered-payload reload, and status callbacks.
 
 ## Proposed Implementation Steps

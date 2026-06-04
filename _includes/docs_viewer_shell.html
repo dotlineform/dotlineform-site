@@ -35,4 +35,5 @@
   <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
 </section>
 
-<script type="module" src="{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- assign docs_viewer_entrypoint = include.entrypoint | default: '/docs-viewer/runtime/js/docs-viewer-public.js' -%}
+<script type="module" src="{{ docs_viewer_entrypoint | relative_url }}?v={{ site.time | date: '%s' }}"></script>

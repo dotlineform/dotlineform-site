@@ -66,13 +66,14 @@ This include renders:
 
 It also provides the stable mount points that the app shell fills before the runtime binds route behavior.
 
-### 3. Shared runtime
+### 3. Public And Manage Entrypoints
 
-The viewer behavior starts from:
+The viewer behavior starts from route-specific entrypoints:
 
-- `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-public.js` for public read-only routes
+- `docs-viewer/runtime/js/docs-viewer-manage.js` for the local `/docs/` management shell
 
-The entry module delegates boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
+The entry modules delegate boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
 The private app runtime coordinator delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
 Current helper modules:
 

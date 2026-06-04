@@ -329,6 +329,64 @@ Suggested order:
 The nav/tree payload work should be part of this lighter-public-install program, but it should come after the entrypoint/shell split.
 Doing it first would make the new payloads fit the existing broad runtime, preserving the ambiguity this request is trying to remove.
 
+## Target Entrypoint Graphs
+
+This graph target is based on these baseline sections:
+
+- Current Public Route Loads
+- Current Manage Route Loads
+- Current Shared Static Import Graph
+
+### Public Entrypoint Graph
+
+`docs-viewer-public.js` should initially boot the current public reader behavior while making the public entry asset explicit.
+The first implementation slice may reuse current shared boot/runtime modules where the baseline marks them as mixed, but public route HTML should point at the public entrypoint so later slices can remove mixed imports without changing route templates again.
+
+Target first-slice public graph:
+
+- `docs-viewer-public.js`
+- public boot wrapper or shared boot with an explicit public app kind
+- route-context and public route-registry resolution from `docs-viewer/config/routes/docs-viewer-public-routes.json`
+- public shell path that renders top bar, reader toolbar, index panel, main view, info panel, status, and bookmark row only
+- public config read from `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- public generated/static docs index, by-id payload, and search index reads
+- public reader controllers for route workflow, document rendering, search, bookmarks, info panel, sidebar, hosted metadata info, and panel layout
+- shared primitives for access projection, route URLs, asset-version URLs, search normalization, rendering helpers, and tree grouping until nav/tree payloads replace browser-time grouping
+
+Target public graph exclusions:
+
+- `docs-viewer-management*.js`
+- `docs-html-import*.js`
+- `docs-viewer-scope-lifecycle.js`
+- `docs-viewer-management-client.js`
+- `modules/source-editor/source-editor.js`
+- report runtime, report registry, and report CSS until a named public report is promoted
+- management shell/action renderers, management modals, settings, status mutation, context menu, drag/drop, source opening, and local generated-read service probes
+
+### Manage Entrypoint Graph
+
+`docs-viewer-manage.js` should boot the local `/docs/` management shell.
+It may continue to compose the current full runtime while the public split proceeds, because manage remains the owner of local-service capabilities and management UI.
+
+Target first-slice manage graph:
+
+- `docs-viewer-manage.js`
+- manage boot wrapper or shared boot with an explicit manage app kind
+- route-context and manage route-registry resolution from `docs-viewer/config/routes/docs-viewer-routes.json`
+- manage shell path with top bar, reader toolbar, management action row, index panel, management shell host, main view, info panel, status, and bookmark row
+- manage config read from `docs-viewer/config/defaults/docs-viewer-config.json`
+- manage UI text read from the current shared UI text bundle until the UI-text split task replaces it
+- generated docs/search reads from local generated assets or loopback generated-read service
+- management capability checks and local management client calls
+- management actions, modals, source editor, import, settings/status/viewability mutation, scope lifecycle, drag/drop, report runtime, report registry, and report service
+- shared reader controllers and primitives where they remain public-safe
+
+Target manage graph exclusions:
+
+- public route registry as a manage boot dependency
+- public-only UI text or public-only CSS once those split tasks are complete
+- silent fallback to public payloads when local manage data is inaccessible
+
 ## Implementation Tasks
 
 Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
@@ -336,10 +394,10 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | action |
 | --- | --- | --- |
 | 1 | done | Record the public/manage install policy in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary). |
-| 2 | planned | Complete [Docs Viewer Public/Manage Entrypoint Baseline Inventory](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline), including current public route loads, manage route loads, shared static import graph, JSON/config/data loads, CSS loads/selectors, public/manage DOM controls, fallback/compatibility paths, and current index tree construction. |
-| 3 | planned | Define the target public entrypoint import graph and the target manage entrypoint import graph, citing baseline sections: Current Public Route Loads, Current Manage Route Loads, and Current Shared Static Import Graph. |
-| 4 | planned | Create a public shell renderer or public shell path that renders only public controls and public panel mounts, citing baseline sections: Current Public DOM Controls and Current Public Route Loads. |
-| 5 | planned | Create a manage shell renderer or manage shell path that keeps the full current management-capable shell, citing baseline sections: Current Manage DOM Controls and Current Manage Route Loads. |
+| 2 | done | Complete [Docs Viewer Public/Manage Entrypoint Baseline Inventory](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints-baseline), including current public route loads, manage route loads, shared static import graph, JSON/config/data loads, CSS loads/selectors, public/manage DOM controls, fallback/compatibility paths, and current index tree construction. |
+| 3 | done | Define the target public entrypoint import graph and the target manage entrypoint import graph, citing baseline sections: Current Public Route Loads, Current Manage Route Loads, and Current Shared Static Import Graph. |
+| 4 | in progress | Create a public shell renderer or public shell path that renders only public controls and public panel mounts, citing baseline sections: Current Public DOM Controls and Current Public Route Loads. Explicit public entrypoint and public route shell path are in place; boot-created hidden manage controls remain task 9 follow-through. |
+| 5 | done | Create a manage shell renderer or manage shell path that keeps the full current management-capable shell, citing baseline sections: Current Manage DOM Controls and Current Manage Route Loads. |
 | 6 | planned | Split public and manage UI text so public routes do not load management/import/scope lifecycle copy, citing baseline sections: Current JSON Config And Data Loads and Current Public Route Loads. |
 | 7 | planned | Split public and manage CSS loading so public routes do not load report or management styling unless the specific public surface needs it, citing baseline sections: Current CSS Loads And Selectors and Current Public Route Loads. |
 | 8 | planned | Move report runtime, report CSS, and report registry loading behind the manage entrypoint until a specific public report is promoted, citing baseline sections: Current Public Route Loads, Current Manage Route Loads, and Current JSON Config And Data Loads. |

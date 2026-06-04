@@ -136,6 +136,7 @@ Current route shells:
 Current shared docs-viewer layer:
 
 - `_includes/docs_viewer_shell.html`
-- `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-public.js`
+- `docs-viewer/runtime/js/docs-viewer-manage.js`
 
 The fork/no-fork rule for that shared viewer is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary).

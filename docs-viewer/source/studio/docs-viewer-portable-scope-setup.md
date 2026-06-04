@@ -131,7 +131,7 @@ Local Studio points Docs links, generated reads, and management actions at the c
 The standalone Docs Viewer service injects `DOCS_VIEWER_BASE_URL` into the served route-config registry for local management and generated-read URLs.
 The checked-in static route-config asset keeps those URLs blank so public builds do not expose localhost state.
 The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
-Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `docs-viewer/runtime/js/docs-viewer.js`.
+Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or the Docs Viewer runtime entrypoints.
 If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
 The scope delete lifecycle action removes the matching `ui_statuses_by_scope` entry from `docs-viewer/config/scopes/docs_scopes.json` along with the scope record.
 If the new scope uses a new availability type, add or update its `docs_viewer.scope_type_badges` entry so the management scope dropdown can prefix the scope name consistently.

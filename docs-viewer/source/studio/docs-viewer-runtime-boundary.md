@@ -13,9 +13,10 @@ viewable: true
 This document records the current boundary between:
 
 - scope-specific docs shells such as service-owned `/docs/` and public Jekyll `/library/`
-- the shared Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer.js`
+- the public Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer-public.js`
+- the local/manage Docs Viewer entrypoint in `docs-viewer/runtime/js/docs-viewer-manage.js`
 
-It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
+It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking stable lower-level viewer primitives.
 
 It also records the public/manage promotion policy for Docs Viewer runtime work.
 Public read-only installs should be lightweight deliverables that import only the data, JavaScript, CSS, and browser-visible config they need.
@@ -26,8 +27,10 @@ Local/manage installs can keep the full management surface, local-service workfl
 Current model:
 
 - scope pages may diverge at the route-shell level
-- the viewer runtime remains shared
-- the structural shell include remains shared
+- public and manage routes load separate entrypoint assets
+- public and manage routes still share lower-level boot/runtime modules where the current slice has not split them yet
+- the public structural shell include renders only public shell mounts
+- the local manage shell renders the management-capable shell
 
 Current shell examples:
 
@@ -35,9 +38,10 @@ Current shell examples:
 - `library/index.md`
 - `analysis/index.md`
 
-Current shared implementation:
+Current entrypoints and shared implementation:
 
-- `docs-viewer/runtime/js/docs-viewer.js` as the stable shared entrypoint loaded by route shells
+- `docs-viewer/runtime/js/docs-viewer-public.js` as the public read-only entrypoint loaded by public route shells
+- `docs-viewer/runtime/js/docs-viewer-manage.js` as the local/manage entrypoint loaded by the Docs Viewer service shell
 - `docs-viewer/runtime/js/docs-viewer-app-boot.js` as the app boot owner for root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup
 - `docs-viewer/runtime/js/docs-viewer-app-composition.js` as the app-composition owner for runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, config-service creation, document-index state creation, public/manage startup phase descriptions, startup authority notes, and initial startup phase sequencing
 - `docs-viewer/runtime/js/docs-viewer-app-session.js` as the app-session owner for state default creation, named state-domain facades, and public/manage route-session projection. It still returns the broad state object for runtime-internal controller handoff while controller families finish moving to explicit domains, but it no longer exposes a separate compatibility bridge.

@@ -40,14 +40,14 @@ Split refresh status:
 Rescored on 2026-05-21 from the current filesystem inventory.
 Category scores may range from 0 to 3 under the current policy.
 The normal acceptable target remains 4 or lower; no current row uses a category score of 0.
-`docs-viewer/runtime/js/docs-viewer.js` remains in the table for completeness, but implementation work for that shared entry runtime is tracked separately.
+Docs Viewer entrypoint/runtime work is tracked separately in [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
 
 ## Summary
 
 - Current local Analytics browser modules under `analytics-app/app/frontend/js/`: 58 files, 16,488 lines.
 - Current local Studio browser modules under `studio/app/frontend/js/`: 86 files, 17,304 lines.
 - The table still includes public runtime, Docs Viewer runtime, UI Catalogue, and retired reference rows that are outside those two local app roots.
-- Files above target score 4, excluding `docs-viewer/runtime/js/docs-viewer.js`: 55
+- Files above target score 4, excluding the separate Docs Viewer runtime track: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
 | Score | Files |
@@ -63,7 +63,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 
 | Rank | File | Family | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | `docs-viewer/runtime/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
+| 1 | Docs Viewer runtime track | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Separate Docs Viewer public/manage entrypoints now delegate into shared boot/runtime owners; route loading and payload composition remain tracked in the Docs Viewer inventory. |
 | 2 | `analytics-app/app/frontend/js/analytics-tag-editor.js` | Analytics tag routes | 2 | 1 | 1 | 1 | 5 | Series tag editor route shell after shared route-state projection, shared save-mode re-probe lifecycle extraction, and selected-work/tag-entry interaction state extraction; route boot, shell rendering, event wiring, save handoff, and status/result rendering remain route-local. |
 | 3 | `studio/app/frontend/js/catalogue-work-actions.js` | Catalogue editors | 2 | 1 | 2 | 1 | 6 | Work action coordinator after shared save/build/action presentation projection, bulk build-target projection, and Work action record/store sync extraction; service request construction, action sequencing, route refresh, delete navigation, and media refresh remain route-local. |
 | 4 | `studio/app/frontend/js/catalogue-work-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work route shell after state construction moved to `catalogue-work-editor-state.js` and DOM event binding moved to `catalogue-work-editor-events.js`; validation, update coordination, selection/action context handoff, and Work-specific route-state transitions remain route-local. |
