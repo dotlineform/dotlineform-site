@@ -1,0 +1,10 @@
+{
+  "doc_id": "docs-viewer-info-panel",
+  "title": "Docs Viewer Info Panel",
+  "added_date": "2026-06-04 11:43",
+  "last_updated": "2026-06-04 11:43",
+  "source_path": "docs-viewer-info-panel.md",
+  "viewer_url": "/docs/?scope=studio&doc=docs-viewer-info-panel",
+  "parent_id": "change-requests",
+  "content_html": "<h1>Docs Viewer Info Panel</h1>\n<p>status: to be implemented</p>\n<h2>New behaviour</h2>\n<p>The public info panel should not mirror the manage-mode metadata surface. For public read-only routes, the info panel should display only public reader-facing document data:</p>\n<ul>\n<li><code>title</code></li>\n<li><code>summary</code></li>\n<li><code>last updated</code></li>\n</ul>\n<h2>Design</h2>\n<ul>\n<li>the info panel should read from <code>by-id</code> payloads, not public index rows, not <code>index.json</code>. this should be a consistent principle for both local and public routes.</li>\n<li>keep manage mode compatible with the shared runtime while allowing local/manage projections to be richer than public projections</li>\n<li>preserve public route behavior for tree navigation, selected document loading, search, recently-added, and info-panel opening</li>\n</ul>\n<h2>Implementation Tasks</h2>\n<p>Allowed statuses are <code>planned</code>, <code>in progress</code>, <code>done</code>, and <code>deferred</code>.</p>\n<table>\n<thead>\n<tr>\n<th>ID</th>\n<th>status</th>\n<th>action</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>planned</td>\n<td></td>\n</tr>\n</tbody>\n</table>\n<h2>Acceptance Criteria</h2>\n<ul>\n<li>public info panel reads summary from by-id payloads, not public index rows</li>\n<li>public info panel shows only reader-facing metadata</li>\n<li>public read-only routes do not load management-only JS/CSS or management service data</li>\n<li>manage mode still opens and edits metadata through its existing management surfaces</li>\n</ul>\n"
+}

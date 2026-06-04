@@ -12,7 +12,6 @@ viewable: true
 Status:
 
 - draft
-- related request: [Data Sharing Docs Internal Index Request](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index)
 
 ## Summary
 
@@ -33,7 +32,6 @@ The public runtime should use a small index for tree/navigation and read richer 
 
 ## Non-Goals
 
-- no Data Sharing contract migration in this request; that belongs to [Data Sharing Docs Internal Index Request](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index)
 - no removal of public by-id rendered document payloads
 - no change to docs source front matter fields
 - no management metadata modal redesign
@@ -114,4 +112,3 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 - public info panel shows only reader-facing metadata
 - public read-only routes do not load management-only JS/CSS or management service data
 - manage mode still opens and edits metadata through its existing management surfaces
-- Data Sharing no longer depends on public scope indexes for tooling metadata before `content_text_length` or similar tooling fields are removed

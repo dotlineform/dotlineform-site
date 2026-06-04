@@ -8,19 +8,43 @@ ui_status: draft
 
 # tmp
 
+## source
+
+all scopes:
+`docs-viewer/source` - source markdown
+
+# published
+
+management scopes:
+`docs-viewer/generated/docs` - published JSON for each management scope
+
+e.g. for `studio`:
+`docs-viewer/generated/docs/studio/by-id` - full data, JSON file for each doc
+`docs-viewer/generated/docs/studio/index.json` - metadata, all docs
+
+public scopes:
+`assets/data/docs/scopes` - published JSON for each public scope
+
+e.g. for `library`:
+`assets/data/docs/scopes/library/by-id` - full data, JSON file for each doc
+`assets/data/docs/scopes/library/index.json` - metadata, all docs
+
+
+`index.json` should only contain what is necessary to build the index tree view
+`by-id` for public scopes should only contain what is needed
+
+
+- public scopes do not load any code that is used for local/manage scopes.
+
+
+---
+
 semantic references:
 
 - registry: defines what they are, what they can do, who they involve (like tag registry)
 - assignments: what actual relationships have been defined (like tag assignments)
 
 a lot of this is already in the request docs, just needs tidying up. see also chatgpt notes - need to import them
-
-
----
-
-
-
-
 
 ---
 
@@ -29,9 +53,7 @@ this keeps the css modular and easier to maintain.
 do you agree this is a sensible approach?
 
 
-
 ---
-
 
 docs viewer config:
 
