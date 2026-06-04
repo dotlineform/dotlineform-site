@@ -3,9 +3,9 @@ doc_id: task-template
 title: Task Template
 added_date: "2026-06-04 20:59"
 last_updated: "2026-06-04 20:59"
+ui_status: planned
 parent_id: dev-home
 ---
-
 # [Task Title]
 
 This is the specification for task [#] in [link to tasks tracker document].
@@ -60,3 +60,4 @@ Status: `planned` | `in progress` | `done` | `deferred`
 ## task close
 
 - add a handoff note to the following task.
+- set the status of this task in the top section and front matter `ui_status`.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cd278e5cf7e10f1fc6b70c0ec50e4fdf",
-    "generated_at_utc": "2026-06-04T20:47:36Z",
+    "version": "blake2b-4eb6931843cd2bd951317faca5cea552",
+    "generated_at_utc": "2026-06-04T22:06:02Z",
     "count": 247
   },
   "entries": [
@@ -215,22 +215,22 @@
       "kind": "doc",
       "title": "Tag Services",
       "href": "/docs/?scope=studio&doc=analytics-tag-services",
-      "last_updated": "2026-07-02",
+      "last_updated": "2026-06-02",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-07-02 • Analytics",
+      "display_meta": "2026-06-02 • Analytics",
       "search_terms": [
         "analytics-tag-services",
         "analytics",
         "tag",
         "services",
         "tag services",
-        "2026-07-02",
+        "2026-06-02",
         "2026",
-        "07",
+        "06",
         "02"
       ],
-      "search_text": "analytics-tag-services analytics tag services tag services 2026-07-02 2026 07 02"
+      "search_text": "analytics-tag-services analytics tag services tag services 2026-06-02 2026 06 02"
     },
     {
       "id": "analytics-tag-source-data",

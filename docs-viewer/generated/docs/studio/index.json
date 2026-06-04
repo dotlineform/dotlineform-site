@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T21:59:25Z",
+  "generated_at": "2026-06-04T22:06:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -110,8 +110,8 @@
     {
       "doc_id": "analytics-tag-services",
       "title": "Tag Services",
-      "added_date": "2026-07-02",
-      "last_updated": "2026-07-02",
+      "added_date": "2026-06-02",
+      "last_updated": "2026-06-02",
       "source_path": "analytics-tag-services.md",
       "viewer_url": "/docs/?scope=studio&doc=analytics-tag-services",
       "parent_id": "analytics",
@@ -1164,8 +1164,9 @@
       "source_path": "task-template.md",
       "viewer_url": "/docs/?scope=studio&doc=task-template",
       "parent_id": "dev-home",
+      "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/task-template.json",
-      "content_text_length": 1529
+      "content_text_length": 1606
     },
     {
       "doc_id": "tasks-tracker-template",
@@ -1175,6 +1176,7 @@
       "source_path": "tasks-tracker-template.md",
       "viewer_url": "/docs/?scope=studio&doc=tasks-tracker-template",
       "parent_id": "dev-home",
+      "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
       "content_text_length": 3362
     },

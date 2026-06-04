@@ -1,8 +1,8 @@
 ---
 doc_id: analytics-tag-services
 title: Tag Services
-added_date: 2026-07-02
-last_updated: 2026-07-02
+added_date: 2026-06-02
+last_updated: 2026-06-02
 parent_id: analytics
 ---
 # Tag Services

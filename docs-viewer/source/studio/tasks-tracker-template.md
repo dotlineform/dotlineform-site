@@ -3,9 +3,9 @@ doc_id: tasks-tracker-template
 title: Tasks Tracker Template
 added_date: "2026-06-04 20:26"
 last_updated: "2026-06-04 20:26"
+ui_status: planned
 parent_id: dev-home
 ---
-
 # [Implementation Name]
 
 This is the tracker for implementing [link to request document].
