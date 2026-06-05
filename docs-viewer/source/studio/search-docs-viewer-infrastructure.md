@@ -48,7 +48,7 @@ Docs Viewer browser config is generated from the same scope config by:
 
 - `docs-viewer/build/build_docs.py`
 
-The generated browser config includes per-scope docs index URLs and search index URLs.
+The generated browser config includes per-scope docs tree, recently-added, selected-payload, and search index URLs.
 It also emits a Docs Viewer search policy payload with the docs-domain `record_update` targeted policy.
 
 Docs Viewer search does not use `studio/services/catalogue/search/build_config.json`.
@@ -71,27 +71,21 @@ The same entrypoint supports any configured Docs Viewer scope, including `studio
 
 Current source input:
 
-- the scope's generated Docs Viewer index, normally `<scope output>/index.json`
-
-For example:
-
-- `docs-viewer/generated/docs/studio/index.json`
-- `assets/data/docs/scopes/library/index.json`
-- `assets/data/docs/scopes/analysis/index.json`
+- the configured Docs Viewer source root for the requested scope
 
 Current pipeline shape:
 
 1. load the requested scope from `docs-viewer/config/scopes/docs_scopes.json`
-2. resolve source docs index and search output paths from that scope config
-3. read the generated docs index
+2. resolve source docs root and search output paths from that scope config
+3. parse source document front matter
 4. filter out non-viewable and manage-only docs
 5. derive one search entry per viewable doc
 6. derive `search_terms` and `search_text`
 7. compute a content hash in the artifact header
 8. write only when changed, forced, or targeted changes require it
 
-Docs search is downstream of the generated Docs Viewer docs payload.
-It does not parse source Markdown directly during search-index generation.
+Docs search is downstream of the Docs Viewer source model, not public route payloads.
+It does not read retired public docs `index.json` artifacts during search-index generation.
 
 ## Index Schema
 
@@ -141,7 +135,8 @@ The search controller loads that index through the generated-data runtime, norma
 Current ranking is docs-domain-specific.
 It weights exact id/title matches first, then phrase and prefix matches, then title-token coverage, then parent-title matches, then broader `search_text` matches.
 
-Docs Viewer also has a recent-docs path that sorts viewable docs by `added_date` or `last_updated`.
+Docs Viewer recently-added mode reads the scope's generated `recently-added.json` payload.
+Search ranking remains separate and uses the search payload.
 
 ## Targeted Updates
 

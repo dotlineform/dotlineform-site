@@ -75,12 +75,14 @@ Backend reachability and write availability are not browser-side route-config au
 
 Generated payload contracts live in [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts).
 
-## Batch 7 Update Targets
+## Route Payload Surfaces
 
-After [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming) is implemented, update this document to confirm:
+Current Docs Viewer route payload ownership:
 
-- public `/library/` and `/analysis/` route configs point navigation at public `index-tree.json`
-- local/manage `/docs/` route config points navigation at manage `index-tree.json`
-- recently-added routes point at the small generated recently-added payload
-- public route smoke assertions still prove management JS/CSS, report runtime, scope lifecycle, import, settings, and source-editor surfaces are absent
+- public `/library/` and `/analysis/` route configs point navigation at public `assets/data/docs/scopes/<scope>/index-tree.json`
+- local/manage `/docs/` route config points navigation at manage `docs-viewer/generated/docs/<scope>/index-tree.json`
+- public and manage routes point recently-added mode at the route-appropriate `recently-added.json`
+- search remains on the route-appropriate search payload such as `assets/data/search/<scope>/index.json` or `docs-viewer/generated/search/<scope>/index.json`
+- selected-document rendering and info-panel metadata hydrate from selected by-id payloads
+- public route smoke assertions prove management JS/CSS, report runtime, scope lifecycle, import, settings, source-editor surfaces, and public docs `index.json` requests are absent
 - scope lifecycle create/delete behavior records only user-created route/generated outputs, not shared entrypoints, CSS, route registries, or shared runtime modules

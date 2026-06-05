@@ -2,7 +2,7 @@
 doc_id: search-studio-v1-index-shape
 title: Docs Scope Index Shape
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: 2026-06-05
 parent_id: search-docs-viewer-infrastructure
 viewable: true
 ---
@@ -26,13 +26,15 @@ For the wider docs-scope model that these artifacts sit on top of, use:
 
 ## Upstream Sources
 
-The docs-domain search builder reads the generated docs indexes:
+The docs-domain search builder reads the configured Docs Viewer source roots:
 
-- `docs-viewer/generated/docs/studio/index.json`
-- `assets/data/docs/scopes/library/index.json`
+- `docs-viewer/source/studio/*.md`
+- `docs-viewer/source/library/*.md`
+- `docs-viewer/source/analysis/**/*.md`
 
-It does not read raw Markdown source files directly.
+It reads source front matter rather than public route payloads.
 Rows with `viewable: false` are excluded from the docs-domain search artifacts.
+Retired public docs `index.json` artifacts are not search-builder inputs.
 
 ## Top-Level Output Shape
 
@@ -99,7 +101,7 @@ Current field mapping back to the docs model:
 - `last_updated`, `parent_id`, `parent_title`, `display_meta` <- docs metadata used for context and search support
 - `search_terms` and `search_text` <- search-specific derived fields built from that metadata
 
-The generated docs index also includes `added_date`, but docs-domain search intentionally does not consume it yet. Search review remains separate from the Docs Viewer recently-added list.
+Source front matter can include `added_date`, but docs-domain search intentionally does not consume it yet. Search review remains separate from the Docs Viewer recently-added list.
 
 ## Current Builder Rules
 

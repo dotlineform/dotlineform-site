@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
-last_updated: 2026-05-30
+last_updated: 2026-06-05
 parent_id: docs-viewer-scopes
 viewable: true
 ---
@@ -27,7 +27,8 @@ Current source and generated artifacts:
 - source docs:
   - `docs-viewer/source/library/*.md`
 - generated docs data:
-  - `assets/data/docs/scopes/library/index.json`
+  - `assets/data/docs/scopes/library/index-tree.json`
+  - `assets/data/docs/scopes/library/recently-added.json`
   - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 - Library docs search:
   - `assets/data/search/library/index.json`
@@ -78,24 +79,28 @@ That is not a special-case runtime model. It is simply a small corpus using the 
 
 ## Generated Docs Data
 
-### `assets/data/docs/scopes/library/index.json`
+### `assets/data/docs/scopes/library/index-tree.json`
 
 Purpose:
 
-- lightweight tree/index payload for the Library docs corpus
+- compact navigation tree payload for the Library docs corpus
 
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, optional non-empty `parent_id`, optional `viewable: false`, viewer URL, per-doc content URL, and `content_text_length`
+- identity, title, optional non-empty `parent_id`, optional `viewable: false`, optional `ui_status`, and per-doc content URL
 - `viewer_options` for scope-level display behavior such as hiding document-view updated dates
 
 Current site mapping:
 
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/docs/?scope=library&mode=manage` can show those generated docs for local management
-- Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
-- `/analytics/data-sharing/prepare/?mode=manage` receives adapter-owned selectable records from `/analytics/api/data-sharing/selectable-records` and uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
+- Library document view does not display the `last_updated` metadata row; recently-added uses `recently-added.json`, and search uses its separate search payload
+
+Retired route artifact:
+
+- public `assets/data/docs/scopes/library/index.json` is not part of the Docs Viewer route contract and is not published for public route loading
+- Data Sharing selectable-record behavior is an Analytics-owned adapter surface rather than a reason to restore public flat indexes
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -105,13 +110,30 @@ Purpose:
 
 Current content families:
 
-- doc identity metadata
-- optional `summary` and `ui_status` metadata when the source front matter defines them
+- reader-facing metadata: title, optional `summary`, and `last_updated`
 - rendered `content_html`
 
 Current site mapping:
 
-- the content pane on `/library/`
+- the content pane and public info panel on `/library/`
+
+Public by-id payloads do not expose management fields such as `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
+
+### `assets/data/docs/scopes/library/recently-added.json`
+
+Purpose:
+
+- small recently-added payload for the public Library route
+
+Current content families:
+
+- schema `docs_recently_added_v1`
+- configured result limit
+- rows with doc identity, title, content URL, `added_date`, optional `parent_id`, and optional `parent_title`
+
+Current site mapping:
+
+- recently-added mode on `/library/`
 
 ## Library Search Data
 
@@ -126,7 +148,7 @@ Current content families:
 - one `doc` entry per public-viewable Library doc after applying `viewable` filtering
 - identity, viewer URL, last-updated metadata, and normalized search text
 
-Library recently-added lists use `added_date` from the generated docs index. Library search continues to use `last_updated`.
+Library recently-added lists use `added_date` from `recently-added.json`. Library search continues to use `last_updated`.
 Library search does not currently consume `summary`.
 
 Current site mapping:
@@ -188,7 +210,7 @@ Current model:
 - import v1 reads staged data files but does not mutate `docs-viewer/source/library/*.md`
 - the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
 - unknown file-level and record-level metadata is preserved in parser reports
-- parser reports compare staged records with the current generated Library docs index and generated payload filenames
+- parser reports compare staged records with adapter-owned current Library document records and generated payload filenames
 - Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
@@ -224,7 +246,7 @@ Why:
 Current dependencies:
 
 - Library docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- Library docs search is derived from the generated Library docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
+- Library docs search is derived from Library source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 
 Current enforcement:
 
@@ -236,7 +258,8 @@ Current enforcement:
 
 The current Library scope inherits the same performance model as Studio docs:
 
-- one lightweight docs index for tree/navigation
+- one compact docs tree payload for tree/navigation
+- one small recently-added payload
 - one per-doc payload for heavier rendered content
 - one flattened search artifact for inline search
 
@@ -244,4 +267,4 @@ This is arguably overbuilt for one doc today, but it is the right current implem
 
 ## Practical Update Rule
 
-If the Library scope gains new artifact families beyond docs and docs search, add them here rather than burying them only in Docs Viewer or Search docs.
+If the Library scope gains generated families beyond docs tree/recent/by-id and docs search, add them here rather than burying them only in Docs Viewer or Search docs.

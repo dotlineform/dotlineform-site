@@ -79,13 +79,14 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Source editor | `docs-viewer/runtime/js/modules/source-editor/source-editor.js` | Manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
 | Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. |
 
-## Batch 7 Update Targets
+## Public Index Slimming Ownership
 
-After [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming) is implemented, update this document to confirm:
+The current payload-loading ownership after public index slimming is:
 
-- the module that owns `index-tree.json` loading and adaptation
-- whether `docs-viewer-document-index-state.js` owns tree payload projection after the switch
-- whether `docs-viewer-search-controller.js` still owns recently-added rendering while a generated-data method owns recently-added reads
-- whether `docs-viewer-generated-data-runtime.js` gained named methods for `index-tree.json` and recently-added payloads
-- info-panel modules hydrate metadata from selected by-id payloads rather than tree/index rows
-- no public-safe module imports manage-owned metadata, report, source-editor, import, settings, scope lifecycle, or management client modules
+- `docs-viewer-generated-data-runtime.js` owns named reads for docs index tree, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets.
+- `docs-viewer-tree-payload-adapter.js` owns normalizing `index-tree.json` and `recently-added.json` payloads into the runtime record shape.
+- `docs-viewer-document-index-state.js` owns public/manage visibility filtering, manage-only tree-root omission, non-loadable fallback resolution, default-doc selection, and index status projection after the normalized tree payload is loaded.
+- `docs-viewer-route-workflow.js` owns route application, `index-tree.json` loading orchestration, selected-document payload loading, URL/history writes, and missing/error projection through its private route command contract.
+- `docs-viewer-search-controller.js` owns search and recently-added rendering while delegating generated search/recent payload reads to `docs-viewer-generated-data-runtime.js`.
+- `docs-viewer-view-context.js` and `docs-viewer-metadata-info-view.js` hydrate and render info-panel metadata from selected by-id payloads rather than tree rows or public `index.json`.
+- Public-safe modules must not import manage-owned metadata, report, source-editor, import, settings, scope lifecycle, or management client modules.

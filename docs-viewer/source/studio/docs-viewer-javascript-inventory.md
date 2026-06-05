@@ -186,7 +186,8 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Added 2026-05-28 as the focused generated-data request owner.
 - Current risk score: 4.
-- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, and named generated JSON read methods for docs indexes, payloads, search indexes, references indexes, and reference-target buckets.
+- 2026-06-05 owner note: this module owns named reads for `index-tree.json`, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets. Public route reads must not fall back to public docs `index.json`.
+- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, and named generated JSON read methods.
 - Low-level generated-data fetch/retry helpers in `docs-viewer/runtime/js/docs-viewer-data.js` are allowed here because this module is the feature-facing generated-data owner.
 - Do not move config loading, payload rendering, backend write authority, or management capability UI projection into it.
 
@@ -275,6 +276,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 - Current risk score: 5.
 - 2026-05-28 owner note: search/recent route command bundling moved into this focused owner through `createDocsViewerSearchRouteCommands(...)`. The controller now consumes explicit `searchRecent`, `documentIndex`, `selectedDocument`, `routeCommands`, and `paneCommands` inputs for route application, history writes, current-doc resolution, default-doc fallback, result URL creation, loadable-doc target resolution, and pane projection requests.
+- 2026-06-05 owner note: recently-added rendering remains here, while generated recently-added payload reads are delegated through `docs-viewer-generated-data-runtime.js`.
 - Keep this module focused on generated search-index loading, result/recent rendering, debounce handoff, search/recent route activation, more-results behavior, route command consumption, and pane command requests.
 - Do not move low-level URL construction, browser history primitives, document payload rendering, config loading, management writes, or panel toolbar/view switching into it.
 
@@ -447,6 +449,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`
 
 - Added 2026-05-27 as the first public-safe read-only info hosted view.
+- 2026-06-05 owner note: public and manage metadata-info rendering consume selected by-id payload metadata through `docs-viewer-view-context.js`, not public tree rows or public docs `index.json`.
 - Keep this module limited to rendering selected-document metadata from explicit context fields.
 - Do not read broad viewer state, expose source paths, add edit controls, or call management endpoints.
 
@@ -455,6 +458,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Added 2026-05-27 as the focused selected-document hosted-view context projector.
 - 2026-05-28 lifecycle note: public-safe hosted views should receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
 - 2026-06-03 owner note: main-view module contexts now add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings, plus source-editor service slots that are omitted unless route access allows management.
+- 2026-06-05 owner note: selected metadata comes from the selected by-id payload cache; public contexts project only reader metadata while manage contexts can retain richer selected-document metadata.
 - Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view helper slots from explicit inputs.
 - Future info views should extend or consume this helper rather than adding context shaping directly to `docs-viewer.js`.
 - Do not add DOM rendering, hosted-view lifecycle, URL history mutation, source-editor service implementation, or backend writes to it.

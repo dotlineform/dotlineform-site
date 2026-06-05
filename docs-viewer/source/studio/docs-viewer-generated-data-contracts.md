@@ -31,7 +31,7 @@ It separates public read-only route data from local/manage route data so payload
 
 | Capability | Public route source | Manage route source | Notes |
 | --- | --- | --- | --- |
-| Navigation tree | `index-tree.json` after public-index slimming | `index-tree.json` after public-index slimming | Public and manage tree records should share the same structure. |
+| Navigation tree | `index-tree.json` | `index-tree.json` | Public and manage tree records share the same structure. |
 | Selected document render | by-id payload | by-id payload | By-id payloads remain in scope for selected documents. |
 | Info-panel metadata | selected by-id payload | selected by-id payload | Public reader metadata is limited to title, summary, and last updated. |
 | Search | search payload | search payload | Search runtime reads separate search payloads. |
@@ -95,7 +95,9 @@ Do not add `added_date` or `last_updated` to `index-tree.json` only to support t
 
 ## Public Flat `index.json` Retirement
 
-Public flat `assets/data/docs/scopes/<scope>/index.json` is retired from the Docs Viewer route contract after:
+Public flat `assets/data/docs/scopes/<scope>/index.json` is retired from the Docs Viewer route contract.
+Public Docs Viewer routes do not publish or load it.
+The route contract is covered by:
 
 - `index-tree.json` covers navigation
 - by-id payloads cover selected-document rendering and info-panel metadata
@@ -105,14 +107,15 @@ Public flat `assets/data/docs/scopes/<scope>/index.json` is retired from the Doc
 Data Sharing or other tooling needs for richer document data are not a reason to preserve rich public flat indexes as public route data.
 Those consumers need their own owning contract.
 
-## Batch 7 Update Targets
+Manage/local rich flat indexes under `docs-viewer/generated/docs/<scope>/index.json` remain valid for manage/report/tooling consumers.
+Do not treat those local artifacts as public route dependencies.
 
-After [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming) is implemented, update this document to confirm:
+## Verification Coverage
 
-- exact public and manage `index-tree.json` paths
-- exact recently-added payload path and shape
-- final public by-id metadata fields used by the info panel
-- final route config field names for tree, search, by-id, and recently-added payloads
-- public flat `index.json` retirement status
-- tests or fixtures that assert public tree/by-id/recent payloads omit management-only metadata
-- any remaining non-Docs Viewer owner for rich document metadata, such as Data Sharing
+Current verification covers:
+
+- generated-output fixtures for public tree, recently-added, and public by-id payload shape
+- builder projection tests for public tree/recent/by-id metadata omission and public flat-index removal
+- public `/library/` and `/analysis/` route smokes for `index-tree.json`, `recently-added.json`, selected by-id, and search requests
+- negative public smoke assertions that public routes do not request `assets/data/docs/scopes/<scope>/index.json`
+- manage-route smoke assertions that generated reads use `index-tree`, selected payload, recently-added, and search endpoints without falling back to `/docs/generated/index`

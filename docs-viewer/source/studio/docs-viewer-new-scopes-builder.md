@@ -96,7 +96,7 @@ Create and commit:
 - source root and Markdown files
 - `docs-viewer/config/scopes/docs_scopes.json` entry
 - read-only route page
-- generated docs/search JSON under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` if the repo tracks generated outputs for the site
+- generated docs tree, recently-added, by-id, and search JSON under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` if the repo tracks generated outputs for the site
 
 Then deploy through the normal static site workflow.
 Readers use the public route, such as `/research/`.
@@ -110,7 +110,7 @@ Create and commit:
 
 - source root and Markdown files
 - `docs-viewer/config/scopes/docs_scopes.json` entry
-- generated docs/search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
+- generated docs tree, recently-added, by-id, rich manage index, and search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
 The scope remains available through `/docs/?scope=<scope>&mode=manage` when the local server is running.
@@ -324,6 +324,7 @@ Apply behavior:
 - creates the source root and default welcome Markdown document
 - appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
 - creates a public read-only route page only for `public_readonly`
+- writes route-appropriate generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads when generated output is requested
 - writes a user-created, tool-created manifest record
 - runs the docs build and, when requested, the docs search build after the config and source files are written
 
@@ -448,6 +449,9 @@ The server response should list:
 Create preview reports this planned write set without writing files.
 Create apply writes the allowlisted source-root, route-file, config, generated-output, and manifest changes after confirmation.
 Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
+
+Scope lifecycle manifests record user-created route and generated-output paths such as scope-specific `index-tree.json`, `recently-added.json`, by-id payload directories, and search payloads.
+They must not record shared public/manage entrypoints, route registries, CSS, UI text, or runtime modules as delete-owned scope files.
 
 ## Management UI Flow
 

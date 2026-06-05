@@ -90,7 +90,7 @@ $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
 The `docs` profile includes Docs Viewer-owned pytest checks from `docs-viewer/tests/python/` plus shared Data Sharing adapter checks that remain under `studio/tests/python/`.
 The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/`.
-Run `docs-viewer-smoke`, or at minimum `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a Docs Viewer change touches the shared public runtime, route shell, public config, or management-only module boundary.
+Run `docs-viewer-smoke`, or at minimum `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a Docs Viewer change touches the shared public runtime, route shell, public config, public payload-loading contract, or management-only module boundary.
 Do not use the repo root or a stale `_site` directory as evidence for public read-only behavior; those targets can mask public-build exclusions.
 The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the UI Catalogue modal demo and data import route checks.
 Those checks cover Studio-owned browser workflows, including the docs-management-unavailable state and a mocked Library import preview flow, but do not run Docs Viewer-owned smoke scripts.
@@ -104,12 +104,8 @@ Default Docs Viewer smoke coverage:
 
 | script | profile role | responsibility |
 | --- | --- | --- |
-| `docs_viewer_service_manage.py` | `docs-viewer-smoke` | Standalone Docs Viewer service manage shell and API base. |
-| `public_docs_viewer_readonly.py` | `docs-viewer-smoke` | Public Library and Analysis installs stay read-only. |
-| `docs_viewer_index_panel_modules.py` | `docs-viewer-smoke` | Index-panel state, persistence, and projection helper contracts. |
-| `docs_viewer_management_modal.py` | `docs-viewer-smoke` | Management modal semantics, action rows, focus behavior, and mobile sizing. |
-| `docs_viewer_management_action_workflow_modules.py` | `docs-viewer-smoke` | Management action choices, payloads, and viewability target shaping. |
-| `docs_html_import_modules.py` | `docs-viewer-smoke` | HTML import preview, replacement, write-failure fallback, and result rendering modules. |
+| `docs_viewer_service_manage.py` | `docs-viewer-smoke` | Standalone Docs Viewer service manage shell, generated tree/recent/by-id/search reads, rich manage info-panel metadata, and representative management API base. |
+| `public_docs_viewer_readonly.py` | `docs-viewer-smoke` | Public Library and Analysis installs stay read-only, load public tree/recent/by-id/search payloads, hydrate public info-panel metadata from by-id payloads, and do not request public docs `index.json`. |
 
 Focused Docs Viewer route smokes are opt-in unless a route-specific change needs them:
 

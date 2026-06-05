@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-tasks
 title: Docs Viewer Public Index Slimming Tasks
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming
 viewable: true
 ---
@@ -57,7 +57,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 | 4 | done | [Batch 4: Info Panel Hydration and Rendering](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-4) |
 | 5 | done | [Batch 5: Public Flat Index Retirement](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5) |
 | 6 | done | [Batch 6: Verification](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-6) |
-| 7 | planned | [Batch 7: Documentation and Closeout](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7) |
+| 7 | done | [Batch 7: Documentation and Closeout](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7) |
 
 ### closeout coverage
 
@@ -74,6 +74,7 @@ Batch 7 owns the template closeout duties:
 - Batch 2 added build-time compact tree/recent payload generation, scope lifecycle manifest records for those outputs, and search builder source-root inputs that no longer read retired public docs `index.json`. Codex did not manually run a write rebuild; the running docs watcher regenerated affected Studio payloads after source-doc edits.
 - Batch 4 moved info-panel metadata hydration to selected by-id payloads, split public reader metadata rendering from manage metadata rendering, and narrowed public by-id payload metadata without rebuilding generated payloads.
 - Batch 5 retired public flat docs `index.json` from public route configs, public browser scope configs, public generated-output writes, public generated-read validation, and checked-in public generated outputs. Manage/local rich flat indexes remain for manage/report/tooling consumers.
+- Batch 7 moved durable decisions into owning runtime, generated-data, data-model, search, scope lifecycle, testing, and inventory docs; cleanup scans confirmed no public flat-index route compatibility path remains.
 
 ## Verification Log
 
@@ -84,3 +85,4 @@ Batch 7 owns the template closeout duties:
 - 2026-06-05: Batch 4 syntax checks, focused generated-output pytest, metadata info module smoke, and reduced Docs Viewer smoke profile passed.
 - 2026-06-05: Batch 5 syntax checks, focused pytest, JSON validation, stale-reference scans, public docs dry runs, and reduced Docs Viewer smoke profile passed.
 - 2026-06-05: Batch 6 syntax checks, focused generated-output pytest, and full Docs Viewer smoke profile passed.
+- 2026-06-05: Batch 7 docs-source updates, cleanup scans, and `git diff --check` passed. Generated Docs Viewer payloads were not rebuilt.

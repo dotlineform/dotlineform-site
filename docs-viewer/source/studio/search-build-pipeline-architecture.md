@@ -34,7 +34,7 @@ Current build principles:
 Current source boundary:
 
 - `catalogue` search reads canonical repo JSON artifacts, not retired workbook sources or non-repo source files
-- `studio`, `analysis`, and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
+- `studio`, `analysis`, and `library` search read Docs Viewer source front matter and include only rows where `viewable !== false`
 
 This means the stable command shape is shared, while ownership stays with each data domain.
 

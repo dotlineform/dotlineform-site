@@ -2,7 +2,7 @@
 doc_id: data-models-analysis
 title: Analysis Scope
 added_date: 2026-04-26
-last_updated: "2026-05-06 20:54"
+last_updated: 2026-06-05
 parent_id: docs-viewer-scopes
 viewable: true
 ---
@@ -19,7 +19,8 @@ Current checked-in artifacts:
 - source docs:
   - `docs-viewer/source/analysis/**/*.md`
 - generated docs data:
-  - `assets/data/docs/scopes/analysis/index.json`
+  - `assets/data/docs/scopes/analysis/index-tree.json`
+  - `assets/data/docs/scopes/analysis/recently-added.json`
   - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 - Analysis docs search:
   - `assets/data/search/analysis/index.json`
@@ -53,21 +54,25 @@ Those folders are a source-organisation affordance for future UI lookup and gene
 
 ## Generated Docs Data
 
-### `assets/data/docs/scopes/analysis/index.json`
+### `assets/data/docs/scopes/analysis/index-tree.json`
 
 Purpose:
 
-- lightweight tree/index payload for the Analysis docs corpus
+- compact navigation tree payload for the Analysis docs corpus
 
 Current content families:
 
 - one row per generated Analysis doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, optional non-empty `parent_id`, optional `viewable: false`, viewer URL, and per-doc content URL
+- identity, title, optional non-empty `parent_id`, optional `viewable: false`, optional `ui_status`, and per-doc content URL
 - `viewer_options` using the shared docs-scope option shape
 
 Current site mapping:
 
 - the nav/tree layer on `/analysis/`
+
+Retired route artifact:
+
+- public `assets/data/docs/scopes/analysis/index.json` is not part of the Docs Viewer route contract and is not published for public route loading
 
 ### `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 
@@ -77,13 +82,30 @@ Purpose:
 
 Current content families:
 
-- doc identity metadata
-- optional `summary` and `ui_status` metadata when the source front matter defines them
+- reader-facing metadata: title, optional `summary`, and `last_updated`
 - rendered `content_html`
 
 Current site mapping:
 
-- the content pane on `/analysis/`
+- the content pane and public info panel on `/analysis/`
+
+Public by-id payloads do not expose management fields such as `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
+
+### `assets/data/docs/scopes/analysis/recently-added.json`
+
+Purpose:
+
+- small recently-added payload for the public Analysis route
+
+Current content families:
+
+- schema `docs_recently_added_v1`
+- configured result limit
+- rows with doc identity, title, content URL, `added_date`, optional `parent_id`, and optional `parent_title`
+
+Current site mapping:
+
+- recently-added mode on `/analysis/`
 
 ## Analysis Search Data
 
@@ -107,7 +129,7 @@ Current site mapping:
 Current dependencies:
 
 - Analysis docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- Analysis docs search is derived from the generated Analysis docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
+- Analysis docs search is derived from Analysis source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 
 Current enforcement:
 
@@ -116,4 +138,4 @@ Current enforcement:
 
 ## Practical Update Rule
 
-If Analysis gains generated families beyond docs and docs search, add them here rather than burying them only in Docs Viewer or Search docs.
+If Analysis gains generated families beyond docs tree/recent/by-id and docs search, add them here rather than burying them only in Docs Viewer or Search docs.

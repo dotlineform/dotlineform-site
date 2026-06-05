@@ -30,7 +30,7 @@ Important fields:
 - `last_updated`: display/search metadata
 - `added_date`: recently-added metadata
 
-The generated docs index sorts root siblings and each parent’s children case-insensitively by `title`, with `doc_id` as a stable tie-breaker.
+The generated `index-tree.json` payload sorts root siblings and each parent’s children case-insensitively by `title`, with `doc_id` as a stable tie-breaker.
 
 A minimal root doc for a new Library-style scope looks like:
 

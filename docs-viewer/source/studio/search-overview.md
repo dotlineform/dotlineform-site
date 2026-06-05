@@ -117,7 +117,7 @@ Current live surfaces:
 Current build behavior:
 
 - `catalogue` search reads canonical generated catalogue JSON
-- configured docs scopes such as `studio`, `library`, and `analysis` search read generated Docs Viewer indexes
+- configured docs scopes such as `studio`, `library`, and `analysis` search read Docs Viewer source front matter
 - docs search skips rows where `viewable: false`
 - docs search supports targeted updates by `doc_id`
 - catalogue search remains full-rebuild-only for existing-record changes

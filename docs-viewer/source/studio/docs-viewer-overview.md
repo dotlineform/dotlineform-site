@@ -12,7 +12,7 @@ parent_id: docs-viewer
 The Docs Viewer is a shared documentation reader used by the site's docs-domain scopes.
 It provides:
 
-- a left-hand tree navigation built from generated docs indexes
+- a left-hand tree navigation loaded from generated `index-tree.json` payloads
 - a right-hand document pane for rendered doc content
 - inline docs search within the same viewer shell
 - a shared recently-added list beside inline docs search
@@ -252,8 +252,8 @@ The current design keeps some behavior scope-specific and some behavior shared.
 Scope-owned:
 
 - source doc trees
-- generated docs indexes, compact `index-tree.json` payloads, compact `recently-added.json` payloads, and per-doc payloads
-- scope-level viewer options in generated docs indexes
+- compact `index-tree.json` payloads, compact `recently-added.json` payloads, per-doc payloads, and manage/local rich generated docs indexes where tooling needs them
+- scope-level viewer options in generated tree/index payloads
 - route/page shell copy
 - route ids on route shells and browser-safe route records in `docs-viewer/config/routes/docs-viewer-routes.json`
 

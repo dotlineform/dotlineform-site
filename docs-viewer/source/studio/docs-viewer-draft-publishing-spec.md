@@ -76,13 +76,15 @@ Recommended working states:
 viewable: false
 ```
 
-## One Index Artifact
+## Generated Route Artifacts
 
-The preferred design is one generated docs index per scope.
+The preferred public-route design is compact generated docs payloads per scope.
 
 Direction:
 
-- keep `assets/data/docs/scopes/<scope>/index.json` as the single docs index artifact
+- keep `assets/data/docs/scopes/<scope>/index-tree.json` as the public navigation payload
+- keep `assets/data/docs/scopes/<scope>/recently-added.json` as the public recently-added payload
+- keep `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` as selected-document payloads
 - omit `viewable` on viewable index rows and include `viewable: false` only for non-viewable rows
 - do not create a separate manage-only non-viewable-doc index
 - let the Docs Viewer filter rows based on route/mode state
@@ -216,7 +218,7 @@ Docs search should remain viewable-only initially.
 
 Direction:
 
-- search builder should read the generated docs index but filter to `viewable !== false`
+- search builder should read Docs Viewer source front matter and filter to `viewable !== false`
 - search artifacts should not include non-viewable records
 - search results should not expose non-viewable docs unless a later manage-mode search path is intentionally added
 

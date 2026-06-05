@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-7
 title: Docs Viewer Public Index Slimming Batch 7
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,13 +17,13 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 | ID | status | action |
 | --- | --- | --- |
-| 7.1 | planned | Update the runtime boundary docs after the contract is durable: keep [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) as policy, update [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) for route/config/CSS/scope lifecycle surfaces, update [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) for tree/recent/by-id/search payload contracts, and update [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for final runtime owner responsibilities. |
-| 7.2 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) only for changed browser module ownership, risk notes, or row-level evidence; do not duplicate the runtime surface or generated-data contract tables there. |
-| 7.3 | planned | Update public scope data model docs, including [Data Models Library](/docs/?scope=studio&doc=data-models-library) and [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis), so they describe public `index-tree.json`, recently-added payloads, by-id reader metadata, search payloads, and retired public flat `index.json` route ownership. |
-| 7.4 | planned | Update search, scope lifecycle, and testing docs for the implemented contract: search build inputs no longer depend on retired public docs `index.json`, scope lifecycle creates/deletes required tree/recent outputs through manifest-recorded generated files only, and smoke/contract tests assert new payload loads plus absence of public `index.json` requests. |
-| 7.5 | planned | Cleanup confirmation: confirm removed paths and artifacts are not retained through import aliases, copied files, static mount shims, route-config fallback logic, generated-read fallback logic, or dual-read public `index.json` paths. |
-| 7.6 | planned | Verification record: record final verification commands, pass/fail results, generated payload status, and any manual checks that remain. |
-| 7.7 | planned | Close out this batch, the task tracker, and the parent request with final statuses, changed-path summary, durable decisions, remaining risks, and any follow-on work. |
+| 7.1 | done | Update the runtime boundary docs after the contract is durable: keep [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) as policy, update [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) for route/config/CSS/scope lifecycle surfaces, update [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) for tree/recent/by-id/search payload contracts, and update [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for final runtime owner responsibilities. |
+| 7.2 | done | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) only for changed browser module ownership, risk notes, or row-level evidence; do not duplicate the runtime surface or generated-data contract tables there. |
+| 7.3 | done | Update public scope data model docs, including [Data Models Library](/docs/?scope=studio&doc=data-models-library) and [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis), so they describe public `index-tree.json`, recently-added payloads, by-id reader metadata, search payloads, and retired public flat `index.json` route ownership. |
+| 7.4 | done | Update search, scope lifecycle, and testing docs for the implemented contract: search build inputs no longer depend on retired public docs `index.json`, scope lifecycle creates/deletes required tree/recent outputs through manifest-recorded generated files only, and smoke/contract tests assert new payload loads plus absence of public `index.json` requests. |
+| 7.5 | done | Cleanup confirmation: confirm removed paths and artifacts are not retained through import aliases, copied files, static mount shims, route-config fallback logic, generated-read fallback logic, or dual-read public `index.json` paths. |
+| 7.6 | done | Verification record: record final verification commands, pass/fail results, generated payload status, and any manual checks that remain. |
+| 7.7 | done | Close out this batch, the task tracker, and the parent request with final statuses, changed-path summary, durable decisions, remaining risks, and any follow-on work. |
 
 ## Steer for these tasks
 
@@ -65,7 +65,12 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 ## completed verification
 
-- Not started.
+- 2026-06-05: Durable docs updated for runtime surfaces, generated-data contracts, module ownership, JavaScript inventory, public Library/Analysis data models, Docs Viewer search inputs, scope lifecycle generated outputs, testing, source organisation, portable source shape, and draft publishing notes.
+- 2026-06-05: Cleanup scan passed for route configs and browser configs: public `/library/` and `/analysis/` route configs and browser scope records do not expose public docs `index_url`.
+- 2026-06-05: Cleanup scan passed for checked-in public flat indexes: `assets/data/docs/scopes/library/index.json` and `assets/data/docs/scopes/analysis/index.json` are absent.
+- 2026-06-05: Stale-reference scans passed for active public route contract docs. Remaining `index.json` mentions are explicit retired-artifact notes, search payload paths, manage/local rich-index/report surfaces, import/export fixtures, or tests that assert removal.
+- 2026-06-05: `git diff --check` passed.
+- 2026-06-05: Batch 6 final executable verification remains the request smoke baseline: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`; summary at `var/test-runs/20260605-192632/summary.md`.
 
 ## follow-on tasks
 
@@ -81,5 +86,6 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 ## task close
 
-- Set this document, the tracker, and the parent request to `done` when implementation is complete and durable docs are updated.
-- Record changed files, verification results, generated payload status, and remaining risks before closeout.
+- This document, the tracker, and the parent request were set to `done`.
+- Generated Docs Viewer payloads were not rebuilt for Batch 7; edits were docs-source only.
+- Remaining follow-on ownership: Data Sharing export/import, docs import review, broken-link tooling, source-config reports, and report/internal rich-index reads remain under their owning requests and are not reasons to restore public route flat indexes.

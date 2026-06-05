@@ -122,7 +122,8 @@ The docs builder writes scope-owned viewer data under:
 
 At a high level, each scope currently has:
 
-- one generated docs index for the tree
+- one generated `index-tree.json` payload for the tree
+- one generated `recently-added.json` payload for recently-added mode
 - one generated per-doc payload for each included source doc
 
 This is why the shared runtime can stay generic: it consumes the same kind of scope-owned output for each docs scope.

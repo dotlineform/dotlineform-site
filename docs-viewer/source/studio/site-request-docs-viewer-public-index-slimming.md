@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming
 title: Docs Viewer Public Index Slimming Request
 added_date: 2026-06-03
 last_updated: 2026-06-05
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 
 ## Summary
 
@@ -225,3 +225,24 @@ The implementation tracker owns task state and links to the focused batch delive
 - public info panel shows only title, summary, and last updated
 - public read-only routes do not load management-only JS/CSS or management service data
 - manage mode still opens and edits metadata through its existing management surfaces
+
+## Closeout
+
+Completed on 2026-06-05.
+
+Durable current contracts now live in:
+
+- [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces)
+- [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts)
+- [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership)
+- [Data Models Library](/docs/?scope=studio&doc=data-models-library)
+- [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis)
+- [Docs Viewer Search Infrastructure](/docs/?scope=studio&doc=search-docs-viewer-infrastructure)
+- [Testing](/docs/?scope=studio&doc=testing)
+
+Final verification is recorded in [Docs Viewer Public Index Slimming Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks) and [Batch 7](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7).
+
+Generated Docs Viewer payloads were not rebuilt during documentation closeout.
+Batch 6 completed the executable smoke baseline against a temporary public build, and Batch 7 completed cleanup scans confirming public route configs, public browser scope configs, and checked-in public outputs do not retain a public flat-index route path.
+
+Remaining non-route consumers for richer document metadata, including Data Sharing export/import, docs import review, broken-link tooling, source-config reports, and report/internal rich-index reads, remain under their owning requests and should not restore public flat `index.json` route behavior.
