@@ -52,9 +52,9 @@ Summary: Add tree payload adapters, switch public and manage route loading to `i
 
 ## completed verification
 
-- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/build/build_docs.py docs-viewer/build/build_search.py docs-viewer/services/docs_generated_reads.py docs-viewer/services/docs_management_routes.py docs-viewer/services/docs_management_read_service.py docs-viewer/services/docs_viewer_service.py docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/tests/smoke/docs_viewer_service_manage.py docs-viewer/tests/smoke/docs_viewer_management_workflows.py docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/build/build_docs.py docs-viewer/build/build_search.py docs-viewer/services/docs_generated_reads.py docs-viewer/services/docs_management_routes.py docs-viewer/services/docs_management_read_service.py docs-viewer/services/docs_viewer_service.py docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/smoke/docs_viewer_service_manage.py docs-viewer/tests/smoke/docs_viewer_management_workflows.py docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
 - `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_management_service.py`
-- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- Batch 3 originally used the now-retired app-shell mega-smoke; Batch 3a replaced that with the reduced Docs Viewer smoke profile.
 - `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
 - `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
 - `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --diagnostics`

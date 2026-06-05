@@ -159,7 +159,7 @@ For high risk controllers, leave a lightweight owner note in the relevant invent
 Useful checks and follow-through:
 
 - Run `$HOME/miniconda3/bin/python3 studio/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
-- Use focused browser module smokes where practical: serve the site root through a temporary local static server, import browser modules directly in Playwright, stub config/data/service/DOM inputs, assert helper contracts without full route boot, and import affected route shells to catch syntax and dependency regressions.
+- Use browser smokes only for integration behavior that needs a browser, such as route boot, service-backed route reads, and representative user workflows. Keep helper contracts in cheaper focused tests; do not create broad browser module-contract suites with duplicated runtime fixtures.
 - After material JavaScript risk-reduction work, update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), and update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when Docs Viewer-specific rows or follow-up tasks changed.
 
 ### Docs Viewer App Architecture Gate

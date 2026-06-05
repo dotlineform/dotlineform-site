@@ -1,12 +1,8 @@
 {
-  "scope": "library",
   "doc_id": "library",
   "title": "Library",
   "added_date": "2026-03-30",
   "last_updated": "2026-05-04",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "library.md",
   "viewer_url": "/library/?doc=library",
   "content_html": "<h1>Library</h1>\n<p>Library is a document space for research and reference.</p>\n"

@@ -365,46 +365,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
         ),
-        CheckCommand(
-            "docs-viewer-index-panel-module-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Docs Viewer index panel state, persistence migration, and projection helpers.",
-        ),
-        CheckCommand(
-            "docs-viewer-management-modal-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_viewer_management_modal.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Docs Viewer management modal semantics, action rows, focus behavior, and mobile sizing.",
-        ),
-        CheckCommand(
-            "docs-viewer-management-action-workflow-module-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_viewer_management_action_workflow_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Docs Viewer management action workflow choices, payloads, and viewability target shaping.",
-        ),
-        CheckCommand(
-            "docs-html-import-module-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_html_import_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
-        ),
     ),
     "ui-catalogue-smoke": (
         CheckCommand(

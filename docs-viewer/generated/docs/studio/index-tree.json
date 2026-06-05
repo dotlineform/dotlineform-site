@@ -402,6 +402,13 @@
       "ui_status": "done"
     },
     {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3a",
+      "title": "Docs Viewer Public Index Slimming Batch 3a",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3a.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "done"
+    },
+    {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
       "title": "Docs Viewer Public Index Slimming Batch 4",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
@@ -1638,5 +1645,5 @@
       "parent_id": "ui"
     }
   ],
-  "generated_at": "2026-06-05T16:00:41Z"
+  "generated_at": "2026-06-05T17:37:37Z"
 }

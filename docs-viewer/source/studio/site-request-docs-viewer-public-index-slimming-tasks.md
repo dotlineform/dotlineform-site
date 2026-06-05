@@ -53,7 +53,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 | 1 | done | [Batch 1: Discovery and Contract Lock](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-1) |
 | 2 | done | [Batch 2: Builder Outputs](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-2) |
 | 3 | done | [Batch 3: Runtime Loading and Boundary Check](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3) |
-| 3a | planned | [Batch 3a: Smoke Test Diet](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3a) |
+| 3a | done | [Batch 3a: Smoke Test Diet](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3a) |
 | 4 | planned | [Batch 4: Info Panel Hydration and Rendering](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-4) |
 | 5 | planned | [Batch 5: Public Flat Index Retirement](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5) |
 | 6 | planned | [Batch 6: Verification](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-6) |
@@ -78,3 +78,4 @@ Batch 7 owns the template closeout duties:
 - 2026-06-05: Batch 1 source review and scoped `rg` audit completed; no executable code changed.
 - 2026-06-05: Batch 2 syntax checks, focused pytest, Studio docs dry run, and Studio search dry run passed.
 - 2026-06-05: Batch 3 syntax checks, focused pytest, Docs Viewer app-shell smoke, service manage smoke, management workflows smoke, and Studio docs dry run passed.
+- 2026-06-05: Batch 3a syntax checks and reduced Docs Viewer smoke profile passed.

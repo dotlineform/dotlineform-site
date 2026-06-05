@@ -58,6 +58,8 @@ Summary: Shape selected by-id metadata as needed, hydrate info-panel state from 
 - Batch 3 handoff: normalized tree docs are deliberately slim and should not be widened for info-panel needs; use selected by-id payload hydration for title, summary, last updated, and any manage-only metadata.
 - Batch 3 handoff: browser scope config still carries full `index_url` as `docsIndexUrl` for report/internal rich-index reads; do not reintroduce that path into public route boot or recently-added mode.
 - Batch 3 handoff: management metadata modal and info-panel code may still assume metadata is present on selected tree/index records; Batch 4 should move those reads to selected by-id payload state.
+- Batch 3a handoff: `docs_viewer_app_shell_modules.py` was deleted; Batch 4 verification should use focused Python/syntax checks plus the reduced `docs-viewer-smoke` profile when browser coverage is warranted.
+- Batch 3a handoff: do not add broad browser module-contract smokes for info-panel hydration; prefer focused tests for data shaping and one public/manage route check for rendered behavior.
 
 ## task close
 

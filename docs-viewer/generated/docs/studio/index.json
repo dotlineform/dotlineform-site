@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T16:00:41Z",
+  "generated_at": "2026-06-05T17:38:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -663,7 +663,7 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
-      "content_text_length": 4109
+      "content_text_length": 4227
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -699,7 +699,19 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
-      "content_text_length": 6291
+      "content_text_length": 6263
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3a",
+      "title": "Docs Viewer Public Index Slimming Batch 3a",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-3a.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3a",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "done",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3a.json",
+      "content_text_length": 5356
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
@@ -711,7 +723,7 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
-      "content_text_length": 3443
+      "content_text_length": 3838
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
@@ -1217,7 +1229,7 @@
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
-      "content_text_length": 19048
+      "content_text_length": 19013
     },
     {
       "doc_id": "scripts-run-checks",
@@ -1228,7 +1240,7 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 3243
+      "content_text_length": 3234
     },
     {
       "doc_id": "runtime-dependencies",

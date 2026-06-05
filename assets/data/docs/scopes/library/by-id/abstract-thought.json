@@ -1,12 +1,8 @@
 {
-  "scope": "library",
   "doc_id": "abstract-thought",
   "title": "Abstract Thought and Physical Processes",
   "added_date": "2026-05-07 16:43",
   "last_updated": "2026-05-07 22:13",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "abstract-thought.md",
   "viewer_url": "/library/?doc=abstract-thought",
   "summary": "Our abstract thoughts are implemented in and constrained by physical and chemical processes in the brain, but they are organized at higher levels of description where concepts like representation, inference, and meaning become the natural explanatory tools.",

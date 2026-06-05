@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-3a
 title: Docs Viewer Public Index Slimming Batch 3a
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,12 +17,12 @@ Summary: Replace and retire the high-maintenance Docs Viewer mega-smoke pattern 
 
 | ID | status | action |
 | --- | --- | --- |
-| 3a.1 | planned | Retire `docs_viewer_app_shell_modules.py` as a required smoke target; do not modularize or preserve the 4,500-line mega-smoke as the default path. |
-| 3a.2 | planned | Replace the retired mega-smoke with a small set of focused browser smokes that prove public `/library/`, public `/analysis/`, and manage `/docs/` boot and load a selected doc through route-appropriate generated payloads. |
-| 3a.3 | planned | Move valuable low-level contracts out of browser smoke where practical, especially route config normalization, generated-data URL selection, compact tree/recent adapters, and management generated-read endpoints. |
-| 3a.4 | planned | Delete brittle assertions that check implementation trivia, exact callback ordering, duplicated fixture object shape, or negative requests not tied to a concrete regression risk. |
-| 3a.5 | planned | Aggressively rationalize other Docs Viewer smoke files using the same standard: keep only durable end-to-end checks, move focused contracts to cheaper tests, and delete the rest. |
-| 3a.6 | planned | Update the Docs Viewer verification guidance so future batches require focused tests and minimal end-to-end smoke checks instead of broad module-contract browser tests. |
+| 3a.1 | done | Retire `docs_viewer_app_shell_modules.py` as a required smoke target; do not modularize or preserve the 4,500-line mega-smoke as the default path. |
+| 3a.2 | done | Replace the retired mega-smoke with a small set of focused browser smokes that prove public `/library/`, public `/analysis/`, and manage `/docs/` boot and load a selected doc through route-appropriate generated payloads. |
+| 3a.3 | done | Move valuable low-level contracts out of browser smoke where practical, especially route config normalization, generated-data URL selection, compact tree/recent adapters, and management generated-read endpoints. |
+| 3a.4 | done | Delete brittle assertions that check implementation trivia, exact callback ordering, duplicated fixture object shape, or negative requests not tied to a concrete regression risk. |
+| 3a.5 | done | Aggressively rationalize other Docs Viewer smoke files using the same standard: keep only durable end-to-end checks, move focused contracts to cheaper tests, and delete the rest. |
+| 3a.6 | done | Update the Docs Viewer verification guidance so future batches require focused tests and minimal end-to-end smoke checks instead of broad module-contract browser tests. |
 
 ## Steer for these tasks
 
@@ -58,15 +58,20 @@ Summary: Replace and retire the high-maintenance Docs Viewer mega-smoke pattern 
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile studio/commands/run_checks.py docs-viewer/tests/smoke/public_docs_viewer_readonly.py docs-viewer/tests/smoke/docs_viewer_service_manage.py docs-viewer/tests/smoke/docs_viewer_routes.py docs-viewer/tests/smoke/docs_viewer_route_smoke_helpers.py`
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`
 
 ## follow-on tasks
 
 - Batch 3 handoff: `docs_viewer_app_shell_modules.py` is about 4,500 lines long and contains many duplicated inline route-config and browser-config records, making route contract changes expensive and failure-prone.
 - Batch 3 handoff: keep the route-loading guarantees from Batch 3, but prove them with narrower tests.
 - Batch 4 should proceed after this test diet so info-panel hydration changes do not compound the current smoke-test maintenance burden.
+- `docs_viewer_app_shell_modules.py` was deleted.
+- `docs-viewer-smoke` now runs the Jekyll temp build, standalone service manage smoke, and public read-only smoke only.
+- Public read-only and service manage smokes now assert compact `index-tree.json` and `recently-added.json` loading without carrying the old broad module-contract assertion set.
+- Module smoke scripts that still exist are not required profile targets; use them only for deliberate, focused follow-up work or delete them when their covered behavior has cheaper coverage.
 
 ## task close
 
-- Add a handoff note to Batch 4 covering the new reduced verification strategy.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 4 handoff added.
+- Tracker row can be marked `done`.
