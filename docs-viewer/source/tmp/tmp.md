@@ -8,8 +8,8 @@ ui_status: draft
 
 # tmp
 
-we are working on `site-request-docs-viewer-public-index-slimming.md`,
-please proceed with the tasks in `site-request-docs-viewer-public-index-slimming-batch-8.md`
+we are working on `site-request-data-sharing-docs-internal-index.md`,
+please proceed with batch 1 in `site-request-data-sharing-docs-internal-index-tasks.md`
 
 
 ~

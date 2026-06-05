@@ -281,13 +281,13 @@
           "doc_id": "site-request-data-sharing-docs-internal-index",
           "title": "Data Sharing Docs Source Metadata Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-          "ui_status": "planned",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
               "title": "Data Sharing Docs Source Metadata Tasks",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
-              "ui_status": "planned",
+              "ui_status": "in-progress",
               "children": [
                 {
                   "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
@@ -1520,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-05T21:14:18Z"
+  "generated_at": "2026-06-05T21:42:55Z"
 }

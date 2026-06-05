@@ -3,9 +3,8 @@ doc_id: site-request-data-sharing-docs-internal-index-tasks
 title: Data Sharing Docs Source Metadata Tasks
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: in-progress
 parent_id: site-request-data-sharing-docs-internal-index
-viewable: true
 ---
 # Data Sharing Docs Source Metadata Tasks
 

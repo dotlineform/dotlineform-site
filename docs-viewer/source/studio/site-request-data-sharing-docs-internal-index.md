@@ -3,7 +3,7 @@ doc_id: site-request-data-sharing-docs-internal-index
 title: Data Sharing Docs Source Metadata Request
 added_date: 2026-06-03
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,9 +11,7 @@ viewable: true
 
 Status:
 
-- planned
-- current position updated 2026-06-05 after public index slimming closeout
-- related request: [Docs Viewer Public Index Slimming Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming)
+- in porgress
 
 ## Summary
 
