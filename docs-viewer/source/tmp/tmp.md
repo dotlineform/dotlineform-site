@@ -9,6 +9,11 @@ ui_status: draft
 # tmp
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
+please proceed with batch 1 tasks.
+
+~
+
+we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
 please review the request and proposed tasks and identify any areas or tasks that are missing or need clarification.
 
 ~
