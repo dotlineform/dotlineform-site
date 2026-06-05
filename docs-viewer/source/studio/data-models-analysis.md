@@ -107,7 +107,7 @@ Current site mapping:
 Current dependencies:
 
 - Analysis docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- Analysis docs search is derived from the generated Analysis docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- Analysis docs search is derived from the generated Analysis docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 
 Current enforcement:
 

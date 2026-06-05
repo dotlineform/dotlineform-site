@@ -156,11 +156,10 @@ As docs search moves under Docs Viewer, its policy should be documented there or
 ## Related Documents
 
 - [Search](/docs/?scope=studio&doc=search)
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
-- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry-table)
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
-- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)

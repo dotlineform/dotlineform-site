@@ -32,12 +32,10 @@ Architecture direction:
 - [Docs Viewer Infrastructure](/docs/?scope=studio&doc=search-docs-viewer-infrastructure) - current Docs Viewer search config, pipeline, ranking, runtime, and targeted-update surfaces.
 - [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) - defines the Catalogue-owned `/catalogue/search/` route and entry-point model.
 - [Index Schema](/docs/?scope=studio&doc=search-index-schema) - describes the current catalogue search index shape.
-- [Field Registry](/docs/?scope=studio&doc=search-field-registry) - separates “field exists in schema” from “field participates in search and how.”
+- [Catalogue Field Registry](/docs/?scope=studio&doc=search-field-registry-table) - separates “field exists in schema” from “field participates in search and how.”
 - [Ranking Model](/docs/?scope=studio&doc=search-ranking-model) - explain current relevance behaviour separately from schema and field policy.
 - [UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) - separates browser behaviour from ranking and indexing
-- [Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) - explains how source content becomes the generated index.
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) - explains how source content becomes the generated index.
 - [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape) - describes the current search artifact shape for the Studio and Library docs scopes.
 - [Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) - describes token preparation, deduplication, hyphen/space handling, and similar preprocessing rules.
-- [Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) - operational checks for catalogue and docs-domain search surfaces.
-- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan) - separates server/watch orchestration from search-owned record generation for future incremental updates.
 - [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan) - additive-only catalogue targeted search boundary and remaining follow-on work.

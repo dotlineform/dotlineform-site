@@ -130,7 +130,6 @@ Before enabling catalogue targeted search in live write flows:
 - verify catalogue targeted mode refuses `--remove-missing`
 - verify existing changed records are refused and routed to full rebuild
 - confirm `catalogue` targeted mode still refuses ambiguous source-family changes and work-detail changes
-- update [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) with catalogue-targeted checks
 
 ## First Implementation Slice
 

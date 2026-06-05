@@ -143,4 +143,4 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)

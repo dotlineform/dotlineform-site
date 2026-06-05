@@ -80,4 +80,4 @@ For Docs Viewer body or summary indexing, update the Docs Viewer search builder/
 
 The first implementation deliberately avoids per-record checksums and sidecar payloads. The current fallback remains a full same-scope rebuild when a dependency cannot be invalidated cheaply and explicitly.
 
-For the broader build flow, see [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline).
+For the broader build flow, see [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture).

@@ -161,7 +161,7 @@ Current enforcement layers:
 
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
   drives the live rebuild path that writes the main catalogue indexes and record payloads
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
   documents the unified search builder that now owns `catalogue`, `studio`, `analysis`, and `library` search outputs from canonical repo JSON and published docs indexes
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   validates duplicate `doc_id` values and unknown `parent_id` references before writing docs-scope payloads

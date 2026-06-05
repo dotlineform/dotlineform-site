@@ -224,7 +224,7 @@ Why:
 Current dependencies:
 
 - Library docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- Library docs search is derived from the generated Library docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- Library docs search is derived from the generated Library docs index as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 
 Current enforcement:
 

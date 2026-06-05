@@ -177,7 +177,7 @@ Catalogue/runtime maintenance:
 
 - [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec (v1)](/docs/?scope=studio&doc=css-audit-spec)
 - CSS Audit Latest

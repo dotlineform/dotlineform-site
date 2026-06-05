@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T11:39:15Z",
+  "generated_at": "2026-06-05T12:19:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1932,7 +1932,7 @@
       "source_path": "search.md",
       "viewer_url": "/docs/?scope=studio&doc=search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search.json",
-      "content_text_length": 2392
+      "content_text_length": 2171
     },
     {
       "doc_id": "search-build-pipeline-architecture",
@@ -2010,7 +2010,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
       "parent_id": "search-catalogue-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-targeted-plan.json",
-      "content_text_length": 7046
+      "content_text_length": 6978
     },
     {
       "doc_id": "search-field-registry-definitions",
@@ -2054,7 +2054,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-normalisation-rules",
       "parent_id": "search-catalogue-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-normalisation-rules.json",
-      "content_text_length": 10350
+      "content_text_length": 10266
     },
     {
       "doc_id": "search-ranking-model",
@@ -2065,7 +2065,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-ranking-model",
       "parent_id": "search-catalogue-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ranking-model.json",
-      "content_text_length": 8823
+      "content_text_length": 8745
     },
     {
       "doc_id": "search-docs-viewer-infrastructure",
@@ -2133,7 +2133,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "parent_id": "search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-overview.json",
-      "content_text_length": 5104
+      "content_text_length": 5074
     },
     {
       "doc_id": "search-public-ui-contract",
@@ -2166,7 +2166,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
       "parent_id": "search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ui-behaviour.json",
-      "content_text_length": 12209
+      "content_text_length": 12135
     },
     {
       "doc_id": "studio",

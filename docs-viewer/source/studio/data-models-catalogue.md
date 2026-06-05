@@ -26,7 +26,7 @@ Current checked-in catalogue model families include:
 Primary writers:
 
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) refreshes route stubs, shared indexes, and per-record catalogue payloads.
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) writes `assets/data/search/catalogue/index.json`.
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) writes `assets/data/search/catalogue/index.json`.
 
 Primary validator:
 

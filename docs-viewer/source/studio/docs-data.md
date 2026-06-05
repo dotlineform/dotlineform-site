@@ -100,4 +100,4 @@ Why it is derived from the docs index rather than the source Markdown directly:
 
 Current writer:
 
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)

@@ -121,4 +121,4 @@ Related implementation docs:
 - [Catalogue Search Infrastructure](/docs/?scope=studio&doc=search-catalogue-infrastructure)
 - [Docs Viewer Search Infrastructure](/docs/?scope=studio&doc=search-docs-viewer-infrastructure)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)

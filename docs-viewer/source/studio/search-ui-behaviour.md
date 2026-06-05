@@ -35,9 +35,8 @@ It covers:
 - [Search Overview](/docs/?scope=studio&doc=search-overview) describes the subsystem at a high level
 - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) defines the Catalogue-owned `/catalogue/search/` route and entry model
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the data available to the UI
-- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines which fields contribute to search and display
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry-table) defines which fields contribute to search and display
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) defines result ordering
-- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines what UI behaviour should be checked
 
 ## UI behaviour principles
 
