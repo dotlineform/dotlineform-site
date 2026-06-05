@@ -5,12 +5,10 @@ import {
 import {
   collectRecentDocs,
   collectSearchMatches,
+  normalizeRecentEntries,
   normalizeSearchEntries,
   normalizeSearchText
 } from "./docs-viewer-search.js";
-import {
-  isDocViewable
-} from "./docs-viewer-tree.js";
 
 export function createDocsViewerSearchRouteCommands(context) {
   var settings = context || {};
@@ -52,6 +50,10 @@ export function initDocsViewerSearchController(context) {
     return typeof context.searchIndexUrl === "function" ? context.searchIndexUrl() : context.searchIndexUrl;
   }
 
+  function currentRecentlyAddedUrl() {
+    return typeof context.recentlyAddedUrl === "function" ? context.recentlyAddedUrl() : context.recentlyAddedUrl;
+  }
+
   function currentViewerScope() {
     return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
   }
@@ -62,6 +64,10 @@ export function initDocsViewerSearchController(context) {
 
   function searchControlsAvailable() {
     return Boolean(searchInput && results && more);
+  }
+
+  function recentIsEnabled() {
+    return Boolean(searchInput && results && more && currentRecentlyAddedUrl());
   }
 
   function applyCurrentRoute(options) {
@@ -144,6 +150,40 @@ export function initDocsViewerSearchController(context) {
     return searchRecent.searchRequestPromise;
   }
 
+  function loadRecentEntries() {
+    if (!recentIsEnabled()) {
+      return Promise.reject(new Error("Recently added unavailable."));
+    }
+    if (searchRecent.recentLoaded) {
+      return Promise.resolve(searchRecent.recentEntries);
+    }
+    if (searchRecent.recentRequestPromise) {
+      return searchRecent.recentRequestPromise;
+    }
+
+    var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
+
+    searchRecent.recentRequestPromise = context.generatedData.readRecentlyAdded({
+      recentlyAddedUrl: currentRecentlyAddedUrl(),
+      viewerScope: currentViewerScope()
+    })
+      .then(function (payload) {
+        searchRecent.recentEntries = normalizeRecentEntries(payload && Array.isArray(payload.docs) ? payload.docs : []);
+        searchRecent.recentLoaded = true;
+        return searchRecent.recentEntries;
+      })
+      .catch(function (error) {
+        searchRecent.recentLoaded = false;
+        throw error;
+      })
+      .finally(function () {
+        stopBusy();
+        searchRecent.recentRequestPromise = null;
+      });
+
+    return searchRecent.recentRequestPromise;
+  }
+
   function setResultsStatus(message, isError) {
     if (!resultsStatus) {
       if (isError && typeof context.setStatus === "function") context.setStatus(message, true);
@@ -169,7 +209,9 @@ export function initDocsViewerSearchController(context) {
     var parts = [];
     var addedDate = String(doc.added_date || doc.last_updated || "").trim();
     if (addedDate) parts.push(addedDate);
-    if (doc.parent_id) {
+    if (doc.parent_title) {
+      parts.push(String(doc.parent_title || "").trim());
+    } else if (doc.parent_id) {
       var parent = documentIndex.docsById.get(doc.parent_id);
       var parentTitle = parent ? String(parent.title || "").trim() : "";
       if (parentTitle) parts.push(parentTitle);
@@ -186,11 +228,29 @@ export function initDocsViewerSearchController(context) {
   }
 
   function renderRecentMode() {
-    if (!searchIsEnabled()) return;
+    if (!recentIsEnabled()) return;
     context.setRecentModeActive(true);
     showRecentPane();
     document.title = "Recently Added | dotlineform";
-    var recentDocs = collectRecentDocs(documentIndex.docs.filter(isDocViewable), searchRecent.recentLimit);
+    if (!searchRecent.recentLoaded) {
+      setResultsStatus("Loading recently added docs...", false);
+      results.innerHTML = "";
+      more.innerHTML = "";
+      more.hidden = true;
+      loadRecentEntries()
+        .then(function () {
+          if (searchRecent.recentModeActive) renderRecentMode();
+        })
+        .catch(function (error) {
+          if (!searchRecent.recentModeActive) return;
+          setResultsStatus(error.message || "Failed to load recently added docs.", true);
+          results.innerHTML = "";
+          more.innerHTML = "";
+          more.hidden = true;
+        });
+      return;
+    }
+    var recentDocs = collectRecentDocs(searchRecent.recentEntries || [], searchRecent.recentLimit);
     if (!recentDocs.length) {
       setResultsStatus("No recently added docs.", false);
       results.innerHTML = "";

@@ -349,6 +349,9 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
+    assert browser_config["scopes"][0]["index_url"] == "/docs-viewer/generated/docs/studio/index.json"
+    assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
+    assert browser_config["scopes"][0]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
     assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}
     assert public_config["scopes"] == []
 

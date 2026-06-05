@@ -85,7 +85,8 @@ export function startDocsViewerRuntime(options) {
   var allowScopeQuery = routeContext.access.allowScopeQuery;
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
-  var indexUrl = routeContext.indexUrl;
+  var indexTreeUrl = routeContext.indexTreeUrl;
+  var recentlyAddedUrl = routeContext.recentlyAddedUrl;
   var viewerBaseUrl = routeContext.viewerBaseUrl;
   var viewerScope = routeContext.viewerScope;
   var includeScopeParam = routeContext.includeScopeParam;
@@ -245,7 +246,7 @@ export function startDocsViewerRuntime(options) {
     hideDocPane: hideDocPane,
     generatedData: generatedDataRuntime,
     includeScopeParam: function () { return includeScopeParam; },
-    indexUrl: function () { return indexUrl; },
+    indexTreeUrl: function () { return indexTreeUrl; },
     managementModeValue: MANAGEMENT_MODE,
     more: more,
     renderBookmarkUi: renderBookmarkUi,
@@ -306,6 +307,7 @@ export function startDocsViewerRuntime(options) {
     searchDebounceMs: SEARCH_DEBOUNCE_MS,
     searchRecent: appSession.domains.searchRecent,
     searchIndexUrl: function () { return searchIndexUrl; },
+    recentlyAddedUrl: function () { return recentlyAddedUrl; },
     searchInput: searchInput,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
@@ -415,7 +417,8 @@ export function startDocsViewerRuntime(options) {
     routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
     appSession.domains.routeSession.updateRouteContext(routeContext);
     viewerScope = routeContext.viewerScope;
-    indexUrl = routeContext.indexUrl;
+    indexTreeUrl = routeContext.indexTreeUrl;
+    recentlyAddedUrl = routeContext.recentlyAddedUrl;
     searchIndexUrl = routeContext.searchIndexUrl;
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;

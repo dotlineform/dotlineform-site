@@ -74,7 +74,9 @@ export function initDocsViewerConfigController(context) {
       viewerBaseUrl: viewerBase,
       includeScopeParam: rawScope.include_scope_param === true,
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
-      indexUrl: String(rawScope.index_url || "").trim(),
+      indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
+      recentlyAddedUrl: String(rawScope.recently_added_url || "").trim(),
+      docsIndexUrl: String(rawScope.index_url || rawScope.docs_index_url || "").trim(),
       searchIndexUrl: String(rawScope.search_index_url || "").trim()
     };
   }
@@ -101,8 +103,8 @@ export function initDocsViewerConfigController(context) {
       throw new Error("Docs Viewer config does not define any scopes.");
     }
     scopes.forEach(function (config) {
-      if (!config.defaultDocId || !config.indexUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing default_doc_id or index_url.");
+      if (!config.defaultDocId || !config.indexTreeUrl || !config.recentlyAddedUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing default_doc_id, index_tree_url, or recently_added_url.");
       }
     });
     return {
@@ -195,7 +197,9 @@ export function initDocsViewerConfigController(context) {
       context.applyRouteGlobals(routeProjection);
     }
     root.dataset.viewerScope = scope;
-    root.dataset.indexUrl = config.indexUrl;
+    root.dataset.indexTreeUrl = config.indexTreeUrl;
+    root.dataset.recentlyAddedUrl = config.recentlyAddedUrl;
+    root.dataset.docsIndexUrl = config.docsIndexUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = config.defaultDocId;
     root.dataset.viewerBaseUrl = routeProjection.viewerBaseUrl;

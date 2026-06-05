@@ -9,7 +9,7 @@ ui_status: draft
 # tmp
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
-please proceed with batch 1 tasks.
+please proceed with batch 3 tasks.
 
 ~
 
@@ -25,7 +25,7 @@ Follow the guidance in the templates for what to include in them.
 
 ~
 
-`docs-viewer-runtime-boundary.md` currently contains long lists of entrypoints etc. is there a better way of organising and structuring these lists? creating focussed child documents is also an option to be considered.
+'The big smoke file has many embedded route-config records.' - this presumably means that the test file itself is more likely to cause errors? perhaps it be more modular?
 
 ---
 

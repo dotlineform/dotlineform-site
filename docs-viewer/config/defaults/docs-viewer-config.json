@@ -11,6 +11,8 @@
       "default_doc_id": "dev-home",
       "media_path_prefix": "docs/studio",
       "index_url": "/docs-viewer/generated/docs/studio/index.json",
+      "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
+      "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
       "search_index_url": "/docs-viewer/generated/search/studio/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -33,6 +35,8 @@
       "default_doc_id": "library",
       "media_path_prefix": "docs/library",
       "index_url": "/assets/data/docs/scopes/library/index.json",
+      "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
+      "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
       "search_index_url": "/assets/data/search/library/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -55,6 +59,8 @@
       "default_doc_id": "analysis",
       "media_path_prefix": "docs/analysis",
       "index_url": "/assets/data/docs/scopes/analysis/index.json",
+      "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
+      "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
       "search_index_url": "/assets/data/search/analysis/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -77,6 +83,8 @@
       "default_doc_id": "tmp",
       "media_path_prefix": "docs/tmp",
       "index_url": "/docs-viewer/generated/docs/tmp/index.json",
+      "index_tree_url": "/docs-viewer/generated/docs/tmp/index-tree.json",
+      "recently_added_url": "/docs-viewer/generated/docs/tmp/recently-added.json",
       "search_index_url": "/docs-viewer/generated/search/tmp/index.json",
       "search": {
         "domain": "docs_viewer",

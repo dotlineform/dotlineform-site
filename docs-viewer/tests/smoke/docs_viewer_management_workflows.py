@@ -179,6 +179,8 @@ def write_browser_config(target_root: Path) -> None:
                     "default_doc_id": "root-doc",
                     "media_path_prefix": "docs/studio",
                     "index_url": "/docs-viewer/generated/docs/studio/index.json",
+                    "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
+                    "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
                     "search_index_url": "/docs-viewer/generated/search/studio/index.json",
                 },
                 {
@@ -190,6 +192,8 @@ def write_browser_config(target_root: Path) -> None:
                     "default_doc_id": "library",
                     "media_path_prefix": "docs/library",
                     "index_url": "/assets/data/docs/scopes/library/index.json",
+                    "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
+                    "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
                     "search_index_url": "/assets/data/search/library/index.json",
                 },
                 {
@@ -201,6 +205,8 @@ def write_browser_config(target_root: Path) -> None:
                     "default_doc_id": "analysis",
                     "media_path_prefix": "docs/analysis",
                     "index_url": "/assets/data/docs/scopes/analysis/index.json",
+                    "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
+                    "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
                     "search_index_url": "/assets/data/search/analysis/index.json",
                 },
             ],
@@ -236,6 +242,8 @@ def refresh_browser_config_from_scope_config(target_root: Path) -> None:
                 "default_doc_id": str(scope.get("default_doc_id") or ""),
                 "media_path_prefix": str(scope.get("media_path_prefix") or ""),
                 "index_url": f"/{str(scope.get('output') or '').strip('/')}/index.json",
+                "index_tree_url": f"/{str(scope.get('output') or '').strip('/')}/index-tree.json",
+                "recently_added_url": f"/{str(scope.get('output') or '').strip('/')}/recently-added.json",
                 "search_index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
                 "search": {
                     "domain": "docs_viewer",

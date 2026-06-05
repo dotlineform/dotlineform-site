@@ -62,9 +62,9 @@ def page_diagnostics(page: Page) -> dict[str, object]:
             const status = document.querySelector("#docsViewerStatus");
             let indexText = "";
             let payloadText = "";
-            if (root?.dataset.indexUrl) {
+            if (root?.dataset.indexTreeUrl) {
                 try {
-                    const response = await fetch(root.dataset.indexUrl, { cache: "no-store" });
+                    const response = await fetch(root.dataset.indexTreeUrl, { cache: "no-store" });
                     const body = await response.text();
                     indexText = String(response.status) + " " + body.slice(0, 500);
                     const payload = JSON.parse(body);

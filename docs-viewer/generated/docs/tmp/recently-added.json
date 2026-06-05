@@ -1,0 +1,67 @@
+{
+  "schema": "docs_recently_added_v1",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "github-actions",
+      "title": "github actions",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-actions.json",
+      "added_date": "2026-06-02"
+    },
+    {
+      "doc_id": "risks",
+      "title": "risks",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/risks.json",
+      "added_date": "2026-05-31"
+    },
+    {
+      "doc_id": "docs-viewer",
+      "title": "docs viewer",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/docs-viewer.json",
+      "added_date": "2026-05-30"
+    },
+    {
+      "doc_id": "jekyll",
+      "title": "jekyll",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/jekyll.json",
+      "added_date": "2026-05-30"
+    },
+    {
+      "doc_id": "analytics",
+      "title": "analytics",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/analytics.json",
+      "added_date": "2026-05-28"
+    },
+    {
+      "doc_id": "azure",
+      "title": "azure",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/azure.json",
+      "added_date": "2026-05-28"
+    },
+    {
+      "doc_id": "emoji",
+      "title": "emoji",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
+      "added_date": "2026-05-28"
+    },
+    {
+      "doc_id": "links",
+      "title": "links",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/links.json",
+      "added_date": "2026-05-28"
+    },
+    {
+      "doc_id": "plan",
+      "title": "Docs Viewer Workstream Priority Plan",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/plan.json",
+      "added_date": "2026-05-27"
+    },
+    {
+      "doc_id": "tmp",
+      "title": "tmp",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
+      "added_date": "2026-05-26"
+    }
+  ],
+  "generated_at": "2026-06-05T16:02:27Z"
+}

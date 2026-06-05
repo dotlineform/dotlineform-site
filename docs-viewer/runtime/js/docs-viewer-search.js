@@ -42,6 +42,26 @@ export function normalizeSearchEntries(entries) {
     });
 }
 
+export function normalizeRecentEntries(entries) {
+  return entries
+    .filter(function (entry) {
+      return entry && typeof entry === "object";
+    })
+    .map(function (entry) {
+      return {
+        doc_id: String(entry.doc_id || "").trim(),
+        title: String(entry.title || "").trim(),
+        content_url: String(entry.content_url || "").trim(),
+        added_date: String(entry.added_date || "").trim(),
+        parent_id: String(entry.parent_id || "").trim(),
+        parent_title: String(entry.parent_title || "").trim()
+      };
+    })
+    .filter(function (entry) {
+      return entry.doc_id && entry.title && entry.added_date;
+    });
+}
+
 export function scoreSearchEntry(entry, query, queryTokens) {
   if (entry.idNorm === query) return 900;
   if (entry.titleNorm === query) return 860;

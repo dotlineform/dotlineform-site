@@ -185,6 +185,26 @@ def write_generated_docs(root: Path) -> None:
             "docs": docs,
         },
     )
+    write_json(
+        root / "docs-viewer/generated/docs/studio/index-tree.json",
+        {
+            "schema": "docs_index_tree_v1",
+            "viewer_options": {
+                "show_updated_date": True,
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": [],
+            },
+            "docs": docs,
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/studio/recently-added.json",
+        {
+            "schema": "docs_recently_added_v1",
+            "limit": 10,
+            "docs": [docs[1]],
+        },
+    )
     write_json(root / "docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json", {"doc_id": "non-viewable-doc"})
     write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
@@ -243,6 +263,8 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                     "default_doc_id": "child",
                     "media_path_prefix": "docs/studio",
                     "index_url": "/docs-viewer/generated/docs/studio/index.json",
+                    "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
+                    "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
                     "search_index_url": "/docs-viewer/generated/search/studio/index.json",
                 }
             ],
@@ -896,6 +918,8 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
     assert payload["scopes"][0]["browser_config"]["index_url"] == "/docs-viewer/generated/docs/studio/index.json"
+    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
+    assert payload["scopes"][0]["browser_config"]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
     assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
     assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []

@@ -108,8 +108,8 @@ export function initDocsViewerRouteWorkflow(context) {
     return Boolean(currentValue(context.allowScopeQuery));
   }
 
-  function indexUrl() {
-    return currentValue(context.indexUrl);
+  function indexTreeUrl() {
+    return currentValue(context.indexTreeUrl);
   }
 
   function scopeConfigsById() {
@@ -313,8 +313,8 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function loadIndex() {
     var stopBusy = startBusy();
-    return context.generatedData.readDocsIndex({
-      indexUrl: indexUrl(),
+    return context.generatedData.readDocsIndexTree({
+      indexTreeUrl: indexTreeUrl(),
       viewerScope: viewerScope()
     })
       .then(function (payload) {
@@ -322,7 +322,7 @@ export function initDocsViewerRouteWorkflow(context) {
       })
       .catch(function (error) {
         state.reloadExpectedDocId = "";
-        setStatus(error.message || "Failed to load docs index.", true);
+        setStatus(error.message || "Failed to load docs index tree.", true);
         context.hideDocPane();
         if (content) content.textContent = "";
         throw error;

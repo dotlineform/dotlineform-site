@@ -19,7 +19,8 @@
         "management_mode_value": "manage"
       },
       "docs_paths": {
-        "index_url": "/docs-viewer/generated/docs/studio/index.json",
+        "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
+        "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
         "search_index_url": "/docs-viewer/generated/search/studio/index.json"
       },
       "config_urls": {
@@ -69,7 +70,8 @@
         "management_mode_value": "manage"
       },
       "docs_paths": {
-        "index_url": "/assets/data/docs/scopes/library/index.json",
+        "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
+        "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
         "search_index_url": "/assets/data/search/library/index.json"
       },
       "config_urls": {
@@ -103,7 +105,8 @@
         "management_mode_value": "manage"
       },
       "docs_paths": {
-        "index_url": "/assets/data/docs/scopes/analysis/index.json",
+        "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
+        "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
       "config_urls": {

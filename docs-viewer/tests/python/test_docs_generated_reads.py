@@ -70,6 +70,14 @@ def write_generated_docs(root: Path) -> None:
         },
     ]
     write_json(root / "docs-viewer/generated/docs/studio/index.json", {"docs": docs})
+    write_json(
+        root / "docs-viewer/generated/docs/studio/index-tree.json",
+        {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/studio/recently-added.json",
+        {"schema": "docs_recently_added_v1", "limit": 10, "docs": [docs[1]]},
+    )
     write_json(root / "docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json", {"doc_id": "non-viewable-doc"})
     write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(
@@ -188,6 +196,20 @@ def test_generated_references_reads_scope_index_and_target() -> None:
     assert target_payload["target_kind"] == "work"
 
 
+def test_generated_tree_and_recently_added_reads_scope_payloads() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+
+        index_tree = generated_reads.read_generated_docs_index_tree(repo_root, "studio")
+        recently_added = generated_reads.read_generated_recently_added(repo_root, "studio")
+
+    assert index_tree["schema"] == "docs_index_tree_v1"
+    assert index_tree["docs"][0]["doc_id"] == "non-viewable-doc"
+    assert recently_added["schema"] == "docs_recently_added_v1"
+    assert recently_added["docs"][0]["doc_id"] == "child"
+
+
 def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -278,6 +300,7 @@ def main() -> None:
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
     test_generated_references_reads_scope_index_and_target()
+    test_generated_tree_and_recently_added_reads_scope_payloads()
     test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
     test_generated_search_path_uses_scope_config_search_output()

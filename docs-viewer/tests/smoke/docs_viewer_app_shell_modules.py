@@ -338,7 +338,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                   data-docs-viewer-config-url="/docs-viewer/config/defaults/docs-viewer-config.json"
                   data-viewer-base-url="/docs/"
                   data-viewer-scope="studio"
-                  data-index-url="/assets/data/docs/scopes/studio/index.json"
+                  data-index-tree-url="/assets/data/docs/scopes/studio/index-tree.json"
                   data-search-index-url="/assets/data/search/studio/index.json"
                   data-default-doc-id="dev-home"
                   data-include-scope-param="true"
@@ -367,7 +367,8 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 viewer_base_url: '/docs/',
                 generated_base_url: 'http://127.0.0.1:8789/',
                 docs_paths: {
-                    index_url: '/assets/data/docs/scopes/studio/index.json',
+                    index_tree_url: '/assets/data/docs/scopes/studio/index-tree.json',
+                    recently_added_url: '/assets/data/docs/scopes/studio/recently-added.json',
                     search_index_url: '/assets/data/search/studio/index.json'
                 },
                 config_urls: {
@@ -393,7 +394,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
             const refs = shell.getDocsViewerAppShellRefs({ root, document });
             const updated = context.updateDocsViewerRouteContext(route, {
                 viewerScope: 'library',
-                indexUrl: '/assets/data/docs/scopes/library/index.json?v=smoke',
+                indexTreeUrl: '/assets/data/docs/scopes/library/index-tree.json?v=smoke',
                 searchIndexUrl: '/assets/data/search/library/index.json?v=smoke',
                 defaultRouteDocId: 'library-home',
                 viewerBaseUrl: '/library/',
@@ -409,7 +410,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 managementRequested: route.access.managementRequested,
                 importRequested: route.access.importRequested,
                 publicReadOnly: route.access.publicReadOnly,
-                indexUrl: route.indexUrl,
+                indexTreeUrl: route.indexTreeUrl,
                 searchIndexUrl: route.searchIndexUrl,
                 managementBaseUrl: route.managementBaseUrl,
                 generatedBaseUrl: route.generatedBaseUrl,
@@ -448,7 +449,7 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
         "managementRequested": True,
         "importRequested": True,
         "publicReadOnly": False,
-        "indexUrl": "/assets/data/docs/scopes/studio/index.json?v=smoke",
+        "indexTreeUrl": "/assets/data/docs/scopes/studio/index-tree.json?v=smoke",
         "searchIndexUrl": "/assets/data/search/studio/index.json?v=smoke",
         "managementBaseUrl": "http://127.0.0.1:8789",
         "generatedBaseUrl": "http://127.0.0.1:8789",
@@ -506,7 +507,8 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 viewer_base_url: '/library/',
                 generated_base_url: 'http://127.0.0.1:8789',
                 docs_paths: {
-                    index_url: '/assets/data/docs/scopes/library/index.json',
+                    index_tree_url: '/assets/data/docs/scopes/library/index-tree.json',
+                    recently_added_url: '/assets/data/docs/scopes/library/recently-added.json',
                     search_index_url: '/assets/data/search/library/index.json'
                 },
                 config_urls: {
@@ -543,7 +545,7 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
                 routeType: resolved.routeType,
                 defaultScopeId: resolved.defaultScopeId,
                 legacyIgnored: route.viewerBaseUrl,
-                indexUrl: route.indexUrl,
+                indexTreeUrl: route.indexTreeUrl,
                 routeGeneratedBaseUrl: route.generatedBaseUrl,
                 routeManagementBaseUrl: route.managementBaseUrl,
                 allowManagement: projected.allowManagement,
@@ -564,7 +566,7 @@ def assert_route_config_explicit_and_access_projection(page: Page) -> None:
         "routeType": "public",
         "defaultScopeId": "library",
         "legacyIgnored": "/library/",
-        "indexUrl": "/assets/data/docs/scopes/library/index.json?v=smoke",
+        "indexTreeUrl": "/assets/data/docs/scopes/library/index-tree.json?v=smoke",
         "routeGeneratedBaseUrl": "",
         "routeManagementBaseUrl": "",
         "allowManagement": False,
@@ -594,7 +596,7 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
                   data-allow-scope-query="false"
                   data-viewer-base-url="/legacy/"
                   data-viewer-scope="legacy"
-                  data-index-url="/legacy/index.json"
+                  data-index-tree-url="/legacy/index-tree.json"
                   data-search-index-url="/legacy/search.json"
                   data-default-doc-id="legacy-home"
                 >
@@ -608,7 +610,8 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
                     "viewer_base_url": "/analysis/",
                     "generated_base_url": "",
                     "docs_paths": {
-                      "index_url": "/assets/data/docs/scopes/analysis/index.json",
+                      "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
+                      "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
                       "search_index_url": "/assets/data/search/analysis/index.json"
                     },
                     "config_urls": {
@@ -650,7 +653,7 @@ def assert_route_config_requires_explicit_or_registry_config(page: Page) -> None
                   data-allow-scope-query="false"
                   data-viewer-base-url="/library/"
                   data-viewer-scope="library"
-                  data-index-url="/assets/data/docs/scopes/library/index.json"
+                  data-index-tree-url="/assets/data/docs/scopes/library/index-tree.json"
                   data-search-index-url="/assets/data/search/library/index.json"
                   data-default-doc-id="library"
                   data-docs-viewer-config-url="/docs-viewer/config/defaults/docs-viewer-public-config.json"
@@ -694,7 +697,7 @@ def assert_route_config_rejects_compatibility_aliases(page: Page) -> None:
                         includeScopeParam: false,
                         viewerBaseUrl: '/library/',
                         docsPaths: {
-                            indexUrl: '/assets/data/docs/scopes/library/index.json',
+                            indexTreeUrl: '/assets/data/docs/scopes/library/index-tree.json',
                             searchIndexUrl: '/assets/data/search/library/index.json'
                         },
                         configUrls: {
@@ -735,7 +738,8 @@ def assert_route_config_rejects_compatibility_aliases(page: Page) -> None:
                                     default_doc_id: 'library',
                                     viewer_base_url: '/library/',
                                     docs_paths: {
-                                        index_url: '/assets/data/docs/scopes/library/index.json',
+                                        index_tree_url: '/assets/data/docs/scopes/library/index-tree.json',
+                                        recently_added_url: '/assets/data/docs/scopes/library/recently-added.json',
                                         search_index_url: '/assets/data/search/library/index.json'
                                     },
                                     config_urls: {
@@ -761,7 +765,8 @@ def assert_route_config_rejects_compatibility_aliases(page: Page) -> None:
                     include_scope_param: false,
                     viewer_base_url: '/analysis/',
                     docs_paths: {
-                        index_url: '/assets/data/docs/scopes/analysis/index.json',
+                        index_tree_url: '/assets/data/docs/scopes/analysis/index-tree.json',
+                        recently_added_url: '/assets/data/docs/scopes/analysis/recently-added.json',
                         search_index_url: '/assets/data/search/analysis/index.json'
                     },
                     config_urls: {
@@ -847,7 +852,7 @@ def assert_route_config_registry_resolution(page: Page) -> None:
                 routeId: resolved.routeId,
                 routeType: resolved.routeType,
                 defaultScopeId: route.viewerScope,
-                indexUrl: route.indexUrl,
+                indexTreeUrl: route.indexTreeUrl,
                 searchIndexUrl: route.searchIndexUrl,
                 docsViewerConfigUrl: route.docsViewerConfigUrl,
                 allowManagement: route.access.allowManagement,
@@ -863,7 +868,7 @@ def assert_route_config_registry_resolution(page: Page) -> None:
         "routeId": "analysis",
         "routeType": "public",
         "defaultScopeId": "analysis",
-        "indexUrl": "/assets/data/docs/scopes/analysis/index.json?v=smoke",
+        "indexTreeUrl": "/assets/data/docs/scopes/analysis/index-tree.json?v=smoke",
         "searchIndexUrl": "/assets/data/search/analysis/index.json?v=smoke",
         "docsViewerConfigUrl": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
         "allowManagement": False,
@@ -900,7 +905,8 @@ def assert_app_boot_public_context_contract(page: Page) -> None:
                 default_doc_id: 'analysis',
                 viewer_base_url: '/analysis/',
                 docs_paths: {
-                    index_url: '/assets/data/docs/scopes/analysis/index.json',
+                    index_tree_url: '/assets/data/docs/scopes/analysis/index-tree.json',
+                    recently_added_url: '/assets/data/docs/scopes/analysis/recently-added.json',
                     search_index_url: '/assets/data/search/analysis/index.json'
                 },
                 config_urls: {
@@ -1067,7 +1073,8 @@ def assert_app_composition_contract(page: Page) -> None:
                     viewer_base_url: '/analysis/',
                     generated_base_url: '',
                     docs_paths: {
-                        index_url: '/assets/data/docs/scopes/analysis/index.json',
+                        index_tree_url: '/assets/data/docs/scopes/analysis/index-tree.json',
+                        recently_added_url: '/assets/data/docs/scopes/analysis/recently-added.json',
                         search_index_url: '/assets/data/search/analysis/index.json'
                     },
                     config_urls: {
@@ -1145,7 +1152,8 @@ def assert_app_composition_contract(page: Page) -> None:
                     viewer_base_url: '/docs/',
                     generated_base_url: 'http://127.0.0.1:8789/',
                     docs_paths: {
-                        index_url: '/assets/data/docs/scopes/studio/index.json',
+                        index_tree_url: '/assets/data/docs/scopes/studio/index-tree.json',
+                        recently_added_url: '/assets/data/docs/scopes/studio/recently-added.json',
                         search_index_url: '/assets/data/search/studio/index.json'
                     },
                     config_urls: {
@@ -1307,7 +1315,8 @@ def assert_app_boot_management_context_contract(page: Page) -> None:
                 viewer_base_url: '/docs/',
                 generated_base_url: 'http://127.0.0.1:8789',
                 docs_paths: {
-                    index_url: '/assets/data/docs/scopes/studio/index.json',
+                    index_tree_url: '/assets/data/docs/scopes/studio/index-tree.json',
+                    recently_added_url: '/assets/data/docs/scopes/studio/recently-added.json',
                     search_index_url: '/assets/data/search/studio/index.json'
                 },
                 config_urls: {
@@ -1389,7 +1398,8 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                 default_doc_id: 'analysis',
                 viewer_base_url: '/analysis/',
                 docs_paths: {
-                    index_url: '/assets/data/docs/scopes/analysis/index.json',
+                    index_tree_url: '/assets/data/docs/scopes/analysis/index-tree.json',
+                    recently_added_url: '/assets/data/docs/scopes/analysis/recently-added.json',
                     search_index_url: '/assets/data/search/analysis/index.json'
                 },
                 config_urls: {
@@ -1403,28 +1413,54 @@ def assert_app_boot_start_is_single_start(page: Page) -> None:
                     management_base_url: ''
                 }
             };
-            const first = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
-            const second = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
-            const app = await first;
-            if (app && app.initialLoadPromise) await app.initialLoadPromise;
-            const handleKeys = Object.keys(app || {}).sort();
-            const activeLink = document.querySelector('#docsViewerNav a[aria-current="page"]');
-            return {
-                samePromise: first === second,
-                handleKeys,
-                hasBroadRuntimeState: Boolean(app && app.state),
-                hasCompositionBridge: Boolean(app && app.appComposition),
-                hasSessionBridge: Boolean(app && app.appSession),
-                hasManagementBridge: Boolean(app && app.loadManagementController),
-                hasRouteWorkflowBridge: Boolean(app && (app.applyCurrentRoute || app.loadIndex || app.loadDoc)),
-                hasInitialLoadPromise: Boolean(app && app.initialLoadPromise && typeof app.initialLoadPromise.then === 'function'),
-                routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
-                viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
-                navCount: document.querySelectorAll('#docsViewerNav').length,
-                mainViewCount: document.querySelectorAll('.docsViewer__main').length,
-                activeDocId: activeLink?.dataset.docId || '',
-                activeDocText: activeLink?.textContent.trim() || ''
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = (url, options) => {
+                const path = new URL(String(url), window.location.origin).pathname;
+                if (path === '/assets/data/docs/scopes/analysis/index-tree.json') {
+                    return Promise.resolve({
+                        ok: true,
+                        status: 200,
+                        json: () => Promise.resolve({
+                            schema: 'docs_index_tree_v1',
+                            viewer_options: {},
+                            docs: [
+                                {
+                                    doc_id: 'analysis',
+                                    title: 'Analysis',
+                                    content_url: '/assets/data/docs/scopes/analysis/by-id/analysis.json'
+                                }
+                            ]
+                        })
+                    });
+                }
+                return originalFetch(url, options);
             };
+            try {
+                const first = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
+                const second = boot.startDocsViewerApp({ root, document, window, assetVersion: 'boot-smoke', routeConfig });
+                const app = await first;
+                if (app && app.initialLoadPromise) await app.initialLoadPromise;
+                const handleKeys = Object.keys(app || {}).sort();
+                const activeLink = document.querySelector('#docsViewerNav a[aria-current="page"]');
+                return {
+                    samePromise: first === second,
+                    handleKeys,
+                    hasBroadRuntimeState: Boolean(app && app.state),
+                    hasCompositionBridge: Boolean(app && app.appComposition),
+                    hasSessionBridge: Boolean(app && app.appSession),
+                    hasManagementBridge: Boolean(app && app.loadManagementController),
+                    hasRouteWorkflowBridge: Boolean(app && (app.applyCurrentRoute || app.loadIndex || app.loadDoc)),
+                    hasInitialLoadPromise: Boolean(app && app.initialLoadPromise && typeof app.initialLoadPromise.then === 'function'),
+                    routeId: app && app.routeContext ? app.routeContext().routeConfig.routeId : '',
+                    viewerToolbarCount: document.querySelectorAll('.docsViewer__viewerToolbar').length,
+                    navCount: document.querySelectorAll('#docsViewerNav').length,
+                    mainViewCount: document.querySelectorAll('.docsViewer__main').length,
+                    activeDocId: activeLink?.dataset.docId || '',
+                    activeDocText: activeLink?.textContent.trim() || ''
+                };
+            } finally {
+                window.fetch = originalFetch;
+            }
         }"""
     )
     if result["samePromise"] is not True:
@@ -2813,7 +2849,8 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 reloadExpectedDocId: ''
             };
             const payloads = {
-                '/index.json': {
+                '/index-tree.json': {
+                    schema: 'docs_index_tree_v1',
                     viewer_options: {
                         non_loadable_doc_ids: ['folder'],
                         manage_only_tree_root_ids: ['private'],
@@ -2878,7 +2915,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 handleMissingDoc: () => calls.push('missing'),
                 handlePayloadError: (error) => calls.push(`payload-error:${error.message}`),
                 generatedData: {
-                    readDocsIndex: ({ indexUrl }) => responseFor(indexUrl).then((response) => response.json()),
+                    readDocsIndexTree: ({ indexTreeUrl }) => responseFor(indexTreeUrl).then((response) => response.json()),
                     readDocumentPayload: (doc) => responseFor(doc.content_url).then((response) => response.json())
                 },
                 hasActiveQuery: (query) => {
@@ -2888,7 +2925,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
                 hideContextMenu: () => calls.push('hide-context'),
                 hideDocPane: () => calls.push('hide-doc-pane'),
                 includeScopeParam: () => false,
-                indexUrl: () => '/index.json',
+                indexTreeUrl: () => '/index-tree.json',
                 managementModeValue: 'manage',
                 renderBookmarkUi: () => calls.push('bookmarks'),
                 renderDocLoadingState: (doc) => calls.push(`loading:${doc.doc_id}`),
@@ -3015,7 +3052,7 @@ def assert_route_workflow_contract(page: Page, base_url: str) -> None:
         raise AssertionError(f"route workflow link interception failed: {result!r}")
     if result["afterPopstateUrl"] != "/library/?doc=child#back-hash":
         raise AssertionError(f"route workflow popstate handling changed URL unexpectedly: {result!r}")
-    if "/index.json" not in result["fetchCalls"] or "/child.json" not in result["fetchCalls"] or "/intro.json" not in result["fetchCalls"]:
+    if "/index-tree.json" not in result["fetchCalls"] or "/index.json" in result["fetchCalls"] or "/child.json" not in result["fetchCalls"] or "/intro.json" not in result["fetchCalls"]:
         raise AssertionError(f"route workflow did not hand off expected fetches: {result!r}")
 
 
@@ -3091,6 +3128,9 @@ def assert_search_controller_contract(page: Page) -> None:
                 ],
                 searchLoaded: true,
                 searchRequestPromise: null,
+                recentEntries: [],
+                recentLoaded: false,
+                recentRequestPromise: null,
                 searchQuery: 'guide',
                 searchVisibleCount: 1,
                 searchRouteActive: false,
@@ -3099,7 +3139,16 @@ def assert_search_controller_contract(page: Page) -> None:
             };
             const controller = module.initDocsViewerSearchController({
                 generatedData: {
-                    readSearchIndex: () => Promise.resolve({ entries: [] })
+                    readSearchIndex: () => Promise.resolve({ entries: [] }),
+                    readRecentlyAdded: ({ recentlyAddedUrl }) => {
+                        calls.push(`recent-url:${recentlyAddedUrl}`);
+                        return Promise.resolve({
+                            docs: [
+                                { doc_id: 'intro', title: 'Intro Guide', content_url: '/intro.json', added_date: '2026-05-27' },
+                                { doc_id: 'second', title: 'Second Guide', content_url: '/second.json', parent_id: 'intro', parent_title: 'Intro Guide', added_date: '2026-05-26' }
+                            ]
+                        });
+                    }
                 },
                 hasActiveQuery: (query) => Boolean(String(typeof query === 'string' ? query : searchRecent.searchQuery || '').trim()),
                 hideContextMenu: () => calls.push('hide-context'),
@@ -3122,6 +3171,7 @@ def assert_search_controller_contract(page: Page) -> None:
                 searchDebounceMs: 0,
                 searchRecent,
                 searchIndexUrl: () => '/search.json',
+                recentlyAddedUrl: () => '/recently-added.json',
                 searchInput,
                 selectedDocument,
                 setRecentModeActive: (active) => {
@@ -3150,6 +3200,7 @@ def assert_search_controller_contract(page: Page) -> None:
                 moreHidden: more.hidden
             };
             recentButton.click();
+            await new Promise((resolve) => setTimeout(resolve, 10));
             const afterRecent = {
                 status: resultsStatus.textContent,
                 resultCount: results.querySelectorAll('li').length,
@@ -3207,6 +3258,8 @@ def assert_search_controller_contract(page: Page) -> None:
         raise AssertionError(f"search controller route handoff changed: {result!r}")
     if "search-pane" not in result["paneCalls"] or "recent-pane" not in result["paneCalls"]:
         raise AssertionError(f"search controller pane handoff changed: {result!r}")
+    if "recent-url:/recently-added.json" not in result["calls"]:
+        raise AssertionError(f"recent-mode controller did not load recently-added payload: {result!r}")
     if result["finalQuery"] != "" or result["finalRouteActive"] is not False:
         raise AssertionError(f"search controller clear-route state changed: {result!r}")
 
@@ -3384,9 +3437,9 @@ def assert_document_and_sidebar_controller_contract(page: Page) -> None:
                 selectedDocId: ''
             };
             const scopeConfig = {
-                scopeConfigs: [{ scope_id: 'studio', indexUrl: '/assets/data/docs/scopes/studio/index.json' }],
+                scopeConfigs: [{ scope_id: 'studio', indexTreeUrl: '/assets/data/docs/scopes/studio/index-tree.json' }],
                 scopeConfigsById: new Map([
-                    ['studio', { scope_id: 'studio', indexUrl: '/assets/data/docs/scopes/studio/index.json' }]
+                    ['studio', { scope_id: 'studio', indexTreeUrl: '/assets/data/docs/scopes/studio/index-tree.json' }]
                 ]),
                 managementText: {
                     metadataNonViewableLabel: 'non-viewable',
@@ -3522,6 +3575,30 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                                 }
                             };
                         }
+                        if (String(url).includes('/docs/generated/index-tree')) {
+                            return {
+                                ok: true,
+                                async json() {
+                                    return {
+                                        schema: 'docs_index_tree_v1',
+                                        viewer_options: {},
+                                        docs: [{ doc_id: 'doc-2', title: 'Doc two', content_url: '/doc-2.json' }]
+                                    };
+                                }
+                            };
+                        }
+                        if (String(url).includes('/docs/generated/recently-added')) {
+                            return {
+                                ok: true,
+                                async json() {
+                                    return {
+                                        schema: 'docs_recently_added_v1',
+                                        limit: 1,
+                                        docs: [{ doc_id: 'doc-2', title: 'Doc two', content_url: '/doc-2.json', added_date: '2026-06-05' }]
+                                    };
+                                }
+                            };
+                        }
                         return {
                             ok: true,
                             async json() {
@@ -3549,6 +3626,14 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                 searchIndexUrl: '/assets/search/studio/index.json',
                 viewerScope: 'studio'
             });
+            const treePayload = await runtime.readDocsIndexTree({
+                indexTreeUrl: '/assets/docs/studio/index-tree.json',
+                viewerScope: 'studio'
+            });
+            const recentPayload = await runtime.readRecentlyAdded({
+                recentlyAddedUrl: '/assets/docs/studio/recently-added.json',
+                viewerScope: 'studio'
+            });
             const staticRequests = [];
             const publicRuntime = module.createDocsViewerGeneratedDataRuntime({
                 assetVersion: 'asset-2',
@@ -3569,6 +3654,12 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                         return {
                             ok: true,
                             async json() {
+                                if (String(url).includes('index-tree')) {
+                                    return { schema: 'docs_index_tree_v1', viewer_options: {}, docs: [] };
+                                }
+                                if (String(url).includes('recently-added')) {
+                                    return { schema: 'docs_recently_added_v1', limit: 1, docs: [] };
+                                }
                                 return { entries: [] };
                             }
                         };
@@ -3578,6 +3669,14 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
             });
             await publicRuntime.readSearchIndex({
                 searchIndexUrl: '/assets/search/library/index.json',
+                viewerScope: 'library'
+            });
+            await publicRuntime.readDocsIndexTree({
+                indexTreeUrl: '/assets/docs/library/index-tree.json',
+                viewerScope: 'library'
+            });
+            await publicRuntime.readRecentlyAdded({
+                recentlyAddedUrl: '/assets/docs/library/recently-added.json',
                 viewerScope: 'library'
             });
             return {
@@ -3596,8 +3695,12 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
                 searchAllowed,
                 cachedStudioAllowed,
                 searchEntryCount: searchPayload.entries.length,
+                treeDocCount: treePayload.docs.length,
+                recentDocCount: recentPayload.docs.length,
                 searchRequestPath: new URL(requestUrls[1]).pathname,
-                staticSearchRequest: staticRequests[0],
+                generatedTreeRequestPath: new URL(requestUrls[2]).pathname,
+                generatedRecentRequestPath: new URL(requestUrls[3]).pathname,
+                staticRequests,
                 fetchCount,
                 checked: state.generatedDataReadChecked,
                 available: state.generatedDataReadAvailable
@@ -3620,9 +3723,17 @@ def assert_generated_data_runtime_contract(page: Page) -> None:
         "searchAllowed": False,
         "cachedStudioAllowed": True,
         "searchEntryCount": 1,
+        "treeDocCount": 1,
+        "recentDocCount": 1,
         "searchRequestPath": "/docs/generated/search",
-        "staticSearchRequest": "/assets/search/library/index.json?v=asset-2",
-        "fetchCount": 2,
+        "generatedTreeRequestPath": "/docs/generated/index-tree",
+        "generatedRecentRequestPath": "/docs/generated/recently-added",
+        "staticRequests": [
+            "/assets/search/library/index.json?v=asset-2",
+            "/assets/docs/library/index-tree.json?v=asset-2",
+            "/assets/docs/library/recently-added.json?v=asset-2",
+        ],
+        "fetchCount": 4,
         "checked": True,
         "available": True,
     }:
@@ -3708,6 +3819,8 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                         include_scope_param: true,
                         default_doc_id: 'studio-home',
                         index_url: '/studio/index.json',
+                        index_tree_url: '/studio/index-tree.json',
+                        recently_added_url: '/studio/recently-added.json',
                         search_index_url: '/studio/search.json'
                     },
                     {
@@ -3718,6 +3831,8 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                         include_scope_param: false,
                         default_doc_id: 'library-home',
                         index_url: '/library/index.json',
+                        index_tree_url: '/library/index-tree.json',
+                        recently_added_url: '/library/recently-added.json',
                         search_index_url: '/library/search.json'
                     }
                 ]
@@ -3790,7 +3905,9 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
                     })),
                     rootDataset: {
                         viewerScope: root.dataset.viewerScope,
-                        indexUrl: root.dataset.indexUrl,
+                        indexTreeUrl: root.dataset.indexTreeUrl,
+                        recentlyAddedUrl: root.dataset.recentlyAddedUrl,
+                        docsIndexUrl: root.dataset.docsIndexUrl,
                         searchIndexUrl: root.dataset.searchIndexUrl,
                         defaultDocId: root.dataset.defaultDocId,
                         viewerBaseUrl: root.dataset.viewerBaseUrl,
@@ -3821,7 +3938,9 @@ def assert_config_controller_contract(page: Page, base_url: str) -> None:
         raise AssertionError(f"config controller custom scope option projection changed: {result!r}")
     if result["rootDataset"] != {
         "viewerScope": "library",
-        "indexUrl": "/library/index.json",
+        "indexTreeUrl": "/library/index-tree.json",
+        "recentlyAddedUrl": "/library/recently-added.json",
+        "docsIndexUrl": "/library/index.json",
         "searchIndexUrl": "/library/search.json",
         "defaultDocId": "library-home",
         "viewerBaseUrl": "/docs/",

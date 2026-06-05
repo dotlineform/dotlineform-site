@@ -331,7 +331,8 @@ def main(argv: list[str] | None = None) -> int:
                     "management_mode_value": "manage",
                 },
                 "docs_paths": {
-                    "index_url": "/docs-viewer/generated/docs/studio/index.json",
+                    "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
+                    "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
                     "search_index_url": "/docs-viewer/generated/search/studio/index.json",
                 },
                 "config_urls": {
@@ -387,8 +388,8 @@ def main(argv: list[str] | None = None) -> int:
             "editButtonVisible": True,
         }:
             raise AssertionError(f"unexpected manage-mode info panel state: {info_panel_state!r}")
-        if not any("/docs/generated/index" in url for url in generated_requests):
-            raise AssertionError(f"expected generated index request through Docs Viewer service: {generated_requests!r}")
+        if not any("/docs/generated/index-tree" in url for url in generated_requests):
+            raise AssertionError(f"expected generated index-tree request through Docs Viewer service: {generated_requests!r}")
         if not any("/docs/generated/payload" in url for url in generated_requests):
             raise AssertionError(f"expected generated payload request through Docs Viewer service: {generated_requests!r}")
         if not any(urlparse(url).path == "/docs/delete-preview" for url in management_posts):

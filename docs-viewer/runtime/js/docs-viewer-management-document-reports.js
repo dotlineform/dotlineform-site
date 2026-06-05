@@ -26,8 +26,8 @@ function scopeConfigFor(context, scope) {
 
 function docsScopeDataBaseUrl(context, scope) {
   var targetConfig = scopeConfigFor(context, scope);
-  var indexUrl = targetConfig ? cleanString(targetConfig.indexUrl) : "";
-  return indexUrl.replace(/\/index\.json(?:[?#].*)?$/, "");
+  var indexUrl = targetConfig ? cleanString(targetConfig.docsIndexUrl || targetConfig.indexTreeUrl) : "";
+  return indexUrl.replace(/\/(?:index|index-tree)\.json(?:[?#].*)?$/, "");
 }
 
 function referenceTargetSlug(target) {
@@ -47,7 +47,7 @@ function referenceTargetSlug(target) {
 function fetchDocsIndexForScope(context, scope) {
   var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
   var targetConfig = scopeConfigFor(context, targetScope);
-  if (!targetConfig || !targetConfig.indexUrl) {
+  if (!targetConfig || !targetConfig.docsIndexUrl) {
     return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
   }
   return context.generatedData.readScopeIndex({

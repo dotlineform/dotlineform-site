@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-3
 title: Docs Viewer Public Index Slimming Batch 3
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,9 +17,9 @@ Summary: Add tree payload adapters, switch public and manage route loading to `i
 
 | ID | status | action |
 | --- | --- | --- |
-| 3.1 | planned | Add public and manage tree payload adapters that preserve the shared-core boundary owned by [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints); do not move manage-only controls, services, drag/drop, context menus, mutation calls, source/edit workflows, or local-service reads into public payloads or shared payload adapters. |
-| 3.2 | planned | Coordinate with the entrypoint split request if tree payload switching exposes shared-core public/manage mode switches or manage-only rendering in shared modules; this request owns the payload/data contract, while the entrypoint split request owns the shared-core cleanup work. |
-| 3.3 | planned | Switch public and manage route config/data loading so frontend index-panel rendering reads route-appropriate `index-tree.json` payloads and recently-added reads its small generated payload; missing required payloads should surface as visible data-load failures with no fallback to `index.json`. |
+| 3.1 | done | Add public and manage tree payload adapters that preserve the shared-core boundary owned by [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints); do not move manage-only controls, services, drag/drop, context menus, mutation calls, source/edit workflows, or local-service reads into public payloads or shared payload adapters. |
+| 3.2 | done | Coordinate with the entrypoint split request if tree payload switching exposes shared-core public/manage mode switches or manage-only rendering in shared modules; this request owns the payload/data contract, while the entrypoint split request owns the shared-core cleanup work. |
+| 3.3 | done | Switch public and manage route config/data loading so frontend index-panel rendering reads route-appropriate `index-tree.json` payloads and recently-added reads its small generated payload; missing required payloads should surface as visible data-load failures with no fallback to `index.json`. |
 
 ## Steer for these tasks
 
@@ -52,7 +52,12 @@ Summary: Add tree payload adapters, switch public and manage route loading to `i
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/build/build_docs.py docs-viewer/build/build_search.py docs-viewer/services/docs_generated_reads.py docs-viewer/services/docs_management_routes.py docs-viewer/services/docs_management_read_service.py docs-viewer/services/docs_viewer_service.py docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py docs-viewer/tests/smoke/docs_viewer_service_manage.py docs-viewer/tests/smoke/docs_viewer_management_workflows.py docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
+- `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_management_service.py`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+- `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
+- `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --diagnostics`
 
 ## follow-on tasks
 
@@ -62,8 +67,12 @@ Summary: Add tree payload adapters, switch public and manage route loading to `i
 - `recently-added.json` uses schema `docs_recently_added_v1` with top-level `schema`, `generated_at`, `limit`, and `docs`; row fields are limited to `doc_id`, `title`, `content_url`, `added_date`, optional `parent_id`, and optional `parent_title`.
 - Public compact payloads filter out non-viewable docs, descendants of non-viewable docs, and descendants of `manage_only_tree_root_ids`; manage compact tree payloads preserve non-viewable rows with `viewable: false`.
 - The search builder now derives docs search entries from configured source roots and no longer accepts `--source-index`; runtime search remains on the separate `search_index_url`.
+- Batch 3 added `docs-viewer-tree-payload-adapter.js`; tree rows intentionally normalize only `doc_id`, `title`, `content_url`, optional `parent_id`, optional `viewable: false`, and optional `ui_status`.
+- Public and manage route loading now uses `index_tree_url`; recently-added mode uses `recently_added_url`; public route-loading smokes assert no request to public docs `index.json`.
+- Full `index_url` remains in browser scope config as `docsIndexUrl` for report/internal rich-index reads, not for public route boot or recently-added mode.
+- Missing `index-tree.json` or `recently-added.json` is surfaced as a visible load failure; no runtime fallback to `index.json` was added.
 
 ## task close
 
-- Add a handoff note to Batch 4 with selected-document state behavior and any adapter assumptions that affect info-panel hydration.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 4 handoff added.
+- Tracker row can be marked `done`.

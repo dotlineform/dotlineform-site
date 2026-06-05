@@ -69,7 +69,9 @@ export function createDocsViewerRouteContext(options) {
     allowScopeQuery: access.allowScopeQuery,
     docsViewerConfigUrl: routeConfig.docsViewerConfigUrl,
     routeViewerBaseUrl: routeViewerBaseUrl,
-    indexUrl: appendAssetVersion(routeConfig.indexUrl, assetVersion),
+    indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
+    recentlyAddedUrl: appendAssetVersion(routeConfig.recentlyAddedUrl, assetVersion),
+    docsIndexUrl: appendAssetVersion(routeConfig.docsIndexUrl, assetVersion),
     viewerBaseUrl: viewerBaseUrl,
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
@@ -93,7 +95,9 @@ export function updateDocsViewerRouteContext(context, values, options) {
   var nextViewerBaseUrl = cleanString(values && values.viewerBaseUrl) || current.viewerBaseUrl || locationPathname(windowRef);
   var nextContext = Object.assign({}, current, {
     viewerScope: cleanString(values && values.viewerScope),
-    indexUrl: values && values.indexUrl ? values.indexUrl : "",
+    indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
+    recentlyAddedUrl: values && values.recentlyAddedUrl ? values.recentlyAddedUrl : "",
+    docsIndexUrl: values && values.docsIndexUrl ? values.docsIndexUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
     defaultRouteDocId: cleanString(values && values.defaultRouteDocId),
     viewerBaseUrl: nextViewerBaseUrl,
@@ -103,7 +107,9 @@ export function updateDocsViewerRouteContext(context, values, options) {
   nextContext.routeConfig = Object.assign({}, current.routeConfig || {}, {
     defaultDocId: nextContext.defaultRouteDocId,
     defaultScopeId: nextContext.viewerScope,
-    indexUrl: nextContext.indexUrl,
+    indexTreeUrl: nextContext.indexTreeUrl,
+    recentlyAddedUrl: nextContext.recentlyAddedUrl,
+    docsIndexUrl: nextContext.docsIndexUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });

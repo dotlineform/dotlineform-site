@@ -54,7 +54,10 @@ Summary: Shape selected by-id metadata as needed, hydrate info-panel state from 
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 3 handoff: route tree loading now reads `index_tree_url` through `readDocsIndexTree`; recently-added mode reads `recently_added_url` through `readRecentlyAdded`.
+- Batch 3 handoff: normalized tree docs are deliberately slim and should not be widened for info-panel needs; use selected by-id payload hydration for title, summary, last updated, and any manage-only metadata.
+- Batch 3 handoff: browser scope config still carries full `index_url` as `docsIndexUrl` for report/internal rich-index reads; do not reintroduce that path into public route boot or recently-added mode.
+- Batch 3 handoff: management metadata modal and info-panel code may still assume metadata is present on selected tree/index records; Batch 4 should move those reads to selected by-id payload state.
 
 ## task close
 

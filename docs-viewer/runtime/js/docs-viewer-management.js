@@ -51,6 +51,9 @@ function createDocsViewerManagementStateFacade(domains) {
     metadataEditingDocId: sources.management,
     metadataRestoreFocusId: sources.management,
     payloadCache: sources.selectedDocument,
+    recentEntries: sources.searchRecent,
+    recentLoaded: sources.searchRecent,
+    recentRequestPromise: sources.searchRecent,
     recentModeActive: sources.searchRecent,
     reloadExpectedDocId: sources.selectedDocument || sources.generatedData,
     reloadNonce: sources.selectedDocument || sources.generatedData,
@@ -528,6 +531,9 @@ export function initDocsViewerManagement(context) {
     state.searchEntries = [];
     state.searchLoaded = false;
     state.searchRequestPromise = null;
+    state.recentEntries = [];
+    state.recentLoaded = false;
+    state.recentRequestPromise = null;
     state.reloadNonce = String(Date.now());
     state.reloadExpectedDocId = String(targetDocId || "").trim();
     state.searchQuery = "";

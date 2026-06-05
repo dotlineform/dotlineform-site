@@ -32,6 +32,14 @@ def generated_docs_index_path(repo_root: Path, scope: str) -> Path:
     return generated_docs_output_root(repo_root, scope) / "index.json"
 
 
+def generated_docs_index_tree_path(repo_root: Path, scope: str) -> Path:
+    return generated_docs_output_root(repo_root, scope) / "index-tree.json"
+
+
+def generated_recently_added_path(repo_root: Path, scope: str) -> Path:
+    return generated_docs_output_root(repo_root, scope) / "recently-added.json"
+
+
 def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
     if not SAFE_DOC_ID_PATTERN.match(doc_id):
         raise ValueError("doc_id contains unsupported characters")
@@ -76,6 +84,20 @@ def read_generated_docs_index(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
         generated_docs_index_path(repo_root, scope),
         f"generated docs index for {scope}",
+    )
+
+
+def read_generated_docs_index_tree(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_docs_index_tree_path(repo_root, scope),
+        f"generated docs index tree for {scope}",
+    )
+
+
+def read_generated_recently_added(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_recently_added_path(repo_root, scope),
+        f"generated recently added docs for {scope}",
     )
 
 

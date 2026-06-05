@@ -1441,6 +1441,14 @@ def browser_docs_index_url(config: DocsScopeConfig) -> str:
     return f"/{config.output.as_posix().lstrip('/')}/index.json"
 
 
+def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
+    return f"/{config.output.as_posix().lstrip('/')}/index-tree.json"
+
+
+def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
+    return f"/{config.output.as_posix().lstrip('/')}/recently-added.json"
+
+
 def browser_search_index_url(config: DocsScopeConfig) -> str:
     return f"/{config.search_output.as_posix().lstrip('/')}"
 
@@ -1488,6 +1496,8 @@ def browser_scope_config_payload(repo_root: Path, configs: list[DocsScopeConfig]
                 "default_doc_id": config.default_doc_id,
                 "media_path_prefix": config.media_path_prefix.as_posix(),
                 "index_url": browser_docs_index_url(config),
+                "index_tree_url": browser_docs_index_tree_url(config),
+                "recently_added_url": browser_docs_recently_added_url(config),
                 "search_index_url": browser_search_index_url(config),
                 "search": browser_search_policy_payload(config),
             }

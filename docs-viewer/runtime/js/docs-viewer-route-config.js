@@ -205,7 +205,8 @@ export function resolveDocsViewerRouteConfig(options) {
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
     uiTextUrl: requireRouteConfigField(configUrls.ui_text, "config_urls.ui_text"),
     reportRegistryUrl: cleanString(configUrls.report_registry),
-    indexUrl: normalizePath(requireRouteConfigField(docsPaths.index_url, "docs_paths.index_url")),
+    indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
+    recentlyAddedUrl: normalizePath(requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")),
     searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
     access: {
       allowManagement: allowManagement,
@@ -253,7 +254,9 @@ export function routeConfigScopeProjection(scopeConfig, options) {
   return {
     defaultRouteDocId: cleanString(config.defaultDocId),
     includeScopeParam: includeScopeParam,
-    indexUrl: appendAssetVersion(config.indexUrl || "", settings.assetVersion),
+    indexTreeUrl: appendAssetVersion(config.indexTreeUrl || "", settings.assetVersion),
+    recentlyAddedUrl: appendAssetVersion(config.recentlyAddedUrl || "", settings.assetVersion),
+    docsIndexUrl: appendAssetVersion(config.docsIndexUrl || "", settings.assetVersion),
     searchIndexUrl: appendAssetVersion(config.searchIndexUrl || "", settings.assetVersion),
     viewerBaseUrl: viewerBaseUrl,
     viewerPathname: windowRef && windowRef.location

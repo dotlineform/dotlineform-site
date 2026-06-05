@@ -1,11 +1,16 @@
 import {
   fetchIndexWithRetry,
+  fetchIndexTreeWithRetry,
   fetchPreferredGeneratedJson,
   managementReloadPath
 } from "./docs-viewer-data.js";
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
+import {
+  normalizeDocsIndexTreePayload,
+  normalizeRecentlyAddedPayload
+} from "./docs-viewer-tree-payload-adapter.js";
 
 export function createDocsViewerGeneratedDataRuntime(options) {
   var settings = options || {};
@@ -125,6 +130,14 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     }));
   }
 
+  function readDocsIndexTree(options) {
+    var requestSettings = options || {};
+    return fetchIndexTreeWithRetry(dataRequestOptions({
+      indexTreeUrl: requestSettings.indexTreeUrl,
+      viewerScope: requestSettings.viewerScope || currentViewerScope()
+    })).then(normalizeDocsIndexTreePayload);
+  }
+
   function readDocumentPayload(doc, options) {
     var requestSettings = options || {};
     var docId = String(requestSettings.docId || doc && doc.doc_id || "").trim();
@@ -155,15 +168,29 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     );
   }
 
+  function readRecentlyAdded(options) {
+    var requestSettings = options || {};
+    var viewerScope = requestSettings.viewerScope || currentViewerScope();
+    return fetchPreferredGeneratedJson(
+      requestSettings.recentlyAddedUrl,
+      "Failed to load recently added docs",
+      managementReloadPath("/docs/generated/recently-added", { scope: viewerScope }),
+      dataRequestOptions(Object.assign({}, requestSettings, {
+        useSearchCapability: false,
+        viewerScope: viewerScope
+      }))
+    ).then(normalizeRecentlyAddedPayload);
+  }
+
   function readScopeIndex(options) {
     var requestSettings = options || {};
     var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
     var targetConfig = requestSettings.scopeConfig || null;
-    if (!targetConfig || !targetConfig.indexUrl) {
+    if (!targetConfig || !targetConfig.docsIndexUrl) {
       return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
     }
     return fetchIndexWithRetry(dataRequestOptions({
-      indexUrl: appendAssetVersion(targetConfig.indexUrl),
+      indexUrl: appendAssetVersion(targetConfig.docsIndexUrl),
       viewerScope: targetScope,
       reloadNonce: "",
       reloadExpectedDocId: ""
@@ -214,7 +241,9 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     dataRequestOptions: dataRequestOptions,
     readDocsIndex: readDocsIndex,
+    readDocsIndexTree: readDocsIndexTree,
     readDocumentPayload: readDocumentPayload,
+    readRecentlyAdded: readRecentlyAdded,
     readReferenceTarget: readReferenceTarget,
     readReferencesIndex: readReferencesIndex,
     readScopeIndex: readScopeIndex,

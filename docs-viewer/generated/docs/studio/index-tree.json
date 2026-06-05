@@ -399,7 +399,7 @@
       "title": "Docs Viewer Public Index Slimming Batch 3",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
@@ -1638,5 +1638,5 @@
       "parent_id": "ui"
     }
   ],
-  "generated_at": "2026-06-05T15:35:08Z"
+  "generated_at": "2026-06-05T16:00:41Z"
 }

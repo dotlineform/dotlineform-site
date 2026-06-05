@@ -159,6 +159,32 @@ export function fetchIndexWithRetry(options) {
     });
 }
 
+export function fetchIndexTreeWithRetry(options) {
+  var settings = options || {};
+  var currentAttempt = typeof settings.attempt === "number" ? settings.attempt : 0;
+  var attempts = typeof settings.reloadRetryAttempts === "number" ? settings.reloadRetryAttempts : 1;
+  return fetchPreferredGeneratedJson(
+    settings.indexTreeUrl,
+    "Failed to load docs index tree",
+    managementReloadPath("/docs/generated/index-tree", { scope: settings.viewerScope }),
+    Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
+  )
+    .then(function (payload) {
+      if (indexIncludesExpectedDoc(payload, settings.reloadExpectedDocId)) {
+        return payload;
+      }
+      if (!settings.reloadNonce || currentAttempt >= attempts - 1) {
+        var missingError = new Error("Updated docs index tree is missing " + settings.reloadExpectedDocId + ".");
+        missingError.status = 404;
+        throw missingError;
+      }
+      return waitForReloadRetry(settings).then(function () {
+        var nextSettings = Object.assign({}, settings, { attempt: currentAttempt + 1 });
+        return fetchIndexTreeWithRetry(nextSettings);
+      });
+    });
+}
+
 export function managementReloadPath(path, params) {
   if (!path || !params) return "";
   var query = [];
