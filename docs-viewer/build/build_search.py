@@ -12,13 +12,23 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
-if str(DOCS_SERVICES_DIR) not in sys.path:
-    sys.path.insert(0, str(DOCS_SERVICES_DIR))
+for path in (BUILD_DIR, DOCS_SERVICES_DIR):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
+from build_docs import (  # noqa: E402
+    FrontMatterSyntaxError,
+    extract_title,
+    front_matter_boolean,
+    humanize,
+    parse_source,
+)
 from docs_scope_config import DocsScopeConfig, load_docs_scope_configs  # noqa: E402
 
 
@@ -133,14 +143,12 @@ class DocsViewerSearchDataBuilder:
         *,
         repo_root: Path,
         scope: str,
-        source_index_path: Path | None = None,
         output_path: Path | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
         self.scope_config = self.docs_scope_config(self.scope)
         self.schema = f"search_index_{self.scope}_v1"
-        self.source_index_path = self.resolve_path(source_index_path or (self.scope_config.output / "index.json"))
         self.output_path = self.resolve_path(output_path or self.scope_config.search_output)
 
     def run(
@@ -178,22 +186,55 @@ class DocsViewerSearchDataBuilder:
         target_doc_ids: list[str],
         remove_missing: bool,
     ) -> tuple[dict[str, Any], dict[str, int] | None]:
-        docs = self.load_docs_index(self.source_index_path)
+        docs = self.load_source_docs()
         entries = self.build_docs_entries(docs)
         if not target_doc_ids:
             return self.build_docs_search_payload(entries), None
         return self.build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
 
-    def load_docs_index(self, path: Path | None) -> list[SearchDocRecord]:
-        if not path or not path.exists():
-            raise SystemExit(f"Source JSON not found: {relative_path(path, self.repo_root)}")
-        payload = read_json(path)
-        docs = payload.get("docs") if isinstance(payload, dict) else None
-        if not isinstance(docs, list):
-            raise SystemExit("Invalid docs index payload: expected top-level docs array")
-        manage_only_ids = self.manage_only_doc_ids(payload, docs)
+    def load_source_docs(self) -> list[SearchDocRecord]:
+        source_dir = (self.repo_root / self.scope_config.source).resolve()
+        paths = sorted(source_dir.glob("**/*.md"))
+        nested_paths = [path for path in paths if path.parent != source_dir]
+        if nested_paths and not self.scope_config.allow_nested_source:
+            nested = ", ".join(path.relative_to(source_dir).as_posix() for path in nested_paths)
+            raise SystemExit(f"Nested markdown docs are not supported under {source_dir}; move these files to the scope root: {nested}")
+
+        raw_records: list[dict[str, Any]] = []
+        for path in paths:
+            try:
+                front_matter, body_markdown = parse_source(path)
+            except FrontMatterSyntaxError as exc:
+                raise SystemExit(str(exc)) from exc
+            stem = path.stem
+            doc_id = normalize_text(front_matter.get("doc_id") or stem)
+            title = normalize_text(front_matter.get("title") or extract_title(body_markdown) or humanize(stem))
+            if not doc_id or not title:
+                continue
+            raw_records.append(
+                {
+                    "doc_id": doc_id,
+                    "title": title,
+                    "last_updated": normalize_text(front_matter.get("last_updated")),
+                    "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
+                    "viewer_url": self.viewer_url_for(doc_id),
+                    "viewable": front_matter_boolean(front_matter, "viewable", True),
+                }
+            )
+        return self.search_records_from_source_rows(self.ordered_source_rows(raw_records))
+
+    def viewer_url_for(self, doc_id: str) -> str:
+        pairs: list[str] = []
+        if self.scope_config.include_scope_param and self.scope:
+            pairs.append(f"scope={quote(self.scope)}")
+        pairs.append(f"doc={quote(str(doc_id))}")
+        return f"{self.scope_config.viewer_base_url}?{'&'.join(pairs)}"
+
+    def search_records_from_source_rows(self, rows: list[dict[str, Any]]) -> list[SearchDocRecord]:
+        hidden_ids = self.hidden_doc_ids(rows)
+        all_doc_ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
         records: list[SearchDocRecord] = []
-        for row in docs:
+        for row in rows:
             if not isinstance(row, dict):
                 continue
             doc_id = normalize_text(row.get("doc_id"))
@@ -201,26 +242,64 @@ class DocsViewerSearchDataBuilder:
             viewer_url = normalize_text(row.get("viewer_url"))
             if not doc_id or not title or not viewer_url:
                 continue
-            if doc_id in manage_only_ids or not boolean_field(row, "viewable", True):
+            if doc_id in hidden_ids or not boolean_field(row, "viewable", True):
                 continue
+            parent_id = normalize_text(row.get("parent_id"))
+            if parent_id and parent_id not in all_doc_ids:
+                parent_id = ""
             records.append(
                 SearchDocRecord(
                     doc_id=doc_id,
                     title=title,
                     last_updated=normalize_text(row.get("last_updated")),
-                    parent_id=normalize_text(row.get("parent_id")),
+                    parent_id=parent_id,
                     viewer_url=viewer_url,
                     viewable=True,
                 )
             )
         return records
 
-    def manage_only_doc_ids(self, payload: Any, docs: list[Any]) -> set[str]:
-        viewer_options = payload.get("viewer_options") if isinstance(payload, dict) else None
-        roots = []
-        if isinstance(viewer_options, dict):
-            roots = [normalize_text(value) for value in viewer_options.get("manage_only_tree_root_ids") or []]
-            roots = [value for value in roots if value]
+    def ordered_source_rows(self, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        by_parent: dict[str, list[dict[str, Any]]] = {}
+        ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
+        for row in rows:
+            parent_id = normalize_text(row.get("parent_id"))
+            if parent_id not in ids:
+                parent_id = ""
+            by_parent.setdefault(parent_id, []).append(row)
+        for children in by_parent.values():
+            children.sort(key=lambda row: (normalize(row.get("title")), normalize(row.get("doc_id"))))
+        ordered: list[dict[str, Any]] = []
+        seen: set[str] = set()
+
+        def append_children(parent_id: str) -> None:
+            for child in by_parent.get(parent_id, []):
+                doc_id = normalize_text(child.get("doc_id"))
+                if not doc_id or doc_id in seen:
+                    continue
+                seen.add(doc_id)
+                ordered.append(child)
+                append_children(doc_id)
+
+        append_children("")
+        for row in sorted(rows, key=lambda row: (normalize(row.get("title")), normalize(row.get("doc_id")))):
+            doc_id = normalize_text(row.get("doc_id"))
+            if doc_id and doc_id not in seen:
+                seen.add(doc_id)
+                ordered.append(row)
+        return ordered
+
+    def hidden_doc_ids(self, docs: list[Any]) -> set[str]:
+        roots = [
+            normalize_text(value)
+            for value in self.scope_config.manage_only_tree_root_ids
+        ]
+        roots.extend(
+            normalize_text(row.get("doc_id"))
+            for row in docs
+            if isinstance(row, dict) and not boolean_field(row, "viewable", True)
+        )
+        roots = [value for value in roots if value]
         if not roots:
             return set()
         by_parent: dict[str, list[str]] = {}
@@ -435,7 +514,7 @@ class DocsViewerSearchDataBuilder:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
     parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Docs Viewer search scope to build.")
-    parser.add_argument("--source-index", help="Canonical docs index JSON path for docs-domain scopes.")
+    parser.add_argument("--source-index", help=argparse.SUPPRESS)
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", action="append", default=[], help="Comma-separated doc ids for targeted docs-domain search updates.")
     parser.add_argument("--only-records", help="Catalogue-only targeted search records.")
@@ -443,6 +522,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
     parser.add_argument("--force", action="store_true", help="Write even when the content version matches.")
     args = parser.parse_args(argv)
+    if args.source_index is not None:
+        raise SystemExit("Docs Viewer search no longer supports --source-index; source metadata comes from the configured docs source root")
     if args.only_records is not None:
         raise SystemExit("Docs Viewer search does not support --only-records")
     return args
@@ -454,7 +535,6 @@ def main(argv: list[str] | None = None) -> int:
     builder = DocsViewerSearchDataBuilder(
         repo_root=repo_root,
         scope=args.scope,
-        source_index_path=Path(args.source_index) if args.source_index else None,
         output_path=Path(args.output) if args.output else None,
     )
     builder.run(

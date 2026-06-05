@@ -35,6 +35,9 @@ from markdown_renderer import plain_text_from_html, render_markdown_to_html  # n
 DOCS_VIEWER_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
 DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-public-config.json")
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
+DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
+DOCS_RECENTLY_ADDED_SCHEMA_VERSION = "docs_recently_added_v1"
+DEFAULT_RECENTLY_ADDED_LIMIT = 10
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
 INTERACTIVE_HTML_TOKEN_PATTERN = re.compile(r"\[\[interactive-html:(.+?)\]\]")
@@ -293,9 +296,13 @@ class DocsDataBuilder:
             "viewer_options": viewer_options,
             "docs": docs_index,
         }
+        index_tree_payload = self.index_tree_payload(docs, viewer_options)
+        recently_added_payload = self.recently_added_payload(docs)
         reference_payloads = self.build_reference_payloads(docs, semantic_references_by_doc)
         write_plan = self.build_write_plan(
             index_payload,
+            index_tree_payload,
+            recently_added_payload,
             item_payloads,
             reference_payloads,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
@@ -310,14 +317,18 @@ class DocsDataBuilder:
             self.write_outputs(
                 write_plan,
                 docs_total=len(index_payload["docs"]),
+                tree_total=len(index_tree_payload["docs"]),
+                recently_added_total=len(recently_added_payload["docs"]),
                 reference_total=reference_payloads["index"]["header"]["count"],
             )
         else:
-            self.print_dry_run(index_payload, reference_payloads, write_plan)
+            self.print_dry_run(index_payload, index_tree_payload, recently_added_payload, reference_payloads, write_plan)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
             "index_payload": index_payload,
+            "index_tree_payload": index_tree_payload,
+            "recently_added_payload": recently_added_payload,
             "item_payloads": item_payloads,
             "reference_payloads": reference_payloads,
             "write_plan": write_plan,
@@ -334,6 +345,13 @@ class DocsDataBuilder:
             "manage_only_tree_root_ids": self.manage_only_tree_root_ids,
             "show_updated_date": self.show_updated_date,
         }
+
+    @property
+    def public_readonly_scope(self) -> bool:
+        return is_public_readonly_scope(
+            viewer_base_url=self.viewer_base_url,
+            include_scope_param=self.include_scope_param,
+        )
 
     def load_docs(self) -> list[DocRecord]:
         paths = sorted(self.source_dir.glob("**/*.md"))
@@ -513,6 +531,116 @@ class DocsDataBuilder:
             if existing_generated_at:
                 return existing_generated_at
         return utc_timestamp()
+
+    def effective_generated_at_for_payload(self, path: Path, comparable_payload: dict[str, Any]) -> str:
+        existing = read_json(path)
+        if not isinstance(existing, dict):
+            return utc_timestamp()
+        generated_at = str(existing.get("generated_at") or "").strip()
+        comparable_existing = {key: value for key, value in existing.items() if key != "generated_at"}
+        if comparable_existing == comparable_payload and generated_at:
+            return generated_at
+        return utc_timestamp()
+
+    def descendants_for_roots(self, docs: list[DocRecord], roots: list[str]) -> set[str]:
+        by_parent: dict[str, list[str]] = {}
+        for doc in docs:
+            parent_id = self.effective_parent_id(doc, docs)
+            if parent_id:
+                by_parent.setdefault(parent_id, []).append(doc.doc_id)
+        hidden = set(roots)
+        queue = list(roots)
+        while queue:
+            current = queue.pop(0)
+            for child_id in by_parent.get(current, []):
+                if child_id in hidden:
+                    continue
+                hidden.add(child_id)
+                queue.append(child_id)
+        return hidden
+
+    def docs_for_public_payloads(self, docs: list[DocRecord]) -> list[DocRecord]:
+        if not self.public_readonly_scope:
+            return docs
+        hidden_roots = [doc.doc_id for doc in docs if not doc.viewable]
+        hidden = self.descendants_for_roots(docs, [*self.manage_only_tree_root_ids, *hidden_roots])
+        return [doc for doc in docs if doc.viewable and doc.doc_id not in hidden]
+
+    def tree_entry(self, doc: DocRecord, docs: list[DocRecord], included_ids: set[str]) -> dict[str, Any]:
+        entry: dict[str, Any] = {
+            "doc_id": doc.doc_id,
+            "title": doc.title,
+            "content_url": doc.content_url,
+        }
+        parent_id = self.effective_parent_id(doc, docs)
+        if parent_id and parent_id in included_ids:
+            entry["parent_id"] = parent_id
+        if not doc.viewable:
+            entry["viewable"] = False
+        if doc.ui_status:
+            entry["ui_status"] = doc.ui_status
+        return entry
+
+    def index_tree_payload(self, docs: list[DocRecord], viewer_options: dict[str, Any]) -> dict[str, Any]:
+        included_docs = self.docs_for_public_payloads(self.ordered_docs_for_index(docs))
+        included_ids = {doc.doc_id for doc in included_docs}
+        rows = [self.tree_entry(doc, docs, included_ids) for doc in included_docs]
+        comparable = {
+            "schema": DOCS_INDEX_TREE_SCHEMA_VERSION,
+            "viewer_options": viewer_options,
+            "docs": rows,
+        }
+        return {
+            **comparable,
+            "generated_at": self.effective_generated_at_for_payload(self.output_dir / "index-tree.json", comparable),
+        }
+
+    def recently_added_limit(self) -> int:
+        try:
+            payload = json.loads((self.repo_root / CONFIG_REL_PATH).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return DEFAULT_RECENTLY_ADDED_LIMIT
+        settings = payload.get("docs_viewer") if isinstance(payload, dict) else None
+        raw_limit = settings.get("recently_added_limit") if isinstance(settings, dict) else None
+        try:
+            limit = int(raw_limit)
+        except (TypeError, ValueError):
+            return DEFAULT_RECENTLY_ADDED_LIMIT
+        return limit if limit > 0 else DEFAULT_RECENTLY_ADDED_LIMIT
+
+    def recently_added_entry(self, doc: DocRecord, docs: list[DocRecord], title_by_id: dict[str, str]) -> dict[str, Any]:
+        entry: dict[str, Any] = {
+            "doc_id": doc.doc_id,
+            "title": doc.title,
+            "content_url": doc.content_url,
+            "added_date": doc.added_date,
+        }
+        parent_id = self.effective_parent_id(doc, docs)
+        if parent_id and parent_id in title_by_id:
+            entry["parent_id"] = parent_id
+            entry["parent_title"] = title_by_id[parent_id]
+        return entry
+
+    def recently_added_payload(self, docs: list[DocRecord]) -> dict[str, Any]:
+        limit = self.recently_added_limit()
+        included_docs = self.docs_for_public_payloads(docs)
+        title_by_id = {doc.doc_id: doc.title for doc in included_docs}
+        ordered_docs = sorted(included_docs, key=lambda doc: (doc.title.lower(), doc.doc_id))
+        ordered_docs.sort(key=lambda doc: doc.added_date, reverse=True)
+        rows = [
+            self.recently_added_entry(doc, docs, title_by_id)
+            for doc in ordered_docs
+            if doc.added_date
+        ][:limit]
+        comparable = {
+            "schema": DOCS_RECENTLY_ADDED_SCHEMA_VERSION,
+            "limit": limit,
+            "docs": rows,
+        }
+        return {
+            **comparable,
+            "generated_at": self.effective_generated_at_for_payload(self.output_dir / "recently-added.json", comparable),
+        }
 
     def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: list[DocRecord]) -> str:
         docs_by_id = {doc.doc_id: doc for doc in docs}
@@ -1091,12 +1219,16 @@ class DocsDataBuilder:
     def build_write_plan(
         self,
         index_payload: dict[str, Any],
+        index_tree_payload: dict[str, Any],
+        recently_added_payload: dict[str, Any],
         item_payloads: dict[str, dict[str, Any]],
         reference_payloads: dict[str, Any],
         *,
         target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         index_text = json_text(index_payload)
+        index_tree_text = json_text(index_tree_payload)
+        recently_added_text = json_text(recently_added_payload)
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
         for doc_id, payload in item_payloads.items():
@@ -1112,6 +1244,10 @@ class DocsDataBuilder:
         return {
             "index_write": read_text(self.output_dir / "index.json") != index_text,
             "index_text": index_text,
+            "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
+            "index_tree_text": index_tree_text,
+            "recently_added_write": read_text(self.output_dir / "recently-added.json") != recently_added_text,
+            "recently_added_text": recently_added_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
@@ -1151,11 +1287,23 @@ class DocsDataBuilder:
             "reference_target_text_by_key": target_text_by_key,
         }
 
-    def write_outputs(self, write_plan: dict[str, Any], *, docs_total: int, reference_total: int) -> None:
+    def write_outputs(
+        self,
+        write_plan: dict[str, Any],
+        *,
+        docs_total: int,
+        tree_total: int,
+        recently_added_total: int,
+        reference_total: int,
+    ) -> None:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["index_write"]:
             write_text(self.output_dir / "index.json", write_plan["index_text"])
+        if write_plan["index_tree_write"]:
+            write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
+        if write_plan["recently_added_write"]:
+            write_text(self.output_dir / "recently-added.json", write_plan["recently_added_text"])
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
@@ -1165,6 +1313,8 @@ class DocsDataBuilder:
             write_plan,
             mode="write",
             docs_total=docs_total,
+            tree_total=tree_total,
+            recently_added_total=recently_added_total,
             reference_total=reference_total,
         )
 
@@ -1182,11 +1332,20 @@ class DocsDataBuilder:
         for key in write_plan["stale_reference_target_keys"]:
             self.reference_target_path(*key).unlink(missing_ok=True)
 
-    def print_dry_run(self, index_payload: dict[str, Any], reference_payloads: dict[str, Any], write_plan: dict[str, Any]) -> None:
+    def print_dry_run(
+        self,
+        index_payload: dict[str, Any],
+        index_tree_payload: dict[str, Any],
+        recently_added_payload: dict[str, Any],
+        reference_payloads: dict[str, Any],
+        write_plan: dict[str, Any],
+    ) -> None:
         self.print_human_summary(
             write_plan,
             mode="dry-run",
             docs_total=len(index_payload["docs"]),
+            tree_total=len(index_tree_payload["docs"]),
+            recently_added_total=len(recently_added_payload["docs"]),
             reference_total=reference_payloads["index"]["header"]["count"],
         )
 
@@ -1196,6 +1355,8 @@ class DocsDataBuilder:
         *,
         mode: str,
         docs_total: int,
+        tree_total: int,
+        recently_added_total: int,
         reference_total: int,
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
@@ -1209,7 +1370,12 @@ class DocsDataBuilder:
             len(write_plan["stale_reference_doc_ids"])
             + len(write_plan["stale_reference_target_keys"])
         )
-        index_write_count = (1 if write_plan["index_write"] else 0) + (1 if write_plan["reference_index_write"] else 0)
+        index_write_count = (
+            (1 if write_plan["index_write"] else 0)
+            + (1 if write_plan["index_tree_write"] else 0)
+            + (1 if write_plan["recently_added_write"] else 0)
+            + (1 if write_plan["reference_index_write"] else 0)
+        )
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
 
@@ -1217,6 +1383,8 @@ class DocsDataBuilder:
         print(f"  docs total: {docs_total}")
         print(f"  docs {verb}: {doc_write_count}")
         print(f"  docs {remove_verb}: {doc_remove_count}")
+        print(f"  tree docs total: {tree_total}")
+        print(f"  recently added total: {recently_added_total}")
         print(f"  references total: {reference_total}")
         print(f"  references {verb}: {reference_write_count}")
         print(f"  references {remove_verb}: {reference_remove_count}")
@@ -1239,6 +1407,8 @@ class DocsDataBuilder:
             "docs_emitted": len(docs),
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
+            "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
+            "recently_added_changed": 1 if write_plan["recently_added_write"] else 0,
             "reference_index_changed": 1 if write_plan["reference_index_write"] else 0,
             "reference_by_doc_payloads_changed": len(write_plan["changed_reference_doc_ids"]),
             "reference_by_doc_payloads_removed": len(write_plan["stale_reference_doc_ids"]),

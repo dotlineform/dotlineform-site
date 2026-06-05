@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-analysis
 title: Analysis Scope
 added_date: 2026-05-19
-last_updated: 2026-06-01
+last_updated: 2026-06-05
 parent_id: search-docs-viewer-infrastructure
 viewable: true
 ---
@@ -20,9 +20,10 @@ viewable: true
 
 ### Current Source Input
 
-- `assets/data/docs/scopes/analysis/index.json`
+- `docs-viewer/source/analysis/**/*.md`
 
-The current Analysis search artifact is derived from the generated Analysis docs index rather than directly from `docs-viewer/source/analysis/`.
+The current Analysis search artifact is derived from source front matter through the configured scope source root.
+It no longer reads `assets/data/docs/scopes/analysis/index.json` or accepts `--source-index`.
 Rows with `viewable: false` are skipped so draft Analysis docs can be generated for manage-mode review without appearing in public/default search.
 
 ### Current Commands
@@ -41,7 +42,6 @@ Dry run:
 
 Current supported overrides:
 
-- `--source-index PATH`
 - `--output PATH`
 - `--only-doc-ids IDS`
 - `--remove-missing`
@@ -53,7 +53,7 @@ Current supported overrides:
 Current builder behaviour for Analysis:
 
 - matches the same docs-domain record model used by Studio and Library
-- reads only the generated Analysis docs index
+- reads source front matter from the configured Analysis docs source root
 - can patch the existing Analysis search artifact for targeted `doc_id` updates
 - emits one search record per public-viewable Analysis doc
 - stays compatible with the shared Docs Viewer inline search runtime

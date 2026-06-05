@@ -56,7 +56,12 @@ Summary: Add tree payload adapters, switch public and manage route loading to `i
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 2 handoff: `docs-viewer/build/build_docs.py` now writes `index-tree.json` and `recently-added.json` beside each scope's generated docs root.
+- Public route paths are `assets/data/docs/scopes/<scope>/index-tree.json` and `assets/data/docs/scopes/<scope>/recently-added.json`; manage/local route paths are `docs-viewer/generated/docs/<scope>/index-tree.json` and `docs-viewer/generated/docs/<scope>/recently-added.json`.
+- `index-tree.json` uses schema `docs_index_tree_v1` with top-level `schema`, `generated_at`, `viewer_options`, and `docs`; row fields are limited to `doc_id`, `title`, `content_url`, optional non-empty `parent_id`, optional `viewable: false`, and optional non-empty `ui_status`.
+- `recently-added.json` uses schema `docs_recently_added_v1` with top-level `schema`, `generated_at`, `limit`, and `docs`; row fields are limited to `doc_id`, `title`, `content_url`, `added_date`, optional `parent_id`, and optional `parent_title`.
+- Public compact payloads filter out non-viewable docs, descendants of non-viewable docs, and descendants of `manage_only_tree_root_ids`; manage compact tree payloads preserve non-viewable rows with `viewable: false`.
+- The search builder now derives docs search entries from configured source roots and no longer accepts `--source-index`; runtime search remains on the separate `search_index_url`.
 
 ## task close
 

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-05-29
+last_updated: 2026-06-05
 parent_id: docs-viewer
 ---
 # Docs Viewer Overview
@@ -252,7 +252,7 @@ The current design keeps some behavior scope-specific and some behavior shared.
 Scope-owned:
 
 - source doc trees
-- generated docs indexes and per-doc payloads
+- generated docs indexes, compact `index-tree.json` payloads, compact `recently-added.json` payloads, and per-doc payloads
 - scope-level viewer options in generated docs indexes
 - route/page shell copy
 - route ids on route shells and browser-safe route records in `docs-viewer/config/routes/docs-viewer-routes.json`

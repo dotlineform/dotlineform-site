@@ -26,6 +26,11 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -57,62 +62,35 @@ def write_scope_config(root: Path) -> None:
     )
 
 
-def docs_index_payload(*, child_title: str = "Child", child_viewable: bool = True) -> dict[str, Any]:
-    return {
-        "generated_at": "2026-06-01T00:00:00Z",
-        "viewer_options": {
-            "non_loadable_doc_ids": [],
-            "manage_only_tree_root_ids": ["manage-root"],
-            "show_updated_date": True,
-        },
-        "docs": [
-            {
-                "doc_id": "parent",
-                "title": "Parent Page",
-                "last_updated": "2026-06-01",
-                "parent_id": "",
-                "viewer_url": "/docs/?scope=studio&doc=parent",
-                "viewable": True,
-            },
-            {
-                "doc_id": "child",
-                "title": child_title,
-                "last_updated": "2026-06-02",
-                "parent_id": "parent",
-                "viewer_url": "/docs/?scope=studio&doc=child",
-                "viewable": child_viewable,
-            },
-            {
-                "doc_id": "draft",
-                "title": "Draft",
-                "last_updated": "2026-06-03",
-                "parent_id": "",
-                "viewer_url": "/docs/?scope=studio&doc=draft",
-                "viewable": False,
-            },
-            {
-                "doc_id": "manage-root",
-                "title": "Manage Root",
-                "last_updated": "2026-06-04",
-                "parent_id": "",
-                "viewer_url": "/docs/?scope=studio&doc=manage-root",
-                "viewable": True,
-            },
-            {
-                "doc_id": "manage-child",
-                "title": "Manage Child",
-                "last_updated": "2026-06-05",
-                "parent_id": "manage-root",
-                "viewer_url": "/docs/?scope=studio&doc=manage-child",
-                "viewable": True,
-            },
-        ],
-    }
+def write_source_docs(root: Path, *, child_title: str = "Child", child_viewable: bool = True) -> None:
+    rows = [
+        ("parent", "Parent Page", "2026-06-01", "", True),
+        ("child", child_title, "2026-06-02", "parent", child_viewable),
+        ("draft", "Draft", "2026-06-03", "", False),
+        ("draft-child", "Draft Child", "2026-06-04", "draft", True),
+        ("manage-root", "Manage Root", "2026-06-04", "", True),
+        ("manage-child", "Manage Child", "2026-06-05", "manage-root", True),
+    ]
+    for doc_id, title, last_updated, parent_id, viewable in rows:
+        viewable_line = "" if viewable else "viewable: false\n"
+        parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
+        write_text(
+            root / f"docs-viewer/source/studio/{doc_id}.md",
+            f"""---
+doc_id: {doc_id}
+title: {json.dumps(title)}
+last_updated: {last_updated}
+{parent_line}{viewable_line}---
+# {title}
+
+Search source body.
+""",
+        )
 
 
 def prepare_repo(root: Path) -> None:
     write_scope_config(root)
-    write_json(root / "docs-viewer/generated/docs/studio/index.json", docs_index_payload())
+    write_source_docs(root)
 
 
 def run_cli(root: Path, args: list[str]) -> tuple[int, str, str]:
@@ -137,6 +115,7 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
 
     assert exit_code == 0
     assert stderr == ""
+    assert not (root / "docs-viewer/generated/docs/studio/index.json").exists()
     assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
@@ -200,7 +179,7 @@ def test_python_docs_search_builder_targeted_update_patches_existing_entry() -> 
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        write_json(root / "docs-viewer/generated/docs/studio/index.json", docs_index_payload(child_title="Child Updated"))
+        write_source_docs(root, child_title="Child Updated")
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
         payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
@@ -217,7 +196,7 @@ def test_python_docs_search_builder_targeted_remove_requires_remove_missing() ->
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        write_json(root / "docs-viewer/generated/docs/studio/index.json", docs_index_payload(child_viewable=False))
+        write_source_docs(root, child_viewable=False)
 
         try:
             run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child"])
@@ -263,6 +242,20 @@ def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() ->
     assert error == "Docs Viewer search does not support --only-records"
 
 
+def test_python_docs_search_builder_rejects_retired_source_index_flag() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        try:
+            run_cli(root, ["--scope", "studio", "--source-index", "docs-viewer/generated/docs/studio/index.json"])
+        except SystemExit as exc:
+            error = str(exc)
+        else:
+            raise AssertionError("--source-index should fail for docs search")
+
+    assert "no longer supports --source-index" in error
+
+
 def main() -> None:
     test_python_docs_search_builder_writes_current_schema_and_hash()
     test_python_docs_search_builder_dry_run_does_not_write()
@@ -271,6 +264,7 @@ def main() -> None:
     test_python_docs_search_builder_targeted_remove_requires_remove_missing()
     test_python_docs_search_builder_targeted_without_existing_index_falls_back_full()
     test_python_docs_search_builder_rejects_catalogue_targeted_records_flag()
+    test_python_docs_search_builder_rejects_retired_source_index_flag()
     print("Python Docs Viewer search builder tests OK")
 
 

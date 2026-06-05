@@ -54,6 +54,11 @@ def assert_required_keys(payload: dict[str, Any], required: list[str], label: st
     assert_equal(missing, [], f"{label} missing keys")
 
 
+def assert_allowed_keys(payload: dict[str, Any], allowed: list[str], label: str) -> None:
+    extra = [key for key in payload if key not in allowed]
+    assert_equal(extra, [], f"{label} extra keys")
+
+
 def assert_search_entry(entry: dict[str, Any], label: str, *, requires_href: bool = True) -> None:
     required = ["id", "kind", "title", "search_terms", "search_text"]
     if requires_href:
@@ -113,6 +118,34 @@ def test_docs_viewer_index_contract_fixture() -> None:
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "content URL by-id path")
     assert_true(isinstance(doc_entry["content_text_length"], int), "content text length type")
     assert_true(doc_entry["content_text_length"] >= 0, "content text length non-negative")
+
+
+def test_docs_viewer_index_tree_contract_fixture() -> None:
+    fixture = load_fixture()["docs_viewer"]["index_tree_json"]
+    doc_entry = fixture["doc_entry"]
+
+    assert_equal(fixture["path_pattern"], "<docs_scope.output>/index-tree.json", "docs tree path pattern")
+    assert_equal(fixture["schema"], "docs_index_tree_v1", "docs tree schema")
+    assert_equal(fixture["required_top_level_keys"], ["schema", "docs", "generated_at", "viewer_options"], "docs tree keys")
+    assert_allowed_keys(doc_entry, fixture["allowed_doc_entry_keys"], "docs tree entry")
+    assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "tree content URL by-id path")
+    for key in fixture["forbidden_doc_entry_keys"]:
+        assert_true(key not in doc_entry, f"docs tree entry excludes {key}")
+
+
+def test_docs_viewer_recently_added_contract_fixture() -> None:
+    fixture = load_fixture()["docs_viewer"]["recently_added_json"]
+    doc_entry = fixture["doc_entry"]
+
+    assert_equal(fixture["path_pattern"], "<docs_scope.output>/recently-added.json", "recent path pattern")
+    assert_equal(fixture["schema"], "docs_recently_added_v1", "recent schema")
+    assert_equal(fixture["limit"], 10, "recent limit")
+    assert_equal(fixture["required_top_level_keys"], ["schema", "docs", "generated_at", "limit"], "recent keys")
+    assert_allowed_keys(doc_entry, fixture["allowed_doc_entry_keys"], "recent entry")
+    assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "recent content URL by-id path")
+    assert_true(doc_entry["added_date"], "recent entry added date")
+    for key in fixture["forbidden_doc_entry_keys"]:
+        assert_true(key not in doc_entry, f"recent entry excludes {key}")
 
 
 def test_docs_viewer_by_id_contract_fixture() -> None:
@@ -213,6 +246,8 @@ def test_catalogue_prose_content_html_contract_fixtures() -> None:
 def main() -> None:
     test_fixture_declares_contract_policy()
     test_docs_viewer_index_contract_fixture()
+    test_docs_viewer_index_tree_contract_fixture()
+    test_docs_viewer_recently_added_contract_fixture()
     test_docs_viewer_by_id_contract_fixture()
     test_docs_viewer_reference_payload_contract_fixtures()
     test_docs_search_payload_contract_fixture()

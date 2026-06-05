@@ -395,6 +395,8 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
+    assert any(file["path"] == "assets/data/docs/scopes/research/index-tree.json" for file in payload["created_files"])
+    assert any(file["path"] == "assets/data/docs/scopes/research/recently-added.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])
     assert any(command["command"] == "./docs-viewer/build/build_docs.py --scope research --write" for command in payload["build_commands"])
 
@@ -427,6 +429,8 @@ def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:
     assert payload["urls"]["public"] == ""
     assert not any(file["kind"] == "route_file" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/index-tree.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/recently-added.json" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
     assert not any(file["path"].startswith("assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("assets/data/search/notes") for file in payload["created_files"])
@@ -669,6 +673,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
     recorded_paths = {file["path"] for file in records["research"]["files"]}
+    assert "assets/data/docs/scopes/research/index-tree.json" in recorded_paths
+    assert "assets/data/docs/scopes/research/recently-added.json" in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert any(file["path"] == "research/index.md" and file["kind"] == "route_file" for file in records["research"]["files"])
     assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths
@@ -719,6 +725,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["notes"]["scope_type"] == "local"
     assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/index-tree.json" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/recently-added.json" for file in records["notes"]["files"])
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 

@@ -1,0 +1,1642 @@
+{
+  "schema": "docs_index_tree_v1",
+  "viewer_options": {
+    "non_loadable_doc_ids": [],
+    "manage_only_tree_root_ids": [],
+    "show_updated_date": true
+  },
+  "docs": [
+    {
+      "doc_id": "analytics",
+      "title": "Analytics",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json"
+    },
+    {
+      "doc_id": "dimension-visualisation-projection",
+      "title": "Dimension Visualisation Projection Table",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/dimension-visualisation-projection.json",
+      "parent_id": "analytics",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "experimental-dimension-framework",
+      "title": "Experimental Dimension Framework",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/experimental-dimension-framework.json",
+      "parent_id": "analytics",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "registry-driven-scoring-architecture",
+      "title": "Registry-Driven Scoring Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/registry-driven-scoring-architecture.json",
+      "parent_id": "analytics",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "series-tags",
+      "title": "Series Tags",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "tag-aliases",
+      "title": "Tag Aliases",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-aliases.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "tag-editor",
+      "title": "Tag Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-editor.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "tag-groups",
+      "title": "Tag Groups",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-groups.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "tag-registry",
+      "title": "Tag Registry",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "analytics-tag-services",
+      "title": "Tag Services",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-services.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "analytics-tag-source-data",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-source-data.json",
+      "parent_id": "analytics"
+    },
+    {
+      "doc_id": "tiered-dimension-policy",
+      "title": "Tiered Dimension Policy",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tiered-dimension-policy.json",
+      "parent_id": "analytics",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "architecture",
+      "title": "Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/architecture.json"
+    },
+    {
+      "doc_id": "config-jekyll-site-config",
+      "title": "Jekyll Site Config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "data-models-projection-contract",
+      "title": "Projection Contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "scripts-audit-projection-contract",
+      "title": "Projection Contract Validation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "public-route-model",
+      "title": "Public Route Model",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-route-model.json",
+      "parent_id": "architecture",
+      "ui_status": "stable"
+    },
+    {
+      "doc_id": "data-models-shared",
+      "title": "Shared Patterns",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-shared.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "site-shell-runtime",
+      "title": "Site Shell Runtime",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "source-tree-ownership",
+      "title": "Source Tree Ownership",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json",
+      "parent_id": "architecture"
+    },
+    {
+      "doc_id": "audit",
+      "title": "Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/audit.json"
+    },
+    {
+      "doc_id": "scripts-audit-site-consistency",
+      "title": "Site Consistency Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json",
+      "parent_id": "audit"
+    },
+    {
+      "doc_id": "scripts-studio-audit-service",
+      "title": "Studio Audit Runner",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-studio-audit-service.json",
+      "parent_id": "audit"
+    },
+    {
+      "doc_id": "studio-audits",
+      "title": "Studio Audits",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json",
+      "parent_id": "audit"
+    },
+    {
+      "doc_id": "studio-docs-inventory",
+      "title": "Studio Docs Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
+      "parent_id": "audit",
+      "ui_status": "urgent"
+    },
+    {
+      "doc_id": "studio-python-ruby-script-inventory",
+      "title": "Studio Python And Ruby Script Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
+      "parent_id": "audit",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "docs-build-management-import-export-improvements",
+      "title": "Docs Build Management Import Export Improvements",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
+      "parent_id": "studio-python-ruby-script-inventory",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "scripts-audit-studio-ready-state",
+      "title": "Studio Ready-State Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json",
+      "parent_id": "audit"
+    },
+    {
+      "doc_id": "studio-risk-analysis-policy",
+      "title": "Studio Risk Analysis Policy",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
+      "parent_id": "audit",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "docs-viewer-javascript-inventory",
+      "title": "Docs Viewer JavaScript Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
+      "parent_id": "studio-risk-analysis-policy",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "javascript-inventory",
+      "title": "Javascript Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
+      "parent_id": "studio-risk-analysis-policy",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "studio-javascript-payload-inventory",
+      "title": "Retired JavaScript Inventory Policy",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
+      "parent_id": "studio-risk-analysis-policy",
+      "ui_status": "retired"
+    },
+    {
+      "doc_id": "studio-risk-priority-dashboard",
+      "title": "Studio Risk Priority Dashboard",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
+      "parent_id": "audit",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "analytics-risk-inventory",
+      "title": "Analytics Risk Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
+      "parent_id": "studio-risk-priority-dashboard",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "docs-viewer-risk-inventory",
+      "title": "Docs Viewer Risk Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
+      "parent_id": "studio-risk-priority-dashboard",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "public-site-risk-inventory",
+      "title": "Public Site Risk Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
+      "parent_id": "studio-risk-priority-dashboard",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "studio-app-risk-inventory",
+      "title": "Studio App Risk Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
+      "parent_id": "studio-risk-priority-dashboard",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "studio-risk-operations",
+      "title": "Studio Risk Operations",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-operations.json",
+      "parent_id": "studio-risk-priority-dashboard",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "studio-risk-evidence-pack",
+      "title": "Studio Risk Evidence Pack",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
+      "parent_id": "studio-risk-operations",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "change-requests",
+      "title": "Change Requests",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json"
+    },
+    {
+      "doc_id": "site-request-analytics-app-split",
+      "title": "Analytics App Split Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-analytics-app-split-follow-on",
+      "title": "Analytics App Split Follow-On Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
+      "parent_id": "site-request-analytics-app-split",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-analytics-app-split-tasks",
+      "title": "Analytics App Split Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
+      "parent_id": "site-request-analytics-app-split",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-analytics-data-sharing-growth-path",
+      "title": "Analytics Data Sharing Growth Path Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-data-sharing-growth-path.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-catalogue-save-build-diagnostics",
+      "title": "Catalogue Save Build Diagnostics Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-save-build-diagnostics.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-catalogue-work-unified-editor",
+      "title": "Catalogue Work Unified Editor Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-work-unified-editor.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index",
+      "title": "Data Sharing Docs Internal Index Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-docs-semantic-references-v2",
+      "title": "Docs Semantic References v2 Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-docs-semantic-references",
+      "title": "Docs Semantic References Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references.json",
+      "parent_id": "site-request-docs-semantic-references-v2",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-docs-toolkit-extraction",
+      "title": "Docs Toolkit Extraction Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-toolkit-extraction.json",
+      "parent_id": "change-requests",
+      "ui_status": "deferred"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-markdown-editor",
+      "title": "Docs Viewer Markdown Editor Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-markdown-editor-tasks",
+      "title": "Docs Viewer Markdown Editor Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor-tasks.json",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-pre-editor-work",
+      "title": "Docs Viewer Pre-Editor Work Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work.json",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-pre-editor-work-tasks",
+      "title": "Docs Viewer Pre-Editor Work Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work-tasks.json",
+      "parent_id": "site-request-docs-viewer-markdown-editor",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
+      "title": "Docs Viewer Multi-Panel App Shell Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming",
+      "title": "Docs Viewer Public Index Slimming Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
+      "parent_id": "change-requests",
+      "ui_status": "in-progress"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "title": "Docs Viewer Public Index Slimming Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
+      "title": "Docs Viewer Public Index Slimming Batch 1",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-1.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-2",
+      "title": "Docs Viewer Public Index Slimming Batch 2",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-2.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3",
+      "title": "Docs Viewer Public Index Slimming Batch 3",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
+      "title": "Docs Viewer Public Index Slimming Batch 4",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
+      "title": "Docs Viewer Public Index Slimming Batch 5",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
+      "title": "Docs Viewer Public Index Slimming Batch 6",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
+      "title": "Docs Viewer Public Index Slimming Batch 7",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
+      "title": "Docs Viewer Public/Manage Entrypoint Split Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
+      "title": "Docs Viewer Public/Manage Entrypoint Baseline Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints-baseline.json",
+      "parent_id": "site-request-docs-viewer-public-manage-entrypoints",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-runtime-risk-reduction",
+      "title": "Docs Viewer Runtime Risk Reduction Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-risk-reduction.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-semantic-reference-editor",
+      "title": "Docs Viewer Semantic Reference Editor Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-workspace-mount-architecture",
+      "title": "Docs Viewer Workspace Mount Architecture Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workspace-mount-architecture.json",
+      "parent_id": "change-requests",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-json-schema-adoption",
+      "title": "JSON Schema Adoption Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-json-schema-adoption.json",
+      "parent_id": "change-requests",
+      "ui_status": "deferred"
+    },
+    {
+      "doc_id": "site-request-library-import-generated-parent-nodes",
+      "title": "Library Import Generated Parent Nodes Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-library-import-generated-parent-nodes.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-portable-docs-viewer",
+      "title": "Portable Docs Viewer Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-portable-docs-viewer-public-fixture-tasks",
+      "title": "Portable Docs Viewer Public Fixture Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
+      "parent_id": "site-request-portable-docs-viewer",
+      "ui_status": "urgent"
+    },
+    {
+      "doc_id": "site-request-public-route-simplification",
+      "title": "Public Route Simplification Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-public-route-simplification-tasks",
+      "title": "Public Route Simplification Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification-tasks.json",
+      "parent_id": "site-request-public-route-simplification",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-public-static-site-build",
+      "title": "Public Static Site Build Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
+      "parent_id": "change-requests",
+      "ui_status": "in-progress"
+    },
+    {
+      "doc_id": "site-request-public-static-site-build-tasks",
+      "title": "Public Static Site Build Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build-tasks.json",
+      "parent_id": "site-request-public-static-site-build",
+      "ui_status": "in-progress"
+    },
+    {
+      "doc_id": "site-request-r2-media-upload-automation",
+      "title": "R2 Media Upload Automation Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-risk-analysis-inventory-redesign",
+      "title": "Risk Analysis Inventory Redesign Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-analysis-inventory-redesign.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-risk-route",
+      "title": "Studio Risk Route Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-risk-route.json",
+      "parent_id": "site-request-risk-analysis-inventory-redesign",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-risk-evidence-producers",
+      "title": "Risk Evidence Producers Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
+      "parent_id": "change-requests",
+      "ui_status": "in-progress"
+    },
+    {
+      "doc_id": "studio-risk-evidence-producer-roadmap",
+      "title": "Studio Risk Evidence Producer Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-producer-roadmap.json",
+      "parent_id": "site-request-risk-evidence-producers",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "studio-risk-route-exposure-evidence",
+      "title": "Studio Risk Route Exposure Evidence",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-route-exposure-evidence.json",
+      "parent_id": "site-request-risk-evidence-producers",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "studio-risk-runtime-browser-evidence",
+      "title": "Studio Risk Runtime Browser Evidence",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-runtime-browser-evidence.json",
+      "parent_id": "site-request-risk-evidence-producers",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "site-request-rubyless-app-runtimes",
+      "title": "Rubyless App Runtimes Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-rubyless-app-runtimes-tasks",
+      "title": "Rubyless App Runtimes Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes-tasks.json",
+      "parent_id": "site-request-rubyless-app-runtimes",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-activity-follow-ups",
+      "title": "Studio Activity Follow-Ups",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-activity-follow-ups.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-studio-audits-page",
+      "title": "Studio Audits Page Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-audits-page.json",
+      "parent_id": "change-requests",
+      "ui_status": "paused"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell",
+      "title": "Studio JavaScript App Shell Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
+      "parent_id": "change-requests",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-1",
+      "title": "Studio JavaScript App Shell Slice 1 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-1.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-2",
+      "title": "Studio JavaScript App Shell Slice 2 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-2.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-3",
+      "title": "Studio JavaScript App Shell Slice 3 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-3.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-4",
+      "title": "Studio JavaScript App Shell Slice 4 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-4.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-5",
+      "title": "Studio JavaScript App Shell Slice 5 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-5.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-studio-javascript-app-shell-slice-6",
+      "title": "Studio JavaScript App Shell Slice 6 Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-6.json",
+      "parent_id": "site-request-studio-javascript-app-shell",
+      "ui_status": "done"
+    },
+    {
+      "doc_id": "data-sharing",
+      "title": "Data Sharing",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json"
+    },
+    {
+      "doc_id": "studio-data-sharing",
+      "title": "Analytics Data Sharing Runtime",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
+      "parent_id": "data-sharing"
+    },
+    {
+      "doc_id": "studio-data-sharing-technical-spec",
+      "title": "Analytics Data Sharing Technical Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
+      "parent_id": "data-sharing"
+    },
+    {
+      "doc_id": "config-data-sharing-adapters",
+      "title": "Data Sharing Adapters",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
+      "parent_id": "data-sharing"
+    },
+    {
+      "doc_id": "config-library-export-configs",
+      "title": "Library Export Configs",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json",
+      "parent_id": "data-sharing"
+    },
+    {
+      "doc_id": "dev-home",
+      "title": "Dev Home",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/dev-home.json"
+    },
+    {
+      "doc_id": "scripts-cloud-environments",
+      "title": "Cloud Environments",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-cloud-environments.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "development-checklist",
+      "title": "Development Checklist",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/development-checklist.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "development-workflow",
+      "title": "Development Workflow",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "scripts-run-checks",
+      "title": "Run Checks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-run-checks.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "runtime-dependencies",
+      "title": "Runtime Dependencies",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/runtime-dependencies.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "scripts",
+      "title": "Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
+      "parent_id": "dev-home"
+    },
+    {
+      "doc_id": "task-batch-template",
+      "title": "Task Batch Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
+      "parent_id": "dev-home",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "task-template",
+      "title": "Task Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/task-template.json",
+      "parent_id": "dev-home",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "tasks-tracker-template",
+      "title": "Tasks Tracker Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
+      "parent_id": "dev-home",
+      "ui_status": "planned"
+    },
+    {
+      "doc_id": "docs-viewer",
+      "title": "Docs Viewer",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json"
+    },
+    {
+      "doc_id": "docs-broken-links",
+      "title": "Broken Links",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-broken-links.json",
+      "parent_id": "docs-viewer",
+      "ui_status": "report"
+    },
+    {
+      "doc_id": "scripts-docs-broken-links",
+      "title": "Broken Links Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-builder",
+      "title": "Builder",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-builder.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "config-docs-viewer",
+      "title": "Config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-css-cascade-design",
+      "title": "CSS Cascade Design",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-css-cascade-design.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-dependencies",
+      "title": "Dependencies",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-dependencies.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-data",
+      "title": "Docs Data",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-data.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "user-guide-docs-images",
+      "title": "Docs Images And Assets",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-images.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "user-guide-docs-html-import",
+      "title": "Docs Import",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-export",
+      "title": "Documents Package Preparation Script",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-import",
+      "title": "Documents Returned Package Script",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-import-source-registry-spec",
+      "title": "Import Source Registry Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-live-rebuild-watcher",
+      "title": "Live Rebuild Watcher",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-live-rebuild-watcher.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-management-server",
+      "title": "Management Service",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "scripts-docs-management-server-data-sharing",
+      "title": "Docs Management Service Data Sharing (Retired)",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-data-sharing.json",
+      "parent_id": "scripts-docs-management-server"
+    },
+    {
+      "doc_id": "scripts-docs-management-server-generated-reads",
+      "title": "Docs Management Service Generated Reads",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-generated-reads.json",
+      "parent_id": "scripts-docs-management-server"
+    },
+    {
+      "doc_id": "scripts-docs-management-server-import-rebuild",
+      "title": "Docs Management Service Import And Rebuild",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-import-rebuild.json",
+      "parent_id": "scripts-docs-management-server"
+    },
+    {
+      "doc_id": "scripts-docs-management-server-operations",
+      "title": "Docs Management Service Operations",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json",
+      "parent_id": "scripts-docs-management-server"
+    },
+    {
+      "doc_id": "scripts-docs-management-server-write-actions",
+      "title": "Docs Management Service Write Actions",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-write-actions.json",
+      "parent_id": "scripts-docs-management-server"
+    },
+    {
+      "doc_id": "docs-viewer-media-handling",
+      "title": "Media Handling",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-media-handling.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-new-scopes-builder",
+      "title": "New Scopes Builder",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-overview",
+      "title": "Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-panel-hosts",
+      "title": "Panel Hosts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-portable-setup",
+      "title": "Portable Setup",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-setup.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-portable-files",
+      "title": "Portable File Manifest",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json",
+      "parent_id": "docs-viewer-portable-setup"
+    },
+    {
+      "doc_id": "docs-viewer-portable-scope-setup",
+      "title": "Portable Scope Setup",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-scope-setup.json",
+      "parent_id": "docs-viewer-portable-setup"
+    },
+    {
+      "doc_id": "docs-viewer-portable-source-shape",
+      "title": "Portable Source Shape",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-source-shape.json",
+      "parent_id": "docs-viewer-portable-setup"
+    },
+    {
+      "doc_id": "docs-viewer-reports",
+      "title": "Reports",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-runtime-boundary",
+      "title": "Runtime Boundary",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-generated-data-contracts",
+      "title": "Docs Viewer Generated Data Contracts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "docs-viewer-runtime-module-ownership",
+      "title": "Docs Viewer Runtime Module Ownership",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "docs-viewer-runtime-surfaces",
+      "title": "Docs Viewer Runtime Surfaces",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference"
+    },
+    {
+      "doc_id": "docs-viewer-scopes",
+      "title": "Scopes",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-scopes.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "data-models-analysis",
+      "title": "Analysis Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-analysis.json",
+      "parent_id": "docs-viewer-scopes"
+    },
+    {
+      "doc_id": "library-documents",
+      "title": "Library Documents",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
+      "parent_id": "docs-viewer-scopes",
+      "ui_status": "report"
+    },
+    {
+      "doc_id": "data-models-library",
+      "title": "Library Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-library.json",
+      "parent_id": "docs-viewer-scopes"
+    },
+    {
+      "doc_id": "docs-viewer-semantic-references",
+      "title": "Semantic References",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references.json",
+      "parent_id": "docs-viewer",
+      "ui_status": "report"
+    },
+    {
+      "doc_id": "docs-viewer-semantic-references-implementation",
+      "title": "Semantic References Implementation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-implementation.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-source-config-report",
+      "title": "Source Config Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-config-report.json",
+      "parent_id": "docs-viewer",
+      "ui_status": "report"
+    },
+    {
+      "doc_id": "docs-viewer-source-organisation",
+      "title": "Source Organisation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-organisation.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-toolbar-model",
+      "title": "Toolbar Model",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "doc-ui-status",
+      "title": "UI Status",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/doc-ui-status.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-view-capability-contract",
+      "title": "View Capability Contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "docs-viewer-draft-publishing-spec",
+      "title": "Viewability Workflow Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-draft-publishing-spec.json",
+      "parent_id": "docs-viewer"
+    },
+    {
+      "doc_id": "llm",
+      "title": "LLM",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/llm.json"
+    },
+    {
+      "doc_id": "generic-llm-helper-pattern",
+      "title": "Generic LLM Helper Pattern",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/generic-llm-helper-pattern.json",
+      "parent_id": "llm",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "llm-semantic-enrichment-spec",
+      "title": "LLM Semantic Enrichment Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/llm-semantic-enrichment-spec.json",
+      "parent_id": "llm",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "llm-dimension",
+      "title": "LLM-Assisted Dimension Recommendation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/llm-dimension.json",
+      "parent_id": "llm",
+      "ui_status": "draft"
+    },
+    {
+      "doc_id": "local-setup",
+      "title": "Local Setup",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup.json"
+    },
+    {
+      "doc_id": "scripts-local-studio",
+      "title": "Local Runners",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "local-setup-environment",
+      "title": "Local Setup Environment",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-environment.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "local-setup-github-codex",
+      "title": "Local Setup GitHub And Codex Notes",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-github-codex.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "local-setup-public-site-preview",
+      "title": "Local Setup Public Site Preview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-public-site-preview.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "local-setup-recovery",
+      "title": "Local Setup Recovery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-recovery.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "local-setup-toolchain",
+      "title": "Local Setup Toolchain",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-toolchain.json",
+      "parent_id": "local-setup"
+    },
+    {
+      "doc_id": "search",
+      "title": "Search",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search.json"
+    },
+    {
+      "doc_id": "search-build-pipeline-architecture",
+      "title": "Build Pipeline",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-architecture.json",
+      "parent_id": "search"
+    },
+    {
+      "doc_id": "search-catalogue-infrastructure",
+      "title": "Catalogue Infrastructure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-infrastructure.json",
+      "parent_id": "search",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "config-search-build-json",
+      "title": "Build Config JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-build-json.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-build-pipeline-catalogue",
+      "title": "Catalogue Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-catalogue.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-index-schema",
+      "title": "Catalogue Search Index Schema",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-index-schema.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "config-search-policy-json",
+      "title": "Catalogue Search Policy JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-policy-json.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-catalogue-targeted-plan",
+      "title": "Catalogue Targeted Search Plan",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-targeted-plan.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-field-registry-definitions",
+      "title": "Search Field Definitions",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-definitions.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-field-registry-policy",
+      "title": "Search Field Policy",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-policy.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-field-registry-table",
+      "title": "Search Field Registry Table",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-field-registry-table.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-normalisation-rules",
+      "title": "Search Normalisation Rules",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-normalisation-rules.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-ranking-model",
+      "title": "Search Ranking Model",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ranking-model.json",
+      "parent_id": "search-catalogue-infrastructure"
+    },
+    {
+      "doc_id": "search-docs-viewer-infrastructure",
+      "title": "Docs Viewer Infrastructure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-docs-viewer-infrastructure.json",
+      "parent_id": "search",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "search-build-pipeline-analysis",
+      "title": "Analysis Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-analysis.json",
+      "parent_id": "search-docs-viewer-infrastructure"
+    },
+    {
+      "doc_id": "search-studio-v1-index-shape",
+      "title": "Docs Scope Index Shape",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-studio-v1-index-shape.json",
+      "parent_id": "search-docs-viewer-infrastructure"
+    },
+    {
+      "doc_id": "search-build-pipeline-library",
+      "title": "Library Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-library.json",
+      "parent_id": "search-docs-viewer-infrastructure"
+    },
+    {
+      "doc_id": "search-domain-review-patterns",
+      "title": "Domain Review Patterns",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-domain-review-patterns.json",
+      "parent_id": "search",
+      "ui_status": "review"
+    },
+    {
+      "doc_id": "search-overview",
+      "title": "Search Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-overview.json",
+      "parent_id": "search"
+    },
+    {
+      "doc_id": "search-public-ui-contract",
+      "title": "Search Public UI Contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-public-ui-contract.json",
+      "parent_id": "search"
+    },
+    {
+      "doc_id": "search-build-pipeline-studio",
+      "title": "Studio Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-studio.json",
+      "parent_id": "search"
+    },
+    {
+      "doc_id": "search-ui-behaviour",
+      "title": "UI Behaviour",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/search-ui-behaviour.json",
+      "parent_id": "search"
+    },
+    {
+      "doc_id": "studio",
+      "title": "Studio",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json"
+    },
+    {
+      "doc_id": "studio-activity",
+      "title": "Activity Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-analytics-config-json",
+      "title": "Analytics Config JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-analytics-ui-text-json",
+      "title": "Analytics UI Text Config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-ui-text-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "bulk-add-work",
+      "title": "Bulk Add Work",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/bulk-add-work.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-status",
+      "title": "Catalogue Drafts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-status.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-field-registry-review",
+      "title": "Catalogue Field Registry",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-field-registry-review.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-verify-catalogue-field-registry",
+      "title": "Catalogue Field Registry Verification",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-verify-catalogue-field-registry.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-models-catalogue-indexes",
+      "title": "Catalogue Indexes And Payloads",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-indexes.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-catalogue-lookup",
+      "title": "Catalogue Lookup Export",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-lookup.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-models-catalogue-maintenance",
+      "title": "Catalogue Model Maintenance",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-maintenance.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-moment-editor",
+      "title": "Catalogue Moment Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-moment-editor.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-models-catalogue",
+      "title": "Catalogue Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-series-editor",
+      "title": "Catalogue Series Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-series-editor.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-models-catalogue-source",
+      "title": "Catalogue Source Model",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-source.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-catalogue-source",
+      "title": "Catalogue Source Utilities",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-source.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-work-detail-editor",
+      "title": "Catalogue Work Detail Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-work-detail-editor.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "catalogue-work-editor",
+      "title": "Catalogue Work Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-work-editor.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "studio-works",
+      "title": "Catalogue Works",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-works.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-catalogue-write-server",
+      "title": "Catalogue Write Services",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-catalogue-write-server-build-lookup",
+      "title": "Catalogue Write Server Build And Lookup",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-build-lookup.json",
+      "parent_id": "scripts-catalogue-write-server"
+    },
+    {
+      "doc_id": "scripts-catalogue-write-server-endpoints",
+      "title": "Catalogue Write Server Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-endpoints.json",
+      "parent_id": "scripts-catalogue-write-server"
+    },
+    {
+      "doc_id": "scripts-catalogue-write-service-extraction",
+      "title": "Catalogue Write Service Extraction",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-service-extraction.json",
+      "parent_id": "scripts-catalogue-write-server"
+    },
+    {
+      "doc_id": "scripts-catalogue-write-server-operations",
+      "title": "Catalogue Write Service Operations",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-operations.json",
+      "parent_id": "scripts-catalogue-write-server"
+    },
+    {
+      "doc_id": "studio-config-and-save-flow",
+      "title": "Config and Save Flow",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-cleanup-implementation-plan",
+      "title": "Config Cleanup Implementation Plan",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-files-inventory",
+      "title": "Config Files Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-studio-config-js",
+      "title": "Config Loader JS",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-js.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-flow",
+      "title": "Data Flow",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-flow.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-data-sharing-files",
+      "title": "Data Sharing Config Files",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-files.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-docs-viewer-files",
+      "title": "Docs Viewer Config Files",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "local-studio-apis",
+      "title": "Local Studio APIs",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-apis.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "local-studio-app",
+      "title": "Local Studio App",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "local-studio-routes",
+      "title": "Local Studio Routes",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-routes.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-pipeline-json",
+      "title": "Pipeline Config JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-pipeline-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "project-state-page",
+      "title": "Project State Page",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/project-state-page.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-project-state-report",
+      "title": "Project State Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-project-state-report.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-publish-media-to-r2",
+      "title": "Publish Media To R2",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-publish-media-to-r2.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "studio-ready-state",
+      "title": "Route State",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ready-state.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "data-models-studio",
+      "title": "Scope",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-build-catalogue-json",
+      "title": "Scoped JSON Catalogue Build",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-build-catalogue-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "sorting-architecture",
+      "title": "Series Sorting",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/sorting-architecture.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "scripts-srcset-builder",
+      "title": "Srcset Builder",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-srcset-builder.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-studio-config-json",
+      "title": "Studio Config JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-studio-data-configs",
+      "title": "Studio Data Config Files",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-data-configs.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "studio-runtime",
+      "title": "Studio Runtime",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "config-studio-ui-text-json",
+      "title": "Studio UI Text Config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-ui-text-json.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "thumbnail-quality-page",
+      "title": "Thumbnail Quality Page",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/thumbnail-quality-page.json",
+      "parent_id": "studio"
+    },
+    {
+      "doc_id": "testing",
+      "title": "Testing",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json"
+    },
+    {
+      "doc_id": "testing-pytest",
+      "title": "Pytest",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/testing-pytest.json",
+      "parent_id": "testing"
+    },
+    {
+      "doc_id": "studio-smoke-testing",
+      "title": "Studio Smoke Testing",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-smoke-testing.json",
+      "parent_id": "testing"
+    },
+    {
+      "doc_id": "ui",
+      "title": "UI",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui.json"
+    },
+    {
+      "doc_id": "css-audit-spec",
+      "title": "CSS Audit Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/css-audit-spec.json",
+      "parent_id": "ui"
+    },
+    {
+      "doc_id": "scripts-css-token-audit",
+      "title": "CSS Token Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-css-token-audit.json",
+      "parent_id": "ui"
+    },
+    {
+      "doc_id": "ui-audits",
+      "title": "UI Audits",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-audits.json",
+      "parent_id": "ui"
+    },
+    {
+      "doc_id": "ui-catalogue",
+      "title": "UI Catalogue",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
+      "parent_id": "ui"
+    },
+    {
+      "doc_id": "ui-pattern-action-menu",
+      "title": "Action Menu Pattern",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-action-menu.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-primitive-button",
+      "title": "Button Primitive",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-button.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-pattern-column-links",
+      "title": "Column Links Pattern",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-column-links.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "css-primitives",
+      "title": "CSS Primitives",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/css-primitives.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-primitive-input",
+      "title": "Input Primitive",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-input.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-primitive-list",
+      "title": "List Primitive",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-list.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "studio-ui-framework-modal-contract",
+      "title": "Modal Contract",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-modal-contract.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "studio-ui-framework-modal-implementation",
+      "title": "Modal Implementation",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-modal-implementation.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-primitive-modal-shell",
+      "title": "Modal Shell Primitive",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-modal-shell.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-primitive-panel",
+      "title": "Panel Primitive",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-panel.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-pattern-reopenable-command-result",
+      "title": "Reopenable Command Result Pattern",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "ui-pattern-select-menu",
+      "title": "Select Menu Pattern",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "studio-ui-framework-primitives",
+      "title": "UI Framework Primitives",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-primitives.json",
+      "parent_id": "ui-catalogue"
+    },
+    {
+      "doc_id": "studio-ui-conformance",
+      "title": "UI Conformance Spec",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-conformance.json",
+      "parent_id": "ui"
+    },
+    {
+      "doc_id": "ui-framework",
+      "title": "UI Framework",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json",
+      "parent_id": "ui"
+    }
+  ],
+  "generated_at": "2026-06-05T15:35:08Z"
+}

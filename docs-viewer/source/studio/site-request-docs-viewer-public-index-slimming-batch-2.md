@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-2
 title: Docs Viewer Public Index Slimming Batch 2
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,10 +17,10 @@ Summary: Add public and manage tree/recently-added generation, wire scope lifecy
 
 | ID | status | action |
 | --- | --- | --- |
-| 2.1 | planned | Add build-time public `index-tree.json` and recently-added payload generation under `assets/data/docs/scopes/<scope>/`, using public-safe compact tree records, current public viewability filtering, and no recently-added-only date fields in tree rows. |
-| 2.2 | planned | Add build-time manage `index-tree.json` and recently-added payload generation under `docs-viewer/generated/docs/<scope>/`, using the same tree record structure as public scopes while preserving manage visibility/loadability behavior. |
-| 2.3 | planned | Update scope lifecycle create/delete behavior so `write_generated_outputs` creates required `index-tree.json` and recently-added payloads for new scopes and delete removes only manifest-recorded generated outputs for user-created scopes; existing scopes are backfilled through the normal `build_docs.py --scope <scope> --write` path. |
-| 2.4 | planned | Update search build inputs so search continues to produce and read its separate search payload without depending on retired public docs `index.json`. |
+| 2.1 | done | Add build-time public `index-tree.json` and recently-added payload generation under `assets/data/docs/scopes/<scope>/`, using public-safe compact tree records, current public viewability filtering, and no recently-added-only date fields in tree rows. |
+| 2.2 | done | Add build-time manage `index-tree.json` and recently-added payload generation under `docs-viewer/generated/docs/<scope>/`, using the same tree record structure as public scopes while preserving manage visibility/loadability behavior. |
+| 2.3 | done | Update scope lifecycle create/delete behavior so `write_generated_outputs` creates required `index-tree.json` and recently-added payloads for new scopes and delete removes only manifest-recorded generated outputs for user-created scopes; existing scopes are backfilled through the normal `build_docs.py --scope <scope> --write` path. |
+| 2.4 | done | Update search build inputs so search continues to produce and read its separate search payload without depending on retired public docs `index.json`. |
 
 ## Steer for these tasks
 
@@ -72,13 +72,17 @@ Batch 1 locked the generated-data contracts and dependency classification.
 
 ## completed verification
 
-- Not started.
+- 2026-06-05: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/build/build_docs.py docs-viewer/build/build_search.py docs-viewer/services/docs_scope_manifest.py docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_build_search_python.py studio/tests/python/test_generated_output_contract_fixtures.py docs-viewer/tests/python/test_docs_management_service.py` passed.
+- 2026-06-05: `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_build_search_python.py studio/tests/python/test_generated_output_contract_fixtures.py docs-viewer/tests/python/test_docs_management_service.py` passed, 56 tests.
+- 2026-06-05: `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --diagnostics` dry run passed; after the running docs watcher regenerated source-doc changes, the final dry run reported no pending docs, tree, recently-added, search, or reference writes.
+- 2026-06-05: `$HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope studio` dry run passed; search output was unchanged.
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 3 should switch route config/data loading to `index-tree.json` and `recently-added.json` with visible failures for missing payloads and no fallback to `index.json`.
+- Batch 5 still owns public flat `index.json` retirement after tree, selected-document, search, and recently-added runtime dependencies have moved.
 
 ## task close
 
-- Add a handoff note to Batch 3 with generated output paths, payload shapes, and any builder limitations.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 2 is complete.
+- Codex did not manually run `build_docs.py --write`; the running docs watcher regenerated the affected Studio generated payloads after source docs changed, including `index-tree.json` and `recently-added.json`.

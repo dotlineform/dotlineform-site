@@ -73,6 +73,37 @@ def write_scope_config(root: Path) -> None:
     )
 
 
+def write_public_scope_config(root: Path) -> None:
+    write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "library",
+                    "scope_type": "public",
+                    "meta": "public scope",
+                    "source": "docs-viewer/source/library",
+                    "media_path_prefix": "docs/library",
+                    "output": "assets/data/docs/scopes/library",
+                    "search_output": "assets/data/search/library/index.json",
+                    "viewer_base_url": "/library/",
+                    "include_scope_param": False,
+                    "default_doc_id": "parent",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": ["manage-root"],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                }
+            ],
+            "docs_viewer": {
+                "recently_added_limit": 2,
+            },
+        },
+    )
+
+
 def write_catalogue_records(root: Path) -> None:
     base = root / "studio/data/canonical/catalogue"
     write_json(
@@ -135,6 +166,35 @@ Intro with [parent](parent.md), ![Diagram]([[media:docs/studio/diagram.png]]), a
     )
 
 
+def write_public_source_docs(root: Path) -> None:
+    rows = [
+        ("parent", "Parent", "2026-06-01", "2026-06-01", "", True),
+        ("child", "Child", "2026-06-03", "2026-06-03", "parent", True),
+        ("hidden", "Hidden", "2026-06-04", "2026-06-04", "parent", False),
+        ("hidden-child", "Hidden Child", "2026-06-05", "2026-06-05", "hidden", True),
+        ("manage-root", "Manage Root", "2026-06-05", "2026-06-05", "", True),
+        ("manage-child", "Manage Child", "2026-06-06", "2026-06-06", "manage-root", True),
+    ]
+    for doc_id, title, added_date, last_updated, parent_id, viewable in rows:
+        viewable_line = "" if viewable else "viewable: false\n"
+        parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
+        write_text(
+            root / f"docs-viewer/source/library/{doc_id}.md",
+            f"""---
+doc_id: {doc_id}
+title: {json.dumps(title)}
+added_date: {added_date}
+last_updated: {last_updated}
+summary: {json.dumps(title + " summary")}
+ui_status: done
+{parent_line}{viewable_line}---
+# {title}
+
+{title} body.
+""",
+        )
+
+
 def prepare_repo(root: Path) -> None:
     write_text(root / "_config.yml", "media_base: https://media.example.test\n")
     write_scope_config(root)
@@ -176,6 +236,8 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         result = run_builder(root)
 
         index = read_json(root / "docs-viewer/generated/docs/studio/index.json")
+        index_tree = read_json(root / "docs-viewer/generated/docs/studio/index-tree.json")
+        recently_added = read_json(root / "docs-viewer/generated/docs/studio/recently-added.json")
         child = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
         references_index = read_json(root / "docs-viewer/generated/docs/studio/references/index.json")
         target_payload = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json")
@@ -187,6 +249,29 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert docs[1]["ui_status"] == "done"
     assert docs[1]["content_url"] == "/docs-viewer/generated/docs/studio/by-id/child.json"
     assert isinstance(docs[1]["content_text_length"], int)
+
+    assert index_tree["schema"] == "docs_index_tree_v1"
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent", "child"]
+    tree_child = index_tree["docs"][1]
+    assert tree_child == {
+        "doc_id": "child",
+        "title": "Child",
+        "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
+        "parent_id": "parent",
+        "ui_status": "done",
+    }
+    assert "summary" not in tree_child
+    assert "added_date" not in tree_child
+    assert "last_updated" not in tree_child
+    assert "source_path" not in tree_child
+    assert "viewer_url" not in tree_child
+    assert "content_text_length" not in tree_child
+
+    assert recently_added["schema"] == "docs_recently_added_v1"
+    assert recently_added["limit"] == 10
+    assert recently_added["docs"][0]["doc_id"] == "child"
+    assert recently_added["docs"][0]["added_date"] == "2026-06-01"
+    assert recently_added["docs"][0]["parent_title"] == "Parent"
 
     content_html = child["content_html"]
     assert 'href="/docs/?scope=studio&doc=parent"' in content_html
@@ -208,6 +293,30 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert target_payload["references"][0]["source_doc_id"] == "child"
     assert by_doc["references"][0]["label"] == "three signs"
     assert result["diagnostics"]["docs_emitted"] == 2
+    assert result["diagnostics"]["index_tree_changed"] == 1
+    assert result["diagnostics"]["recently_added_changed"] == 1
+
+
+def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_text(root / "_config.yml", "")
+        write_public_scope_config(root)
+        write_public_source_docs(root)
+        config = load_docs_scope_configs(root)["library"]
+        result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
+        index_tree = read_json(root / "assets/data/docs/scopes/library/index-tree.json")
+        recently_added = read_json(root / "assets/data/docs/scopes/library/recently-added.json")
+
+    assert result["diagnostics"]["docs_emitted"] == 6
+    assert index_tree["schema"] == "docs_index_tree_v1"
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent", "child"]
+    assert all("viewable" not in doc for doc in index_tree["docs"])
+    assert all("added_date" not in doc and "last_updated" not in doc for doc in index_tree["docs"])
+    assert recently_added["schema"] == "docs_recently_added_v1"
+    assert recently_added["limit"] == 2
+    assert [doc["doc_id"] for doc in recently_added["docs"]] == ["child", "parent"]
+    assert recently_added["docs"][0]["parent_title"] == "Parent"
 
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:
@@ -350,6 +459,7 @@ invalid front matter
 
 def main() -> None:
     test_python_docs_builder_writes_docs_payloads_and_references()
+    test_python_docs_builder_public_tree_and_recently_added_filter_private_rows()
     test_python_docs_builder_preserves_existing_payloads_for_targeted_builds()
     test_python_docs_builder_writes_browser_configs_on_cli_write()
     test_python_docs_builder_cli_dry_run_does_not_write_outputs()

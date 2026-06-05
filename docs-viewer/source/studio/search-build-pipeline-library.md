@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-library
 title: Library Scope
 added_date: 2026-05-19
-last_updated: 2026-06-01
+last_updated: 2026-06-05
 parent_id: search-docs-viewer-infrastructure
 viewable: true
 ---
@@ -20,9 +20,10 @@ viewable: true
 
 ### Current Source Input
 
-- `assets/data/docs/scopes/library/index.json`
+- `docs-viewer/source/library/*.md`
 
-The current Library search artifact is derived from the generated Library docs index rather than directly from `docs-viewer/source/library/`.
+The current Library search artifact is derived from source front matter through the configured scope source root.
+It no longer reads `assets/data/docs/scopes/library/index.json` or accepts `--source-index`.
 Rows with `viewable: false` are skipped so draft Library docs can be generated for manage-mode review without appearing in public/default search.
 
 ### Current Commands
@@ -41,7 +42,6 @@ Dry run:
 
 Current supported overrides:
 
-- `--source-index PATH`
 - `--output PATH`
 - `--only-doc-ids IDS`
 - `--remove-missing`
@@ -53,7 +53,7 @@ Current supported overrides:
 Current builder behaviour for Library:
 
 - matches the same docs-domain record model used by Studio
-- reads only the generated Library docs index
+- reads source front matter from the configured Library docs source root
 - can patch the existing Library search artifact for targeted `doc_id` updates
 - emits one search record per public-viewable Library doc after applying `viewable` filtering
 - stays compatible with the shared Docs Viewer inline search runtime

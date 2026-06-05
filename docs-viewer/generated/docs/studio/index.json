@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T15:25:10Z",
+  "generated_at": "2026-06-05T15:37:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -663,7 +663,7 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
-      "content_text_length": 3504
+      "content_text_length": 3948
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -685,9 +685,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-2.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-2",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-2.json",
-      "content_text_length": 5332
+      "content_text_length": 6732
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3",
@@ -699,7 +699,7 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
-      "content_text_length": 3304
+      "content_text_length": 4553
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
@@ -1537,12 +1537,12 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-05",
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 18514
+      "content_text_length": 18587
     },
     {
       "doc_id": "docs-viewer-panel-hosts",
@@ -2083,12 +2083,12 @@
       "doc_id": "search-build-pipeline-analysis",
       "title": "Analysis Scope",
       "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-05",
       "source_path": "search-build-pipeline-analysis.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
       "parent_id": "search-docs-viewer-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-analysis.json",
-      "content_text_length": 2501
+      "content_text_length": 2560
     },
     {
       "doc_id": "search-studio-v1-index-shape",
@@ -2105,12 +2105,12 @@
       "doc_id": "search-build-pipeline-library",
       "title": "Library Scope",
       "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-05",
       "source_path": "search-build-pipeline-library.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "parent_id": "search-docs-viewer-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-library.json",
-      "content_text_length": 2465
+      "content_text_length": 2522
     },
     {
       "doc_id": "search-domain-review-patterns",
@@ -2150,12 +2150,12 @@
       "doc_id": "search-build-pipeline-studio",
       "title": "Studio Scope",
       "added_date": "2026-05-19",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-05",
       "source_path": "search-build-pipeline-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
       "parent_id": "search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-studio.json",
-      "content_text_length": 2848
+      "content_text_length": 2789
     },
     {
       "doc_id": "search-ui-behaviour",

@@ -51,7 +51,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 | Batch ID | status | title |
 | --- | --- | --- |
 | 1 | done | [Batch 1: Discovery and Contract Lock](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-1) |
-| 2 | planned | [Batch 2: Builder Outputs](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-2) |
+| 2 | done | [Batch 2: Builder Outputs](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-2) |
 | 3 | planned | [Batch 3: Runtime Loading and Boundary Check](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3) |
 | 4 | planned | [Batch 4: Info Panel Hydration and Rendering](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-4) |
 | 5 | planned | [Batch 5: Public Flat Index Retirement](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5) |
@@ -70,7 +70,9 @@ Batch 7 owns the template closeout duties:
 ## Closeout Notes
 
 - Batch 1 completed discovery and contract lock. Generated payloads were not rebuilt.
+- Batch 2 added build-time compact tree/recent payload generation, scope lifecycle manifest records for those outputs, and search builder source-root inputs that no longer read retired public docs `index.json`. Codex did not manually run a write rebuild; the running docs watcher regenerated affected Studio payloads after source-doc edits.
 
 ## Verification Log
 
 - 2026-06-05: Batch 1 source review and scoped `rg` audit completed; no executable code changed.
+- 2026-06-05: Batch 2 syntax checks, focused pytest, Studio docs dry run, and Studio search dry run passed.

@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-studio
 title: Studio Scope
 added_date: 2026-05-19
-last_updated: 2026-06-01
+last_updated: 2026-06-05
 parent_id: search
 viewable: true
 ---
@@ -23,11 +23,10 @@ The search builder no longer derives the output path from the scope id alone.
 
 ### Current Source Input
 
-- `docs-viewer/generated/docs/studio/index.json`
+- `docs-viewer/source/studio/*.md`
 
-The source index path comes from the same scope config's generated docs `output` field unless `--source-index` overrides it.
-
-The current Studio search artifact is derived from the published Studio docs index rather than directly from `docs-viewer/source/studio/`.
+The current Studio search artifact is derived from source front matter through the configured scope source root.
+It no longer reads `docs-viewer/generated/docs/studio/index.json` or accepts `--source-index`.
 
 ### Current Commands
 
@@ -45,7 +44,6 @@ Dry run:
 
 Current supported overrides:
 
-- `--source-index PATH`
 - `--output PATH`
 - `--only-doc-ids IDS`
 - `--remove-missing`
@@ -56,7 +54,7 @@ Current supported overrides:
 
 Current builder behaviour for Studio:
 
-- reads the generated Studio docs index
+- reads source front matter from the configured Studio docs source root
 - can patch the existing Studio search artifact for targeted `doc_id` updates
 - emits one search record per viewable Studio doc
 - keeps record shape compatible with the shared Docs Viewer inline search runtime
