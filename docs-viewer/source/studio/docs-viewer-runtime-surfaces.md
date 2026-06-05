@@ -79,8 +79,8 @@ Generated payload contracts live in [Docs Viewer Generated Data Contracts](/docs
 
 Current Docs Viewer route payload ownership:
 
-- public `/library/` and `/analysis/` route configs point navigation at public `assets/data/docs/scopes/<scope>/index-tree.json`
-- local/manage `/docs/` route config points navigation at manage `docs-viewer/generated/docs/<scope>/index-tree.json`
+- public `/library/` and `/analysis/` route configs point navigation at public nested-tree payloads in `assets/data/docs/scopes/<scope>/index-tree.json`
+- local/manage `/docs/` route config points navigation at the manage nested-tree payload in `docs-viewer/generated/docs/<scope>/index-tree.json`
 - public and manage routes point recently-added mode at the route-appropriate `recently-added.json`
 - search remains on the route-appropriate search payload such as `assets/data/search/<scope>/index.json` or `docs-viewer/generated/search/<scope>/index.json`
 - selected-document rendering and info-panel metadata hydrate from selected by-id payloads

@@ -84,7 +84,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 The current payload-loading ownership after public index slimming is:
 
 - `docs-viewer-generated-data-runtime.js` owns named reads for docs index tree, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets.
-- `docs-viewer-tree-payload-adapter.js` owns normalizing `index-tree.json` and `recently-added.json` payloads into the runtime record shape.
+- `docs-viewer-tree-payload-adapter.js` owns normalizing nested `index-tree.json` and `recently-added.json` payloads into the runtime record shape, including deriving in-memory child `parent_id` values from nested tree position.
 - `docs-viewer-document-index-state.js` owns public/manage visibility filtering, manage-only tree-root omission, non-loadable fallback resolution, default-doc selection, and index status projection after the normalized tree payload is loaded.
 - `docs-viewer-route-workflow.js` owns route application, `index-tree.json` loading orchestration, selected-document payload loading, URL/history writes, and missing/error projection through its private route command contract.
 - `docs-viewer-search-controller.js` owns search and recently-added rendering while delegating generated search/recent payload reads to `docs-viewer-generated-data-runtime.js`.

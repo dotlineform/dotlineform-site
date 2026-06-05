@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T19:24:32Z",
+  "generated_at": "2026-06-05T20:04:50Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -649,9 +649,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
       "parent_id": "change-requests",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 14700
+      "content_text_length": 15082
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
@@ -661,9 +661,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks",
       "parent_id": "site-request-docs-viewer-public-index-slimming",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
-      "content_text_length": 5813
+      "content_text_length": 6286
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -769,9 +769,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-8.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-8",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-8.json",
-      "content_text_length": 5918
+      "content_text_length": 8839
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1657,7 +1657,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
-      "content_text_length": 5548
+      "content_text_length": 5856
     },
     {
       "doc_id": "docs-viewer-runtime-module-ownership",
@@ -1669,7 +1669,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json",
-      "content_text_length": 10098
+      "content_text_length": 10184
     },
     {
       "doc_id": "docs-viewer-runtime-surfaces",
@@ -1681,7 +1681,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
-      "content_text_length": 5920
+      "content_text_length": 5971
     },
     {
       "doc_id": "docs-viewer-scopes",

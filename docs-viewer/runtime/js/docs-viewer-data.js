@@ -128,6 +128,23 @@ export function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPa
 export function indexIncludesExpectedDoc(payload, expectedDocId) {
   if (!expectedDocId) return true;
   var docs = payload && Array.isArray(payload.docs) ? payload.docs : [];
+  var stack = docs.slice();
+  while (stack.length > 0) {
+    var doc = stack.shift();
+    if (!doc || typeof doc !== "object") continue;
+    if (doc.doc_id === expectedDocId) return true;
+    if (Array.isArray(doc.children)) {
+      doc.children.forEach(function (child) {
+        stack.push(child);
+      });
+    }
+  }
+  return false;
+}
+
+export function flatIndexIncludesExpectedDoc(payload, expectedDocId) {
+  if (!expectedDocId) return true;
+  var docs = payload && Array.isArray(payload.docs) ? payload.docs : [];
   return docs.some(function (doc) {
     return doc && doc.doc_id === expectedDocId;
   });
@@ -144,7 +161,7 @@ export function fetchIndexWithRetry(options) {
     Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
   )
     .then(function (payload) {
-      if (indexIncludesExpectedDoc(payload, settings.reloadExpectedDocId)) {
+      if (flatIndexIncludesExpectedDoc(payload, settings.reloadExpectedDocId)) {
         return payload;
       }
       if (!settings.reloadNonce || currentAttempt >= attempts - 1) {

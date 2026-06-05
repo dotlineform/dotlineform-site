@@ -31,7 +31,7 @@ It separates public read-only route data from local/manage route data so payload
 
 | Capability | Public route source | Manage route source | Notes |
 | --- | --- | --- | --- |
-| Navigation tree | `index-tree.json` | `index-tree.json` | Public and manage tree records share the same structure. |
+| Navigation tree | `index-tree.json` | `index-tree.json` | Public and manage tree nodes share the same nested structure. |
 | Selected document render | by-id payload | by-id payload | By-id payloads remain in scope for selected documents. |
 | Info-panel metadata | selected by-id payload | selected by-id payload | Public reader metadata is limited to title, summary, and last updated. |
 | Search | search payload | search payload | Search runtime reads separate search payloads. |
@@ -40,14 +40,17 @@ It separates public read-only route data from local/manage route data so payload
 
 ## `index-tree.json` Contract
 
-Public and manage `index-tree.json` should use exactly the same data structure.
+Public and manage `index-tree.json` use exactly the same nested data structure.
 Manage tree generation may preserve manage visibility/loadability behavior, but it should not add richer row fields unless a manage interaction needs them before selected by-id is loaded.
 
-Public `index-tree.json` rows should stay as close as possible to:
+`docs` is an array of root nodes. Child relationships are expressed with each node's optional `children` array.
+Generated tree nodes do not carry `parent_id`; `docs-viewer-tree-payload-adapter.js` derives runtime-only parent ids while normalizing the nested payload for existing renderer and management state.
+
+Public `index-tree.json` nodes should stay as close as possible to:
 
 - `doc_id`
 - `title`
-- `parent_id`, only when non-empty
+- `children`, only when non-empty
 - `viewable: false`, only when needed
 - `ui_status`
 - `content_url`

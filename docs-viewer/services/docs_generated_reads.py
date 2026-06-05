@@ -143,7 +143,10 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
         label = "index tree" if public_readonly else "index"
         raise RuntimeError(f"generated docs {label} for {scope} is missing docs")
 
-    record = next((doc for doc in docs if isinstance(doc, dict) and doc.get("doc_id") == doc_id), None)
+    record = find_generated_doc_record(docs, doc_id) if public_readonly else next(
+        (doc for doc in docs if isinstance(doc, dict) and doc.get("doc_id") == doc_id),
+        None,
+    )
     if record is None:
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
@@ -158,3 +161,15 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
         generated_doc_payload_path(repo_root, scope, doc_id),
         f"generated doc payload for {doc_id}",
     )
+
+
+def find_generated_doc_record(docs: list[Any], doc_id: str) -> Dict[str, Any] | None:
+    stack = [doc for doc in docs if isinstance(doc, dict)]
+    while stack:
+        record = stack.pop(0)
+        if record.get("doc_id") == doc_id:
+            return record
+        children = record.get("children")
+        if isinstance(children, list):
+            stack.extend(child for child in children if isinstance(child, dict))
+    return None

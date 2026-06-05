@@ -7,23 +7,36 @@ function optionalStringRecordValue(row, key) {
   return value ? value : "";
 }
 
-function normalizeTreeDoc(row) {
+function normalizeTreeDoc(row, parentId) {
   if (!row || typeof row !== "object" || Array.isArray(row)) return null;
   var docId = cleanString(row.doc_id);
   var title = cleanString(row.title);
   var contentUrl = cleanString(row.content_url);
   if (!docId || !title || !contentUrl) return null;
+  if (optionalStringRecordValue(row, "parent_id")) {
+    throw new Error("Docs index tree nodes must express parentage with nested children, not parent_id.");
+  }
   var doc = {
     doc_id: docId,
     title: title,
     content_url: contentUrl
   };
-  var parentId = optionalStringRecordValue(row, "parent_id");
   var uiStatus = optionalStringRecordValue(row, "ui_status");
   if (parentId) doc.parent_id = parentId;
   if (row.viewable === false) doc.viewable = false;
   if (uiStatus) doc.ui_status = uiStatus;
   return doc;
+}
+
+function flattenTreeDocs(rows, parentId, docs) {
+  if (!Array.isArray(rows)) return docs;
+  rows.forEach(function (row) {
+    var doc = normalizeTreeDoc(row, parentId);
+    if (!doc) return;
+    docs.push(doc);
+    flattenTreeDocs(row.children, doc.doc_id, docs);
+  });
+  return docs;
 }
 
 function normalizeRecentDoc(row) {
@@ -63,7 +76,7 @@ export function normalizeDocsIndexTreePayload(payload) {
     schema: "docs_index_tree_v1",
     generated_at: cleanString(payload.generated_at),
     viewer_options: viewerOptions,
-    docs: payload.docs.map(normalizeTreeDoc).filter(Boolean)
+    docs: flattenTreeDocs(payload.docs, "", [])
   };
 }
 

@@ -585,15 +585,12 @@ class DocsDataBuilder:
         hidden = self.descendants_for_roots(docs, [*self.manage_only_tree_root_ids, *hidden_roots])
         return [doc for doc in docs if doc.viewable and doc.doc_id not in hidden]
 
-    def tree_entry(self, doc: DocRecord, docs: list[DocRecord], included_ids: set[str]) -> dict[str, Any]:
+    def tree_entry(self, doc: DocRecord) -> dict[str, Any]:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
             "content_url": doc.content_url,
         }
-        parent_id = self.effective_parent_id(doc, docs)
-        if parent_id and parent_id in included_ids:
-            entry["parent_id"] = parent_id
         if not doc.viewable:
             entry["viewable"] = False
         if doc.ui_status:
@@ -603,11 +600,37 @@ class DocsDataBuilder:
     def index_tree_payload(self, docs: list[DocRecord], viewer_options: dict[str, Any]) -> dict[str, Any]:
         included_docs = self.docs_for_public_payloads(self.ordered_docs_for_index(docs))
         included_ids = {doc.doc_id for doc in included_docs}
-        rows = [self.tree_entry(doc, docs, included_ids) for doc in included_docs]
+        included_by_parent: dict[str, list[DocRecord]] = {}
+        for doc in included_docs:
+            parent_id = self.effective_parent_id(doc, docs)
+            if parent_id not in included_ids:
+                parent_id = ""
+            included_by_parent.setdefault(parent_id, []).append(doc)
+
+        emitted_ids: set[str] = set()
+
+        def node_for(doc: DocRecord, active_ids: set[str] | None = None) -> dict[str, Any]:
+            active = active_ids or set()
+            active.add(doc.doc_id)
+            emitted_ids.add(doc.doc_id)
+            node = self.tree_entry(doc)
+            children = [
+                node_for(child, set(active))
+                for child in included_by_parent.get(doc.doc_id, [])
+                if child.doc_id not in active and child.doc_id not in emitted_ids
+            ]
+            if children:
+                node["children"] = children
+            return node
+
+        tree = [node_for(doc) for doc in included_by_parent.get("", [])]
+        for doc in included_docs:
+            if doc.doc_id not in emitted_ids:
+                tree.append(node_for(doc))
         comparable = {
             "schema": DOCS_INDEX_TREE_SCHEMA_VERSION,
             "viewer_options": viewer_options,
-            "docs": rows,
+            "docs": tree,
         }
         return {
             **comparable,

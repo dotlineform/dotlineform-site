@@ -98,6 +98,13 @@ def write_public_generated_docs(root: Path) -> None:
             "doc_id": "library",
             "title": "Library",
             "content_url": "/assets/data/docs/scopes/library/by-id/library.json",
+            "children": [
+                {
+                    "doc_id": "child",
+                    "title": "Child",
+                    "content_url": "/assets/data/docs/scopes/library/by-id/child.json",
+                }
+            ],
         }
     ]
     write_json(
@@ -111,6 +118,10 @@ def write_public_generated_docs(root: Path) -> None:
     write_json(
         root / "assets/data/docs/scopes/library/by-id/library.json",
         {"title": "Library", "content_html": "<h1>Library</h1>"},
+    )
+    write_json(
+        root / "assets/data/docs/scopes/library/by-id/child.json",
+        {"title": "Child", "content_html": "<h1>Child</h1>"},
     )
 
 
@@ -238,8 +249,10 @@ def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
         repo_root = Path(temp_path)
         write_public_generated_docs(repo_root)
         payload = generated_reads.read_generated_doc_payload(repo_root, "library", "library")
+        child_payload = generated_reads.read_generated_doc_payload(repo_root, "library", "child")
 
         assert payload["title"] == "Library"
+        assert child_payload["title"] == "Child"
         assert generated_reads.generated_scope_data_available(repo_root, "library") is True
         assert not (repo_root / "assets/data/docs/scopes/library/index.json").exists()
 
@@ -273,19 +286,26 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
             {
                 "doc_id": "research",
                 "content_url": "/custom/generated/research/by-id/research.json",
+                "children": [
+                    {
+                        "doc_id": "finding",
+                        "content_url": "/custom/generated/research/by-id/finding.json",
+                    }
+                ],
             }
         ]
         write_json(repo_root / "custom/generated/research/index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
         write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
+        write_json(repo_root / "custom/generated/research/by-id/finding.json", {"doc_id": "finding"})
 
         assert (
             generated_reads.generated_docs_index_path(repo_root, "research")
             == repo_root / "custom/generated/research/index.json"
         )
         assert not (repo_root / "custom/generated/research/index.json").exists()
-        payload = generated_reads.read_generated_doc_payload(repo_root, "research", "research")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "research", "finding")
 
-    assert payload["doc_id"] == "research"
+    assert payload["doc_id"] == "finding"
 
 
 def test_generated_search_path_uses_scope_config_search_output() -> None:

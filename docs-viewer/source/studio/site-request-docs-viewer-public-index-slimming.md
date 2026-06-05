@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming
 title: Docs Viewer Public Index Slimming Request
 added_date: 2026-06-03
 last_updated: 2026-06-05
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 
 ## Summary
 
@@ -208,13 +208,14 @@ The implementation tracker owns task state and links to the focused batch delive
 - [Batch 5: Public Flat Index Retirement](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5)
 - [Batch 6: Verification](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-6)
 - [Batch 7: Documentation and Closeout](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7)
+- [Batch 8: Nested Tree Payload Correction](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-8)
 
 ## Acceptance Criteria
 
 - public Docs Viewer routes do not load public `index.json`
 - public Docs Viewer-generated route outputs no longer publish a flat public `assets/data/docs/scopes/<scope>/index.json` for Docs Viewer runtime use
-- public routes load a public `index-tree.json` payload for navigation instead of constructing the tree from a rich flat index
-- manage routes load a manage `index-tree.json` payload with the same data structure as public tree payloads instead of relying on public tree data
+- public routes load a nested public `index-tree.json` payload for navigation instead of constructing the tree from a rich flat index
+- manage routes load a nested manage `index-tree.json` payload with the same data structure as public tree payloads instead of relying on public tree data
 - recently-added reads from a small build-time payload and does not require `added_date` or `last_updated` fields in `index-tree.json`
 - search runtime continues to read its separate search payload, and search build inputs no longer depend on retired public docs `index.json`
 - generated-output contract fixtures and projection checks no longer require rich public `index.json` fields such as `source_path`, `viewer_url`, or `content_text_length`
@@ -242,11 +243,11 @@ Durable current contracts now live in:
 
 Final verification is recorded in [Docs Viewer Public Index Slimming Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks) and [Batch 7](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7).
 
-Generated Docs Viewer payloads were not rebuilt during documentation closeout.
-Batch 6 completed the executable smoke baseline against a temporary public build, and Batch 7 completed cleanup scans confirming public route configs, public browser scope configs, and checked-in public outputs do not retain a public flat-index route path.
+Generated Docs Viewer payloads were not rebuilt during Batch 7 documentation closeout.
+Batch 6 completed the executable smoke baseline against a temporary public build, Batch 7 completed cleanup scans confirming public route configs, public browser scope configs, and checked-in public outputs do not retain a public flat-index route path, and Batch 8 corrected the remaining flat `index-tree.json` shape.
 
 Remaining non-route consumers for richer document metadata, including Data Sharing export/import, docs import review, broken-link tooling, source-config reports, and report/internal rich-index reads, remain under their owning requests and should not restore public flat `index.json` route behavior.
 
-Reopened on 2026-06-05 for [Batch 8: Nested Tree Payload Correction](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-8).
-The implemented public-index slimming work retired rich public flat indexes, but `index-tree.json` remains a flat adjacency-list payload.
-Batch 8 owns either correcting `index-tree.json` to a nested build-time tree payload aligned with the Proposed Direction, or recording that the correction is large enough to require a fresh request.
+Batch 8 completed on 2026-06-05.
+`index-tree.json` is now a nested build-time tree payload. Generated tree nodes express child relationships with `children`, not `parent_id`; the shared tree payload adapter derives runtime-only parent ids after load for renderer, routing, trail, non-loadable fallback, and manage-mode behavior.
+The Studio generated `index-tree.json` was rebuilt for this contract change. Studio generated docs were also regenerated after closeout source-doc edits so checked-in generated data matches the closed request state. Public Library/Analysis tree payloads were checked and did not need writes because they are root-only under the nested contract.

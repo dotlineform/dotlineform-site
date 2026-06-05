@@ -251,15 +251,16 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert isinstance(docs[1]["content_text_length"], int)
 
     assert index_tree["schema"] == "docs_index_tree_v1"
-    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent", "child"]
-    tree_child = index_tree["docs"][1]
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent"]
+    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == ["child"]
+    tree_child = index_tree["docs"][0]["children"][0]
     assert tree_child == {
         "doc_id": "child",
         "title": "Child",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
-        "parent_id": "parent",
         "ui_status": "done",
     }
+    assert "parent_id" not in tree_child
     assert "summary" not in tree_child
     assert "added_date" not in tree_child
     assert "last_updated" not in tree_child
@@ -355,9 +356,12 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     }
 
     assert index_tree["schema"] == "docs_index_tree_v1"
-    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent", "child"]
-    assert all("viewable" not in doc for doc in index_tree["docs"])
-    assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in index_tree["docs"])
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent"]
+    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == ["child"]
+    flattened_tree_docs = [index_tree["docs"][0], *index_tree["docs"][0]["children"]]
+    assert all("parent_id" not in doc for doc in flattened_tree_docs)
+    assert all("viewable" not in doc for doc in flattened_tree_docs)
+    assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in flattened_tree_docs)
     assert recently_added["schema"] == "docs_recently_added_v1"
     assert recently_added["limit"] == 2
     assert [doc["doc_id"] for doc in recently_added["docs"]] == ["child", "parent"]
