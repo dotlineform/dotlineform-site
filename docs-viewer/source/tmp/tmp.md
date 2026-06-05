@@ -11,7 +11,10 @@ ui_status: draft
 we are working on `site-request-docs-viewer-public-index-slimming.md`,
 please review the request and proposed tasks and identify any areas or tasks that are missing or need clarification.
 
-
+we now need to move the implementation batches out of the request doc into a focussed set of implementation docs:
+- a task tracker using `tasks-tracker-template.md` as the template,
+- a set of batch task delivery dos using `task-batch-template.md` as the template.
+Follow the guidance in the templates for what to include in them.
 
 ---
 
