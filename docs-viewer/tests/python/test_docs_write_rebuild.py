@@ -225,6 +225,44 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
     assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
 
 
+def test_targeted_public_docs_build_does_not_require_flat_index() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text(
+            """{
+  "schema_version": "docs_scopes_v1",
+  "scopes": [
+    {
+      "scope_id": "library",
+      "source": "docs-viewer/source/library",
+      "media_path_prefix": "docs/library",
+      "output": "assets/data/docs/scopes/library",
+      "search_output": "assets/data/search/library/index.json",
+      "viewer_base_url": "/library/",
+      "include_scope_param": false,
+      "default_doc_id": "library"
+    }
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+        source_root = repo_root / "docs-viewer/source/library"
+        source_root.mkdir(parents=True)
+        (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
+        (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
+        (repo_root / "assets/data/docs/scopes/library/by-id").mkdir(parents=True)
+        (repo_root / "assets/data/docs/scopes/library/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "assets/data/docs/scopes/library/references").mkdir(parents=True)
+        (repo_root / "assets/data/docs/scopes/library/references/index.json").write_text("{}", encoding="utf-8")
+
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
+
+    assert reason == ""
+
+
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()

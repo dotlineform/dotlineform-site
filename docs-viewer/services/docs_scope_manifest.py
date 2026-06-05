@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, safe_relative_path
+from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs, safe_relative_path
 
 
 MANIFEST_REL_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
@@ -119,10 +119,16 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
         files.append(default_doc)
     if route_path.exists():
         files.append(path_record(repo_root, "route_file", route_path))
+    files.append(path_record(repo_root, "generated_docs_root", repo_root / config.output))
+    if not is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ):
+        files.append(path_record(repo_root, "generated_docs_index", repo_root / config.output / "index.json"))
     files.extend(
         [
-            path_record(repo_root, "generated_docs_root", repo_root / config.output),
-            path_record(repo_root, "generated_docs_index", repo_root / config.output / "index.json"),
+            path_record(repo_root, "generated_docs_index_tree", repo_root / config.output / "index-tree.json"),
+            path_record(repo_root, "generated_docs_recently_added", repo_root / config.output / "recently-added.json"),
             path_record(repo_root, "generated_docs_payload_root", repo_root / config.output / "by-id"),
             path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, config)),
         ]
@@ -766,10 +772,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             planned_scope_config["output"],
             field="planned_scope_config.output",
         )
+        created_files.append(path_record(repo_root, "generated_docs_root", docs_output, action="create"))
+        if publishing_mode != PUBLIC_MODE:
+            created_files.append(path_record(repo_root, "generated_docs_index", docs_output / "index.json", action="create"))
         created_files.extend(
             [
-                path_record(repo_root, "generated_docs_root", docs_output, action="create"),
-                path_record(repo_root, "generated_docs_index", docs_output / "index.json", action="create"),
                 path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),
                 path_record(repo_root, "generated_docs_recently_added", docs_output / "recently-added.json", action="create"),
                 path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id", action="create"),

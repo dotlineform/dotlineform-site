@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-5
 title: Docs Viewer Public Index Slimming Batch 5
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,8 +17,8 @@ Summary: Remove remaining Docs Viewer public runtime dependencies on rich flat-i
 
 | ID | status | action |
 | --- | --- | --- |
-| 5.1 | planned | Remove public info-panel metadata reads and tree construction reads from public flat `index.json`, then retire public flat `index.json` from Docs Viewer-generated public route outputs after Docs Viewer-owned tree, selected-document, search, and recently-added dependencies have moved. |
-| 5.2 | planned | Review and remove public runtime exposure of rich flat-index fields such as `last_updated`, `source_path`, `viewer_url`, `content_text_length`, and other management/tooling metadata after dependent Docs Viewer call sites have moved. |
+| 5.1 | done | Remove public info-panel metadata reads and tree construction reads from public flat `index.json`, then retire public flat `index.json` from Docs Viewer-generated public route outputs after Docs Viewer-owned tree, selected-document, search, and recently-added dependencies have moved. |
+| 5.2 | done | Review and remove public runtime exposure of rich flat-index fields such as `last_updated`, `source_path`, `viewer_url`, `content_text_length`, and other management/tooling metadata after dependent Docs Viewer call sites have moved. |
 
 ## Steer for these tasks
 
@@ -48,7 +48,12 @@ Summary: Remove remaining Docs Viewer public runtime dependencies on rich flat-i
 
 ## completed verification
 
-- Not started.
+- 2026-06-05: Python syntax checks passed for changed builder, services, smoke, and focused test files.
+- 2026-06-05: Focused pytest passed: `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_write_rebuild.py docs-viewer/tests/python/test_docs_management_service.py -q`.
+- 2026-06-05: JSON validation passed for `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json`, and `docs-viewer/config/scopes/docs_scope_manifest.json`.
+- 2026-06-05: Stale-reference scan passed for public docs `index.json` exposure in runtime/config/builder/service surfaces.
+- 2026-06-05: Public docs dry runs passed for `library` and `analysis` without public flat `index.json`; `analysis` still reports the existing unresolved semantic reference warning for `work:00638002`.
+- 2026-06-05: Reduced Docs Viewer smoke profile passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`; summary at `var/test-runs/20260605-191502/summary.md`.
 
 ## follow-on tasks
 
@@ -59,5 +64,5 @@ Summary: Remove remaining Docs Viewer public runtime dependencies on rich flat-i
 
 ## task close
 
-- Add a handoff note to Batch 6 with exact negative assertions that final verification must cover.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 6 handoff added.
+- This document and the tracker row were set to `done`.

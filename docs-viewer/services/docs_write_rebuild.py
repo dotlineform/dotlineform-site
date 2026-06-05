@@ -11,8 +11,8 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs
-from docs_source_model import scope_root
+from docs_scope_config import DOCS_SCOPE_CONFIGS, is_public_readonly_scope, load_docs_scope_configs
+from docs_source_model import load_scope_docs, scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -58,18 +58,28 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
     output_dir = repo_root / config.output
     index_path = output_dir / "index.json"
     references_index_path = output_dir / "references" / "index.json"
-    if not index_path.exists():
+    public_readonly = is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    )
+    if not public_readonly and not index_path.exists():
         return "full-scope fallback: existing docs index missing"
     if not references_index_path.exists():
         return "full-scope fallback: existing references index missing"
 
-    try:
-        index_payload = json.loads(index_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        return f"full-scope fallback: existing docs index unreadable: {exc}"
-    docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
-    if not isinstance(docs, list):
-        return "full-scope fallback: existing docs index has no docs array"
+    if public_readonly:
+        try:
+            docs = [{"doc_id": doc.doc_id} for doc in load_scope_docs(repo_root, scope)]
+        except (OSError, ValueError) as exc:
+            return f"full-scope fallback: source docs unavailable: {exc}"
+    else:
+        try:
+            index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return f"full-scope fallback: existing docs index unreadable: {exc}"
+        docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
+        if not isinstance(docs, list):
+            return "full-scope fallback: existing docs index has no docs array"
 
     target_set = set(target_doc_ids)
     missing_payload_ids: list[str] = []

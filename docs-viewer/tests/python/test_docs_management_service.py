@@ -417,6 +417,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
+    assert not any(file["path"] == "assets/data/docs/scopes/research/index.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research/index-tree.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research/recently-added.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])

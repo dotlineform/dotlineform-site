@@ -292,7 +292,7 @@ class DocsDataBuilder:
         ]
         viewer_options = self.viewer_options_payload()
         index_payload = {
-            "generated_at": self.effective_generated_at(docs_index, viewer_options),
+            "generated_at": self.effective_index_generated_at(docs_index, viewer_options),
             "viewer_options": viewer_options,
             "docs": docs_index,
         }
@@ -411,7 +411,7 @@ class DocsDataBuilder:
                 raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
     def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
-        if not (self.output_dir / "index.json").exists():
+        if not self.public_readonly_scope and not (self.output_dir / "index.json").exists():
             raise RuntimeError("Targeted docs build requires existing scope index; run a full-scope build first")
         if not (self.references_dir / "index.json").exists():
             raise RuntimeError("Targeted docs build requires existing references index; run a full-scope build first")
@@ -555,6 +555,11 @@ class DocsDataBuilder:
         if comparable_existing == comparable_payload and generated_at:
             return generated_at
         return utc_timestamp()
+
+    def effective_index_generated_at(self, docs_index: list[dict[str, Any]], viewer_options: dict[str, Any]) -> str:
+        if self.public_readonly_scope:
+            return utc_timestamp()
+        return self.effective_generated_at(docs_index, viewer_options)
 
     def descendants_for_roots(self, docs: list[DocRecord], roots: list[str]) -> set[str]:
         by_parent: dict[str, list[str]] = {}
@@ -1255,8 +1260,10 @@ class DocsDataBuilder:
         stale_item_ids = sorted(set(existing_item_ids) - set(desired_item_ids))
         if target_doc_ids:
             stale_item_ids = sorted(set(stale_item_ids) & set(target_doc_ids))
+        public_readonly = self.public_readonly_scope
         return {
-            "index_write": read_text(self.output_dir / "index.json") != index_text,
+            "index_write": False if public_readonly else read_text(self.output_dir / "index.json") != index_text,
+            "index_remove": public_readonly and (self.output_dir / "index.json").exists(),
             "index_text": index_text,
             "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
             "index_tree_text": index_tree_text,
@@ -1312,7 +1319,9 @@ class DocsDataBuilder:
     ) -> None:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
-        if write_plan["index_write"]:
+        if write_plan["index_remove"]:
+            (self.output_dir / "index.json").unlink(missing_ok=True)
+        elif write_plan["index_write"]:
             write_text(self.output_dir / "index.json", write_plan["index_text"])
         if write_plan["index_tree_write"]:
             write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
@@ -1390,6 +1399,7 @@ class DocsDataBuilder:
             + (1 if write_plan["recently_added_write"] else 0)
             + (1 if write_plan["reference_index_write"] else 0)
         )
+        index_remove_count = 1 if write_plan.get("index_remove") else 0
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
 
@@ -1403,6 +1413,7 @@ class DocsDataBuilder:
         print(f"  references {verb}: {reference_write_count}")
         print(f"  references {remove_verb}: {reference_remove_count}")
         print(f"  indexes {verb}: {index_write_count}")
+        print(f"  indexes {remove_verb}: {index_remove_count}")
         print(f"  warnings: {len(self.warnings)}")
 
     def diagnostics_payload(
@@ -1421,6 +1432,7 @@ class DocsDataBuilder:
             "docs_emitted": len(docs),
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
+            "index_removed": 1 if write_plan.get("index_remove") else 0,
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recently_added_changed": 1 if write_plan["recently_added_write"] else 0,
             "reference_index_changed": 1 if write_plan["reference_index_write"] else 0,
@@ -1494,29 +1506,35 @@ def docs_viewer_settings_payload(repo_root: Path, scope_ids: list[str]) -> dict[
     return settings
 
 
+def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]], config: DocsScopeConfig) -> dict[str, Any]:
+    record = {
+        "scope_id": config.scope_id,
+        "scope_type": config.scope_type,
+        "meta": str(raw_by_scope.get(config.scope_id, {}).get("meta") or "").strip(),
+        "viewer_base_url": normalize_viewer_base_url(config.viewer_base_url),
+        "include_scope_param": config.include_scope_param is True,
+        "default_doc_id": config.default_doc_id,
+        "media_path_prefix": config.media_path_prefix.as_posix(),
+        "index_tree_url": browser_docs_index_tree_url(config),
+        "recently_added_url": browser_docs_recently_added_url(config),
+        "search_index_url": browser_search_index_url(config),
+        "search": browser_search_policy_payload(config),
+    }
+    if not is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ):
+        record["index_url"] = browser_docs_index_url(config)
+    return record
+
+
 def browser_scope_config_payload(repo_root: Path, configs: list[DocsScopeConfig]) -> dict[str, Any]:
     raw_by_scope = raw_scope_items(repo_root)
     scope_ids = [config.scope_id for config in configs]
     payload = {
         "schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
         "default_scope_id": configs[0].scope_id if configs else "",
-        "scopes": [
-            {
-                "scope_id": config.scope_id,
-                "scope_type": config.scope_type,
-                "meta": str(raw_by_scope.get(config.scope_id, {}).get("meta") or "").strip(),
-                "viewer_base_url": normalize_viewer_base_url(config.viewer_base_url),
-                "include_scope_param": config.include_scope_param is True,
-                "default_doc_id": config.default_doc_id,
-                "media_path_prefix": config.media_path_prefix.as_posix(),
-                "index_url": browser_docs_index_url(config),
-                "index_tree_url": browser_docs_index_tree_url(config),
-                "recently_added_url": browser_docs_recently_added_url(config),
-                "search_index_url": browser_search_index_url(config),
-                "search": browser_search_policy_payload(config),
-            }
-            for config in configs
-        ],
+        "scopes": [browser_scope_record(repo_root, raw_by_scope, config) for config in configs],
     }
     settings = docs_viewer_settings_payload(repo_root, scope_ids)
     if settings:

@@ -91,6 +91,29 @@ def write_generated_docs(root: Path) -> None:
     write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
 
+def write_public_generated_docs(root: Path) -> None:
+    write_scope_config(root)
+    docs = [
+        {
+            "doc_id": "library",
+            "title": "Library",
+            "content_url": "/assets/data/docs/scopes/library/by-id/library.json",
+        }
+    ]
+    write_json(
+        root / "assets/data/docs/scopes/library/index-tree.json",
+        {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
+    )
+    write_json(
+        root / "assets/data/docs/scopes/library/recently-added.json",
+        {"schema": "docs_recently_added_v1", "limit": 10, "docs": docs},
+    )
+    write_json(
+        root / "assets/data/docs/scopes/library/by-id/library.json",
+        {"title": "Library", "content_html": "<h1>Library</h1>"},
+    )
+
+
 def test_generated_data_availability_checks_scope_files() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -210,6 +233,17 @@ def test_generated_tree_and_recently_added_reads_scope_payloads() -> None:
     assert recently_added["docs"][0]["doc_id"] == "child"
 
 
+def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_public_generated_docs(repo_root)
+        payload = generated_reads.read_generated_doc_payload(repo_root, "library", "library")
+
+        assert payload["title"] == "Library"
+        assert generated_reads.generated_scope_data_available(repo_root, "library") is True
+        assert not (repo_root / "assets/data/docs/scopes/library/index.json").exists()
+
+
 def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -241,13 +275,14 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
                 "content_url": "/custom/generated/research/by-id/research.json",
             }
         ]
-        write_json(repo_root / "custom/generated/research/index.json", {"docs": docs})
+        write_json(repo_root / "custom/generated/research/index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
         write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
 
         assert (
             generated_reads.generated_docs_index_path(repo_root, "research")
             == repo_root / "custom/generated/research/index.json"
         )
+        assert not (repo_root / "custom/generated/research/index.json").exists()
         payload = generated_reads.read_generated_doc_payload(repo_root, "research", "research")
 
     assert payload["doc_id"] == "research"

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
 
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs
+from docs_scope_config import DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs
 
 
 SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -72,7 +72,17 @@ def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
         raise RuntimeError(f"{label} is not valid JSON: {path.name}") from exc
 
 
+def generated_scope_is_public_readonly(repo_root: Path, scope: str) -> bool:
+    config = generated_scope_config(repo_root, scope)
+    return is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    )
+
+
 def generated_scope_data_available(repo_root: Path, scope: str) -> bool:
+    if generated_scope_is_public_readonly(repo_root, scope):
+        return generated_docs_index_tree_path(repo_root, scope).exists()
     return generated_docs_index_path(repo_root, scope).exists()
 
 
@@ -126,10 +136,12 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if not SAFE_DOC_ID_PATTERN.match(doc_id):
         raise ValueError("doc_id contains unsupported characters")
 
-    index_payload = read_generated_docs_index(repo_root, scope)
+    public_readonly = generated_scope_is_public_readonly(repo_root, scope)
+    index_payload = read_generated_docs_index_tree(repo_root, scope) if public_readonly else read_generated_docs_index(repo_root, scope)
     docs = index_payload.get("docs")
     if not isinstance(docs, list):
-        raise RuntimeError(f"generated docs index for {scope} is missing docs")
+        label = "index tree" if public_readonly else "index"
+        raise RuntimeError(f"generated docs {label} for {scope} is missing docs")
 
     record = next((doc for doc in docs if isinstance(doc, dict) and doc.get("doc_id") == doc_id), None)
     if record is None:
@@ -139,7 +151,8 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     expected_url = f"/{expected_path}"
     content_url = str(record.get("content_url") or "").strip()
     if content_url and urlparse(content_url).path != expected_url:
-        raise RuntimeError(f"generated docs index for {scope} has an unexpected payload path for {doc_id}")
+        label = "index tree" if public_readonly else "index"
+        raise RuntimeError(f"generated docs {label} for {scope} has an unexpected payload path for {doc_id}")
 
     return read_generated_json(
         generated_doc_payload_path(repo_root, scope, doc_id),

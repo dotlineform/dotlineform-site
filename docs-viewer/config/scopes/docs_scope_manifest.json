@@ -45,8 +45,14 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_index",
-          "path": "assets/data/docs/scopes/analysis/index.json",
+          "kind": "generated_docs_index_tree",
+          "path": "assets/data/docs/scopes/analysis/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "generated_docs_recently_added",
+          "path": "assets/data/docs/scopes/analysis/recently-added.json",
           "action": "track",
           "exists": true
         },
@@ -111,8 +117,14 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_index",
-          "path": "assets/data/docs/scopes/library/index.json",
+          "kind": "generated_docs_index_tree",
+          "path": "assets/data/docs/scopes/library/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "generated_docs_recently_added",
+          "path": "assets/data/docs/scopes/library/recently-added.json",
           "action": "track",
           "exists": true
         },

@@ -59,12 +59,18 @@ def public_route_state(page: Page) -> dict[str, object]:
             const routeConfigUrl = root.dataset.routeConfigUrl || "";
             const payload = await fetch(routeConfigUrl).then(response => response.json());
             const routeConfig = (payload.routes || []).find(record => record.route_id === root.dataset.routeId) || {};
+            const docsViewerConfigUrl = routeConfig.config_urls?.docs_viewer || "";
+            const docsViewerConfig = docsViewerConfigUrl
+                ? await fetch(docsViewerConfigUrl).then(response => response.json())
+                : {};
+            const scopeConfig = (docsViewerConfig.scopes || []).find(record => record.scope_id === root.dataset.viewerScope) || {};
             return {
                 allowManagement: root.dataset.allowManagement || "",
                 managementBaseUrl: root.dataset.managementBaseUrl || "",
                 routeId: root.dataset.routeId || "",
                 routeConfigUrl,
                 docsPaths: routeConfig.docs_paths || {},
+                scopeConfig,
                 allowManagementConfig: routeConfig.access?.allow_management,
                 managementControls: document.querySelectorAll(
                     ".docsViewer__manageActions, #docsViewerManageActionsButton, #docsViewerManageEditButton, #docsViewerStatusPills"
@@ -77,6 +83,7 @@ def public_route_state(page: Page) -> dict[str, object]:
 def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
     route_id = route.strip("/").split("/", 1)[0] or route.strip("/?")
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
+    scope_config = state.get("scopeConfig") if isinstance(state.get("scopeConfig"), dict) else {}
     if state["allowManagement"] == "true" or state["managementBaseUrl"]:
         raise AssertionError(f"{route} exposed management access: {state!r}")
     if state["allowManagementConfig"] is not False:
@@ -89,6 +96,8 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
         raise AssertionError(f"{route} used unexpected route id: {state!r}")
     if "index_url" in docs_paths:
         raise AssertionError(f"{route} route config still exposes docs_paths.index_url: {state!r}")
+    if "index_url" in scope_config:
+        raise AssertionError(f"{route} browser scope config still exposes index_url: {state!r}")
     if not str(docs_paths.get("index_tree_url") or "").endswith("/index-tree.json"):
         raise AssertionError(f"{route} route config missing index_tree_url: {state!r}")
     if not str(docs_paths.get("recently_added_url") or "").endswith("/recently-added.json"):

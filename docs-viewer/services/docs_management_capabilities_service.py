@@ -9,7 +9,7 @@ import docs_scope_manifest
 import docs_source_config_settings
 import docs_source_model as source_model
 from docs_management_context import relative_path
-from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS, is_public_readonly_scope
 
 
 def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
@@ -56,10 +56,18 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         root = repo_root / config.source
         scope_docs = capability_scope_docs(repo_root, scope, root)
         manifest_record = manifest_scopes.get(scope)
+        generated_data_path = (
+            repo_root / config.output / "index-tree.json"
+            if is_public_readonly_scope(
+                viewer_base_url=config.viewer_base_url,
+                include_scope_param=config.include_scope_param,
+            )
+            else repo_root / config.output / "index.json"
+        )
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
-            "generated_data_reads": (repo_root / config.output / "index.json").exists(),
+            "generated_data_reads": generated_data_path.exists(),
             "generated_search_reads": (repo_root / config.search_output).exists(),
             "count": len(scope_docs),
             "scope_lifecycle": {

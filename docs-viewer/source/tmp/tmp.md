@@ -9,7 +9,7 @@ ui_status: draft
 # tmp
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
-please proceed with batch 3 tasks.
+please proceed with batch 4 tasks.
 
 ~
 
@@ -25,6 +25,12 @@ Follow the guidance in the templates for what to include in them.
 
 ~
 
+---
+
+risk evidence: need to ensure that test scripts are checked as well, one smoke got to 4500 lines and had to be deleted.
+
+
+after data sharingm we need to fix anything else remaining that looks at flat index.json, then we can proerly retire it from manage/local, including any checks.helpers.
 
 ---
 

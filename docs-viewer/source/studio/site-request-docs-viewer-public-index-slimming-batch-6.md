@@ -56,7 +56,13 @@ Keep these checks scoped to payload contract and route/runtime behavior; do not 
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 5 handoff: final verification must assert that public route configs for `/library/` and `/analysis/` do not expose `docs_paths.index_url`.
+- Batch 5 handoff: final verification must assert that public browser scope config records for `library` and `analysis` do not expose docs `index_url`; search policy `index_url` values under `assets/data/search/<scope>/index.json` remain valid and should not be treated as failures.
+- Batch 5 handoff: final verification must assert that public `/library/` and `/analysis/` route requests include `index-tree.json`, `recently-added.json`, selected by-id payloads, and search payloads when those UI paths are exercised, and never request `assets/data/docs/scopes/<scope>/index.json`.
+- Batch 5 handoff: final verification must assert that `assets/data/docs/scopes/library/index.json` and `assets/data/docs/scopes/analysis/index.json` are absent from the repo and not recreated by public docs builds.
+- Batch 5 handoff: final verification must assert public by-id payload fixtures remain reader-only and do not require `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
+- Batch 5 handoff: manage/local rich flat indexes under `docs-viewer/generated/docs/<scope>/index.json` remain in scope for manage/report/tooling consumers; do not fail Batch 6 scans on those manage/local paths.
+- Batch 5 handoff: Data Sharing export/import, docs import review, broken-link tooling, source-config reports, and report/internal rich-index reads are separate tooling consumers. Do not preserve public flat indexes for them; classify remaining needs under their owning internal-index/tooling requests.
 
 ## task close
 
