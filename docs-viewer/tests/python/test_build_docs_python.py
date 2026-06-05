@@ -314,26 +314,61 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     assert result["diagnostics"]["docs_emitted"] == 6
     assert result["diagnostics"]["index_removed"] == 1
     assert not (root / "assets/data/docs/scopes/library/index.json").exists()
+    public_tree_forbidden_keys = {
+        "summary",
+        "added_date",
+        "last_updated",
+        "source_path",
+        "viewer_url",
+        "content_text_length",
+        "viewer_report",
+        "viewer_report_scope",
+        "viewer_report_access",
+        "viewer_report_preset",
+    }
+    public_recent_forbidden_keys = {
+        "summary",
+        "last_updated",
+        "source_path",
+        "viewer_url",
+        "content_text_length",
+        "viewer_report",
+        "viewer_report_scope",
+        "viewer_report_access",
+        "viewer_report_preset",
+        "viewable",
+        "ui_status",
+    }
+    public_by_id_forbidden_keys = {
+        "doc_id",
+        "added_date",
+        "parent_id",
+        "source_path",
+        "viewer_url",
+        "ui_status",
+        "viewable",
+        "content_text_length",
+        "viewer_report",
+        "viewer_report_scope",
+        "viewer_report_access",
+        "viewer_report_preset",
+    }
+
     assert index_tree["schema"] == "docs_index_tree_v1"
     assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent", "child"]
     assert all("viewable" not in doc for doc in index_tree["docs"])
-    assert all("added_date" not in doc and "last_updated" not in doc for doc in index_tree["docs"])
+    assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in index_tree["docs"])
     assert recently_added["schema"] == "docs_recently_added_v1"
     assert recently_added["limit"] == 2
     assert [doc["doc_id"] for doc in recently_added["docs"]] == ["child", "parent"]
     assert recently_added["docs"][0]["parent_title"] == "Parent"
+    assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in recently_added["docs"])
+    assert set(child_payload) == {"content_html", "last_updated", "summary", "title"}
     assert child_payload["title"] == "Child"
     assert child_payload["summary"] == "Child summary"
     assert child_payload["last_updated"] == "2026-06-03"
     assert "content_html" in child_payload
-    assert "doc_id" not in child_payload
-    assert "added_date" not in child_payload
-    assert "parent_id" not in child_payload
-    assert "source_path" not in child_payload
-    assert "viewer_url" not in child_payload
-    assert "ui_status" not in child_payload
-    assert "viewable" not in child_payload
-    assert "viewer_report" not in child_payload
+    assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert "index_url" not in browser_config["scopes"][0]
     assert browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert browser_config["scopes"][0]["recently_added_url"] == "/assets/data/docs/scopes/library/recently-added.json"

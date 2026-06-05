@@ -153,12 +153,26 @@ def test_docs_viewer_by_id_contract_fixture() -> None:
     payload = fixture["payload"]
 
     assert_equal(fixture["path_pattern"], "<docs_scope.output>/by-id/<doc_id>.json", "by-id path pattern")
+    assert_equal(fixture["scope_contract"], "manage/local rich selected-document payload", "by-id scope contract")
     assert_required_keys(payload, fixture["required_top_level_keys"], "by-id payload")
     assert_equal(payload["doc_id"], "contract-fixture", "by-id doc id")
     assert_equal(payload["viewer_url"], "/docs/?scope=studio&doc=contract-fixture", "by-id viewer URL")
     for snippet in fixture["html_semantics_contains"]:
         assert_contains(payload["content_html"], snippet, "by-id HTML semantics")
     assert_no_non_contract_fragments(payload["content_html"], fixture["non_contract_fragments"], "by-id HTML")
+
+
+def test_docs_viewer_public_by_id_contract_fixture() -> None:
+    fixture = load_fixture()["docs_viewer"]["public_by_id_json"]
+    payload = fixture["payload"]
+
+    assert_equal(fixture["path_pattern"], "<public_docs_scope.output>/by-id/<doc_id>.json", "public by-id path pattern")
+    assert_equal(fixture["scope_contract"], "public reader selected-document payload", "public by-id scope contract")
+    assert_required_keys(payload, fixture["required_top_level_keys"], "public by-id payload")
+    assert_allowed_keys(payload, fixture["allowed_top_level_keys"], "public by-id payload")
+    assert_contains(payload["content_html"], "<h1 id=\"public-contract-fixture\">", "public by-id HTML semantics")
+    for key in fixture["forbidden_top_level_keys"]:
+        assert_true(key not in payload, f"public by-id excludes {key}")
 
 
 def test_docs_viewer_reference_payload_contract_fixtures() -> None:
@@ -249,6 +263,7 @@ def main() -> None:
     test_docs_viewer_index_tree_contract_fixture()
     test_docs_viewer_recently_added_contract_fixture()
     test_docs_viewer_by_id_contract_fixture()
+    test_docs_viewer_public_by_id_contract_fixture()
     test_docs_viewer_reference_payload_contract_fixtures()
     test_docs_search_payload_contract_fixture()
     test_catalogue_search_payload_contract_fixture()

@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-6
 title: Docs Viewer Public Index Slimming Batch 6
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -18,8 +18,8 @@ Keep these checks scoped to payload contract and route/runtime behavior; do not 
 
 | ID | status | action |
 | --- | --- | --- |
-| 6.1 | planned | Add or update tests, generated-output contract fixtures, and projection checks that assert public `index-tree.json`, public recently-added payloads, public by-id reader metadata, and public route loads omit non-public or selected-document-only metadata, and that public routes do not request public `index.json`. |
-| 6.2 | planned | Update the current Docs Viewer smoke checks for the new loading contract, then run public Docs Viewer read-only smoke against a fresh temporary Jekyll build and focused manage-mode checks for shared runtime compatibility. Required smoke updates include replacing old `index.json` route-config/request expectations with route-appropriate public and manage `index-tree.json` expectations, asserting recently-added payload requests, search payload requests, selected by-id hydration for info panels, and absence of public `index.json` requests; broken-links report behavior and manage dark-theme styling are out of scope for this request's smoke pass. |
+| 6.1 | done | Add or update tests, generated-output contract fixtures, and projection checks that assert public `index-tree.json`, public recently-added payloads, public by-id reader metadata, and public route loads omit non-public or selected-document-only metadata, and that public routes do not request public `index.json`. |
+| 6.2 | done | Update the current Docs Viewer smoke checks for the new loading contract, then run public Docs Viewer read-only smoke against a fresh temporary Jekyll build and focused manage-mode checks for shared runtime compatibility. Required smoke updates include replacing old `index.json` route-config/request expectations with route-appropriate public and manage `index-tree.json` expectations, asserting recently-added payload requests, search payload requests, selected by-id hydration for info panels, and absence of public `index.json` requests; broken-links report behavior and manage dark-theme styling are out of scope for this request's smoke pass. |
 
 ## Steer for these tasks
 
@@ -52,7 +52,10 @@ Keep these checks scoped to payload contract and route/runtime behavior; do not 
 
 ## completed verification
 
-- Not started.
+- 2026-06-05: Python syntax checks passed for changed builder contract test, generated-output fixture test, and public/manage smoke scripts.
+- 2026-06-05: Focused pytest passed: `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py studio/tests/python/test_generated_output_contract_fixtures.py -q`.
+- 2026-06-05: Docs Viewer smoke profile passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`; summary at `var/test-runs/20260605-192632/summary.md`.
+- 2026-06-05: Fresh temporary Jekyll build plus public `/library/` and `/analysis/` read-only checks passed inside the smoke profile. The temp build was removed by the runner.
 
 ## follow-on tasks
 
@@ -66,5 +69,5 @@ Keep these checks scoped to payload contract and route/runtime behavior; do not 
 
 ## task close
 
-- Add a handoff note to Batch 7 with commands run, pass/fail results, generated payload status, and remaining risks.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 7 handoff added.
+- This document and the tracker row were set to `done`.

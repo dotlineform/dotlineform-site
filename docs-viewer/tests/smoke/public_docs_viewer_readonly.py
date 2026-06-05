@@ -110,12 +110,60 @@ def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str
     expected_tree = f"/assets/data/docs/scopes/{scope}/index-tree.json"
     expected_recent = f"/assets/data/docs/scopes/{scope}/recently-added.json"
     expected_doc = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
+    expected_search = f"/assets/data/search/{scope}/index.json"
     forbidden_index = f"/assets/data/docs/scopes/{scope}/index.json"
-    missing = [path for path in [expected_tree, expected_recent, expected_doc] if path not in paths]
+    missing = [path for path in [expected_tree, expected_recent, expected_doc, expected_search] if path not in paths]
     if missing:
         raise AssertionError(f"{route} missed expected compact payload requests {missing!r}; saw {sorted(paths)!r}")
     if forbidden_index in paths:
         raise AssertionError(f"{route} requested retired public route index payload: {sorted(paths)!r}")
+
+
+def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:
+    page.locator("#docsViewerInfoToggle").click()
+    page.wait_for_function(
+        """expectedTitle => {
+            const root = document.querySelector("#docsViewerRoot");
+            const panel = document.querySelector("#docsViewerInfoPanel");
+            const title = panel?.querySelector(".docsViewer__metadataInfoTitle");
+            return root?.dataset.infoPanelState === "open" &&
+                panel &&
+                !panel.hidden &&
+                title &&
+                title.textContent.trim() === expectedTitle;
+        }""",
+        arg=title,
+        timeout=timeout_ms,
+    )
+    info_state = page.locator("#docsViewerInfoPanel").evaluate(
+        """panel => ({
+            terms: Array.from(panel.querySelectorAll("dt")).map((node) => node.textContent.trim()),
+            text: panel.textContent || ""
+        })"""
+    )
+    if info_state["terms"] != ["Summary", "Updated"]:
+        raise AssertionError(f"{route} public info panel did not render reader-only terms: {info_state!r}")
+    blocked = ["Doc ID", "Scope", "Parent path", "Added", "UI status", "Visibility", "Route"]
+    leaked = [item for item in blocked if item in str(info_state["text"])]
+    if leaked:
+        raise AssertionError(f"{route} public info panel leaked management metadata {leaked!r}: {info_state!r}")
+
+
+def exercise_search(page: Page, route: str, query: str, timeout_ms: int) -> None:
+    page.locator("#docsViewerSearchInput").fill(query)
+    page.wait_for_function(
+        """query => {
+            const input = document.querySelector("#docsViewerSearchInput");
+            const status = document.querySelector("#docsViewerResultsStatus");
+            return input &&
+                input.value === query &&
+                status &&
+                !status.hidden &&
+                /results?|No results/.test(status.textContent);
+        }""",
+        arg=query,
+        timeout=timeout_ms,
+    )
 
 
 def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, title: str, timeout_ms: int) -> None:
@@ -124,6 +172,7 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
     page.goto(route_url(base_url, route), wait_until="domcontentloaded")
     wait_for_rendered_doc(page, doc_id, title, timeout_ms)
     assert_public_route_contract(route, public_route_state(page))
+    assert_public_info_panel(page, route, title, timeout_ms)
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
         """() => {
@@ -132,6 +181,7 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
         }""",
         timeout=timeout_ms,
     )
+    exercise_search(page, route, title, timeout_ms)
     assert_payload_requests(route, request_paths(request_urls), doc_id, doc_id)
 
 

@@ -118,6 +118,7 @@
     },
     "by_id_json": {
       "path_pattern": "<docs_scope.output>/by-id/<doc_id>.json",
+      "scope_contract": "manage/local rich selected-document payload",
       "required_top_level_keys": [
         "doc_id",
         "title",
@@ -153,6 +154,41 @@
         "<div class=\"highlight\">",
         "<span class=\""
       ]
+    },
+    "public_by_id_json": {
+      "path_pattern": "<public_docs_scope.output>/by-id/<doc_id>.json",
+      "scope_contract": "public reader selected-document payload",
+      "required_top_level_keys": [
+        "title",
+        "last_updated",
+        "content_html"
+      ],
+      "allowed_top_level_keys": [
+        "title",
+        "summary",
+        "last_updated",
+        "content_html"
+      ],
+      "forbidden_top_level_keys": [
+        "doc_id",
+        "added_date",
+        "parent_id",
+        "source_path",
+        "viewer_url",
+        "ui_status",
+        "viewable",
+        "content_text_length",
+        "viewer_report",
+        "viewer_report_scope",
+        "viewer_report_access",
+        "viewer_report_preset"
+      ],
+      "payload": {
+        "title": "Public Contract Fixture",
+        "summary": "Reader-facing summary.",
+        "last_updated": "2026-06-01",
+        "content_html": "<h1 id=\"public-contract-fixture\">Public Contract Fixture</h1>\n<p>Reader body.</p>\n"
+      }
     },
     "references": {
       "index_json": {

@@ -143,14 +143,61 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")
     if docs_paths.get("recently_added_url") != "/docs-viewer/generated/docs/studio/recently-added.json":
         raise AssertionError(f"manage route config missing recently_added_url: {state!r}")
+    if docs_paths.get("search_index_url") != "/docs-viewer/generated/search/studio/index.json":
+        raise AssertionError(f"manage route config missing search_index_url: {state!r}")
 
 
 def assert_generated_requests(paths: set[str]) -> None:
-    for expected in ["/docs/generated/index-tree", "/docs/generated/payload", "/docs/generated/recently-added"]:
+    for expected in ["/docs/generated/index-tree", "/docs/generated/payload", "/docs/generated/recently-added", "/docs/generated/search"]:
         if expected not in paths:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
     if "/docs/generated/index" in paths:
         raise AssertionError(f"manage route requested retired generated index endpoint: {sorted(paths)!r}")
+
+
+def assert_manage_info_panel(page: Page, timeout_ms: int) -> None:
+    page.locator("#docsViewerInfoToggle").click()
+    page.wait_for_function(
+        """() => {
+            const root = document.querySelector("#docsViewerRoot");
+            const panel = document.querySelector("#docsViewerInfoPanel");
+            const title = panel?.querySelector(".docsViewer__metadataInfoTitle");
+            return root?.dataset.infoPanelState === "open" &&
+                panel &&
+                !panel.hidden &&
+                title &&
+                title.textContent.trim() === "Docs Viewer";
+        }""",
+        timeout=timeout_ms,
+    )
+    info_state = page.locator("#docsViewerInfoPanel").evaluate(
+        """panel => ({
+            terms: Array.from(panel.querySelectorAll("dt")).map((node) => node.textContent.trim()),
+            text: panel.textContent || ""
+        })"""
+    )
+    expected_terms = ["Scope", "Summary", "Parent path", "Added", "Updated", "UI status", "Visibility", "Route"]
+    if info_state["terms"] != expected_terms:
+        raise AssertionError(f"manage info panel did not render rich metadata terms: {info_state!r}")
+    for expected in ["Doc ID", "docs-viewer", "studio"]:
+        if expected not in str(info_state["text"]):
+            raise AssertionError(f"manage info panel missed {expected!r}: {info_state!r}")
+
+
+def exercise_search(page: Page, timeout_ms: int) -> None:
+    page.locator("#docsViewerSearchInput").fill("viewer")
+    page.wait_for_function(
+        """() => {
+            const input = document.querySelector("#docsViewerSearchInput");
+            const status = document.querySelector("#docsViewerResultsStatus");
+            return input &&
+                input.value === "viewer" &&
+                status &&
+                !status.hidden &&
+                /results?|No results/.test(status.textContent);
+        }""",
+        timeout=timeout_ms,
+    )
 
 
 def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], str]:
@@ -172,6 +219,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_manage_route_contract(manage_route_state(page), base_url)
+    assert_manage_info_panel(page, timeout_ms)
 
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
@@ -181,6 +229,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         }""",
         timeout=timeout_ms,
     )
+    exercise_search(page, timeout_ms)
 
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)

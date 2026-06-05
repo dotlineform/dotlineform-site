@@ -69,7 +69,15 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 6 handoff: contract/projection coverage now asserts public `index-tree.json`, recently-added payloads, and public by-id reader payloads omit management/report metadata while manage/local by-id remains rich.
+- Batch 6 handoff: public read-only smoke now asserts `/library/` and `/analysis/` route configs and public browser scope configs omit docs `index_url`, request `index-tree.json`, `recently-added.json`, selected by-id payloads, and search payloads, hydrate public info-panel metadata from selected by-id payloads, and never request `assets/data/docs/scopes/<scope>/index.json`.
+- Batch 6 handoff: manage service smoke now asserts manage route config uses `index-tree.json`, recently-added, and search paths, generated service reads include `/docs/generated/index-tree`, `/docs/generated/payload`, `/docs/generated/recently-added`, and `/docs/generated/search`, manage info-panel metadata remains rich, and `/docs/generated/index` is not requested.
+- Batch 6 handoff: commands passed:
+  - `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/python/test_build_docs_python.py studio/tests/python/test_generated_output_contract_fixtures.py docs-viewer/tests/smoke/public_docs_viewer_readonly.py docs-viewer/tests/smoke/docs_viewer_service_manage.py`
+  - `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py studio/tests/python/test_generated_output_contract_fixtures.py -q`
+  - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`; summary at `var/test-runs/20260605-192632/summary.md`
+- Batch 6 handoff: generated Docs Viewer payloads were not rebuilt. The smoke profile created and removed a temporary Jekyll build at `/tmp/dlf-jekyll-build`.
+- Batch 6 handoff: remaining risk is limited to Batch 7 durable documentation and cleanup scans; broken-links report behavior, Data Sharing import/export, docs import review, source-config reports, and manage dark-theme styling remain outside this request's smoke pass.
 
 ## task close
 
