@@ -8,8 +8,9 @@ ui_status: draft
 
 # tmp
 
-we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
-please proceed with batch 4 tasks.
+we are working on `site-request-docs-viewer-public-index-slimming.md`,
+please proceed with the tasks in `site-request-docs-viewer-public-index-slimming-batch-8.md`
+
 
 ~
 
@@ -153,6 +154,7 @@ servers:
 
 scripts:
 
+./docs-viewer/build/build_docs.py --write
 ./docs-viewer/build/build_docs.py --scope studio
 ./docs-viewer/build/build_docs.py --scope studio --write
 ./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids example-doc

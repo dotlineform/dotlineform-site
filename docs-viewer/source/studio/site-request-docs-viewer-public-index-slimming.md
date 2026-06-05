@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming
 title: Docs Viewer Public Index Slimming Request
 added_date: 2026-06-03
 last_updated: 2026-06-05
-ui_status: done
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- done
+- in progress
 
 ## Summary
 
@@ -246,3 +246,7 @@ Generated Docs Viewer payloads were not rebuilt during documentation closeout.
 Batch 6 completed the executable smoke baseline against a temporary public build, and Batch 7 completed cleanup scans confirming public route configs, public browser scope configs, and checked-in public outputs do not retain a public flat-index route path.
 
 Remaining non-route consumers for richer document metadata, including Data Sharing export/import, docs import review, broken-link tooling, source-config reports, and report/internal rich-index reads, remain under their owning requests and should not restore public flat `index.json` route behavior.
+
+Reopened on 2026-06-05 for [Batch 8: Nested Tree Payload Correction](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-8).
+The implemented public-index slimming work retired rich public flat indexes, but `index-tree.json` remains a flat adjacency-list payload.
+Batch 8 owns either correcting `index-tree.json` to a nested build-time tree payload aligned with the Proposed Direction, or recording that the correction is large enough to require a fresh request.

@@ -371,14 +371,14 @@
       "title": "Docs Viewer Public Index Slimming Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
       "parent_id": "change-requests",
-      "ui_status": "done"
+      "ui_status": "in-progress"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "title": "Docs Viewer Public Index Slimming Tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming",
-      "ui_status": "done"
+      "ui_status": "in-progress"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -435,6 +435,13 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "ui_status": "done"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-8",
+      "title": "Docs Viewer Public Index Slimming Batch 8",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-8.json",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned"
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1645,5 +1652,5 @@
       "parent_id": "ui"
     }
   ],
-  "generated_at": "2026-06-05T18:40:53Z"
+  "generated_at": "2026-06-05T19:24:32Z"
 }

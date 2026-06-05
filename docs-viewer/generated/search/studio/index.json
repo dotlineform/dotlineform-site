@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-041b99ad99e15cd3a704dbed0f02e6ea",
-    "generated_at_utc": "2026-06-05T18:40:53Z",
-    "count": 260
+    "version": "blake2b-d0cddaf319d948af51c5ee7a2d72ad77",
+    "generated_at_utc": "2026-06-05T19:24:12Z",
+    "count": 261
   },
   "entries": [
     {
@@ -1680,6 +1680,36 @@
         "05"
       ],
       "search_text": "site-request-docs-viewer-public-index-slimming-batch-7 site request docs viewer public index slimming batch 7 docs viewer public index slimming batch 7 docs viewer public index slimming tasks tasks 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "site-request-docs-viewer-public-index-slimming-batch-8",
+      "kind": "doc",
+      "title": "Docs Viewer Public Index Slimming Batch 8",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-8",
+      "last_updated": "2026-06-05",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "parent_title": "Docs Viewer Public Index Slimming Tasks",
+      "display_meta": "2026-06-05 • Docs Viewer Public Index Slimming Tasks",
+      "search_terms": [
+        "site-request-docs-viewer-public-index-slimming-batch-8",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "index",
+        "slimming",
+        "batch",
+        "8",
+        "docs viewer public index slimming batch 8",
+        "docs viewer public index slimming tasks",
+        "tasks",
+        "2026-06-05",
+        "2026",
+        "06",
+        "05"
+      ],
+      "search_text": "site-request-docs-viewer-public-index-slimming-batch-8 site request docs viewer public index slimming batch 8 docs viewer public index slimming batch 8 docs viewer public index slimming tasks tasks 2026-06-05 2026 06 05"
     },
     {
       "id": "site-request-docs-viewer-public-manage-entrypoints",
