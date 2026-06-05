@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T17:38:14Z",
+  "generated_at": "2026-06-05T18:40:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -341,7 +341,7 @@
       "parent_id": "studio-risk-analysis-policy",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 57251
+      "content_text_length": 57977
     },
     {
       "doc_id": "javascript-inventory",
@@ -649,9 +649,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
       "parent_id": "change-requests",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 13298
+      "content_text_length": 14291
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
@@ -661,9 +661,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks",
       "parent_id": "site-request-docs-viewer-public-index-slimming",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
-      "content_text_length": 4227
+      "content_text_length": 5497
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -721,9 +721,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-4.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-4",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
-      "content_text_length": 3838
+      "content_text_length": 4578
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
@@ -733,9 +733,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-5.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
-      "content_text_length": 2726
+      "content_text_length": 4858
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
@@ -745,9 +745,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-6.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-6",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
-      "content_text_length": 3589
+      "content_text_length": 5773
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
@@ -757,9 +757,9 @@
       "source_path": "site-request-docs-viewer-public-index-slimming-batch-7.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
-      "content_text_length": 4731
+      "content_text_length": 8004
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1543,7 +1543,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 18027
+      "content_text_length": 18598
     },
     {
       "doc_id": "docs-viewer-overview",
@@ -1554,7 +1554,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 18587
+      "content_text_length": 18650
     },
     {
       "doc_id": "docs-viewer-panel-hosts",
@@ -1609,7 +1609,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-source-shape",
       "parent_id": "docs-viewer-portable-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-source-shape.json",
-      "content_text_length": 1165
+      "content_text_length": 1178
     },
     {
       "doc_id": "docs-viewer-reports",
@@ -1645,7 +1645,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
-      "content_text_length": 5263
+      "content_text_length": 5548
     },
     {
       "doc_id": "docs-viewer-runtime-module-ownership",
@@ -1657,7 +1657,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json",
-      "content_text_length": 9464
+      "content_text_length": 10098
     },
     {
       "doc_id": "docs-viewer-runtime-surfaces",
@@ -1669,7 +1669,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
-      "content_text_length": 5611
+      "content_text_length": 5920
     },
     {
       "doc_id": "docs-viewer-scopes",
@@ -1686,12 +1686,12 @@
       "doc_id": "data-models-analysis",
       "title": "Analysis Scope",
       "added_date": "2026-04-26",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-06-05",
       "source_path": "data-models-analysis.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-analysis",
       "parent_id": "docs-viewer-scopes",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-analysis.json",
-      "content_text_length": 3145
+      "content_text_length": 3891
     },
     {
       "doc_id": "library-documents",
@@ -1713,12 +1713,12 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-05",
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "parent_id": "docs-viewer-scopes",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-library.json",
-      "content_text_length": 10395
+      "content_text_length": 11030
     },
     {
       "doc_id": "docs-viewer-semantic-references",
@@ -1768,7 +1768,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-organisation.json",
-      "content_text_length": 4232
+      "content_text_length": 4313
     },
     {
       "doc_id": "docs-viewer-toolbar-model",
@@ -1812,7 +1812,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-draft-publishing-spec.json",
-      "content_text_length": 12720
+      "content_text_length": 12943
     },
     {
       "doc_id": "llm",
@@ -1955,7 +1955,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
       "parent_id": "search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-architecture.json",
-      "content_text_length": 4631
+      "content_text_length": 4630
     },
     {
       "doc_id": "search-catalogue-infrastructure",
@@ -2089,7 +2089,7 @@
       "parent_id": "search",
       "ui_status": "review",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-docs-viewer-infrastructure.json",
-      "content_text_length": 5110
+      "content_text_length": 5063
     },
     {
       "doc_id": "search-build-pipeline-analysis",
@@ -2106,12 +2106,12 @@
       "doc_id": "search-studio-v1-index-shape",
       "title": "Docs Scope Index Shape",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-06-05",
       "source_path": "search-studio-v1-index-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
       "parent_id": "search-docs-viewer-infrastructure",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-studio-v1-index-shape.json",
-      "content_text_length": 2946
+      "content_text_length": 3048
     },
     {
       "doc_id": "search-build-pipeline-library",
@@ -2145,7 +2145,7 @@
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "parent_id": "search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search-overview.json",
-      "content_text_length": 5074
+      "content_text_length": 5076
     },
     {
       "doc_id": "search-public-ui-contract",
@@ -2715,7 +2715,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json",
-      "content_text_length": 9249
+      "content_text_length": 9011
     },
     {
       "doc_id": "testing-pytest",

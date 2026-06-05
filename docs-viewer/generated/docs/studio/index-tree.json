@@ -371,14 +371,14 @@
       "title": "Docs Viewer Public Index Slimming Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
       "parent_id": "change-requests",
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "title": "Docs Viewer Public Index Slimming Tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
@@ -413,28 +413,28 @@
       "title": "Docs Viewer Public Index Slimming Batch 4",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
       "title": "Docs Viewer Public Index Slimming Batch 5",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
       "title": "Docs Viewer Public Index Slimming Batch 6",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
       "title": "Docs Viewer Public Index Slimming Batch 7",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "ui_status": "planned"
+      "ui_status": "done"
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1645,5 +1645,5 @@
       "parent_id": "ui"
     }
   ],
-  "generated_at": "2026-06-05T17:37:37Z"
+  "generated_at": "2026-06-05T18:40:53Z"
 }

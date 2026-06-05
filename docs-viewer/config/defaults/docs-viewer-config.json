@@ -10,7 +10,6 @@
       "include_scope_param": true,
       "default_doc_id": "dev-home",
       "media_path_prefix": "docs/studio",
-      "index_url": "/docs-viewer/generated/docs/studio/index.json",
       "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
       "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
       "search_index_url": "/docs-viewer/generated/search/studio/index.json",
@@ -24,7 +23,8 @@
           "update",
           "delete"
         ]
-      }
+      },
+      "index_url": "/docs-viewer/generated/docs/studio/index.json"
     },
     {
       "scope_id": "library",
@@ -80,7 +80,6 @@
       "include_scope_param": true,
       "default_doc_id": "tmp",
       "media_path_prefix": "docs/tmp",
-      "index_url": "/docs-viewer/generated/docs/tmp/index.json",
       "index_tree_url": "/docs-viewer/generated/docs/tmp/index-tree.json",
       "recently_added_url": "/docs-viewer/generated/docs/tmp/recently-added.json",
       "search_index_url": "/docs-viewer/generated/search/tmp/index.json",
@@ -94,7 +93,8 @@
           "update",
           "delete"
         ]
-      }
+      },
+      "index_url": "/docs-viewer/generated/docs/tmp/index.json"
     }
   ],
   "docs_viewer": {

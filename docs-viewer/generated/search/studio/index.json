@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5f113a1a07fba694d2282d9c5c1d2dbb",
-    "generated_at_utc": "2026-06-05T15:34:45Z",
-    "count": 259
+    "version": "blake2b-041b99ad99e15cd3a704dbed0f02e6ea",
+    "generated_at_utc": "2026-06-05T18:40:53Z",
+    "count": 260
   },
   "entries": [
     {
@@ -1530,6 +1530,36 @@
         "05"
       ],
       "search_text": "site-request-docs-viewer-public-index-slimming-batch-3 site request docs viewer public index slimming batch 3 docs viewer public index slimming batch 3 docs viewer public index slimming tasks tasks 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "site-request-docs-viewer-public-index-slimming-batch-3a",
+      "kind": "doc",
+      "title": "Docs Viewer Public Index Slimming Batch 3a",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3a",
+      "last_updated": "2026-06-05",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "parent_title": "Docs Viewer Public Index Slimming Tasks",
+      "display_meta": "2026-06-05 • Docs Viewer Public Index Slimming Tasks",
+      "search_terms": [
+        "site-request-docs-viewer-public-index-slimming-batch-3a",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "public",
+        "index",
+        "slimming",
+        "batch",
+        "3a",
+        "docs viewer public index slimming batch 3a",
+        "docs viewer public index slimming tasks",
+        "tasks",
+        "2026-06-05",
+        "2026",
+        "06",
+        "05"
+      ],
+      "search_text": "site-request-docs-viewer-public-index-slimming-batch-3a site request docs viewer public index slimming batch 3a docs viewer public index slimming batch 3a docs viewer public index slimming tasks tasks 2026-06-05 2026 06 05"
     },
     {
       "id": "site-request-docs-viewer-public-index-slimming-batch-4",
@@ -3760,10 +3790,10 @@
       "kind": "doc",
       "title": "Analysis Scope",
       "href": "/docs/?scope=studio&doc=data-models-analysis",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-06-05",
       "parent_id": "docs-viewer-scopes",
       "parent_title": "Scopes",
-      "display_meta": "2026-05-06 20:54 • Scopes",
+      "display_meta": "2026-06-05 • Scopes",
       "search_terms": [
         "data-models-analysis",
         "data",
@@ -3772,14 +3802,12 @@
         "analysis scope",
         "scope",
         "scopes",
-        "2026-05-06 20:54",
+        "2026-06-05",
         "2026",
-        "05",
         "06",
-        "20",
-        "54"
+        "05"
       ],
-      "search_text": "data-models-analysis data models analysis analysis scope scope scopes 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "data-models-analysis data models analysis analysis scope scope scopes 2026-06-05 2026 06 05"
     },
     {
       "id": "library-documents",
@@ -3808,10 +3836,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-05",
       "parent_id": "docs-viewer-scopes",
       "parent_title": "Scopes",
-      "display_meta": "2026-05-30 • Scopes",
+      "display_meta": "2026-06-05 • Scopes",
       "search_terms": [
         "data-models-library",
         "data",
@@ -3820,12 +3848,12 @@
         "library scope",
         "scope",
         "scopes",
-        "2026-05-30",
+        "2026-06-05",
         "2026",
-        "05",
-        "30"
+        "06",
+        "05"
       ],
-      "search_text": "data-models-library data models library library scope scope scopes 2026-05-30 2026 05 30"
+      "search_text": "data-models-library data models library library scope scope scopes 2026-06-05 2026 06 05"
     },
     {
       "id": "docs-viewer-semantic-references",
@@ -4658,10 +4686,10 @@
       "kind": "doc",
       "title": "Docs Scope Index Shape",
       "href": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-06-05",
       "parent_id": "search-docs-viewer-infrastructure",
       "parent_title": "Docs Viewer Infrastructure",
-      "display_meta": "2026-05-11 14:10 • Docs Viewer Infrastructure",
+      "display_meta": "2026-06-05 • Docs Viewer Infrastructure",
       "search_terms": [
         "search-studio-v1-index-shape",
         "search",
@@ -4675,14 +4703,12 @@
         "docs viewer infrastructure",
         "viewer",
         "infrastructure",
-        "2026-05-11 14:10",
+        "2026-06-05",
         "2026",
-        "05",
-        "11",
-        "14",
-        "10"
+        "06",
+        "05"
       ],
-      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope docs viewer infrastructure viewer infrastructure 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope docs viewer infrastructure viewer infrastructure 2026-06-05 2026 06 05"
     },
     {
       "id": "search-build-pipeline-library",
