@@ -3,9 +3,8 @@ doc_id: site-request-public-static-site-build-tasks
 title: Public Static Site Build Tasks
 added_date: 2026-06-02
 last_updated: 2026-06-02
-ui_status: in-progress
+ui_status: draft
 parent_id: site-request-public-static-site-build
-viewable: true
 ---
 # Public Static Site Build Tasks
 

@@ -521,13 +521,13 @@
           "doc_id": "site-request-public-static-site-build",
           "title": "Public Static Site Build Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
-          "ui_status": "in-progress",
+          "ui_status": "draft",
           "children": [
             {
               "doc_id": "site-request-public-static-site-build-tasks",
               "title": "Public Static Site Build Tasks",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build-tasks.json",
-              "ui_status": "in-progress"
+              "ui_status": "draft"
             }
           ]
         },
@@ -1520,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-05T21:09:59Z"
+  "generated_at": "2026-06-05T21:14:18Z"
 }

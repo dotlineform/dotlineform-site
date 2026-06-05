@@ -3,15 +3,14 @@ doc_id: site-request-public-static-site-build
 title: Public Static Site Build Request
 added_date: 2026-06-01
 last_updated: 2026-06-02
-ui_status: in-progress
+ui_status: draft
 parent_id: change-requests
-viewable: true
 ---
 # Public Static Site Build Request
 
 Status:
 
-- in-progress
+- in planning
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - The migration decisions have been resolved and can be used to create an implementation task list.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
