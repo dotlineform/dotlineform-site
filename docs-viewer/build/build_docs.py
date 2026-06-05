@@ -474,6 +474,20 @@ class DocsDataBuilder:
                 entry[key] = value
         return entry
 
+    def reader_metadata_entry(self, doc: DocRecord) -> dict[str, Any]:
+        entry = {
+            "title": doc.title,
+            "last_updated": doc.last_updated,
+        }
+        if doc.summary:
+            entry["summary"] = doc.summary
+        return entry
+
+    def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
+        if self.public_readonly_scope:
+            return self.reader_metadata_entry(doc)
+        return self.metadata_entry(doc, docs)
+
     def index_entry(self, doc: DocRecord, docs: list[DocRecord], item_payload: dict[str, Any] | None) -> dict[str, Any]:
         item = item_payload if item_payload is not None else read_json(self.items_dir / f"{doc.doc_id}.json")
         entry = self.metadata_entry(doc, docs)
@@ -491,7 +505,7 @@ class DocsDataBuilder:
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(render_markdown_to_html(resolved), current_doc=doc, docs=docs)
         )
-        entry = self.metadata_entry(doc, docs)
+        entry = self.by_id_metadata_entry(doc, docs)
         entry["content_html"] = content_html
         return entry
 

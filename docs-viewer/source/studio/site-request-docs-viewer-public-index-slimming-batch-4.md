@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-public-index-slimming-batch-4
 title: Docs Viewer Public Index Slimming Batch 4
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-public-index-slimming-tasks
 viewable: true
 ---
@@ -17,9 +17,9 @@ Summary: Shape selected by-id metadata as needed, hydrate info-panel state from 
 
 | ID | status | action |
 | --- | --- | --- |
-| 4.1 | planned | Update public and manage by-id payload shaping only as needed for selected-document info-panel hydration, keeping public read-only metadata limited to title, summary, and last updated and avoiding management-only metadata in public by-id payloads. |
-| 4.2 | planned | Refactor the info-panel context so selected-document metadata hydrates from by-id payloads for both public read-only and local/manage routes. |
-| 4.3 | planned | Split public read-only info-panel rendering from manage-mode metadata rendering, with public read-only limited to title, summary, and last updated. |
+| 4.1 | done | Update public and manage by-id payload shaping only as needed for selected-document info-panel hydration, keeping public read-only metadata limited to title, summary, and last updated and avoiding management-only metadata in public by-id payloads. |
+| 4.2 | done | Refactor the info-panel context so selected-document metadata hydrates from by-id payloads for both public read-only and local/manage routes. |
+| 4.3 | done | Split public read-only info-panel rendering from manage-mode metadata rendering, with public read-only limited to title, summary, and last updated. |
 
 ## Steer for these tasks
 
@@ -50,7 +50,11 @@ Summary: Shape selected by-id metadata as needed, hydrate info-panel state from 
 
 ## completed verification
 
-- Not started.
+- 2026-06-05: Python syntax checks passed for `docs-viewer/build/build_docs.py`, `docs-viewer/tests/python/test_build_docs_python.py`, and `docs-viewer/tests/smoke/docs_viewer_metadata_info_view_modules.py`.
+- 2026-06-05: Focused generated-output pytest passed: `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_build_docs_python.py -q`.
+- 2026-06-05: JavaScript syntax checks passed for `docs-viewer/runtime/js/docs-viewer-view-context.js` and `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`.
+- 2026-06-05: Focused metadata info module smoke passed: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_metadata_info_view_modules.py --site-root .`.
+- 2026-06-05: Reduced Docs Viewer smoke profile passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`; summary at `var/test-runs/20260605-190324/summary.md`.
 
 ## follow-on tasks
 
@@ -63,5 +67,5 @@ Summary: Shape selected by-id metadata as needed, hydrate info-panel state from 
 
 ## task close
 
-- Add a handoff note to Batch 5 listing any remaining flat-index metadata reads found during implementation.
-- Set this document and the tracker row status to `done` when the batch is complete.
+- Batch 5 handoff added.
+- This document and the tracker row were set to `done`.

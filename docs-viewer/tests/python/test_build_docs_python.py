@@ -307,6 +307,7 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
         index_tree = read_json(root / "assets/data/docs/scopes/library/index-tree.json")
         recently_added = read_json(root / "assets/data/docs/scopes/library/recently-added.json")
+        child_payload = read_json(root / "assets/data/docs/scopes/library/by-id/child.json")
 
     assert result["diagnostics"]["docs_emitted"] == 6
     assert index_tree["schema"] == "docs_index_tree_v1"
@@ -317,6 +318,18 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     assert recently_added["limit"] == 2
     assert [doc["doc_id"] for doc in recently_added["docs"]] == ["child", "parent"]
     assert recently_added["docs"][0]["parent_title"] == "Parent"
+    assert child_payload["title"] == "Child"
+    assert child_payload["summary"] == "Child summary"
+    assert child_payload["last_updated"] == "2026-06-03"
+    assert "content_html" in child_payload
+    assert "doc_id" not in child_payload
+    assert "added_date" not in child_payload
+    assert "parent_id" not in child_payload
+    assert "source_path" not in child_payload
+    assert "viewer_url" not in child_payload
+    assert "ui_status" not in child_payload
+    assert "viewable" not in child_payload
+    assert "viewer_report" not in child_payload
 
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:

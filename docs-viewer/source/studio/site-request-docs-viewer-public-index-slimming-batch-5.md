@@ -52,7 +52,10 @@ Summary: Remove remaining Docs Viewer public runtime dependencies on rich flat-i
 
 ## follow-on tasks
 
-- To be completed during the task.
+- Batch 4 handoff: public route boot and metadata info rendering no longer depend on public flat `index.json`; info-panel metadata now comes from the selected by-id payload context.
+- Batch 4 handoff: public by-id payload generation now emits reader metadata only (`title`, optional `summary`, `last_updated`, plus rendered `content_html`) and omits management-only fields such as `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, and report metadata.
+- Batch 4 handoff: remaining rich flat-index reads found during implementation are non-info-panel paths: browser config still carries `index_url`/`docsIndexUrl`; manage document reports use `docsIndexUrl` through `readScopeIndex`; local generated payload reads validate selected payloads against the rich flat index; Data Sharing export/import and docs broken-link tooling still read rich flat indexes under their owning requests.
+- Batch 4 handoff: Batch 5 should keep public route request assertions focused on ensuring `/library/` and `/analysis/` do not request `assets/data/docs/scopes/<scope>/index.json` for route boot, tree construction, recently-added, selected-document loading, or info-panel rendering.
 
 ## task close
 

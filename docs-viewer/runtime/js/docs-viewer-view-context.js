@@ -6,6 +6,33 @@ function mapGet(map, key) {
   return map && typeof map.get === "function" ? map.get(key) : null;
 }
 
+function objectRecord(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : null;
+}
+
+function selectedPayloadMetadata(payload, access, docId) {
+  var record = objectRecord(payload);
+  if (!record) return null;
+  if (access && access.publicReadOnly) {
+    return {
+      title: cleanString(record.title),
+      summary: cleanString(record.summary),
+      last_updated: cleanString(record.last_updated)
+    };
+  }
+  return {
+    doc_id: cleanString(record.doc_id) || cleanString(docId),
+    title: cleanString(record.title),
+    summary: cleanString(record.summary),
+    parent_id: cleanString(record.parent_id),
+    added_date: cleanString(record.added_date),
+    last_updated: cleanString(record.last_updated),
+    ui_status: cleanString(record.ui_status),
+    viewable: record.viewable === false ? false : true,
+    viewer_url: cleanString(record.viewer_url)
+  };
+}
+
 export function resolveDocsViewerSelectedDoc(options = {}) {
   const selectedDocId = cleanString(options.selectedDocId);
   if (!selectedDocId) return null;
@@ -26,6 +53,13 @@ export function createDocsViewerHostedViewContext(options = {}) {
   const selectedDoc = options.selectedDoc || resolveDocsViewerSelectedDoc(options);
   const docId = selectedDoc ? cleanString(selectedDoc.doc_id) : "";
   const routeAccess = options.routeAccess || {};
+  const access = {
+    allowManagement: Boolean(routeAccess.allowManagement),
+    publicReadOnly: Boolean(routeAccess.publicReadOnly),
+    routeType: cleanString(routeAccess.routeType)
+  };
+  const payload = docId ? mapGet(options.payloadCache, docId) || null : null;
+  const selectedMetadata = selectedPayloadMetadata(payload, access, docId);
   const trail = selectedDoc && typeof options.buildTrail === "function"
     ? options.buildTrail(docId).slice(0, -1)
     : [];
@@ -37,16 +71,13 @@ export function createDocsViewerHostedViewContext(options = {}) {
     : "";
 
   return {
-    access: {
-      allowManagement: Boolean(routeAccess.allowManagement),
-      publicReadOnly: Boolean(routeAccess.publicReadOnly),
-      routeType: cleanString(routeAccess.routeType)
-    },
+    access: access,
     canonicalUrl: canonicalUrl,
     parentTrail: trail,
-    payload: docId ? mapGet(options.payloadCache, docId) || null : null,
+    payload: payload,
     selectedDoc: selectedDoc,
-    statusLabel: docsViewerStatusLabel(selectedDoc && selectedDoc.ui_status, options.uiStatusByValue),
+    selectedMetadata: selectedMetadata,
+    statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue),
     viewerScope: cleanString(options.viewerScope)
   };
 }
