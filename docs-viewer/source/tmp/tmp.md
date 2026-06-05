@@ -25,7 +25,6 @@ Follow the guidance in the templates for what to include in them.
 
 ~
 
-'The big smoke file has many embedded route-config records.' - this presumably means that the test file itself is more likely to cause errors? perhaps it be more modular?
 
 ---
 
