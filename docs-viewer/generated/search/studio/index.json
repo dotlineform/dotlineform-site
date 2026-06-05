@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4eb6931843cd2bd951317faca5cea552",
-    "generated_at_utc": "2026-06-04T22:06:02Z",
-    "count": 247
+    "version": "blake2b-690850c2f0ad61538358b0b148ccc52d",
+    "generated_at_utc": "2026-06-05T09:36:45Z",
+    "count": 248
   },
   "entries": [
     {
@@ -1389,10 +1389,10 @@
       "kind": "doc",
       "title": "Docs Viewer Public Index Slimming Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-05",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-04 • Change Requests",
+      "display_meta": "2026-06-05 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-public-index-slimming",
         "site",
@@ -1406,12 +1406,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-04",
+        "2026-06-05",
         "2026",
         "06",
-        "04"
+        "05"
       ],
-      "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-04 2026 06 04"
+      "search_text": "site-request-docs-viewer-public-index-slimming site request docs viewer public index slimming docs viewer public index slimming request change requests change requests 2026-06-05 2026 06 05"
     },
     {
       "id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -2582,6 +2582,33 @@
         "01"
       ],
       "search_text": "scripts dev home dev home 2026-06-01 2026 06 01"
+    },
+    {
+      "id": "task-batch-template",
+      "kind": "doc",
+      "title": "Task Batch Template",
+      "href": "/docs/?scope=studio&doc=task-batch-template",
+      "last_updated": "2026-06-05 10:36",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-06-05 10:36 • Dev Home",
+      "search_terms": [
+        "task-batch-template",
+        "task",
+        "batch",
+        "template",
+        "task batch template",
+        "dev home",
+        "dev",
+        "home",
+        "2026-06-05 10:36",
+        "2026",
+        "06",
+        "05",
+        "10",
+        "36"
+      ],
+      "search_text": "task-batch-template task batch template task batch template dev home dev home 2026-06-05 10:36 2026 06 05 10 36"
     },
     {
       "id": "task-template",

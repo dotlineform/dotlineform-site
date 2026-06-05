@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-public-index-slimming
 title: Docs Viewer Public Index Slimming Request
 added_date: 2026-06-03
-last_updated: 2026-06-04
+last_updated: 2026-06-05
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -199,24 +199,70 @@ None currently.
 
 Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
+### Batch 1: Discovery and Contract Lock
+
+Summary: Audit current public flat-index generation and consumption, then define the generated-data contracts before implementation starts.
+
 | ID | status | action |
 | --- | --- | --- |
 | 1 | planned | Audit current public flat-index generation and consumption, including browser/runtime tree construction, info-panel reads, search build inputs, recently-added behavior, scope lifecycle, tests/fixtures, reports, export/import, and Data Sharing references. Classify dependencies as Docs Viewer-owned work for this request or separate tooling ownership such as [Data Sharing Docs Internal Index Request](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index). |
 | 2 | planned | Define the generated-data contracts before implementation: shared public/manage `index-tree.json`, small recently-added payload, selected by-id reader metadata for the info panel, route config fields, visible missing-payload behavior, and public flat `index.json` retirement semantics. |
+
+### Batch 2: Builder Outputs
+
+Summary: Add public and manage tree/recently-added generation, wire scope lifecycle generated outputs, and move search build inputs away from retired public docs indexes.
+
+| ID | status | action |
+| --- | --- | --- |
 | 3 | planned | Add build-time public `index-tree.json` and recently-added payload generation under `assets/data/docs/scopes/<scope>/`, using public-safe compact tree records, current public viewability filtering, and no recently-added-only date fields in tree rows. |
 | 4 | planned | Add build-time manage `index-tree.json` and recently-added payload generation under `docs-viewer/generated/docs/<scope>/`, using the same tree record structure as public scopes while preserving manage visibility/loadability behavior. |
 | 5 | planned | Update scope lifecycle create/delete behavior so `write_generated_outputs` creates required `index-tree.json` and recently-added payloads for new scopes and delete removes only manifest-recorded generated outputs for user-created scopes; existing scopes are backfilled through the normal `build_docs.py --scope <scope> --write` path. |
-| 6 | planned | Update public and manage by-id payload shaping only as needed for selected-document info-panel hydration, keeping public read-only metadata limited to title, summary, and last updated and avoiding management-only metadata in public by-id payloads. |
-| 7 | planned | Refactor the info-panel context so selected-document metadata hydrates from by-id payloads for both public read-only and local/manage routes. |
-| 8 | planned | Split public read-only info-panel rendering from manage-mode metadata rendering, with public read-only limited to title, summary, and last updated. |
 | 9 | planned | Update search build inputs so search continues to produce and read its separate search payload without depending on retired public docs `index.json`. |
+
+### Batch 3: Runtime Loading and Boundary Check
+
+Summary: Add tree payload adapters, switch public and manage route loading to `index-tree.json` and the small recently-added payload, and coordinate with the entrypoint split request if shared-core ownership issues appear.
+
+| ID | status | action |
+| --- | --- | --- |
 | 10 | planned | Add public and manage tree payload adapters that preserve the shared-core boundary owned by [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints); do not move manage-only controls, services, drag/drop, context menus, mutation calls, source/edit workflows, or local-service reads into public payloads or shared payload adapters. |
 | 11 | planned | Coordinate with the entrypoint split request if tree payload switching exposes shared-core public/manage mode switches or manage-only rendering in shared modules; this request owns the payload/data contract, while the entrypoint split request owns shared-core cleanup tasks 10 and 11. |
 | 12 | planned | Switch public and manage route config/data loading so frontend index-panel rendering reads route-appropriate `index-tree.json` payloads and recently-added reads its small generated payload; missing required payloads should surface as visible data-load failures with no fallback to `index.json`. |
+
+### Batch 4: Info Panel Hydration and Rendering
+
+Summary: Shape selected by-id metadata as needed, hydrate info-panel state from selected by-id payloads, and split public reader metadata rendering from manage metadata surfaces.
+
+| ID | status | action |
+| --- | --- | --- |
+| 6 | planned | Update public and manage by-id payload shaping only as needed for selected-document info-panel hydration, keeping public read-only metadata limited to title, summary, and last updated and avoiding management-only metadata in public by-id payloads. |
+| 7 | planned | Refactor the info-panel context so selected-document metadata hydrates from by-id payloads for both public read-only and local/manage routes. |
+| 8 | planned | Split public read-only info-panel rendering from manage-mode metadata rendering, with public read-only limited to title, summary, and last updated. |
+
+### Batch 5: Public Flat Index Retirement
+
+Summary: Remove remaining Docs Viewer public runtime dependencies on rich flat-index data, then retire public flat `index.json` from generated public route outputs.
+
+| ID | status | action |
+| --- | --- | --- |
 | 13 | planned | Remove public info-panel metadata reads and tree construction reads from public flat `index.json`, then retire public flat `index.json` from Docs Viewer-generated public route outputs after Docs Viewer-owned tree, selected-document, search, and recently-added dependencies have moved. |
 | 14 | planned | Review and remove public runtime exposure of rich flat-index fields such as `last_updated`, `source_path`, `viewer_url`, `content_text_length`, and other management/tooling metadata after dependent Docs Viewer call sites have moved. |
+
+### Batch 6: Verification
+
+Summary: Add or update contract/projection coverage, then run focused public and manage smoke checks against the new payload-loading path. Keep these checks scoped to payload contract and route/runtime behavior; do not use the Docs Viewer public-index slimming smoke pass to cover broken-links reports or manage dark-theme styling.
+
+| ID | status | action |
+| --- | --- | --- |
 | 15 | planned | Add or update tests, generated-output contract fixtures, and projection checks that assert public `index-tree.json`, public recently-added payloads, public by-id reader metadata, and public route loads omit non-public or selected-document-only metadata, and that public routes do not request public `index.json`. |
-| 16 | planned | Run public Docs Viewer read-only smoke against a fresh temporary Jekyll build and focused manage-mode checks for shared runtime compatibility, including asset-load assertions for public and manage `index-tree.json`, recently-added payloads, search payloads, by-id hydration, and absence of public `index.json` requests. |
+| 16 | planned | Update the current Docs Viewer smoke checks for the new loading contract, then run public Docs Viewer read-only smoke against a fresh temporary Jekyll build and focused manage-mode checks for shared runtime compatibility. Required smoke updates include replacing old `index.json` route-config/request expectations with route-appropriate public and manage `index-tree.json` expectations, asserting recently-added payload requests, search payload requests, selected by-id hydration for info panels, and absence of public `index.json` requests; broken-links report behavior and manage dark-theme styling are out of scope for this request's smoke pass. |
+
+### Batch 7: Documentation
+
+Summary: Update durable runtime, data model, search, lifecycle, and testing documentation after the contract is implemented and verified.
+
+| ID | status | action |
+| --- | --- | --- |
 | 17 | planned | Update [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Data Models Library](/docs/?scope=studio&doc=data-models-library), [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis), search docs, scope lifecycle docs, and testing docs after the contract is durable. |
 
 ## Acceptance Criteria

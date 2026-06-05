@@ -39,11 +39,14 @@ Codex sandbox note: local service, browser, and temporary localhost checks will 
 - Work through the table by ID order. A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
 - Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
-**Each task** is described in its own sibling document, based on the template `task-template.md`.
+**Each task** or **batch of tasks** is described in its own sibling document:
+
+- if tasks need tracking individually, use the template `task-template.md`.
+- if tasks can be done as a batch in one session, use the template `task-batch-template.md`
 
 | ID | status | title |
 | --- | --- | --- |
-| 1 | planned | title and link to task document |
+| 1 | planned | title and link to task/batch document |
 
 The last tasks should close out the implementation with the following named tasks:
 

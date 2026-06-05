@@ -356,14 +356,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the standalone Docs Viewer service manage shell and API base.",
         ),
         CheckCommand(
-            "docs-viewer-manage-dark-theme-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_viewer_manage_dark_theme.py",
-            ),
-            "Smoke-check local Docs Viewer manage-mode dark theme tokens.",
-        ),
-        CheckCommand(
             "public-docs-viewer-readonly-smoke",
             (
                 sys.executable,

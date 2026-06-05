@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T22:06:02Z",
+  "generated_at": "2026-06-05T10:54:04Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -645,13 +645,13 @@
       "doc_id": "site-request-docs-viewer-public-index-slimming",
       "title": "Docs Viewer Public Index Slimming Request",
       "added_date": "2026-06-03",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-05",
       "source_path": "site-request-docs-viewer-public-index-slimming.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming",
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 17555
+      "content_text_length": 19581
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1157,6 +1157,18 @@
       "content_text_length": 9957
     },
     {
+      "doc_id": "task-batch-template",
+      "title": "Task Batch Template",
+      "added_date": "2026-06-05 10:36",
+      "last_updated": "2026-06-05 10:36",
+      "source_path": "task-batch-template.md",
+      "viewer_url": "/docs/?scope=studio&doc=task-batch-template",
+      "parent_id": "dev-home",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
+      "content_text_length": 1684
+    },
+    {
       "doc_id": "task-template",
       "title": "Task Template",
       "added_date": "2026-06-04 20:59",
@@ -1178,7 +1190,7 @@
       "parent_id": "dev-home",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
-      "content_text_length": 3362
+      "content_text_length": 3511
     },
     {
       "doc_id": "docs-viewer",
