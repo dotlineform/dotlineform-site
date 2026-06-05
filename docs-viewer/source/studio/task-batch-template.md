@@ -8,9 +8,9 @@ parent_id: dev-home
 ---
 # [Batch Title]
 
-This is the specification for tasks [#...] in [link to tasks tracker document].
+This is the delivery specification for Batch [#] in [link to tasks tracker document].
 
-[include the task batch table here]
+[include the task batch table here. Task rows use scoped IDs such as 1.1, 1.2 ...]
 
 example:
 
@@ -20,8 +20,8 @@ Summary: [one-line summary of batch]
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | description |
-| 2 | planned | description |
+| 1.1 | planned | description |
+| 1.2 | planned | description |
 
 ## Steer for these tasks
 
@@ -66,5 +66,5 @@ Summary: [one-line summary of batch]
 
 ## task close
 
-- add a handoff note to the following task.
-- set the status of this task in the top section and front matter `ui_status`.
+- add a handoff note to the following batch.
+- set the status of this batch in the top section and front matter `ui_status`.

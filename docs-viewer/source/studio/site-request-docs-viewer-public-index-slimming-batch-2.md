@@ -1,0 +1,68 @@
+---
+doc_id: site-request-docs-viewer-public-index-slimming-batch-2
+title: Docs Viewer Public Index Slimming Batch 2
+added_date: 2026-06-05
+last_updated: 2026-06-05
+ui_status: planned
+parent_id: site-request-docs-viewer-public-index-slimming-tasks
+viewable: true
+---
+# Batch 2: Builder Outputs
+
+This is the delivery specification for [Batch 2 in Docs Viewer Public Index Slimming Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks).
+
+### Batch 2: Builder Outputs
+
+Summary: Add public and manage tree/recently-added generation, wire scope lifecycle generated outputs, and move search build inputs away from retired public docs indexes.
+
+| ID | status | action |
+| --- | --- | --- |
+| 2.1 | planned | Add build-time public `index-tree.json` and recently-added payload generation under `assets/data/docs/scopes/<scope>/`, using public-safe compact tree records, current public viewability filtering, and no recently-added-only date fields in tree rows. |
+| 2.2 | planned | Add build-time manage `index-tree.json` and recently-added payload generation under `docs-viewer/generated/docs/<scope>/`, using the same tree record structure as public scopes while preserving manage visibility/loadability behavior. |
+| 2.3 | planned | Update scope lifecycle create/delete behavior so `write_generated_outputs` creates required `index-tree.json` and recently-added payloads for new scopes and delete removes only manifest-recorded generated outputs for user-created scopes; existing scopes are backfilled through the normal `build_docs.py --scope <scope> --write` path. |
+| 2.4 | planned | Update search build inputs so search continues to produce and read its separate search payload without depending on retired public docs `index.json`. |
+
+## Steer for these tasks
+
+- Use the Batch 1 locked contracts as the source of truth.
+- Keep public and manage `index-tree.json` record structures identical even though generation inputs and visibility rules differ.
+- Keep recently-added as a separate compact payload limited to the configured recently-added count.
+- Update scope lifecycle in the same implementation slice that introduces generated tree outputs.
+- Move search build inputs at the builder-source level; do not widen public runtime search behavior.
+
+## Deliverables
+
+- Public `assets/data/docs/scopes/<scope>/index-tree.json` generation.
+- Public recently-added payload generation.
+- Manage `docs-viewer/generated/docs/<scope>/index-tree.json` generation.
+- Manage recently-added payload generation.
+- Scope lifecycle create/delete manifest handling for new generated outputs.
+- Search build input path no longer depends on retired public docs `index.json`.
+- Focused generated-output contract tests or fixtures for the new payloads.
+
+## Implementation and policy guidance
+
+- Public tree rows should exclude `summary`, `last_updated`, `source_path`, `viewer_url`, `content_text_length`, and other default or derivable fields.
+- Do not add `added_date` or `last_updated` to tree rows only to support recently-added.
+- Manage tree rows may preserve manage visibility/loadability behavior but should not add richer row fields unless a manage interaction needs them before selected by-id is loaded.
+- Existing scopes should be backfilled through the normal generated-docs write path, not a custom migration path.
+
+## Proposed verification set
+
+- Python syntax/import checks for changed builder and scope lifecycle modules.
+- Focused generated-output contract tests for public tree, manage tree, and recently-added payloads.
+- Focused search build tests proving search output is still produced without reading retired public docs `index.json`.
+- Dry-run or write run of `docs-viewer/build/build_docs.py --scope studio --write` only when the touched builder path warrants it.
+
+## completed verification
+
+- Not started.
+
+## follow-on tasks
+
+- To be completed during the task.
+
+## task close
+
+- Add a handoff note to Batch 3 with generated output paths, payload shapes, and any builder limitations.
+- Set this document and the tracker row status to `done` when the batch is complete.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T10:54:04Z",
+  "generated_at": "2026-06-05T11:26:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -651,7 +651,103 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-      "content_text_length": 19581
+      "content_text_length": 13298
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "title": "Docs Viewer Public Index Slimming Tasks",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-tasks",
+      "parent_id": "site-request-docs-viewer-public-index-slimming",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
+      "content_text_length": 3352
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
+      "title": "Docs Viewer Public Index Slimming Batch 1",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-1.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-1",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-1.json",
+      "content_text_length": 3029
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-2",
+      "title": "Docs Viewer Public Index Slimming Batch 2",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-2.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-2",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-2.json",
+      "content_text_length": 3630
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3",
+      "title": "Docs Viewer Public Index Slimming Batch 3",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-3.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-3",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
+      "content_text_length": 3304
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
+      "title": "Docs Viewer Public Index Slimming Batch 4",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-4.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-4",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
+      "content_text_length": 2707
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
+      "title": "Docs Viewer Public Index Slimming Batch 5",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-5.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-5",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
+      "content_text_length": 2726
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
+      "title": "Docs Viewer Public Index Slimming Batch 6",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-6.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-6",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
+      "content_text_length": 3589
+    },
+    {
+      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
+      "title": "Docs Viewer Public Index Slimming Batch 7",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-docs-viewer-public-index-slimming-batch-7.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-public-index-slimming-batch-7",
+      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
+      "content_text_length": 3032
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1166,7 +1262,7 @@
       "parent_id": "dev-home",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
-      "content_text_length": 1684
+      "content_text_length": 1743
     },
     {
       "doc_id": "task-template",
@@ -1190,7 +1286,7 @@
       "parent_id": "dev-home",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
-      "content_text_length": 3511
+      "content_text_length": 3517
     },
     {
       "doc_id": "docs-viewer",

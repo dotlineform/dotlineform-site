@@ -48,7 +48,7 @@ Codex sandbox note: local service, browser, and temporary localhost checks will 
 | --- | --- | --- |
 | 1 | planned | title and link to task/batch document |
 
-The last tasks should close out the implementation with the following named tasks:
+The last tasks/batch should close out the implementation with the following named tasks:
 
 | ID | status | title |
 | --- | --- | --- |
