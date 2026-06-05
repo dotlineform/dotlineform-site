@@ -14,6 +14,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_EXPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_export.py"
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 
 def load_docs_export_module():
@@ -79,31 +82,64 @@ BASE_CONFIG = {
 }
 
 
-INDEX_PAYLOAD = {
-    "docs": [
-        {
-            "doc_id": "library",
-            "title": "Library",
-            "parent_id": "",
-            "summary": "",
-            "last_updated": "2026-05-03 10:00",
-            "viewable": True,
-        },
-        {
-            "doc_id": "child-with-summary",
-            "title": "Child With Summary",
-            "parent_id": "library",
-            "summary": "Existing summary.",
-            "last_updated": "2026-05-03 10:01",
-            "viewable": True,
-        },
-    ],
-}
-
-
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_scope_config(root: Path) -> None:
+    write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "library",
+                    "scope_type": "public",
+                    "source": "docs-viewer/source/library",
+                    "media_path_prefix": "docs/library",
+                    "output": "assets/data/docs/scopes/library",
+                    "search_output": "assets/data/search/library/index.json",
+                    "viewer_base_url": "/library/",
+                    "include_scope_param": False,
+                    "default_doc_id": "library",
+                    "allow_nested_source": False,
+                    "allow_unresolved_parent_ids": True,
+                }
+            ],
+        },
+    )
+
+
+def write_doc(
+    root: Path,
+    filename: str,
+    *,
+    doc_id: str,
+    title: str,
+    parent_id: str = "",
+    summary: str = "",
+    last_updated: str = "2026-05-03 10:00",
+    viewable: bool = True,
+    body: str = "Body text.",
+) -> None:
+    lines = [
+        "---",
+        f"doc_id: {doc_id}",
+        f"title: {title}",
+        "added_date: 2026-05-03",
+        f"last_updated: {last_updated}",
+    ]
+    if parent_id:
+        lines.append(f"parent_id: {parent_id}")
+    if summary:
+        lines.append(f"summary: {summary}")
+    if not viewable:
+        lines.append("viewable: false")
+    lines.extend(["---", "", body])
+    path = root / "docs-viewer/source/library" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
@@ -111,16 +147,18 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     write_json(root / "data-sharing/config/library-export-configs.json", config or BASE_CONFIG)
-    write_json(root / "assets/data/docs/scopes/library/index.json", INDEX_PAYLOAD)
-    for doc in INDEX_PAYLOAD["docs"]:
-        write_json(
-            root / f"assets/data/docs/scopes/library/by-id/{doc['doc_id']}.json",
-            {
-                "doc_id": doc["doc_id"],
-                "title": doc["title"],
-                "content_html": f"<h1>{doc['title']}</h1><p>Body text.</p>",
-            },
-        )
+    write_scope_config(root)
+    write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
+    write_doc(
+        root,
+        "child-with-summary.md",
+        doc_id="child-with-summary",
+        title="Child With Summary",
+        parent_id="library",
+        summary="Existing summary.",
+        last_updated="2026-05-03 10:01",
+        body="# Child With Summary\n\nBody text.",
+    )
     return temp_dir
 
 

@@ -79,20 +79,9 @@ def make_repo() -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
-    index_path = root / "assets/data/docs/scopes/library/index.json"
-    index_path.parent.mkdir(parents=True, exist_ok=True)
-    docs = [
-        {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
-        {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "viewable": True},
-    ]
-    index_path.write_text(json.dumps({"docs": docs}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    payload_root = root / "assets/data/docs/scopes/library/by-id"
-    payload_root.mkdir(parents=True, exist_ok=True)
-    for doc in docs:
-        (payload_root / f"{doc['doc_id']}.json").write_text(
-            json.dumps({"doc_id": doc["doc_id"], "title": doc["title"]}, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
+    write_scope_config(root)
+    write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+    write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
     config_path = root / "data-sharing/config/library-export-configs.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
@@ -182,8 +171,6 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                     "documents": "docs-viewer/source/library",
                                 },
                                 "sources": {
-                                    "docs_index": "assets/data/docs/scopes/library/index.json",
-                                    "docs_payload_root": "assets/data/docs/scopes/library/by-id",
                                     "source_root": "docs-viewer/source/library",
                                 },
                                 "config": {
@@ -265,6 +252,37 @@ def make_repo() -> tempfile.TemporaryDirectory:
         encoding="utf-8",
     )
     return temp_dir
+
+
+def write_scope_config(root: Path) -> None:
+    path = root / "docs-viewer/config/scopes/docs_scopes.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "library",
+                        "scope_type": "public",
+                        "source": "docs-viewer/source/library",
+                        "media_path_prefix": "docs/library",
+                        "output": "assets/data/docs/scopes/library",
+                        "search_output": "assets/data/search/library/index.json",
+                        "viewer_base_url": "/library/",
+                        "include_scope_param": False,
+                        "default_doc_id": "library",
+                        "allow_nested_source": False,
+                        "allow_unresolved_parent_ids": True,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
 
 def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:

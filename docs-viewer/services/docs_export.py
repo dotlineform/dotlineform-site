@@ -20,9 +20,10 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
+from docs_data_sharing import source_metadata
+
 
 DEFAULT_CONFIG_PATH = Path("data-sharing/config/library-export-configs.json")
-DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 OUTPUT_ROOT = Path("var/analytics/data-sharing")
 SCHEMA_VERSION = "library_export_configs_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
@@ -69,37 +70,10 @@ class ExportContext:
     repo_root: Path
     scope: str
     config: dict[str, Any]
+    source_context: source_metadata.DataSharingDocsSourceContext
     docs: list[dict[str, Any]]
     docs_by_id: dict[str, dict[str, Any]]
     children_by_parent: dict[str, list[dict[str, Any]]]
-    payload_cache: dict[str, dict[str, Any]]
-
-
-class HeadingCollector(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.headings: list[str] = []
-        self._current_tag: str | None = None
-        self._current_parts: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        tag_name = tag.lower()
-        if tag_name in {"h1", "h2", "h3", "h4", "h5", "h6"}:
-            self._current_tag = tag_name
-            self._current_parts = []
-
-    def handle_endtag(self, tag: str) -> None:
-        if self._current_tag is None or tag.lower() != self._current_tag:
-            return
-        text = normalize_text("".join(self._current_parts))
-        if text:
-            self.headings.append(text)
-        self._current_tag = None
-        self._current_parts = []
-
-    def handle_data(self, data: str) -> None:
-        if self._current_tag is not None:
-            self._current_parts.append(data)
 
 
 class PlainTextExtractor(HTMLParser):
@@ -328,18 +302,6 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
-    content_url = normalize_text(doc.get("content_url"))
-    expected_prefix = f"/{DOCS_SCOPES_ROOT.as_posix()}/{scope}/by-id/"
-    if content_url.startswith(expected_prefix) and content_url.endswith(".json"):
-        relative_path = content_url.removeprefix("/")
-        path = repo_root / relative_path
-        if DOCS_SCOPES_ROOT.as_posix() in relative_path and ".." not in Path(relative_path).parts:
-            return path
-    doc_id = normalize_text(doc.get("doc_id"))
-    return repo_root / DOCS_SCOPES_ROOT / scope / "by-id" / f"{doc_id}.json"
-
-
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -517,34 +479,28 @@ def config_checksum(config: dict[str, Any]) -> str:
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
-def load_scope_index(repo_root: Path, scope: str) -> list[dict[str, Any]]:
-    index_path = repo_root / DOCS_SCOPES_ROOT / scope / "index.json"
-    payload = read_json(index_path, f"{scope} docs index")
-    docs = payload.get("docs")
-    if not isinstance(docs, list):
-        raise ValueError(f"Expected docs array in {index_path}")
-    normalized_docs: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for item in docs:
-        if not isinstance(item, dict):
-            continue
-        doc_id = normalize_text(item.get("doc_id"))
-        if not doc_id:
-            continue
-        if doc_id in seen:
-            raise ValueError(f"Duplicate doc_id in {index_path}: {doc_id}")
-        seen.add(doc_id)
-        row = dict(item)
-        row["doc_id"] = doc_id
-        normalized_docs.append(row)
-    return normalized_docs
+def source_record_to_export_doc(record: source_metadata.DataSharingDocsSourceRecord) -> dict[str, Any]:
+    return {
+        "doc_id": record.doc_id,
+        "scope": record.scope,
+        "title": record.title,
+        "published": record.published,
+        "summary": record.summary,
+        "added_date": record.added_date,
+        "last_updated": record.last_updated,
+        "parent_id": record.parent_id,
+        "parent_title": record.parent_title,
+        "viewable": record.viewable,
+        "ui_status": record.ui_status,
+        "source_path": record.source_path,
+        "viewer_url": record.viewer_url,
+        "content_text_length": record.content_text_length,
+    }
 
 
-def load_doc_payload(context: ExportContext, doc_id: str) -> dict[str, Any]:
-    if doc_id not in context.payload_cache:
-        payload_path = doc_payload_path(context.repo_root, context.scope, context.docs_by_id.get(doc_id, {"doc_id": doc_id}))
-        context.payload_cache[doc_id] = read_json(payload_path, f"{context.scope} doc payload for {doc_id}")
-    return context.payload_cache[doc_id]
+def load_source_export_context(repo_root: Path, scope: str) -> tuple[source_metadata.DataSharingDocsSourceContext, list[dict[str, Any]]]:
+    context = source_metadata.load_data_sharing_docs_source_context(repo_root, scope)
+    return context, [source_record_to_export_doc(record) for record in context.records]
 
 
 def build_children_by_parent(docs: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
@@ -651,19 +607,6 @@ def effective_missing_summary_only(config: dict[str, Any], override: bool | None
             return False
         return override
     return bool(selection.get("default_missing_summary_only")) if selection.get("supports_missing_summary_only") else False
-
-
-def collect_headings(content_html: str, title: str) -> list[str]:
-    parser = HeadingCollector()
-    parser.feed(content_html)
-    parser.close()
-    normalized_title = normalize_text(title)
-    headings: list[str] = []
-    for heading in parser.headings:
-        if not headings and normalized_title and heading == normalized_title:
-            continue
-        headings.append(heading)
-    return headings
 
 
 def normalize_plain_text(value: str) -> str:
@@ -786,11 +729,9 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
     if source == "child_titles":
         return [normalize_text(item.get("title")) for item in context.children_by_parent.get(doc_id, [])]
     if source == "headings":
-        payload = load_doc_payload(context, doc_id)
-        return collect_headings(str(payload.get("content_html") or ""), normalize_text(doc.get("title")))
+        return source_metadata.data_sharing_doc_headings(context.source_context, doc_id)
     if source == "source_text":
-        payload = load_doc_payload(context, doc_id)
-        return str(payload.get("content_html") or "")
+        return source_metadata.render_data_sharing_doc_html(context.source_context, doc_id)
     raise ValueError(f"Unsupported field source: {source}")
 
 
@@ -1091,16 +1032,16 @@ def build_export(
             "output_written": False,
         }
 
-    docs = load_scope_index(repo_root, scope)
+    source_context, docs = load_source_export_context(repo_root, scope)
     docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
     context = ExportContext(
         repo_root=repo_root,
         scope=scope,
         config=config,
+        source_context=source_context,
         docs=docs,
         docs_by_id=docs_by_id,
         children_by_parent=build_children_by_parent(docs),
-        payload_cache={},
     )
     selected, skipped, selection_errors, selection_warnings = selected_docs(
         context,

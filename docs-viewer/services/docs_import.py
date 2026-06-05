@@ -18,11 +18,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from docs_data_sharing import source_metadata
+
 
 WORKFLOW_ROOT = Path("var/analytics/data-sharing")
 STAGING_DIR_NAME = "import-staging"
 PREVIEW_DIR_NAME = "import-preview"
-DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 SUPPORTED_SCOPES = {"analytics", "catalogue", "library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
@@ -136,18 +137,6 @@ def scope_title(scope: str) -> str:
         "library": "Library",
     }
     return labels.get(normalized, normalized.title() if normalized else "Docs")
-
-
-def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
-    content_url = normalize_text(doc.get("content_url"))
-    expected_prefix = f"/{DOCS_SCOPES_ROOT.as_posix()}/{scope}/by-id/"
-    if content_url.startswith(expected_prefix) and content_url.endswith(".json"):
-        relative_path = content_url.removeprefix("/")
-        path = repo_root / relative_path
-        if ".." not in Path(relative_path).parts:
-            return path
-    doc_id = normalize_text(doc.get("doc_id"))
-    return repo_root / DOCS_SCOPES_ROOT / scope / "by-id" / f"{doc_id}.json"
 
 
 def preview_generated_at(generated_at_dt: dt.datetime | None = None) -> str:
@@ -394,53 +383,38 @@ def read_json_object(path: Path, label: str) -> dict[str, Any]:
 
 def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     issues: list[dict[str, Any]] = []
-    index_path = repo_root / DOCS_SCOPES_ROOT / scope / "index.json"
     context: dict[str, Any] = {
         "index_loaded": False,
-        "index_path": relative_path(repo_root, index_path),
+        "index_path": "",
+        "source_loaded": False,
+        "source_root": "",
         "doc_count": 0,
         "payload_count": 0,
         "docs_by_id": {},
         "payload_ids": [],
     }
     try:
-        payload = read_json_object(index_path, f"{scope} docs index")
-    except FileNotFoundError:
-        issues.append(issue("warning", "current_index_missing", f"current {scope} docs index is missing"))
-        return context, issues
-    except (json.JSONDecodeError, ValueError, OSError) as exc:
-        issues.append(issue("warning", "current_index_unreadable", f"current {scope} docs index could not be read: {exc}"))
-        return context, issues
-
-    docs = payload.get("docs")
-    if not isinstance(docs, list):
-        issues.append(issue("warning", "current_index_invalid", f"current {scope} docs index has no docs array"))
+        source_context = source_metadata.load_data_sharing_docs_source_context(repo_root, scope)
+    except (FileNotFoundError, json.JSONDecodeError, ValueError, RuntimeError, OSError) as exc:
+        issues.append(issue("warning", "current_source_unreadable", f"current {scope} docs source metadata could not be read: {exc}"))
         return context, issues
 
     docs_by_id: dict[str, dict[str, Any]] = {}
-    for item in docs:
-        if not isinstance(item, dict):
-            continue
-        doc_id = normalize_text(item.get("doc_id"))
-        if not doc_id:
-            continue
-        if doc_id in docs_by_id:
-            issues.append(issue("warning", "current_duplicate_doc_id", f"current Library index has duplicate doc_id: {doc_id}", doc_id=doc_id))
-            continue
+    payload_ids: list[str] = []
+    for item in source_context.records:
+        doc_id = item.doc_id
         docs_by_id[doc_id] = item
-
-    payload_ids = sorted(
-        doc_id
-        for doc_id, doc in docs_by_id.items()
-        if doc_payload_path(repo_root, scope, doc).exists()
-    )
+        payload_ids.append(doc_id)
     context.update(
         {
             "index_loaded": True,
+            "index_path": source_context.scope_config.source.as_posix(),
+            "source_loaded": True,
+            "source_root": source_context.scope_config.source.as_posix(),
             "doc_count": len(docs_by_id),
-            "payload_count": len(payload_ids),
+            "payload_count": len(set(payload_ids)),
             "docs_by_id": docs_by_id,
-            "payload_ids": payload_ids,
+            "payload_ids": sorted(set(payload_ids)),
         }
     )
     return context, issues
@@ -532,6 +506,8 @@ def current_report_context(current: dict[str, Any]) -> dict[str, Any]:
     return {
         "index_loaded": bool(current.get("index_loaded")),
         "index_path": normalize_text(current.get("index_path")),
+        "source_loaded": bool(current.get("source_loaded")),
+        "source_root": normalize_text(current.get("source_root")),
         "doc_count": int(current.get("doc_count") or 0),
         "payload_count": int(current.get("payload_count") or 0),
     }
@@ -561,17 +537,28 @@ def add_current_library_report(
         doc_id = normalize_text(record.get("doc_id"))
         parent_id = normalize_text(record.get("parent_id"))
         current_doc = docs_by_id.get(doc_id)
+        metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
 
         current_state: dict[str, Any] = {
             "exists": bool(current_doc),
             "viewable": None,
             "payload_exists": False,
+            "source_exists": bool(current_doc),
+            "source_renderable": False,
+            "current_summary": "",
+            "staged_current_summary_matches": None,
             "parent_exists": None,
             "parent_payload_exists": None,
+            "parent_source_exists": None,
+            "parent_source_renderable": None,
         }
         if current_doc:
-            current_state["viewable"] = current_doc.get("viewable")
+            current_state["viewable"] = current_doc.viewable
             current_state["payload_exists"] = doc_id in payload_ids
+            current_state["source_renderable"] = doc_id in payload_ids
+            current_state["current_summary"] = current_doc.summary
+            if "current_summary" in metadata:
+                current_state["staged_current_summary_matches"] = str(metadata.get("current_summary") or "") == current_doc.summary
         record["current_library"] = current_state
 
         if not doc_id:
@@ -581,7 +568,7 @@ def add_current_library_report(
                 issue(
                     "warning",
                     "unknown_doc_id",
-                    f"record doc_id is not in the current {scope_title(scope)} index: {doc_id}",
+                    f"record doc_id is not in the current {scope_title(scope)} source metadata: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -591,8 +578,8 @@ def add_current_library_report(
             issues.append(
                 issue(
                     "warning",
-                    "current_payload_missing",
-                    f"record exists in the current Library index but has no generated payload: {doc_id}",
+                    "current_source_unrenderable",
+                    f"record exists in the current {scope_title(scope)} source metadata but could not be rendered: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -603,12 +590,14 @@ def add_current_library_report(
             parent_doc = docs_by_id.get(parent_id)
             current_state["parent_exists"] = bool(parent_doc)
             current_state["parent_payload_exists"] = parent_id in payload_ids
+            current_state["parent_source_exists"] = bool(parent_doc)
+            current_state["parent_source_renderable"] = parent_id in payload_ids
             if parent_id not in docs_by_id and parent_id not in staged_ids:
                 issues.append(
                     issue(
                         "warning",
                         "missing_parent_id",
-                        f"parent_id is not in the current {scope_title(scope)} index or staged records: {parent_id}",
+                        f"parent_id is not in the current {scope_title(scope)} source metadata or staged records: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,
@@ -618,8 +607,8 @@ def add_current_library_report(
                 issues.append(
                     issue(
                         "warning",
-                        "parent_payload_missing",
-                        f"parent_id points to a current Library record with no generated payload: {parent_id}",
+                        "parent_source_unrenderable",
+                        f"parent_id points to a current {scope_title(scope)} source metadata record that could not be rendered: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,
@@ -785,11 +774,11 @@ def render_metadata_lines(record: dict[str, Any], report: dict[str, Any]) -> lis
     current = record.get("current_library") if isinstance(record.get("current_library"), dict) else {}
     if current:
         exists = "yes" if current.get("exists") else "no"
-        payload = "yes" if current.get("payload_exists") else "no"
+        source = "yes" if current.get("source_renderable") else "no"
         lines.extend(
             [
                 f"- current {scope_title(scope)} match: {exists}",
-                f"- generated payload: {payload}",
+                f"- source renderable: {source}",
             ]
         )
     return lines

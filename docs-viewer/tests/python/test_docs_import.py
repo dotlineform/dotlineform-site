@@ -12,6 +12,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_IMPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_import.py"
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 
 def load_docs_import_module():
@@ -32,6 +35,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
+    write_scope_config(root)
     write_current_index(
         root,
         [
@@ -50,19 +54,59 @@ def make_repo() -> tempfile.TemporaryDirectory:
 
 
 def write_current_index(root: Path, docs: list[dict], *, payload_ids: list[str] | None = None) -> None:
-    index_path = root / "assets/data/docs/scopes/library/index.json"
-    index_path.parent.mkdir(parents=True, exist_ok=True)
-    index_path.write_text(json.dumps({"docs": docs}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    payload_root = root / "assets/data/docs/scopes/library/by-id"
-    payload_root.mkdir(parents=True, exist_ok=True)
-    for existing in payload_root.glob("*.json"):
+    del payload_ids
+    source_root = root / "docs-viewer/source/library"
+    source_root.mkdir(parents=True, exist_ok=True)
+    for existing in source_root.glob("*.md"):
         existing.unlink()
-    ids = payload_ids if payload_ids is not None else [doc["doc_id"] for doc in docs if doc.get("doc_id")]
-    for doc_id in ids:
-        (payload_root / f"{doc_id}.json").write_text(
-            json.dumps({"doc_id": doc_id, "title": doc_id}, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+    for doc in docs:
+        doc_id = str(doc.get("doc_id") or "").strip()
+        if not doc_id:
+            continue
+        lines = [
+            "---",
+            f"doc_id: {doc_id}",
+            f"title: {doc.get('title') or doc_id}",
+            "added_date: 2026-05-03",
+            "last_updated: 2026-05-03",
+        ]
+        if doc.get("parent_id"):
+            lines.append(f"parent_id: {doc.get('parent_id')}")
+        if doc.get("viewable") is False:
+            lines.append("viewable: false")
+        lines.extend(["---", "", f"# {doc.get('title') or doc_id}", "", "Body text."])
+        (source_root / f"{doc_id}.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_scope_config(root: Path) -> None:
+    path = root / "docs-viewer/config/scopes/docs_scopes.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "library",
+                        "scope_type": "public",
+                        "source": "docs-viewer/source/library",
+                        "media_path_prefix": "docs/library",
+                        "output": "assets/data/docs/scopes/library",
+                        "search_output": "assets/data/search/library/index.json",
+                        "viewer_base_url": "/library/",
+                        "include_scope_param": False,
+                        "default_doc_id": "library",
+                        "allow_nested_source": False,
+                        "allow_unresolved_parent_ids": True,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
         )
+        + "\n",
+        encoding="utf-8",
+    )
 
 
 def write_staged(root: Path, filename: str, text: str) -> None:
@@ -225,7 +269,6 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
                     "viewable": True,
                 },
             ],
-            payload_ids=["library", "non-viewable-parent"],
         )
         payload = [
             {"doc_id": "unknown-doc", "title": "Unknown Doc", "parent_id": "missing-parent"},
@@ -238,18 +281,19 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
     assert report["ok"] is True
     assert report["current_library"] == {
         "index_loaded": True,
-        "index_path": "assets/data/docs/scopes/library/index.json",
+        "index_path": "docs-viewer/source/library",
+        "source_loaded": True,
+        "source_root": "docs-viewer/source/library",
         "doc_count": 3,
-        "payload_count": 2,
+        "payload_count": 3,
     }
-    assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 3, "errors": 0}
+    assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 2, "errors": 0}
     assert [item["code"] for item in report["issues"]] == [
         "unknown_doc_id",
         "missing_parent_id",
-        "current_payload_missing",
     ]
     assert report["records"][0]["current_library"]["exists"] is False
-    assert report["records"][2]["current_library"]["payload_exists"] is False
+    assert report["records"][2]["current_library"]["source_renderable"] is True
 
 
 def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> None:

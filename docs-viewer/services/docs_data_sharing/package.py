@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids
-import docs_generated_reads
+from docs_data_sharing import source_metadata
 from docs_import import list_staged_import_files
 import docs_source_model as source_model
 
@@ -42,11 +42,21 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
 
 def selectable_document_records(repo_root: Path, *, scope: str, selection_model: str) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    index_payload = docs_generated_reads.read_generated_docs_index(repo_root, normalized_scope)
-    docs = index_payload.get("docs")
-    if not isinstance(docs, list):
-        raise RuntimeError(f"generated docs index for {normalized_scope} is missing docs")
-    records = [document_selectable_record(item) for item in docs if isinstance(item, dict)]
+    docs = source_metadata.load_data_sharing_docs_source_records(repo_root, normalized_scope)
+    records = [
+        document_selectable_record(
+            {
+                "doc_id": item.doc_id,
+                "title": item.title,
+                "parent_id": item.parent_id,
+                "published": item.published,
+                "viewable": item.viewable,
+                "content_text_length": item.content_text_length,
+                "summary": item.summary,
+            }
+        )
+        for item in docs
+    ]
     return {
         "ok": True,
         "scope": normalized_scope,
@@ -56,7 +66,7 @@ def selectable_document_records(repo_root: Path, *, scope: str, selection_model:
         "source": {
             "kind": "adapter",
             "module": "documents",
-            "source": "generated_docs_index",
+            "source": "docs_source_metadata",
             "scope": normalized_scope,
         },
     }

@@ -16,6 +16,7 @@ for path in (DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
+from docs_data_sharing import package as data_sharing_package  # noqa: E402
 from docs_data_sharing import source_metadata  # noqa: E402
 
 
@@ -239,6 +240,49 @@ def test_helper_does_not_require_generated_docs_artifacts() -> None:
     assert source_metadata.data_sharing_doc_content_text(context, "doc") == "Source body."
 
 
+def test_selectable_document_records_use_source_metadata() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_config(repo_root, [scope_config("studio")])
+        write_doc(
+            repo_root,
+            "studio",
+            "doc.md",
+            doc_id="doc",
+            title="Source Title",
+            summary="Source summary.",
+            published=False,
+            body="# Source Title\n\nSource body.",
+        )
+        write_text(repo_root / "docs-viewer/generated/docs/studio/index.json", "{")
+
+        payload = data_sharing_package.selectable_document_records(
+            repo_root,
+            scope="studio",
+            selection_model="documents",
+        )
+
+    assert payload["ok"] is True
+    assert payload["source"]["source"] == "docs_source_metadata"
+    assert payload["records"] == [
+        {
+            "id": "doc",
+            "doc_id": "doc",
+            "title": "Source Title",
+            "type": "document",
+            "meta": "doc",
+            "parent_id": "",
+            "published": False,
+            "viewable": True,
+            "selectable": False,
+            "children": [],
+            "issues": [{"level": "warning", "message": "Document is not published."}],
+            "content_text_length": len("Source body."),
+            "summary": "Source summary.",
+        }
+    ]
+
+
 def test_nested_source_and_unknown_doc_path_safety() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -270,6 +314,7 @@ def main() -> None:
         test_duplicate_doc_ids_and_missing_source_roots_fail_visibly,
         test_unresolved_parent_policy_follows_scope_config,
         test_helper_does_not_require_generated_docs_artifacts,
+        test_selectable_document_records_use_source_metadata,
         test_nested_source_and_unknown_doc_path_safety,
     ]
     for test in tests:
