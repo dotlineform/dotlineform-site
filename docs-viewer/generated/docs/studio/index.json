@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T20:04:50Z",
+  "generated_at": "2026-06-05T21:09:59Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -535,15 +535,87 @@
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index",
-      "title": "Data Sharing Docs Internal Index Request",
+      "title": "Data Sharing Docs Source Metadata Request",
       "added_date": "2026-06-03",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-05",
       "source_path": "site-request-data-sharing-docs-internal-index.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index",
       "parent_id": "change-requests",
-      "ui_status": "draft",
+      "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-      "content_text_length": 7733
+      "content_text_length": 15345
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "title": "Data Sharing Docs Source Metadata Tasks",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-tasks",
+      "parent_id": "site-request-data-sharing-docs-internal-index",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
+      "content_text_length": 3198
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
+      "title": "Data Sharing Docs Source Metadata Batch 1",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-batch-1.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-1",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-1.json",
+      "content_text_length": 3337
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-2",
+      "title": "Data Sharing Docs Source Metadata Batch 2",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-batch-2.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-2.json",
+      "content_text_length": 3313
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-3",
+      "title": "Data Sharing Docs Source Metadata Batch 3",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-batch-3.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-3",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-3.json",
+      "content_text_length": 3651
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-4",
+      "title": "Data Sharing Docs Source Metadata Batch 4",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-batch-4.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-4",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-4.json",
+      "content_text_length": 3297
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-5",
+      "title": "Data Sharing Docs Source Metadata Batch 5",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "site-request-data-sharing-docs-internal-index-batch-5.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-5",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "ui_status": "planned",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-5.json",
+      "content_text_length": 2905
     },
     {
       "doc_id": "site-request-docs-semantic-references-v2",

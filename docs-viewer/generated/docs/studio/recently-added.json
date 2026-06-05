@@ -11,6 +11,54 @@
       "parent_title": "Dev Home"
     },
     {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
+      "title": "Data Sharing Docs Source Metadata Batch 1",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-1.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "parent_title": "Data Sharing Docs Source Metadata Tasks"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-2",
+      "title": "Data Sharing Docs Source Metadata Batch 2",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-2.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "parent_title": "Data Sharing Docs Source Metadata Tasks"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-3",
+      "title": "Data Sharing Docs Source Metadata Batch 3",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-3.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "parent_title": "Data Sharing Docs Source Metadata Tasks"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-4",
+      "title": "Data Sharing Docs Source Metadata Batch 4",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-4.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "parent_title": "Data Sharing Docs Source Metadata Tasks"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-batch-5",
+      "title": "Data Sharing Docs Source Metadata Batch 5",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-5.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "parent_title": "Data Sharing Docs Source Metadata Tasks"
+    },
+    {
+      "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
+      "title": "Data Sharing Docs Source Metadata Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
+      "added_date": "2026-06-05",
+      "parent_id": "site-request-data-sharing-docs-internal-index",
+      "parent_title": "Data Sharing Docs Source Metadata Request"
+    },
+    {
       "doc_id": "docs-viewer-generated-data-contracts",
       "title": "Docs Viewer Generated Data Contracts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
@@ -33,55 +81,7 @@
       "added_date": "2026-06-05",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3",
-      "title": "Docs Viewer Public Index Slimming Batch 3",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3a",
-      "title": "Docs Viewer Public Index Slimming Batch 3a",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3a.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
-      "title": "Docs Viewer Public Index Slimming Batch 4",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
-      "title": "Docs Viewer Public Index Slimming Batch 5",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
-      "title": "Docs Viewer Public Index Slimming Batch 6",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
-      "title": "Docs Viewer Public Index Slimming Batch 7",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
     }
   ],
-  "generated_at": "2026-06-05T17:37:37Z"
+  "generated_at": "2026-06-05T21:09:59Z"
 }
