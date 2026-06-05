@@ -299,7 +299,7 @@
                   "doc_id": "site-request-data-sharing-docs-internal-index-batch-2",
                   "title": "Data Sharing Docs Source Metadata Batch 2",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-2.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "site-request-data-sharing-docs-internal-index-batch-3",
@@ -1520,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-05T21:47:05Z"
+  "generated_at": "2026-06-05T21:57:34Z"
 }

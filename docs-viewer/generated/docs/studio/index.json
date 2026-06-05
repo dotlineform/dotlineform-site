@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T21:51:44Z",
+  "generated_at": "2026-06-05T21:58:18Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -543,7 +543,7 @@
       "parent_id": "change-requests",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-      "content_text_length": 15210
+      "content_text_length": 15207
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
@@ -555,7 +555,7 @@
       "parent_id": "site-request-data-sharing-docs-internal-index",
       "ui_status": "in-progress",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
-      "content_text_length": 3281
+      "content_text_length": 3895
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
@@ -577,9 +577,9 @@
       "source_path": "site-request-data-sharing-docs-internal-index-batch-2.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2",
       "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-2.json",
-      "content_text_length": 3346
+      "content_text_length": 3975
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-batch-3",
@@ -591,7 +591,7 @@
       "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-3.json",
-      "content_text_length": 3651
+      "content_text_length": 5380
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-batch-4",

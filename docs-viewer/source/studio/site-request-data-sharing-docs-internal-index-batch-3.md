@@ -42,6 +42,26 @@ Summary: Move Data Sharing selectable-record, export, and returned-package revie
 - Migrated returned-package review context.
 - Updated focused tests around migrated behavior.
 
+## Batch 2 Handoff
+
+Batch 2 added `docs-viewer/services/docs_data_sharing/source_metadata.py` with these public helpers:
+
+- `load_data_sharing_docs_source_records(repo_root, scope)`
+- `load_data_sharing_docs_source_context(repo_root, scope)`
+- `render_data_sharing_doc_html(context, doc_id)`
+- `data_sharing_doc_content_text(context, doc_id)`
+- `data_sharing_doc_headings(context, doc_id)`
+
+The helper returns `DataSharingDocsSourceRecord` rows with the locked fields from Batch 1, including `published`, repo-relative `source_path`, `viewer_url`, `parent_title`, and `content_text_length`.
+It uses `docs_scope_config.load_docs_scope_configs(...)`, `build_docs.DocsDataBuilder`, and the shared Markdown plain-text helper.
+Focused tests cover record fields, public/local/synthetic scope config behavior, duplicate ids, missing source roots, unresolved-parent policy, generated-artifact absence, headings, rendered text, doc-link rewriting, nested source, and unknown doc ids.
+
+Batch 3 migration call sites:
+
+- `docs-viewer/services/docs_data_sharing/package.py`: replace `docs_generated_reads.read_generated_docs_index(...)` in `selectable_document_records(...)` with `load_data_sharing_docs_source_records(...)`, and update the selectable `source.source` label away from `generated_docs_index`.
+- `docs-viewer/services/docs_export.py`: replace `load_scope_index(...)`, generated `doc_payload_path(...)`, and `load_doc_payload(...)` use in Data Sharing export with source metadata context/records and `render_data_sharing_doc_html(...)` or `data_sharing_doc_headings(...)`.
+- `docs-viewer/services/docs_import.py`: replace current-doc flat-index and generated payload existence context with source metadata context, preserving useful current-source existence/renderability diagnostics.
+
 ## Implementation and policy guidance
 
 - Keep Data Sharing source metadata calls behind the Batch 2 helper API.

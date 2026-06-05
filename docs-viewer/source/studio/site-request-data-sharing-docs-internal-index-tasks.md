@@ -48,7 +48,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 | Batch ID | status | title |
 | --- | --- | --- |
 | 1 | done | [Batch 1: Contract and Dependency Audit](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-1) |
-| 2 | planned | [Batch 2: Source Metadata Read API](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2) |
+| 2 | done | [Batch 2: Source Metadata Read API](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2) |
 | 3 | planned | [Batch 3: Data Sharing Consumer Migration](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-3) |
 | 4 | planned | [Batch 4: Contract Tests and Stale-Path Guards](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-4) |
 | 5 | planned | [Batch 5: Durable Docs and Closeout](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-5) |
@@ -64,8 +64,10 @@ Batch 5 owns the template closeout duties:
 
 ## Closeout Notes
 
-- Not started.
+- Batch 2 added the Docs Viewer-owned source metadata helper API and focused tests.
+- Batch 3 owns migrating Data Sharing consumers to the helper.
 
 ## Verification Log
 
 - 2026-06-05: Batch 1 source audit completed. `git diff --check` passed. No generated writes were run.
+- 2026-06-05: Batch 2 source metadata helper completed. `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_data_sharing/source_metadata.py docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py` passed. `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py` passed with 6 tests. No explicit generated write command was run; the local docs watcher regenerated Studio docs payloads after source docs edits.
