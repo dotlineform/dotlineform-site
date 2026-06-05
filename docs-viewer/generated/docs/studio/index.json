@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T22:15:09Z",
+  "generated_at": "2026-06-05T22:21:08Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -200,12 +200,12 @@
       "doc_id": "data-models-shared",
       "title": "Shared Patterns",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-06 21:10",
+      "last_updated": "2026-06-05",
       "source_path": "data-models-shared.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-shared",
       "parent_id": "architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-shared.json",
-      "content_text_length": 6302
+      "content_text_length": 6692
     },
     {
       "doc_id": "site-shell-runtime",
@@ -541,9 +541,9 @@
       "source_path": "site-request-data-sharing-docs-internal-index.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index",
       "parent_id": "change-requests",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-      "content_text_length": 15201
+      "content_text_length": 15898
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
@@ -553,9 +553,9 @@
       "source_path": "site-request-data-sharing-docs-internal-index-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-tasks",
       "parent_id": "site-request-data-sharing-docs-internal-index",
-      "ui_status": "in-progress",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
-      "content_text_length": 5954
+      "content_text_length": 6964
     },
     {
       "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
@@ -613,9 +613,9 @@
       "source_path": "site-request-data-sharing-docs-internal-index-batch-5.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-5",
       "parent_id": "site-request-data-sharing-docs-internal-index-tasks",
-      "ui_status": "planned",
+      "ui_status": "done",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-5.json",
-      "content_text_length": 3880
+      "content_text_length": 5071
     },
     {
       "doc_id": "site-request-docs-semantic-references-v2",
@@ -1221,55 +1221,55 @@
       "doc_id": "data-sharing",
       "title": "Data Sharing",
       "added_date": "2026-05-13 17:16",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-05",
       "source_path": "data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json",
-      "content_text_length": 1793
+      "content_text_length": 2427
     },
     {
       "doc_id": "studio-data-sharing",
       "title": "Analytics Data Sharing Runtime",
       "added_date": "2026-05-06",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-05",
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "parent_id": "data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 9603
+      "content_text_length": 9586
     },
     {
       "doc_id": "studio-data-sharing-technical-spec",
       "title": "Analytics Data Sharing Technical Spec",
       "added_date": "2026-05-13 18:15",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-05",
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "parent_id": "data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 14267
+      "content_text_length": 15073
     },
     {
       "doc_id": "config-data-sharing-adapters",
       "title": "Data Sharing Adapters",
       "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-05",
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "parent_id": "data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 6512
+      "content_text_length": 7208
     },
     {
       "doc_id": "config-library-export-configs",
       "title": "Library Export Configs",
       "added_date": "2026-05-03 14:15",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-06-05",
       "source_path": "config-library-export-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "parent_id": "data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 9660
+      "content_text_length": 9930
     },
     {
       "doc_id": "dev-home",
@@ -1346,7 +1346,7 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "parent_id": "dev-home",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
-      "content_text_length": 9957
+      "content_text_length": 9959
     },
     {
       "doc_id": "task-batch-template",
@@ -1468,12 +1468,12 @@
       "doc_id": "docs-data",
       "title": "Docs Data",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-06-05",
       "source_path": "docs-data.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-data",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-data.json",
-      "content_text_length": 2646
+      "content_text_length": 2651
     },
     {
       "doc_id": "user-guide-docs-images",
@@ -1501,12 +1501,12 @@
       "doc_id": "scripts-docs-export",
       "title": "Documents Package Preparation Script",
       "added_date": "2026-05-03 15:05",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-06-05",
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 8098
+      "content_text_length": 8550
     },
     {
       "doc_id": "scripts-docs-import",
@@ -1729,7 +1729,7 @@
       "parent_id": "docs-viewer-runtime-boundary",
       "ui_status": "reference",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
-      "content_text_length": 5856
+      "content_text_length": 6288
     },
     {
       "doc_id": "docs-viewer-runtime-module-ownership",
@@ -1847,12 +1847,12 @@
       "doc_id": "docs-viewer-source-organisation",
       "title": "Source Organisation",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-06-05",
       "source_path": "docs-viewer-source-organisation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-organisation.json",
-      "content_text_length": 4313
+      "content_text_length": 4750
     },
     {
       "doc_id": "docs-viewer-toolbar-model",

@@ -2,7 +2,7 @@
 doc_id: docs-data
 title: Docs Data
 added_date: 2026-04-19
-last_updated: "2026-05-06 20:51"
+last_updated: 2026-06-05
 parent_id: docs-viewer
 viewable: true
 ---
@@ -87,7 +87,7 @@ Current content families:
 - one `doc` entry per viewable Studio doc
 - doc identity, title, viewer URL, last-updated metadata, parent context, and normalized search text
 
-Search currently uses `last_updated`, not `added_date`. The docs-viewer recently-added list reads `added_date` from the generated docs index, but search review is intentionally separate.
+Search currently uses `last_updated`, not `added_date`. The docs-viewer recently-added list reads its separate generated recently-added payload, but search review is intentionally separate.
 
 Current site mapping:
 

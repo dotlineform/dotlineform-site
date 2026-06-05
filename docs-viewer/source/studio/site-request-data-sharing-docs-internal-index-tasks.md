@@ -3,7 +3,7 @@ doc_id: site-request-data-sharing-docs-internal-index-tasks
 title: Data Sharing Docs Source Metadata Tasks
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-data-sharing-docs-internal-index
 ---
 # Data Sharing Docs Source Metadata Tasks
@@ -51,7 +51,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 | 2 | done | [Batch 2: Source Metadata Read API](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2) |
 | 3 | done | [Batch 3: Data Sharing Consumer Migration](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-3) |
 | 4 | done | [Batch 4: Contract Tests and Stale-Path Guards](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-4) |
-| 5 | planned | [Batch 5: Durable Docs and Closeout](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-5) |
+| 5 | done | [Batch 5: Durable Docs and Closeout](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-5) |
 
 ### closeout coverage
 
@@ -67,6 +67,7 @@ Batch 5 owns the template closeout duties:
 - Batch 2 added the Docs Viewer-owned source metadata helper API and focused tests.
 - Batch 3 migrated selectable records, docs export/package preparation, source rendering/source-text extraction, and returned-package review context to the Docs Viewer-owned source metadata helper.
 - Batch 4 added contract guard tests and removed generated docs index/by-id source declarations from the documents adapter config.
+- Batch 5 moved the final source metadata contract into durable docs and closed this request.
 
 ## Verification Log
 
@@ -74,3 +75,4 @@ Batch 5 owns the template closeout duties:
 - 2026-06-05: Batch 2 source metadata helper completed. `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_data_sharing/source_metadata.py docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py` passed. `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py` passed with 6 tests. No explicit generated write command was run; the local docs watcher regenerated Studio docs payloads after source docs edits.
 - 2026-06-05: Batch 3 consumer migration completed. `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_data_sharing/package.py docs-viewer/services/docs_export.py docs-viewer/services/docs_import.py docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py docs-viewer/tests/python/test_docs_export.py docs-viewer/tests/python/test_docs_import.py docs-viewer/tests/python/test_docs_import_service.py` passed. `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py docs-viewer/tests/python/test_docs_export.py docs-viewer/tests/python/test_docs_import.py docs-viewer/tests/python/test_docs_import_service.py` passed with 65 tests. `git diff --check` passed. No explicit generated docs write command was run; the local docs watcher regenerated Studio docs payloads after source docs edits.
 - 2026-06-05: Batch 4 contract guards completed. `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_data_sharing/package.py docs-viewer/services/docs_export.py docs-viewer/services/docs_import.py docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py docs-viewer/tests/python/test_docs_export.py docs-viewer/tests/python/test_docs_import.py docs-viewer/tests/python/test_docs_import_service.py studio/tests/python/test_data_sharing_adapters.py` passed. `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py docs-viewer/tests/python/test_docs_export.py docs-viewer/tests/python/test_docs_import.py docs-viewer/tests/python/test_docs_import_service.py studio/tests/python/test_data_sharing_adapters.py` passed with 80 tests. Active service/config stale-path scan returned no matches. `git diff --check` passed. No explicit generated docs write command was run.
+- 2026-06-05: Batch 5 durable docs and closeout completed. Durable Data Sharing, Docs Viewer source/generated-data/data-model, adapter config, export script, export config, and scripts docs now describe source metadata as the document Data Sharing metadata source. Active service/config stale-path scan returned no matches. Focused durable-doc scan found only intentional negative-contract matches and historical request/task records. `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py docs-viewer/tests/python/test_docs_export.py docs-viewer/tests/python/test_docs_import.py docs-viewer/tests/python/test_docs_import_service.py studio/tests/python/test_data_sharing_adapters.py` passed with 80 tests. `git diff --check` passed. No explicit generated docs write command was run; the local docs watcher regenerated Studio docs/search payloads after source docs edits.

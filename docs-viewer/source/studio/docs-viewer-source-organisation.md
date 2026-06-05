@@ -2,7 +2,7 @@
 doc_id: docs-viewer-source-organisation
 title: Source Organisation
 added_date: 2026-04-23
-last_updated: "2026-05-13 20:20"
+last_updated: 2026-06-05
 parent_id: docs-viewer
 ---
 # Docs Viewer Source Organisation
@@ -37,6 +37,10 @@ Library docs source root:
 
 Each scope owns its own source-doc tree and generated output tree.
 The shared viewer does not merge those scopes into one combined docs corpus.
+
+Document Data Sharing reads this same source boundary through Docs Viewer-owned source metadata helpers.
+Those helpers use scope config plus source Markdown front matter and body content, then render source content through shared Docs Viewer rendering code when export or review workflows need headings or plain text.
+Generated Docs Viewer payloads are publication/runtime outputs and are not the Data Sharing document metadata source.
 
 Studio and Library source roots are flat:
 

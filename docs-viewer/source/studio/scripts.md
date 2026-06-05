@@ -116,7 +116,7 @@ Catalogue/runtime maintenance:
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`
-  - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/analytics/data-sharing/<scope>/exports/`; also powers the Library documents adapter used by Analytics Data Sharing
+  - prepares Docs Viewer source metadata through source-controlled sharing profiles into `var/analytics/data-sharing/<scope>/exports/`; also powers the Library documents adapter used by Analytics Data Sharing
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
   - parses staged Library returned-package JSON/JSONL files under `var/analytics/data-sharing/library/import-staging/` and returns a structured review report
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py`
@@ -147,7 +147,7 @@ Catalogue/runtime maintenance:
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
   Maintain the standalone Docs Viewer service and shared management API dispatcher.
 - [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export)
-  Prepare generated Docs Viewer data through configured documents Data Sharing profiles.
+  Prepare Docs Viewer source metadata through configured documents Data Sharing profiles.
 - [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import)
   Parse staged Library returned packages and render Markdown review artifacts without writing source files.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)

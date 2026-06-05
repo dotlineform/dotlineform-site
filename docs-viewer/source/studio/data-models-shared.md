@@ -2,7 +2,7 @@
 doc_id: data-models-shared
 title: Shared Patterns
 added_date: 2026-04-19
-last_updated: "2026-05-06 21:10"
+last_updated: 2026-06-05
 parent_id: architecture
 ---
 # Shared Patterns
@@ -38,7 +38,6 @@ Examples:
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
 - `assets/data/moments_index.json`
-- `assets/data/docs/scopes/<scope>/index.json`
 - `docs-viewer/generated/docs/<scope>/index.json`
 
 Purpose:
@@ -67,13 +66,14 @@ Docs-scope index rows can also carry optional metadata from source front matter:
 
 Search indexes do not consume these optional fields until a scope-specific search task explicitly promotes them.
 
-Docs-scope generated index location depends on the scope's publishing contract:
+Docs-scope generated index location depends on the scope's publishing contract.
+Public read-only docs routes no longer publish or load flat `assets/data/docs/scopes/<scope>/index.json`.
+Public docs routes use `index-tree.json` for navigation, `recently-added.json` for recently-added mode, by-id payloads for selected documents, and separate search payloads.
+Committed manage-mode scopes may still use `docs-viewer/generated/docs/<scope>/index.json` as a rich local/manage generated artifact.
 
-- public read-only scopes use `assets/data/docs/scopes/<scope>/index.json`
-- committed manage-mode scopes use `docs-viewer/generated/docs/<scope>/index.json`
-
-Both are generated runtime data.
+All of these are generated runtime data.
 The `assets/` location is a public static asset location; `docs-viewer/generated/` is a tracked non-public Docs Viewer data location served by the local Docs Viewer service for manage-mode scopes.
+Document Data Sharing does not use either public or manage generated docs indexes as metadata input; it reads Docs Viewer source metadata from scope config and source Markdown.
 
 ### 3. Generated per-record JSON
 
