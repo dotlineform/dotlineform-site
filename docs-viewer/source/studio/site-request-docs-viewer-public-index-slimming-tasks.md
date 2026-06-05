@@ -36,7 +36,7 @@ Codex sandbox note: local service, browser, and temporary localhost checks will 
 - Hydrate info-panel metadata from selected by-id payloads, not public tree/index rows.
 - Retire public flat `index.json` from the Docs Viewer route contract only after tree, selected-document, search, and recently-added dependencies have moved.
 - Preserve the public/manage entrypoint boundary; do not move management controls, services, drag/drop, context menus, mutation calls, source/edit workflows, or local-service reads into public payloads or shared public adapters.
-- Follow [Development Workflow](/docs/?scope=studio&doc=development-workflow). Compatibility aliases, dual-read fallbacks, and old-path shims are not acceptable end states.
+- Follow [Development Checklist](/docs/?scope=studio&doc=development-checklist). Compatibility aliases, dual-read fallbacks, and old-path shims are not acceptable end states.
 - Source docs should be updated; generated Docs Viewer payloads should not be rebuilt unless an implementation or verification step explicitly requires that follow-through.
 
 ## Implementation Tasks

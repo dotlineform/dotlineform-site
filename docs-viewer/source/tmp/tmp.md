@@ -8,7 +8,7 @@ ui_status: draft
 
 # tmp
 
-we are working on `site-request-docs-viewer-public-index-slimming.md`,
+we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
 please review the request and proposed tasks and identify any areas or tasks that are missing or need clarification.
 
 ~
