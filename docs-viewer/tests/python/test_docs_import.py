@@ -30,6 +30,11 @@ def load_docs_import_module():
 docs_import = load_docs_import_module()
 
 
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
@@ -296,6 +301,63 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
     assert report["records"][2]["current_library"]["source_renderable"] is True
 
 
+def test_current_lookup_uses_source_metadata_when_generated_artifacts_are_broken() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_text(root / "assets/data/docs/scopes/library/index.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/index-tree.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/recently-added.json", "{")
+        write_text(root / "assets/data/search/library/index.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/by-id/alpha.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/metadata-index.json", "{")
+        write_staged(root, "lookup.json", json.dumps([{"doc_id": "alpha", "title": "Alpha", "parent_id": "library"}]))
+        report = parse(root, "lookup.json")
+
+    assert report["ok"] is True
+    assert report["current_library"]["source_loaded"] is True
+    assert report["current_library"]["doc_count"] == 4
+    assert report["records"][0]["current_library"]["exists"] is True
+    assert report["records"][0]["current_library"]["source_renderable"] is True
+    assert report["issues"] == []
+
+
+def test_missing_source_metadata_adds_current_context_warning() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_text(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            json.dumps(
+                {
+                    "schema_version": "docs_scopes_v1",
+                    "scopes": [
+                        {
+                            "scope_id": "library",
+                            "scope_type": "public",
+                            "source": "docs-viewer/source/missing-library",
+                            "media_path_prefix": "docs/library",
+                            "output": "assets/data/docs/scopes/library",
+                            "search_output": "assets/data/search/library/index.json",
+                            "viewer_base_url": "/library/",
+                            "include_scope_param": False,
+                            "default_doc_id": "library",
+                            "allow_nested_source": False,
+                            "allow_unresolved_parent_ids": True,
+                        }
+                    ],
+                }
+            )
+            + "\n",
+        )
+        write_staged(root, "lookup.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
+        report = parse(root, "lookup.json")
+
+    assert report["ok"] is True
+    assert report["current_library"]["source_loaded"] is False
+    assert report["counts"]["warnings"] == 1
+    assert report["issues"][0]["code"] == "current_source_unreadable"
+    assert "missing source root for scope library" in report["issues"][0]["message"]
+
+
 def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -456,6 +518,8 @@ def main() -> None:
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,
         test_current_library_lookup_adds_record_level_warnings,
+        test_current_lookup_uses_source_metadata_when_generated_artifacts_are_broken,
+        test_missing_source_metadata_adds_current_context_warning,
         test_summary_preview_writes_one_file_per_document_with_fallback_names,
         test_full_content_preview_preserves_headings_and_source_text,
         test_relationship_preview_writes_one_whole_tree_file,

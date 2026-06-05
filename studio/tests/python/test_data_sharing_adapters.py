@@ -97,8 +97,6 @@ def domain_payload(status: str = "active", data_domain: str = "library") -> dict
             "documents": f"docs-viewer/source/{data_domain}",
         },
         "sources": {
-            "docs_index": f"assets/data/docs/scopes/{data_domain}/index.json",
-            "docs_payload_root": f"assets/data/docs/scopes/{data_domain}/by-id",
             "source_root": f"docs-viewer/source/{data_domain}",
         },
         "config": {
@@ -295,6 +293,13 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
     assert tags_resolution.adapter_id == "analytics-tags"
 
 
+def test_repo_documents_adapter_declares_source_root_not_generated_docs_sources() -> None:
+    resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="library", operation="prepare")
+    sources = resolution.domain.get("sources")
+
+    assert sources == {"source_root": "docs-viewer/source/library"}
+
+
 def main() -> None:
     tests = [
         test_active_documents_adapter_resolves_with_v2_metadata,
@@ -306,6 +311,7 @@ def main() -> None:
         test_registry_distinguishes_non_active_capability_statuses,
         test_registry_rejects_legacy_operation_names,
         test_repo_registry_loads_and_resolves_documents_and_tags,
+        test_repo_documents_adapter_declares_source_root_not_generated_docs_sources,
     ]
     for test in tests:
         test()

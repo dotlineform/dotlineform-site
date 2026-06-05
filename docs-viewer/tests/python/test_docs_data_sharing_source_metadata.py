@@ -255,6 +255,11 @@ def test_selectable_document_records_use_source_metadata() -> None:
             body="# Source Title\n\nSource body.",
         )
         write_text(repo_root / "docs-viewer/generated/docs/studio/index.json", "{")
+        write_text(repo_root / "docs-viewer/generated/docs/studio/by-id/doc.json", "{")
+        write_text(repo_root / "docs-viewer/generated/docs/studio/index-tree.json", "{")
+        write_text(repo_root / "docs-viewer/generated/search/studio/index.json", "{")
+        write_text(repo_root / "docs-viewer/generated/docs/studio/recently-added.json", "{")
+        write_text(repo_root / "docs-viewer/generated/docs/studio/metadata-index.json", "{")
 
         payload = data_sharing_package.selectable_document_records(
             repo_root,
@@ -281,6 +286,35 @@ def test_selectable_document_records_use_source_metadata() -> None:
             "summary": "Source summary.",
         }
     ]
+
+
+def test_active_data_sharing_metadata_services_do_not_reference_generated_artifacts() -> None:
+    service_paths = [
+        REPO_ROOT / "docs-viewer/services/docs_data_sharing/package.py",
+        REPO_ROOT / "docs-viewer/services/docs_export.py",
+        REPO_ROOT / "docs-viewer/services/docs_import.py",
+    ]
+    forbidden = [
+        "docs_generated_reads",
+        "read_generated_docs_index",
+        "read_generated_doc_payload",
+        "generated_docs_index_path",
+        "generated_doc_payload_path",
+        "DOCS_SCOPES_ROOT",
+        "assets/data/docs/scopes/{scope}/index.json",
+        "docs-viewer/generated/docs/{scope}/index.json",
+        "index-tree.json",
+        "recently-added.json",
+        "metadata-index.json",
+        "tooling-index.json",
+    ]
+    offenders: list[str] = []
+    for path in service_paths:
+        text = path.read_text(encoding="utf-8")
+        for pattern in forbidden:
+            if pattern in text:
+                offenders.append(f"{path.relative_to(REPO_ROOT)} contains {pattern}")
+    assert offenders == []
 
 
 def test_nested_source_and_unknown_doc_path_safety() -> None:
@@ -315,6 +349,7 @@ def main() -> None:
         test_unresolved_parent_policy_follows_scope_config,
         test_helper_does_not_require_generated_docs_artifacts,
         test_selectable_document_records_use_source_metadata,
+        test_active_data_sharing_metadata_services_do_not_reference_generated_artifacts,
         test_nested_source_and_unknown_doc_path_safety,
     ]
     for test in tests:

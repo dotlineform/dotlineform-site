@@ -67,8 +67,6 @@
             "documents": "docs-viewer/source/library"
           },
           "sources": {
-            "docs_index": "assets/data/docs/scopes/library/index.json",
-            "docs_payload_root": "assets/data/docs/scopes/library/by-id",
             "source_root": "docs-viewer/source/library"
           },
           "config": {

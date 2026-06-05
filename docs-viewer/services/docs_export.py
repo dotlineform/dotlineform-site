@@ -1032,7 +1032,28 @@ def build_export(
             "output_written": False,
         }
 
-    source_context, docs = load_source_export_context(repo_root, scope)
+    try:
+        source_context, docs = load_source_export_context(repo_root, scope)
+    except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
+        errors = [f"source metadata: {exc}"]
+        return {
+            "ok": False,
+            "dry_run": not write,
+            "config_id": config_id,
+            "scope": scope,
+            "target_format": resolved_target_format,
+            "supported_target_formats": supported_formats,
+            "output_file": relative_output,
+            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
+            "selected_doc_ids": [],
+            "exported_doc_ids": [],
+            "skipped": [],
+            "skipped_summary": {},
+            "warnings": warnings,
+            "errors": errors,
+            "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
+            "output_written": False,
+        }
     docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
     context = ExportContext(
         repo_root=repo_root,

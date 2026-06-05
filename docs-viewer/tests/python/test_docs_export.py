@@ -87,6 +87,11 @@ def write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
@@ -397,6 +402,66 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert "sort_order" not in child_row
 
 
+def test_export_uses_source_metadata_when_generated_artifacts_are_broken() -> None:
+    config = docs_export.load_config_file(REPO_ROOT)
+    with make_repo(copy.deepcopy(config)) as temp:
+        root = Path(temp)
+        write_text(root / "assets/data/docs/scopes/library/index.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/index-tree.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/recently-added.json", "{")
+        write_text(root / "assets/data/search/library/index.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/by-id/library.json", "{")
+        write_text(root / "assets/data/docs/scopes/library/metadata-index.json", "{")
+
+        report = docs_export.build_export(
+            repo_root=root,
+            config_id="library-full-document-content",
+            scope="library",
+            selected_doc_ids=["library"],
+            select_all=False,
+            missing_summary_only=None,
+            write=True,
+        )
+        rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
+
+    assert report["ok"] is True, report
+    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert rows[0]["doc_id"] == "library"
+    assert rows[0]["source_text"] == "Body text."
+
+
+def test_missing_source_metadata_returns_structured_export_error() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_json(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "library",
+                        "scope_type": "public",
+                        "source": "docs-viewer/source/missing-library",
+                        "media_path_prefix": "docs/library",
+                        "output": "assets/data/docs/scopes/library",
+                        "search_output": "assets/data/search/library/index.json",
+                        "viewer_base_url": "/library/",
+                        "include_scope_param": False,
+                        "default_doc_id": "library",
+                        "allow_nested_source": False,
+                        "allow_unresolved_parent_ids": True,
+                    }
+                ],
+            },
+        )
+        report = run_export(root)
+
+    assert report["ok"] is False
+    assert report["counts"] == {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
+    assert report["output_written"] is False
+    assert "source metadata: missing source root for scope library: docs-viewer/source/missing-library" in report["errors"]
+
+
 def test_repo_parent_child_relationships_respects_selected_docs() -> None:
     report = docs_export.build_export(
         repo_root=REPO_ROOT,
@@ -471,6 +536,8 @@ def main() -> None:
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_library_export_configs_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
+        test_export_uses_source_metadata_when_generated_artifacts_are_broken,
+        test_missing_source_metadata_returns_structured_export_error,
         test_repo_parent_child_relationships_respects_selected_docs,
         test_repo_representative_library_exports_dry_run_successfully,
     ]
