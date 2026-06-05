@@ -30,6 +30,7 @@ Summary: Add the Docs Viewer-owned source metadata helper API that Data Sharing 
 ## Steer for these tasks
 
 - This batch creates the source-read capability only; it does not migrate Data Sharing consumers yet except where tests need direct helper coverage.
+- see contract/audit in batch 1.
 - Do not add `metadata-index.json`, `tooling-index.json`, or any other generated metadata output.
 - Do not update scope lifecycle generated-output manifests because this request adds no generated data artifact.
 - Keep helper APIs narrow and shaped around current Data Sharing workflows.

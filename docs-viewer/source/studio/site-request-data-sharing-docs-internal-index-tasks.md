@@ -47,7 +47,7 @@ Task rows inside each batch use scoped IDs such as `1.1`, `1.2`, and `2.1`.
 
 | Batch ID | status | title |
 | --- | --- | --- |
-| 1 | planned | [Batch 1: Contract and Dependency Audit](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-1) |
+| 1 | done | [Batch 1: Contract and Dependency Audit](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-1) |
 | 2 | planned | [Batch 2: Source Metadata Read API](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-2) |
 | 3 | planned | [Batch 3: Data Sharing Consumer Migration](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-3) |
 | 4 | planned | [Batch 4: Contract Tests and Stale-Path Guards](/docs/?scope=studio&doc=site-request-data-sharing-docs-internal-index-batch-4) |
@@ -68,4 +68,4 @@ Batch 5 owns the template closeout duties:
 
 ## Verification Log
 
-- Not started.
+- 2026-06-05: Batch 1 source audit completed. `git diff --check` passed. No generated writes were run.
