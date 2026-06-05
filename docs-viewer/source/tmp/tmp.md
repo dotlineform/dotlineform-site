@@ -20,6 +20,8 @@ Follow the guidance in the templates for what to include in them.
 
 ~
 
+`docs-viewer-runtime-boundary.md` currently contains long lists of entrypoints etc. is there a better way of organising and structuring these lists? creating focussed child documents is also an option to be considered.
+
 ---
 
 ## source

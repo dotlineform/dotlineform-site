@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T11:26:23Z",
+  "generated_at": "2026-06-05T11:39:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -747,7 +747,7 @@
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "ui_status": "planned",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
-      "content_text_length": 3032
+      "content_text_length": 4731
     },
     {
       "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
@@ -1616,12 +1616,48 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-05",
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 34939
+      "content_text_length": 12960
+    },
+    {
+      "doc_id": "docs-viewer-generated-data-contracts",
+      "title": "Docs Viewer Generated Data Contracts",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "docs-viewer-generated-data-contracts.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-generated-data-contracts",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
+      "content_text_length": 5263
+    },
+    {
+      "doc_id": "docs-viewer-runtime-module-ownership",
+      "title": "Docs Viewer Runtime Module Ownership",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "docs-viewer-runtime-module-ownership.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json",
+      "content_text_length": 9464
+    },
+    {
+      "doc_id": "docs-viewer-runtime-surfaces",
+      "title": "Docs Viewer Runtime Surfaces",
+      "added_date": "2026-06-05",
+      "last_updated": "2026-06-05",
+      "source_path": "docs-viewer-runtime-surfaces.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "ui_status": "reference",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
+      "content_text_length": 5611
     },
     {
       "doc_id": "docs-viewer-scopes",

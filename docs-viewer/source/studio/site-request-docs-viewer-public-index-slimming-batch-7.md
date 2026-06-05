@@ -17,10 +17,13 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 | ID | status | action |
 | --- | --- | --- |
-| 7.1 | planned | Update [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), [Data Models Library](/docs/?scope=studio&doc=data-models-library), [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis), search docs, scope lifecycle docs, and testing docs after the contract is durable. |
-| 7.2 | planned | Cleanup confirmation: confirm removed paths and artifacts are not retained through import aliases, copied files, static mount shims, route-config fallback logic, generated-read fallback logic, or dual-read public `index.json` paths. |
-| 7.3 | planned | Verification record: record final verification commands, pass/fail results, generated payload status, and any manual checks that remain. |
-| 7.4 | planned | Close out this batch, the task tracker, and the parent request with final statuses, changed-path summary, durable decisions, remaining risks, and any follow-on work. |
+| 7.1 | planned | Update the runtime boundary docs after the contract is durable: keep [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) as policy, update [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) for route/config/CSS/scope lifecycle surfaces, update [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) for tree/recent/by-id/search payload contracts, and update [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for final runtime owner responsibilities. |
+| 7.2 | planned | Update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) only for changed browser module ownership, risk notes, or row-level evidence; do not duplicate the runtime surface or generated-data contract tables there. |
+| 7.3 | planned | Update public scope data model docs, including [Data Models Library](/docs/?scope=studio&doc=data-models-library) and [Data Models Analysis](/docs/?scope=studio&doc=data-models-analysis), so they describe public `index-tree.json`, recently-added payloads, by-id reader metadata, search payloads, and retired public flat `index.json` route ownership. |
+| 7.4 | planned | Update search, scope lifecycle, and testing docs for the implemented contract: search build inputs no longer depend on retired public docs `index.json`, scope lifecycle creates/deletes required tree/recent outputs through manifest-recorded generated files only, and smoke/contract tests assert new payload loads plus absence of public `index.json` requests. |
+| 7.5 | planned | Cleanup confirmation: confirm removed paths and artifacts are not retained through import aliases, copied files, static mount shims, route-config fallback logic, generated-read fallback logic, or dual-read public `index.json` paths. |
+| 7.6 | planned | Verification record: record final verification commands, pass/fail results, generated payload status, and any manual checks that remain. |
+| 7.7 | planned | Close out this batch, the task tracker, and the parent request with final statuses, changed-path summary, durable decisions, remaining risks, and any follow-on work. |
 
 ## Steer for these tasks
 
@@ -31,8 +34,11 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 
 ## Deliverables
 
-- Updated runtime boundary docs.
-- Updated JavaScript inventory.
+- Updated runtime boundary policy doc.
+- Updated runtime surface map.
+- Updated generated-data contract doc.
+- Updated runtime module ownership doc.
+- Updated JavaScript inventory, only where module ownership or risk evidence changed.
 - Updated Library and Analysis data model docs.
 - Updated search, scope lifecycle, and testing docs.
 - Cleanup confirmation for retired public flat-index route dependencies.
@@ -42,6 +48,8 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 ## Implementation and policy guidance
 
 - Move durable decisions and current contracts out of temporary request/task docs into permanent owning docs.
+- Keep [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) concise; put surface matrices in [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces), payload contracts in [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts), and grouped owner maps in [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership).
+- Do not duplicate row-level JavaScript inventory detail in runtime boundary docs; link to [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when file-level risk evidence is needed.
 - Do not preserve old public `index.json` runtime behavior as a compatibility path.
 - Record generated payload status explicitly.
 - Keep closeout concise but complete enough for a future maintainer to understand changed paths, validation, and remaining risk.
@@ -51,6 +59,7 @@ Summary: Update durable runtime, data model, search, lifecycle, and testing docu
 - `git diff --check`.
 - Changed-doc link/path checks where practical.
 - Focused stale-reference scans for retired `index.json` runtime loading and rich public flat-index fields.
+- Focused scans that public runtime docs do not describe public flat `index.json` as an active route payload after retirement.
 - Final verification commands recorded from Batch 6.
 - Optional final Docs Viewer smoke profile if docs closeout touches executable smoke docs or scripts.
 

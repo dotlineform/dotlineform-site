@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-84c8d355384df4f85765671deb630f5e",
-    "generated_at_utc": "2026-06-05T11:05:19Z",
-    "count": 256
+    "version": "blake2b-290557b541d8dbb296b2e2d2a4982b0e",
+    "generated_at_utc": "2026-06-05T11:38:49Z",
+    "count": 259
   },
   "entries": [
     {
@@ -3636,10 +3636,10 @@
       "kind": "doc",
       "title": "Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-05",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-04 • Docs Viewer",
+      "display_meta": "2026-06-05 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -3648,12 +3648,90 @@
         "boundary",
         "runtime boundary",
         "docs viewer",
-        "2026-06-04",
+        "2026-06-05",
         "2026",
         "06",
-        "04"
+        "05"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary runtime boundary docs viewer 2026-06-04 2026 06 04"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary runtime boundary docs viewer 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "docs-viewer-generated-data-contracts",
+      "kind": "doc",
+      "title": "Docs Viewer Generated Data Contracts",
+      "href": "/docs/?scope=studio&doc=docs-viewer-generated-data-contracts",
+      "last_updated": "2026-06-05",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "parent_title": "Runtime Boundary",
+      "display_meta": "2026-06-05 • Runtime Boundary",
+      "search_terms": [
+        "docs-viewer-generated-data-contracts",
+        "docs",
+        "viewer",
+        "generated",
+        "data",
+        "contracts",
+        "docs viewer generated data contracts",
+        "runtime boundary",
+        "runtime",
+        "boundary",
+        "2026-06-05",
+        "2026",
+        "06",
+        "05"
+      ],
+      "search_text": "docs-viewer-generated-data-contracts docs viewer generated data contracts docs viewer generated data contracts runtime boundary runtime boundary 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "docs-viewer-runtime-module-ownership",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime Module Ownership",
+      "href": "/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership",
+      "last_updated": "2026-06-05",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "parent_title": "Runtime Boundary",
+      "display_meta": "2026-06-05 • Runtime Boundary",
+      "search_terms": [
+        "docs-viewer-runtime-module-ownership",
+        "docs",
+        "viewer",
+        "runtime",
+        "module",
+        "ownership",
+        "docs viewer runtime module ownership",
+        "runtime boundary",
+        "boundary",
+        "2026-06-05",
+        "2026",
+        "06",
+        "05"
+      ],
+      "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership docs viewer runtime module ownership runtime boundary boundary 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "docs-viewer-runtime-surfaces",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime Surfaces",
+      "href": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
+      "last_updated": "2026-06-05",
+      "parent_id": "docs-viewer-runtime-boundary",
+      "parent_title": "Runtime Boundary",
+      "display_meta": "2026-06-05 • Runtime Boundary",
+      "search_terms": [
+        "docs-viewer-runtime-surfaces",
+        "docs",
+        "viewer",
+        "runtime",
+        "surfaces",
+        "docs viewer runtime surfaces",
+        "runtime boundary",
+        "boundary",
+        "2026-06-05",
+        "2026",
+        "06",
+        "05"
+      ],
+      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces docs viewer runtime surfaces runtime boundary boundary 2026-06-05 2026 06 05"
     },
     {
       "id": "docs-viewer-scopes",
