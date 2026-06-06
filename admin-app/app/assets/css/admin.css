@@ -1,0 +1,162 @@
+:root {
+  color-scheme: light;
+  --admin-background: #f7f8f5;
+  --admin-surface: #ffffff;
+  --admin-surface-muted: #eff2ed;
+  --admin-border: #d8ddd3;
+  --admin-text: #1c211b;
+  --admin-muted: #636b61;
+  --admin-link: #245d8f;
+  --admin-link-hover: #173f62;
+  --admin-focus: #8b4c2f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.adminApp {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--admin-background);
+  color: var(--admin-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.adminShell {
+  min-height: 100vh;
+}
+
+.adminHeader {
+  border-bottom: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+}
+
+.adminHeader__inner,
+.adminMain {
+  width: min(100% - 32px, 1120px);
+  margin: 0 auto;
+}
+
+.adminHeader__inner {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.adminHeader__brand {
+  color: var(--admin-text);
+  font-size: 1rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.adminHeader__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.adminHeader__nav a,
+.adminLinkList__item {
+  color: var(--admin-link);
+  text-decoration: none;
+}
+
+.adminHeader__nav a:hover,
+.adminLinkList__item:hover {
+  color: var(--admin-link-hover);
+  text-decoration: underline;
+}
+
+.adminMain {
+  padding: 32px 0 48px;
+}
+
+.adminHome {
+  display: grid;
+  gap: 24px;
+}
+
+.adminHome__header {
+  display: grid;
+  gap: 6px;
+}
+
+.adminHome__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 680;
+  line-height: 1.2;
+}
+
+.adminHome__summary {
+  max-width: 720px;
+  margin: 0;
+  color: var(--admin-muted);
+}
+
+.adminHome__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.adminHome__section {
+  min-height: 160px;
+  padding: 18px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface);
+}
+
+.adminHome__section h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.adminLinkList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adminLinkList__item {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 6px 0;
+  font-weight: 600;
+}
+
+.adminLinkList__item:focus-visible,
+.adminHeader__brand:focus-visible,
+.adminHeader__nav a:focus-visible {
+  outline: 2px solid var(--admin-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .adminHeader__inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 0;
+  }
+
+  .adminHeader__nav {
+    justify-content: flex-start;
+  }
+
+  .adminMain {
+    padding-top: 24px;
+  }
+}

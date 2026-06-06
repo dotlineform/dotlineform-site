@@ -26,6 +26,7 @@ Summary: move UI Catalogue routes, source, scoped assets, tests, and fixtures un
 
 ## Steer for these tasks
 
+- Batch 1 created the Admin app skeleton, `bin/local-admin`, `bin/local-all` startup wiring, `admin.css`, focused Admin server tests, and a visible `/admin/` home with links to UI Catalogue and sibling apps.
 - UI Catalogue becomes Admin-hosted but keeps distinct demo code, CSS, class names, and palette/reference data.
 - The target route family is `/admin/ui-catalogue/...`.
 - Verification should prove Admin-hosted UI Catalogue pages render and behave correctly.

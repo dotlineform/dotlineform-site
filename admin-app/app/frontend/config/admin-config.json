@@ -1,0 +1,57 @@
+{
+  "admin_config_version": "admin_config_v1",
+  "updated_at_utc": "2026-06-06T00:00:00Z",
+  "app": {
+    "routes": {
+      "admin_home": {
+        "label": "home",
+        "title": "Admin",
+        "path": "/admin/",
+        "script": "/admin/app/frontend/js/admin-home.js",
+        "nav": false
+      },
+      "admin_audits": {
+        "label": "audits",
+        "title": "Audits",
+        "path": "/admin/audits/",
+        "script": "",
+        "nav": false
+      },
+      "admin_risk": {
+        "label": "risk",
+        "title": "Risk",
+        "path": "/admin/risk/",
+        "script": "",
+        "nav": false
+      },
+      "admin_activity": {
+        "label": "activity",
+        "title": "Activity",
+        "path": "/admin/activity/",
+        "script": "",
+        "nav": false
+      },
+      "admin_testing": {
+        "label": "testing",
+        "title": "Testing",
+        "path": "/admin/testing/",
+        "script": "",
+        "nav": false
+      },
+      "admin_ui_catalogue": {
+        "label": "UI Catalogue",
+        "title": "UI Catalogue",
+        "path": "/admin/ui-catalogue/",
+        "script": "",
+        "nav": false
+      }
+    }
+  },
+  "links": {
+    "siblings": {
+      "studio": "/studio/",
+      "analytics": "/analytics/",
+      "docs_viewer": "/docs/"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Focused checks for the local Admin app server."""
+
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+ADMIN_SERVER_DIR = REPO_ROOT / "admin-app" / "app" / "server"
+ADMIN_PACKAGE_DIR = ADMIN_SERVER_DIR / "admin_app"
+for path in (REPO_ROOT, ADMIN_SERVER_DIR, ADMIN_PACKAGE_DIR):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from admin_app_config import load_admin_config, runtime_config, validate_admin_route_registry  # noqa: E402
+from admin_app_server import AdminAppRequestHandler, env_flag, parse_args  # noqa: E402
+from admin_app_views import admin_home_view  # noqa: E402
+
+
+def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
+    payload = runtime_config(REPO_ROOT, "test-version")
+    runtime = payload["app"]["runtime"]
+
+    assert runtime["host"] == "local-admin-app"
+    assert runtime["asset_version"] == "test-version"
+    assert runtime["routes"]["home"] == "/admin/"
+    assert runtime["routes"]["runtime_config"] == "/admin/runtime-config.json"
+    assert payload["app"]["routes"]["admin_home"]["path"] == "/admin/"
+    assert payload["app"]["routes"]["admin_audits"]["path"] == "/admin/audits/"
+    assert payload["app"]["routes"]["admin_risk"]["path"] == "/admin/risk/"
+    assert payload["app"]["routes"]["admin_activity"]["path"] == "/admin/activity/"
+    assert payload["app"]["routes"]["admin_testing"]["path"] == "/admin/testing/"
+    assert payload["app"]["routes"]["admin_ui_catalogue"]["path"] == "/admin/ui-catalogue/"
+    assert any(view["id"] == "admin_home" and view["path"] == "/admin/" for view in runtime["views"])
+    assert runtime["data_paths"]["ui_text"]["admin_home"] == "/admin/app/frontend/config/ui-text/admin-home.json"
+
+
+def test_admin_route_registry_validates_home_script() -> None:
+    payload = load_admin_config(REPO_ROOT)
+    validate_admin_route_registry(REPO_ROOT, payload)
+
+    payload["app"]["routes"]["admin_home"]["script"] = "/admin/app/frontend/js/missing.js"
+    try:
+        validate_admin_route_registry(REPO_ROOT, payload)
+    except RuntimeError as error:
+        assert "script does not exist" in str(error)
+    else:  # pragma: no cover
+        raise AssertionError("missing Admin home script was not rejected")
+
+
+def test_static_path_policy_serves_only_admin_app_assets() -> None:
+    def allowed(path: str) -> bool:
+        return AdminAppRequestHandler.is_allowed_static_path(object(), path)
+
+    assert allowed("/admin/app/assets/css/admin.css") is True
+    assert allowed("/admin/app/frontend/js/admin-home.js") is True
+    assert allowed("/admin/app/frontend/config/admin-config.json") is True
+    assert allowed("/admin/app/frontend/config/ui-text/admin-home.json") is True
+
+    assert allowed("/studio/app/assets/css/studio.css") is False
+    assert allowed("/analytics/app/assets/css/analytics.css") is False
+    assert allowed("/ui-catalogue/app/assets/css/ui-catalogue-demo.css") is False
+    assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
+
+
+def test_admin_home_renders_visible_navigation() -> None:
+    html = admin_home_view("test-version", REPO_ROOT)
+
+    assert "dotlineform admin" in html
+    assert 'href="/admin/audits/"' in html
+    assert 'href="/admin/risk/"' in html
+    assert 'href="/admin/activity/"' in html
+    assert 'href="/admin/testing/"' in html
+    assert 'href="/admin/ui-catalogue/"' in html
+    assert 'href="/studio/"' in html
+    assert 'href="/analytics/"' in html
+    assert 'href="/docs/"' in html
+    assert "/admin/app/assets/css/admin.css?v=test-version" in html
+    assert "/admin/app/frontend/js/admin-home.js?v=test-version" in html
+    assert 'data-admin-ready="false"' in html
+
+
+def test_access_log_is_opt_in(monkeypatch) -> None:
+    monkeypatch.delenv("ADMIN_APP_ACCESS_LOG", raising=False)
+    assert env_flag("ADMIN_APP_ACCESS_LOG") is False
+    assert parse_args([]).access_log is False
+
+    monkeypatch.setenv("ADMIN_APP_ACCESS_LOG", "1")
+    assert env_flag("ADMIN_APP_ACCESS_LOG") is True
+    assert parse_args([]).access_log is True
+    assert parse_args(["--access-log"]).access_log is True
+
+    monkeypatch.setenv("ADMIN_APP_ACCESS_LOG", "0")
+    assert parse_args([]).access_log is False
+    assert parse_args(["--access-log"]).access_log is True

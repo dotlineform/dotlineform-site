@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "id": "admin_operations",
+      "label": "operations",
+      "links": [
+        {"route_id": "admin_audits", "label": "audits"},
+        {"route_id": "admin_risk", "label": "risk"},
+        {"route_id": "admin_activity", "label": "activity"},
+        {"route_id": "admin_testing", "label": "testing"}
+      ]
+    },
+    {
+      "id": "reference",
+      "label": "reference",
+      "links": [
+        {"route_id": "admin_ui_catalogue", "label": "UI Catalogue"}
+      ]
+    },
+    {
+      "id": "sibling_apps",
+      "label": "apps",
+      "links": [
+        {"route_id": "studio", "label": "Studio"},
+        {"route_id": "analytics", "label": "Analytics"},
+        {"route_id": "docs_viewer", "label": "Docs Viewer"}
+      ]
+    }
+  ]
+}

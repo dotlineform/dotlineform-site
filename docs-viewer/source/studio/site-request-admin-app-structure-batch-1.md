@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure-batch-1
 title: Admin App Structure Batch 1
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: done
 parent_id: site-request-admin-app-structure-tasks
 viewable: true
 ---
@@ -56,14 +56,20 @@ Summary: create the Admin app skeleton, visible home, route shell, stylesheet, l
 
 ## completed verification
 
-- pending
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/app/server/admin_app/admin_app_config.py admin-app/app/server/admin_app/admin_app_views.py admin-app/app/server/admin_app/admin_app_server.py admin-app/tests/python/test_admin_app_server.py admin-app/tests/smoke/admin_home_route.py`
+- `$HOME/miniconda3/bin/python3 -m pytest admin-app/tests/python/test_admin_app_server.py -q`
+- `node --check admin-app/app/frontend/js/admin-home.js`
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/admin-config.json`
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/ui-text/admin-home.json`
+- `bash -n bin/local-admin bin/local-all`
+- `$HOME/miniconda3/bin/python3 admin-app/tests/smoke/admin_home_route.py`
+- Browser check of `http://127.0.0.1:8791/admin/` confirmed Admin title, ready state, desktop links, Admin CSS colors, and mobile 390px layout without horizontal overflow.
 
 ## follow-on tasks
 
-- Batch 2 moves UI Catalogue under Admin.
-- Batch 3 moves audits, risk, and activity after the visible home exists.
+- Batch 2 can move UI Catalogue under the visible Admin home.
+- Batch 3 can move audits, risk, and activity after the Admin destination exists.
 
 ## task close
 
-- Add a handoff note to Batch 2.
-- Set `ui_status` to `done` when Admin home and launcher behavior are verified.
+- done
