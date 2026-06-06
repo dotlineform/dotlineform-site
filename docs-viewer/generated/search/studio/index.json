@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0b23dc6af00bdff34414a3502fb5f0a0",
-    "generated_at_utc": "2026-06-06T15:49:02Z",
+    "version": "blake2b-bbb3a86078930305ec91a1b180823943",
+    "generated_at_utc": "2026-06-06T16:03:00Z",
     "count": 267
   },
   "entries": [
@@ -3419,10 +3419,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-06",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-30 • Docs Viewer",
+      "display_meta": "2026-06-06 • Docs Viewer",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
@@ -3435,12 +3435,11 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-30",
+        "2026-06-06",
         "2026",
-        "05",
-        "30"
+        "06"
       ],
-      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-30 2026 05 30"
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-06-06 2026 06"
     },
     {
       "id": "docs-viewer-import-source-registry-spec",

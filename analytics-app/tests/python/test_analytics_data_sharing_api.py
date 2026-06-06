@@ -29,6 +29,33 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_source_doc(
+    root: Path,
+    filename: str,
+    *,
+    doc_id: str,
+    title: str,
+    summary: str = "",
+    viewable: bool = True,
+    body: str = "Body text.",
+) -> None:
+    lines = [
+        "---",
+        f"doc_id: {doc_id}",
+        f"title: {title}",
+        "added_date: 2026-01-01",
+        "last_updated: 2026-01-02",
+    ]
+    if summary:
+        lines.append(f"summary: {summary}")
+    if not viewable:
+        lines.append("viewable: false")
+    lines.extend(["---", "", f"# {title}", "", body])
+    path = root / "docs-viewer/source/library" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def write_docs_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
@@ -93,8 +120,6 @@ def write_adapter_registry(root: Path) -> None:
                                 "documents": "docs-viewer/source/library",
                             },
                             "sources": {
-                                "docs_index": "assets/data/docs/scopes/library/index.json",
-                                "docs_payload_root": "assets/data/docs/scopes/library/by-id",
                                 "source_root": "docs-viewer/source/library",
                             },
                             "config": {
@@ -191,25 +216,21 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             ],
         },
     )
-    write_json(
-        root / "assets/data/docs/scopes/library/index.json",
-        {
-            "docs": [
-                {
-                    "doc_id": "library",
-                    "title": "Library",
-                    "viewable": True,
-                    "content_text_length": 100,
-                    "summary": "Library root.",
-                },
-                {
-                    "doc_id": "hidden-doc",
-                    "title": "Hidden",
-                    "viewable": False,
-                    "hidden": True,
-                },
-            ]
-        },
+    write_source_doc(
+        root,
+        "library.md",
+        doc_id="library",
+        title="Library",
+        summary="Library root.",
+        body="Library body.",
+    )
+    write_source_doc(
+        root,
+        "hidden-doc.md",
+        doc_id="hidden-doc",
+        title="Hidden",
+        viewable=False,
+        body="Hidden body.",
     )
     return temp_dir
 
@@ -294,13 +315,13 @@ def test_selectable_records_returns_documents_without_docs_viewer_http() -> None
     assert payload["source"] == {
         "kind": "adapter",
         "module": "documents",
-        "source": "generated_docs_index",
+        "source": "docs_source_metadata",
         "scope": "library",
     }
-    assert payload["records"][0]["id"] == "library"
-    assert payload["records"][0]["selectable"] is True
-    assert payload["records"][1]["id"] == "hidden-doc"
-    assert payload["records"][1]["selectable"] is False
+    records_by_id = {record["id"]: record for record in payload["records"]}
+    assert records_by_id["library"]["selectable"] is True
+    assert records_by_id["library"]["summary"] == "Library root."
+    assert records_by_id["hidden-doc"]["selectable"] is False
 
 
 def test_analytics_data_sharing_api_avoids_docs_management_context_imports() -> None:

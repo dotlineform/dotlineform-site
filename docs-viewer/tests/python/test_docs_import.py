@@ -41,7 +41,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
-    write_current_index(
+    write_current_source_docs(
         root,
         [
             {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
@@ -58,8 +58,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
     return temp_dir
 
 
-def write_current_index(root: Path, docs: list[dict], *, payload_ids: list[str] | None = None) -> None:
-    del payload_ids
+def write_current_source_docs(root: Path, docs: list[dict]) -> None:
     source_root = root / "docs-viewer/source/library"
     source_root.mkdir(parents=True, exist_ok=True)
     for existing in source_root.glob("*.md"):
@@ -257,7 +256,7 @@ def test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_pa
 def test_current_library_lookup_adds_record_level_warnings() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_current_index(
+        write_current_source_docs(
             root,
             [
                 {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
@@ -268,8 +267,8 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
                     "viewable": False,
                 },
                 {
-                    "doc_id": "no-payload",
-                    "title": "No Payload",
+                    "doc_id": "source-child",
+                    "title": "Source Child",
                     "parent_id": "library",
                     "viewable": True,
                 },
@@ -278,19 +277,17 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
         payload = [
             {"doc_id": "unknown-doc", "title": "Unknown Doc", "parent_id": "missing-parent"},
             {"doc_id": "non-viewable-parent", "title": "Non-viewable Parent", "parent_id": "library"},
-            {"doc_id": "no-payload", "title": "No Payload", "parent_id": "non-viewable-parent"},
+            {"doc_id": "source-child", "title": "Source Child", "parent_id": "non-viewable-parent"},
         ]
         write_staged(root, "lookup.json", json.dumps(payload))
         report = parse(root, "lookup.json")
 
     assert report["ok"] is True
     assert report["current_library"] == {
-        "index_loaded": True,
-        "index_path": "docs-viewer/source/library",
         "source_loaded": True,
         "source_root": "docs-viewer/source/library",
         "doc_count": 3,
-        "payload_count": 3,
+        "renderable_count": 3,
     }
     assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 2, "errors": 0}
     assert [item["code"] for item in report["issues"]] == [

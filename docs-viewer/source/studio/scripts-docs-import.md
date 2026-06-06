@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
-last_updated: 2026-05-30
+last_updated: 2026-06-06
 parent_id: docs-viewer
 ---
 # Documents Returned Package Script
@@ -27,10 +27,9 @@ Current input path:
 - `var/analytics/data-sharing/library/import-staging/<filename>.json`
 - `var/analytics/data-sharing/library/import-staging/<filename>.jsonl`
 
-Current lookup paths:
+Current lookup path:
 
-- `assets/data/docs/scopes/library/index.json`
-- `assets/data/docs/scopes/library/by-id/<doc_id>.json`
+- `docs-viewer/source/library/`, resolved through the configured Docs Viewer scope and `docs_data_sharing/source_metadata.py`
 
 Current outputs:
 
@@ -50,8 +49,8 @@ Implemented now:
 - falls back to structural detection for relationship, summary, full-content, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
-- loads the current generated Library docs index and generated payload filenames
-- annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
+- loads current Library source metadata through Docs Viewer source parsing/rendering helpers
+- annotates each normalized record with current Library existence, viewability, source renderability, current summary, and parent source state
 - renders one Markdown-style review artifact per parsed document
 - renders one additional whole-tree Markdown review artifact whenever staged relationship metadata is available
 - writes review artifacts only under `var/analytics/data-sharing/library/import-preview/`
@@ -62,7 +61,7 @@ Implemented now:
 - is callable through the documents Data Sharing adapter for returned-package listing and review generation
 - is exposed through the `/analytics/data-sharing/review/?mode=manage` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
-- reports unknown current `doc_id`, missing current payloads, missing parents, and parent records with missing payloads
+- reports unknown current `doc_id`, unreadable current source metadata, unrenderable current source records, missing parents, and parent records with unrenderable source
 
 ## Commands
 
@@ -106,6 +105,9 @@ The script prints a JSON report with:
 - `preview_written`
 
 The Data Sharing review endpoint returns this same report shape from `POST /analytics/api/data-sharing/review` after documents-adapter dispatch.
+
+`current_library` reports source metadata status with `source_loaded`, `source_root`, `doc_count`, and `renderable_count`.
+Per-record `current_library` values report `exists`, `viewable`, `source_exists`, `source_renderable`, `current_summary`, `parent_exists`, `parent_source_exists`, and `parent_source_renderable`.
 
 `counts` includes:
 

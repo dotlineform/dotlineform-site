@@ -62,38 +62,36 @@ def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
 
 
-def generated_docs_index() -> dict[str, object]:
-    return {
-        "docs": [
-            {
-                "doc_id": "modal-parent",
-                "title": "Modal parent",
-                "viewable": True,
-                "content_text_length": 120,
-                "summary": "Parent summary.",
-            },
-            {
-                "doc_id": "modal-empty-child",
-                "parent_id": "modal-parent",
-                "title": "Modal empty child",
-                "viewable": True,
-                "content_text_length": 0,
-                "summary": "",
-            },
-            {
-                "doc_id": "modal-hidden-child",
-                "parent_id": "modal-parent",
-                "title": "Modal hidden child",
-                "viewable": False,
-                "content_text_length": 45,
-                "summary": "Hidden summary.",
-            },
-        ],
-    }
+def source_metadata_records() -> list[dict[str, object]]:
+    return [
+        {
+            "doc_id": "modal-parent",
+            "title": "Modal parent",
+            "viewable": True,
+            "content_text_length": 120,
+            "summary": "Parent summary.",
+        },
+        {
+            "doc_id": "modal-empty-child",
+            "parent_id": "modal-parent",
+            "title": "Modal empty child",
+            "viewable": True,
+            "content_text_length": 0,
+            "summary": "",
+        },
+        {
+            "doc_id": "modal-hidden-child",
+            "parent_id": "modal-parent",
+            "title": "Modal hidden child",
+            "viewable": False,
+            "content_text_length": 45,
+            "summary": "Hidden summary.",
+        },
+    ]
 
 
 def selectable_records_payload() -> dict[str, object]:
-    docs = generated_docs_index()["docs"]
+    docs = source_metadata_records()
     return {
         "ok": True,
         "data_domain": "library",
@@ -105,7 +103,7 @@ def selectable_records_payload() -> dict[str, object]:
         "source": {
             "kind": "adapter",
             "module": "documents",
-            "source": "generated_docs_index",
+            "source": "docs_source_metadata",
             "scope": "library",
         },
     }
