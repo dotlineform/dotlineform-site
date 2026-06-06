@@ -19,7 +19,7 @@ This document tracks implementation status for evidence producers named by [Stud
 | Check profiles | implemented | [Studio Risk Runtime Browser Evidence](/docs/?scope=studio&doc=studio-risk-runtime-browser-evidence) | Existing run-check profiles are allowlisted through `--runtime-profile`. |
 | Static file metrics | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Counts files, lines, bytes, and family totals. |
 | Import/export scan | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Included inside `static-metrics.json`. |
-| Static searches | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Uses configured regex patterns over selected app roots, including the `negative_test_assertion_inventory` maintenance fixture over test roots. |
+| Static searches | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Uses configured regex patterns over selected app roots, including maintenance fixtures for negative-test assertion inventory and Data Sharing generated-docs stale-path inventory. |
 | Generated payload scan | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Counts generated JSON payloads and basic shape. |
 | Script family inventory | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Writes `script-family-inventory.json`. |
 | Git touch counts | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Uses recent git history over selected app roots. |

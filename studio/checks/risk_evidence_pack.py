@@ -96,6 +96,28 @@ STATIC_SEARCH_PATTERNS: tuple[dict[str, object], ...] = (
         ),
         "include_prefixes": ("docs-viewer/tests/", "studio/tests/"),
     },
+    {
+        "name": "data_sharing_generated_docs_stale_path_inventory",
+        "pattern": (
+            r"docs_index|docs_payload_root|generated_docs_index|read_generated_docs_index|DOCS_SCOPES_ROOT|"
+            r"doc_payload_path|load_doc_payload|current_payload_missing|parent_payload_missing|"
+            r"metadata-index|tooling-index|"
+            r"assets/data/docs/scopes/[^/\"'\s]+/(?:index\.json|by-id)|"
+            r"docs-viewer/generated/docs/[^/\"'\s]+/(?:index\.json|by-id)"
+        ),
+        "include_prefixes": (
+            "docs-viewer/services/docs_data_sharing/",
+            "docs-viewer/services/docs_export.py",
+            "docs-viewer/services/docs_import.py",
+            "data-sharing/config/",
+            "docs-viewer/tests/python/test_docs_export.py",
+            "docs-viewer/tests/python/test_docs_import.py",
+            "docs-viewer/tests/python/test_docs_import_service.py",
+            "analytics-app/tests/python/test_analytics_data_sharing_api.py",
+            "analytics-app/tests/smoke/data_sharing_prepare.py",
+            "studio/tests/python/test_data_sharing_adapters.py",
+        ),
+    },
 )
 
 
@@ -295,12 +317,18 @@ def collect_static_searches(app: str, repo_root: Path = REPO_ROOT) -> dict[str, 
         pattern = str(spec["pattern"])
         include_prefixes = tuple(str(prefix) for prefix in spec.get("include_prefixes", ()))
         regex = re.compile(pattern, re.IGNORECASE)
-        search_files = []
-        for path in files:
-            rel_path = repo_relative(path, repo_root)
-            if include_prefixes and not any(rel_path.startswith(prefix) for prefix in include_prefixes):
-                continue
-            search_files.append(path)
+        if include_prefixes:
+            search_files_by_path: dict[Path, Path] = {}
+            for prefix in include_prefixes:
+                prefix_path = repo_root / prefix
+                if prefix_path.is_file() and prefix_path.suffix in METRIC_EXTENSIONS:
+                    search_files_by_path[prefix_path] = prefix_path
+                elif prefix_path.exists():
+                    for path in iter_source_files([prefix_path], repo_root):
+                        search_files_by_path[path] = path
+            search_files = sorted(search_files_by_path)
+        else:
+            search_files = files
         matched_paths: set[str] = set()
         matches: list[dict[str, object]] = []
         count = 0

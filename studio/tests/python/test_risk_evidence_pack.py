@@ -91,6 +91,32 @@ def test_static_searches_include_negative_test_assertion_inventory(tmp_path: Pat
     assert inventory["matches"][0]["path"] == "studio/tests/python/test_contract.py"
 
 
+def test_static_searches_include_data_sharing_stale_path_inventory(tmp_path: Path) -> None:
+    config_root = tmp_path / "data-sharing" / "config"
+    config_root.mkdir(parents=True)
+    (config_root / "adapters.json").write_text(
+        json.dumps({"sources": {"docs_payload_root": "assets/data/docs/scopes/library/by-id"}}),
+        encoding="utf-8",
+    )
+    service_root = tmp_path / "docs-viewer" / "services"
+    service_root.mkdir(parents=True)
+    (service_root / "docs_import.py").write_text("load_doc_payload(repo_root, doc_id)\n", encoding="utf-8")
+    unrelated_root = tmp_path / "docs-viewer" / "source" / "studio"
+    unrelated_root.mkdir(parents=True)
+    (unrelated_root / "request.md").write_text("historical docs_index mention\n", encoding="utf-8")
+
+    searches = risk_pack.collect_static_searches("analytics", tmp_path)
+    patterns = {item["name"]: item for item in searches["patterns"]}
+    inventory = patterns["data_sharing_generated_docs_stale_path_inventory"]
+
+    assert "data-sharing/config/" in inventory["include_prefixes"]
+    assert inventory["match_count"] == 2
+    assert {item["path"] for item in inventory["matches"]} == {
+        "data-sharing/config/adapters.json",
+        "docs-viewer/services/docs_import.py",
+    }
+
+
 def test_collect_generated_payloads_summarizes_json_shapes(tmp_path: Path) -> None:
     generated_root = tmp_path / "assets" / "data"
     generated_root.mkdir(parents=True)
