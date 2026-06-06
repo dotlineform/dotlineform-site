@@ -145,7 +145,7 @@ def test_descendant_helper_handles_cycles_without_looping() -> None:
     assert source_model.descendant_doc_ids([alpha, beta], "alpha") == {"alpha", "beta"}
 
 
-def test_source_rewrite_preserves_doc_dates_and_removes_retired_sort_order() -> None:
+def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> None:
     original_timestamp = source_model.current_doc_timestamp
     source_model.current_doc_timestamp = lambda: "2026-05-09 13:00"
     try:
@@ -161,20 +161,36 @@ def test_source_rewrite_preserves_doc_dates_and_removes_retired_sort_order() -> 
     finally:
         source_model.current_doc_timestamp = original_timestamp
 
-    assert "added_date: 2026-01-01" in metadata_text
-    assert 'last_updated: "2026-01-02 09:00"' in metadata_text
-    assert "title: Updated" in metadata_text
-    assert "viewable: false" in metadata_text
-    assert "hidden:" not in metadata_text
-    assert "parent_id: \"\"" in placement_text
-    assert 'last_updated: "2026-01-02 09:00"' in placement_text
-    assert "sort_order:" not in placement_text
+    with tempfile.TemporaryDirectory() as temp:
+        metadata_path = Path(temp) / "metadata.md"
+        placement_path = Path(temp) / "placement.md"
+        metadata_path.write_text(metadata_text, encoding="utf-8")
+        placement_path.write_text(placement_text, encoding="utf-8")
+        metadata_front_matter, _ = source_model.parse_source(metadata_path)
+        placement_front_matter, _ = source_model.parse_source(placement_path)
+
+    assert metadata_front_matter == {
+        "doc_id": "sample",
+        "title": "Updated",
+        "added_date": "2026-01-01",
+        "last_updated": "2026-01-02 09:00",
+        "parent_id": "parent",
+        "viewable": False,
+    }
+    assert placement_front_matter == {
+        "doc_id": "sample",
+        "title": "Sample",
+        "added_date": "2026-01-01",
+        "last_updated": "2026-01-02 09:00",
+        "parent_id": "",
+        "viewable": True,
+    }
 
 
 def test_ensure_unique_stem_checks_existing_stems_and_doc_ids() -> None:
     docs = [
         make_doc("first-doc", stem="first-doc"),
-        make_doc("legacy-id", stem="first-doc-2"),
+        make_doc("alternate-id", stem="first-doc-2"),
     ]
 
     assert source_model.ensure_unique_stem(docs, "First Doc") == "first-doc-3"
@@ -188,7 +204,7 @@ def main() -> None:
         test_load_scope_docs_allows_unknown_library_parent,
         test_title_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
-        test_source_rewrite_preserves_doc_dates_and_removes_retired_sort_order,
+        test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter,
         test_ensure_unique_stem_checks_existing_stems_and_doc_ids,
     ]
     for test in tests:

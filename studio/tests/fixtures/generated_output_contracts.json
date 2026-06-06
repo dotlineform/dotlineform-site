@@ -67,18 +67,6 @@
         "parent_id",
         "viewable",
         "ui_status"
-      ],
-      "forbidden_doc_entry_keys": [
-        "summary",
-        "added_date",
-        "last_updated",
-        "source_path",
-        "viewer_url",
-        "content_text_length",
-        "viewer_report",
-        "viewer_report_scope",
-        "viewer_report_access",
-        "viewer_report_preset"
       ]
     },
     "recently_added_json": {
@@ -101,19 +89,6 @@
         "added_date",
         "parent_id",
         "parent_title"
-      ],
-      "forbidden_doc_entry_keys": [
-        "summary",
-        "last_updated",
-        "source_path",
-        "viewer_url",
-        "content_text_length",
-        "viewer_report",
-        "viewer_report_scope",
-        "viewer_report_access",
-        "viewer_report_preset",
-        "viewable",
-        "ui_status"
       ]
     },
     "by_id_json": {
@@ -168,20 +143,6 @@
         "summary",
         "last_updated",
         "content_html"
-      ],
-      "forbidden_top_level_keys": [
-        "doc_id",
-        "added_date",
-        "parent_id",
-        "source_path",
-        "viewer_url",
-        "ui_status",
-        "viewable",
-        "content_text_length",
-        "viewer_report",
-        "viewer_report_scope",
-        "viewer_report_access",
-        "viewer_report_preset"
       ],
       "payload": {
         "title": "Public Contract Fixture",

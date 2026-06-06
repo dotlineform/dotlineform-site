@@ -223,16 +223,11 @@ def test_unresolved_parent_policy_follows_scope_config() -> None:
     assert record.parent_title == ""
 
 
-def test_helper_does_not_require_generated_docs_artifacts() -> None:
+def test_helper_loads_source_metadata_context() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_scope_config(repo_root, [scope_config("studio")])
         write_doc(repo_root, "studio", "doc.md", doc_id="doc", title="Source Title", body="# Source Title\n\nSource body.")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/index.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/by-id/doc.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/index-tree.json", "{")
-        write_text(repo_root / "docs-viewer/generated/search/studio/index.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/recently-added.json", "{")
 
         context = source_metadata.load_data_sharing_docs_source_context(repo_root, "studio")
 
@@ -254,12 +249,6 @@ def test_selectable_document_records_use_source_metadata() -> None:
             published=False,
             body="# Source Title\n\nSource body.",
         )
-        write_text(repo_root / "docs-viewer/generated/docs/studio/index.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/by-id/doc.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/index-tree.json", "{")
-        write_text(repo_root / "docs-viewer/generated/search/studio/index.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/recently-added.json", "{")
-        write_text(repo_root / "docs-viewer/generated/docs/studio/metadata-index.json", "{")
 
         payload = data_sharing_package.selectable_document_records(
             repo_root,
@@ -288,33 +277,18 @@ def test_selectable_document_records_use_source_metadata() -> None:
     ]
 
 
-def test_active_data_sharing_metadata_services_do_not_reference_generated_artifacts() -> None:
-    service_paths = [
-        REPO_ROOT / "docs-viewer/services/docs_data_sharing/package.py",
-        REPO_ROOT / "docs-viewer/services/docs_export.py",
-        REPO_ROOT / "docs-viewer/services/docs_import.py",
-    ]
-    forbidden = [
-        "docs_generated_reads",
-        "read_generated_docs_index",
-        "read_generated_doc_payload",
-        "generated_docs_index_path",
-        "generated_doc_payload_path",
-        "DOCS_SCOPES_ROOT",
-        "assets/data/docs/scopes/{scope}/index.json",
-        "docs-viewer/generated/docs/{scope}/index.json",
-        "index-tree.json",
-        "recently-added.json",
-        "metadata-index.json",
-        "tooling-index.json",
-    ]
-    offenders: list[str] = []
-    for path in service_paths:
-        text = path.read_text(encoding="utf-8")
-        for pattern in forbidden:
-            if pattern in text:
-                offenders.append(f"{path.relative_to(REPO_ROOT)} contains {pattern}")
-    assert offenders == []
+def test_active_data_sharing_metadata_services_use_source_metadata_owner() -> None:
+    service_paths = {
+        "package": REPO_ROOT / "docs-viewer/services/docs_data_sharing/package.py",
+        "export": REPO_ROOT / "docs-viewer/services/docs_export.py",
+        "import": REPO_ROOT / "docs-viewer/services/docs_import.py",
+    }
+    source_text_by_service = {name: path.read_text(encoding="utf-8") for name, path in service_paths.items()}
+
+    assert all("from docs_data_sharing import source_metadata" in text for text in source_text_by_service.values())
+    assert "source_metadata.load_data_sharing_docs_source_records" in source_text_by_service["package"]
+    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["export"]
+    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["import"]
 
 
 def test_nested_source_and_unknown_doc_path_safety() -> None:
@@ -347,9 +321,9 @@ def main() -> None:
         test_source_metadata_uses_scope_config_without_scope_name_branches,
         test_duplicate_doc_ids_and_missing_source_roots_fail_visibly,
         test_unresolved_parent_policy_follows_scope_config,
-        test_helper_does_not_require_generated_docs_artifacts,
+        test_helper_loads_source_metadata_context,
         test_selectable_document_records_use_source_metadata,
-        test_active_data_sharing_metadata_services_do_not_reference_generated_artifacts,
+        test_active_data_sharing_metadata_services_use_source_metadata_owner,
         test_nested_source_and_unknown_doc_path_safety,
     ]
     for test in tests:

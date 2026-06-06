@@ -478,9 +478,9 @@ def main() -> None:
 
     if not args.internal_json_source_run:
         print(
-            "Deprecated direct entrypoint: studio/services/catalogue/generate_work_pages.py is now an internal JSON build engine.\n"
+            "Unsupported direct entrypoint: studio/services/catalogue/generate_work_pages.py is an internal JSON build engine.\n"
             "Use `./studio/services/catalogue/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
-            "Direct generation through this script is retired."
+            "Direct generation through this script is disabled."
         )
         return
 
@@ -1121,7 +1121,7 @@ def main() -> None:
                 print("Series pages skipped: not selected by --only.")
             else:
                 print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
-            print("Studio series pages retired: skipped.")
+            print("Studio series pages disabled: skipped.")
             print("Tag assignments sync skipped: follows series-pages selection.")
 
         if run_series_pages:
@@ -1148,7 +1148,7 @@ def main() -> None:
             f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: "
             f"{series_json_written}. Skipped: {series_json_skipped}."
         )
-        print("Studio series pages retired: skipped.")
+        print("Studio series pages disabled: skipped.")
 
     try:
         series_index_payload = indexes.build_series_index_payload(

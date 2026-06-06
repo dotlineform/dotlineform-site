@@ -408,20 +408,6 @@ def write_catalogue_lookup_payloads(lookup_dir: Path, payloads: Mapping[str, Any
         _atomic_write_json(path, payload)
         written.append(path)
 
-    for retired_folder in ["work_files", "work_links"]:
-        target_dir = lookup_dir / retired_folder
-        if target_dir.exists():
-            for stale_path in target_dir.glob("*.json"):
-                if stale_path.is_file():
-                    try:
-                        stale_path.unlink()
-                    except OSError:
-                        pass
-            try:
-                target_dir.rmdir()
-            except OSError:
-                pass
-
     for folder in ["works", "work_details", "series"]:
         target_dir = lookup_dir / folder
         target_dir.mkdir(parents=True, exist_ok=True)

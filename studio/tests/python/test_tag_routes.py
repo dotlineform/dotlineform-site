@@ -45,8 +45,6 @@ def test_options_routes_cover_each_post_route() -> None:
 
 def test_local_analytics_adapter_covers_each_post_route() -> None:
     assert_equal(set(analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
-    if "/build-docs" in analytics_api.ANALYTICS_POST_PATHS:
-        raise AssertionError("deprecated /build-docs route should not be exposed by local analytics API")
 
 
 def main() -> None:

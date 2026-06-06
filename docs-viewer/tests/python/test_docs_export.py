@@ -402,16 +402,10 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert "sort_order" not in child_row
 
 
-def test_export_uses_source_metadata_when_generated_artifacts_are_broken() -> None:
+def test_export_uses_source_metadata_for_document_content() -> None:
     config = docs_export.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
-        write_text(root / "assets/data/docs/scopes/library/index.json", "{")
-        write_text(root / "assets/data/docs/scopes/library/index-tree.json", "{")
-        write_text(root / "assets/data/docs/scopes/library/recently-added.json", "{")
-        write_text(root / "assets/data/search/library/index.json", "{")
-        write_text(root / "assets/data/docs/scopes/library/by-id/library.json", "{")
-        write_text(root / "assets/data/docs/scopes/library/metadata-index.json", "{")
 
         report = docs_export.build_export(
             repo_root=root,
@@ -536,7 +530,7 @@ def main() -> None:
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_library_export_configs_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
-        test_export_uses_source_metadata_when_generated_artifacts_are_broken,
+        test_export_uses_source_metadata_for_document_content,
         test_missing_source_metadata_returns_structured_export_error,
         test_repo_parent_child_relationships_respects_selected_docs,
         test_repo_representative_library_exports_dry_run_successfully,

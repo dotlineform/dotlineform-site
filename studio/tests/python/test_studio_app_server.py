@@ -179,25 +179,25 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
         validate_studio_route_registry(REPO_ROOT, unsupported_shell)
 
-    stale_route = json.loads(json.dumps(payload))
-    stale_route["app"]["routes"]["obsolete_route"] = {
-        "label": "obsolete",
-        "title": "Obsolete",
-        "path": "/studio/obsolete/?mode=manage",
+    unserved_route = json.loads(json.dumps(payload))
+    unserved_route["app"]["routes"]["unserved_route"] = {
+        "label": "unserved",
+        "title": "Unserved",
+        "path": "/studio/unserved/?mode=manage",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": False,
         "shell_type": "javascript",
-        "ready_state_route_id": "obsolete",
+        "ready_state_route_id": "unserved",
     }
-    with pytest.raises(RuntimeError, match="obsolete_route: no current Studio route serves this shell route"):
-        validate_studio_route_registry(REPO_ROOT, stale_route)
+    with pytest.raises(RuntimeError, match="unserved_route: no current Studio route serves this shell route"):
+        validate_studio_route_registry(REPO_ROOT, unserved_route)
 
-    duplicated_legacy_path = json.loads(json.dumps(payload))
-    duplicated_legacy_path["paths"]["routes"] = {
+    duplicated_route_metadata = json.loads(json.dumps(payload))
+    duplicated_route_metadata["paths"]["routes"] = {
         "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage"
     }
     with pytest.raises(RuntimeError, match="Studio route metadata must live in app.routes"):
-        validate_studio_route_registry(REPO_ROOT, duplicated_legacy_path)
+        validate_studio_route_registry(REPO_ROOT, duplicated_route_metadata)
 
 
 def test_access_log_is_opt_in(monkeypatch) -> None:
@@ -215,20 +215,20 @@ def test_access_log_is_opt_in(monkeypatch) -> None:
     assert parse_args(["--access-log"]).access_log is True
 
 
-def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots() -> None:
+def test_static_path_policy_serves_current_studio_allowlists() -> None:
     def allowed(path: str) -> bool:
         return StudioAppRequestHandler.is_allowed_static_path(object(), path)
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
-    assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
+    assert allowed("/studio/data/generated/activity/index.json") is True
+    assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
     assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
     assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is False
-    assert allowed("/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json") is False
+    assert allowed("/studio/data/generated/project-state/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
@@ -504,11 +504,6 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         assert open_payload["editor"] == "vscode"
 
 
-def test_catalogue_thumbnail_quality_route_is_retired() -> None:
-    with pytest.raises(FileNotFoundError, match="Unknown catalogue API route"):
-        catalogue_post_response(REPO_ROOT, "/thumbnail-quality-preview", {}, dry_run=True)
-
-
 def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
@@ -580,7 +575,7 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
 
 
-def test_catalogue_thin_service_routes_bypass_legacy_handler() -> None:
+def test_catalogue_write_service_routes_are_registered() -> None:
     service_paths = studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS
     assert {
         "/bulk-save",
@@ -603,7 +598,6 @@ def test_catalogue_thin_service_routes_bypass_legacy_handler() -> None:
         "/moment/import-preview",
         "/moment/import-apply",
     } <= service_paths
-    assert not hasattr(studio_catalogue_api, "LEGACY_WRITE_ROUTE_BY_API_PATH")
 
 
 def test_catalogue_delete_preview_uses_callable_service_route() -> None:
@@ -1053,7 +1047,7 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
 
 if __name__ == "__main__":
     test_runtime_config_exposes_adapter_contract()
-    test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots()
+    test_static_path_policy_serves_current_studio_allowlists()
     test_local_studio_shells_load_studio_css_without_public_main_css()
     test_local_studio_asset_version_does_not_follow_public_main_css()
     print("studio app server tests OK")

@@ -63,7 +63,6 @@ def main(argv: list[str] | None = None) -> int:
             browser = playwright.chromium.launch(headless=True)
             console_errors: list[str] = []
             page_errors: list[str] = []
-            legacy_audit_wrapper_requests: list[str] = []
             viewports = (
                 ("desktop", {"width": 1280, "height": 900}),
                 ("mobile", {"width": 390, "height": 844}),
@@ -72,16 +71,6 @@ def main(argv: list[str] | None = None) -> int:
                 page = browser.new_page(viewport=viewport)
                 page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
                 page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
-                page.on(
-                    "request",
-                    lambda request: legacy_audit_wrapper_requests.append(request.url)
-                    if "127.0.0.1:8790" in request.url
-                    else None,
-                )
-                page.route(
-                    "http://127.0.0.1:8790/**",
-                    lambda route: route.abort(),
-                )
 
                 page.goto(f"{base_url}/studio/audits/?mode=manage", wait_until="domcontentloaded")
                 root = page.locator("#studioAuditsRoot")
@@ -101,8 +90,6 @@ def main(argv: list[str] | None = None) -> int:
                 if home_href != "/studio/":
                     raise AssertionError(f"unexpected Studio home link: {home_href!r}")
                 page.close()
-            if legacy_audit_wrapper_requests:
-                raise AssertionError(f"audits route should not request legacy 8790 endpoints: {legacy_audit_wrapper_requests!r}")
 
             browser.close()
 

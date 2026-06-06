@@ -267,13 +267,13 @@ def test_registry_distinguishes_non_active_capability_statuses() -> None:
             )
 
 
-def test_registry_rejects_legacy_operation_names() -> None:
+def test_registry_rejects_unknown_operation_names() -> None:
     payload = registry_payload()
-    payload["dispatch"] = [{"data_domain": "library", "operation": "export", "adapter_id": "documents"}]
+    payload["dispatch"] = [{"data_domain": "library", "operation": "archive", "adapter_id": "documents"}]
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "operation 'export' is not canonical",
+            "operation 'archive' is not canonical",
         )
 
 
@@ -309,7 +309,7 @@ def main() -> None:
         test_registry_rejects_unsafe_paths,
         test_registry_rejects_non_standard_runtime_artifact_roots,
         test_registry_distinguishes_non_active_capability_statuses,
-        test_registry_rejects_legacy_operation_names,
+        test_registry_rejects_unknown_operation_names,
         test_repo_registry_loads_and_resolves_documents_and_tags,
         test_repo_documents_adapter_declares_source_root_not_generated_docs_sources,
     ]

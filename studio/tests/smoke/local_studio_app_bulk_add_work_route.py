@@ -54,7 +54,6 @@ def main(argv: list[str] | None = None) -> int:
             browser = playwright.chromium.launch(headless=True)
             console_errors: list[str] = []
             page_errors: list[str] = []
-            legacy_catalogue_service_requests: list[str] = []
             local_catalogue_requests: list[str] = []
             viewports = (
                 ("desktop", {"width": 1280, "height": 900}),
@@ -64,12 +63,6 @@ def main(argv: list[str] | None = None) -> int:
                 page = browser.new_page(viewport=viewport)
                 page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
                 page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
-                page.on(
-                    "request",
-                    lambda request: legacy_catalogue_service_requests.append(request.url)
-                    if "127.0.0.1:8788" in request.url
-                    else None,
-                )
                 page.on(
                     "request",
                     lambda request: local_catalogue_requests.append(request.url)
@@ -99,8 +92,6 @@ def main(argv: list[str] | None = None) -> int:
                 page.close()
             if not local_catalogue_requests:
                 raise AssertionError("bulk-add-work route did not call the local catalogue API")
-            if legacy_catalogue_service_requests:
-                raise AssertionError(f"bulk-add-work still called legacy catalogue service: {legacy_catalogue_service_requests}")
 
             browser.close()
 

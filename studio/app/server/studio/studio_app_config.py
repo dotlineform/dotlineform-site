@@ -35,7 +35,7 @@ STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "catalogue_moment_editor": "/studio/catalogue-moment/",
 }
 
-STUDIO_ROUTE_PATHS_WITH_LEGACY_KEYS: dict[str, tuple[str, ...]] = {
+STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS: dict[str, tuple[str, ...]] = {
     "catalogue_field_registry": ("catalogue_field_registry_review",),
 }
 
@@ -202,12 +202,12 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
     paths_routes = paths_routes.get("routes") if isinstance(paths_routes.get("routes"), dict) else {}
     if isinstance(paths_routes, dict):
         route_ids = set(raw_routes)
-        legacy_route_keys = {
-            legacy_key
-            for legacy_keys in STUDIO_ROUTE_PATHS_WITH_LEGACY_KEYS.values()
-            for legacy_key in legacy_keys
+        compat_route_keys = {
+            compat_key
+            for compat_keys in STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS.values()
+            for compat_key in compat_keys
         }
-        duplicate_keys = sorted((route_ids | legacy_route_keys) & set(paths_routes))
+        duplicate_keys = sorted((route_ids | compat_route_keys) & set(paths_routes))
         for key in duplicate_keys:
             errors.append(f"{key}: Studio route metadata must live in app.routes, not paths.routes")
 

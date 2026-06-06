@@ -228,9 +228,6 @@ class CatalogueSearchDataBuilder:
                 )
 
     def validate_targeted_policy(self, config: dict[str, Any], label: str) -> None:
-        if "targeted" in config:
-            raise SystemExit(f"Invalid search build config: {label} uses obsolete targeted boolean; use targeted_policy")
-
         policy = normalize_text(config.get("targeted_policy"))
         if policy not in SEARCH_BUILD_TARGETED_POLICIES:
             policies = ", ".join(["full_rebuild", "record_update", "additive_only"])

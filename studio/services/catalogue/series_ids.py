@@ -5,7 +5,7 @@ from typing import Any, List
 
 
 SERIES_ID_WIDTH = 3
-LEGACY_SERIES_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+SLUG_SERIES_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 def normalize_text(value: Any) -> str:
@@ -17,7 +17,7 @@ def normalize_text(value: Any) -> str:
     return s
 
 
-def normalize_series_id(raw: Any, *, allow_legacy_slug: bool = True, width: int = SERIES_ID_WIDTH) -> str:
+def normalize_series_id(raw: Any, *, allow_slug_id: bool = True, width: int = SERIES_ID_WIDTH) -> str:
     if raw is None:
         raise ValueError("Missing series_id")
     s = normalize_text(raw)
@@ -26,18 +26,18 @@ def normalize_series_id(raw: Any, *, allow_legacy_slug: bool = True, width: int 
     s = re.sub(r"\.0+$", "", s)
     if re.fullmatch(r"\d+", s):
         return s.zfill(width)
-    if allow_legacy_slug and LEGACY_SERIES_ID_RE.fullmatch(s):
+    if allow_slug_id and SLUG_SERIES_ID_RE.fullmatch(s):
         return s
     raise ValueError(f"Invalid series_id value: {raw!r}")
 
 
-def parse_series_ids(raw: Any, *, allow_legacy_slug: bool = True, width: int = SERIES_ID_WIDTH) -> List[str]:
+def parse_series_ids(raw: Any, *, allow_slug_id: bool = True, width: int = SERIES_ID_WIDTH) -> List[str]:
     values: List[str] = []
     seen: set[str] = set()
     for part in normalize_text(raw).split(","):
         if normalize_text(part) == "":
             continue
-        sid = normalize_series_id(part, allow_legacy_slug=allow_legacy_slug, width=width)
+        sid = normalize_series_id(part, allow_slug_id=allow_slug_id, width=width)
         if sid in seen:
             continue
         seen.add(sid)
@@ -45,9 +45,9 @@ def parse_series_ids(raw: Any, *, allow_legacy_slug: bool = True, width: int = S
     return values
 
 
-def is_valid_series_id(raw: Any, *, allow_legacy_slug: bool = True, width: int = SERIES_ID_WIDTH) -> bool:
+def is_valid_series_id(raw: Any, *, allow_slug_id: bool = True, width: int = SERIES_ID_WIDTH) -> bool:
     try:
-        normalize_series_id(raw, allow_legacy_slug=allow_legacy_slug, width=width)
+        normalize_series_id(raw, allow_slug_id=allow_slug_id, width=width)
     except ValueError:
         return False
     return True

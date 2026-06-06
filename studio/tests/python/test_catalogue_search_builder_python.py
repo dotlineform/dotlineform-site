@@ -30,7 +30,7 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def search_build_config(*, obsolete_targeted: bool = False) -> dict[str, Any]:
+def search_build_config() -> dict[str, Any]:
     family_policy: dict[str, Any] = {
         "targeted_policy": "additive_only",
         "targeted_operations": ["create"],
@@ -39,8 +39,6 @@ def search_build_config(*, obsolete_targeted: bool = False) -> dict[str, Any]:
         "targeted_policy": "additive_only",
         "targeted_operations": ["create"],
     }
-    if obsolete_targeted:
-        family_policy["targeted"] = True
     return {
         "search_build_config_version": "search_build_config_v2",
         "source_families": {
@@ -302,22 +300,6 @@ def test_python_catalogue_search_builder_rejects_docs_only_flags() -> None:
             assert error == expected
 
 
-def test_python_catalogue_search_builder_validates_search_build_config() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        write_json(root / "studio/services/catalogue/search/build_config.json", search_build_config(obsolete_targeted=True))
-
-        try:
-            run_cli(root, ["--scope", "catalogue"])
-        except SystemExit as exc:
-            error = str(exc)
-        else:
-            raise AssertionError("obsolete targeted config should fail")
-
-    assert "uses obsolete targeted boolean" in error
-
-
 def main() -> None:
     test_python_catalogue_search_builder_writes_current_schema_and_hash()
     test_python_catalogue_search_builder_dry_run_does_not_write()
@@ -325,7 +307,6 @@ def main() -> None:
     test_python_catalogue_search_builder_targeted_additive_insert()
     test_python_catalogue_search_builder_targeted_changed_record_requires_full_rebuild()
     test_python_catalogue_search_builder_rejects_docs_only_flags()
-    test_python_catalogue_search_builder_validates_search_build_config()
     print("Python catalogue search builder tests OK")
 
 

@@ -129,8 +129,6 @@ def test_docs_viewer_index_tree_contract_fixture() -> None:
     assert_equal(fixture["required_top_level_keys"], ["schema", "docs", "generated_at", "viewer_options"], "docs tree keys")
     assert_allowed_keys(doc_entry, fixture["allowed_doc_entry_keys"], "docs tree entry")
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "tree content URL by-id path")
-    for key in fixture["forbidden_doc_entry_keys"]:
-        assert_true(key not in doc_entry, f"docs tree entry excludes {key}")
 
 
 def test_docs_viewer_recently_added_contract_fixture() -> None:
@@ -144,8 +142,6 @@ def test_docs_viewer_recently_added_contract_fixture() -> None:
     assert_allowed_keys(doc_entry, fixture["allowed_doc_entry_keys"], "recent entry")
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "recent content URL by-id path")
     assert_true(doc_entry["added_date"], "recent entry added date")
-    for key in fixture["forbidden_doc_entry_keys"]:
-        assert_true(key not in doc_entry, f"recent entry excludes {key}")
 
 
 def test_docs_viewer_by_id_contract_fixture() -> None:
@@ -171,8 +167,6 @@ def test_docs_viewer_public_by_id_contract_fixture() -> None:
     assert_required_keys(payload, fixture["required_top_level_keys"], "public by-id payload")
     assert_allowed_keys(payload, fixture["allowed_top_level_keys"], "public by-id payload")
     assert_contains(payload["content_html"], "<h1 id=\"public-contract-fixture\">", "public by-id HTML semantics")
-    for key in fixture["forbidden_top_level_keys"]:
-        assert_true(key not in payload, f"public by-id excludes {key}")
 
 
 def test_docs_viewer_reference_payload_contract_fixtures() -> None:

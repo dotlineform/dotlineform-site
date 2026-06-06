@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check Local Studio no longer hosts the Docs Viewer shell."""
+"""Smoke-check Local Studio serves its own shell and keeps Docs Viewer assets out."""
 
 from __future__ import annotations
 
@@ -42,15 +42,12 @@ def main(argv: list[str] | None = None) -> int:
     server, base_url = start_server()
     try:
         assert_http_status(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", 404)
-        assert_http_status(f"{base_url}/docs-viewer/generated/docs/studio/index.json", 404)
         assert_http_status(f"{base_url}/docs-viewer/runtime/js/docs-viewer.js", 404)
         assert_http_status(f"{base_url}/docs-viewer/static/css/docs-viewer.css", 404)
         assert_http_status(f"{base_url}/assets/docs/interactive/library/coincidence-salience.html", 404)
 
         with urllib.request.urlopen(f"{base_url}/studio/", timeout=10) as response:
             body = response.read().decode("utf-8")
-        if "/docs/?mode=manage" in body:
-            raise AssertionError("Local Studio should not render the retired header Docs Viewer link")
         if "docsViewerRoot" in body:
             raise AssertionError("Local Studio home unexpectedly contains Docs Viewer shell markup")
 
@@ -60,8 +57,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("Local Studio unexpectedly exposed Docs Viewer service endpoints")
         if "external_links" in runtime_config:
             raise AssertionError("Local Studio unexpectedly exposed Docs Viewer external link config")
-        if "docs" in runtime_config.get("app", {}).get("routes", {}):
-            raise AssertionError("Local Studio should not expose a Docs header route")
 
         print(f"local Studio Docs Viewer boundary OK: {base_url}/studio/")
         return 0

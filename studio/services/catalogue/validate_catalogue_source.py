@@ -36,7 +36,7 @@ def main() -> int:
     parser.add_argument(
         "--target-media-section-schema",
         action="store_true",
-        help="Require migrated work-detail media section fields and reject legacy detail project_subfolder.",
+        help="Require work-detail media section fields and reject compatibility detail project_subfolder.",
     )
     args = parser.parse_args()
 
@@ -46,7 +46,7 @@ def main() -> int:
     errors = validate_source_records(
         records,
         require_detail_media_sections=args.target_media_section_schema,
-        allow_legacy_detail_project_subfolder=not args.target_media_section_schema,
+        allow_compat_detail_project_subfolder=not args.target_media_section_schema,
     )
     print(f"Catalogue source validation: {format_display_path(source_dir, repo_root=repo_root)}")
     for kind, record_map in records.as_maps().items():

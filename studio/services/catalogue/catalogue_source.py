@@ -32,7 +32,7 @@ SOURCE_FILES = {
     "meta": "meta.json",
 }
 
-DETAIL_LEGACY_SUBFOLDER_FIELD = "project_subfolder"
+DETAIL_COMPAT_SUBFOLDER_FIELD = "project_subfolder"
 DETAIL_SECTION_ID_SEPARATOR = "-"
 
 WORK_FIELDS = [
@@ -191,19 +191,19 @@ def build_detail_section_resolution_by_uid(
     resolutions: Dict[str, Dict[str, Any]] = {}
     for detail_uid, record in sorted(detail_records.items(), key=detail_record_sort_key):
         work_id = normalize_text(record.get("work_id"))
-        legacy_section = normalize_text(record.get(DETAIL_LEGACY_SUBFOLDER_FIELD))
+        compat_section = normalize_text(record.get(DETAIL_COMPAT_SUBFOLDER_FIELD))
         section_id = normalize_text(record.get("section_id"))
-        if detail_section_id_number(work_id, section_id) is None and legacy_section:
+        if detail_section_id_number(work_id, section_id) is None and compat_section:
             work_assignments = assignments_by_work.setdefault(work_id, {})
-            if legacy_section not in work_assignments:
+            if compat_section not in work_assignments:
                 existing_count = existing_section_count_by_work.get(work_id, 0)
-                work_assignments[legacy_section] = build_detail_section_id(
+                work_assignments[compat_section] = build_detail_section_id(
                     work_id,
                     existing_count + len(work_assignments) + 1,
                 )
-            section_id = work_assignments[legacy_section]
-        section_title = normalize_text(record.get("section_title")) or legacy_section
-        details_subfolder = normalize_text(record.get("details_subfolder")) or legacy_section
+            section_id = work_assignments[compat_section]
+        section_title = normalize_text(record.get("section_title")) or compat_section
+        details_subfolder = normalize_text(record.get("details_subfolder")) or compat_section
         resolutions[detail_uid] = {
             "section_id": section_id,
             "section_title": section_title,
@@ -506,10 +506,10 @@ def validate_record_fields(
     key: str,
     record: Mapping[str, Any],
     allowed_fields: Iterable[str],
-    allowed_legacy_fields: Iterable[str] = (),
+    allowed_compat_fields: Iterable[str] = (),
 ) -> None:
     allowed = set(allowed_fields)
-    allowed.update(allowed_legacy_fields)
+    allowed.update(allowed_compat_fields)
     unknown = sorted(str(field) for field in record.keys() if str(field) not in allowed)
     if unknown:
         errors.append(f"{kind} {key}: unsupported field(s): {', '.join(unknown)}")
@@ -517,8 +517,8 @@ def validate_record_fields(
 
 def validate_work_detail_media_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
-    if DETAIL_LEGACY_SUBFOLDER_FIELD in record:
-        errors.append(f"work_details {key}: legacy project_subfolder is not supported; use details_subfolder")
+    if DETAIL_COMPAT_SUBFOLDER_FIELD in record:
+        errors.append(f"work_details {key}: project_subfolder is not supported; use details_subfolder")
     raw_work_id = record.get("work_id")
     try:
         work_id = slug_id(raw_work_id)
@@ -567,7 +567,7 @@ def validate_source_records(
     records: CatalogueSourceRecords,
     *,
     require_detail_media_sections: bool = False,
-    allow_legacy_detail_project_subfolder: bool = True,
+    allow_compat_detail_project_subfolder: bool = True,
 ) -> list[str]:
     errors: list[str] = []
     all_work_ids: set[str] = set()
@@ -662,9 +662,9 @@ def validate_source_records(
                 errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
 
     for key, record in records.work_details.items():
-        allowed_legacy_fields = (
-            [DETAIL_LEGACY_SUBFOLDER_FIELD]
-            if allow_legacy_detail_project_subfolder and not require_detail_media_sections
+        allowed_compat_fields = (
+            [DETAIL_COMPAT_SUBFOLDER_FIELD]
+            if allow_compat_detail_project_subfolder and not require_detail_media_sections
             else []
         )
         validate_record_fields(
@@ -673,10 +673,10 @@ def validate_source_records(
             key=key,
             record=record,
             allowed_fields=DETAIL_FIELDS,
-            allowed_legacy_fields=allowed_legacy_fields,
+            allowed_compat_fields=allowed_compat_fields,
         )
-        if DETAIL_LEGACY_SUBFOLDER_FIELD in record and not allow_legacy_detail_project_subfolder:
-            errors.append(f"work_details {key}: legacy project_subfolder is not supported; use details_subfolder")
+        if DETAIL_COMPAT_SUBFOLDER_FIELD in record and not allow_compat_detail_project_subfolder:
+            errors.append(f"work_details {key}: project_subfolder is not supported; use details_subfolder")
         raw_work_id = record.get("work_id")
         raw_detail_id = record.get("detail_id")
         if is_empty(raw_work_id) or is_empty(raw_detail_id):

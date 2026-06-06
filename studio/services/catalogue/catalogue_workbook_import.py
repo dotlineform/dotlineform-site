@@ -426,7 +426,7 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
                 blocked_reason_counts,
                 row_number=row_number,
                 record_id=detail_uid,
-                reason="legacy_project_subfolder",
+                reason="compat_project_subfolder",
                 message="use details_subfolder instead of project_subfolder",
             )
             continue

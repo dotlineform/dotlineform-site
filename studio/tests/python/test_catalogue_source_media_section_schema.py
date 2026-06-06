@@ -52,12 +52,12 @@ def assert_target_detail_schema_accepts_new_fields() -> None:
     errors = validate_source_records(
         source_records_with_detail(detail),
         require_detail_media_sections=True,
-        allow_legacy_detail_project_subfolder=False,
+        allow_compat_detail_project_subfolder=False,
     )
     assert not errors, errors
 
 
-def assert_default_validation_keeps_legacy_source_readable() -> None:
+def assert_default_validation_accepts_compat_subfolder_field() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -71,7 +71,7 @@ def assert_default_validation_keeps_legacy_source_readable() -> None:
     assert not errors, errors
 
 
-def assert_target_detail_schema_rejects_legacy_field() -> None:
+def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -82,7 +82,7 @@ def assert_target_detail_schema_rejects_legacy_field() -> None:
         "status": "draft",
     }
     errors = validate_work_detail_media_section_record("00001-001", detail)
-    assert any("legacy project_subfolder" in error for error in errors), errors
+    assert any("project_subfolder is not supported" in error for error in errors), errors
     assert any("missing section_id" in error for error in errors), errors
     assert any("missing section_title" in error for error in errors), errors
 
@@ -145,8 +145,8 @@ def assert_shared_section_id_requires_consistent_metadata() -> None:
 
 def main() -> int:
     assert_target_detail_schema_accepts_new_fields()
-    assert_default_validation_keeps_legacy_source_readable()
-    assert_target_detail_schema_rejects_legacy_field()
+    assert_default_validation_accepts_compat_subfolder_field()
+    assert_target_detail_schema_rejects_compat_subfolder_field()
     assert_target_detail_schema_rejects_bad_sort_order()
     assert_next_detail_section_id_uses_hyphen_suffix()
     assert_shared_section_id_requires_consistent_metadata()

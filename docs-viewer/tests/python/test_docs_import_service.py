@@ -1425,7 +1425,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
     assert payload["hierarchy_apply_written"] is False
 
 
-def test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_order() -> None:
+def test_library_import_hierarchy_apply_writes_source_placement() -> None:
     original_rebuild = stub_rebuild()
     try:
         with make_repo() as temp:
@@ -1456,8 +1456,8 @@ def test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_o
                 {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
                 dry_run=False,
             )
-            alpha_text = (root / "docs-viewer/source/library/alpha.md").read_text(encoding="utf-8")
-            library_text = (root / "docs-viewer/source/library/library.md").read_text(encoding="utf-8")
+            alpha_front_matter, _ = source_model.parse_source(root / "docs-viewer/source/library/alpha.md")
+            library_front_matter, _ = source_model.parse_source(root / "docs-viewer/source/library/library.md")
     finally:
         write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
@@ -1469,10 +1469,14 @@ def test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_o
     assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["diagnostics"]["search"]["mode"] == "targeted"
-    assert "last_updated: 2026-05-01" in alpha_text
-    assert 'parent_id: ""' in alpha_text
-    assert "sort_order:" not in alpha_text
-    assert "parent_id: external-root" not in library_text
+    assert alpha_front_matter == {
+        "doc_id": "alpha",
+        "title": "Alpha",
+        "added_date": "2026-05-01",
+        "last_updated": "2026-05-01",
+        "parent_id": "",
+    }
+    assert library_front_matter["parent_id"] == ""
 
 
 def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write() -> None:
@@ -1551,7 +1555,7 @@ def main() -> None:
         test_documents_data_sharing_apply_uses_python_docs_rebuild_commands,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,
         test_library_import_hierarchy_apply_preflight_reports_missing_target_doc,
-        test_library_import_hierarchy_apply_writes_source_and_removes_retired_sort_order,
+        test_library_import_hierarchy_apply_writes_source_placement,
         test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write,
         test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows,
     ]

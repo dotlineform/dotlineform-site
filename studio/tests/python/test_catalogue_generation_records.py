@@ -37,9 +37,9 @@ def test_work_projection_order_and_coercion() -> None:
 
 
 def test_work_series_ids_are_normalized_and_deduped() -> None:
-    assert records.parse_work_record_series_ids({"series_ids": "9, 009, legacy-series, bad id"}) == [
+    assert records.parse_work_record_series_ids({"series_ids": "9, 009, slug-series, bad id"}) == [
         "009",
-        "legacy-series",
+        "slug-series",
     ]
     assert records.parse_work_record_series_ids({"series_ids": [9, "009", "010"]}) == ["009", "010"]
 
