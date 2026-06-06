@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-48e904536180dd93981cf78782a4ebfb",
-    "generated_at_utc": "2026-06-06T15:16:05Z",
-    "count": 268
+    "version": "blake2b-0b23dc6af00bdff34414a3502fb5f0a0",
+    "generated_at_utc": "2026-06-06T15:49:02Z",
+    "count": 267
   },
   "entries": [
     {
@@ -479,28 +479,6 @@
         "06"
       ],
       "search_text": "audit 2026-06-06 2026 06"
-    },
-    {
-      "id": "negative-test-assertion-audit",
-      "kind": "doc",
-      "title": "Negative Test Assertion Audit",
-      "href": "/docs/?scope=studio&doc=negative-test-assertion-audit",
-      "last_updated": "2026-06-06",
-      "parent_id": "audit",
-      "parent_title": "Audit",
-      "display_meta": "2026-06-06 • Audit",
-      "search_terms": [
-        "negative-test-assertion-audit",
-        "negative",
-        "test",
-        "assertion",
-        "audit",
-        "negative test assertion audit",
-        "2026-06-06",
-        "2026",
-        "06"
-      ],
-      "search_text": "negative-test-assertion-audit negative test assertion audit negative test assertion audit 2026-06-06 2026 06"
     },
     {
       "id": "scripts-audit-site-consistency",

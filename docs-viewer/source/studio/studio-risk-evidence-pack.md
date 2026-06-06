@@ -94,7 +94,7 @@ Each run directory should contain:
 | `summary.md` | Human-readable summary suitable for linking from an app inventory or change request. |
 | `summary.json` | Machine-readable summary grouped by app, area, indicator, evidence source, and close-out relevance. |
 | `static-metrics.json` | Source/config file counts, line counts, import/export counts, dependency direction, and grouped ownership metrics. Generated and canonical data payload roots are excluded so payload size does not distort source metrics. |
-| `static-searches.json` | Repeatable search patterns, matched paths, counts, and excerpts where useful. |
+| `static-searches.json` | Repeatable search patterns, matched paths, counts, scoped fixture roots, and excerpts where useful. |
 | `generated-payloads.json` | Generated payload counts, sizes, schema versions, index counts, changed/removed records, and relevant builder diagnostics. |
 | `config-consumers.json` | Optional future artifact that lists config keys and payload fields, owner docs, active consumers, browser-visible/server-only classification, public-projection whitelist status, and likely action. |
 | `script-family-inventory.json` | Python/Ruby script-family counts, line counts, family totals, and largest-file observations migrated from the legacy script inventory rerun block. |
@@ -116,7 +116,13 @@ Current producers:
 | Check profiles | `studio/commands/run_checks.py --profile <profile>` | Existing check summaries and logs under `var/test-runs/`; summary paths are linked from `runtime-checks.json`. |
 | Static file metrics | risk runner helper | Source/config file counts, line counts, bytes, and grouped totals by app and file family. Excludes generated and canonical data payload roots. |
 | Import/export scan | risk runner helper | Dependency direction and cross-app coupling evidence inside `static-metrics.json`. |
-| Static searches | risk runner helper | Configurable patterns for stale paths, broad state, retired modules, endpoints, generated paths, and ownership smells. |
+| Static searches | risk runner helper | Configurable patterns for stale paths, broad state, retired modules, endpoints, generated paths, ownership smells, and code-maintenance fixtures such as `negative_test_assertion_inventory`. |
+
+Current static-search maintenance fixtures:
+
+| Fixture | Scope | Purpose |
+| --- | --- | --- |
+| `negative_test_assertion_inventory` | `docs-viewer/tests/`, `studio/tests/` | Inventory negative assertions and stale-behavior phrasing so permanent tests can be reviewed against the current-contract testing rule. |
 | Generated payload scan | risk runner helper | Generated JSON payload counts, sizes, and basic shape observations. |
 | Script family inventory | risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc rerun commands from the legacy script inventory. |
 | Git touch counts | risk runner helper | Recent edit concentration grouped by app, area, family, and file. |

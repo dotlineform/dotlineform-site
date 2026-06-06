@@ -78,13 +78,24 @@ EXCLUDED_DIRS = {
     "var",
 }
 SCRIPT_INVENTORY_EXCLUDED_PARTS = {"tests", "test", "smoke", "__pycache__"}
-STATIC_SEARCH_PATTERNS: tuple[tuple[str, str], ...] = (
-    ("todo_markers", r"\b(TODO|FIXME|HACK|XXX)\b"),
-    ("broad_browser_state", r"\b(window|document)\.[A-Za-z0-9_$]*State\b|\bwindow\.[A-Za-z0-9_$]*Config\b"),
-    ("browser_storage", r"\b(localStorage|sessionStorage)\b"),
-    ("local_service_url", r"\b(127\.0\.0\.1|localhost):[0-9]{2,5}\b"),
-    ("generated_path_reference", r"\b(assets/data|docs-viewer/generated|studio/data/generated)/"),
-    ("legacy_or_retired", r"\b(legacy|retired|deprecated|compatibility)\b"),
+STATIC_SEARCH_PATTERNS: tuple[dict[str, object], ...] = (
+    {"name": "todo_markers", "pattern": r"\b(TODO|FIXME|HACK|XXX)\b"},
+    {
+        "name": "broad_browser_state",
+        "pattern": r"\b(window|document)\.[A-Za-z0-9_$]*State\b|\bwindow\.[A-Za-z0-9_$]*Config\b",
+    },
+    {"name": "browser_storage", "pattern": r"\b(localStorage|sessionStorage)\b"},
+    {"name": "local_service_url", "pattern": r"\b(127\.0\.0\.1|localhost):[0-9]{2,5}\b"},
+    {"name": "generated_path_reference", "pattern": r"\b(assets/data|docs-viewer/generated|studio/data/generated)/"},
+    {"name": "legacy_or_retired", "pattern": r"\b(legacy|retired|deprecated|compatibility)\b"},
+    {
+        "name": "negative_test_assertion_inventory",
+        "pattern": (
+            r"assert not |not in |is False|does not|must not|should not|retired|obsolete|legacy|removed|"
+            r"forbidden|no longer|not .*exists\(|not any\(|not .*requested|should fail|expected .*fail|rejects_"
+        ),
+        "include_prefixes": ("docs-viewer/tests/", "studio/tests/"),
+    },
 )
 
 
@@ -279,12 +290,21 @@ def collect_static_searches(app: str, repo_root: Path = REPO_ROOT) -> dict[str, 
     roots = selected_root_paths(app, repo_root)
     files = sorted(iter_source_files(roots, repo_root))
     pattern_results: list[dict[str, object]] = []
-    for name, pattern in STATIC_SEARCH_PATTERNS:
+    for spec in STATIC_SEARCH_PATTERNS:
+        name = str(spec["name"])
+        pattern = str(spec["pattern"])
+        include_prefixes = tuple(str(prefix) for prefix in spec.get("include_prefixes", ()))
         regex = re.compile(pattern, re.IGNORECASE)
+        search_files = []
+        for path in files:
+            rel_path = repo_relative(path, repo_root)
+            if include_prefixes and not any(rel_path.startswith(prefix) for prefix in include_prefixes):
+                continue
+            search_files.append(path)
         matched_paths: set[str] = set()
         matches: list[dict[str, object]] = []
         count = 0
-        for path in files:
+        for path in search_files:
             rel_path = repo_relative(path, repo_root)
             for number, line in enumerate(path.read_text(encoding="utf-8", errors="ignore").splitlines(), start=1):
                 if not regex.search(line):
@@ -297,6 +317,7 @@ def collect_static_searches(app: str, repo_root: Path = REPO_ROOT) -> dict[str, 
             {
                 "name": name,
                 "pattern": pattern,
+                "include_prefixes": list(include_prefixes),
                 "match_count": count,
                 "matched_path_count": len(matched_paths),
                 "matches": matches,

@@ -10,5 +10,3 @@ viewable: true
 # Audit
 
 This section contains policy and guidance about auditing the repo to identify problems and areas which need improving.
-
-- [Negative Test Assertion Audit](/docs/?scope=studio&doc=negative-test-assertion-audit)

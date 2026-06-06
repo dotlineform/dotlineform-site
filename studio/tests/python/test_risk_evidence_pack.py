@@ -70,6 +70,27 @@ def test_import_export_scan_reports_js_dependency_counts(tmp_path: Path) -> None
     assert scan["totals"]["cross_app_references"] == 1
 
 
+def test_static_searches_include_negative_test_assertion_inventory(tmp_path: Path) -> None:
+    test_root = tmp_path / "studio" / "tests" / "python"
+    test_root.mkdir(parents=True)
+    (test_root / "test_contract.py").write_text(
+        "def test_contract():\n"
+        "    assert 'old_field' not in payload\n",
+        encoding="utf-8",
+    )
+    source_root = tmp_path / "studio" / "services"
+    source_root.mkdir(parents=True)
+    (source_root / "service.py").write_text("assert 'old_field' not in payload\n", encoding="utf-8")
+
+    searches = risk_pack.collect_static_searches("studio", tmp_path)
+    patterns = {item["name"]: item for item in searches["patterns"]}
+    inventory = patterns["negative_test_assertion_inventory"]
+
+    assert inventory["include_prefixes"] == ["docs-viewer/tests/", "studio/tests/"]
+    assert inventory["match_count"] == 1
+    assert inventory["matches"][0]["path"] == "studio/tests/python/test_contract.py"
+
+
 def test_collect_generated_payloads_summarizes_json_shapes(tmp_path: Path) -> None:
     generated_root = tmp_path / "assets" / "data"
     generated_root.mkdir(parents=True)

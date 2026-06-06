@@ -88,7 +88,7 @@ def risk_producers_payload() -> dict[str, Any]:
             {
                 "producer_id": "static-searches",
                 "label": "Static searches",
-                "description": "Configured risk search patterns for stale paths, local URLs, broad browser state, and related smells.",
+                "description": "Configured risk search patterns for stale paths, local URLs, broad browser state, maintenance fixtures, and related smells.",
                 "default": True,
             },
             {
