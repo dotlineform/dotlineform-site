@@ -101,11 +101,9 @@ Studio owns catalogue and public-site data maintenance:
 - catalogue save, delete, publication, build, lookup, and generated-output workflows
 - catalogue APIs under `/studio/api/catalogue/...`
 - catalogue source and generated Local Studio read models under `studio/data/...`
-
-Studio should not own audit/risk/activity/testing surfaces after this split.
-`/studio/catalogue-field-registry/` and `/studio/project-state/` should stay in Studio without `?mode=manage`.
-They are treated as catalogue/public-site maintenance surfaces for this split.
-Studio is entirely local, so it does not need a public/manage route mode split.
+- Studio should not own audit/risk/activity/testing surfaces after this split.
+- Studio is entirely local, so it does not need a public/manage route mode split.
+- Admin may report repo-scope check results that include Docs Viewer, but Docs Viewer remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### Analytics
 
@@ -115,8 +113,7 @@ Analytics remains the local app for:
 - Data Sharing prepare, review, and apply workflows
 - semantic-reference maintenance
 - analysis and visualisation workflows
-
-Admin may link to Analytics route health or check results, but Analytics remains the owner of its writes and route/API behavior.
+- Admin may report repo-scope check results that include Analytics, but Analytics remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### Docs Viewer
 
@@ -127,24 +124,24 @@ Docs Viewer remains the local app and runtime for:
 - docs import/export/conversion helpers
 - Docs Viewer generated payloads and search
 - Docs Viewer management APIs
-
-Admin may show Docs Viewer health, risk, activity, or test status, but Docs Viewer remains the owner of docs management behavior.
+- Admin may report repo-scope check results that include Docs Viewer, but Docs Viewer remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### UI Catalogue
 
-UI Catalogue should be visible from Admin because it is a cross-app design and verification aid rather than catalogue data maintenance.
+UI Catalogue should be visible from Admin because it is a cross-app design and verification aid rather than catalogue data maintenance:
 
-UI Catalogue should move under `admin-app/`.
-The standalone `ui-catalogue-app` server should be retired.
+- UI Catalogue should move under `admin-app/`.
+- The standalone `ui-catalogue-app` server should be retired, deleted in its entirety with no links to it remaining.
+
 This does not require UI Catalogue code to merge into generic Admin UI code:
 
-- demo CSS can remain UI Catalogue-scoped
-- demo JavaScript can remain UI Catalogue-scoped
-- demo class names can remain isolated from Admin route class names
-- palette/reference source can remain in a dedicated UI Catalogue subdirectory
+- The target route family is `/admin/ui-catalogue/...`.
+- demo CSS remains UI Catalogue-scoped
+- demo JavaScript remains UI Catalogue-scoped
+- demo class names remains isolated from Admin route class names
+- palette/reference source remains in a dedicated UI Catalogue subdirectory
 - Admin only becomes the route and server owner
 
-The target route family is `/admin/ui-catalogue/...`.
 Implementation should move the existing standalone route behavior into Admin without adding a second server, proxy, redirect, or app-launch dependency.
 
 ## Proposed Source Layout
@@ -163,8 +160,10 @@ Implementation should move the existing standalone route behavior into Admin wit
 | `admin-app/ui-catalogue/` | UI Catalogue demo source, scoped demo CSS/JS, palette/reference source, and demo assets. UI Catalogue CSS remains demo-scoped rather than merged into `admin.css`. |
 | `var/admin/` | Ignored local Admin output such as risk runs, audit reports, activity views, and test-run summaries. |
 
-Existing app-local tests should stay with their app when they verify that app's direct behavior.
-Admin should own cross-app orchestration, check profiles, and repo-level verification summaries.
+Notes:
+
+- Existing app-local tests should stay with their app when they verify that app's direct behavior.
+- Admin should own cross-app orchestration, check profiles, and repo-level verification summaries.
 
 ## Proposed Route Migration
 
@@ -183,8 +182,10 @@ Admin should own cross-app orchestration, check profiles, and repo-level verific
 | `var/test-runs/` | `var/admin/test-runs/` |
 | `ui-catalogue-app/` | move under `admin-app/ui-catalogue/` and retire the standalone server |
 
-Old Studio admin routes should be removed rather than retained as aliases once the Admin routes are implemented and verified.
-Old standalone UI Catalogue server routes should be replaced by Admin-hosted UI Catalogue routes rather than retained as a second local app.
+Notes:
+
+- Old Studio admin routes should be removed rather than retained as aliases once the Admin routes are implemented and verified.
+- Old standalone UI Catalogue server routes should be replaced by Admin-hosted UI Catalogue routes rather than retained as a second local app.
 
 ## Testing Ownership Model
 
@@ -196,24 +197,20 @@ The testing split should make owner responsibilities visible:
 - fixtures should move with the tests or owner contracts that use them; `studio/tests/fixtures/` should not remain a hidden shared bucket for Admin, Docs Viewer, Analytics, UI Catalogue, or repo-scope checks
 - Admin owns check profiles, repo-scope orchestration, run summaries, and cross-app verification views
 - Admin owns tests for the runner, profile metadata, risk/audit allowlists, public-surface audits, and source-tree ownership rules
-
-The runner can still execute app-local tests by path.
-Ownership should be expressed by the profile registry and docs, not by copying every test into Admin.
-The split should include an explicit pass over current app test folders and `studio/tests/fixtures/` to move misplaced tests and fixtures to the correct app or to Admin.
+- The runner can still execute app-local tests by path.
+- Ownership should be expressed by the profile registry and docs
+- The split should include an explicit pass over current app test folders and `studio/tests/fixtures/` to move misplaced tests and fixtures to the correct app or to Admin.
 
 ## Migration Rules
 
-- Treat this as a boundary split, not a feature release.
+- Functionality remains the same as current.
 - Build a visible Admin home first so existing functional pages have a real destination before route moves begin.
 - Move complete route/API ownership in coherent slices.
 - Update durable ownership docs before or alongside code moves.
 - Retire old Studio admin route handlers, runtime-config entries, navigation links, and smoke targets once Admin replacements pass.
-- Do not add compatibility aliases for retired `/studio/audits`, `/studio/risk`, or `/studio/activity` paths unless a task records a time-limited exception and removal check.
-- Do not keep the retired standalone UI Catalogue server as a compatibility app after Admin hosts the UI Catalogue routes.
-- Do not turn Admin into a replacement for `bin/local-all`; keep process supervision in the launcher.
+- Do not add compatibility aliases for retired `/studio/audits`, `/studio/risk`, or `/studio/activity` paths. Task batching and ordering must ensure no temporary compatibility layers are needed.
 - Do not create generic browser-controlled command execution, file read, or shell APIs.
 - Keep audit and risk execution allowlisted in trusted Python code.
-- Keep generated Docs Viewer payload rebuilds out of this request unless an implementation task explicitly calls for docs regeneration.
 
 ## Docs To Update During Implementation
 
@@ -231,7 +228,7 @@ Durable docs that will need updates include:
 
 ## Open Questions
 
-- none at this level; implementation tasks may add narrower technical questions.
+- none.
 
 ## Initial Recommendation
 
