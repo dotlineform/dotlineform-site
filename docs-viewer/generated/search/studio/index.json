@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bbb3a86078930305ec91a1b180823943",
-    "generated_at_utc": "2026-06-06T16:03:00Z",
-    "count": 267
+    "version": "blake2b-ad62d517aa85a910dbf2e459643b99af",
+    "generated_at_utc": "2026-06-06T16:28:57Z",
+    "count": 268
   },
   "entries": [
     {
@@ -958,6 +958,32 @@
         "25"
       ],
       "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-admin-app-structure",
+      "kind": "doc",
+      "title": "Admin App Structure Request",
+      "href": "/docs/?scope=studio&doc=site-request-admin-app-structure",
+      "last_updated": "2026-06-06",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-06 • Change Requests",
+      "search_terms": [
+        "site-request-admin-app-structure",
+        "site",
+        "request",
+        "admin",
+        "app",
+        "structure",
+        "admin app structure request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-06",
+        "2026",
+        "06"
+      ],
+      "search_text": "site-request-admin-app-structure site request admin app structure admin app structure request change requests change requests 2026-06-06 2026 06"
     },
     {
       "id": "site-request-analytics-app-split",

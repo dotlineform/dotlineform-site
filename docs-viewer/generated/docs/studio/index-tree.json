@@ -240,6 +240,12 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
+          "doc_id": "site-request-admin-app-structure",
+          "title": "Admin App Structure Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure.json",
+          "ui_status": "planned"
+        },
+        {
           "doc_id": "site-request-analytics-app-split",
           "title": "Analytics App Split Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
@@ -1520,5 +1526,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-06T15:49:02Z"
+  "generated_at": "2026-06-06T16:28:57Z"
 }
