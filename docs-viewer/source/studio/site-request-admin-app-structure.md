@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure
 title: Admin App Structure Request
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- being planned
+- in progress
 
 ## Summary
 
@@ -21,7 +21,7 @@ The Admin app should become the home for:
 
 - audit and risk operations
 - activity reporting
-- UI Catalogue access and ownership decisions
+- UI Catalogue routes and reference surfaces
 - repo-scope testing, check profiles, and verification review
 
 This is an architecture boundary change.
@@ -49,7 +49,7 @@ The proposed Admin app makes the local app model more explicit:
 - Admin reviews operational health, risk, activity, and test coverage across the repo.
 - Analytics owns tag, semantic-reference, analysis, and Data Sharing workflows.
 - Docs Viewer owns documentation viewing, management, imports, exports, and docs payloads.
-- UI Catalogue owns reusable UI demos and visual reference surfaces, with final hosting shape to be decided.
+- Admin-hosted UI Catalogue owns reusable UI demos and visual reference surfaces.
 
 ## Goals
 
@@ -103,7 +103,6 @@ Studio owns catalogue and public-site data maintenance:
 - catalogue source and generated Local Studio read models under `studio/data/...`
 - Studio should not own audit/risk/activity/testing surfaces after this split.
 - Studio is entirely local, so it does not need a public/manage route mode split.
-- Admin may report repo-scope check results that include Docs Viewer, but Docs Viewer remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### Analytics
 
@@ -113,7 +112,6 @@ Analytics remains the local app for:
 - Data Sharing prepare, review, and apply workflows
 - semantic-reference maintenance
 - analysis and visualisation workflows
-- Admin may report repo-scope check results that include Analytics, but Analytics remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### Docs Viewer
 
@@ -124,7 +122,6 @@ Docs Viewer remains the local app and runtime for:
 - docs import/export/conversion helpers
 - Docs Viewer generated payloads and search
 - Docs Viewer management APIs
-- Admin may report repo-scope check results that include Docs Viewer, but Docs Viewer remains the owner of its routes, APIs, writes, and app-local tests.
 
 ### UI Catalogue
 
@@ -191,7 +188,7 @@ Notes:
 
 The testing split should make owner responsibilities visible:
 
-- app-local deterministic tests remain under the owning app, such as `studio/tests/python/`, `analytics-app/tests/python/`, `docs-viewer/tests/python/`, and `ui-catalogue-app/tests/python/`
+- app-local deterministic tests remain under the owning app, such as `studio/tests/python/`, `analytics-app/tests/python/`, `docs-viewer/tests/python/`, and Admin-owned tests under `admin-app/tests/python/`
 - app-local smoke tests remain under the owning app when they validate that app's route behavior
 - tests currently under an app should move when they validate another app, a retired route surface, repo-scope orchestration, public-surface structure, or cross-app risk rather than that app's direct behavior
 - fixtures should move with the tests or owner contracts that use them; `studio/tests/fixtures/` should not remain a hidden shared bucket for Admin, Docs Viewer, Analytics, UI Catalogue, or repo-scope checks
@@ -230,15 +227,6 @@ Durable docs that will need updates include:
 
 - none.
 
-## Initial Recommendation
+## Implementation Tracker
 
-Start with a docs-first task that locks the ownership map, then implement the smallest useful Admin app:
-
-1. Create `admin-app/` with a basic `/admin/` home and health endpoint.
-2. Add visible Admin home navigation for audits, risk, activity, testing, UI Catalogue, and sibling app links.
-3. Move audit/risk/activity route ownership from Studio to Admin without redesigning the workflows.
-4. Move `studio/commands/run_checks.py` to `admin-app/commands/run_checks.py`, keeping a direct command shape and updating docs/tests.
-5. Move repo-scope checks from `studio/checks/` to `admin-app/checks/` only when their ownership is clearly repo/admin rather than catalogue-specific.
-6. Move UI Catalogue routes, scoped code, CSS, palette/reference data, and tests under Admin, then retire the standalone UI Catalogue server.
-
-This preserves momentum while making the new boundary explicit.
+Use [Admin App Structure Tasks](/docs/?scope=studio&doc=site-request-admin-app-structure-tasks) for the batch list, sequencing, cleanup coverage, fixture handling, and verification plan.

@@ -11,13 +11,10 @@ ui_status: draft
 
 
 
-broken links report is described in doc `scripts-docs-broken-links.md`, can we make it use index-tree.json instead of index.json. the aim is stop index.json being consumed by anything so it can be retired.
-
 ~
 
-we are working on `site-request-data-sharing-docs-internal-index.md`,
-please proceed with batch 1 in `site-request-data-sharing-docs-internal-index-tasks.md`
-
+we are working on `site-request-admin-app-structure.md`,
+please proceed with batch 1 in `site-request-admin-app-structure-tasks.md`
 
 ~
 
@@ -35,10 +32,6 @@ Follow the guidance in the templates for what to include in them.
 
 ---
 
-risk evidence: need to ensure that test scripts are checked as well, one smoke got to 4500 lines and had to be deleted.
-
-
-after data sharingm we need to fix anything else remaining that looks at flat index.json, then we can proerly retire it from manage/local, including any checks.helpers.
 
 ---
 
