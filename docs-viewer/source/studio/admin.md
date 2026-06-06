@@ -7,4 +7,4 @@ parent_id: ""
 ---
 # Admin
 
-This section contains guidance about the Local Admin App.
+This section contains guidance about the Local Admin App, whose ownership includes audit, risks and activity reporting.
