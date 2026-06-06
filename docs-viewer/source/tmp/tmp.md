@@ -8,6 +8,13 @@ ui_status: draft
 
 # tmp
 
+
+
+
+broken links report is described in doc `scripts-docs-broken-links.md`, can we make it use index-tree.json instead of index.json. the aim is stop index.json being consumed by anything so it can be retired.
+
+~
+
 we are working on `site-request-data-sharing-docs-internal-index.md`,
 please proceed with batch 1 in `site-request-data-sharing-docs-internal-index-tasks.md`
 

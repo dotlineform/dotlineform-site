@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-06T12:57:21Z",
+  "generated_at": "2026-06-06T14:04:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1699,14 +1699,14 @@
       "doc_id": "docs-viewer-reports",
       "title": "Reports",
       "added_date": "2026-05-13",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-06",
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "parent_id": "docs-viewer",
       "viewer_report": "reports_list",
       "viewer_report_access": "manage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 6345
+      "content_text_length": 6433
     },
     {
       "doc_id": "docs-viewer-runtime-boundary",
@@ -1781,7 +1781,7 @@
       "doc_id": "library-documents",
       "title": "Library Documents",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-06-06",
       "source_path": "library-documents.md",
       "viewer_url": "/docs/?scope=studio&doc=library-documents",
       "parent_id": "docs-viewer-scopes",
@@ -1791,7 +1791,7 @@
       "viewer_report_access": "manage",
       "viewer_report_preset": "library_documents_admin",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
-      "content_text_length": 1475
+      "content_text_length": 1604
     },
     {
       "doc_id": "data-models-library",

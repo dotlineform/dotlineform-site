@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9bef58900bbfc12b4a8c0352d696f85b",
-    "generated_at_utc": "2026-06-06T12:57:21Z",
+    "version": "blake2b-6f65f553c0aa10d39a30052bbd908380",
+    "generated_at_utc": "2026-06-06T14:03:35Z",
     "count": 267
   },
   "entries": [
@@ -3861,22 +3861,21 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-06",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-04 • Docs Viewer",
+      "display_meta": "2026-06-06 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
         "viewer",
         "reports",
         "docs viewer",
-        "2026-06-04",
+        "2026-06-06",
         "2026",
-        "06",
-        "04"
+        "06"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-06-04 2026 06 04"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer 2026-06-06 2026 06"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -4031,22 +4030,21 @@
       "kind": "doc",
       "title": "Library Documents",
       "href": "/docs/?scope=studio&doc=library-documents",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-06-06",
       "parent_id": "docs-viewer-scopes",
       "parent_title": "Scopes",
-      "display_meta": "2026-05-13 • Scopes",
+      "display_meta": "2026-06-06 • Scopes",
       "search_terms": [
         "library-documents",
         "library",
         "documents",
         "library documents",
         "scopes",
-        "2026-05-13",
+        "2026-06-06",
         "2026",
-        "05",
-        "13"
+        "06"
       ],
-      "search_text": "library-documents library documents library documents scopes 2026-05-13 2026 05 13"
+      "search_text": "library-documents library documents library documents scopes 2026-06-06 2026 06"
     },
     {
       "id": "data-models-library",

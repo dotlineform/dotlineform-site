@@ -7,7 +7,7 @@ function optionalStringRecordValue(row, key) {
   return value ? value : "";
 }
 
-function normalizeTreeDoc(row, parentId) {
+function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   if (!row || typeof row !== "object" || Array.isArray(row)) return null;
   var docId = cleanString(row.doc_id);
   var title = cleanString(row.title);
@@ -19,7 +19,9 @@ function normalizeTreeDoc(row, parentId) {
   var doc = {
     doc_id: docId,
     title: title,
-    content_url: contentUrl
+    content_url: contentUrl,
+    tree_depth: depth,
+    tree_order: treeOrder
   };
   var uiStatus = optionalStringRecordValue(row, "ui_status");
   if (parentId) doc.parent_id = parentId;
@@ -28,13 +30,13 @@ function normalizeTreeDoc(row, parentId) {
   return doc;
 }
 
-function flattenTreeDocs(rows, parentId, docs) {
+function flattenTreeDocs(rows, parentId, docs, depth) {
   if (!Array.isArray(rows)) return docs;
   rows.forEach(function (row) {
-    var doc = normalizeTreeDoc(row, parentId);
+    var doc = normalizeTreeDoc(row, parentId, depth, docs.length);
     if (!doc) return;
     docs.push(doc);
-    flattenTreeDocs(row.children, doc.doc_id, docs);
+    flattenTreeDocs(row.children, doc.doc_id, docs, depth + 1);
   });
   return docs;
 }
@@ -76,7 +78,7 @@ export function normalizeDocsIndexTreePayload(payload) {
     schema: "docs_index_tree_v1",
     generated_at: cleanString(payload.generated_at),
     viewer_options: viewerOptions,
-    docs: flattenTreeDocs(payload.docs, "", [])
+    docs: flattenTreeDocs(payload.docs, "", [], 0)
   };
 }
 

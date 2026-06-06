@@ -3,7 +3,7 @@ const PRESETS = {
     columns: ["title", "doc_id", "viewable"],
     filters: ["non_viewable"],
     sortable: ["title", "doc_id", "viewable"],
-    defaultSort: "doc_id",
+    defaultSort: "tree",
     defaultDir: "asc",
     linkMode: "manage"
   },
@@ -33,6 +33,16 @@ function docTitle(doc) {
 
 function docAddedDate(doc) {
   return cleanString(doc && doc.added_date);
+}
+
+function docTreeDepth(doc) {
+  const depth = Number(doc && doc.tree_depth);
+  return Number.isFinite(depth) && depth > 0 ? Math.min(depth, 12) : 0;
+}
+
+function docTreeOrder(doc) {
+  const order = Number(doc && doc.tree_order);
+  return Number.isFinite(order) && order >= 0 ? order : 0;
 }
 
 function docIsViewable(doc) {
@@ -72,7 +82,9 @@ function docMatchesFilters(state, doc) {
 function compareDocs(state, a, b) {
   let av = "";
   let bv = "";
-  if (state.sortKey === "added_date") {
+  if (state.sortKey === "tree") {
+    return docTreeOrder(a) - docTreeOrder(b);
+  } else if (state.sortKey === "added_date") {
     av = docAddedDate(a);
     bv = docAddedDate(b);
   } else if (state.sortKey === "title") {
@@ -144,6 +156,17 @@ function appendLinkCell(row, state, className, doc, text) {
   row.appendChild(link);
 }
 
+function appendTitleCell(row, state, doc) {
+  const link = document.createElement("a");
+  link.className = "docsViewerReport__cellLink docsViewerReport__title docsViewerReport__treeTitle";
+  link.href = state.context.viewerUrlForScope(state.sourceScope, docId(doc), {
+    manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementMode)
+  });
+  link.style.setProperty("--docs-report-tree-indent", `${docTreeDepth(doc) * 1.15}rem`);
+  link.textContent = docTitle(doc);
+  row.appendChild(link);
+}
+
 function renderFilters(state) {
   clearNode(state.filtersNode);
   const counts = filterCounts(state);
@@ -197,7 +220,7 @@ function appendDataCell(state, row, doc, column) {
   } else if (column === "non_viewable") {
     appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__viewable", docIsNonViewable(doc) ? "non-viewable" : "");
   } else {
-    appendLinkCell(row, state, "docsViewerReport__cellLink docsViewerReport__title", doc, docTitle(doc));
+    appendTitleCell(row, state, doc);
   }
 }
 
@@ -217,6 +240,7 @@ function renderRows(state) {
     const row = document.createElement("li");
     row.className = "docsViewerReport__row";
     row.dataset.reportDocId = docId(doc);
+    row.dataset.treeDepth = String(docTreeDepth(doc));
     state.preset.columns.forEach((column) => appendDataCell(state, row, doc, column));
     state.rowsNode.appendChild(row);
   });
@@ -310,7 +334,7 @@ export function mountDocsIndexTableReport(context) {
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, routeState, nodes);
 
-  return context.fetchDocsIndex(sourceScope).then((payload) => {
+  return context.fetchDocsIndexTree(sourceScope).then((payload) => {
     state.docs = Array.isArray(payload && payload.docs)
       ? payload.docs.filter((doc) => docId(doc))
       : [];

@@ -26,7 +26,7 @@ function scopeConfigFor(context, scope) {
 
 function docsScopeDataBaseUrl(context, scope) {
   var targetConfig = scopeConfigFor(context, scope);
-  var indexUrl = targetConfig ? cleanString(targetConfig.docsIndexUrl || targetConfig.indexTreeUrl) : "";
+  var indexUrl = targetConfig ? cleanString(targetConfig.indexTreeUrl) : "";
   return indexUrl.replace(/\/(?:index|index-tree)\.json(?:[?#].*)?$/, "");
 }
 
@@ -44,14 +44,14 @@ function referenceTargetSlug(target) {
   return encodeURIComponent(cleanString(target && target.target_id));
 }
 
-function fetchDocsIndexForScope(context, scope) {
+function fetchDocsIndexTreeForScope(context, scope) {
   var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
   var targetConfig = scopeConfigFor(context, targetScope);
-  if (!targetConfig || !targetConfig.docsIndexUrl) {
+  if (!targetConfig || !targetConfig.indexTreeUrl) {
     return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
   }
-  return context.generatedData.readScopeIndex({
-    scopeConfig: targetConfig,
+  return context.generatedData.readDocsIndexTree({
+    indexTreeUrl: targetConfig.indexTreeUrl,
     viewerScope: targetScope,
     reloadNonce: "",
     reloadExpectedDocId: ""
@@ -109,8 +109,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
     fetchDocsReferencesIndex: function (scope) {
       return fetchDocsReferencesIndexForScope(settings, scope);
     },
-    fetchDocsIndex: function (scope) {
-      return fetchDocsIndexForScope(settings, scope);
+    fetchDocsIndexTree: function (scope) {
+      return fetchDocsIndexTreeForScope(settings, scope);
     },
     managementMode: Boolean(settings.managementMode),
     payload: payload,

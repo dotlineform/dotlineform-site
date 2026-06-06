@@ -1,13 +1,13 @@
 ## General Behaviour
 
+- Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
+- For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
 - Use `docs-viewer/source/studio/development-checklist.md` as the project implementation checklist. Keep durable repo guardrails there.
 - Use `docs-viewer/source/studio/development-workflow.md` when lifecycle decisions, change requests, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report and fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
 - Answer questions based on domain best practice, suggest ways to reduce maintenance risk and improve performance, and raise likely side effects or missing requirements.
-- Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
-- For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff note with changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to that document.

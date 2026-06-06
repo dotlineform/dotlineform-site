@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Reports
 added_date: 2026-05-13
-last_updated: 2026-06-04
+last_updated: 2026-06-06
 parent_id: docs-viewer
 viewable: true
 viewer_report: reports_list
@@ -105,7 +105,8 @@ This keeps requirements readable while preserving reusable technical configurati
 
 ## Current Reports
 
-`docs_index_table` renders generated docs index records for a selected scope.
+`docs_index_table` renders generated docs index-tree records for a selected scope.
+It preserves the tree order by default and indents title cells by hierarchy depth.
 It is used by [Library Documents](/docs/?scope=studio&doc=library-documents) to review Library docs in manage mode.
 
 `reports_list` renders the report metadata registry itself.

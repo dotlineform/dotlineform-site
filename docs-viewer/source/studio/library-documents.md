@@ -2,7 +2,7 @@
 doc_id: library-documents
 title: Library Documents
 added_date: 2026-05-07
-last_updated: 2026-05-13
+last_updated: 2026-06-06
 ui_status: report
 parent_id: docs-viewer-scopes
 viewable: true
@@ -19,16 +19,16 @@ Viewer report:
 
 Purpose:
 
-- review generated Library Docs Viewer records in a dense sortable list inside the Docs Viewer document pane
+- review generated Library Docs Viewer records in a dense hierarchical list inside the Docs Viewer document pane
 
 ## Data Source
 
-The report reads the generated Library docs index:
+The report reads the generated Library docs index tree:
 
-- `assets/data/docs/scopes/library/index.json`
+- `assets/data/docs/scopes/library/index-tree.json`
 
 The report uses `viewer_report_scope: library`, so it reads Library docs even though this request document lives in the Studio docs scope.
-When local generated-data reads are available, the report can read the generated Library index through the Docs Viewer service.
+When local generated-data reads are available, the report can read the generated Library index tree through the Docs Viewer service.
 Otherwise, it reads the static generated JSON asset.
 
 ## UI Contract
@@ -36,6 +36,8 @@ Otherwise, it reads the static generated JSON asset.
 The report uses Docs Viewer-owned report styles and behavior.
 
 It does not depend on Studio route state or Studio list primitives.
+
+Rows follow the `index-tree.json` hierarchy by default, with child documents indented under their parent rows.
 
 Columns:
 
