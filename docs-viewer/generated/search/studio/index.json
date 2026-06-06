@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b0582e0d768ecefe296b8f3ef8a09fcc",
-    "generated_at_utc": "2026-06-06T20:19:34Z",
+    "version": "blake2b-a21b6a84b74b2bb227321d2777a5f036",
+    "generated_at_utc": "2026-06-06T20:36:30Z",
     "count": 276
   },
   "entries": [
@@ -3356,21 +3356,20 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-06",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-01 • Dev Home",
+      "display_meta": "2026-06-06 • Dev Home",
       "search_terms": [
         "scripts",
         "dev home",
         "dev",
         "home",
-        "2026-06-01",
+        "2026-06-06",
         "2026",
-        "06",
-        "01"
+        "06"
       ],
-      "search_text": "scripts dev home dev home 2026-06-01 2026 06 01"
+      "search_text": "scripts dev home dev home 2026-06-06 2026 06"
     },
     {
       "id": "task-batch-template",
@@ -3457,19 +3456,18 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-06-04",
-      "display_meta": "2026-06-04",
+      "last_updated": "2026-06-06",
+      "display_meta": "2026-06-06",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-06-04",
+        "2026-06-06",
         "2026",
-        "06",
-        "04"
+        "06"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-06-04 2026 06 04"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-06-06 2026 06"
     },
     {
       "id": "docs-broken-links",
