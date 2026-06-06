@@ -7,9 +7,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-STUDIO_DIR = REPO_ROOT / "studio"
-if str(STUDIO_DIR) not in sys.path:
-    sys.path.insert(0, str(STUDIO_DIR))
+ADMIN_APP_DIR = REPO_ROOT / "admin-app"
+if str(ADMIN_APP_DIR) not in sys.path:
+    sys.path.insert(0, str(ADMIN_APP_DIR))
 
 from checks import javascript_inventory_guardrail as guardrail  # noqa: E402
 

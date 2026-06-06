@@ -43,12 +43,13 @@ The current script surface is organized by owner:
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `docs-viewer/build/` owns Docs Viewer docs and search build implementations.
-- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit and Studio catalogue/admin route dispatch services.
-- `studio/checks/` owns standalone audits, risk checks, and verification commands.
+- `studio/app/server/studio/` owns Studio catalogue route dispatch and catalogue-local runtime services.
+- `admin-app/app/server/admin_app/` owns Admin routes and APIs for audits, risk, activity, testing, and UI Catalogue.
+- `admin-app/checks/` owns standalone audits, risk checks, and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners when a wrapper is still intentionally supported.
 
-Risk operations use the Local Studio app server.
+Risk operations use the local Admin app server.
 Do not add a separate risk server for risk dashboards, app inventories, audit launching, unified activity review, or local risk artifacts; see [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
 
 Top-level survivors are intentional:
@@ -105,11 +106,11 @@ Catalogue prose rendering:
 
 Catalogue/runtime maintenance:
 
-- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
-  - runs optional repo check profiles and writes local logs under `var/test-runs/`
-- `$HOME/miniconda3/bin/python3 studio/checks/audit_projection_contract.py`
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`
+  - runs optional repo check profiles and writes local logs under `var/admin/test-runs/`
+- `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py`
   - validates the Phase 6 projection contract manifest, checked-in public JSON leak rules, `_config.yml` exclusion policy, and optional built public output
-- `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py`
+- `$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py`
   - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search

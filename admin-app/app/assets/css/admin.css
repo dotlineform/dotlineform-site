@@ -168,6 +168,8 @@ body.adminApp {
 .studioRiskRun__meta,
 .studioRiskRun__path,
 .studioRiskSummaryCard__path,
+.adminTestingRun__meta,
+.adminTestingRun__path,
 .activityReport__meta {
   margin: 0;
   color: var(--admin-muted);
@@ -221,6 +223,7 @@ body.adminApp {
 .studioAuditsPage__list,
 .studioRiskRuns,
 .studioRiskSummary,
+.adminTestingRuns,
 .activityReport__rows,
 .tagStudioList__rows {
   display: grid;
@@ -235,7 +238,8 @@ body.adminApp {
 .studioAuditsItem__body > h3,
 .studioRiskPage__panel > h3,
 .studioAuditsResult__summary,
-.studioRiskSummaryCard__status {
+.studioRiskSummaryCard__status,
+.adminTestingRun > h3 {
   margin: 0;
 }
 

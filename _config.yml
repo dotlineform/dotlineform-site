@@ -113,8 +113,8 @@ exclude:
   - studio/shared/
   - studio/retired/
   - studio/workflows/
-  - studio/checks/
   - studio/tests/
+  - admin-app/checks/
   - docs-viewer/build/
   - docs-viewer/bin/
   - docs-viewer/config/defaults/docs-viewer-config.json

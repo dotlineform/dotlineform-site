@@ -10,7 +10,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-FIXTURE_PATH = REPO_ROOT / "studio" / "tests" / "fixtures" / "generated_output_contracts.json"
+FIXTURE_PATH = REPO_ROOT / "docs-viewer" / "tests" / "fixtures" / "generated_output_contracts.json"
 REQUIRED_TOP_LEVEL_SECTIONS = {
     "schema",
     "policy",

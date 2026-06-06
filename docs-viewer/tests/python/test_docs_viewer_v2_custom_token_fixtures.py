@@ -9,7 +9,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-FIXTURE_PATH = REPO_ROOT / "studio" / "tests" / "fixtures" / "docs_viewer_v2_custom_tokens.json"
+FIXTURE_PATH = REPO_ROOT / "docs-viewer" / "tests" / "fixtures" / "docs_viewer_v2_custom_tokens.json"
 REQUIRED_COVERAGE = {
     "media_token",
     "interactive_html_token",

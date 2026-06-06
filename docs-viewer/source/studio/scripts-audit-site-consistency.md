@@ -11,19 +11,19 @@ viewable: true
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict
 ```
 
 Run an audit across generated pages and JSON:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict
 ```
 
 Scope and output options:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
   --checks cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
@@ -34,7 +34,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
 Single check:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
   --check-only schema \
   --max-samples 10
 ```
@@ -42,7 +42,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
 Multiple repeated checks:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
   --check-only cross_refs \
   --check-only json_schema \
   --series-ids collected-1989-1998
@@ -79,7 +79,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
 Optional orphan-media scan:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
   --check-only orphans \
   --orphans-media
 ```

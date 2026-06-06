@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure-batch-4
 title: Admin App Structure Batch 4
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: done
 parent_id: site-request-admin-app-structure-tasks
 viewable: true
 ---
@@ -17,13 +17,13 @@ Summary: move repo-scope verification ownership to Admin, including runner outpu
 
 | ID | status | action |
 | --- | --- | --- |
-| 4.1 | planned | Move `studio/commands/run_checks.py` to `admin-app/commands/run_checks.py` and update command docs, launcher references, and profile paths. |
-| 4.2 | planned | Move repo-scope checks from `studio/checks/` to `admin-app/checks/`, leaving catalogue-specific checks with Studio. |
-| 4.3 | planned | Move check run output from `var/test-runs/` to `var/admin/test-runs/`. |
-| 4.4 | planned | Review current app test folders and move tests to the app or Admin owner that matches the behavior being verified. |
-| 4.5 | planned | Review `studio/tests/fixtures/` and move fixtures with the tests or owner contracts that use them. |
-| 4.6 | planned | Add Admin runner/profile tests that verify profile expansion, output summary paths, and representative app-local test execution. |
-| 4.7 | planned | Add Admin testing route data/API behavior for reading Admin-owned run summaries, if the visible testing page is included in this batch. |
+| 4.1 | done | Move `studio/commands/run_checks.py` to `admin-app/commands/run_checks.py` and update command docs, launcher references, and profile paths. |
+| 4.2 | done | Move repo-scope checks from `studio/checks/` to `admin-app/checks/`, leaving catalogue-specific checks with Studio. |
+| 4.3 | done | Move check run output from `var/test-runs/` to `var/admin/test-runs/`. |
+| 4.4 | done | Review current app test folders and move tests to the app or Admin owner that matches the behavior being verified. |
+| 4.5 | done | Review `studio/tests/fixtures/` and move fixtures with the tests or owner contracts that use them. |
+| 4.6 | done | Add Admin runner/profile tests that verify profile expansion, output summary paths, and representative app-local test execution. |
+| 4.7 | done | Add Admin testing route data/API behavior for reading Admin-owned run summaries, if the visible testing page is included in this batch. |
 
 ## Steer for these tasks
 
@@ -67,11 +67,19 @@ Summary: move repo-scope verification ownership to Admin, including runner outpu
 
 ## completed verification
 
-- pending
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/commands/run_checks.py admin-app/app/server/admin_app/admin_app_config.py admin-app/app/server/admin_app/admin_app_server.py admin-app/app/server/admin_app/admin_app_views.py admin-app/app/server/admin_app/admin_testing_api.py admin-app/app/server/admin_app/admin_risk_api.py admin-app/app/server/admin_app/audit_runner.py admin-app/checks/*.py admin-app/tests/python/test_admin_runner_contract.py admin-app/tests/python/test_admin_app_server.py admin-app/tests/python/test_activity_contract.py admin-app/tests/python/test_javascript_inventory_guardrail.py admin-app/tests/python/test_risk_evidence_pack.py docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py docs-viewer/tests/python/test_generated_output_contract_fixtures.py analytics-app/tests/python/test_data_sharing_adapters.py analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_data_sharing_subsystem_scaffold.py analytics-app/tests/python/test_tags_data_sharing_adapter.py admin-app/tests/smoke/admin_home_route.py` passed.
+- `$HOME/miniconda3/bin/python3 -m pytest -q admin-app/tests/python/test_admin_runner_contract.py admin-app/tests/python/test_admin_app_server.py admin-app/tests/python/test_activity_contract.py admin-app/tests/python/test_javascript_inventory_guardrail.py admin-app/tests/python/test_risk_evidence_pack.py docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py docs-viewer/tests/python/test_generated_output_contract_fixtures.py analytics-app/tests/python/test_data_sharing_adapters.py analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_data_sharing_subsystem_scaffold.py analytics-app/tests/python/test_tags_data_sharing_adapter.py` passed with 65 tests.
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-smoke --run-id admin-batch-4-runner-smoke` passed; summary: `var/admin/test-runs/admin-batch-4-runner-smoke/summary.md`.
+- `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` passed.
+- `node --check admin-app/app/frontend/js/admin-testing.js` passed.
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/admin-config.json` passed.
+- Source review for retired runner/check/fixture paths passed; only a deliberate negative assertion remains in `admin-app/tests/python/test_admin_runner_contract.py`.
+- `git diff --check` passed.
 
 ## follow-on tasks
 
 - Batch 5 cleans retained Studio routes, app scripts, and source references after Admin owns the moved surfaces.
+- Batch 5 should still review launchers and Studio route cleanup; Batch 4 did not remove generated `__pycache__` directories left under old Studio paths.
 
 ## task close
 

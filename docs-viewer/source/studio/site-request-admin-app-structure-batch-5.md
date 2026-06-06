@@ -31,6 +31,17 @@ Summary: clean retained Studio local routes, Studio route config, moved app scri
 - Cleanup is source, config, docs, and launcher ownership work after Admin behavior is already verified.
 - Studio tests should assert retained Studio catalogue-maintenance behavior.
 
+## Batch 4 handoff
+
+- The repo-scope runner now lives at `admin-app/commands/run_checks.py` and writes summaries under `var/admin/test-runs/`.
+- Repo-scope checks now live under `admin-app/checks/`; the projection contract manifest is `admin-app/checks/projection_contract.json`.
+- Admin risk execution calls `admin-app/checks/risk_evidence_pack.py`; risk runs default to `var/admin/risk/runs/`.
+- Admin now has `/admin/testing/` plus read-only `/admin/api/testing/...` endpoints for Admin-owned run summaries.
+- Admin-owned runner/check tests live under `admin-app/tests/python/`.
+- Analytics-owned tag and Data Sharing Python tests moved to `analytics-app/tests/python/`.
+- Docs Viewer fixture contract tests and fixtures moved to `docs-viewer/tests/python/` and `docs-viewer/tests/fixtures/`.
+- Batch 4 updated current command/check docs, but Batch 5 should still review launcher references, retained Studio route links, and stale source references in Studio route/config surfaces.
+
 ## Deliverables
 
 - Updated Studio local route config.

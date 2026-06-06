@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect repeatable Studio risk evidence into a local run directory."""
+"""Collect repeatable Admin risk evidence into a local run directory."""
 
 from __future__ import annotations
 
@@ -20,23 +20,25 @@ from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_RUNS_ROOT = REPO_ROOT / "var" / "studio" / "risk" / "runs"
+DEFAULT_RUNS_ROOT = REPO_ROOT / "var" / "admin" / "risk" / "runs"
 COMMAND_VERSION = "1"
 DEFAULT_HISTORY_WINDOW = "90 days"
 
-VALID_APPS = ("public-site", "studio", "analytics", "docs-viewer", "all")
+VALID_APPS = ("public-site", "studio", "admin", "analytics", "docs-viewer", "all")
 APP_ROOTS: dict[str, tuple[str, ...]] = {
     "public-site": ("_config.yml", "_includes", "_layouts", "assets/css", "assets/js", "index.md", "series", "work"),
     "studio": ("studio",),
+    "admin": ("admin-app",),
     "analytics": ("analytics-app",),
     "docs-viewer": ("docs-viewer", "assets/docs"),
 }
 RUNTIME_PROFILE_BY_APP: dict[str, tuple[str, ...]] = {
     "public-site": ("studio-smoke",),
-    "studio": ("studio-smoke", "ui-catalogue-smoke"),
+    "studio": ("studio-smoke",),
+    "admin": ("admin-smoke", "ui-catalogue-smoke"),
     "analytics": ("analytics-smoke",),
     "docs-viewer": ("docs-viewer-smoke",),
-    "all": ("studio-smoke", "ui-catalogue-smoke", "analytics-smoke", "docs-viewer-smoke"),
+    "all": ("admin-smoke", "studio-smoke", "ui-catalogue-smoke", "analytics-smoke", "docs-viewer-smoke"),
 }
 
 METRIC_EXTENSIONS = {
@@ -94,7 +96,7 @@ STATIC_SEARCH_PATTERNS: tuple[dict[str, object], ...] = (
             r"assert not |not in |is False|does not|must not|should not|retired|obsolete|legacy|removed|"
             r"forbidden|no longer|not .*exists\(|not any\(|not .*requested|should fail|expected .*fail|rejects_"
         ),
-        "include_prefixes": ("docs-viewer/tests/", "studio/tests/"),
+        "include_prefixes": ("admin-app/tests/", "analytics-app/tests/", "docs-viewer/tests/", "studio/tests/"),
     },
     {
         "name": "data_sharing_generated_docs_stale_path_inventory",
@@ -115,7 +117,7 @@ STATIC_SEARCH_PATTERNS: tuple[dict[str, object], ...] = (
             "docs-viewer/tests/python/test_docs_import_service.py",
             "analytics-app/tests/python/test_analytics_data_sharing_api.py",
             "analytics-app/tests/smoke/data_sharing_prepare.py",
-            "studio/tests/python/test_data_sharing_adapters.py",
+            "analytics-app/tests/python/test_data_sharing_adapters.py",
         ),
     },
 )
@@ -397,7 +399,7 @@ def script_family(path: Path, repo_root: Path = REPO_ROOT) -> str:
     if parts[:3] == ("studio", "services", "catalogue"):
         return "studio/services/catalogue"
     if parts[:2] == ("studio", "checks"):
-        return "studio/checks"
+        return "admin-app/checks"
     if parts[:4] == ("studio", "app", "server", "studio"):
         return "studio/app/server/studio"
     if parts[:4] == ("analytics-app", "app", "server", "analytics_app"):
@@ -534,7 +536,7 @@ def run_recorded_command(name: str, argv: tuple[str, ...], repo_root: Path, outp
 
 def collect_javascript_guardrail(run_dir: Path, repo_root: Path = REPO_ROOT) -> tuple[dict[str, object], dict[str, object]]:
     output_path = run_dir / "javascript-inventory-guardrail.json"
-    argv = (sys.executable, "studio/checks/javascript_inventory_guardrail.py", "--json")
+    argv = (sys.executable, "admin-app/checks/javascript_inventory_guardrail.py", "--json")
     command = run_recorded_command("javascript-inventory-guardrail", argv, repo_root, output_path)
     if command["exit_code"] != 0:
         return command, {"status": "failed", "error": command["stderr_excerpt"]}
@@ -561,7 +563,7 @@ def collect_runtime_checks(args: argparse.Namespace, run_id: str, repo_root: Pat
     results: list[dict[str, object]] = []
     for profile in profiles:
         check_run_id = slugify(f"risk-{run_id}-{profile}")
-        argv = (sys.executable, "studio/commands/run_checks.py", "--profile", profile, "--run-id", check_run_id)
+        argv = (sys.executable, "admin-app/commands/run_checks.py", "--profile", profile, "--run-id", check_run_id)
         command = run_recorded_command(f"runtime-profile-{profile}", argv, repo_root)
         commands.append(command)
         summary_path = REPO_ROOT / "var" / "test-runs" / check_run_id / "summary.md"

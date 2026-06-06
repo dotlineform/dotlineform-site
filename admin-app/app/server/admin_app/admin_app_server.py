@@ -30,9 +30,10 @@ if str(ADMIN_SERVER_DIR) not in sys.path:
 
 from admin_app_config import asset_version, runtime_config  # noqa: E402
 from admin_activity_api import activity_get_payload  # noqa: E402
-from admin_app_views import admin_activity_view, admin_audits_view, admin_home_view, admin_risk_view  # noqa: E402
+from admin_app_views import admin_activity_view, admin_audits_view, admin_home_view, admin_risk_view, admin_testing_view  # noqa: E402
 from admin_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from admin_risk_api import risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
+from admin_testing_api import testing_get_payload  # noqa: E402
 from ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view, ui_catalogue_palette_view  # noqa: E402
 
 
@@ -96,6 +97,9 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/admin/api/risk/"):
             self.send_risk_api_json(path.removeprefix("/admin/api/risk"), query)
             return
+        if path.startswith("/admin/api/testing/"):
+            self.send_testing_api_json(path.removeprefix("/admin/api/testing"), query)
+            return
         if path in {"/admin", "/admin/"}:
             self.send_html(admin_home_view(self.version, self.repo_root))
             return
@@ -107,6 +111,9 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/admin/activity", "/admin/activity/"}:
             self.send_html(admin_activity_view(self.version))
+            return
+        if path in {"/admin/testing", "/admin/testing/"}:
+            self.send_html(admin_testing_view(self.version))
             return
         if path in {"/admin/ui-catalogue", "/admin/ui-catalogue/"}:
             self.send_redirect("/admin/ui-catalogue/demos/")
@@ -231,6 +238,16 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
     def send_risk_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
             self.send_json(risk_get_payload(self.repo_root, api_path, query))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_testing_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+        try:
+            self.send_json(testing_get_payload(self.repo_root, api_path, query))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:

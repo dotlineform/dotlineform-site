@@ -23,6 +23,7 @@ ADMIN_SERVED_ROUTE_PATHS: dict[str, str] = {
     "admin_audits": "/admin/audits/",
     "admin_risk": "/admin/risk/",
     "admin_activity": "/admin/activity/",
+    "admin_testing": "/admin/testing/",
     "admin_ui_catalogue": "/admin/ui-catalogue/",
 }
 
@@ -43,6 +44,11 @@ ADMIN_SERVICE_ENDPOINTS: dict[str, object] = {
         "health": "/admin/api/risk/health",
         "producers": "/admin/api/risk/producers",
         "runs": "/admin/api/risk/runs",
+    },
+    "testing": {
+        "base": "/admin/api/testing",
+        "health": "/admin/api/testing/health",
+        "runs": "/admin/api/testing/runs",
     },
 }
 
@@ -178,6 +184,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-operational-route.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-risk.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-state.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
         repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-demo.css",
         repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-shell.css",
@@ -220,6 +227,9 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             },
             "risk": {
                 "runs": "var/admin/risk/runs",
+            },
+            "testing": {
+                "runs": "var/admin/test-runs",
             },
         },
     }

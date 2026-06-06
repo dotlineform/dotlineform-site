@@ -35,6 +35,7 @@ var/local/
 var/studio/activity/
 var/studio/reports/
 var/studio/risk/
+var/admin/
 var/docs/
 
 # staging

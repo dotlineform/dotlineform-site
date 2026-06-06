@@ -11,7 +11,7 @@ viewable: true
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
 ```
 
 Run this after changing Studio route shells, dashboard shells, static/reference pages, or route-ready helper scripts.
@@ -19,7 +19,7 @@ Run this after changing Studio route shells, dashboard shells, static/reference 
 Structured output for the Studio audit service:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict --json
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict --json
 ```
 
 ## Purpose
@@ -39,12 +39,12 @@ The audit keeps the shared Studio ready-state contract from drifting as pages ev
 Use strict mode for normal verification:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
 ```
 
 Strict mode exits non-zero for warnings as well as errors. Without `--strict`, warnings are informational and errors still fail the run.
 
-The `quick` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` includes this audit in strict mode.
+The `quick` profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` includes this audit in strict mode.
 
 `--json` emits the same pass/fail status, counts, totals, and findings as structured JSON for `/studio/audits/`.
 

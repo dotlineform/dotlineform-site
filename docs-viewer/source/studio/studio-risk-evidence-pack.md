@@ -21,12 +21,12 @@ The goal is that every deterministic bullet in [Studio Risk Analysis Policy](/do
 
 ## Current Status
 
-Status: command-line runner and Local Studio route implemented.
+Status: command-line runner and local Admin route implemented.
 
-The current repo already has some evidence producers, such as `studio/checks/javascript_inventory_guardrail.py`, `studio/commands/run_checks.py`, app smokes, builder diagnostics, and generated payload indexes.
+The current repo already has some evidence producers, such as `admin-app/checks/javascript_inventory_guardrail.py`, `admin-app/commands/run_checks.py`, app smokes, builder diagnostics, and generated payload indexes.
 The first runner now collects static metrics, static search evidence, generated payload evidence, git touch counts, the JavaScript inventory guardrail, optional subjective notes, and allowlisted runtime check profiles into a consistent local run directory.
-The Local Studio app server exposes a narrow risk API for listing producers, creating validated runs, listing recent runs, reading run summaries, deleting local run snapshots, and appending Activity rows for user-initiated write runs.
-The Local Studio route at `/studio/risk/?mode=manage` provides the first UI for dry runs, write runs, recent runs, snapshot deletion, and summary review.
+The Admin app server exposes a narrow risk API for listing producers, creating validated runs, listing recent runs, reading run summaries, deleting local run snapshots, and appending Activity rows for user-initiated write runs.
+The Admin route at `/admin/risk/` provides the UI for dry runs, write runs, recent runs, snapshot deletion, and summary review.
 
 Producer implementation backlog is tracked in [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
@@ -53,13 +53,13 @@ For browser-visible config evidence, record whether the field is part of an expl
 Default ignored output root:
 
 ```text
-var/studio/risk/
+var/admin/risk/
 ```
 
 Each run should write to:
 
 ```text
-var/studio/risk/runs/<run-id>/
+var/admin/risk/runs/<run-id>/
 ```
 
 Recommended run id:
@@ -71,17 +71,11 @@ YYYYMMDD-HHMMSS-<slug>
 Example:
 
 ```text
-var/studio/risk/runs/20260531-143000-docs-viewer-runtime/
+var/admin/risk/runs/20260531-143000-docs-viewer-runtime/
 ```
 
-If Studio needs to read a compact current summary, write a generated read model to:
-
-```text
-studio/data/generated/risk/
-```
-
-Do not put bulky logs, screenshots, traces, or profiler exports under `studio/data/generated/risk/`.
-Those belong in the ignored run directory.
+Do not put bulky logs, screenshots, traces, or profiler exports in app source or generated-data directories.
+Those belong in the ignored Admin run directory.
 
 ## Run Directory Contract
 
@@ -112,8 +106,8 @@ Current producers:
 
 | Producer | Command source | Output |
 | --- | --- | --- |
-| JavaScript inventory guardrail | `studio/checks/javascript_inventory_guardrail.py --json` | Legacy JavaScript inventory consistency and concentration metrics. |
-| Check profiles | `studio/commands/run_checks.py --profile <profile>` | Existing check summaries and logs under `var/test-runs/`; summary paths are linked from `runtime-checks.json`. |
+| JavaScript inventory guardrail | `admin-app/checks/javascript_inventory_guardrail.py --json` | Legacy JavaScript inventory consistency and concentration metrics. |
+| Check profiles | `admin-app/commands/run_checks.py --profile <profile>` | Existing check summaries and logs under `var/admin/test-runs/`; summary paths are linked from `runtime-checks.json`. |
 | Static file metrics | risk runner helper | Source/config file counts, line counts, bytes, and grouped totals by app and file family. Excludes generated and canonical data payload roots. |
 | Import/export scan | risk runner helper | Dependency direction and cross-app coupling evidence inside `static-metrics.json`. |
 | Static searches | risk runner helper | Configurable patterns for stale paths, broad state, retired modules, endpoints, generated paths, ownership smells, and code-maintenance fixtures such as `negative_test_assertion_inventory` and `data_sharing_generated_docs_stale_path_inventory`. |
@@ -122,7 +116,7 @@ Current static-search maintenance fixtures:
 
 | Fixture | Scope | Purpose |
 | --- | --- | --- |
-| `negative_test_assertion_inventory` | `docs-viewer/tests/`, `studio/tests/` | Inventory negative assertions and stale-behavior phrasing so permanent tests can be reviewed against the current-contract testing rule. |
+| `negative_test_assertion_inventory` | `admin-app/tests/`, `analytics-app/tests/`, `docs-viewer/tests/`, `studio/tests/` | Inventory negative assertions and stale-behavior phrasing so permanent tests can be reviewed against the current-contract testing rule. |
 | `data_sharing_generated_docs_stale_path_inventory` | Data Sharing document services, adapter config, and focused Data Sharing test/smoke fixtures | Inventory stale generated-docs metadata path terms such as retired docs indexes, generated by-id roots, and generated-docs source labels so ordinary tests can assert the current source-metadata contract instead. |
 | Generated payload scan | risk runner helper | Generated JSON payload counts, sizes, and basic shape observations. |
 | Script family inventory | risk runner helper | Persistent Python/Ruby family metrics that replace the ad hoc rerun commands from the legacy script inventory. |
@@ -134,19 +128,19 @@ Current static-search maintenance fixtures:
 Target command:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/risk_evidence_pack.py --app docs-viewer --area runtime --write
+$HOME/miniconda3/bin/python3 admin-app/checks/risk_evidence_pack.py --app docs-viewer --area runtime --write
 ```
 
 Optional flags:
 
 ```text
---app <public-site|studio|analytics|docs-viewer|all>
+--app <public-site|studio|admin|analytics|docs-viewer|all>
 --area <slug>
 --run-id <id>
 --include-runtime
 --include-lighthouse
 --include-subjective-notes <path>
---runtime-profile <studio-smoke|ui-catalogue-smoke|analytics-smoke|docs-viewer-smoke>
+--runtime-profile <admin-smoke|studio-smoke|ui-catalogue-smoke|analytics-smoke|docs-viewer-smoke>
 --write
 ```
 
@@ -157,7 +151,7 @@ Dry-run behavior:
 - never mutate source files
 - never run arbitrary browser-provided commands
 
-Runtime profiles are allowlisted and execute through `studio/commands/run_checks.py`.
+Runtime profiles are allowlisted and execute through `admin-app/commands/run_checks.py`.
 `--include-lighthouse` is accepted as a deferred hook but does not run Lighthouse until a safe URL contract is defined.
 Future route exposure, browser target, and Lighthouse producers are tracked in [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
@@ -168,25 +162,25 @@ App inventories should cite evidence packs in the `Evidence` column when determi
 Example:
 
 ```md
-Evidence pack: `var/studio/risk/runs/20260531-143000-docs-viewer-runtime/summary.md`
+Evidence pack: `var/admin/risk/runs/20260531-143000-docs-viewer-runtime/summary.md`
 ```
 
-If a compact current summary is exposed through Local Studio later, the inventory may link to the Studio route or generated read model as well.
+If a compact current summary is exposed through Admin, the inventory may link to the Admin route as well.
 The ignored run directory remains the source of detailed evidence.
 
-## Local Studio API
+## Local Admin API
 
-The initial Local Studio adapter lives in `studio/app/server/studio/studio_risk_api.py`.
+The Admin adapter lives in `admin-app/app/server/admin_app/admin_risk_api.py`.
 It exposes:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `GET` | `/studio/api/risk/health` | risk API availability |
-| `GET` | `/studio/api/risk/producers` | allowlisted evidence producers and safe options |
-| `GET` | `/studio/api/risk/runs` | recent risk evidence runs with compact metadata |
-| `POST` | `/studio/api/risk/runs` | start one validated evidence run through `studio/checks/risk_evidence_pack.py` |
-| `GET` | `/studio/api/risk/runs/<run-id>/summary` | read `summary.md` and `summary.json` for a completed run |
-| `DELETE` | `/studio/api/risk/runs/<run-id>` | delete one local run snapshot directory under `var/studio/risk/runs/` |
+| `GET` | `/admin/api/risk/health` | risk API availability |
+| `GET` | `/admin/api/risk/producers` | allowlisted evidence producers and safe options |
+| `GET` | `/admin/api/risk/runs` | recent risk evidence runs with compact metadata |
+| `POST` | `/admin/api/risk/runs` | start one validated evidence run through `admin-app/checks/risk_evidence_pack.py` |
+| `GET` | `/admin/api/risk/runs/<run-id>/summary` | read `summary.md` and `summary.json` for a completed run |
+| `DELETE` | `/admin/api/risk/runs/<run-id>` | delete one local run snapshot directory under `var/admin/risk/runs/` |
 
 The browser may choose app id, area slug, run id, dry-run mode, and allowlisted runtime options.
 The browser may not provide command text, shell flags, environment values, arbitrary paths, or subjective-notes file paths.
@@ -194,7 +188,7 @@ Snapshot deletion uses the same safe run-id validation as summary reads and only
 
 ## Activity Integration
 
-Risk evidence runs initiated from a Studio UI should append a unified activity row when they write a run directory or generated summary.
+Risk evidence runs initiated from Admin should append a unified activity row when they write a run directory or generated summary.
 
 The activity detail should include:
 
@@ -205,7 +199,7 @@ The activity detail should include:
 - summary path
 - warnings or failed producer count
 
-Command-line Codex runs do not need to append activity unless they are invoked through the Local Studio API or a future Studio risk route.
+Command-line Codex runs do not need to append activity unless they are invoked through the Admin API.
 
 ## Non-Goals
 

@@ -35,8 +35,8 @@
         "label": "testing",
         "title": "Testing",
         "path": "/admin/testing/",
-        "script": "",
-        "nav": false
+        "script": "/admin/app/frontend/js/admin-testing.js",
+        "nav": true
       },
       "admin_ui_catalogue": {
         "label": "UI Catalogue",

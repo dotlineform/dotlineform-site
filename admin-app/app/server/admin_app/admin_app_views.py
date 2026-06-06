@@ -172,6 +172,27 @@ def admin_activity_view(version: str) -> str:
     )
 
 
+def admin_testing_view(version: str) -> str:
+    return admin_route_view(
+        version,
+        title="Testing",
+        route_id="admin-testing",
+        script="/admin/app/frontend/js/admin-testing.js",
+        body="""<div
+          class="adminTesting"
+          id="adminTestingRoot"
+          data-admin-route="admin-testing"
+          data-admin-ready="false"
+          data-admin-busy="false"
+        >
+          <section class="tagStudio__panel">
+            <p class="tagStudio__status" id="adminTestingStatus">loading Admin test runs...</p>
+            <div class="adminTestingRuns" id="adminTestingRuns"></div>
+          </section>
+        </div>""",
+    )
+
+
 def admin_route_view(version: str, *, title: str, route_id: str, script: str, body: str) -> str:
     escaped_version = html.escape(version, quote=True)
     escaped_title = html.escape(title)

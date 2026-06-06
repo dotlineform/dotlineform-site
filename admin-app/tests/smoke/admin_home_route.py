@@ -60,6 +60,13 @@ def main() -> int:
         missing = [text for text in expected if text not in html]
         if missing:
             raise AssertionError(f"Admin home missing expected content: {missing!r}")
+
+        testing_html = read_text(f"{base_url}/admin/testing/")
+        if "Admin test runs" not in testing_html or "/admin/app/frontend/js/admin-testing.js" not in testing_html:
+            raise AssertionError("Admin testing route did not render the testing shell")
+        testing_runs = json.loads(read_text(f"{base_url}/admin/api/testing/runs"))
+        if testing_runs.get("runs_root") != "var/admin/test-runs":
+            raise AssertionError(f"unexpected Admin testing runs payload: {testing_runs!r}")
     finally:
         server.shutdown()
         server.server_close()

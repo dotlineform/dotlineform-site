@@ -11,7 +11,7 @@ viewable: true
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
+$HOME/miniconda3/bin/python3 admin-app/checks/css_token_audit.py
 ```
 
 ## Optional Flags

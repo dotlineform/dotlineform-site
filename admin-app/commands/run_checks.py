@@ -18,7 +18,7 @@ from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RUNS_DIR = REPO_ROOT / "var" / "test-runs"
+RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
 JEKYLL_DESTINATION = Path("/tmp/dlf-jekyll-build")
 SOURCE_MODULE_SITE_ROOT = Path(".")
 GENERATED_PUBLIC_PAYLOADS = (
@@ -55,19 +55,19 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "-m",
                 "py_compile",
-                "studio/commands/run_checks.py",
+                "admin-app/commands/run_checks.py",
                 "studio/shared/python/local_env.py",
                 "studio/shared/python/pipeline_config.py",
                 "studio/shared/python/studio_python_paths.py",
                 "studio/shared/python/display_paths.py",
                 "studio/shared/python/script_logging.py",
                 "studio/shared/python/studio_activity.py",
-                "studio/checks/audit_site_consistency.py",
-                "studio/checks/audit_projection_contract.py",
-                "studio/checks/audit_public_build_surface.py",
-                "studio/checks/css_token_audit.py",
-                "studio/checks/javascript_inventory_guardrail.py",
-                "studio/checks/risk_evidence_pack.py",
+                "admin-app/checks/audit_site_consistency.py",
+                "admin-app/checks/audit_projection_contract.py",
+                "admin-app/checks/audit_public_build_surface.py",
+                "admin-app/checks/css_token_audit.py",
+                "admin-app/checks/javascript_inventory_guardrail.py",
+                "admin-app/checks/risk_evidence_pack.py",
                 "studio/services/media/publish_media_to_r2.py",
                 "studio/services/media/build_palette_data.py",
                 "studio/services/catalogue/catalogue_json_build.py",
@@ -99,7 +99,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_app_config.py",
                 "studio/app/server/studio/studio_app_views.py",
                 "studio/app/server/studio/studio_app_server.py",
-                "studio/app/server/studio/studio_risk_api.py",
                 "analytics-app/app/server/analytics_app/analytics_api.py",
                 "analytics-app/app/server/analytics_app/analytics_app_config.py",
                 "analytics-app/app/server/analytics_app/analytics_app_views.py",
@@ -110,9 +109,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "analytics-app/app/server/analytics_app/data_sharing_service.py",
                 "admin-app/app/server/admin_app/ui_catalogue_config.py",
                 "admin-app/app/server/admin_app/ui_catalogue_views.py",
+                "admin-app/app/server/admin_app/admin_app_config.py",
+                "admin-app/app/server/admin_app/admin_app_views.py",
                 "admin-app/app/server/admin_app/admin_app_server.py",
-                "studio/checks/audit_studio_ready_state.py",
-                "studio/checks/verify_activity_contract.py",
+                "admin-app/app/server/admin_app/admin_testing_api.py",
+                "admin-app/checks/audit_studio_ready_state.py",
+                "admin-app/checks/verify_activity_contract.py",
                 "docs-viewer/services/docs_activity.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_activity.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_alias_mutations.py",
@@ -155,6 +157,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_routes.py",
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
                 "docs-viewer/tests/smoke/docs_viewer_manage_dark_theme.py",
+                "docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py",
+                "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
                 "docs-viewer/tests/smoke/docs_viewer_management_modal.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
@@ -183,28 +187,35 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/tests/smoke/admin_ui_catalogue_modal_demo.py",
                 "admin-app/tests/smoke/admin_ui_catalogue_routes.py",
                 "studio/tests/smoke/public_site_theme_toggle.py",
-                "studio/tests/smoke/local_studio_app_risk_route.py",
+                "admin-app/tests/smoke/admin_home_route.py",
+                "admin-app/tests/smoke/admin_operations_routes.py",
                 "studio/tests/python/test_studio_app_server.py",
                 "analytics-app/tests/python/test_analytics_app_server.py",
                 "analytics-app/tests/python/test_analytics_data_sharing_api.py",
+                "analytics-app/tests/python/test_data_sharing_adapters.py",
+                "analytics-app/tests/python/test_data_sharing_service.py",
+                "analytics-app/tests/python/test_data_sharing_subsystem_scaffold.py",
+                "analytics-app/tests/python/test_tags_data_sharing_adapter.py",
+                "admin-app/tests/python/test_admin_app_server.py",
+                "admin-app/tests/python/test_admin_runner_contract.py",
                 "admin-app/tests/python/test_admin_ui_catalogue.py",
-                "studio/tests/python/test_activity_contract.py",
+                "admin-app/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
-                "studio/tests/python/test_javascript_inventory_guardrail.py",
+                "admin-app/tests/python/test_javascript_inventory_guardrail.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
                 "docs-viewer/tests/python/test_docs_activity.py",
-                "studio/tests/python/test_tag_activity.py",
-                "studio/tests/python/test_tag_alias_mutations.py",
-                "studio/tests/python/test_tag_assignment_service.py",
-                "studio/tests/python/test_tag_promotion_mutations.py",
-                "studio/tests/python/test_tag_registry_mutations.py",
-                "studio/tests/python/test_tag_source_model.py",
-                "studio/tests/python/test_tag_write_transactions.py",
+                "analytics-app/tests/python/test_tag_activity.py",
+                "analytics-app/tests/python/test_tag_alias_mutations.py",
+                "analytics-app/tests/python/test_tag_assignment_service.py",
+                "analytics-app/tests/python/test_tag_promotion_mutations.py",
+                "analytics-app/tests/python/test_tag_registry_mutations.py",
+                "analytics-app/tests/python/test_tag_source_model.py",
+                "analytics-app/tests/python/test_tag_write_transactions.py",
                 "docs-viewer/tests/python/test_docs_live_rebuild_watcher.py",
                 "docs-viewer/tests/python/test_docs_management_mutations.py",
                 "docs-viewer/tests/python/test_docs_source_model.py",
                 "docs-viewer/tests/python/test_docs_viewer_service.py",
-                "studio/tests/python/test_tag_routes.py",
+                "analytics-app/tests/python/test_tag_routes.py",
                 "studio/tests/python/test_catalogue_cleanup.py",
                 "studio/tests/python/test_catalogue_delete_plans.py",
                 "studio/tests/python/test_catalogue_invalidation.py",
@@ -234,9 +245,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         CheckCommand(
             "quick-python-pytest",
             pytest_argv(
-                "studio/tests/python/test_activity_contract.py",
+                "admin-app/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
-                "studio/tests/python/test_risk_evidence_pack.py",
+                "admin-app/tests/python/test_risk_evidence_pack.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
                 "studio/tests/python/test_catalogue_invalidation.py",
                 "studio/tests/python/test_catalogue_lookup_refresh.py",
@@ -246,14 +257,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_catalogue_prose_import.py",
                 "studio/tests/python/test_catalogue_transactions.py",
                 "studio/tests/python/test_catalogue_routes.py",
-                "studio/tests/python/test_tag_routes.py",
-                "studio/tests/python/test_tag_activity.py",
-                "studio/tests/python/test_tag_alias_mutations.py",
-                "studio/tests/python/test_tag_assignment_service.py",
-                "studio/tests/python/test_tag_promotion_mutations.py",
-                "studio/tests/python/test_tag_registry_mutations.py",
-                "studio/tests/python/test_tag_source_model.py",
-                "studio/tests/python/test_tag_write_transactions.py",
+                "analytics-app/tests/python/test_tag_routes.py",
+                "analytics-app/tests/python/test_tag_activity.py",
+                "analytics-app/tests/python/test_tag_alias_mutations.py",
+                "analytics-app/tests/python/test_tag_assignment_service.py",
+                "analytics-app/tests/python/test_tag_promotion_mutations.py",
+                "analytics-app/tests/python/test_tag_registry_mutations.py",
+                "analytics-app/tests/python/test_tag_source_model.py",
+                "analytics-app/tests/python/test_tag_write_transactions.py",
                 "analytics-app/tests/python/test_analytics_app_server.py",
                 "analytics-app/tests/python/test_analytics_data_sharing_api.py",
                 "admin-app/tests/python/test_admin_ui_catalogue.py",
@@ -274,12 +285,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
         CheckCommand(
             "projection-contract",
-            (sys.executable, "studio/checks/audit_projection_contract.py"),
+            (sys.executable, "admin-app/checks/audit_projection_contract.py"),
             "Validate the projection contract manifest and checked-in public projections.",
         ),
         CheckCommand(
             "studio-ready-state-audit",
-            (sys.executable, "studio/checks/audit_studio_ready_state.py", "--strict"),
+            (sys.executable, "admin-app/checks/audit_studio_ready_state.py", "--strict"),
             "Audit Studio route-ready template contracts.",
         ),
         CheckCommand(
@@ -313,8 +324,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "docs-python-pytest",
             pytest_argv(
                 "docs-viewer/tests/python/test_docs_export.py",
-                "studio/tests/python/test_data_sharing_adapters.py",
-                "studio/tests/python/test_data_sharing_service.py",
+                "analytics-app/tests/python/test_data_sharing_adapters.py",
+                "analytics-app/tests/python/test_data_sharing_service.py",
                 "docs-viewer/tests/python/test_docs_import.py",
                 "docs-viewer/tests/python/test_docs_import_service.py",
                 "docs-viewer/tests/python/test_docs_generated_reads.py",
@@ -327,6 +338,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_source_model.py",
                 "docs-viewer/tests/python/test_docs_broken_links.py",
                 "docs-viewer/tests/python/test_docs_viewer_service.py",
+                "docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py",
+                "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
             ),
             "Run docs-profile Python tests through pytest collection.",
         ),
@@ -389,6 +402,24 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Admin-hosted UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
         ),
     ),
+    "admin-smoke": (
+        CheckCommand(
+            "admin-home-route-smoke",
+            (
+                sys.executable,
+                "admin-app/tests/smoke/admin_home_route.py",
+            ),
+            "Smoke-check the local Admin home route and runtime config.",
+        ),
+        CheckCommand(
+            "admin-operations-routes-smoke",
+            (
+                sys.executable,
+                "admin-app/tests/smoke/admin_operations_routes.py",
+            ),
+            "Smoke-check Admin audits, risk, and activity routes.",
+        ),
+    ),
     "studio-smoke": (
         CheckCommand(
             "jekyll-temp-build",
@@ -432,14 +463,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check shared Catalogue editor route boot, readiness, and lookup helpers.",
-        ),
-        CheckCommand(
-            "local-studio-risk-route-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_app_risk_route.py",
-            ),
-            "Smoke-check the local Studio Risk route shell and dry-run flow.",
         ),
     ),
     "analytics-smoke": (
@@ -616,7 +639,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
 }
 
-FULL_PROFILE_ORDER = ("quick", "catalogue", "docs", "studio-smoke")
+FULL_PROFILE_ORDER = ("quick", "catalogue", "docs", "admin-smoke", "studio-smoke")
 
 
 def slugify(value: str) -> str:
@@ -776,7 +799,7 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Check profile to run. Repeat to combine profiles. Defaults to quick.",
     )
-    parser.add_argument("--run-id", help="Optional local run id for var/test-runs/.")
+    parser.add_argument("--run-id", help="Optional local run id for var/admin/test-runs/.")
     parser.add_argument("--list", action="store_true", help="List available profiles and exit.")
     parser.add_argument(
         "--keep-temp-build",

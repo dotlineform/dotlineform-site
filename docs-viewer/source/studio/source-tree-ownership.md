@@ -40,16 +40,16 @@ The current Studio-owned source homes are:
 | `studio/app/assets/` | Studio-only CSS and visual assets used by Local Studio routes. |
 | `studio/data/canonical/` | Canonical source data maintained by Studio, including catalogue JSON, catalogue Markdown, and media-adjacent source records. |
 | `studio/data/config/` | Studio-owned checked-in config, including catalogue and Studio runtime data contracts. |
-| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup and activity data. Risk summaries belong here only when they are intentionally served by Local Studio; ordinary local risk artifacts belong under `var/studio/risk/`. Retired thumbnail-quality preview output is not an active served contract. |
+| `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup data. Retired thumbnail-quality preview output is not an active served contract. |
 | `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
 | `studio/shared/` | Shared Python helpers used by Studio-owned commands, Docs Viewer builders, catalogue generation, and services. |
-| `studio/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, and other verification checks. |
-| `studio/tests/` | Python tests, smoke tests, fixtures, and Codex-run verification helpers. |
-| `studio/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
+| `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, and other repo-scope verification checks. |
+| `admin-app/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
+| `studio/tests/` | Studio-owned Python tests, smoke tests, and Codex-run verification helpers for catalogue/public-site behavior. |
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
 
-Risk operations are Studio-owned.
-Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `studio/checks/`; ignored local risk reports and snapshots should default to `var/studio/risk/`; and any Studio-readable generated risk summaries should use `studio/data/generated/risk/` only when they are deliberately served by Local Studio.
+Risk operations are Admin-owned.
+Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `admin-app/checks/`; ignored local risk reports and snapshots should default to `var/admin/risk/`.
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
 
@@ -156,8 +156,8 @@ Current active rules:
 - do not restore `assets/docs-viewer/` as Docs Viewer source; public copies are generated/runtime payloads only when explicitly needed
 - do not restore `_docs_catalogue/` for catalogue Markdown source
 - do not restore root `tests/`, root check folders, or `scripts/docs/` as active source homes
-- keep `scripts/run_checks.py` deleted; use `studio/commands/run_checks.py`
-- keep public-site validation checks under Studio/Codex test ownership even when they inspect public generated output
+- keep `scripts/run_checks.py` deleted; use `admin-app/commands/run_checks.py`
+- keep public-site validation checks under Admin/Codex check ownership or the owning app test directory even when they inspect public generated output
 
 Root wrappers may remain only as deliberate convenience entrypoints into the owning Studio or Docs Viewer implementation.
 They must not become compatibility layers for old source paths.

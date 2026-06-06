@@ -10,9 +10,9 @@ parent_id: ""
 This repo uses lightweight, opt-in checks rather than a mandatory full test suite.
 
 The goal is to give Codex a standard place to put repeatable checks, run logs, and verification notes when a change is too broad for manual review alone.
-The current Python checks are pytest-collected scripts under `studio/tests/python/`.
-They use ordinary `assert` statements and are run by `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` through pytest.
-Tests, checks, smoke helpers, and public-surface audits are Studio/Codex development infrastructure even when they validate public generated output.
+The current Python checks are pytest-collected scripts under the owning app test directories.
+They use ordinary `assert` statements and are run by `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` through pytest.
+Tests, checks, smoke helpers, and public-surface audits are Admin/Codex development infrastructure when they span app boundaries.
 See [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) for the maintained repo ownership boundary.
 
 ## When To Use Automated Checks
@@ -33,16 +33,22 @@ Manual checks are still enough for small copy changes, narrow docs edits, and vi
 ## Structure
 
 - `studio/tests/python/`
-  Deterministic Python checks. Files expose `test_*` functions for pytest collection; many can also run directly as scripts.
+  Deterministic Studio catalogue and public-site checks. Files expose `test_*` functions for pytest collection; many can also run directly as scripts.
 - `studio/tests/smoke/`
   Focused browser smoke scripts for Studio-owned route and module behavior.
+- `admin-app/tests/python/`
+  Admin server, runner, risk/audit/check, and Admin-hosted UI Catalogue checks.
+- `admin-app/tests/smoke/`
+  Admin home, operational route, and Admin-hosted UI Catalogue smoke scripts.
+- `analytics-app/tests/python/`
+  Analytics server, tag, and Data Sharing checks.
 - `docs-viewer/tests/python/`
   Deterministic Docs Viewer service, source-model, generated-read, management, import/export, rebuild, and activity checks.
 - `docs-viewer/tests/smoke/`
   Playwright scripts for Docs Viewer public read-only behavior, management UI, browser modules, and the standalone service manage shell.
-- `studio/tests/fixtures/`
+- `docs-viewer/tests/fixtures/`
   Small stable fixtures, only where existing repo data is not safe or sufficient.
-- `var/test-runs/`
+- `var/admin/test-runs/`
   Local check logs and summaries. This path is ignored by git.
 
 ## Ownership Boundaries
@@ -69,32 +75,34 @@ Examples of current retired shapes include the old Docs visibility source input,
 Keep Studio and Docs Viewer smoke responsibilities separate:
 
 - `docs-viewer-smoke` owns Docs Viewer public read-only, management UI, browser-module, and standalone service checks.
-- `studio-smoke` owns Studio browser workflows, UI Catalogue, Studio route/module checks, and data-sharing route checks.
+- `admin-smoke` owns Admin home and Admin operational route checks.
+- `studio-smoke` owns Studio browser workflows and Studio catalogue/public-site route/module checks.
+- `ui-catalogue-smoke` owns Admin-hosted UI Catalogue route and demo checks.
 - `studio-smoke` should not run Docs Viewer-owned smoke scripts.
 
 ## Runner
 
-Use `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` to run one or more check profiles and write a local run summary.
+Use `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` to run one or more check profiles and write a local run summary.
 
 Examples:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile catalogue
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile catalogue
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
 ```
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
-The `docs` profile includes Docs Viewer-owned pytest checks from `docs-viewer/tests/python/` plus shared Data Sharing adapter checks that remain under `studio/tests/python/`.
+The `docs` profile includes Docs Viewer-owned pytest checks from `docs-viewer/tests/python/` plus Analytics-owned Data Sharing adapter checks.
 The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/`.
 Run `docs-viewer-smoke`, or at minimum `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a Docs Viewer change touches the shared public runtime, route shell, public config, public payload-loading contract, or management-only module boundary.
 Do not use the repo root or a stale `_site` directory as evidence for public read-only behavior; those targets can mask public-build exclusions.
-The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the UI Catalogue modal demo and data import route checks.
-Those checks cover Studio-owned browser workflows, including the docs-management-unavailable state and a mocked Library import preview flow, but do not run Docs Viewer-owned smoke scripts.
-The `full` profile runs `quick`, `catalogue`, `docs`, and `studio-smoke`; it does not include `docs-viewer-smoke`.
+The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts for Studio catalogue/public-site behavior.
+The `admin-smoke` profile runs Admin route smoke checks without the Jekyll temp build.
+The `full` profile runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke`.
 Smoke profiles clean `/tmp/dlf-jekyll-build` before and after the run by default.
 Use `--keep-temp-build` only when inspecting the generated temp build after a failure.
 
@@ -129,14 +137,14 @@ Prefer direct module tests over broad end-to-end setup unless the integration bo
 
 Current conventions:
 
-- keep tests in `studio/tests/python/test_<area>.py`
+- keep tests in the owning app test directory, such as `studio/tests/python/`, `admin-app/tests/python/`, `analytics-app/tests/python/`, or `docs-viewer/tests/python/`
 - use plain `assert`
-- run grouped profile checks through `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`, which calls the same interpreter with `-m pytest -q`
+- run grouped profile checks through `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`, which calls the same interpreter with `-m pytest -q`
 - avoid network access
 - use temporary directories or small fixtures when repo data would make the test brittle
 - keep direct script execution working where practical for narrow opt-in checks
 - when a direct verifier script belongs in `run_checks.py` or pytest, wrap it with a real `test_*` function so pytest collection cannot silently skip it
-- add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` when it covers a repeated risk
+- add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` when it covers a repeated risk
 
 See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.
 
@@ -146,7 +154,7 @@ When Codex runs checks, the final response should report:
 
 - which profiles ran
 - pass/fail status
-- the `var/test-runs/.../summary.md` path
+- the `var/admin/test-runs/.../summary.md` path
 - any failed command log paths
 - manual checks still needed
 
@@ -158,7 +166,7 @@ Automated checks:
 - catalogue: pass
 
 Logs:
-- var/test-runs/20260501-171530/summary.md
+- var/admin/test-runs/20260501-171530/summary.md
 
 Manual checks:
 - Open /studio/catalogue-field-registry/
@@ -170,7 +178,7 @@ Manual checks:
 
 The MVP framework is deliberately small:
 
-- pytest is the Python test collection layer, but `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` remains the top-level runner
+- pytest is the Python test collection layer, but `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` remains the top-level runner
 - no CI contract
 - no automatic full-suite run before every change
 - no broad fixture duplication

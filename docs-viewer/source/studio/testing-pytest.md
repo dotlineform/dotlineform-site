@@ -8,13 +8,13 @@ parent_id: testing
 # Pytest
 
 Pytest is the Python test collection layer for this repo.
-It sits underneath the existing lightweight check framework rather than replacing `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`.
+It sits underneath the existing lightweight check framework rather than replacing `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`.
 
 ## Current State
 
 The current test framework requires pytest for grouped Python profile checks.
-Python checks live under `studio/tests/python/`, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
-`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` remains the top-level runner because it also coordinates Ruby/Jekyll builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/test-runs/`.
+Python checks live under the owning app test directories, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
+`$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` remains the top-level runner because it also coordinates Ruby/Jekyll builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/admin/test-runs/`.
 
 That structure should remain the source of truth for Codex close-out unless a future change explicitly replaces it.
 
@@ -22,7 +22,7 @@ That structure should remain the source of truth for Codex close-out unless a fu
 
 Pytest improves the Python layer in ways that fit the existing test style:
 
-- automatic discovery of `test_*` functions across `studio/tests/python/`
+- automatic discovery of `test_*` functions across app-owned test directories
 - clearer assertion failure output than direct script execution
 - `-k` filtering for one behavior or module name
 - reusable fixtures for temporary repos, sample docs trees, generated payloads, and fake services
@@ -39,7 +39,7 @@ $HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_manage
 
 ## Integration Model
 
-Keep `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` as the user-facing framework.
+Keep `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` as the user-facing framework.
 Use pytest underneath it for Python test collection.
 
 Current integration:
@@ -113,10 +113,10 @@ Or, when targeting the interpreter directly:
 Run all Python tests:
 
 ```bash
-$HOME/miniconda3/bin/python3 -m pytest studio/tests/python
+$HOME/miniconda3/bin/python3 -m pytest studio/tests/python admin-app/tests/python analytics-app/tests/python docs-viewer/tests/python
 ```
 
-Pytest is listed in `requirements.txt` because `studio/commands/run_checks.py` now depends on it for grouped Python checks.
+Pytest is listed in `requirements.txt` because `admin-app/commands/run_checks.py` now depends on it for grouped Python checks.
 
 ## Not Yet Needed
 

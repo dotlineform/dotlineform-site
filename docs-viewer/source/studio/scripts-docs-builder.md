@@ -258,7 +258,7 @@ Current fields:
 
 - The Python Docs Viewer v2 renderer helper is `studio/shared/python/markdown_renderer.py`; it starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule, allows raw HTML by default, performs no sanitization, and enables no external renderer plugins.
 - Renderer acceptance fixtures live in `studio/tests/python/test_markdown_renderer_acceptance.py` and cover headings, links, lists, fenced code, inline code, raw HTML, tables, generated plain text, and HTML semantics without comparing against Jekyll/Kramdown output.
-- Custom-token contract fixtures live in `studio/tests/fixtures/docs_viewer_v2_custom_tokens.json`, with validation coverage in `studio/tests/python/test_docs_viewer_v2_custom_token_fixtures.py`.
+- Custom-token contract fixtures live in `docs-viewer/tests/fixtures/docs_viewer_v2_custom_tokens.json`, with validation coverage in `docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py`.
 - `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/**/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.py --scope <scope> --write`
 - Docs Viewer manage mode rebuilds the current docs scope through the standalone Docs Viewer service

@@ -22,8 +22,8 @@ from studio.shared.python.studio_activity import (
 
 RISK_RUNS_REL_DIR = Path("var/admin/risk/runs")
 RISK_RUN_API_PATH = "/admin/api/risk/runs"
-VALID_APPS = ("public-site", "studio", "analytics", "docs-viewer", "all")
-VALID_RUNTIME_PROFILES = ("studio-smoke", "ui-catalogue-smoke", "analytics-smoke", "docs-viewer-smoke")
+VALID_APPS = ("public-site", "studio", "admin", "analytics", "docs-viewer", "all")
+VALID_RUNTIME_PROFILES = ("admin-smoke", "studio-smoke", "ui-catalogue-smoke", "analytics-smoke", "docs-viewer-smoke")
 VALID_SLUG = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
@@ -224,7 +224,7 @@ def run_risk_evidence_payload(repo_root: Path, body: dict[str, Any]) -> dict[str
     include_lighthouse = bool(body.get("include_lighthouse"))
     runtime_profiles = normalize_runtime_profiles(body.get("runtime_profiles"))
 
-    script_path = repo_root / "studio" / "checks" / "risk_evidence_pack.py"
+    script_path = repo_root / "admin-app" / "checks" / "risk_evidence_pack.py"
     argv = [
         sys.executable,
         str(script_path),

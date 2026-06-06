@@ -7,7 +7,7 @@ Use these checks when a change has enough blast radius that manual review alone 
 Run checks through:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
 ```
 
-Local run logs are written under `var/test-runs/` and are not committed.
+Local run logs are written under `var/admin/test-runs/` and are not committed.

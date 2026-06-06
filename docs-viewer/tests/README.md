@@ -5,11 +5,11 @@ Docs Viewer-owned focused tests live here after the shell/service extraction.
 - `python/` contains pytest checks for Docs Viewer service modules, source models, generated reads, management workflows, imports, exports, and rebuild helpers.
 - `smoke/` contains retained Playwright smoke scripts for Docs Viewer route boot, public read-only installs, and the standalone service manage route. Browser module-contract scripts are not required smoke targets.
 
-Repo-level check profiles remain in `studio/commands/run_checks.py` so Codex and local workflows can still run the usual commands:
+Repo-level check profiles remain in `admin-app/commands/run_checks.py` so Codex and local workflows can still run the usual commands:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
 ```
 
 Studio-owned integration tests stay under `studio/tests/`.

@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping
 
 
-DEFAULT_CONTRACT_PATH = Path("studio/checks/projection_contract.json")
+DEFAULT_CONTRACT_PATH = Path("admin-app/checks/projection_contract.json")
 VALID_CLASSIFICATIONS = {
     "canonical_source",
     "public_projection",
@@ -20,6 +20,7 @@ VALID_CLASSIFICATIONS = {
     "public_runtime_asset",
     "studio_app_asset",
     "analytics_app_asset",
+    "admin_app_asset",
     "ui_catalogue_app_asset",
 }
 VALID_PUBLIC_OUTPUT_POLICIES = {"required", "allowed", "forbidden", "ignored"}
