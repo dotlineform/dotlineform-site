@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure-batch-6
 title: Admin App Structure Batch 6
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: done
 parent_id: site-request-admin-app-structure-tasks
 viewable: true
 ---
@@ -17,11 +17,11 @@ Summary: update durable docs, run final focused verification, record moved owner
 
 | ID | status | action |
 | --- | --- | --- |
-| 6.1 | planned | Update durable ownership docs for Admin, Studio, UI Catalogue, testing, local setup, route ownership, scripts, output paths, and fixture ownership. |
-| 6.2 | planned | Update request and task docs with final statuses, moved paths, verification results, and any remaining follow-on work. |
-| 6.3 | planned | Run focused final verification for Admin home, Admin routes, Admin runner, Admin UI Catalogue, retained Studio routes, and moved fixtures/checks. |
-| 6.4 | planned | Record final check summaries and run-log locations under `var/admin/test-runs/` when runner verification writes logs. |
-| 6.5 | planned | Close the parent request when durable docs contain the current ownership contract and the planned migration is complete. |
+| 6.1 | done | Update durable ownership docs for Admin, Studio, UI Catalogue, testing, local setup, route ownership, scripts, output paths, and fixture ownership. |
+| 6.2 | done | Update request and task docs with final statuses, moved paths, verification results, and any remaining follow-on work. |
+| 6.3 | done | Run focused final verification for Admin home, Admin routes, Admin runner, Admin UI Catalogue, retained Studio routes, and moved fixtures/checks. |
+| 6.4 | done | Record final check summaries and run-log locations under `var/admin/test-runs/` when runner verification writes logs. |
+| 6.5 | done | Close the parent request when durable docs contain the current ownership contract and the planned migration is complete. |
 
 ## Steer for these tasks
 
@@ -54,18 +54,24 @@ Summary: update durable docs, run final focused verification, record moved owner
 
 ## completed verification
 
-- pending
+- `$HOME/miniconda3/bin/python3 -m py_compile ...` passed for the Admin runner/server/check/smoke files plus retained Studio server files.
+- `node --check ...` passed for Admin route modules, Admin UI Catalogue modules, and retained Studio shell modules.
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/admin-config.json` passed.
+- `$HOME/miniconda3/bin/python3 -m pytest -q admin-app/tests/python/test_admin_app_server.py admin-app/tests/python/test_admin_operations.py admin-app/tests/python/test_admin_runner_contract.py admin-app/tests/python/test_admin_ui_catalogue.py admin-app/tests/python/test_activity_contract.py admin-app/tests/python/test_risk_evidence_pack.py studio/tests/python/test_studio_app_server.py studio/tests/python/test_studio_activity_feed.py docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py docs-viewer/tests/python/test_generated_output_contract_fixtures.py` passed with 69 tests.
+- `$HOME/miniconda3/bin/python3 -m pytest -q studio/tests/python/test_studio_app_server.py` passed with 20 tests after the narrow Studio Works static-serving fix.
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick --run-id admin-batch-6-quick-final` passed; summary: `var/admin/test-runs/admin-batch-6-quick-final/summary.md`.
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-smoke --run-id admin-batch-6-admin-smoke` passed with elevated localhost/browser permissions; summary: `var/admin/test-runs/admin-batch-6-admin-smoke/summary.md`.
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile ui-catalogue-smoke --run-id admin-batch-6-ui-catalogue-smoke` passed with elevated localhost/browser permissions; summary: `var/admin/test-runs/admin-batch-6-ui-catalogue-smoke/summary.md`.
+- Retained Studio route smokes passed with elevated localhost/browser permissions for `/studio/project-state/`, `/studio/bulk-add-work/`, `/studio/catalogue-field-registry/`, `/studio/catalogue-status/`, `/studio/studio-works/`, and the catalogue editor route family.
+- Source/config review scan confirmed remaining active references to retired `/studio/audits`, `/studio/risk`, `/studio/activity`, `/studio/ui-catalogue`, `ui-catalogue-app`, old runner paths, and old output paths are historical request notes, intentional retired-route notes, or negative tests.
 
 ## follow-on tasks
 
-- Batch 5 handoff:
-  - Studio route registry now uses plain local paths for retained routes: `/studio/project-state/`, `/studio/bulk-add-work/`, `/studio/catalogue-field-registry/`, `/studio/catalogue-status/`, `/studio/studio-works/`, and the catalogue editor route family.
-  - Studio activity contexts, runtime activity contract rows, route tests, and route smokes were updated to the plain Studio paths.
-  - `bin/local-studio` startup text now points audit/risk/activity/testing ownership to `bin/local-admin`.
-  - Current source docs were reviewed and updated for Admin-owned audit/risk/activity, UI Catalogue, runner/check paths, and retained Studio route paths. Historical migration/request docs still retain old route examples as historical evidence.
-  - Verification passed for focused Studio server/config pytest, JSON/syntax checks, retained route smokes, route helper smoke, launcher shell syntax, stale-reference scans, and `git diff --check`.
-  - Docs Viewer payloads were not regenerated.
+- none.
 
 ## task close
 
-- Set `ui_status` to `done` for this batch, the tracker, and the parent request after closeout is complete.
+- Durable source docs now describe the current Admin boundary, retained Studio catalogue boundary, Admin-hosted UI Catalogue ownership, Admin runner/check ownership, test and fixture ownership, local setup, and `bin/local-all` sibling-service behavior.
+- `admin-app/commands/run_checks.py` syntax coverage now points at `admin-app/app/server/admin_app/audit_runner.py`.
+- Local Studio now narrowly serves `studio/data/generated/activity/work-storage-index.json`, which is required by `/studio/studio-works/`; the broader generated activity directory remains unserved.
+- Docs Viewer payloads were not regenerated.

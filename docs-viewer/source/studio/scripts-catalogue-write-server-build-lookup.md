@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-build-lookup
 title: Catalogue Write Server Build And Lookup
 added_date: 2026-05-19
-last_updated: 2026-06-01
+last_updated: 2026-06-06
 parent_id: scripts-catalogue-write-server
 ---
 # Catalogue Write Server Build And Lookup
@@ -371,4 +371,4 @@ The save-time follow-through logic for work, work-detail, series, and moment sav
 
 The apply endpoint updates:
 
-- `var/studio/activity/activity_log.json` when valid Studio activity context is supplied for a covered action
+- `var/admin/activity/activity_log.json` when valid Studio activity context is supplied for a covered action

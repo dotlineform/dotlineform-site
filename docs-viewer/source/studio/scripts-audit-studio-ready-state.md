@@ -2,7 +2,7 @@
 doc_id: scripts-audit-studio-ready-state
 title: Studio Ready-State Audit
 added_date: 2026-05-03
-last_updated: "2026-05-24"
+last_updated: 2026-06-06
 parent_id: audit
 viewable: true
 ---
@@ -16,7 +16,7 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --stri
 
 Run this after changing Studio route shells, dashboard shells, static/reference pages, or route-ready helper scripts.
 
-Structured output for the Studio audit service:
+Structured output for the Admin audit API:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict --json
@@ -46,7 +46,7 @@ Strict mode exits non-zero for warnings as well as errors. Without `--strict`, w
 
 The `quick` profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` includes this audit in strict mode.
 
-`--json` emits the same pass/fail status, counts, totals, and findings as structured JSON for `/studio/audits/`.
+`--json` emits the same pass/fail status, counts, totals, and findings as structured JSON for the Admin audit route and API under `/admin/audits/`.
 
 ## Related References
 

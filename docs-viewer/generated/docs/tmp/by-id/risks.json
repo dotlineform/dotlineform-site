@@ -1,12 +1,8 @@
 {
-  "scope": "tmp",
   "doc_id": "risks",
   "title": "risks",
   "added_date": "2026-05-31",
   "last_updated": "2026-05-31",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "risks.md",
   "viewer_url": "/docs/?scope=tmp&doc=risks",
   "ui_status": "draft",

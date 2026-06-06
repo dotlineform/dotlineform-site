@@ -2,7 +2,7 @@
 doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
-last_updated: 2026-05-22
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -44,7 +44,7 @@ Current data sources:
 
 - `assets/data/works_index.json`
 - `assets/data/series_index.json`
-- `assets/studio/data/work_storage_index.json`
+- `studio/data/generated/activity/work-storage-index.json`
 
 Top-level structure:
 

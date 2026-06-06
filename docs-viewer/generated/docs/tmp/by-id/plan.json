@@ -1,12 +1,8 @@
 {
-  "scope": "tmp",
   "doc_id": "plan",
   "title": "Docs Viewer Workstream Priority Plan",
   "added_date": "2026-05-27",
   "last_updated": "2026-05-27",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "plan.md",
   "viewer_url": "/docs/?scope=tmp&doc=plan",
   "ui_status": "draft",

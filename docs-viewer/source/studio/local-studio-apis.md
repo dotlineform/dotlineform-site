@@ -2,7 +2,7 @@
 doc_id: local-studio-apis
 title: Local Studio APIs
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -99,6 +99,5 @@ Local Studio routes may link to Docs Viewer, but they do not proxy Docs Viewer m
 Current focused API checks:
 
 - `studio/tests/python/test_studio_app_server.py`
-- `admin-app/tests/python/test_risk_evidence_pack.py`
 - route-level smoke checks listed in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - Docs Viewer service checks listed in [Local Studio App](/docs/?scope=studio&doc=local-studio-app)

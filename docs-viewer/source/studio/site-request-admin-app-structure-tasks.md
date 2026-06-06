@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure-tasks
 title: Admin App Structure Tasks
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: done
 parent_id: site-request-admin-app-structure
 viewable: true
 ---
@@ -48,7 +48,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 3 | done | [Batch 3: Audits, Risk, and Activity Routes](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-3) |
 | 4 | done | [Batch 4: Runner, Checks, Tests, and Fixtures](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-4) |
 | 5 | done | [Batch 5: Studio Local Route Cleanup and App Script Cleanup](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-5) |
-| 6 | planned | [Batch 6: Durable Docs, Verification, and Closeout](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-6) |
+| 6 | done | [Batch 6: Durable Docs, Verification, and Closeout](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-6) |
 
 ### task: update docs
 
@@ -92,3 +92,6 @@ Close out the parent request and this tracker by recording:
 - retired app scripts
 - verification results
 - remaining follow-on work, if any
+
+Closeout complete in [Batch 6: Durable Docs, Verification, and Closeout](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-6).
+No follow-on task is required for this request.

@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: local-setup
 viewable: true
 ---
@@ -25,7 +25,7 @@ docs-viewer/bin/docs-viewer
 Local Studio, Local Admin, Local Analytics, public Jekyll preview, and Docs Viewer have separate launcher commands.
 
 `bin/local-studio` 
-- starts the Local Studio app for Studio catalogue/audit/activity/admin APIs
+- starts the Local Studio app for Studio catalogue routes and APIs
 - the docs live rebuild watcher
 - Python startup maintenance tasks.
 
@@ -191,7 +191,7 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 - default URL: `http://127.0.0.1:8765/studio/`
 
 - serves Local Studio views outside Jekyll
-- mounts `/studio/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local audit APIs, and local catalogue APIs
+- mounts `/studio/`, retained Studio catalogue route shells, `/health`, `/studio/runtime-config.json`, and local catalogue APIs
 - does not serve `/analytics/`, `/analytics/api/...`, `/docs/`, `/docs-viewer/...` assets, Docs Viewer generated reads, Docs Viewer management APIs, `/ui-catalogue/...`, or Data Sharing APIs
 - links to Docs Viewer manage mode through the configured Docs Viewer web service URL
 - can be disabled with `STUDIO_APP_ENABLED=0`
@@ -273,10 +273,12 @@ $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/admin_app_server.py 
 
 - default URL: `http://127.0.0.1:8768/admin/`
 - owns Admin pages under `/admin/...`
+- owns Admin APIs under `/admin/api/...`
 - owns UI Catalogue demo pages and assets under `/admin/ui-catalogue/...`
 - uses `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, and `ADMIN_APP_ACCESS_LOG`
 - stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
-- intentionally does not provide compatibility aliases for old `/studio/ui-catalogue/...` or `/ui-catalogue/...` paths
+- intentionally does not provide compatibility aliases for old `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, `/studio/ui-catalogue/...`, or `/ui-catalogue/...` paths
+- related doc: [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
 
 ### Docs Viewer Web Service
 

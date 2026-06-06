@@ -59,6 +59,7 @@ STATIC_FILES = {
     "/apple-touch-icon.png",
     "/safari-pinned-tab.svg",
     "/site.webmanifest",
+    "/studio/data/generated/activity/work-storage-index.json",
 }
 MAX_BODY_BYTES = 1024 * 1024
 ENABLED_VALUES = {"1", "on", "true", "yes"}

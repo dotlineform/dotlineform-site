@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: 2026-06-01
+last_updated: 2026-06-06
 parent_id: dev-home
 ---
 # Scripts
@@ -15,7 +15,7 @@ The current script surface is organized by owner:
 - catalogue-domain source, build, and write-service behavior
 - analytics-domain tag metadata behavior
 - Local Analytics app and Data Sharing route/API behavior
-- UI Catalogue demo app behavior
+- Admin-hosted UI Catalogue demo behavior
 - docs-domain builders for scope-owned docs artifacts
 - search builders for scope-owned search artifacts
 - Studio runtime services that are not domain-owned
@@ -139,6 +139,8 @@ Catalogue/runtime maintenance:
   Maintain the allowlisted audit runner used by `/admin/audits/`; the active HTTP endpoints are served by the Admin app.
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
   Run Local Studio, Local Admin, Local Analytics, public-site preview, and Docs Viewer either independently or through the sibling-service `bin/local-all` runner.
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
+  Maintain the active Admin app boundary for audits, risk, activity, testing, and Admin-hosted UI Catalogue routes.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

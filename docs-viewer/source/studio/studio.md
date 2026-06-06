@@ -2,20 +2,20 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: ""
 ---
 # Studio
 
-This section documents the Local Studio app routes used to review and edit public site data, catalogue records, and related operational workflows.
+This section documents the Local Studio app routes used to review and edit public site data and catalogue records.
 
 Studio is a local service-backed workspace. Editing and mutable review data require `bin/local-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
 
-The current Studio shell is organized around Studio-owned admin entry points:
+The current Studio shell is organized around Studio-owned catalogue entry points:
 
 - `Catalogue`
 - `Docs`
-- `Admin`
+- sibling Admin links
 
 Analytics and Data Sharing now belong to the standalone Local Analytics app.
 Studio may link to those workflows, but it does not host their routes or APIs.
@@ -86,9 +86,9 @@ bin/local-all
 
 Current runner behavior:
 
-- starts the local Studio app server for the Studio shell, Catalogue APIs, Studio audit APIs, activity, and admin routes
-- does not start Local Analytics, UI Catalogue, public-site preview, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for the supervised sibling-service workflow
-- has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
+- starts the local Studio app server for the Studio shell and Catalogue APIs
+- does not start Local Admin, Local Analytics, public-site preview, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for the supervised sibling-service workflow
+- has no Studio audit HTTP service; browser audit APIs are hosted by the Local Admin app and direct automation uses `admin-app/app/server/admin_app/audit_runner.py`
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
 - stops all long-running processes on `Ctrl+C`
@@ -98,7 +98,7 @@ Current limits:
 
 - it does not enable `--livereload`
 - it does not serve `/docs/`; Docs Viewer manage mode belongs to the standalone Docs Viewer service
-- it does not serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
+- it does not serve `/admin/`, `/admin/api/...`, `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
 - it does not rebuild docs or docs-search artifacts on startup
 - it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**

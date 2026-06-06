@@ -1,12 +1,8 @@
 {
-  "scope": "tmp",
   "doc_id": "docs-viewer",
   "title": "docs viewer",
   "added_date": "2026-05-30",
   "last_updated": "2026-05-30",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "docs-viewer.md",
   "viewer_url": "/docs/?scope=tmp&doc=docs-viewer",
   "ui_status": "draft",

@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-operations
 title: Catalogue Write Service Operations
 added_date: 2026-05-19
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: scripts-catalogue-write-server
 ---
 # Catalogue Write Service Operations
@@ -46,7 +46,7 @@ The server validates the proposed update through the shared catalogue source loa
 - source writes use atomic replacement and in-process rollback without writing backup bundles
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
-- covered save, create, delete, publication, import, and report actions also update `var/studio/activity/activity_log.json` when valid Studio activity context is supplied
+- covered save, create, delete, publication, import, and report actions also update `var/admin/activity/activity_log.json` when valid Studio activity context is supplied
 
 ## Dev Studio
 
@@ -73,9 +73,9 @@ Atomic write scope:
 Create, save, bulk-save, workbook import, delete apply, publication apply, moment save, and moment import apply routes use atomic source replacement.
 Multi-file source writes and cleanup transactions keep in-process snapshots for rollback if a later replace/delete/rebuild step fails, but they do not write backup bundles under `var/`.
 
-Studio activity feed:
+Admin activity feed:
 
-- `var/studio/activity/activity_log.json`
+- `var/admin/activity/activity_log.json`
 
 Derived lookup target:
 

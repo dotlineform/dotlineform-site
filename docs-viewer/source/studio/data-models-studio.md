@@ -2,7 +2,7 @@
 doc_id: data-models-studio
 title: Scope
 added_date: 2026-04-19
-last_updated: "2026-05-06 20:51"
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -10,10 +10,14 @@ viewable: true
 
 This document covers the current checked-in data model for the Studio scope.
 
-## local service-backed activity data
+## Local Service-Backed Activity Data
 
-- `var/studio/activity/activity_log.json`
-- `var/studio/activity/activity_log.jsonl`
+Unified activity is now Admin-owned and written under:
+
+- `var/admin/activity/activity_log.json`
+- `var/admin/activity/activity_log.jsonl`
+
+Studio catalogue workflows can still append activity rows through `studio/shared/python/studio_activity.py`, but the route/API surface is `/admin/activity/` and `/admin/api/activity/feed`.
 
 ## Config
 

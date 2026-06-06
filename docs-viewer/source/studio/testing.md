@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-06-03
+last_updated: 2026-06-06
 parent_id: ""
 ---
 # Testing
@@ -50,6 +50,9 @@ Manual checks are still enough for small copy changes, narrow docs edits, and vi
   Small stable fixtures, only where existing repo data is not safe or sufficient.
 - `var/admin/test-runs/`
   Local check logs and summaries. This path is ignored by git.
+
+Fixtures should live with the owner that uses them.
+`studio/tests/fixtures/` is not a shared fixture bucket for Admin, Analytics, Docs Viewer, UI Catalogue, or repo-scope checks.
 
 ## Ownership Boundaries
 
@@ -147,6 +150,7 @@ Current conventions:
 - add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` when it covers a repeated risk
 
 See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.
+See [Local Admin App](/docs/?scope=studio&doc=local-admin-app) for Admin route, API, output-path, and UI Catalogue ownership.
 
 ## Expected Close-Out
 

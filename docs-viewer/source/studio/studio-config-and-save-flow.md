@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: Config and Save Flow
 added_date: 2026-04-22
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -146,7 +146,7 @@ Catalogue editor local save behavior:
 - writes are constrained to allowlisted canonical catalogue source JSON
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - catalogue writes use atomic replacement and in-process rollback without writing backup bundles
-- activity is logged to `var/studio/catalogue/logs/catalogue_service_context.log` and summarized into `var/studio/activity/activity_log.json`
+- activity is logged to `var/studio/catalogue/logs/catalogue_service_context.log` and summarized into `var/admin/activity/activity_log.json`
 - bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`

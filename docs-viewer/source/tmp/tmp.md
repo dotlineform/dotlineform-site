@@ -14,7 +14,7 @@ ui_status: draft
 ~
 
 we are working on `site-request-admin-app-structure.md`,
-please proceed with batch 1 in `site-request-admin-app-structure-tasks.md`
+please proceed with batch 6 in `site-request-admin-app-structure-tasks.md`
 
 ~
 
@@ -31,6 +31,11 @@ Follow the guidance in the templates for what to include in them.
 ~
 
 ---
+
+risk inventories should not be docs in the docs viewer scope.
+- they should be saved in var/ as .md, and surfaced as readonly markdown in an Admin risk report page.
+- they should not include tables, but lists formatted as columns - like they would be displayed in Terminal
+
 
 
 ---

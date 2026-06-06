@@ -2,7 +2,7 @@
 doc_id: data-models-projection-contract
 title: Projection Contract
 added_date: 2026-05-23
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: architecture
 viewable: true
 ---
@@ -71,7 +71,7 @@ It must not publish Studio docs payloads or Studio docs search unless a separate
 | Tag vocabulary and assignments | `analytics-app/data/canonical/tag-registry.json`, `tag-aliases.json`, `tag-assignments.json`, `tag-groups.json` | none by default; public catalogue search does not consume Analytics tags | local analytics API read/write payloads and tag route views | [Analytics](/docs/?scope=studio&doc=analytics) |
 | Work storage lookup | `studio/data/generated/activity/work-storage-index.json` | none | Studio Works storage review data | [Studio Works](/docs/?scope=studio&doc=studio-works) |
 | Studio config and UI text | `studio/app/frontend/config/studio-config.json`, `studio/app/frontend/config/ui-text/*.json`, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and Studio route UI text payloads | [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) |
-| Studio activity | local write-service outputs under `var/studio/activity/` | none | Studio Activity route/API data | [Studio Activity](/docs/?scope=studio&doc=studio-activity) |
+| Admin activity | local write-service outputs under `var/admin/activity/` | none | Admin Activity route/API data | [Studio Activity](/docs/?scope=studio&doc=studio-activity) |
 
 Studio app data is local by default.
 Public builders can read a narrow subset only through documented adapters.
@@ -84,6 +84,7 @@ Public build configuration is part of the projection contract:
 - `_config.yml` is the public Jekyll build config
 - public Docs Viewer config exposes only public read-only scopes
 - `bin/local-studio` serves Studio routes, local runtime config, and Studio-owned APIs
+- `bin/local-admin` serves Admin routes, local Admin runtime config, Admin-owned APIs, and Admin-hosted UI Catalogue routes
 - `docs-viewer/bin/docs-viewer` serves Docs Viewer manage mode, generated reads, Docs management APIs, and document Data Sharing endpoints
 - `bin/public-site-preview` and `bin/public-site-build` run public Jekyll preview/build paths
 

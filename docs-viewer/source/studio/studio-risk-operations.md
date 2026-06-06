@@ -2,7 +2,7 @@
 doc_id: studio-risk-operations
 title: Studio Risk Operations
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-06
 ui_status: review
 parent_id: studio-risk-priority-dashboard
 viewable: true
@@ -58,7 +58,7 @@ This is the same boundary risk operations need.
 | Risk evidence API adapter | `admin-app/app/server/admin_app/` | `admin_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, snapshot deletion, and Activity rows. |
 | Risk evidence UI | Admin app shell | `/admin/risk/` is the run/review/delete surface for risk evidence packs. |
 | Activity UI | Admin app shell | `/admin/activity/` is the unified activity review surface. |
-| Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/studio/activity/activity_log.jsonl`, `var/studio/activity/activity_log.json`, and the checked-in activity contract path. |
+| Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/admin/activity/activity_log.jsonl`, `var/admin/activity/activity_log.json`, and the checked-in activity contract path. |
 | Local risk reports/artifacts | `var/admin/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
 | Checked-in risk configuration | `admin-app/checks/` or `admin-app/data/config/` | Use `admin-app/checks/` for check-owned config and `admin-app/data/config/` for app/runtime-visible config. |
 
@@ -104,7 +104,7 @@ They use:
 
 - route-local shell/body modules
 - focused frontend modules for rendering and filtering
-- Local Studio API adapters with allowlisted behavior
+- Admin API adapters with allowlisted behavior
 - app inventories and change requests as the source of priority state
 
 ## Related References
@@ -115,5 +115,6 @@ They use:
 - [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route)
 - [Studio Audits](/docs/?scope=studio&doc=studio-audits)
 - [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)

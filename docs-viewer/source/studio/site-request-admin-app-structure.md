@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure
 title: Admin App Structure Request
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- in progress
+- done
 
 ## Summary
 
@@ -230,3 +230,42 @@ Durable docs that will need updates include:
 ## Implementation Tracker
 
 Use [Admin App Structure Tasks](/docs/?scope=studio&doc=site-request-admin-app-structure-tasks) for the batch list, sequencing, cleanup coverage, fixture handling, and verification plan.
+
+## Closeout
+
+Completed on 2026-06-06.
+
+Moved source ownership:
+
+- Admin app source, routes, APIs, runtime config, shell assets, route modules, and UI text live under `admin-app/app/...`.
+- Repo-scope checks and risk evidence producers live under `admin-app/checks/`.
+- The optional check runner lives at `admin-app/commands/run_checks.py` and writes summaries under `var/admin/test-runs/`.
+- Admin-owned tests live under `admin-app/tests/python/` and `admin-app/tests/smoke/`.
+- UI Catalogue source and assets live under `admin-app/ui-catalogue/`.
+- Unified activity and risk local output now default to `var/admin/activity/` and `var/admin/risk/`.
+
+Moved route ownership:
+
+- Admin owns `/admin/`, `/admin/audits/`, `/admin/risk/`, `/admin/activity/`, `/admin/testing/`, `/admin/ui-catalogue/...`, and `/admin/api/...`.
+- Studio retains catalogue routes at plain `/studio/...` paths without `?mode=manage`.
+- Retired Studio admin routes and standalone UI Catalogue routes have no aliases, proxies, or fallback servers.
+
+Retired scripts and services:
+
+- `studio/commands/run_checks.py`
+- `studio/checks/` repo-scope ownership
+- `var/test-runs/` as the active runner output root
+- standalone `ui-catalogue-app/` and `bin/local-ui-catalogue`
+- standalone audit/risk UI ownership inside Studio
+
+Final verification:
+
+- Admin `quick` profile passed: `var/admin/test-runs/admin-batch-6-quick-final/summary.md`.
+- Admin route smoke profile passed: `var/admin/test-runs/admin-batch-6-admin-smoke/summary.md`.
+- Admin UI Catalogue smoke profile passed: `var/admin/test-runs/admin-batch-6-ui-catalogue-smoke/summary.md`.
+- Focused syntax, JSON, Python owner tests, Admin route smokes, UI Catalogue smokes, and retained Studio route smokes passed.
+- Source/config review found only historical request notes, intentional retired-route notes, and negative tests for old paths.
+
+Follow-on work:
+
+- none for this request.

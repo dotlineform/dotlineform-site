@@ -149,7 +149,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/services/catalogue/catalogue_save_build.py",
                 "studio/services/catalogue/catalogue_source_mutation.py",
                 "studio/services/catalogue/catalogue_transactions.py",
-                "studio/app/server/studio/audit_runner.py",
+                "admin-app/app/server/admin_app/audit_runner.py",
                 "docs-viewer/tests/smoke/docs_viewer_route_index_panel.py",
                 "docs-viewer/tests/smoke/docs_viewer_route_navigation.py",
                 "docs-viewer/tests/smoke/docs_viewer_route_search_missing_hash.py",

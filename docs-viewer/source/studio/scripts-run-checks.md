@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: 2026-05-15
+last_updated: 2026-06-06
 parent_id: dev-home
 ---
 # Run Checks
@@ -46,7 +46,7 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-vie
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Studio audit service script, and core lightweight test modules.
+  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Admin audit runner, and core lightweight test modules.
 - `catalogue`
   Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
 - `docs`
@@ -79,6 +79,7 @@ The runner removes any existing temp build before `jekyll-temp-build` and remove
 ## Related References
 
 - [Testing](/docs/?scope=studio&doc=testing)
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)

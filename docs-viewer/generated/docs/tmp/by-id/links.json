@@ -1,12 +1,8 @@
 {
-  "scope": "tmp",
   "doc_id": "links",
   "title": "links",
   "added_date": "2026-05-28",
   "last_updated": "2026-05-28",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "links.md",
   "viewer_url": "/docs/?scope=tmp&doc=links",
   "ui_status": "draft",

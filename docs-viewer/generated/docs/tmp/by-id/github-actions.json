@@ -1,12 +1,8 @@
 {
-  "scope": "tmp",
   "doc_id": "github-actions",
   "title": "github actions",
   "added_date": "2026-06-02",
   "last_updated": "2026-06-02",
-  "parent_id": "",
-  "hidden": false,
-  "viewable": true,
   "source_path": "github-actions.md",
   "viewer_url": "/docs/?scope=tmp&doc=github-actions",
   "ui_status": "draft",

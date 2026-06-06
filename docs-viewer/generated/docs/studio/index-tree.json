@@ -243,13 +243,13 @@
           "doc_id": "site-request-admin-app-structure",
           "title": "Admin App Structure Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "site-request-admin-app-structure-tasks",
               "title": "Admin App Structure Tasks",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-tasks.json",
-              "ui_status": "planned",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "site-request-admin-app-structure-batch-1",
@@ -261,31 +261,31 @@
                   "doc_id": "site-request-admin-app-structure-batch-2",
                   "title": "Admin App Structure Batch 2",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-2.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "site-request-admin-app-structure-batch-3",
                   "title": "Admin App Structure Batch 3",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-3.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "site-request-admin-app-structure-batch-4",
                   "title": "Admin App Structure Batch 4",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-4.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "site-request-admin-app-structure-batch-5",
                   "title": "Admin App Structure Batch 5",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-5.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "site-request-admin-app-structure-batch-6",
                   "title": "Admin App Structure Batch 6",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-6.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1364,6 +1364,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json"
         },
         {
+          "doc_id": "local-admin-app",
+          "title": "Local Admin App",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
+        },
+        {
           "doc_id": "local-studio-apis",
           "title": "Local Studio APIs",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-apis.json"
@@ -1572,5 +1577,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-06T17:47:36Z"
+  "generated_at": "2026-06-06T19:26:04Z"
 }

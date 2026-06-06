@@ -2,7 +2,7 @@
 doc_id: studio-python-ruby-script-inventory
 title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
-last_updated: 2026-05-31
+last_updated: 2026-06-06
 ui_status: reference
 parent_id: audit
 viewable: true
@@ -91,8 +91,8 @@ The remaining risk is less about one obvious file to split and more about keepin
 | --- | ---: | ---: | --- | --- | --- | --- |
 | `studio/services/catalogue/` | 48 | 17,013 | high | medium | high | Large source/build/write surface with multiple generated artifact families, field-aware build planning, media derivation, lookup refreshes, Python catalogue search rebuilds, publication flows, prose rendering, and local write-service orchestration. |
 | `docs-viewer/` | 34 | 13,266 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and docs search are now Python-owned. Targeted docs payload/search rebuilds reduce routine write cost, while builder/watcher/management contracts and resolver-data fallbacks still need care. |
-| `studio/` | 18 | 5,165 | medium | medium | low | Command-owned registries and helper entrypoints such as `studio/commands/run_checks.py` should remain orchestration surfaces rather than owning domain behavior. |
-| `studio/checks/` | 10 | 3,647 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
+| `studio/` | 18 | 5,165 | medium | medium | low | Catalogue helper entrypoints should remain orchestration surfaces rather than owning domain behavior. |
+| `admin-app/checks/` | 10 | 3,647 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
 | `analytics-app/app/server/analytics_app/` | 9 | 2,653 | medium | medium | low | Analytics API and Data Sharing dispatch stay Python-owned; keep route adapters thin and domain behavior in focused helper modules. |
 | `studio/app/server/studio/` | 8 | 2,352 | medium | medium | low | Shared Studio services are small, but catalogue, audit, risk, and Activity mechanics overlap with docs and catalogue services. |
 | `analytics-app/app/server/analytics_app/tag_services/` | 10 | 2,131 | medium | medium | low | Analytics-owned tag helper package for source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection. Data Sharing and tag import/apply flows remain broad enough to watch. |
@@ -222,13 +222,13 @@ Relevant files:
 - `studio/services/catalogue/catalogue_write_service.py`
 - `docs-viewer/services/docs_viewer_service.py`
 - `docs-viewer/services/docs_management_service.py`
-- `studio/app/server/studio/studio_audit_api.py`
-- `studio/app/server/studio/audit_runner.py`
+- `admin-app/app/server/admin_app/admin_audit_api.py`
+- `admin-app/app/server/admin_app/audit_runner.py`
 - `studio/shared/python/script_logging.py`
 - `studio/shared/python/studio_activity.py`
 
 The local services share a pattern: loopback-only HTTP, CORS checks, JSON request parsing, write allowlists, backups, local logs, dry-run responses, and Studio Activity rows.
-Studio audit execution is now a direct runner plus local app API adapter rather than a sibling HTTP service.
+Admin audit execution is now a direct runner plus local Admin app API adapter rather than a sibling HTTP service.
 The services are currently domain-specific enough that a broad shared framework would be premature, but repeated mechanics can drift.
 
 Recommended improvements:
@@ -250,11 +250,11 @@ Immediate work signal: medium.
 
 Relevant files:
 
-- `studio/checks/audit_site_consistency.py`
-- `studio/checks/audit_studio_ready_state.py`
-- `studio/checks/css_token_audit.py`
-- `studio/checks/check_runtime_payload_budgets.py`
-- `studio/commands/run_checks.py`
+- `admin-app/checks/audit_site_consistency.py`
+- `admin-app/checks/audit_studio_ready_state.py`
+- `admin-app/checks/css_token_audit.py`
+- `admin-app/checks/check_runtime_payload_budgets.py`
+- `admin-app/commands/run_checks.py`
 
 Audit scripts intentionally cut across the repo, so they will always have broader source knowledge than a domain script.
 The risk is that new checks get appended as unrelated logic without shared output shape, sampling rules, or profile integration.
@@ -289,13 +289,13 @@ The old ad hoc `find`, `wc`, and inline Python snippets have been replaced by th
 Run this from `dotlineform-site/`:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/risk_evidence_pack.py --app all --area script-family-inventory --write
+$HOME/miniconda3/bin/python3 admin-app/checks/risk_evidence_pack.py --app all --area script-family-inventory --write
 ```
 
 Read:
 
 ```text
-var/studio/risk/runs/<run-id>/script-family-inventory.json
+var/admin/risk/runs/<run-id>/script-family-inventory.json
 ```
 
 When updating this doc from an evidence pack, keep the three risk classifications separate.

@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -33,11 +33,9 @@ Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to 
 
 The app server owns:
 
-- `/studio/` and active Local Studio operational route shells
+- `/studio/` and active Local Studio catalogue route shells
 - `/studio/runtime-config.json`
 - Catalogue read/write APIs under `/studio/api/catalogue/...`
-- Studio audit APIs under `/studio/api/audits/...`
-- risk evidence APIs under `/studio/api/risk/...`
 - local report-opening adapters for Studio-owned workflows
 
 The app server does not own:
@@ -45,8 +43,9 @@ The app server does not own:
 - public Jekyll preview/build routes
 - Docs Viewer management routes or Docs Viewer static/runtime assets
 - Local Analytics routes or `/analytics/api/...`
+- Local Admin routes or `/admin/api/...`
 - UI Catalogue routes
-- retired Analytics/Data Sharing Studio aliases
+- retired audit, risk, activity, testing, Analytics/Data Sharing, or UI Catalogue Studio aliases
 - retired standalone catalogue write, tag write, audit-service, or thumbnail-quality route shims
 
 ## Runtime Config
@@ -88,10 +87,6 @@ The app server is split by ownership:
   owns local runtime/view config loading and validation
 - `studio/app/server/studio/studio_app_views.py`
   owns the shared HTML bootstrap
-- `studio/app/server/studio/studio_audit_api.py`
-  owns the Studio audit API adapter
-- `studio/app/server/studio/studio_risk_api.py`
-  owns the risk evidence API adapter
 - `studio/app/server/studio/studio_catalogue_api.py`
   owns the Catalogue API adapter
 
@@ -103,7 +98,6 @@ New route families should follow that module-boundary pattern rather than expand
 Current focused Local Studio checks are grouped by ownership:
 
 - server and config: `studio/tests/python/test_studio_app_server.py`
-- risk evidence: `studio/tests/python/test_risk_evidence_pack.py`
 - navigation/runtime adapter: `studio/tests/smoke/local_studio_navigation_adapter.py`
 - route shells: see [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - Docs Viewer boundary: `studio/tests/smoke/local_studio_app_docs_viewer.py`
@@ -115,4 +109,5 @@ Current focused Local Studio checks are grouped by ownership:
 - [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
 - [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)

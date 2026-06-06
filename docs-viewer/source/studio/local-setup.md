@@ -2,7 +2,7 @@
 doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
-last_updated: 2026-05-30
+last_updated: 2026-06-06
 parent_id: ""
 viewable: true
 ---
@@ -20,7 +20,7 @@ All commands assume you are in `dotlineform-site/` unless stated otherwise.
 The local development stack is split into sibling services:
 
 - `bin/public-site-preview` for the public Jekyll preview
-- `bin/local-studio` for Local Studio catalogue, audit, activity, admin, and docs-watcher workflows
+- `bin/local-studio` for Local Studio catalogue workflows and the docs live rebuild watcher
 - `bin/local-admin` for Admin operations and Admin-hosted UI Catalogue demos
 - `bin/local-analytics` for Analytics tag and Data Sharing routes/APIs
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode and docs management APIs
@@ -34,5 +34,6 @@ Do not make public preview part of Studio startup semantics, do not reintroduce 
 - [Toolchain](/docs/?scope=studio&doc=local-setup-toolchain) covers current versions, fresh macOS install, version checks, and switching Python/Ruby versions.
 - [Environment](/docs/?scope=studio&doc=local-setup-environment) covers `var/local/site.env`, process environment fallback, repo-specific operating notes, and common commands.
 - [Public Site Preview](/docs/?scope=studio&doc=local-setup-public-site-preview) covers the public Jekyll preview/build commands, CSS rebuild behavior, LiveReload, and the difference between wrapper scripts and raw Jekyll commands.
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers Admin route/API ownership, output paths, and UI Catalogue hosting.
 - [Recovery](/docs/?scope=studio&doc=local-setup-recovery) covers recovery after macOS, Xcode, or Command Line Tools updates.
 - [GitHub And Codex Notes](/docs/?scope=studio&doc=local-setup-github-codex) covers local-vs-GitHub setup boundaries and Codex guidance.

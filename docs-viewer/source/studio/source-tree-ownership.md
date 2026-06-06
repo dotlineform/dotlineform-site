@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: architecture
 viewable: true
 ---
@@ -14,17 +14,18 @@ This document is the maintained source-tree ownership contract after the Studio 
 
 Studio is the same-repo catalogue authoring and maintenance system for the site.
 It lives under `studio/`.
-Analytics, Docs Viewer, and UI Catalogue are separate local app boundaries in the same repository.
+Admin, Analytics, Docs Viewer, and Admin-hosted UI Catalogue are separate local app boundaries in the same repository.
 
 The public Jekyll site remains the publishing surface.
 It lives outside `studio/` and should contain only public publishing source, public runtime files, public assets, and generated public output needed by GitHub Pages/Jekyll.
 
 The repo is intentionally one repository:
 
-- Studio owns catalogue source, catalogue authoring workflows, Studio operational routes, Studio local services, app UI, checks, tests, and developer commands.
+- Studio owns catalogue source, catalogue authoring workflows, Studio catalogue routes, Studio catalogue services, app UI, and catalogue/public-site tests.
+- Admin owns cross-repo operational review, audit/risk/activity/testing routes, repo-scope checks, check profiles, local check summaries, and Admin-hosted UI Catalogue routes.
 - Analytics owns tag maintenance, Data Sharing route/API workflows, semantic-reference maintenance, and future analysis/visualisation workflows.
 - Docs Viewer owns docs viewing, docs source management, Docs Viewer payloads, docs conversion helpers, and the `/docs/` manage-mode service.
-- UI Catalogue owns isolated UI demos and reference assets outside Local Studio.
+- UI Catalogue owns isolated UI demos and reference assets under Admin route ownership.
 - Jekyll owns public layouts, includes, route pages, public route JavaScript/CSS, public media, and generated public runtime payloads.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
 - Local working output, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
@@ -43,8 +44,6 @@ The current Studio-owned source homes are:
 | `studio/data/generated/` | Studio-generated read models and review output used by Local Studio, such as catalogue lookup data. Retired thumbnail-quality preview output is not an active served contract. |
 | `studio/services/` | Domain services for catalogue, media, generation, validation, mutation, publication, import/export, and preview/apply workflows. Analytics helper modules may remain here only as current tag-domain helpers used by the Analytics app. |
 | `studio/shared/` | Shared Python helpers used by Studio-owned commands, Docs Viewer builders, catalogue generation, and services. |
-| `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, and other repo-scope verification checks. |
-| `admin-app/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned registries. |
 | `studio/tests/` | Studio-owned Python tests, smoke tests, and Codex-run verification helpers for catalogue/public-site behavior. |
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
 
@@ -52,6 +51,28 @@ Risk operations are Admin-owned.
 Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `admin-app/checks/`; ignored local risk reports and snapshots should default to `var/admin/risk/`.
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
+
+## Admin App
+
+Admin is the local app boundary for cross-repo operational review and verification.
+
+Current Admin-owned source homes:
+
+| Path | Owner / role |
+| --- | --- |
+| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/risk/activity/testing API dispatch, audit allowlist, and UI Catalogue static/view serving. |
+| `admin-app/app/frontend/` | Admin browser modules, route modules, shell helpers, route state helpers, transport helpers, route registry, and Admin UI text config. |
+| `admin-app/app/assets/` | Admin-only CSS and static assets used by Local Admin routes. |
+| `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, activity-contract, and other repo-scope verification checks. |
+| `admin-app/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned profile registries. |
+| `admin-app/tests/` | Admin server tests, runner tests, risk/audit contract tests, Admin-hosted UI Catalogue tests, and Admin route smokes. |
+| `admin-app/ui-catalogue/` | UI Catalogue demo source, palette reference data, scoped CSS, JavaScript helpers, and reference assets served by the Admin app. |
+| `var/admin/activity/` | Ignored local unified activity feed and journal. |
+| `var/admin/risk/` | Ignored local risk evidence runs, snapshots, and review artifacts. |
+| `var/admin/test-runs/` | Ignored local check profile summaries and command logs. |
+
+Admin routes and APIs live under `/admin/...` and `/admin/api/...`.
+Do not add aliases, proxies, dual-read paths, or static-serving shims for retired `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, `/studio/ui-catalogue/...`, `/ui-catalogue/...`, or standalone `ui-catalogue-app` paths.
 
 ## Analytics App
 

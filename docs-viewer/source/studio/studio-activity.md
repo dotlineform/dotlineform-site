@@ -2,7 +2,7 @@
 doc_id: studio-activity
 title: Activity Report
 added_date: 2026-05-08
-last_updated: 2026-05-22
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -34,21 +34,21 @@ The page root `#studioActivityRoot` implements the shared Studio ready-state con
 
 ## Inputs
 
-The page reads the unified feed through the local Studio app catalogue API:
+The page reads the unified feed through the local Admin app activity API:
 
-- `GET /studio/api/catalogue/read?key=activity_log`
+- `GET /admin/api/activity/feed`
 
 That service-backed read returns:
 
-- `var/studio/activity/activity_log.json`
+- `var/admin/activity/activity_log.json`
 
 The fuller local journal lives beside the capped feed outside published route data:
 
-- `var/studio/activity/activity_log.jsonl`
+- `var/admin/activity/activity_log.jsonl`
 
 The feed labels hydrate from:
 
-- `assets/studio/data/activity_contract.json`
+- `studio/data/config/runtime/activity-contract.json`
 
 ## Row Shape
 

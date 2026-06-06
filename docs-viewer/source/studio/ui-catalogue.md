@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: ui
 viewable: true
 ---
@@ -13,6 +13,7 @@ This section is the top-level index for shared UI primitives, composition patter
 The UI Catalogue is now a demo system, not a live-system CSS check. It exists to make patterns readable, inspectable, and reusable while keeping demo code separate from production Studio and Docs Viewer implementation code.
 The demo pages are now served by the local Admin app.
 They do not mutate catalogue data and should not be wired through Local Studio routes.
+The durable Admin route and static-serving boundary is documented in [Local Admin App](/docs/?scope=studio&doc=local-admin-app).
 
 ## Demo Route Structure
 
