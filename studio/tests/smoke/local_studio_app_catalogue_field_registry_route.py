@@ -38,10 +38,10 @@ def main(argv: list[str] | None = None) -> int:
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
         runtime_view = runtime_by_id.get("catalogue_field_registry")
-        if not runtime_view or runtime_view.get("path") != "/studio/catalogue-field-registry/?mode=manage":
+        if not runtime_view or runtime_view.get("path") != "/studio/catalogue-field-registry/":
             raise AssertionError(f"runtime config missing catalogue_field_registry: {runtime_views!r}")
 
-        with urllib.request.urlopen(f"{base_url}/studio/catalogue-field-registry/?mode=manage", timeout=10) as response:
+        with urllib.request.urlopen(f"{base_url}/studio/catalogue-field-registry/", timeout=10) as response:
             bootstrap_html = response.read().decode("utf-8")
         if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
             raise AssertionError("catalogue-field-registry should be served through the JavaScript Studio app bootstrap")
@@ -68,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
                     else None,
                 )
 
-                page.goto(f"{base_url}/studio/catalogue-field-registry/?mode=manage", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/studio/catalogue-field-registry/", wait_until="domcontentloaded")
                 root = page.locator("#fieldRegistryReviewRoot")
                 expect(root).to_be_visible(timeout=10_000)
                 expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio catalogue-field-registry route OK: {base_url}/studio/catalogue-field-registry/?mode=manage")
+        print(f"local Studio catalogue-field-registry route OK: {base_url}/studio/catalogue-field-registry/")
         return 0
     finally:
         server.shutdown()

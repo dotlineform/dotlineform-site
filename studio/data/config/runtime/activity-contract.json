@@ -667,7 +667,7 @@
     },
     "bulk-add-work": {
       "label": "bulk add work",
-      "route": "/studio/bulk-add-work/?mode=manage",
+      "route": "/studio/bulk-add-work/",
       "actions": {
         "import-workbook-records": {
           "label": "import workbook records",
@@ -698,7 +698,7 @@
     },
     "project-state": {
       "label": "project state",
-      "route": "/studio/project-state/?mode=manage",
+      "route": "/studio/project-state/",
       "actions": {
         "run-project-state-report": {
           "label": "run project-state report",

@@ -114,7 +114,7 @@ async function applyImport(state) {
       activity_context: buildStudioActivityContext({
         pageId: "bulk-add-work",
         actionId: "import-workbook-records",
-        route: "/studio/bulk-add-work/?mode=manage",
+        route: "/studio/bulk-add-work/",
         controlId: "bulkAddWorkApply",
         controlSelector: "#bulkAddWorkApply",
         recordIdField: "import_mode",

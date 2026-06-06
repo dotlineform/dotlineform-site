@@ -156,7 +156,7 @@ They cover config loading, semantic config validation, selected-document descend
 The same check runs in the `docs` profile:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
 ```
 
 ## Report Shape

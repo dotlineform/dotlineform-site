@@ -23,7 +23,7 @@ The contract is implemented across current Studio route shells.
 Current verification:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
 ```
 
 As of 2026-05-14, the strict audit reports:
@@ -126,13 +126,11 @@ The former Catalogue, Analytics, and Data Sharing dashboards were retired in fav
 
 Route-specific Studio roots:
 
-- `/studio/activity/` with `#studioActivityRoot`
-- `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/bulk-add-work/` with `#bulkAddWorkRoot`
 - `/studio/catalogue-field-registry/` with `#fieldRegistryReviewRoot`
 - `/studio/catalogue-moment/` with `#catalogueMomentRoot`
 - `/studio/catalogue-series/` with `#catalogueSeriesRoot`
-- `/studio/catalogue-status/?mode=manage` with `#catalogueStatusRoot`
+- `/studio/catalogue-status/` with `#catalogueStatusRoot`
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
 - `/studio/project-state/` with `#projectStateRoot`
@@ -180,17 +178,17 @@ After the shared wait, route-specific tests may assert `data-studio-mode`, `data
 
 The ready-state audit lives in:
 
-- `studio/checks/audit_studio_ready_state.py`
+- `admin-app/checks/audit_studio_ready_state.py`
 
 Run it after changing Studio route shells, static/reference pages, dashboard shells, or route-ready helper scripts:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
 ```
 
 Strict mode fails on warnings as well as errors. It catches missing baseline attributes, static/dashboard marker mixups, missing static or dashboard helper scripts, dashboard metric markers on static routes, and static routes that start loading another module script.
 
-The `quick` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` includes this audit.
+The `quick` profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` includes this audit.
 
 ## Related References
 

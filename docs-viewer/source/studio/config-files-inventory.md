@@ -73,7 +73,7 @@ Every config contract review should answer:
 | `_data/pipeline.json` | shared catalogue/media pipeline defaults | maintainer-editable build config | [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json) |
 | `assets/data/search/policy.json` | public catalogue search runtime policy | maintainer-editable runtime config | [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json) |
 | `studio/services/catalogue/search/build_config.json` | catalogue search build policy | maintainer-editable build config | [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json) |
-| `studio/checks/projection_contract.json` | projection contract audit rules | code infrastructure | [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
+| `admin-app/checks/projection_contract.json` | projection contract audit rules | code infrastructure | [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
 | `admin-app/ui-catalogue/source/palette/palette.yml` | UI Catalogue palette source | maintainer-editable design config | [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) |
 
 ## Cleanup Queue

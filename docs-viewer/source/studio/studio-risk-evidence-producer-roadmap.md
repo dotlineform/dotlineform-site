@@ -15,7 +15,7 @@ This document tracks implementation status for evidence producers named by [Stud
 
 | Producer | Status | Detail owner | Notes |
 | --- | --- | --- | --- |
-| JavaScript inventory guardrail | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Wraps `studio/checks/javascript_inventory_guardrail.py --json`. |
+| JavaScript inventory guardrail | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Wraps `admin-app/checks/javascript_inventory_guardrail.py --json`. |
 | Check profiles | implemented | [Studio Risk Runtime Browser Evidence](/docs/?scope=studio&doc=studio-risk-runtime-browser-evidence) | Existing run-check profiles are allowlisted through `--runtime-profile`. |
 | Static file metrics | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Counts files, lines, bytes, and family totals. |
 | Import/export scan | implemented | [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) | Included inside `static-metrics.json`. |

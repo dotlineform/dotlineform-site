@@ -22,7 +22,7 @@ This is the tracker for implementing [Public Static Site Build Request](/docs/?s
 - Start with a source/build responsibility inventory before adding builder code.
 - Keep the new implementation under `public-site/`; `bin/public-site-build` and `bin/public-site-preview` should remain thin operator-facing wrappers.
 - Do not switch production deploy, remove Jekyll, or remove Jekyll-era files until static output parity and the verification gate pass.
-- Treat `/palette/` as excluded from public-site parity; palette inspection is owned by the UI Catalogue app at `/ui-catalogue/palette/`.
+- Treat `/palette/` as excluded from public-site parity; palette inspection is owned by the UI Catalogue app at `/admin/ui-catalogue/palette/`.
 
 ### baseline verification set
 
@@ -67,7 +67,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | 4 | planned | Implement output directory handling for ignored `_public_site/`, including clean write behavior, `.nojekyll` generation, and diagnostics that identify the selected output directory. Do not write into `_site/`. |
 | 5 | planned | Implement artifact copy allowlists for site-root publishing artifacts and public static assets. Include `CNAME`, favicon files, `apple-touch-icon` files, `safari-pinned-tab.svg`, `site.webmanifest`, `404.html` where applicable, public CSS/JS/assets, public generated data, and public Docs Viewer runtime payloads. |
 | 6 | planned | Implement explicit Python rendering helpers/components to replace the needed `_layouts/` and `_includes/` behavior: document shell, head metadata, navigation, asset includes, footer, Docs Viewer shell mounting, catalogue route shells, canonical URLs, and deterministic asset versioning. Do not recreate Liquid semantics or broad template inheritance. |
-| 7 | planned | Render all fixed public route shells from [Public Route Model](/docs/?scope=studio&doc=public-route-model): `/`, `/about/`, `/recent/`, `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, `/analysis/`, and `404.html`. Exclude `/palette/` from public-site parity because palette inspection is owned by the UI Catalogue app at `/ui-catalogue/palette/`. |
+| 7 | planned | Render all fixed public route shells from [Public Route Model](/docs/?scope=studio&doc=public-route-model): `/`, `/about/`, `/recent/`, `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, `/analysis/`, and `404.html`. Exclude `/palette/` from public-site parity because palette inspection is owned by the UI Catalogue app at `/admin/ui-catalogue/palette/`. |
 | 8 | planned | Generate individual moment pages from public moment records or generated public data, not from `_moments` stubs. Confirm no builder input depends on `_works/`, `_series/`, `_work_details/`, or `_moments` collection stubs. |
 | 9 | planned | Integrate public catalogue projections/generated public data, catalogue search payloads, Docs Viewer public docs/search payloads, and media/static assets without widening the publish surface. |
 | 10 | planned | Add public build surface audit and source/projection leak checks for `_public_site/`. Fail on Studio-only source, manage-only Docs Viewer source, logs, tests, `var/`, local service files, Jekyll collection stubs, or derivable/private source data appearing in the artifact. |
@@ -91,7 +91,7 @@ Closeout should confirm:
 - local output defaults to ignored `_public_site/`
 - production deploy uses GitHub Actions Pages artifacts only
 - all simplified public routes and intentionally public top-level pages are present in the generated artifact
-- `/palette/` is no longer treated as a public-site parity route, and `/ui-catalogue/palette/` remains the UI Catalogue-owned palette reference route
+- `/palette/` is no longer treated as a public-site parity route, and `/admin/ui-catalogue/palette/` remains the UI Catalogue-owned palette reference route
 - individual moment pages are generated from public moment records or generated public data
 - Jekyll collection stubs are not builder inputs
 - generated artifact root includes `.nojekyll`, `CNAME`, favicon/site manifest files, and `404.html`

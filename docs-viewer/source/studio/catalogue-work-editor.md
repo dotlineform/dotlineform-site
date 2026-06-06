@@ -123,7 +123,7 @@ Bulk mode keeps the existing raw `series_ids` input for now because bulk add/rem
 
 ## Local App Migration
 
-The page shell now lives in `studio/app/server/studio/studio_app_views.py` and is mounted at `/studio/catalogue-work/?mode=manage` by `studio/app/server/studio/studio_app_server.py`.
+The page shell now lives in `studio/app/server/studio/studio_app_views.py` and is mounted at `/studio/catalogue-work/` by `studio/app/server/studio/studio_app_server.py`.
 It reuses the existing browser module and calls local-app catalogue endpoints under `/studio/api/catalogue/...`.
 The local app adapter reuses the existing catalogue write handler in-process, so save/build/publication behavior stays aligned with the retired sibling service.
 

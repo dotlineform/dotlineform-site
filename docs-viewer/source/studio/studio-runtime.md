@@ -79,7 +79,7 @@ Active local shells include `/studio/`, operational Studio routes, Studio Works,
 The maintained mounted-route inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
 Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps with their own route shells.
 
-UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
+UI Catalogue demo routes are standalone reference surfaces under `/admin/ui-catalogue/demos/` and are not Studio route shells.
 
 ## Shared Runtime Modules
 

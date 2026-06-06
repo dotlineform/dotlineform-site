@@ -15,7 +15,7 @@
       "project_state": {
         "label": "project state",
         "title": "Project State",
-        "path": "/studio/project-state/?mode=manage",
+        "path": "/studio/project-state/",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": false,
         "shell_type": "javascript",
@@ -24,7 +24,7 @@
       "bulk_add_work": {
         "label": "bulk add",
         "title": "Bulk Add Work",
-        "path": "/studio/bulk-add-work/?mode=manage",
+        "path": "/studio/bulk-add-work/",
         "script": "/studio/app/frontend/js/bulk-add-work.js",
         "nav": false,
         "shell_type": "javascript",
@@ -33,7 +33,7 @@
       "catalogue_field_registry": {
         "label": "field registry",
         "title": "Catalogue Field Registry",
-        "path": "/studio/catalogue-field-registry/?mode=manage",
+        "path": "/studio/catalogue-field-registry/",
         "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
         "nav": false,
         "shell_type": "javascript",
@@ -42,7 +42,7 @@
       "catalogue_status": {
         "label": "drafts",
         "title": "Catalogue Drafts",
-        "path": "/studio/catalogue-status/?mode=manage",
+        "path": "/studio/catalogue-status/",
         "script": "/studio/app/frontend/js/catalogue-status.js",
         "nav": false,
         "shell_type": "javascript",
@@ -51,7 +51,7 @@
       "studio_works": {
         "label": "works",
         "title": "Studio Works",
-        "path": "/studio/studio-works/?mode=manage",
+        "path": "/studio/studio-works/",
         "script": "/studio/app/frontend/js/studio-works.js",
         "nav": false,
         "shell_type": "javascript",
@@ -60,7 +60,7 @@
       "catalogue_series_editor": {
         "label": "series editor",
         "title": "Catalogue Series Editor",
-        "path": "/studio/catalogue-series/?mode=manage",
+        "path": "/studio/catalogue-series/",
         "script": "/studio/app/frontend/js/catalogue-series-editor.js",
         "nav": false,
         "shell_type": "javascript",
@@ -69,7 +69,7 @@
       "catalogue_work_editor": {
         "label": "work editor",
         "title": "Catalogue Work Editor",
-        "path": "/studio/catalogue-work/?mode=manage",
+        "path": "/studio/catalogue-work/",
         "script": "/studio/app/frontend/js/catalogue-work-editor.js",
         "nav": false,
         "shell_type": "javascript",
@@ -78,7 +78,7 @@
       "catalogue_work_detail_editor": {
         "label": "detail editor",
         "title": "Catalogue Work Detail Editor",
-        "path": "/studio/catalogue-work-detail/?mode=manage",
+        "path": "/studio/catalogue-work-detail/",
         "script": "/studio/app/frontend/js/catalogue-work-detail-editor.js",
         "nav": false,
         "shell_type": "javascript",
@@ -87,7 +87,7 @@
       "catalogue_moment_editor": {
         "label": "moment editor",
         "title": "Catalogue Moment Editor",
-        "path": "/studio/catalogue-moment/?mode=manage",
+        "path": "/studio/catalogue-moment/",
         "script": "/studio/app/frontend/js/catalogue-moment-editor.js",
         "nav": false,
         "shell_type": "javascript",

@@ -16,8 +16,8 @@ State the baseline verification set for before and after extraction slices, to b
 
 For example:
 
-- Core checks: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick`.
-- Docs Viewer smoke checks: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`.
+- Core checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick`.
+- Docs Viewer smoke checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke`.
 - Local Studio smoke checks that prove Studio links and integration still work.
 - Public Jekyll build check: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
 - Public scope checks for `/library/` and `/analysis/` when scope registration, generated payload locations, route shells, or public Docs Viewer runtime behavior changes.

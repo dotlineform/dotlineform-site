@@ -30,7 +30,7 @@ Current Python callers load it through `scripts/pipeline_config.py`:
 - `studio/services/catalogue/generate_work_pages.py`
 - `studio/services/catalogue/catalogue_build_media.py`
 - `scripts/media/make_srcset_images.py`
-- `studio/checks/audit_site_consistency.py`
+- `admin-app/checks/audit_site_consistency.py`
 
 Current Jekyll/Liquid callers read it as `site.data.pipeline`:
 

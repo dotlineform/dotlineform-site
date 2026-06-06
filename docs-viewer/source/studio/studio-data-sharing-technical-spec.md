@@ -348,7 +348,7 @@ Focused checks for Data Sharing changes:
 - `analytics-app/tests/smoke/data_sharing_prepare.py`
 - `analytics-app/tests/smoke/data_sharing_review.py`
 
-Use broader `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared service behavior.
+Use broader `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared service behavior.
 
 The 2026-05 split records focused API tests and mock/block/route smokes against the Analytics-owned `/analytics/api/data-sharing/...` boundary.
 Codex did not run a manual Docs Viewer generated payload rebuild during SDSA-015; local docs-watcher output, when present, is normal follow-through from the edited source docs.

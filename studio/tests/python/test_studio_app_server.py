@@ -46,7 +46,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
     assert payload["app"]["routes"]["studio_home"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "javascript"
@@ -69,18 +69,18 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(str(view["id"]).startswith("ui_catalogue") for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
-    assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert not any("doc_id" in view for view in runtime["views"])
     assert not any("docId" in view for view in runtime["views"])
-    assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
+    assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert "analytics" not in runtime["services"]
@@ -170,7 +170,7 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     unserved_route["app"]["routes"]["unserved_route"] = {
         "label": "unserved",
         "title": "Unserved",
-        "path": "/studio/unserved/?mode=manage",
+        "path": "/studio/unserved/",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": False,
         "shell_type": "javascript",
@@ -181,7 +181,7 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
 
     duplicated_route_metadata = json.loads(json.dumps(payload))
     duplicated_route_metadata["paths"]["routes"] = {
-        "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage"
+        "catalogue_field_registry_review": "/studio/catalogue-field-registry/"
     }
     with pytest.raises(RuntimeError, match="Studio route metadata must live in app.routes"):
         validate_studio_route_registry(REPO_ROOT, duplicated_route_metadata)

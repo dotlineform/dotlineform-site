@@ -31,7 +31,7 @@ Use this script after changing:
 - `studio/services/catalogue/catalogue_source.py`
 - `studio/services/catalogue/moment_sources.py`
 - field-aware preview or save-time build planning
-- the optional `catalogue` check profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
+- the optional `catalogue` check profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`
 
 It loads the registry path through `studio/app/frontend/config/studio-config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
 

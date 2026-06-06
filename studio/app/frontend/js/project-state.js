@@ -112,7 +112,7 @@ async function runReport(state) {
       activity_context: buildStudioActivityContext({
         pageId: "project-state",
         actionId: "run-project-state-report",
-        route: "/studio/project-state/?mode=manage",
+        route: "/studio/project-state/",
         controlId: "projectStateRunButton",
         controlSelector: "#projectStateRunButton",
         recordIdField: "activity_target",

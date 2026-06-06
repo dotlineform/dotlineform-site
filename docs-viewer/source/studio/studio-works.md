@@ -10,7 +10,7 @@ viewable: true
 
 Route:
 
-- `/studio/studio-works/?mode=manage`
+- `/studio/studio-works/`
 
 Purpose:
 

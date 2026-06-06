@@ -106,7 +106,7 @@ Runtime ownership:
 Local app migration:
 
 - the page shell now lives in `studio/app/server/studio/studio_app_views.py`
-- the local app mounts it at `/studio/catalogue-moment/?mode=manage`
+- the local app mounts it at `/studio/catalogue-moment/`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
 
 Apply writes:

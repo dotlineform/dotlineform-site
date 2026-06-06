@@ -141,5 +141,5 @@ ruby -v
 bundle -v
 ffmpeg -version | head -n 1
 heif-convert --version
-$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict
 ```

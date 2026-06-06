@@ -22,28 +22,28 @@ from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: 
 ROUTES = [
     {
         "id": "catalogue_series_editor",
-        "path": "/studio/catalogue-series/?mode=manage",
+        "path": "/studio/catalogue-series/",
         "root": "#catalogueSeriesRoot",
         "route": "catalogue-series",
         "doc": "/docs/?scope=studio&doc=catalogue-series-editor&mode=manage",
     },
     {
         "id": "catalogue_work_editor",
-        "path": "/studio/catalogue-work/?mode=manage",
+        "path": "/studio/catalogue-work/",
         "root": "#catalogueWorkRoot",
         "route": "catalogue-work",
         "doc": "/docs/?scope=studio&doc=catalogue-work-editor&mode=manage",
     },
     {
         "id": "catalogue_work_detail_editor",
-        "path": "/studio/catalogue-work-detail/?mode=manage",
+        "path": "/studio/catalogue-work-detail/",
         "root": "#catalogueWorkDetailRoot",
         "route": "catalogue-work-detail",
         "doc": "/docs/?scope=studio&doc=catalogue-work-detail-editor&mode=manage",
     },
     {
         "id": "catalogue_moment_editor",
-        "path": "/studio/catalogue-moment/?mode=manage",
+        "path": "/studio/catalogue-moment/",
         "root": "#catalogueMomentRoot",
         "route": "catalogue-moment",
         "doc": "/docs/?scope=studio&doc=catalogue-moment-editor&mode=manage",
@@ -123,25 +123,25 @@ def main(argv: list[str] | None = None) -> int:
 
             public_link_checks = [
                 {
-                    "url": "/studio/catalogue-series/?mode=manage&series=001",
+                    "url": "/studio/catalogue-series/?series=001",
                     "root": "#catalogueSeriesRoot",
                     "selector": "#catalogueSeriesSummary a[href*='/series/']",
                     "prefix": f"{public_preview_base}/series/?series=001",
                 },
                 {
-                    "url": "/studio/catalogue-work/?mode=manage&work=00001",
+                    "url": "/studio/catalogue-work/?work=00001",
                     "root": "#catalogueWorkRoot",
                     "selector": "#catalogueWorkSummary a[href*='/works/']",
                     "prefix": f"{public_preview_base}/works/?work=00001",
                 },
                 {
-                    "url": "/studio/catalogue-work-detail/?mode=manage&detail=00001-001",
+                    "url": "/studio/catalogue-work-detail/?detail=00001-001",
                     "root": "#catalogueWorkDetailRoot",
                     "selector": "#catalogueWorkDetailSummary a[href*='/work-details/']",
                     "prefix": f"{public_preview_base}/work-details/?detail=00001-001",
                 },
                 {
-                    "url": "/studio/catalogue-moment/?mode=manage&moment=13-moments-in-october",
+                    "url": "/studio/catalogue-moment/?moment=13-moments-in-october",
                     "root": "#catalogueMomentRoot",
                     "selector": "#catalogueMomentSummary a[href*='/moments/']",
                     "prefix": f"{public_preview_base}/moments/13-moments-in-october/",
@@ -166,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio catalogue editor routes OK: {base_url}/studio/catalogue-work/?mode=manage")
+        print(f"local Studio catalogue editor routes OK: {base_url}/studio/catalogue-work/")
         return 0
     finally:
         server.shutdown()

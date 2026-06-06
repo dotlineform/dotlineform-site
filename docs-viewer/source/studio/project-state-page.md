@@ -10,7 +10,7 @@ viewable: true
 
 Route:
 
-- `/studio/project-state/?mode=manage`
+- `/studio/project-state/`
 
 This page runs the project-state report and writes `var/studio/reports/project-state.md`.
 The route shell is served by the local Studio app, not by a Jekyll Studio page.

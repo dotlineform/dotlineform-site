@@ -174,12 +174,12 @@ They cover documents adapter returned-package listing, review writing, dry-run r
 The parser and service checks run in the `docs` profile:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
 ```
 
 The Analytics page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `analytics-app/tests/smoke/data_sharing_review.py`.
 That smoke check runs in the `analytics-smoke` profile:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile analytics-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile analytics-smoke
 ```

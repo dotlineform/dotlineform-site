@@ -35,7 +35,7 @@ If a page uses a pattern that has not yet been standardized enough to audit, the
 
 Use these sources in this order:
 
-1. UI Catalogue docs and isolated demo pages under `/ui-catalogue/demos/`
+1. UI Catalogue docs and isolated demo pages under `/admin/ui-catalogue/demos/`
 2. [UI Framework](/docs/?scope=studio&doc=ui-framework)
 3. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
 

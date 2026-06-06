@@ -8,15 +8,15 @@ viewable: true
 ---
 # Catalogue Drafts
 
-This document describes the Studio drafts page at `/studio/catalogue-status/?mode=manage`.
+This document describes the Studio drafts page at `/studio/catalogue-status/`.
 The route shell is now hosted by the local Studio app server rather than Jekyll.
 
 Family views:
 
-- `/studio/catalogue-status/?mode=manage`
-- `/studio/catalogue-status/?mode=manage&family=works`
-- `/studio/catalogue-status/?mode=manage&family=work_details`
-- `/studio/catalogue-status/?mode=manage&family=moments`
+- `/studio/catalogue-status/`
+- `/studio/catalogue-status/?family=works`
+- `/studio/catalogue-status/?family=work_details`
+- `/studio/catalogue-status/?family=moments`
 
 ## Purpose
 
@@ -76,7 +76,7 @@ Supported family keys:
 - `moments`
 
 Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.
-The local route preserves `mode=manage` when family filters are changed.
+The local route preserves the selected `family` filter when family filters are changed.
 
 ## Boundaries
 

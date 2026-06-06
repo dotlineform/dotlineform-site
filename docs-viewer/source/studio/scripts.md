@@ -136,9 +136,9 @@ Catalogue/runtime maintenance:
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
   Audit Studio route-ready template contracts and static-route drift.
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
-  Maintain the allowlisted audit runner used by `/studio/audits/?mode=manage`; the active HTTP endpoints are served by the local Studio app.
+  Maintain the allowlisted audit runner used by `/admin/audits/`; the active HTTP endpoints are served by the Admin app.
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-  Run Local Studio, Local Analytics, UI Catalogue, public-site preview, and Docs Viewer either independently or through the sibling-service `bin/local-all` runner.
+  Run Local Studio, Local Admin, Local Analytics, public-site preview, and Docs Viewer either independently or through the sibling-service `bin/local-all` runner.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

@@ -57,7 +57,7 @@ UI Audit owns live implementation checks. The UI Catalogue owns isolated demos.
 
 When auditing a page that implements a catalogue primitive or pattern:
 
-- reference the relevant demo route under `/ui-catalogue/demos/`
+- reference the relevant demo route under `/admin/ui-catalogue/demos/`
 - identify the demo namespace classes, for example `uiCatalogueDemoButton` or `uiCatalogueDemoModal`
 - identify the live implementation classes that the page maps the pattern into, for example `tagStudio__button`, `studioHomeLinks`, or another route-owned namespace
 - verify the live route imports production CSS/JS only, not `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css` or demo scripts

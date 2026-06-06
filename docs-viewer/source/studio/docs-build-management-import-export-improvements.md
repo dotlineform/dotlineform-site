@@ -116,7 +116,7 @@ Acceptance checks:
 - metadata changes that affect other rows either update the dependent docs or fall back to full-scope rebuild
 - docs search updates still reconcile missing and non-viewable docs with `--remove-missing`
 - focused tests cover `--only-doc-ids` planning and fallback reasons
-- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` passes when the implementation is complete
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs` passes when the implementation is complete
 
 Risks:
 

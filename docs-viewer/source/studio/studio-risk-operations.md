@@ -9,37 +9,37 @@ viewable: true
 ---
 # Studio Risk Operations
 
-This document finalises the runtime and source ownership decision for risk-related audits, activity, scripts, reports, and local artifacts.
+This document records the previous Studio risk decision and the current Admin ownership boundary for risk-related audits, activity, scripts, reports, and local artifacts.
 
 ## Decision
 
-Risk operations belong in Local Studio.
+Risk operations now belong in the Admin app.
 
-Local Studio is the central home for:
+Admin is the central home for:
 
 - risk dashboards and app inventories
 - audit launcher UI
 - unified activity review
 - allowlisted audit execution adapters
 - risk-related local read APIs
-- risk-related generated review artifacts that need to be inspected from Studio
+- risk-related generated review artifacts that need to be inspected locally
 
-Do not create a separate risk server for the current risk-analysis work.
-A new server should be considered only if a future requirement cannot fit the Local Studio app server's allowlisted adapter model without weakening route ownership, write allowlists, or process boundaries.
+Local Studio remains focused on catalogue/public-site data maintenance and should not recreate audit, risk, activity, testing, or UI Catalogue routes.
 
 ## Rationale
 
-Risk work is operational maintenance for the whole repo, but the active user surface is Local Studio.
-The current Studio app already hosts:
+Risk work is operational maintenance for the whole repo, so the active user surface is Admin.
+The current Admin app hosts:
 
-- `/studio/audits/?mode=manage`
-- `/studio/risk/?mode=manage`
-- `/studio/activity/?mode=manage`
-- `/studio/api/audits/...`
-- `/studio/api/risk/...`
-- Studio catalogue/admin read APIs used by operational pages
+- `/admin/audits/`
+- `/admin/risk/`
+- `/admin/activity/`
+- `/admin/testing/`
+- `/admin/api/audits/...`
+- `/admin/api/risk/...`
+- narrow Admin activity and testing APIs
 
-The Studio app shell also provides the correct boundary:
+The Admin app shell provides the correct boundary:
 
 - JavaScript owns the route UI
 - Python owns local APIs, filesystem access, process execution, and allowlists
@@ -52,30 +52,29 @@ This is the same boundary risk operations need.
 | Surface | Owner | Notes |
 | --- | --- | --- |
 | Risk policy, dashboard, app inventories | Docs Viewer Studio docs | Source docs live under `docs-viewer/source/studio/` and are rendered by Docs Viewer. |
-| Risk/audit/check scripts | `studio/checks/` | Deterministic checks and standalone audits live here unless a domain-specific service already owns the behavior. |
-| Audit runner and API adapter | `studio/app/server/studio/` | `audit_runner.py` owns the allowlist; `studio_audit_api.py` exposes the Local Studio browser API. |
-| Audit UI | Local Studio app shell | `/studio/audits/?mode=manage` remains the launch/read surface. |
-| Risk evidence API adapter | `studio/app/server/studio/` | `studio_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, snapshot deletion, and Activity rows. |
-| Risk evidence UI | Local Studio app shell | `/studio/risk/?mode=manage` is the run/review/delete surface for risk evidence packs. |
-| Activity UI | Local Studio app shell | `/studio/activity/?mode=manage` remains the unified activity review surface. |
+| Risk/audit/check scripts | `admin-app/checks/` | Deterministic repo-scope checks and standalone audits live here unless a domain-specific service owns the behavior. |
+| Audit runner and API adapter | `admin-app/app/server/admin_app/` | `audit_runner.py` owns the allowlist; `admin_audit_api.py` exposes the Admin browser API. |
+| Audit UI | Admin app shell | `/admin/audits/` is the launch/read surface. |
+| Risk evidence API adapter | `admin-app/app/server/admin_app/` | `admin_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, snapshot deletion, and Activity rows. |
+| Risk evidence UI | Admin app shell | `/admin/risk/` is the run/review/delete surface for risk evidence packs. |
+| Activity UI | Admin app shell | `/admin/activity/` is the unified activity review surface. |
 | Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/studio/activity/activity_log.jsonl`, `var/studio/activity/activity_log.json`, and the checked-in activity contract path. |
-| Local risk reports/artifacts | `var/studio/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
-| Checked-in risk configuration | `studio/checks/` or `studio/data/config/` | Use `studio/checks/` for check-owned config and `studio/data/config/` for app/runtime-visible config. |
-| Studio-readable generated risk summaries | `studio/data/generated/risk/` only when needed | Use only for generated read models intentionally served by Local Studio. Most local artifacts should stay in `var/studio/risk/`. |
+| Local risk reports/artifacts | `var/admin/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
+| Checked-in risk configuration | `admin-app/checks/` or `admin-app/data/config/` | Use `admin-app/checks/` for check-owned config and `admin-app/data/config/` for app/runtime-visible config. |
 
 The concrete run-directory and artifact contract is [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
 
 ## Server Boundary
 
-Risk operations use the Local Studio app server.
+Risk operations use the Admin app server.
 
 Allowed:
 
-- add new allowlisted audit IDs to `studio/app/server/studio/audit_runner.py`
-- add narrow Studio API adapters under `studio/app/server/studio/`
-- add route-local JavaScript UI under `studio/app/frontend/js/`
+- add new allowlisted audit IDs to `admin-app/app/server/admin_app/audit_runner.py`
+- add narrow Admin API adapters under `admin-app/app/server/admin_app/`
+- add route-local JavaScript UI under `admin-app/app/frontend/js/`
 - read checked-in or generated risk summaries through explicit read keys or narrow endpoints
-- write local reports under `var/studio/risk/` from trusted Python code
+- write local reports under `var/admin/risk/` from trusted Python code
 
 Not allowed:
 
@@ -83,11 +82,11 @@ Not allowed:
 - browser-controlled filesystem paths for audits or risk scripts
 - a generic "run command" API
 - a generic "read any risk file" API
-- a sibling localhost risk server for ordinary Studio risk work
+- a sibling localhost risk server for ordinary Admin risk work
 
 ## Activity Boundary
 
-Risk-related actions that a user initiates from Studio should write unified activity rows when they produce meaningful local side effects or reports.
+Risk-related actions that a user initiates from Admin should write unified activity rows when they produce meaningful local side effects or reports.
 
 Examples:
 
@@ -100,10 +99,8 @@ Background watchers and purely informational route loads should not produce acti
 
 ## Route Shape
 
-The current `/studio/audits/`, `/studio/risk/`, and `/studio/activity/` routes remain in Studio.
-
-The risk route is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route).
-It uses:
+The current `/admin/audits/`, `/admin/risk/`, and `/admin/activity/` routes live in Admin.
+They use:
 
 - route-local shell/body modules
 - focused frontend modules for rendering and filtering

@@ -18,18 +18,15 @@ Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint 
 Active Local Studio routes:
 
 - `/studio/`
-- `/studio/audits/?mode=manage`
-- `/studio/risk/?mode=manage`
-- `/studio/project-state/?mode=manage`
-- `/studio/bulk-add-work/?mode=manage`
-- `/studio/activity/?mode=manage`
-- `/studio/catalogue-field-registry/?mode=manage`
-- `/studio/catalogue-status/?mode=manage`
-- `/studio/studio-works/?mode=manage`
-- `/studio/catalogue-series/?mode=manage`
-- `/studio/catalogue-work/?mode=manage`
-- `/studio/catalogue-work-detail/?mode=manage`
-- `/studio/catalogue-moment/?mode=manage`
+- `/studio/project-state/`
+- `/studio/bulk-add-work/`
+- `/studio/catalogue-field-registry/`
+- `/studio/catalogue-status/`
+- `/studio/studio-works/`
+- `/studio/catalogue-series/`
+- `/studio/catalogue-work/`
+- `/studio/catalogue-work-detail/`
+- `/studio/catalogue-moment/`
 
 The local app owns `/studio/`.
 Studio home navigation is rendered by the JavaScript Studio app shell, not Python or Jekyll/Liquid page data.
@@ -39,21 +36,15 @@ Every local Studio shell, including `/studio/`, shows the same compact top row: 
 
 ## JavaScript Shell Pattern
 
-Operational Studio route shells are hosted by the local app.
+Catalogue-maintenance Studio route shells are hosted by the local app.
 For active JavaScript-shell routes, Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, route-local `*-shell.js` modules render the body markup, and the route controller keeps route boot and behavior.
 
 Current JavaScript-shell route families:
 
-- Studio Audits:
-  `studio-audits-shell.js` renders the body and `studio-audits.js` owns route behavior.
-- Studio Risk:
-  `studio-risk-shell.js` renders the body and `studio-risk.js` owns route behavior.
 - Project State:
   `project-state-shell.js` renders the body and `project-state.js` owns route behavior.
 - Bulk Add Work:
   `bulk-add-work-shell.js` renders the body and `bulk-add-work.js` owns route behavior.
-- Studio Activity:
-  `activity-log-shell.js` renders the body and `activity-log.js` owns route behavior.
 - Catalogue Field Registry:
   `catalogue-field-registry-shell.js` renders the body and `catalogue-field-registry-review.js` owns route behavior.
 - Catalogue Drafts:
@@ -63,7 +54,7 @@ Current JavaScript-shell route families:
 - Catalogue editors:
   route-local editor `*-shell.js` modules render the body and the existing editor controllers own route behavior.
 
-The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
+The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at plain `/studio/.../` paths.
 The editor shell media attributes are projected in the browser from `app.runtime.media` and `app.runtime.pipeline`.
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
 
@@ -74,10 +65,8 @@ Its links now live on the `/studio/` home page, and metrics belong on the indivi
 
 The old Jekyll shells and Python-rendered bodies for these active local routes have been retired:
 
-- `/studio/audits/`
 - `/studio/project-state/`
 - `/studio/bulk-add-work/`
-- `/studio/activity/`
 - `/studio/catalogue-field-registry/`
 - `/studio/catalogue-status/`
 - `/studio/studio-works/`
@@ -94,14 +83,18 @@ Analytics tag and Data Sharing routes moved out of Local Studio.
 Active route shells are served by `bin/local-analytics` under `/analytics/...`.
 Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
 
+Audit, risk, activity, testing, and UI Catalogue routes moved out of Local Studio.
+Active route shells are served by `bin/local-admin` under `/admin/...`.
+Retired Studio paths such as `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, and `/studio/ui-catalogue/...` intentionally have no aliases, proxies, or static shims.
+
 ## Sibling Route Surfaces
 
-Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps with their own route shells.
+Docs Viewer, Admin, and Analytics/Data Sharing are sibling local apps with their own route shells.
 
 - Docs Viewer manage mode is served by the standalone Docs Viewer service, not Local Studio.
 - Public `/library/` and `/analysis/` are public read-only Docs Viewer routes, not Local Studio routes.
+- Local Admin serves `/admin/...`, including `/admin/audits/`, `/admin/risk/`, `/admin/activity/`, `/admin/testing/`, and `/admin/ui-catalogue/...`.
 - Local Analytics serves `/analytics/...` and `/analytics/api/...`.
-- UI Catalogue demo routes are standalone reference surfaces under `/ui-catalogue/demos/` and are not Studio route shells.
 
 The local `/docs/` route is no longer hosted by Local Studio.
 The runtime config does not expose Docs Viewer link targets, per-route doc IDs, Docs Viewer generated-data passthroughs, or Docs Viewer static assets.
@@ -111,13 +104,9 @@ Use the standalone Docs Viewer service directly for developer documentation.
 
 Current focused route shell checks:
 
-- `studio/tests/smoke/local_studio_app_audits_route.py`
-- `studio/tests/smoke/local_studio_app_risk_route.py`
 - `studio/tests/smoke/local_studio_app_project_state_route.py`
 - `studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
-- `studio/tests/smoke/local_studio_app_activity_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_status_route.py`
 - `studio/tests/smoke/local_studio_app_studio_works_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
-- `studio/tests/smoke/local_studio_app_docs_viewer.py`

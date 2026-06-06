@@ -140,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             browser.close()
 
-        expected_url = "/studio/catalogue-status/?mode=manage&scope=studio&zero=0"
+        expected_url = "/studio/catalogue-status/?scope=studio&zero=0"
         if result["hasDocsService"]:
             raise AssertionError("runtime services unexpectedly exposed a Docs Viewer service")
         if result["hasExternalLinks"]:
@@ -170,9 +170,9 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected modal event name: {result['modalEventName']!r}")
         if result["url"] != expected_url:
             raise AssertionError(f"unexpected view URL: {result['url']!r}")
-        if result["workEditorUrl"] != "/studio/catalogue-work/?mode=manage&work=00001&zero=0":
+        if result["workEditorUrl"] != "/studio/catalogue-work/?work=00001&zero=0":
             raise AssertionError(f"unexpected work editor URL: {result['workEditorUrl']!r}")
-        if result["newDetailUrl"] != "/studio/catalogue-work-detail/?mode=new&work=00001":
+        if result["newDetailUrl"] != "/studio/catalogue-work-detail/?work=00001&mode=new":
             raise AssertionError(f"unexpected new detail URL: {result['newDetailUrl']!r}")
         if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/?work=00123&from=studio&zero=0":
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
@@ -191,9 +191,9 @@ def main(argv: list[str] | None = None) -> int:
         home_link_hrefs = {link["href"] for link in result["homeLinks"]}
         home_link_labels = [link["label"] for link in result["homeLinks"]]
         expected_home_hrefs = {
-            "/studio/catalogue-status/?mode=manage",
-            "/studio/catalogue-series/?mode=manage",
-            "/studio/studio-works/?mode=manage&sort=cat&dir=asc",
+            "/studio/catalogue-status/",
+            "/studio/catalogue-series/",
+            "/studio/studio-works/?sort=cat&dir=asc",
             "/admin/",
         }
         if expected_home_hrefs - home_link_hrefs:

@@ -217,6 +217,6 @@ Current operational constraints:
 
 - `bin/local-studio` does not run startup docs/docs-search rebuilds or startup catalogue lookup export; use manual builders or write-service rebuild paths when generated data needs refreshing
 - Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/public-site-preview` when local preview links are being checked
-- `studio/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
+- `admin-app/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 
 For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

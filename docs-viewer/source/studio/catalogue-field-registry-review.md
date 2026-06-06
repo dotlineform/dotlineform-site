@@ -10,7 +10,7 @@ viewable: true
 
 Route:
 
-- `/studio/catalogue-field-registry/?mode=manage`
+- `/studio/catalogue-field-registry/`
 
 This Studio page is a read-only review surface for `studio/data/config/catalogue/catalogue-field-registry.json`.
 It is hosted by the local Studio app server, not by a Jekyll route shell.

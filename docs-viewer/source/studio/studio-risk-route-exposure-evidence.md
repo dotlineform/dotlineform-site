@@ -91,7 +91,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | 1 | planned | Inventory source-of-truth route/config files for Studio, Analytics, Docs Viewer, UI Catalogue, and public-site routes. |
 | 2 | planned | Define a small route exposure schema with route id, app, path, exposure label, loaded scripts, config payloads, API surfaces, and warnings. |
-| 3 | planned | Implement the producer in `studio/checks/risk_evidence_pack.py` or a focused helper it calls. |
+| 3 | planned | Implement the producer in `admin-app/checks/risk_evidence_pack.py` or a focused helper it calls. |
 | 4 | planned | Add retired-path checks for route ids/files that should not be active. |
 | 5 | planned | Add public/manage leakage checks, starting with Docs Viewer public read-only routes and management-only assets. |
 | 6 | planned | Add tests using small fixture route/config files. |

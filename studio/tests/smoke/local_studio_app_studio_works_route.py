@@ -37,10 +37,10 @@ def main(argv: list[str] | None = None) -> int:
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
         runtime_view = runtime_by_id.get("studio_works")
-        if not runtime_view or runtime_view.get("path") != "/studio/studio-works/?mode=manage":
+        if not runtime_view or runtime_view.get("path") != "/studio/studio-works/":
             raise AssertionError(f"runtime config missing studio_works: {runtime_views!r}")
 
-        with urllib.request.urlopen(f"{base_url}/studio/studio-works/?mode=manage", timeout=10) as response:
+        with urllib.request.urlopen(f"{base_url}/studio/studio-works/", timeout=10) as response:
             bootstrap_html = response.read().decode("utf-8")
         if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
             raise AssertionError("studio-works should be served through the JavaScript Studio app bootstrap")
@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
                     else None,
                 )
 
-                page.goto(f"{base_url}/studio/studio-works/?mode=manage", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/studio/studio-works/", wait_until="domcontentloaded")
                 root = page.locator("#worksStudioRoot")
                 expect(root).to_be_visible(timeout=10_000)
                 expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -109,7 +109,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio works route OK: {base_url}/studio/studio-works/?mode=manage")
+        print(f"local Studio works route OK: {base_url}/studio/studio-works/")
         return 0
     finally:
         server.shutdown()

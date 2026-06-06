@@ -45,7 +45,7 @@ If the answer is unclear, stop and classify it first. Several recent inconsisten
 
 Before adding or changing UI:
 
-- check the isolated demo pages under `/ui-catalogue/demos/`
+- check the isolated demo pages under `/admin/ui-catalogue/demos/`
 - map the demo structure into the shared layer or an owning route namespace before inventing unrelated markup or CSS
 - if the live page fails after mapping a catalogue pattern, use UI Audit to decide whether the issue is in the live route, the shared production primitive, or the demo pattern
 - if a pattern is repeated but not yet formalized, decide whether it is:
@@ -91,7 +91,7 @@ Before finishing Studio UI work:
 - update `studio_config.json` if visible runtime copy changed
 - update shared docs if the contract changed
 - verify desktop and mobile behavior
-- run `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
+- run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 
 The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
 

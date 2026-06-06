@@ -12,9 +12,9 @@ This document defines the boundary between canonical source, public projections,
 
 It complements [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) by documenting the source/projection contract rather than the whole repo layout.
 
-The executable source of truth is `studio/checks/projection_contract.json`.
+The executable source of truth is `admin-app/checks/projection_contract.json`.
 This document explains that manifest; it should not become a parallel hand-maintained list.
-Run `$HOME/miniconda3/bin/python3 studio/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
+Run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
 When a built public site is available, pass `--site-root <path>` to audit public output from the same manifest.
 
 `public` means intended for dotlineform.com runtime output.
@@ -105,7 +105,7 @@ The public Jekyll build should include:
 - generated Library docs payloads and search under `assets/data/docs/scopes/library/` and `assets/data/search/library/`
 - generated Analysis docs payloads and search under `assets/data/docs/scopes/analysis/` and `assets/data/search/analysis/`
 
-Palette inspection belongs to the standalone UI Catalogue app at `/ui-catalogue/palette/`, not to the public-site build surface.
+Palette inspection belongs to the Admin-hosted UI Catalogue at `/admin/ui-catalogue/palette/`, not to the public-site build surface.
 
 The public Jekyll build should not include:
 
@@ -136,10 +136,10 @@ Adding a new generated family requires naming:
 
 Existing enforcement is split across several checks and builders:
 
-- `studio/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
-- `studio/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, public template/script source references, and optional built public output
+- `admin-app/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
+- `admin-app/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, public template/script source references, and optional built public output
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
-- after a public build, run `$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build` to check the published surface directly
+- after a public build, run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build` to check the published surface directly
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
 - docs builder emits viewable/manage-mode metadata according to each scope contract
 - search builders own scope-specific flattened search projections

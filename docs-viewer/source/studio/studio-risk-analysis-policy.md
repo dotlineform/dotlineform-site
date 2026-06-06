@@ -92,7 +92,7 @@ Useful deterministic inputs include:
 - app smoke checks, especially Playwright/browser smokes for route readiness, public read-only behavior, and user-facing interactions
 
 Current local inventory helpers are transition evidence.
-For example, `studio/checks/javascript_inventory_guardrail.py` validates the old JavaScript inventory table and highlights legacy concentration patterns, but it should not remain the final app-priority mechanism.
+For example, `admin-app/checks/javascript_inventory_guardrail.py` validates the old JavaScript inventory table and highlights legacy concentration patterns, but it should not remain the final app-priority mechanism.
 
 When adding deterministic evidence to an app inventory, record the command, source, or report that produced it.
 Avoid anonymous metrics such as "large", "slow", or "complex" when a local count, timing, path list, or diagnostic payload is available.

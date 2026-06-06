@@ -71,7 +71,7 @@ export function renderCatalogueWorkShell(config) {
           <section class="tagStudio__panel catalogueWorkDetails">
             <div class="tagStudio__headingRow">
               <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
-              <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="/studio/catalogue-work-detail/?mode=manage">new work detail -&gt;</a>
+              <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="/studio/catalogue-work-detail/">new work detail -&gt;</a>
             </div>
             <div class="catalogueWorkDetails__searchRow" id="catalogueWorkDetailsSearchRow" hidden>
               <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">

@@ -37,13 +37,13 @@ def main(argv: list[str] | None = None) -> int:
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
         runtime_view = runtime_by_id.get("bulk_add_work")
-        if not runtime_view or runtime_view.get("path") != "/studio/bulk-add-work/?mode=manage":
+        if not runtime_view or runtime_view.get("path") != "/studio/bulk-add-work/":
             raise AssertionError(f"runtime config missing bulk_add_work: {runtime_views!r}")
         runtime_pipeline = runtime_config.get("app", {}).get("runtime", {}).get("pipeline", {})
         if runtime_pipeline.get("workbooks", {}).get("bulk_import") != "data/works_bulk_import.xlsx":
             raise AssertionError(f"runtime config missing bulk import workbook path: {runtime_pipeline!r}")
 
-        with urllib.request.urlopen(f"{base_url}/studio/bulk-add-work/?mode=manage", timeout=10) as response:
+        with urllib.request.urlopen(f"{base_url}/studio/bulk-add-work/", timeout=10) as response:
             bootstrap_html = response.read().decode("utf-8")
         if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
             raise AssertionError("bulk-add-work should be served through the JavaScript Studio app bootstrap")
@@ -70,7 +70,7 @@ def main(argv: list[str] | None = None) -> int:
                     else None,
                 )
 
-                page.goto(f"{base_url}/studio/bulk-add-work/?mode=manage", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/studio/bulk-add-work/", wait_until="domcontentloaded")
                 root = page.locator("#bulkAddWorkRoot")
                 expect(root).to_be_visible(timeout=10_000)
                 expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -99,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio bulk-add-work route OK: {base_url}/studio/bulk-add-work/?mode=manage")
+        print(f"local Studio bulk-add-work route OK: {base_url}/studio/bulk-add-work/")
         return 0
     finally:
         server.shutdown()

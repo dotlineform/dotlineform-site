@@ -8,13 +8,13 @@ viewable: true
 ---
 # Studio Audits
 
-Route:
+Current route:
 
-- `/studio/audits/?mode=manage`
+- `/admin/audits/`
 
-The Studio Audits page surfaces local maintenance audits inside Studio.
+The audit page surfaces local maintenance audits inside Admin.
 This is the central audit-launching surface for risk operations.
-Do not add a separate risk or audit server for normal Studio risk work; add allowlisted audits through the Local Studio app boundary described in [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
+Do not recreate Studio audit routes; add allowlisted audits through the Admin app boundary described in [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
 
 The first version lists the Studio ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
 
@@ -22,16 +22,16 @@ The first version lists the Studio ready-state audit and provides a Run command.
 
 The page uses:
 
-- `studio/app/frontend/js/studio-audits.js`
-- `studio/app/frontend/js/studio-transport.js`
-- `studio/app/server/studio/studio_audit_api.py`
-- `studio/app/server/studio/audit_runner.py`
-- `studio/checks/audit_studio_ready_state.py`
+- `admin-app/app/frontend/js/admin-audits.js`
+- `admin-app/app/frontend/js/admin-transport.js`
+- `admin-app/app/server/admin_app/admin_audit_api.py`
+- `admin-app/app/server/admin_app/audit_runner.py`
+- `admin-app/checks/audit_studio_ready_state.py`
 
-Visible runtime copy lives in `studio/app/frontend/config/ui-text/studio-audits.json`, loaded through `paths.data.ui_text.studio_audits` in `studio/app/frontend/config/studio-config.json`.
+Visible runtime copy lives in `admin-app/app/frontend/config/ui-text/admin-audits.json`, loaded through the Admin runtime config.
 
-The local service endpoint definitions live in `studio/app/frontend/js/studio-transport.js`, matching the existing Studio transport pattern.
-The active browser endpoints are hosted by the local Studio app server under `/studio/api/audits/...`.
+The local service endpoint definitions live in `admin-app/app/frontend/js/admin-transport.js`, matching the Admin transport pattern.
+The active browser endpoints are hosted by the Admin app server under `/admin/api/audits/...`.
 
 ## Ready State
 
@@ -51,11 +51,11 @@ The page marks busy while an audit run is in progress and returns to ready after
 
 When the local app audit API is unavailable, the page stays readable, disables the Run command, and exposes `data-studio-service="unavailable"`.
 
-When the service is available, the page fetches `/studio/api/audits/audits` to list allowlisted audits. It currently expects:
+When the service is available, the page fetches `/admin/api/audits/audits` to list allowlisted audits. It currently expects:
 
 - `studio-ready-state`
 
-Running the audit posts only the audit ID to `/studio/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
+Running the audit posts only the audit ID to `/admin/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
 
 ## Related References
 

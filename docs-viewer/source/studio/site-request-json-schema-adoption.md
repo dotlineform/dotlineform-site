@@ -121,7 +121,7 @@ Preferred validation path:
 
 - each schema lives next to the config it validates when practical
 - config docs link both the config file and schema file
-- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` can later include schema validation in the smallest relevant profile
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` can later include schema validation in the smallest relevant profile
 - deeper semantic validators remain responsible for checks that JSON Schema cannot express cleanly
 
 ## Open Questions

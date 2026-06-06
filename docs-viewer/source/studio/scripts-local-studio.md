@@ -304,14 +304,14 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_viewer_service.py
 The local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
 There is no standalone catalogue write-server fallback in `bin/local-studio`.
 
-### Audit API
+### Admin Operations
 
-The local Studio app owns the active browser-facing audit APIs under `/studio/api/audits/...`.
-There is no standalone audit HTTP service fallback in `bin/local-studio`.
+The Admin app owns the active browser-facing audit, risk, activity, testing, and UI Catalogue pages and APIs under `/admin/...`.
+There is no standalone audit or UI Catalogue HTTP service fallback in `bin/local-studio`.
 For direct automation, call:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
 ```
 
 Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service).

@@ -8,18 +8,18 @@ viewable: true
 ---
 # Studio Activity
 
-This document describes the Studio page at `/studio/activity/?mode=manage`.
-The route shell is served by the local Studio app, not by a Jekyll Studio page.
+This document describes the Admin page at `/admin/activity/`.
+The route shell is served by the Admin app, not by Local Studio or a Jekyll page.
 
 ## Purpose
 
-The page is the v1 unified activity report for local authoring actions.
+The page is the unified activity report for local authoring and operational actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
-It is also the activity surface for user-initiated risk operations that produce meaningful local side effects or reports.
+It is the activity surface for user-initiated risk and audit operations that produce meaningful local side effects or reports.
 
 Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, Data Sharing package/apply actions, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
 Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `assets/studio/data/activity_contract.json`.
-The retired split source-side and build-side report pages have been removed; this is the only active Studio activity report.
+The retired split source-side and build-side report pages have been removed; this is the only active unified activity report.
 
 ## Route Ready State
 

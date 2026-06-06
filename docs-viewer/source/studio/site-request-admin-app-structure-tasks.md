@@ -47,7 +47,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | done | [Batch 2: UI Catalogue Under Admin](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-2) |
 | 3 | done | [Batch 3: Audits, Risk, and Activity Routes](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-3) |
 | 4 | done | [Batch 4: Runner, Checks, Tests, and Fixtures](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-4) |
-| 5 | planned | [Batch 5: Studio Local Route Cleanup and App Script Cleanup](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-5) |
+| 5 | done | [Batch 5: Studio Local Route Cleanup and App Script Cleanup](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-5) |
 | 6 | planned | [Batch 6: Durable Docs, Verification, and Closeout](/docs/?scope=studio&doc=site-request-admin-app-structure-batch-6) |
 
 ### task: update docs

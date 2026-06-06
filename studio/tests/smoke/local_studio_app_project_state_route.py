@@ -37,7 +37,7 @@ def main(argv: list[str] | None = None) -> int:
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
         runtime_view = runtime_by_id.get("project_state")
-        if not runtime_view or runtime_view.get("path") != "/studio/project-state/?mode=manage":
+        if not runtime_view or runtime_view.get("path") != "/studio/project-state/":
             raise AssertionError(f"runtime config missing project_state: {runtime_views!r}")
         catalogue_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("catalogue", {})
         if catalogue_service.get("project_state_report") != "/studio/api/catalogue/project-state-report":
@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
         if catalogue_service.get("project_state_open_report") != "/studio/api/catalogue/project-state-open-report":
             raise AssertionError(f"runtime config missing local project-state open API: {catalogue_service!r}")
 
-        with urllib.request.urlopen(f"{base_url}/studio/project-state/?mode=manage", timeout=10) as response:
+        with urllib.request.urlopen(f"{base_url}/studio/project-state/", timeout=10) as response:
             bootstrap_html = response.read().decode("utf-8")
         if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
             raise AssertionError("project-state should be served through the JavaScript Studio app bootstrap")
@@ -64,7 +64,7 @@ def main(argv: list[str] | None = None) -> int:
                 page = browser.new_page(viewport=viewport)
                 page.on("console", lambda message, current_label=label: console_errors.append(f"{current_label}: {message.text}") if message.type == "error" else None)
                 page.on("pageerror", lambda error, current_label=label: page_errors.append(f"{current_label}: {error}"))
-                page.goto(f"{base_url}/studio/project-state/?mode=manage", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/studio/project-state/", wait_until="domcontentloaded")
                 root = page.locator("#projectStateRoot")
                 expect(root).to_be_visible(timeout=10_000)
                 expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
@@ -87,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio project-state route OK: {base_url}/studio/project-state/?mode=manage")
+        print(f"local Studio project-state route OK: {base_url}/studio/project-state/")
         return 0
     finally:
         server.shutdown()

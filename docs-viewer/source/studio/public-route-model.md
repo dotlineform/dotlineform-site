@@ -71,7 +71,7 @@ Retired first-party public routes include:
 `/work_details/` is legacy and should not be restored.
 
 `/palette/` is not part of the public-site route model.
-Palette inspection is owned by the standalone UI Catalogue app at `/ui-catalogue/palette/`.
+Palette inspection is owned by the Admin-hosted UI Catalogue at `/admin/ui-catalogue/palette/`.
 
 ## Route-State Semantics
 

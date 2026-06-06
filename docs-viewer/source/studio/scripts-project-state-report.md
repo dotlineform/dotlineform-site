@@ -73,7 +73,7 @@ With `--include-subfolders`, the report also includes `/projects/<project_folder
 
 ## Studio Use
 
-`/studio/project-state/?mode=manage` runs the same report builder through `POST /studio/api/catalogue/project-state-report` on the local Studio app server.
+`/studio/project-state/` runs the same report builder through `POST /studio/api/catalogue/project-state-report` on the local Studio app server.
 The page's `include sub-folders` checkbox sends `include_subfolders: true`; the default request sends `false`.
 The local app adapter reads `DOTLINEFORM_PROJECTS_BASE_DIR` through the served repo's local environment contract, then reuses the script's report builder and Studio activity logging behavior.
 The page opens the latest report through `POST /studio/api/catalogue/project-state-open-report`, which is restricted to the Project State report under `var/studio/reports/`.

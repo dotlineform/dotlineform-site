@@ -3,7 +3,7 @@ doc_id: site-request-admin-app-structure-batch-5
 title: Admin App Structure Batch 5
 added_date: 2026-06-06
 last_updated: 2026-06-06
-ui_status: planned
+ui_status: done
 parent_id: site-request-admin-app-structure-tasks
 viewable: true
 ---
@@ -17,12 +17,12 @@ Summary: clean retained Studio local routes, Studio route config, moved app scri
 
 | ID | status | action |
 | --- | --- | --- |
-| 5.1 | planned | Update retained Studio route config and navigation so local Studio routes use plain paths without `?mode=manage`. |
-| 5.2 | planned | Keep `/studio/catalogue-field-registry/` and `/studio/project-state/` in Studio with focused route checks. |
-| 5.3 | planned | Move or remove Studio app server dispatch, runtime config entries, UI text references, and frontend route modules for surfaces now owned by Admin. |
-| 5.4 | planned | Clean existing app scripts and launchers whose ownership moved to Admin, including runner references and retired UI Catalogue service startup. |
-| 5.5 | planned | Update Studio tests and smokes so retained Studio checks prove catalogue-maintenance routes work through the current Studio route contract. |
-| 5.6 | planned | Review active docs/source references that point at moved Admin routes, scripts, output paths, and fixtures. |
+| 5.1 | done | Update retained Studio route config and navigation so local Studio routes use plain paths without `?mode=manage`. |
+| 5.2 | done | Keep `/studio/catalogue-field-registry/` and `/studio/project-state/` in Studio with focused route checks. |
+| 5.3 | done | Move or remove Studio app server dispatch, runtime config entries, UI text references, and frontend route modules for surfaces now owned by Admin. |
+| 5.4 | done | Clean existing app scripts and launchers whose ownership moved to Admin, including runner references and retired UI Catalogue service startup. |
+| 5.5 | done | Update Studio tests and smokes so retained Studio checks prove catalogue-maintenance routes work through the current Studio route contract. |
+| 5.6 | done | Review active docs/source references that point at moved Admin routes, scripts, output paths, and fixtures. |
 
 ## Steer for these tasks
 
@@ -67,7 +67,23 @@ Summary: clean retained Studio local routes, Studio route config, moved app scri
 
 ## completed verification
 
-- pending
+- Passed: `$HOME/miniconda3/bin/python3 -m py_compile studio/app/server/studio/studio_app_config.py studio/app/server/studio/studio_app_server.py studio/app/server/studio/studio_catalogue_api.py studio/services/catalogue/catalogue_activity.py studio/tests/python/test_studio_app_server.py studio/tests/smoke/local_studio_app_project_state_route.py studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py studio/tests/smoke/local_studio_navigation_adapter.py studio/tests/smoke/studio_operational_route_modules.py`
+- Passed: `$HOME/miniconda3/bin/python3 -m json.tool studio/app/frontend/config/studio-config.json`
+- Passed: `$HOME/miniconda3/bin/python3 -m json.tool studio/data/config/runtime/activity-contract.json`
+- Passed: `node --check studio/app/frontend/js/bulk-add-work.js`
+- Passed: `node --check studio/app/frontend/js/project-state.js`
+- Passed: `node --check studio/app/frontend/js/catalogue-work-shell.js`
+- Passed: `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_project_state_route.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_navigation_adapter.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/studio_operational_route_modules.py --site-root .`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_status_route.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
+- Passed: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
+- Passed: `bash -n bin/local-studio`
+- Passed: `git diff --check`
+- Reviewed: active Studio app/source/test files no longer contain retained Studio `/studio/.../?mode=manage` routes; remaining hits are migration/historical request docs.
 
 ## follow-on tasks
 
@@ -75,5 +91,5 @@ Summary: clean retained Studio local routes, Studio route config, moved app scri
 
 ## task close
 
-- Add a handoff note to Batch 6.
-- Set `ui_status` to `done` after retained Studio routes and app script cleanup are verified.
+- Handoff note added to Batch 6.
+- `ui_status` set to `done` after retained Studio routes and app script cleanup were verified.

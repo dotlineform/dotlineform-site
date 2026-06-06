@@ -287,7 +287,7 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
 ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
     page_id="bulk-add-work",
     action_id="import-workbook-records",
-    route="/studio/bulk-add-work/?mode=manage",
+    route="/studio/bulk-add-work/",
     control_id="bulkAddWorkApply",
     control_selector="#bulkAddWorkApply",
     endpoint="/studio/api/catalogue/import-apply",
@@ -309,7 +309,7 @@ ACTIVITY_PROFILE_IMPORT_MOMENT = ActivityActionProfile(
 ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
     page_id="project-state",
     action_id="run-project-state-report",
-    route="/studio/project-state/?mode=manage",
+    route="/studio/project-state/",
     control_id="projectStateRunButton",
     control_selector="#projectStateRunButton",
     endpoint="/studio/api/catalogue/project-state-report",

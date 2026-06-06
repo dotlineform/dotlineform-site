@@ -93,7 +93,7 @@ def assert_operational_route_helpers(page: Page) -> None:
                         project_state: {
                             label: 'project state',
                             title: 'Project State',
-                            path: '/studio/project-state/?mode=manage',
+                            path: '/studio/project-state/',
                             script: '/studio/app/frontend/js/project-state.js',
                             doc_id: 'project-state-page',
                             nav: false,
@@ -103,7 +103,7 @@ def assert_operational_route_helpers(page: Page) -> None:
                         catalogue_work_editor: {
                             label: 'work editor',
                             title: 'Catalogue Work Editor',
-                            path: '/studio/catalogue-work/?mode=manage',
+                            path: '/studio/catalogue-work/',
                             script: '/studio/app/frontend/js/catalogue-work-editor.js',
                             doc_id: 'catalogue-work-editor',
                             nav: false,
@@ -170,7 +170,7 @@ def assert_operational_route_helpers(page: Page) -> None:
     assert result["contractShouldRenderShell"] is True
     assert result["contractReason"] == ""
     assert result["missingContractReason"] == "route_not_registered"
-    assert result["workRoutePath"] == "/studio/catalogue-work/?mode=manage"
+    assert result["workRoutePath"] == "/studio/catalogue-work/"
     assert result["workRouteNeedsScript"] is True
 
 

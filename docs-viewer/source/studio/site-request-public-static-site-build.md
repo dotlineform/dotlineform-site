@@ -185,7 +185,7 @@ The post-simplification public route surface is small enough that the first prod
 
 Required parity includes the public root and static pages, fixed catalogue shells, query-state catalogue routes, individual moment pages, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
 The route list should be derived from [Public Route Model](/docs/?scope=studio&doc=public-route-model) plus current top-level public pages and site-root publishing artifacts that remain intentionally public.
-`/palette/` is excluded from static public-site parity; palette inspection is owned by the UI Catalogue app at `/ui-catalogue/palette/`.
+`/palette/` is excluded from static public-site parity; palette inspection is owned by the UI Catalogue app at `/admin/ui-catalogue/palette/`.
 
 If a current public route is deliberately excluded, the implementation task list must name it and explain why before production deploy switches to the static builder.
 

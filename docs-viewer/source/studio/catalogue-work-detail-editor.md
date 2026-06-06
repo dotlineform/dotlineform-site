@@ -57,7 +57,7 @@ Implementation notes:
 Local app migration:
 
 - the page shell now lives in `studio/app/server/studio/studio_app_views.py`
-- the local app mounts it at `/studio/catalogue-work-detail/?mode=manage`
+- the local app mounts it at `/studio/catalogue-work-detail/`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
 
 ## Route Ready State

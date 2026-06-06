@@ -58,7 +58,13 @@ Summary: update durable docs, run final focused verification, record moved owner
 
 ## follow-on tasks
 
-- pending implementation findings
+- Batch 5 handoff:
+  - Studio route registry now uses plain local paths for retained routes: `/studio/project-state/`, `/studio/bulk-add-work/`, `/studio/catalogue-field-registry/`, `/studio/catalogue-status/`, `/studio/studio-works/`, and the catalogue editor route family.
+  - Studio activity contexts, runtime activity contract rows, route tests, and route smokes were updated to the plain Studio paths.
+  - `bin/local-studio` startup text now points audit/risk/activity/testing ownership to `bin/local-admin`.
+  - Current source docs were reviewed and updated for Admin-owned audit/risk/activity, UI Catalogue, runner/check paths, and retained Studio route paths. Historical migration/request docs still retain old route examples as historical evidence.
+  - Verification passed for focused Studio server/config pytest, JSON/syntax checks, retained route smokes, route helper smoke, launcher shell syntax, stale-reference scans, and `git diff --check`.
+  - Docs Viewer payloads were not regenerated.
 
 ## task close
 

@@ -301,7 +301,7 @@ def project_state_report_payload(
         body.get("activity_context"),
         page_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.page_id,
         action_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.action_id,
-        route="/studio/project-state/?mode=manage",
+        route="/studio/project-state/",
         control_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.control_id,
         record_id_field=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.record_id_field,
         record_id="project-state",
