@@ -144,7 +144,7 @@ Choose the smallest useful check set:
 - Python changes need a syntax check or focused pytest with the configured Python interpreter
 - script or generator changes need dry-run behavior and a summary of what would be written
 - data model or generated contract changes need builder/output-shape checks and affected-doc review
-- UI/layout changes need desktop and mobile browser checks when practical
+- UI/layout changes need desktop browser checks when practical. Only verify mobile behavior where public pages on the site (dotlineform.com) will be affected.
 - broad behavior changes should use the narrowest relevant `run_checks` profile
 
 Toolchain basics:

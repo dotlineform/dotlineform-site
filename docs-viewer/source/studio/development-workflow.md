@@ -224,7 +224,7 @@ Choose the smallest useful check set:
 - Python changes: run a syntax check or focused pytest with the configured Python interpreter.
 - Script/generator changes: run dry-run behavior and summarize what would be written.
 - Data model or generated contract changes: verify the owning builder, generated output shape, and affected docs.
-- UI/layout changes: verify desktop and mobile behavior when practical.
+- UI/layout changes: verify desktop behavior when practical. Only verify mobile behavior where public pages on the site (dotlineform.com) will be affected.
 - Broad behavior changes: use [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) with the narrowest relevant profile.
 
 Use explicit toolchain paths where the repo requires them.

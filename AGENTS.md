@@ -35,7 +35,7 @@
 
 - Define proportional targeted verification for implementation changes, including Codex-run checks and any manual checks that remain.
 - Browser smoke tests are needed for non-trivial operational site or frontend changes, not for routine docs-only edits.
-- For non-trivial UI changes, verify desktop and mobile behavior where practical.
+- For non-trivial UI changes, verify desktop behavior where practical. Only verify mobile behavior where public pages on the site (dotlineform.com) will be affected.
 - After changing scripts, run a syntax check with the configured interpreter.
 - For commands that clearly bind loopback ports or launch browser smokes, run them with elevated localhost permissions immediately in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, say that the sandbox cannot reach it and use an isolated temporary build/server only if automated verification needs it.
