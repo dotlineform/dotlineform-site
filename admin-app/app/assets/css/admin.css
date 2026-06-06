@@ -1,14 +1,67 @@
-:root {
+html {
+  color-scheme: light dark;
+}
+
+html[data-theme="light"] {
   color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body.adminApp {
   --admin-background: #f7f8f5;
   --admin-surface: #ffffff;
   --admin-surface-muted: #eff2ed;
   --admin-border: #d8ddd3;
+  --admin-border-strong: #b8c1b0;
   --admin-text: #1c211b;
   --admin-muted: #636b61;
   --admin-link: #245d8f;
   --admin-link-hover: #173f62;
   --admin-focus: #8b4c2f;
+}
+
+@media (prefers-color-scheme: dark) {
+  body.adminApp {
+    --admin-background: #0f1210;
+    --admin-surface: #171b18;
+    --admin-surface-muted: #202620;
+    --admin-border: #303a31;
+    --admin-border-strong: #465146;
+    --admin-text: #f1f5ee;
+    --admin-muted: #b9c3b4;
+    --admin-link: #8fc7ff;
+    --admin-link-hover: #bddcff;
+    --admin-focus: #d6a580;
+  }
+}
+
+html[data-theme="light"] body.adminApp {
+  --admin-background: #f7f8f5;
+  --admin-surface: #ffffff;
+  --admin-surface-muted: #eff2ed;
+  --admin-border: #d8ddd3;
+  --admin-border-strong: #b8c1b0;
+  --admin-text: #1c211b;
+  --admin-muted: #636b61;
+  --admin-link: #245d8f;
+  --admin-link-hover: #173f62;
+  --admin-focus: #8b4c2f;
+}
+
+html[data-theme="dark"] body.adminApp {
+  --admin-background: #0f1210;
+  --admin-surface: #171b18;
+  --admin-surface-muted: #202620;
+  --admin-border: #303a31;
+  --admin-border-strong: #465146;
+  --admin-text: #f1f5ee;
+  --admin-muted: #b9c3b4;
+  --admin-link: #8fc7ff;
+  --admin-link-hover: #bddcff;
+  --admin-focus: #d6a580;
 }
 
 * {
@@ -23,6 +76,10 @@ body.adminApp {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.5;
+}
+
+body.adminApp [hidden] {
+  display: none !important;
 }
 
 .adminShell {
@@ -55,23 +112,57 @@ body.adminApp {
   text-decoration: none;
 }
 
-.adminHeader__nav {
+.adminHeader__actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: center;
   justify-content: flex-end;
+  min-width: 0;
 }
 
-.adminHeader__nav a,
 .adminLinkList__item {
   color: var(--admin-link);
   text-decoration: none;
 }
 
-.adminHeader__nav a:hover,
 .adminLinkList__item:hover {
   color: var(--admin-link-hover);
   text-decoration: underline;
+}
+
+.studioThemeToggle {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: var(--admin-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.studioThemeToggle:hover {
+  background: var(--admin-surface-muted);
+}
+
+.studioThemeToggle:focus-visible {
+  outline: 2px solid var(--admin-border-strong);
+  outline-offset: 2px;
+}
+
+.studioThemeToggle__icon {
+  width: 1.16rem;
+  height: 1.16rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .adminMain {
@@ -83,42 +174,69 @@ body.adminApp {
   gap: 24px;
 }
 
-.adminHome__header {
+.studioHomeLinks {
   display: grid;
-  gap: 6px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  width: min(100%, 58rem);
+  margin: 0 auto;
+  padding-top: clamp(1.5rem, 5vw, 3rem);
 }
 
-.adminHome__title {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 680;
-  line-height: 1.2;
-}
-
-.adminHome__summary {
-  max-width: 720px;
-  margin: 0;
-  color: var(--admin-muted);
-}
-
-.adminHome__grid {
+.studioHomeLinks__column {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 0.7rem;
+  justify-items: start;
+  min-width: 0;
 }
 
-.adminHome__section {
-  min-height: 160px;
-  padding: 18px;
+.studioHomeLinks__column h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.studioHomeLinks__pills {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.studioHomeLinks__pills > li {
+  margin: 0;
+}
+
+.studioHomeLinks__pill {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.05rem;
   border: 1px solid var(--admin-border);
-  border-radius: 8px;
+  border-radius: 999px;
+  padding: 0.32rem 0.72rem;
+  color: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
   background: var(--admin-surface);
 }
 
-.adminHome__section h2 {
-  margin: 0 0 12px;
-  font-size: 1rem;
-  line-height: 1.25;
+.studioHomeLinks__pill:is(:link, :visited),
+.studioHomeLinks__pill:hover,
+.studioHomeLinks__pill:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
+.studioHomeLinks__pill:hover,
+.studioHomeLinks__pill:focus-visible {
+  border-color: var(--admin-border-strong);
 }
 
 .adminRoute {
@@ -435,25 +553,37 @@ body.adminApp {
 }
 
 .adminLinkList__item:focus-visible,
-.adminHeader__brand:focus-visible,
-.adminHeader__nav a:focus-visible {
+.adminHeader__brand:focus-visible {
   outline: 2px solid var(--admin-focus);
   outline-offset: 3px;
 }
 
+@media (max-width: 760px) {
+  .studioHomeLinks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem 1.75rem;
+  }
+}
+
 @media (max-width: 640px) {
   .adminHeader__inner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     padding: 14px 0;
   }
 
-  .adminHeader__nav {
-    justify-content: flex-start;
+  .studioThemeToggle {
+    width: 1.85rem;
+    min-width: 1.85rem;
+    height: 1.85rem;
   }
 
   .adminMain {
     padding-top: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .studioHomeLinks {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

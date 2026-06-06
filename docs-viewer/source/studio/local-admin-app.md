@@ -84,6 +84,7 @@ Local Admin views declare the runtime config endpoint with `meta[name="dlf-admin
 
 Admin routes do not use `?mode=manage`.
 There is no public Admin mode.
+The `/admin/` home renders only Admin-owned route links; sibling app links can remain runtime config data without being surfaced in the top nav or home link groups.
 
 ## APIs
 
@@ -106,6 +107,7 @@ The check runner writes summaries under `var/admin/test-runs/`.
 UI Catalogue is Admin-hosted because it is a cross-app design and verification aid.
 The route family is `/admin/ui-catalogue/...`.
 Demo CSS and JavaScript stay UI Catalogue-scoped under `admin-app/ui-catalogue/` and are not merged into `admin.css`.
+UI Catalogue pages reuse the shared Admin top nav and theme toggle; the UI Catalogue shell stylesheet owns only the catalogue page content frame.
 
 Do not recreate:
 

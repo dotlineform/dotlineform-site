@@ -70,6 +70,7 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
 
     assert allowed("/admin/app/assets/css/admin.css") is True
     assert allowed("/admin/app/frontend/js/admin-home.js") is True
+    assert allowed("/admin/app/frontend/js/admin-theme.js") is True
     assert allowed("/admin/app/frontend/js/admin-audits.js") is True
     assert allowed("/admin/app/frontend/js/admin-risk.js") is True
     assert allowed("/admin/app/frontend/js/admin-activity.js") is True
@@ -92,10 +93,11 @@ def test_admin_home_renders_visible_navigation() -> None:
     assert 'href="/admin/activity/"' in html
     assert 'href="/admin/testing/"' in html
     assert 'href="/admin/ui-catalogue/"' in html
-    assert 'href="/studio/"' in html
-    assert 'href="/analytics/"' in html
-    assert 'href="/docs/"' in html
+    assert 'class="studioHomeLinks__pill"' in html
+    assert "Admin home links" in html
+    assert "data-admin-theme-toggle" in html
     assert "/admin/app/assets/css/admin.css?v=test-version" in html
+    assert "/admin/app/frontend/js/admin-theme.js?v=test-version" in html
     assert "/admin/app/frontend/js/admin-home.js?v=test-version" in html
     assert 'data-admin-ready="false"' in html
 
@@ -116,7 +118,8 @@ def test_admin_route_views_render_admin_owned_shells() -> None:
     assert 'data-admin-route="admin-testing"' in testing_html
     for html in (audits_html, risk_html, activity_html, testing_html):
         assert 'meta name="dlf-admin-config-url" content="/admin/runtime-config.json"' in html
-        assert "/studio/app/frontend/js/" not in html
+        assert "data-admin-theme-toggle" in html
+        assert "/admin/app/frontend/js/admin-theme.js?v=test-version" in html
 
 
 def test_admin_activity_api_returns_empty_admin_feed(tmp_path) -> None:

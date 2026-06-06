@@ -2,7 +2,7 @@
 doc_id: local-studio-routes
 title: Local Studio Routes
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: studio
 viewable: true
 ---
@@ -30,7 +30,7 @@ Active Local Studio routes:
 
 The local app owns `/studio/`.
 Studio home navigation is rendered by the JavaScript Studio app shell, not Python or Jekyll/Liquid page data.
-The local home exposes Studio-owned Catalogue and Admin links through `studio-home-shell.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home layout owns grouping, order, and route-specific query-string defaults.
+The local home exposes Studio-owned catalogue links through `studio-home-shell.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home layout owns grouping, order, and route-specific query-string defaults.
 The shared Studio top navigation is separate from that home link list.
 Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
 

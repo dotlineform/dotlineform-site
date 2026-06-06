@@ -184,6 +184,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-operational-route.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-risk.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-state.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-theme.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
         repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-demo.css",

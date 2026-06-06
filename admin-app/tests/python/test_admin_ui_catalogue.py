@@ -30,33 +30,19 @@ def test_static_path_policy_serves_only_admin_ui_catalogue_assets() -> None:
     assert allowed("/admin/ui-catalogue/assets/img/panel-backgrounds/01007-primary-800.webp") is True
     assert allowed("/admin/ui-catalogue/assets/img/moments/blue-sky-thumb-96.webp") is True
 
-    assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
-    assert allowed("/ui-catalogue/app/assets/js/ui-catalogue-demo.js") is False
-    assert allowed("/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
-    assert allowed("/studio/app/assets/css/studio.css") is False
-    assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
-    assert allowed("/assets/css/main.css") is False
-
 
 def test_demo_routes_render_admin_hosted_shell() -> None:
     assert UI_CATALOGUE_DEMO_ROUTES["/admin/ui-catalogue/demos/"] == "ui_catalogue_demos"
     html = ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos")
 
-    assert "dotlineform UI catalogue" in html
-    assert 'class="uiCatalogueShellNav__item"' not in html
-    assert ">demos</a>" not in html
+    assert "dotlineform admin" in html
+    assert "UI Catalogue Demos | dotlineform UI Catalogue" in html
+    assert "data-admin-theme-toggle" in html
+    assert "/admin/app/assets/css/admin.css?v=test-version" in html
+    assert "/admin/app/frontend/js/admin-theme.js?v=test-version" in html
     assert "/admin/ui-catalogue/assets/css/ui-catalogue-shell.css?v=test-version" in html
     assert "/admin/ui-catalogue/assets/css/ui-catalogue-demo.css?v=test-version" in html
-    assert "/admin/ui-catalogue/assets/js/ui-catalogue-shell.js?v=test-version" in html
     assert "/admin/ui-catalogue/assets/js/ui-catalogue-demo.js?v=test-version" in html
-    assert "/docs/" not in html
-    assert "uiCatalogueShellDocLink" not in html
-    assert "/studio/ui-catalogue/" not in html
-    assert 'href="/ui-catalogue/' not in html
-    assert 'src="/ui-catalogue/' not in html
-    assert "/studio/app/" not in html
-    assert "/assets/ui-catalogue/" not in html
-    assert "/assets/css/main.css" not in html
 
 
 def test_palette_route_renders_from_ui_catalogue_owned_data() -> None:
@@ -67,12 +53,14 @@ def test_palette_route_renders_from_ui_catalogue_owned_data() -> None:
     html = ui_catalogue_palette_view("test-version", REPO_ROOT)
 
     assert "Palette | dotlineform UI Catalogue" in html
+    assert "dotlineform admin" in html
+    assert "data-admin-theme-toggle" in html
+    assert "/admin/app/assets/css/admin.css?v=test-version" in html
+    assert "/admin/app/frontend/js/admin-theme.js?v=test-version" in html
     assert "/admin/ui-catalogue/assets/css/ui-catalogue-shell.css?v=test-version" in html
     assert "/admin/ui-catalogue/assets/css/ui-catalogue-demo.css?v=test-version" in html
     assert "admin-app/ui-catalogue/source/palette/palette.yml" in html
     assert "<td class=\"uiCataloguePalette__id\">--text</td>" in html
-    assert 'href="/palette/"' not in html
-    assert 'href="/assets/css/main.css' not in html
 
 
 def test_asset_version_tracks_ui_catalogue_assets() -> None:

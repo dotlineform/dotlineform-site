@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f03d38b1a092074c19f4d8787cef27b5",
-    "generated_at_utc": "2026-06-06T17:29:07Z",
-    "count": 275
+    "version": "blake2b-4d1fdf92bda14e226d04b177e44be589",
+    "generated_at_utc": "2026-06-06T19:49:23Z",
+    "count": 276
   },
   "entries": [
     {
@@ -5280,16 +5280,15 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-06-02",
-      "display_meta": "2026-06-02",
+      "last_updated": "2026-06-06",
+      "display_meta": "2026-06-06",
       "search_terms": [
         "studio",
-        "2026-06-02",
+        "2026-06-06",
         "2026",
-        "06",
-        "02"
+        "06"
       ],
-      "search_text": "studio 2026-06-02 2026 06 02"
+      "search_text": "studio 2026-06-06 2026 06"
     },
     {
       "id": "studio-activity",
@@ -6019,6 +6018,28 @@
       "search_text": "config-docs-viewer-files config docs viewer files docs viewer config files studio 2026-06-03 2026 06 03"
     },
     {
+      "id": "local-admin-app",
+      "kind": "doc",
+      "title": "Local Admin App",
+      "href": "/docs/?scope=studio&doc=local-admin-app",
+      "last_updated": "2026-06-06",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-06 • Studio",
+      "search_terms": [
+        "local-admin-app",
+        "local",
+        "admin",
+        "app",
+        "local admin app",
+        "studio",
+        "2026-06-06",
+        "2026",
+        "06"
+      ],
+      "search_text": "local-admin-app local admin app local admin app studio 2026-06-06 2026 06"
+    },
+    {
       "id": "local-studio-apis",
       "kind": "doc",
       "title": "Local Studio APIs",
@@ -6067,22 +6088,21 @@
       "kind": "doc",
       "title": "Local Studio Routes",
       "href": "/docs/?scope=studio&doc=local-studio-routes",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-06",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-06 • Studio",
       "search_terms": [
         "local-studio-routes",
         "local",
         "studio",
         "routes",
         "local studio routes",
-        "2026-06-02",
+        "2026-06-06",
         "2026",
-        "06",
-        "02"
+        "06"
       ],
-      "search_text": "local-studio-routes local studio routes local studio routes 2026-06-02 2026 06 02"
+      "search_text": "local-studio-routes local studio routes local studio routes 2026-06-06 2026 06"
     },
     {
       "id": "config-pipeline-json",

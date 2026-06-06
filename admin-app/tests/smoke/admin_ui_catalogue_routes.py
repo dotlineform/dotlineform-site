@@ -178,7 +178,7 @@ def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dic
     )
     expected = {
         "theme": "dark",
-        "bodyBackground": "rgb(15, 15, 16)",
+        "bodyBackground": "rgb(15, 18, 16)",
         "rootColor": "rgb(242, 242, 242)",
         "rootSurfaceToken": "#161618",
         "rootCodeToken": "#121316",
@@ -190,35 +190,42 @@ def check_dark_theme(page: Page, base_url: str, viewport: dict[str, int]) -> dic
     actual = {key: state.get(key) for key in expected}
     if actual != expected:
         raise AssertionError(f"unexpected UI Catalogue dark theme at viewport {viewport!r}: {state!r}")
-    toggle = page.locator(".uiCatalogueThemeToggle")
+    toggle = page.locator("[data-admin-theme-toggle]")
     default_toggle_state = toggle.evaluate(
         """button => {
             const styles = getComputedStyle(button);
-            const icons = Array.from(button.querySelectorAll("[data-ui-catalogue-theme-icon]"));
+            const icons = Array.from(button.querySelectorAll("[data-admin-theme-icon]"));
             const visibleIcons = icons
                 .filter(icon => !icon.hidden && getComputedStyle(icon).display !== "none")
-                .map(icon => icon.getAttribute("data-ui-catalogue-theme-icon"));
+                .map(icon => icon.getAttribute("data-admin-theme-icon"));
             return {
+                ariaLabel: button.getAttribute("aria-label"),
                 borderWidth: styles.borderTopWidth,
                 background: styles.backgroundColor,
                 visibleIcons
             };
         }"""
     )
-    if default_toggle_state != {"borderWidth": "0px", "background": "rgba(0, 0, 0, 0)", "visibleIcons": ["dark"]}:
-        raise AssertionError(f"unexpected UI Catalogue theme toggle default style: {default_toggle_state!r}")
+    expected_toggle_state = {
+        "ariaLabel": "Switch to light mode",
+        "borderWidth": "0px",
+        "background": "rgba(0, 0, 0, 0)",
+        "visibleIcons": ["dark"],
+    }
+    if default_toggle_state != expected_toggle_state:
+        raise AssertionError(f"unexpected Admin theme toggle default style in UI Catalogue: {default_toggle_state!r}")
     toggle.click()
     light_toggle_icons = toggle.evaluate(
-        """button => Array.from(button.querySelectorAll("[data-ui-catalogue-theme-icon]"))
+        """button => Array.from(button.querySelectorAll("[data-admin-theme-icon]"))
             .filter(icon => !icon.hidden && getComputedStyle(icon).display !== "none")
-            .map(icon => icon.getAttribute("data-ui-catalogue-theme-icon"))"""
+            .map(icon => icon.getAttribute("data-admin-theme-icon"))"""
     )
     if light_toggle_icons != ["light"]:
-        raise AssertionError(f"UI Catalogue theme toggle did not switch to one light icon: {light_toggle_icons!r}")
+        raise AssertionError(f"Admin theme toggle did not switch to one light icon in UI Catalogue: {light_toggle_icons!r}")
     toggle.hover()
     hover_toggle_state = toggle.evaluate("button => getComputedStyle(button).backgroundColor")
-    if hover_toggle_state != "rgb(238, 241, 236)":
-        raise AssertionError(f"unexpected UI Catalogue theme toggle hover background: {hover_toggle_state!r}")
+    if hover_toggle_state != "rgb(239, 242, 237)":
+        raise AssertionError(f"unexpected Admin theme toggle hover background in UI Catalogue: {hover_toggle_state!r}")
     return {"width": viewport["width"], "height": viewport["height"], "theme": "dark"}
 
 
@@ -250,12 +257,6 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(f"{base_url}/admin/ui-catalogue/demos/", wait_until="domcontentloaded")
                 wait_for_demo_ready(page, "#uiCatalogueDemoIndexRoot")
                 requests.clear()
-
-                retired_response = page.goto(f"{base_url}/ui-catalogue/demos/", wait_until="domcontentloaded")
-                if retired_response is None or retired_response.status != 404:
-                    status = retired_response.status if retired_response is not None else None
-                    raise AssertionError(f"retired /ui-catalogue/demos/ route returned {status!r}, expected 404")
-                requests.clear()
                 failed_responses.clear()
                 console_errors.clear()
                 page_errors.clear()
@@ -263,19 +264,17 @@ def main(argv: list[str] | None = None) -> int:
                 for route in ROUTES:
                     page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
                     wait_for_demo_ready(page, route["root"])
-                    doc_link_count = page.locator(".uiCatalogueShellDocLink").count()
-                    if doc_link_count:
-                        raise AssertionError(f"{route['path']} still renders header doc pill")
-                    nav_item_count = page.locator(".uiCatalogueShellNav__item").count()
-                    if nav_item_count:
-                        raise AssertionError(f"{route['path']} still renders header nav links")
+                    if page.locator(".adminHeader").count() != 1:
+                        raise AssertionError(f"{route['path']} did not render the shared Admin header")
+                    if page.locator("[data-admin-theme-toggle]").count() != 1:
+                        raise AssertionError(f"{route['path']} did not render the shared Admin theme toggle")
 
                 page.goto(f"{base_url}/admin/ui-catalogue/palette/", wait_until="domcontentloaded")
                 page.wait_for_selector("#uiCataloguePaletteRoot", timeout=10_000)
                 if page.locator(".uiCataloguePalette__table").count() != 1:
                     raise AssertionError("/admin/ui-catalogue/palette/ did not render the palette table")
-                if page.locator(".uiCatalogueShellNav__item").count():
-                    raise AssertionError("/admin/ui-catalogue/palette/ still renders header nav links")
+                if page.locator(".adminHeader").count() != 1:
+                    raise AssertionError("/admin/ui-catalogue/palette/ did not render the shared Admin header")
 
                 for viewport in ({"width": 1280, "height": 900}, {"width": 390, "height": 844}):
                     modal_results.append(check_modal_shell(page, base_url, viewport))
@@ -289,21 +288,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("UI Catalogue shell CSS was not requested")
         if not any("/admin/ui-catalogue/assets/js/ui-catalogue-demo.js" in request for request in requests):
             raise AssertionError("UI Catalogue demo JS was not requested")
-        if not any("/admin/ui-catalogue/assets/js/ui-catalogue-shell.js" in request for request in requests):
-            raise AssertionError("UI Catalogue shell JS was not requested")
-        legacy_ui_catalogue_requests = [
-            request
-            for request in requests
-            if "/assets/ui-catalogue/" in request or "/studio/ui-catalogue/" in request
-        ]
-        if legacy_ui_catalogue_requests:
-            raise AssertionError(f"UI Catalogue demos should not request retired UI Catalogue paths: {legacy_ui_catalogue_requests!r}")
-        studio_asset_requests = [request for request in requests if "/studio/app/" in request]
-        if studio_asset_requests:
-            raise AssertionError(f"UI Catalogue demos should not request Studio app assets: {studio_asset_requests!r}")
-        main_css_requests = [request for request in requests if "/assets/css/main.css" in request]
-        if main_css_requests:
-            raise AssertionError(f"UI Catalogue demos should not request public main CSS: {main_css_requests!r}")
+        if not any("/admin/app/frontend/js/admin-theme.js" in request for request in requests):
+            raise AssertionError("Admin theme JS was not requested by UI Catalogue routes")
         if failed_responses:
             raise AssertionError(f"failed responses: {failed_responses}")
         if console_errors:

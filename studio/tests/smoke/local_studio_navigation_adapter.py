@@ -193,8 +193,13 @@ def main(argv: list[str] | None = None) -> int:
         expected_home_hrefs = {
             "/studio/catalogue-status/",
             "/studio/catalogue-series/",
+            "/studio/catalogue-work/",
+            "/studio/catalogue-work-detail/",
+            "/studio/bulk-add-work/",
+            "/studio/catalogue-moment/",
+            "/studio/catalogue-field-registry/",
             "/studio/studio-works/?sort=cat&dir=asc",
-            "/admin/",
+            "/studio/project-state/",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")

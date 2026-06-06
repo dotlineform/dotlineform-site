@@ -14,16 +14,41 @@ except ModuleNotFoundError:  # pragma: no cover - supports package-style imports
 REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
+def admin_theme_boot_script() -> str:
+    return """<script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>"""
+
+
 def admin_header() -> str:
     return """<header class="adminHeader">
     <div class="adminHeader__inner">
       <a class="adminHeader__brand" href="/admin/">dotlineform admin</a>
-      <nav class="adminHeader__nav" aria-label="Admin">
-        <a href="/admin/audits/">audits</a>
-        <a href="/admin/risk/">risk</a>
-        <a href="/admin/activity/">activity</a>
-        <a href="/admin/testing/">testing</a>
-      </nav>
+      <div class="adminHeader__actions">
+        <button class="studioThemeToggle" type="button" data-admin-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
+          <svg class="studioThemeToggle__icon" data-admin-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="studioThemeToggle__icon" data-admin-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>"""
 
@@ -41,6 +66,7 @@ def admin_home_view(version: str, repo_root: Path) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-admin-config-url" content="/admin/runtime-config.json">
   <title>Admin | dotlineform</title>
+  {admin_theme_boot_script()}
   <link rel="stylesheet" href="/admin/app/assets/css/admin.css?v={escaped_version}">
 </head>
 <body class="adminApp">
@@ -48,16 +74,13 @@ def admin_home_view(version: str, repo_root: Path) -> str:
     {admin_header()}
     <main class="adminMain">
       <section class="adminHome" data-admin-home data-admin-ready="false" data-admin-busy="false">
-        <div class="adminHome__header">
-          <h1 class="adminHome__title">Admin</h1>
-          <p class="adminHome__summary">Operational review, testing, risk, activity, and reference surfaces for local development.</p>
-        </div>
-        <div class="adminHome__grid">
+        <section class="studioHomeLinks" aria-label="Admin home links">
           {link_groups}
-        </div>
+        </section>
       </section>
     </main>
   </div>
+  <script type="module" src="/admin/app/frontend/js/admin-theme.js?v={escaped_version}"></script>
   <script type="module" src="/admin/app/frontend/js/admin-home.js?v={escaped_version}"></script>
 </body>
 </html>
@@ -206,6 +229,7 @@ def admin_route_view(version: str, *, title: str, route_id: str, script: str, bo
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-admin-config-url" content="/admin/runtime-config.json">
   <title>{escaped_title} | dotlineform Admin</title>
+  {admin_theme_boot_script()}
   <link rel="stylesheet" href="/admin/app/assets/css/admin.css?v={escaped_version}">
 </head>
 <body class="adminApp">
@@ -220,6 +244,7 @@ def admin_route_view(version: str, *, title: str, route_id: str, script: str, bo
       </section>
     </main>
   </div>
+  <script type="module" src="/admin/app/frontend/js/admin-theme.js?v={escaped_version}"></script>
   <script type="module" src="{escaped_script}?v={escaped_version}"></script>
 </body>
 </html>
@@ -232,11 +257,6 @@ def render_home_groups(route_map: dict[str, dict[str, object]], ui_text: dict[st
         return ""
 
     groups: list[str] = []
-    sibling_paths = {
-        "studio": "/studio/",
-        "analytics": "/analytics/",
-        "docs_viewer": "/docs/",
-    }
     for group in raw_groups:
         if not isinstance(group, dict):
             continue
@@ -248,22 +268,20 @@ def render_home_groups(route_map: dict[str, dict[str, object]], ui_text: dict[st
                 if not isinstance(item, dict):
                     continue
                 route_id = str(item.get("route_id") or "")
-                path = sibling_paths.get(route_id)
-                if path is None:
-                    route = route_map.get(route_id, {})
-                    raw_path = route.get("path") if isinstance(route, dict) else None
-                    path = raw_path if isinstance(raw_path, str) else "#"
+                route = route_map.get(route_id, {})
+                raw_path = route.get("path") if isinstance(route, dict) else None
+                path = raw_path if isinstance(raw_path, str) else "#"
                 link_label = html.escape(str(item.get("label") or route_id))
                 links.append(
-                    '<li><a class="adminLinkList__item" href="{href}">{label}</a></li>'.format(
+                    '<li><a class="studioHomeLinks__pill" href="{href}">{label}</a></li>'.format(
                         href=html.escape(path, quote=True),
                         label=link_label,
                     )
                 )
         groups.append(
-            f"""<section class="adminHome__section">
-            <h2>{label}</h2>
-            <ul class="adminLinkList">
+            f"""<section class="studioHomeLinks__column">
+            <h3>{label}</h3>
+            <ul class="studioHomeLinks__pills">
               {"".join(links)}
             </ul>
           </section>"""

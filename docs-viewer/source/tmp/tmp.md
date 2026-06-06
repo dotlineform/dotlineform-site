@@ -10,12 +10,6 @@ ui_status: draft
 
 
 
-
-~
-
-we are working on `site-request-admin-app-structure.md`,
-please proceed with batch 6 in `site-request-admin-app-structure-tasks.md`
-
 ~
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
@@ -152,7 +146,7 @@ servers:
 
 - `bin/local-all` - Studio, Docs Viewer, docs watcher
 - `bin/local-studio` - Studio + Docs Watcher: `http://127.0.0.1:8765/studio/`
-- local-all also starts `http://127.0.0.1:8767/ui-catalogue/demos/`
+- local-all also starts Local Admin App: `http://127.0.0.1:8768/admin/`
 - `docs-viewer/bin/docs-viewer` - Docs Viewer: `http://127.0.0.1:8776/docs/?scope=studio&mode=manage&doc=change-requests`
 - `bin/public-site-preview` - public Jekyll preview: `http://127.0.0.1:4000/series/`
 - `bin/public-site-preview --livereload`

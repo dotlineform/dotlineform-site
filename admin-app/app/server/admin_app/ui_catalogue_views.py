@@ -8,8 +8,10 @@ import re
 from pathlib import Path
 
 try:
+    from admin_app_views import admin_header, admin_theme_boot_script
     from ui_catalogue_config import ui_catalogue_demo_views
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
+    from .admin_app_views import admin_header, admin_theme_boot_script
     from .ui_catalogue_config import ui_catalogue_demo_views
 
 
@@ -57,21 +59,24 @@ def ui_catalogue_shell(version: str, page_title: str, body: str) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
   <title>{title} | dotlineform UI Catalogue</title>
-  {ui_catalogue_theme_boot_script()}
+  {admin_theme_boot_script()}
+  <link rel="stylesheet" href="/admin/app/assets/css/admin.css?v={escaped_version}">
   <link rel="stylesheet" href="/admin/ui-catalogue/assets/css/ui-catalogue-shell.css?v={escaped_version}">
   <link rel="stylesheet" href="/admin/ui-catalogue/assets/css/ui-catalogue-demo.css?v={escaped_version}">
 </head>
-<body class="uiCatalogueApp">
-  {ui_catalogue_header()}
-  <main class="uiCatalogueShellMain">
-    <div class="uiCatalogueShellHeading">
-      <h2>{title}</h2>
-    </div>
-    <div class="uiCatalogueShellContent">
-      {body}
-    </div>
-  </main>
-  <script type="module" src="/admin/ui-catalogue/assets/js/ui-catalogue-shell.js?v={escaped_version}"></script>
+<body class="adminApp uiCatalogueApp">
+  <div class="adminShell">
+    {admin_header()}
+    <main class="adminMain uiCatalogueShellMain">
+      <div class="uiCatalogueShellHeading">
+        <h2>{title}</h2>
+      </div>
+      <div class="uiCatalogueShellContent">
+        {body}
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/admin/app/frontend/js/admin-theme.js?v={escaped_version}"></script>
   <script type="module" src="/admin/ui-catalogue/assets/js/ui-catalogue-demo.js?v={escaped_version}"></script>
 </body>
 </html>
@@ -175,45 +180,6 @@ def render_palette_body(items: list[dict[str, str]]) -> str:
 
   {content}
 </div>"""
-
-
-def ui_catalogue_header() -> str:
-    return """<header class="uiCatalogueShellHeader">
-    <div class="uiCatalogueShellHeader__inner">
-      <div class="uiCatalogueShellTitle"><a href="/admin/ui-catalogue/demos/">dotlineform UI catalogue</a></div>
-      <div class="uiCatalogueShellHeader__actions">
-        <button class="uiCatalogueThemeToggle" type="button" data-ui-catalogue-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
-          <svg class="uiCatalogueThemeToggle__icon" data-ui-catalogue-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="M4.93 4.93l1.41 1.41"></path>
-            <path d="M17.66 17.66l1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="M4.93 19.07l1.41-1.41"></path>
-            <path d="M17.66 6.34l1.41-1.41"></path>
-          </svg>
-          <svg class="uiCatalogueThemeToggle__icon" data-ui-catalogue-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
-            <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>"""
-
-
-def ui_catalogue_theme_boot_script() -> str:
-    return """<script>
-    (function () {
-      try {
-        var theme = window.localStorage ? window.localStorage.getItem('theme') : '';
-        if (theme === 'dark' || theme === 'light') {
-          document.documentElement.setAttribute('data-theme', theme);
-        }
-      } catch (_error) {}
-    })();
-  </script>"""
 
 
 def render_ui_catalogue_demo_body(repo_root: Path, version: str, view_id: str) -> str:

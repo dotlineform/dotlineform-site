@@ -16,15 +16,6 @@
       "links": [
         {"route_id": "admin_ui_catalogue", "label": "UI Catalogue"}
       ]
-    },
-    {
-      "id": "sibling_apps",
-      "label": "apps",
-      "links": [
-        {"route_id": "studio", "label": "Studio"},
-        {"route_id": "analytics", "label": "Analytics"},
-        {"route_id": "docs_viewer", "label": "Docs Viewer"}
-      ]
     }
   ]
 }

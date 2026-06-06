@@ -51,10 +51,10 @@ def main() -> int:
             'href="/admin/activity/"',
             'href="/admin/testing/"',
             'href="/admin/ui-catalogue/"',
-            'href="/studio/"',
-            'href="/analytics/"',
-            'href="/docs/"',
+            'class="studioHomeLinks__pill"',
+            "data-admin-theme-toggle",
             "/admin/app/assets/css/admin.css",
+            "/admin/app/frontend/js/admin-theme.js",
             "/admin/app/frontend/js/admin-home.js",
         ]
         missing = [text for text in expected if text not in html]

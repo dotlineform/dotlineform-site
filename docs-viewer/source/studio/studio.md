@@ -15,7 +15,6 @@ The current Studio shell is organized around Studio-owned catalogue entry points
 
 - `Catalogue`
 - `Docs`
-- sibling Admin links
 
 Analytics and Data Sharing now belong to the standalone Local Analytics app.
 Studio may link to those workflows, but it does not host their routes or APIs.
