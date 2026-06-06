@@ -137,8 +137,6 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"manage route used unexpected route config: {state!r}")
     if state["managementBaseUrl"] != base_url or state["generatedBaseUrl"] != base_url:
         raise AssertionError(f"manage route did not receive service base URL: {state!r}")
-    if "index_url" in docs_paths:
-        raise AssertionError(f"manage route config still exposes docs_paths.index_url: {state!r}")
     if docs_paths.get("index_tree_url") != "/docs-viewer/generated/docs/studio/index-tree.json":
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")
     if docs_paths.get("recently_added_url") != "/docs-viewer/generated/docs/studio/recently-added.json":

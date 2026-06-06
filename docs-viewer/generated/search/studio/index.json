@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2571009b0bec7cb88e6026f2808f8787",
-    "generated_at_utc": "2026-06-06T14:41:10Z",
-    "count": 267
+    "version": "blake2b-48e904536180dd93981cf78782a4ebfb",
+    "generated_at_utc": "2026-06-06T15:16:05Z",
+    "count": 268
   },
   "entries": [
     {
@@ -470,16 +470,37 @@
       "kind": "doc",
       "title": "Audit",
       "href": "/docs/?scope=studio&doc=audit",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
+      "last_updated": "2026-06-06",
+      "display_meta": "2026-06-06",
       "search_terms": [
         "audit",
-        "2026-05-23",
+        "2026-06-06",
         "2026",
-        "05",
-        "23"
+        "06"
       ],
-      "search_text": "audit 2026-05-23 2026 05 23"
+      "search_text": "audit 2026-06-06 2026 06"
+    },
+    {
+      "id": "negative-test-assertion-audit",
+      "kind": "doc",
+      "title": "Negative Test Assertion Audit",
+      "href": "/docs/?scope=studio&doc=negative-test-assertion-audit",
+      "last_updated": "2026-06-06",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-06-06 • Audit",
+      "search_terms": [
+        "negative-test-assertion-audit",
+        "negative",
+        "test",
+        "assertion",
+        "audit",
+        "negative test assertion audit",
+        "2026-06-06",
+        "2026",
+        "06"
+      ],
+      "search_text": "negative-test-assertion-audit negative test assertion audit negative test assertion audit 2026-06-06 2026 06"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -2958,10 +2979,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-06",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-04 • Dev Home",
+      "display_meta": "2026-06-06 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -2970,12 +2991,11 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-04",
+        "2026-06-06",
         "2026",
-        "06",
-        "04"
+        "06"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-04 2026 06 04"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-06 2026 06"
     },
     {
       "id": "development-workflow",

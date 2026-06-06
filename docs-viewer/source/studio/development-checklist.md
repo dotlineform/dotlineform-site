@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-06-04
+last_updated: 2026-06-06
 parent_id: dev-home
 viewable: true
 ---
@@ -165,6 +165,8 @@ For defensive tests during refactors:
 - use temporary tests to catch accidental compatibility shims, proxy paths, or retired write surfaces during migration
 - remove temporary tests before closeout unless they enforce a current architecture contract
 - phrase permanent assertions around the positive architecture that must hold, such as the owning service boundary, allowed route surface, capability model, or write contract
+- do not keep adding permanent assertions that old behavior, retired files, removed fields, or obsolete calls do not happen; delete the old code path and test the current contract instead
+- use [Negative Test Assertion Audit](/docs/?scope=studio&doc=negative-test-assertion-audit) for repo-wide cleanup of existing tests that predate this rule
 
 ## Security And Sanitization
 

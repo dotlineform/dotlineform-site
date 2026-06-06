@@ -335,39 +335,10 @@ def test_capabilities_advertise_generated_data_reads() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         payload = docs_management_service.capabilities_payload(repo_root)
-        old_docs_assets_exist = (repo_root / "assets/data/docs/scopes/studio/index.json").exists()
-        old_search_assets_exist = (repo_root / "assets/data/search/studio/index.json").exists()
 
-    assert old_docs_assets_exist is False
-    assert old_search_assets_exist is False
     assert payload["capabilities"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
-
-
-def test_generated_index_endpoint_is_retired_in_favor_of_index_tree() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-        index_tree = docs_management_service.docs_management_get_payload(
-            repo_root,
-            "/docs/generated/index-tree",
-            {"scope": ["studio"]},
-        )
-        try:
-            docs_management_service.docs_management_get_payload(
-                repo_root,
-                "/docs/generated/index",
-                {"scope": ["studio"]},
-            )
-        except FileNotFoundError:
-            retired_missing = True
-        else:
-            retired_missing = False
-
-    assert index_tree["schema"] == "docs_index_tree_v1"
-    assert retired_missing is True
 
 
 def test_capabilities_advertise_source_config_reads() -> None:
@@ -429,7 +400,6 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
-    assert not any(file["path"] == "assets/data/docs/scopes/research/index.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research/index-tree.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/docs/scopes/research/recently-added.json" for file in payload["created_files"])
     assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])
@@ -1129,7 +1099,6 @@ def main() -> None:
         test_hidden_doc_viewability_can_be_changed_in_dry_run,
         test_hidden_parent_delete_is_blocked_only_by_children,
         test_capabilities_advertise_generated_data_reads,
-        test_generated_index_endpoint_is_retired_in_favor_of_index_tree,
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_reports_write_set_and_urls,

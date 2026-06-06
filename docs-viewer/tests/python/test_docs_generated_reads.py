@@ -129,9 +129,6 @@ def test_generated_data_availability_checks_scope_files() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
 
-        assert not (repo_root / "assets/data/docs/scopes/studio/index.json").exists()
-        assert not (repo_root / "docs-viewer/generated/docs/studio/index.json").exists()
-        assert not (repo_root / "assets/data/search/studio/index.json").exists()
         assert generated_reads.generated_scope_data_available(repo_root, "studio") is True
         assert generated_reads.generated_search_data_available(repo_root, "studio") is True
         assert generated_reads.generated_scope_data_available(repo_root, "library") is False
@@ -256,7 +253,6 @@ def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
         assert payload["title"] == "Library"
         assert child_payload["title"] == "Child"
         assert generated_reads.generated_scope_data_available(repo_root, "library") is True
-        assert not (repo_root / "assets/data/docs/scopes/library/index.json").exists()
 
 
 def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
@@ -304,7 +300,6 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
             generated_reads.generated_docs_index_tree_path(repo_root, "research")
             == repo_root / "custom/generated/research/index-tree.json"
         )
-        assert not (repo_root / "custom/generated/research/index.json").exists()
         payload = generated_reads.read_generated_doc_payload(repo_root, "research", "finding")
 
     assert payload["doc_id"] == "finding"

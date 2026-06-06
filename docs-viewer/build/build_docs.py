@@ -1266,7 +1266,6 @@ class DocsDataBuilder:
         if target_doc_ids:
             stale_item_ids = sorted(set(stale_item_ids) & set(target_doc_ids))
         return {
-            "index_remove": (self.output_dir / "index.json").exists(),
             "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
             "index_tree_text": index_tree_text,
             "recently_added_write": read_text(self.output_dir / "recently-added.json") != recently_added_text,
@@ -1321,8 +1320,6 @@ class DocsDataBuilder:
     ) -> None:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
-        if write_plan["index_remove"]:
-            (self.output_dir / "index.json").unlink(missing_ok=True)
         if write_plan["index_tree_write"]:
             write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
         if write_plan["recently_added_write"]:
@@ -1398,7 +1395,6 @@ class DocsDataBuilder:
             + (1 if write_plan["recently_added_write"] else 0)
             + (1 if write_plan["reference_index_write"] else 0)
         )
-        index_remove_count = 1 if write_plan.get("index_remove") else 0
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
 
@@ -1412,7 +1408,6 @@ class DocsDataBuilder:
         print(f"  references {verb}: {reference_write_count}")
         print(f"  references {remove_verb}: {reference_remove_count}")
         print(f"  indexes {verb}: {index_write_count}")
-        print(f"  indexes {remove_verb}: {index_remove_count}")
         print(f"  warnings: {len(self.warnings)}")
 
     def diagnostics_payload(
@@ -1431,7 +1426,6 @@ class DocsDataBuilder:
             "docs_emitted": len(docs),
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
-            "index_removed": 1 if write_plan.get("index_remove") else 0,
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recently_added_changed": 1 if write_plan["recently_added_write"] else 0,
             "reference_index_changed": 1 if write_plan["reference_index_write"] else 0,

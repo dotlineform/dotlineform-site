@@ -94,10 +94,6 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
         raise AssertionError(f"{route} used unexpected route config: {state!r}")
     if state["routeId"] != route_id:
         raise AssertionError(f"{route} used unexpected route id: {state!r}")
-    if "index_url" in docs_paths:
-        raise AssertionError(f"{route} route config still exposes docs_paths.index_url: {state!r}")
-    if "index_url" in scope_config:
-        raise AssertionError(f"{route} browser scope config still exposes index_url: {state!r}")
     if not str(docs_paths.get("index_tree_url") or "").endswith("/index-tree.json"):
         raise AssertionError(f"{route} route config missing index_tree_url: {state!r}")
     if not str(docs_paths.get("recently_added_url") or "").endswith("/recently-added.json"):
@@ -111,12 +107,9 @@ def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str
     expected_recent = f"/assets/data/docs/scopes/{scope}/recently-added.json"
     expected_doc = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
     expected_search = f"/assets/data/search/{scope}/index.json"
-    forbidden_index = f"/assets/data/docs/scopes/{scope}/index.json"
     missing = [path for path in [expected_tree, expected_recent, expected_doc, expected_search] if path not in paths]
     if missing:
         raise AssertionError(f"{route} missed expected compact payload requests {missing!r}; saw {sorted(paths)!r}")
-    if forbidden_index in paths:
-        raise AssertionError(f"{route} requested retired public route index payload: {sorted(paths)!r}")
 
 
 def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:

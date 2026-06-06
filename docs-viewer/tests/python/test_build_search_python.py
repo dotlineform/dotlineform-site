@@ -115,7 +115,6 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
 
     assert exit_code == 0
     assert stderr == ""
-    assert not (root / "docs-viewer/generated/docs/studio/index.json").exists()
     assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
@@ -242,20 +241,6 @@ def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() ->
     assert error == "Docs Viewer search does not support --only-records"
 
 
-def test_python_docs_search_builder_rejects_retired_source_index_flag() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        try:
-            run_cli(root, ["--scope", "studio", "--source-index", "docs-viewer/generated/docs/studio/index.json"])
-        except SystemExit as exc:
-            error = str(exc)
-        else:
-            raise AssertionError("--source-index should fail for docs search")
-
-    assert "no longer supports --source-index" in error
-
-
 def main() -> None:
     test_python_docs_search_builder_writes_current_schema_and_hash()
     test_python_docs_search_builder_dry_run_does_not_write()
@@ -264,7 +249,6 @@ def main() -> None:
     test_python_docs_search_builder_targeted_remove_requires_remove_missing()
     test_python_docs_search_builder_targeted_without_existing_index_falls_back_full()
     test_python_docs_search_builder_rejects_catalogue_targeted_records_flag()
-    test_python_docs_search_builder_rejects_retired_source_index_flag()
     print("Python Docs Viewer search builder tests OK")
 
 

@@ -514,7 +514,6 @@ class DocsViewerSearchDataBuilder:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
     parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Docs Viewer search scope to build.")
-    parser.add_argument("--source-index", help=argparse.SUPPRESS)
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", action="append", default=[], help="Comma-separated doc ids for targeted docs-domain search updates.")
     parser.add_argument("--only-records", help="Catalogue-only targeted search records.")
@@ -522,8 +521,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
     parser.add_argument("--force", action="store_true", help="Write even when the content version matches.")
     args = parser.parse_args(argv)
-    if args.source_index is not None:
-        raise SystemExit("Docs Viewer search no longer supports --source-index; source metadata comes from the configured docs source root")
     if args.only_records is not None:
         raise SystemExit("Docs Viewer search does not support --only-records")
     return args

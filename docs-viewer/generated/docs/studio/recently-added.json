@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "negative-test-assertion-audit",
+      "title": "Negative Test Assertion Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/negative-test-assertion-audit.json",
+      "added_date": "2026-06-06",
+      "parent_id": "audit",
+      "parent_title": "Audit"
+    },
+    {
       "doc_id": "task-batch-template",
       "title": "Task Batch Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-05",
       "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
       "parent_title": "Docs Viewer Public Index Slimming Tasks"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-public-index-slimming-batch-2",
-      "title": "Docs Viewer Public Index Slimming Batch 2",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-2.json",
-      "added_date": "2026-06-05",
-      "parent_id": "site-request-docs-viewer-public-index-slimming-tasks",
-      "parent_title": "Docs Viewer Public Index Slimming Tasks"
     }
   ],
-  "generated_at": "2026-06-05T21:09:59Z"
+  "generated_at": "2026-06-06T15:16:05Z"
 }
