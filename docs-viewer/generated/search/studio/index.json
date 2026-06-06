@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6903b2d98bd453edcc546f4d1feb9603",
-    "generated_at_utc": "2026-06-05T22:18:56Z",
+    "version": "blake2b-9bef58900bbfc12b4a8c0352d696f85b",
+    "generated_at_utc": "2026-06-06T12:57:21Z",
     "count": 267
   },
   "entries": [
@@ -3199,10 +3199,10 @@
       "kind": "doc",
       "title": "Broken Links Audit",
       "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-06",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-02 • Docs Viewer",
+      "display_meta": "2026-06-06 • Docs Viewer",
       "search_terms": [
         "scripts-docs-broken-links",
         "scripts",
@@ -3213,12 +3213,11 @@
         "audit",
         "docs viewer",
         "viewer",
-        "2026-06-02",
+        "2026-06-06",
         "2026",
-        "06",
-        "02"
+        "06"
       ],
-      "search_text": "scripts-docs-broken-links scripts docs broken links broken links audit audit docs viewer viewer 2026-06-02 2026 06 02"
+      "search_text": "scripts-docs-broken-links scripts docs broken links broken links audit audit docs viewer viewer 2026-06-06 2026 06"
     },
     {
       "id": "scripts-docs-builder",

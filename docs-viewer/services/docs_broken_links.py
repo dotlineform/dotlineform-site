@@ -124,40 +124,52 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def load_index(repo_root: Path, scope: str) -> list[DocMeta]:
-    index_path = repo_root / SCOPE_OUTPUT_DIRS[scope] / "index.json"
-    payload = read_json(index_path, f"{scope} docs index")
-    docs = payload.get("docs")
-    if not isinstance(docs, list):
-        raise ValueError(f"Expected docs array in {index_path}")
-
+def flatten_index_tree(scope: str, docs: list[Any]) -> list[DocMeta]:
     items: list[DocMeta] = []
     for item in docs:
         if not isinstance(item, dict):
             continue
         doc_id = normalize_text(item.get("doc_id"))
         title = normalize_text(item.get("title"))
-        viewer_url = normalize_text(item.get("viewer_url"))
-        source_path = normalize_text(item.get("source_path"))
-        if not doc_id or not title or not viewer_url:
-            continue
-        items.append(
-            DocMeta(
-                scope=scope,
-                doc_id=doc_id,
-                title=title,
-                viewer_url=viewer_url,
-                source_path=source_path,
+        if doc_id and title:
+            items.append(
+                DocMeta(
+                    scope=scope,
+                    doc_id=doc_id,
+                    title=title,
+                    viewer_url="",
+                    source_path="",
+                )
             )
-        )
+        children = item.get("children")
+        if isinstance(children, list):
+            items.extend(flatten_index_tree(scope, children))
     return items
+
+
+def load_index_tree(repo_root: Path, scope: str) -> list[DocMeta]:
+    index_path = repo_root / SCOPE_OUTPUT_DIRS[scope] / "index-tree.json"
+    payload = read_json(index_path, f"{scope} docs index tree")
+    docs = payload.get("docs")
+    if not isinstance(docs, list):
+        raise ValueError(f"Expected docs array in {index_path}")
+    return flatten_index_tree(scope, docs)
 
 
 def load_doc_payload(repo_root: Path, meta: DocMeta) -> DocPayload:
     payload_path = repo_root / SCOPE_OUTPUT_DIRS[meta.scope] / "by-id" / f"{meta.doc_id}.json"
     payload = read_json(payload_path, f"{meta.scope} doc payload for {meta.doc_id}")
+    hydrated_meta = DocMeta(
+        scope=meta.scope,
+        doc_id=meta.doc_id,
+        title=normalize_text(payload.get("title")) or meta.title,
+        viewer_url=normalize_text(payload.get("viewer_url")) or meta.viewer_url,
+        source_path=normalize_text(payload.get("source_path")) or meta.source_path,
+    )
+    if not hydrated_meta.title or not hydrated_meta.viewer_url:
+        raise ValueError(f"Expected title and viewer_url in {payload_path}")
     return DocPayload(
-        meta=meta,
+        meta=hydrated_meta,
         content_html=str(payload.get("content_html") or ""),
     )
 
@@ -241,10 +253,10 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     docs_by_key: dict[tuple[str, str], DocMeta] = {}
     for known_scope in sorted(SCOPE_OUTPUT_DIRS.keys()):
-        for meta in load_index(repo_root, known_scope):
+        for meta in load_index_tree(repo_root, known_scope):
             docs_by_key[(meta.scope, meta.doc_id)] = meta
 
-    audited_docs = [load_doc_payload(repo_root, meta) for meta in load_index(repo_root, normalized_scope)]
+    audited_docs = [load_doc_payload(repo_root, meta) for meta in load_index_tree(repo_root, normalized_scope)]
     entries: list[dict[str, str]] = []
 
     for doc in audited_docs:

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-broken-links
 title: Broken Links Audit
 added_date: 2026-04-23
-last_updated: 2026-06-02
+last_updated: 2026-06-06
 parent_id: docs-viewer
 viewable: true
 ---
@@ -53,9 +53,9 @@ The audit reads generated docs payloads rather than raw source Markdown.
 
 Inputs:
 
-- `docs-viewer/generated/docs/studio/index.json`
+- `docs-viewer/generated/docs/studio/index-tree.json`
 - `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
-- `assets/data/docs/scopes/library/index.json`
+- `assets/data/docs/scopes/library/index-tree.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
 Model:

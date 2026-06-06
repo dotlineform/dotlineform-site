@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T22:21:08Z",
+  "generated_at": "2026-06-06T12:57:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1412,12 +1412,12 @@
       "doc_id": "scripts-docs-broken-links",
       "title": "Broken Links Audit",
       "added_date": "2026-04-23",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-06",
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "parent_id": "docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 2378
+      "content_text_length": 2388
     },
     {
       "doc_id": "scripts-docs-builder",

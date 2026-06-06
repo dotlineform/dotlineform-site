@@ -40,6 +40,9 @@ def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: st
         repo_root / "docs-viewer/generated/docs" / scope / "by-id" / f"{doc_id}.json",
         {
             "doc_id": doc_id,
+            "title": "Source",
+            "viewer_url": "/docs/?scope=studio&doc=source",
+            "source_path": "source.md",
             "content_html": content_html,
         },
     )
@@ -50,14 +53,14 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     repo_root = Path(temp_dir.name)
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_json(
-        repo_root / "docs-viewer/generated/docs/studio/index.json",
+        repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
         {
+            "schema": "docs_index_tree_v1",
             "docs": [
                 {
                     "doc_id": "source",
                     "title": "Source",
-                    "viewer_url": "/docs/?scope=studio&doc=source",
-                    "source_path": "source.md",
+                    "content_url": "/docs-viewer/generated/docs/studio/by-id/source.json",
                 }
             ]
         },
@@ -65,7 +68,7 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     for scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
         if scope == "studio":
             continue
-        write_json(repo_root / output_dir / "index.json", {"docs": []})
+        write_json(repo_root / output_dir / "index-tree.json", {"schema": "docs_index_tree_v1", "docs": []})
     write_doc_payload(repo_root, "studio", "source", content_html)
     return temp_dir
 
