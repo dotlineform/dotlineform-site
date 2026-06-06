@@ -256,7 +256,6 @@ export function routeConfigScopeProjection(scopeConfig, options) {
     includeScopeParam: includeScopeParam,
     indexTreeUrl: appendAssetVersion(config.indexTreeUrl || "", settings.assetVersion),
     recentlyAddedUrl: appendAssetVersion(config.recentlyAddedUrl || "", settings.assetVersion),
-    docsIndexUrl: appendAssetVersion(config.docsIndexUrl || "", settings.assetVersion),
     searchIndexUrl: appendAssetVersion(config.searchIndexUrl || "", settings.assetVersion),
     viewerBaseUrl: viewerBaseUrl,
     viewerPathname: windowRef && windowRef.location

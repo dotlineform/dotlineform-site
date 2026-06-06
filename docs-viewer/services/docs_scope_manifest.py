@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs, safe_relative_path
+from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, safe_relative_path
 
 
 MANIFEST_REL_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
@@ -120,11 +120,6 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
     if route_path.exists():
         files.append(path_record(repo_root, "route_file", route_path))
     files.append(path_record(repo_root, "generated_docs_root", repo_root / config.output))
-    if not is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ):
-        files.append(path_record(repo_root, "generated_docs_index", repo_root / config.output / "index.json"))
     files.extend(
         [
             path_record(repo_root, "generated_docs_index_tree", repo_root / config.output / "index-tree.json"),
@@ -773,8 +768,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             field="planned_scope_config.output",
         )
         created_files.append(path_record(repo_root, "generated_docs_root", docs_output, action="create"))
-        if publishing_mode != PUBLIC_MODE:
-            created_files.append(path_record(repo_root, "generated_docs_index", docs_output / "index.json", action="create"))
         created_files.extend(
             [
                 path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),

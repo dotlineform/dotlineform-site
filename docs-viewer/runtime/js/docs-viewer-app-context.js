@@ -71,7 +71,6 @@ export function createDocsViewerRouteContext(options) {
     routeViewerBaseUrl: routeViewerBaseUrl,
     indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
     recentlyAddedUrl: appendAssetVersion(routeConfig.recentlyAddedUrl, assetVersion),
-    docsIndexUrl: appendAssetVersion(routeConfig.docsIndexUrl, assetVersion),
     viewerBaseUrl: viewerBaseUrl,
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
@@ -97,7 +96,6 @@ export function updateDocsViewerRouteContext(context, values, options) {
     viewerScope: cleanString(values && values.viewerScope),
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
     recentlyAddedUrl: values && values.recentlyAddedUrl ? values.recentlyAddedUrl : "",
-    docsIndexUrl: values && values.docsIndexUrl ? values.docsIndexUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
     defaultRouteDocId: cleanString(values && values.defaultRouteDocId),
     viewerBaseUrl: nextViewerBaseUrl,
@@ -109,7 +107,6 @@ export function updateDocsViewerRouteContext(context, values, options) {
     defaultScopeId: nextContext.viewerScope,
     indexTreeUrl: nextContext.indexTreeUrl,
     recentlyAddedUrl: nextContext.recentlyAddedUrl,
-    docsIndexUrl: nextContext.docsIndexUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });

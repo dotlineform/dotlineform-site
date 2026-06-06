@@ -11,8 +11,8 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, is_public_readonly_scope, load_docs_scope_configs
-from docs_source_model import load_scope_docs, scope_root
+from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs
+from docs_source_model import scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -49,6 +49,20 @@ def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
     return ordered_search_doc_ids(doc_ids)
 
 
+def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
+    if not isinstance(docs, list):
+        return []
+    records: list[Dict[str, Any]] = []
+    stack = [doc for doc in docs if isinstance(doc, dict)]
+    while stack:
+        record = stack.pop(0)
+        records.append(record)
+        children = record.get("children")
+        if isinstance(children, list):
+            stack.extend(child for child in children if isinstance(child, dict))
+    return records
+
+
 def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_ids: list[str]) -> str:
     try:
         config = load_docs_scope_configs(repo_root)[scope]
@@ -56,36 +70,25 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
         return f"full-scope fallback: docs scope config unavailable: {exc}"
 
     output_dir = repo_root / config.output
-    index_path = output_dir / "index.json"
+    index_tree_path = output_dir / "index-tree.json"
     references_index_path = output_dir / "references" / "index.json"
-    public_readonly = is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    )
-    if not public_readonly and not index_path.exists():
-        return "full-scope fallback: existing docs index missing"
+    if not index_tree_path.exists():
+        return "full-scope fallback: existing docs index tree missing"
     if not references_index_path.exists():
         return "full-scope fallback: existing references index missing"
 
-    if public_readonly:
-        try:
-            docs = [{"doc_id": doc.doc_id} for doc in load_scope_docs(repo_root, scope)]
-        except (OSError, ValueError) as exc:
-            return f"full-scope fallback: source docs unavailable: {exc}"
-    else:
-        try:
-            index_payload = json.loads(index_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            return f"full-scope fallback: existing docs index unreadable: {exc}"
-        docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
-        if not isinstance(docs, list):
-            return "full-scope fallback: existing docs index has no docs array"
+    try:
+        index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"full-scope fallback: existing docs index tree unreadable: {exc}"
+    docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
+    records = iter_docs_tree_records(docs)
+    if not records:
+        return "full-scope fallback: existing docs index tree has no docs array"
 
     target_set = set(target_doc_ids)
     missing_payload_ids: list[str] = []
-    for item in docs:
-        if not isinstance(item, dict):
-            continue
+    for item in records:
         doc_id = str(item.get("doc_id") or "").strip()
         if doc_id and doc_id not in target_set and not (output_dir / "by-id" / f"{doc_id}.json").exists():
             missing_payload_ids.append(doc_id)

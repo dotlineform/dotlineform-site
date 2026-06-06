@@ -23,8 +23,7 @@
           "update",
           "delete"
         ]
-      },
-      "index_url": "/docs-viewer/generated/docs/studio/index.json"
+      }
     },
     {
       "scope_id": "library",
@@ -93,8 +92,7 @@
           "update",
           "delete"
         ]
-      },
-      "index_url": "/docs-viewer/generated/docs/tmp/index.json"
+      }
     }
   ],
   "docs_viewer": {

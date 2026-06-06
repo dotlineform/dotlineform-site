@@ -203,7 +203,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
         return Completed()
 
     write_rebuild.subprocess.run = fake_run
-    write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: "full-scope fallback: existing docs index missing"
+    write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: "full-scope fallback: existing docs index tree missing"
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             result = write_rebuild.rebuild_scope_outputs(
@@ -220,12 +220,12 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
     assert result["docs"] == {
         "mode": "full",
         "doc_ids": ["body-doc"],
-        "reason": "full-scope fallback: existing docs index missing",
+        "reason": "full-scope fallback: existing docs index tree missing",
     }
     assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
 
 
-def test_targeted_public_docs_build_does_not_require_flat_index() -> None:
+def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
@@ -255,6 +255,10 @@ def test_targeted_public_docs_build_does_not_require_flat_index() -> None:
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
         (repo_root / "assets/data/docs/scopes/library/by-id").mkdir(parents=True)
         (repo_root / "assets/data/docs/scopes/library/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "assets/data/docs/scopes/library/index-tree.json").write_text(
+            """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
+            encoding="utf-8",
+        )
         (repo_root / "assets/data/docs/scopes/library/references").mkdir(parents=True)
         (repo_root / "assets/data/docs/scopes/library/references/index.json").write_text("{}", encoding="utf-8")
 
@@ -524,6 +528,7 @@ def main() -> None:
     test_rebuild_scope_outputs_preserves_targeted_search_command()
     test_rebuild_scope_outputs_passes_targeted_docs_command()
     test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing()
+    test_targeted_docs_build_uses_index_tree_without_flat_index()
     test_rebuild_scope_outputs_skips_empty_targeted_search()
     test_rebuild_scope_outputs_preserves_front_matter_failure_message()
     test_perform_source_write_and_rebuild_marks_pending_then_complete()

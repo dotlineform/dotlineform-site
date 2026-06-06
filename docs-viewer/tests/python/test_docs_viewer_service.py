@@ -525,7 +525,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-public.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
-    assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
+    assert allowed("/docs-viewer/generated/docs/studio/index-tree.json") is True
     assert allowed("/assets/docs/library/img/example.png") is True
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False

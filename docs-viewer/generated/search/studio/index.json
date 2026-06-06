@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6f65f553c0aa10d39a30052bbd908380",
-    "generated_at_utc": "2026-06-06T14:03:35Z",
+    "version": "blake2b-2571009b0bec7cb88e6026f2808f8787",
+    "generated_at_utc": "2026-06-06T14:41:10Z",
     "count": 267
   },
   "entries": [
@@ -3556,10 +3556,10 @@
       "kind": "doc",
       "title": "Docs Management Service Generated Reads",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-06",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Service",
-      "display_meta": "2026-06-03 • Management Service",
+      "display_meta": "2026-06-06 • Management Service",
       "search_terms": [
         "scripts-docs-management-server-generated-reads",
         "scripts",
@@ -3571,12 +3571,11 @@
         "docs management service generated reads",
         "service",
         "management service",
-        "2026-06-03",
+        "2026-06-06",
         "2026",
-        "06",
-        "03"
+        "06"
       ],
-      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management service generated reads service management service 2026-06-03 2026 06 03"
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management service generated reads service management service 2026-06-06 2026 06"
     },
     {
       "id": "scripts-docs-management-server-import-rebuild",
@@ -4124,10 +4123,10 @@
       "kind": "doc",
       "title": "Source Config Report",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-config-report",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-06-06",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-06-06 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-config-report",
         "docs",
@@ -4137,12 +4136,11 @@
         "report",
         "source config report",
         "docs viewer",
-        "2026-05-14",
+        "2026-06-06",
         "2026",
-        "05",
-        "14"
+        "06"
       ],
-      "search_text": "docs-viewer-source-config-report docs viewer source config report source config report docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-source-config-report docs viewer source config report source config report docs viewer 2026-06-06 2026 06"
     },
     {
       "id": "docs-viewer-source-organisation",

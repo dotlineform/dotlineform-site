@@ -30,8 +30,6 @@ def normalize_scope(repo_root: Path, value: Any) -> str:
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
     scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
 
-    if path in {routes.GENERATED_INDEX_PATH, routes.GENERATED_INDEX_ALT_PATH}:
-        return docs_generated_reads.read_generated_docs_index(repo_root, scope)
     if path in {routes.GENERATED_INDEX_TREE_PATH, routes.GENERATED_INDEX_TREE_ALT_PATH}:
         return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope)
     if path in {routes.GENERATED_RECENTLY_ADDED_PATH, routes.GENERATED_RECENTLY_ADDED_ALT_PATH}:
@@ -60,8 +58,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
     if path in {
-        routes.GENERATED_INDEX_PATH,
-        routes.GENERATED_INDEX_ALT_PATH,
         routes.GENERATED_INDEX_TREE_PATH,
         routes.GENERATED_INDEX_TREE_ALT_PATH,
         routes.GENERATED_RECENTLY_ADDED_PATH,

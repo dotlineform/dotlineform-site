@@ -125,7 +125,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "documents": "docs-viewer/source/library",
                             },
                             "sources": {
-                                "docs_index": "assets/data/docs/scopes/library/index.json",
                                 "docs_payload_root": "assets/data/docs/scopes/library/by-id",
                                 "source_root": "docs-viewer/source/library",
                             },
@@ -174,17 +173,6 @@ def write_generated_docs(root: Path) -> None:
             "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
         },
     ]
-    write_json(
-        root / "docs-viewer/generated/docs/studio/index.json",
-        {
-            "viewer_options": {
-                "show_updated_date": True,
-                "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": [],
-            },
-            "docs": docs,
-        },
-    )
     write_json(
         root / "docs-viewer/generated/docs/studio/index-tree.json",
         {
@@ -262,7 +250,6 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                     "include_scope_param": True,
                     "default_doc_id": "child",
                     "media_path_prefix": "docs/studio",
-                    "index_url": "/docs-viewer/generated/docs/studio/index.json",
                     "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
                     "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
                     "search_index_url": "/docs-viewer/generated/search/studio/index.json",
@@ -356,6 +343,31 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
+
+
+def test_generated_index_endpoint_is_retired_in_favor_of_index_tree() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+        index_tree = docs_management_service.docs_management_get_payload(
+            repo_root,
+            "/docs/generated/index-tree",
+            {"scope": ["studio"]},
+        )
+        try:
+            docs_management_service.docs_management_get_payload(
+                repo_root,
+                "/docs/generated/index",
+                {"scope": ["studio"]},
+            )
+        except FileNotFoundError:
+            retired_missing = True
+        else:
+            retired_missing = False
+
+    assert index_tree["schema"] == "docs_index_tree_v1"
+    assert retired_missing is True
 
 
 def test_capabilities_advertise_source_config_reads() -> None:
@@ -918,9 +930,10 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["source_config_path"] == "docs-viewer/config/scopes/docs_scopes.json"
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
-    assert payload["scopes"][0]["browser_config"]["index_url"] == "/docs-viewer/generated/docs/studio/index.json"
     assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
     assert payload["scopes"][0]["browser_config"]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
+    assert payload["scopes"][0]["generated"]["docs_index_tree"] == "docs-viewer/generated/docs/studio/index-tree.json"
+    assert payload["scopes"][0]["generated"]["recently_added"] == "docs-viewer/generated/docs/studio/recently-added.json"
     assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
     assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []
@@ -961,7 +974,7 @@ def test_source_config_settings_validation_reports_rebuild_artifact() -> None:
     assert payload["requires_rebuild"] is True
     assert payload["changes"]["show_updated_date"]["current_value"] is True
     assert payload["changes"]["show_updated_date"]["proposed_value"] is False
-    assert payload["affected_artifacts"] == ["docs-viewer/generated/docs/studio/index.json"]
+    assert payload["affected_artifacts"] == ["docs-viewer/generated/docs/studio/index-tree.json"]
     assert any("requires rebuilding" in warning for warning in payload["warnings"])
 
 
@@ -1055,7 +1068,7 @@ def test_source_config_settings_warns_when_generated_projection_is_stale() -> No
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        index_path = repo_root / "docs-viewer/generated/docs/studio/index.json"
+        index_path = repo_root / "docs-viewer/generated/docs/studio/index-tree.json"
         payload = json.loads(index_path.read_text(encoding="utf-8"))
         payload["viewer_options"]["show_updated_date"] = False
         write_json(index_path, payload)
@@ -1116,6 +1129,7 @@ def main() -> None:
         test_hidden_doc_viewability_can_be_changed_in_dry_run,
         test_hidden_parent_delete_is_blocked_only_by_children,
         test_capabilities_advertise_generated_data_reads,
+        test_generated_index_endpoint_is_retired_in_favor_of_index_tree,
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_reports_write_set_and_urls,

@@ -21,7 +21,7 @@
   "routes": {
     "health": "/health",
     "capabilities": "/capabilities",
-    "generated_index": "/docs/generated/index",
+    "generated_index_tree": "/docs/generated/index-tree",
     "generated_payload": "/docs/generated/payload",
     "generated_search": "/docs/generated/search",
     "generated_references": "/docs/generated/references",

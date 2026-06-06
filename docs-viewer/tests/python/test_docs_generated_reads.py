@@ -69,7 +69,6 @@ def write_generated_docs(root: Path) -> None:
             "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
         },
     ]
-    write_json(root / "docs-viewer/generated/docs/studio/index.json", {"docs": docs})
     write_json(
         root / "docs-viewer/generated/docs/studio/index-tree.json",
         {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
@@ -131,6 +130,7 @@ def test_generated_data_availability_checks_scope_files() -> None:
         write_generated_docs(repo_root)
 
         assert not (repo_root / "assets/data/docs/scopes/studio/index.json").exists()
+        assert not (repo_root / "docs-viewer/generated/docs/studio/index.json").exists()
         assert not (repo_root / "assets/data/search/studio/index.json").exists()
         assert generated_reads.generated_scope_data_available(repo_root, "studio") is True
         assert generated_reads.generated_search_data_available(repo_root, "studio") is True
@@ -138,7 +138,7 @@ def test_generated_data_availability_checks_scope_files() -> None:
         assert generated_reads.generated_search_data_available(repo_root, "library") is False
 
 
-def test_generated_doc_payload_allows_non_viewable_indexed_doc() -> None:
+def test_generated_doc_payload_allows_non_viewable_tree_doc() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
@@ -159,7 +159,7 @@ def test_generated_doc_payload_rejects_unsafe_doc_id() -> None:
             raise AssertionError("Expected unsafe generated payload doc_id to be rejected")
 
 
-def test_generated_doc_payload_requires_index_record() -> None:
+def test_generated_doc_payload_requires_tree_record() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
@@ -172,7 +172,7 @@ def test_generated_doc_payload_requires_index_record() -> None:
         except FileNotFoundError as exc:
             assert "not found" in str(exc)
         else:
-            raise AssertionError("Expected unlisted generated payload to be rejected")
+            raise AssertionError("Expected generated payload missing from index tree to be rejected")
 
 
 def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
@@ -180,8 +180,9 @@ def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "docs-viewer/generated/docs/studio/index.json",
+            repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
             {
+                "schema": "docs_index_tree_v1",
                 "docs": [
                     {
                         "doc_id": "child",
@@ -203,8 +204,9 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "docs-viewer/generated/docs/studio/index.json",
+            repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
             {
+                "schema": "docs_index_tree_v1",
                 "docs": [
                     {
                         "doc_id": "child",
@@ -299,8 +301,8 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
         write_json(repo_root / "custom/generated/research/by-id/finding.json", {"doc_id": "finding"})
 
         assert (
-            generated_reads.generated_docs_index_path(repo_root, "research")
-            == repo_root / "custom/generated/research/index.json"
+            generated_reads.generated_docs_index_tree_path(repo_root, "research")
+            == repo_root / "custom/generated/research/index-tree.json"
         )
         assert not (repo_root / "custom/generated/research/index.json").exists()
         payload = generated_reads.read_generated_doc_payload(repo_root, "research", "finding")
@@ -337,10 +339,10 @@ def test_generated_search_path_uses_scope_config_search_output() -> None:
 
 def test_read_generated_json_reports_invalid_json() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
-        path = Path(temp_path) / "index.json"
+        path = Path(temp_path) / "index-tree.json"
         path.write_text("{", encoding="utf-8")
         try:
-            generated_reads.read_generated_json(path, "generated docs index for studio")
+            generated_reads.read_generated_json(path, "generated docs index tree for studio")
         except RuntimeError as exc:
             assert "not valid JSON" in str(exc)
         else:
@@ -349,13 +351,14 @@ def test_read_generated_json_reports_invalid_json() -> None:
 
 def main() -> None:
     test_generated_data_availability_checks_scope_files()
-    test_generated_doc_payload_allows_non_viewable_indexed_doc()
+    test_generated_doc_payload_allows_non_viewable_tree_doc()
     test_generated_doc_payload_rejects_unsafe_doc_id()
-    test_generated_doc_payload_requires_index_record()
+    test_generated_doc_payload_requires_tree_record()
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
     test_generated_references_reads_scope_index_and_target()
     test_generated_tree_and_recently_added_reads_scope_payloads()
+    test_public_generated_doc_payload_uses_tree_without_flat_index()
     test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
     test_generated_search_path_uses_scope_config_search_output()

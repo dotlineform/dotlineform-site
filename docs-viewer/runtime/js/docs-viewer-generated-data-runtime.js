@@ -1,12 +1,8 @@
 import {
-  fetchIndexWithRetry,
   fetchIndexTreeWithRetry,
   fetchPreferredGeneratedJson,
   managementReloadPath
 } from "./docs-viewer-data.js";
-import {
-  appendAssetVersion
-} from "./docs-viewer-asset-url.js";
 import {
   normalizeDocsIndexTreePayload,
   normalizeRecentlyAddedPayload
@@ -122,14 +118,6 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     }, requestSettings);
   }
 
-  function readDocsIndex(options) {
-    var requestSettings = options || {};
-    return fetchIndexWithRetry(dataRequestOptions({
-      indexUrl: requestSettings.indexUrl,
-      viewerScope: requestSettings.viewerScope || currentViewerScope()
-    }));
-  }
-
   function readDocsIndexTree(options) {
     var requestSettings = options || {};
     return fetchIndexTreeWithRetry(dataRequestOptions({
@@ -182,21 +170,6 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     ).then(normalizeRecentlyAddedPayload);
   }
 
-  function readScopeIndex(options) {
-    var requestSettings = options || {};
-    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
-    var targetConfig = requestSettings.scopeConfig || null;
-    if (!targetConfig || !targetConfig.docsIndexUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return fetchIndexWithRetry(dataRequestOptions({
-      indexUrl: appendAssetVersion(targetConfig.docsIndexUrl),
-      viewerScope: targetScope,
-      reloadNonce: "",
-      reloadExpectedDocId: ""
-    }));
-  }
-
   function readReferencesIndex(options) {
     var requestSettings = options || {};
     var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
@@ -240,13 +213,11 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   return {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     dataRequestOptions: dataRequestOptions,
-    readDocsIndex: readDocsIndex,
     readDocsIndexTree: readDocsIndexTree,
     readDocumentPayload: readDocumentPayload,
     readRecentlyAdded: readRecentlyAdded,
     readReferenceTarget: readReferenceTarget,
     readReferencesIndex: readReferencesIndex,
-    readScopeIndex: readScopeIndex,
     readSearchIndex: readSearchIndex,
     scopeGeneratedCapability: scopeGeneratedCapability
   };

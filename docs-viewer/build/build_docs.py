@@ -287,20 +287,19 @@ class DocsDataBuilder:
         for doc in docs_for_item_build:
             semantic_references_by_doc.setdefault(doc.doc_id, [])
 
-        docs_index = [
+        flat_doc_rows = [
             self.index_entry(doc, docs, item_payloads.get(doc.doc_id)) for doc in self.ordered_docs_for_index(docs)
         ]
         viewer_options = self.viewer_options_payload()
         index_payload = {
-            "generated_at": self.effective_index_generated_at(docs_index, viewer_options),
+            "generated_at": utc_timestamp(),
             "viewer_options": viewer_options,
-            "docs": docs_index,
+            "docs": flat_doc_rows,
         }
         index_tree_payload = self.index_tree_payload(docs, viewer_options)
         recently_added_payload = self.recently_added_payload(docs)
         reference_payloads = self.build_reference_payloads(docs, semantic_references_by_doc)
         write_plan = self.build_write_plan(
-            index_payload,
             index_tree_payload,
             recently_added_payload,
             item_payloads,
@@ -411,8 +410,8 @@ class DocsDataBuilder:
                 raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
     def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
-        if not self.public_readonly_scope and not (self.output_dir / "index.json").exists():
-            raise RuntimeError("Targeted docs build requires existing scope index; run a full-scope build first")
+        if not (self.output_dir / "index-tree.json").exists():
+            raise RuntimeError("Targeted docs build requires existing scope index tree; run a full-scope build first")
         if not (self.references_dir / "index.json").exists():
             raise RuntimeError("Targeted docs build requires existing references index; run a full-scope build first")
         missing = [
@@ -536,16 +535,6 @@ class DocsDataBuilder:
                 ordered.append(doc)
         return ordered
 
-    def effective_generated_at(self, docs_index: list[dict[str, Any]], viewer_options: dict[str, Any]) -> str:
-        existing = read_json(self.output_dir / "index.json")
-        if not isinstance(existing, dict):
-            return utc_timestamp()
-        if existing.get("docs") == docs_index and existing.get("viewer_options") == viewer_options:
-            existing_generated_at = str(existing.get("generated_at") or "").strip()
-            if existing_generated_at:
-                return existing_generated_at
-        return utc_timestamp()
-
     def effective_generated_at_for_payload(self, path: Path, comparable_payload: dict[str, Any]) -> str:
         existing = read_json(path)
         if not isinstance(existing, dict):
@@ -555,11 +544,6 @@ class DocsDataBuilder:
         if comparable_existing == comparable_payload and generated_at:
             return generated_at
         return utc_timestamp()
-
-    def effective_index_generated_at(self, docs_index: list[dict[str, Any]], viewer_options: dict[str, Any]) -> str:
-        if self.public_readonly_scope:
-            return utc_timestamp()
-        return self.effective_generated_at(docs_index, viewer_options)
 
     def descendants_for_roots(self, docs: list[DocRecord], roots: list[str]) -> set[str]:
         by_parent: dict[str, list[str]] = {}
@@ -1260,7 +1244,6 @@ class DocsDataBuilder:
 
     def build_write_plan(
         self,
-        index_payload: dict[str, Any],
         index_tree_payload: dict[str, Any],
         recently_added_payload: dict[str, Any],
         item_payloads: dict[str, dict[str, Any]],
@@ -1268,7 +1251,6 @@ class DocsDataBuilder:
         *,
         target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
-        index_text = json_text(index_payload)
         index_tree_text = json_text(index_tree_payload)
         recently_added_text = json_text(recently_added_payload)
         item_text_by_id: dict[str, str] = {}
@@ -1283,11 +1265,8 @@ class DocsDataBuilder:
         stale_item_ids = sorted(set(existing_item_ids) - set(desired_item_ids))
         if target_doc_ids:
             stale_item_ids = sorted(set(stale_item_ids) & set(target_doc_ids))
-        public_readonly = self.public_readonly_scope
         return {
-            "index_write": False if public_readonly else read_text(self.output_dir / "index.json") != index_text,
-            "index_remove": public_readonly and (self.output_dir / "index.json").exists(),
-            "index_text": index_text,
+            "index_remove": (self.output_dir / "index.json").exists(),
             "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
             "index_tree_text": index_tree_text,
             "recently_added_write": read_text(self.output_dir / "recently-added.json") != recently_added_text,
@@ -1344,8 +1323,6 @@ class DocsDataBuilder:
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["index_remove"]:
             (self.output_dir / "index.json").unlink(missing_ok=True)
-        elif write_plan["index_write"]:
-            write_text(self.output_dir / "index.json", write_plan["index_text"])
         if write_plan["index_tree_write"]:
             write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
         if write_plan["recently_added_write"]:
@@ -1417,8 +1394,7 @@ class DocsDataBuilder:
             + len(write_plan["stale_reference_target_keys"])
         )
         index_write_count = (
-            (1 if write_plan["index_write"] else 0)
-            + (1 if write_plan["index_tree_write"] else 0)
+            (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recently_added_write"] else 0)
             + (1 if write_plan["reference_index_write"] else 0)
         )
@@ -1486,10 +1462,6 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
     }
 
 
-def browser_docs_index_url(config: DocsScopeConfig) -> str:
-    return f"/{config.output.as_posix().lstrip('/')}/index.json"
-
-
 def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
     return f"/{config.output.as_posix().lstrip('/')}/index-tree.json"
 
@@ -1543,11 +1515,6 @@ def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]
         "search_index_url": browser_search_index_url(config),
         "search": browser_search_policy_payload(config),
     }
-    if not is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ):
-        record["index_url"] = browser_docs_index_url(config)
     return record
 
 

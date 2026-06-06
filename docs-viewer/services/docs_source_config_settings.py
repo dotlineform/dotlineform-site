@@ -70,15 +70,15 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 
 def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
-    index_path = repo_root / config.output / "index.json"
-    payload = _load_json(index_path, f"generated docs index for {config.scope_id}")
+    index_tree_path = config.output / "index-tree.json"
+    payload = _load_json(repo_root / index_tree_path, f"generated docs index tree for {config.scope_id}")
     if not payload:
-        return {}, [f"Generated docs index is missing: {(config.output / 'index.json').as_posix()}"]
+        return {}, [f"Generated docs index tree is missing: {index_tree_path.as_posix()}"]
     viewer_options = payload.get("viewer_options")
     if viewer_options is None:
-        return {}, ["Generated docs index has no viewer_options object."]
+        return {}, ["Generated docs index tree has no viewer_options object."]
     if not isinstance(viewer_options, dict):
-        return {}, ["Generated docs index viewer_options is not an object."]
+        return {}, ["Generated docs index tree viewer_options is not an object."]
     return viewer_options, []
 
 
@@ -116,7 +116,7 @@ def _field_warnings(
             )
         if generated_value != proposed_value:
             warnings.append(
-                f"Saving {field} requires rebuilding the generated docs index before the browser reflects the change."
+                f"Saving {field} requires rebuilding the generated docs index tree before the browser reflects the change."
             )
     elif not viewer_option_warnings:
         warnings.append(f"Generated {EDITABLE_SCOPE_FIELDS[field].generated_path} is missing or invalid.")
@@ -125,7 +125,7 @@ def _field_warnings(
 
 def _affected_artifacts(config: DocsScopeConfig, field: str) -> list[str]:
     if field == "show_updated_date":
-        return [(config.output / "index.json").as_posix()]
+        return [(config.output / "index-tree.json").as_posix()]
     return []
 
 

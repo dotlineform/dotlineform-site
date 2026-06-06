@@ -67,7 +67,7 @@
         "type": "string",
         "pattern": "^/.+"
       },
-      "required": ["health", "capabilities", "generated_index", "generated_payload", "generated_search"]
+      "required": ["health", "capabilities", "generated_index_tree", "generated_payload", "generated_search"]
     },
     "local_state": {
       "type": "object",

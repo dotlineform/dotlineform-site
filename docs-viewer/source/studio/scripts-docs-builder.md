@@ -33,14 +33,17 @@ Viewer route:
 
 Generated outputs:
 
-- `docs-viewer/generated/docs/studio/index.json`
+- `docs-viewer/generated/docs/studio/index-tree.json`
+- `docs-viewer/generated/docs/studio/recently-added.json`
 - `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
 - `docs-viewer/generated/docs/studio/references/index.json`
 - `docs-viewer/generated/docs/studio/references/by-doc/<doc_id>.json`
 - `docs-viewer/generated/docs/studio/references/by-target/<target_kind>/<target_id_slug>.json`
-- `assets/data/docs/scopes/analysis/index.json`
+- `assets/data/docs/scopes/analysis/index-tree.json`
+- `assets/data/docs/scopes/analysis/recently-added.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
-- `assets/data/docs/scopes/library/index.json`
+- `assets/data/docs/scopes/library/index-tree.json`
+- `assets/data/docs/scopes/library/recently-added.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
 Scope configuration:
@@ -96,13 +99,13 @@ Jekyll remains a separate public-site preview/build verification layer.
 - `title`
   label used in the viewer index and page title
 - `added_date`
-  generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
+  generated docs recently-added metadata; legacy source docs without this field fall back to `last_updated`; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `last_updated`
   display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `summary`
-  optional plain-text summary carried into docs-viewer index and per-doc payloads
+  optional plain-text summary carried into docs-viewer per-doc payloads
 - `ui_status`
-  optional UI status key carried into docs-viewer index and per-doc payloads; the builder normalizes whitespace but does not validate the value against viewer config
+  optional UI status key carried into docs-viewer tree and per-doc payloads; the builder normalizes whitespace but does not validate the value against viewer config
 - `parent_id`
   empty string for a top-level doc
 - `viewable`

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-generated-reads
 title: Docs Management Service Generated Reads
 added_date: 2026-05-19
-last_updated: 2026-06-03
+last_updated: 2026-06-06
 parent_id: scripts-docs-management-server
 ---
 # Docs Management Service Generated Reads
@@ -13,12 +13,12 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
-- `GET /docs/generated/index`
+- `GET /docs/generated/index-tree`
 - `GET /docs/generated/payload`
 - `GET /docs/generated/search`
 - `GET /docs/generated/references`
 - `GET /docs/generated/reference-target`
-- `GET /docs/index`
+- `GET /docs/index-tree`
 - `GET /docs/doc`
 - `GET /docs/search`
 - `GET /docs/references`
@@ -64,7 +64,7 @@ Current behavior:
 - also used by the `docs_broken_links` Docs Viewer report for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
 - appends unified activity rows for covered docs import and broken-links audit actions when valid activity context is supplied
-- serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/local-studio` is running
+- serves generated docs index-tree, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/local-studio` is running
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
 - serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
 - serves selected-document Markdown source bodies and accepts body-only source rebuild requests for the manage-mode Markdown source editor
@@ -112,7 +112,7 @@ Docs payload rebuild behavior:
 
 Read-only generated-data endpoints:
 
-- `GET /docs/generated/index?scope=<scope>`
+- `GET /docs/generated/index-tree?scope=<scope>`
 - `GET /docs/generated/payload?scope=<scope>&doc_id=<doc_id>`; `doc=<doc_id>` is also accepted
 - `GET /docs/generated/search?scope=<scope>`
 - `GET /docs/generated/references?scope=<scope>`
@@ -120,7 +120,7 @@ Read-only generated-data endpoints:
 
 Compatibility aliases:
 
-- `GET /docs/index?scope=<scope>`
+- `GET /docs/index-tree?scope=<scope>`
 - `GET /docs/doc?scope=<scope>&doc_id=<doc_id>`
 - `GET /docs/search?scope=<scope>`
 
@@ -129,9 +129,9 @@ Generated-read behavior:
 - `scope` must be one of the configured scope ids in `docs-viewer/config/scopes/docs_scopes.json`
 - responses return the raw generated JSON unchanged
 - all JSON responses include `Cache-Control: no-store`
-- index reads resolve only the configured scope output path plus `index.json`
-- payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope index, and then resolve only the configured scope output path plus `by-id/<doc_id>.json`
-- payload reads allow non-viewable docs when those docs are present in the generated index, because local manage mode needs to inspect and update non-viewable docs
+- index-tree reads resolve only the configured scope output path plus `index-tree.json`
+- payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope data, and then resolve only the configured scope output path plus `by-id/<doc_id>.json`
+- payload reads allow non-viewable docs when those docs are present in generated scope data, because local manage mode needs to inspect and update non-viewable docs
 - search reads resolve only `assets/data/search/<scope>/index.json`
 - references reads resolve only the configured scope output path plus `references/index.json`
 - reference-target reads resolve only configured semantic-reference target buckets under the selected scope
@@ -144,7 +144,7 @@ Source-config report endpoint:
 
 Source-config report behavior:
 
-- reads only known Docs Viewer config files and generated scope indexes
+- reads only known Docs Viewer config files and generated scope index-tree payloads
 - returns repo-relative paths only
 - includes source scope config, browser config projection, generated output paths, generated viewer options, and per-scope warnings
 - is intended for `/docs/` manage-mode report rendering

@@ -151,8 +151,6 @@ def assert_generated_requests(paths: set[str]) -> None:
     for expected in ["/docs/generated/index-tree", "/docs/generated/payload", "/docs/generated/recently-added", "/docs/generated/search"]:
         if expected not in paths:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
-    if "/docs/generated/index" in paths:
-        raise AssertionError(f"manage route requested retired generated index endpoint: {sorted(paths)!r}")
 
 
 def assert_manage_info_panel(page: Page, timeout_ms: int) -> None:

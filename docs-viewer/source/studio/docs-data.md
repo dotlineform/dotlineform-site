@@ -32,16 +32,16 @@ Why Markdown is part of the data model here:
 - for docs, the source Markdown is the canonical authored content
 - the builder turns that content into the generated docs-viewer payloads
 
-### `docs-viewer/generated/docs/studio/index.json`
+### `docs-viewer/generated/docs/studio/index-tree.json`
 
 Purpose:
 
-- lightweight tree/index payload for the Studio docs corpus
+- lightweight hierarchical tree payload for the Studio docs corpus
 
 Current content families:
 
-- one row per generated Studio doc
-- identity, title, added/update dates, optional `summary`, optional `ui_status`, optional non-empty `parent_id`, optional `viewable: false`, source path, viewer URL, and per-doc content URL
+- nested rows for generated Studio docs
+- identity, title, optional `ui_status`, optional `viewable: false`, and per-doc content URL
 - `viewer_options` for scope-level display behavior such as keeping document-view updated dates visible
 
 Current site mapping:
@@ -93,9 +93,9 @@ Current site mapping:
 
 - inline docs search on `/docs/`
 
-Why it is derived from the docs index rather than the source Markdown directly:
+Why it is derived from generated docs data rather than the source Markdown directly:
 
-- the canonical generated Studio docs corpus is the generated docs index, not every source file under `docs-viewer/source/studio/`
+- the canonical generated Studio docs corpus is the generated docs tree and per-doc payloads, not every source file under `docs-viewer/source/studio/`
 - docs with `viewable: false` can have generated payloads for manage mode, but are filtered out of public/default docs search
 
 Current writer:

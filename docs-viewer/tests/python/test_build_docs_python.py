@@ -235,7 +235,6 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         prepare_repo(root)
         result = run_builder(root)
 
-        index = read_json(root / "docs-viewer/generated/docs/studio/index.json")
         index_tree = read_json(root / "docs-viewer/generated/docs/studio/index-tree.json")
         recently_added = read_json(root / "docs-viewer/generated/docs/studio/recently-added.json")
         child = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
@@ -243,7 +242,8 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         target_payload = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json")
         by_doc = read_json(root / "docs-viewer/generated/docs/studio/references/by-doc/child.json")
 
-    docs = index["docs"]
+    assert not (root / "docs-viewer/generated/docs/studio/index.json").exists()
+    docs = result["index_payload"]["docs"]
     assert [doc["doc_id"] for doc in docs] == ["parent", "child"]
     assert docs[1]["summary"] == "Child summary"
     assert docs[1]["ui_status"] == "done"
@@ -408,7 +408,7 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
-    assert browser_config["scopes"][0]["index_url"] == "/docs-viewer/generated/docs/studio/index.json"
+    assert "index_url" not in browser_config["scopes"][0]
     assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
     assert browser_config["scopes"][0]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
     assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}

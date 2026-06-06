@@ -78,10 +78,10 @@ Search builds:
 
 - `./docs-viewer/build/build_search.py`
   - Docs Viewer-owned search builder for configured docs scopes
-  - source indexes:
-    - `docs-viewer/generated/docs/studio/index.json`
-    - `assets/data/docs/scopes/analysis/index.json`
-    - `assets/data/docs/scopes/library/index.json`
+  - source docs:
+    - `docs-viewer/source/studio/`
+    - `docs-viewer/source/analysis/`
+    - `docs-viewer/source/library/`
   - outputs:
     - `docs-viewer/generated/search/studio/index.json`
     - `assets/data/search/analysis/index.json`

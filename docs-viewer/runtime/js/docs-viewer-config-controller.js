@@ -76,7 +76,6 @@ export function initDocsViewerConfigController(context) {
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
       indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
       recentlyAddedUrl: String(rawScope.recently_added_url || "").trim(),
-      docsIndexUrl: String(rawScope.index_url || rawScope.docs_index_url || "").trim(),
       searchIndexUrl: String(rawScope.search_index_url || "").trim()
     };
   }
@@ -199,7 +198,6 @@ export function initDocsViewerConfigController(context) {
     root.dataset.viewerScope = scope;
     root.dataset.indexTreeUrl = config.indexTreeUrl;
     root.dataset.recentlyAddedUrl = config.recentlyAddedUrl;
-    root.dataset.docsIndexUrl = config.docsIndexUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = config.defaultDocId;
     root.dataset.viewerBaseUrl = routeProjection.viewerBaseUrl;

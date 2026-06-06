@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs
+from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs
 
 
 BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
@@ -61,19 +61,23 @@ def _browser_docs_viewer_settings(repo_root: Path) -> dict[str, Any]:
     return docs_viewer if isinstance(docs_viewer, dict) else {}
 
 
-def _read_viewer_options(repo_root: Path, output: Path, scope_id: str) -> tuple[dict[str, Any], list[str]]:
-    index_path = repo_root / output / "index.json"
+def generated_docs_index_tree_path(config: DocsScopeConfig) -> Path:
+    return config.output / "index-tree.json"
+
+
+def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
+    index_tree_path = generated_docs_index_tree_path(config)
     warnings: list[str] = []
-    payload = _load_json(index_path, f"generated docs index for {scope_id}")
+    payload = _load_json(repo_root / index_tree_path, f"generated docs index tree for {config.scope_id}")
     if not payload:
-        warnings.append(f"Generated docs index is missing: {output.as_posix()}/index.json")
+        warnings.append(f"Generated docs index tree is missing: {index_tree_path.as_posix()}")
         return {}, warnings
     viewer_options = payload.get("viewer_options")
     if viewer_options is None:
-        warnings.append("Generated docs index has no viewer_options object.")
+        warnings.append("Generated docs index tree has no viewer_options object.")
         return {}, warnings
     if not isinstance(viewer_options, dict):
-        warnings.append("Generated docs index viewer_options is not an object.")
+        warnings.append("Generated docs index tree viewer_options is not an object.")
         return {}, warnings
     return viewer_options, warnings
 
@@ -120,7 +124,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
         config = configs[scope_id]
         raw = raw_by_scope.get(scope_id, {})
         browser = browser_by_scope.get(scope_id, {})
-        viewer_options, warnings = _read_viewer_options(repo_root, config.output, scope_id)
+        viewer_options, warnings = _read_viewer_options(repo_root, config)
         scopes.append(
             {
                 "scope_id": scope_id,
@@ -132,7 +136,8 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                 "viewer_options": viewer_options,
                 "generated": {
                     "docs_output": config.output.as_posix(),
-                    "docs_index": (config.output / "index.json").as_posix(),
+                    "docs_index_tree": generated_docs_index_tree_path(config).as_posix(),
+                    "recently_added": (config.output / "recently-added.json").as_posix(),
                     "docs_payload_root": (config.output / "by-id").as_posix(),
                     "search_index": config.search_output.as_posix(),
                 },

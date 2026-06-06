@@ -111,7 +111,8 @@ function browserRows(scope) {
     ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
     ["media_path_prefix", config.media_path_prefix],
-    ["index_url", config.index_url],
+    ["index_tree_url", config.index_tree_url],
+    ["recently_added_url", config.recently_added_url],
     ["search_index_url", config.search_index_url],
     ["search", config.search]
   ];
@@ -121,7 +122,8 @@ function generatedRows(scope) {
   const generated = scope.generated || {};
   return [
     ["docs_output", generated.docs_output],
-    ["docs_index", generated.docs_index],
+    ["docs_index_tree", generated.docs_index_tree],
+    ["recently_added", generated.recently_added],
     ["docs_payload_root", generated.docs_payload_root],
     ["search_index", generated.search_index],
     ["viewer_options", scope.viewer_options || {}]

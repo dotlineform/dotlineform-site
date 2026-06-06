@@ -142,40 +142,6 @@ export function indexIncludesExpectedDoc(payload, expectedDocId) {
   return false;
 }
 
-export function flatIndexIncludesExpectedDoc(payload, expectedDocId) {
-  if (!expectedDocId) return true;
-  var docs = payload && Array.isArray(payload.docs) ? payload.docs : [];
-  return docs.some(function (doc) {
-    return doc && doc.doc_id === expectedDocId;
-  });
-}
-
-export function fetchIndexWithRetry(options) {
-  var settings = options || {};
-  var currentAttempt = typeof settings.attempt === "number" ? settings.attempt : 0;
-  var attempts = typeof settings.reloadRetryAttempts === "number" ? settings.reloadRetryAttempts : 1;
-  return fetchPreferredGeneratedJson(
-    settings.indexUrl,
-    "Failed to load docs index",
-    managementReloadPath("/docs/generated/index", { scope: settings.viewerScope }),
-    Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
-  )
-    .then(function (payload) {
-      if (flatIndexIncludesExpectedDoc(payload, settings.reloadExpectedDocId)) {
-        return payload;
-      }
-      if (!settings.reloadNonce || currentAttempt >= attempts - 1) {
-        var missingError = new Error("Updated docs index is missing " + settings.reloadExpectedDocId + ".");
-        missingError.status = 404;
-        throw missingError;
-      }
-      return waitForReloadRetry(settings).then(function () {
-        var nextSettings = Object.assign({}, settings, { attempt: currentAttempt + 1 });
-        return fetchIndexWithRetry(nextSettings);
-      });
-    });
-}
-
 export function fetchIndexTreeWithRetry(options) {
   var settings = options || {};
   var currentAttempt = typeof settings.attempt === "number" ? settings.attempt : 0;

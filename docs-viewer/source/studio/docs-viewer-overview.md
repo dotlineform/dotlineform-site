@@ -226,14 +226,14 @@ Current report behavior:
 
 Current visibility behavior:
 
-- generated docs indexes can carry `viewable: false` rows that remain generated and manageable
+- generated docs tree and by-id payloads can carry `viewable: false` docs that remain generated and manageable
 - source front matter uses `viewable: false` for non-viewable docs and omits `viewable` for the default viewable state
 - public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
 - public/default viewer discovery also excludes descendants of a non-viewable parent, without changing descendant `viewable` values
 
 Current manage-mode draft behavior:
 
-- public/default tree rendering includes only docs whose generated index row is not `viewable: false`
+- public/default tree rendering includes only docs whose generated tree node is not `viewable: false`
 - manage mode always includes non-viewable docs in the tree
 - manage mode preserves the source hierarchy when non-viewable docs are included; children are not automatically changed when a parent is non-viewable
 - the manage toolbar includes a right-aligned light/dark toggle that stores the selected theme in browser storage and applies it to the standalone `/docs/` shell
@@ -252,8 +252,8 @@ The current design keeps some behavior scope-specific and some behavior shared.
 Scope-owned:
 
 - source doc trees
-- compact `index-tree.json` payloads, compact `recently-added.json` payloads, per-doc payloads, and manage/local rich generated docs indexes where tooling needs them
-- scope-level viewer options in generated tree/index payloads
+- compact `index-tree.json` payloads, compact `recently-added.json` payloads, and per-doc payloads
+- scope-level viewer options in generated tree payloads
 - route/page shell copy
 - route ids on route shells and browser-safe route records in `docs-viewer/config/routes/docs-viewer-routes.json`
 
