@@ -7,10 +7,148 @@
   },
   "docs": [
     {
+      "doc_id": "admin",
+      "title": "Admin",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin.json",
+      "children": [
+        {
+          "doc_id": "studio-activity",
+          "title": "Activity Report",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json"
+        },
+        {
+          "doc_id": "local-admin-app",
+          "title": "Local Admin App",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
+        },
+        {
+          "doc_id": "scripts-audit-site-consistency",
+          "title": "Site Consistency Audit",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
+        },
+        {
+          "doc_id": "scripts-studio-audit-service",
+          "title": "Studio Audit Runner",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-studio-audit-service.json"
+        },
+        {
+          "doc_id": "studio-audits",
+          "title": "Studio Audits",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json"
+        },
+        {
+          "doc_id": "studio-docs-inventory",
+          "title": "Studio Docs Inventory",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
+          "ui_status": "urgent"
+        },
+        {
+          "doc_id": "studio-python-ruby-script-inventory",
+          "title": "Studio Python And Ruby Script Inventory",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
+          "children": [
+            {
+              "doc_id": "docs-build-management-import-export-improvements",
+              "title": "Docs Build Management Import Export Improvements",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
+              "ui_status": "done"
+            }
+          ]
+        },
+        {
+          "doc_id": "scripts-audit-studio-ready-state",
+          "title": "Studio Ready-State Audit",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json"
+        },
+        {
+          "doc_id": "studio-risk-analysis-policy",
+          "title": "Studio Risk Analysis Policy",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
+          "ui_status": "review",
+          "children": [
+            {
+              "doc_id": "docs-viewer-javascript-inventory",
+              "title": "Docs Viewer JavaScript Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
+              "ui_status": "reference"
+            },
+            {
+              "doc_id": "javascript-inventory",
+              "title": "Javascript Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
+              "ui_status": "reference"
+            },
+            {
+              "doc_id": "studio-javascript-payload-inventory",
+              "title": "Retired JavaScript Inventory Policy",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
+              "ui_status": "retired"
+            }
+          ]
+        },
+        {
+          "doc_id": "studio-risk-priority-dashboard",
+          "title": "Studio Risk Priority Dashboard",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
+          "ui_status": "review",
+          "children": [
+            {
+              "doc_id": "analytics-risk-inventory",
+              "title": "Analytics Risk Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "docs-viewer-risk-inventory",
+              "title": "Docs Viewer Risk Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "public-site-risk-inventory",
+              "title": "Public Site Risk Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "studio-app-risk-inventory",
+              "title": "Studio App Risk Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "studio-risk-operations",
+              "title": "Studio Risk Operations",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-operations.json",
+              "ui_status": "review",
+              "children": [
+                {
+                  "doc_id": "studio-risk-evidence-pack",
+                  "title": "Studio Risk Evidence Pack",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
+                  "ui_status": "draft"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "doc_id": "analytics",
       "title": "Analytics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
       "children": [
+        {
+          "doc_id": "config-analytics-config-json",
+          "title": "Analytics Config JSON",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json"
+        },
+        {
+          "doc_id": "config-analytics-ui-text-json",
+          "title": "Analytics UI Text Config",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-ui-text-json.json"
+        },
         {
           "doc_id": "dimension-visualisation-projection",
           "title": "Dimension Visualisation Projection Table",
@@ -112,125 +250,6 @@
           "doc_id": "source-tree-ownership",
           "title": "Source Tree Ownership",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json"
-        }
-      ]
-    },
-    {
-      "doc_id": "audit",
-      "title": "Audit",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/audit.json",
-      "children": [
-        {
-          "doc_id": "scripts-audit-site-consistency",
-          "title": "Site Consistency Audit",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
-        },
-        {
-          "doc_id": "scripts-studio-audit-service",
-          "title": "Studio Audit Runner",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-studio-audit-service.json"
-        },
-        {
-          "doc_id": "studio-audits",
-          "title": "Studio Audits",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json"
-        },
-        {
-          "doc_id": "studio-docs-inventory",
-          "title": "Studio Docs Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
-          "ui_status": "urgent"
-        },
-        {
-          "doc_id": "studio-python-ruby-script-inventory",
-          "title": "Studio Python And Ruby Script Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-          "ui_status": "reference",
-          "children": [
-            {
-              "doc_id": "docs-build-management-import-export-improvements",
-              "title": "Docs Build Management Import Export Improvements",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "scripts-audit-studio-ready-state",
-          "title": "Studio Ready-State Audit",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json"
-        },
-        {
-          "doc_id": "studio-risk-analysis-policy",
-          "title": "Studio Risk Analysis Policy",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
-          "ui_status": "review",
-          "children": [
-            {
-              "doc_id": "docs-viewer-javascript-inventory",
-              "title": "Docs Viewer JavaScript Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-              "ui_status": "reference"
-            },
-            {
-              "doc_id": "javascript-inventory",
-              "title": "Javascript Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-              "ui_status": "reference"
-            },
-            {
-              "doc_id": "studio-javascript-payload-inventory",
-              "title": "Retired JavaScript Inventory Policy",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
-              "ui_status": "retired"
-            }
-          ]
-        },
-        {
-          "doc_id": "studio-risk-priority-dashboard",
-          "title": "Studio Risk Priority Dashboard",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
-          "ui_status": "review",
-          "children": [
-            {
-              "doc_id": "analytics-risk-inventory",
-              "title": "Analytics Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "docs-viewer-risk-inventory",
-              "title": "Docs Viewer Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "public-site-risk-inventory",
-              "title": "Public Site Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "studio-app-risk-inventory",
-              "title": "Studio App Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "studio-risk-operations",
-              "title": "Studio Risk Operations",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-operations.json",
-              "ui_status": "review",
-              "children": [
-                {
-                  "doc_id": "studio-risk-evidence-pack",
-                  "title": "Studio Risk Evidence Pack",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-                  "ui_status": "draft"
-                }
-              ]
-            }
-          ]
         }
       ]
     },
@@ -1212,21 +1231,6 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
       "children": [
         {
-          "doc_id": "studio-activity",
-          "title": "Activity Report",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json"
-        },
-        {
-          "doc_id": "config-analytics-config-json",
-          "title": "Analytics Config JSON",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json"
-        },
-        {
-          "doc_id": "config-analytics-ui-text-json",
-          "title": "Analytics UI Text Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-ui-text-json.json"
-        },
-        {
           "doc_id": "bulk-add-work",
           "title": "Bulk Add Work",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/bulk-add-work.json"
@@ -1362,11 +1366,6 @@
           "doc_id": "config-docs-viewer-files",
           "title": "Docs Viewer Config Files",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json"
-        },
-        {
-          "doc_id": "local-admin-app",
-          "title": "Local Admin App",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
         },
         {
           "doc_id": "local-studio-apis",
@@ -1577,5 +1576,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-06T19:26:04Z"
+  "generated_at": "2026-06-06T20:19:34Z"
 }

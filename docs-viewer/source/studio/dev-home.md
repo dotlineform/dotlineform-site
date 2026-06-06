@@ -16,6 +16,7 @@ The repo also contains locally run web apps:
 - **[Studio](/docs/?scope=studio&doc=studio)**, which manages the data for the site.
 - **[Analytics](/docs/?scope=studio&doc=analytics)**, which adds a semantic tagging layer to catalogue data.
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
+- **[Admin](/docs/?scope=studio&doc=admin)**, which includes audit, risks and activity reporting.
 
 Note on document structure:
 

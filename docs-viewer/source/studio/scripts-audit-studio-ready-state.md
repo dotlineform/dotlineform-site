@@ -3,8 +3,7 @@ doc_id: scripts-audit-studio-ready-state
 title: Studio Ready-State Audit
 added_date: 2026-05-03
 last_updated: 2026-06-06
-parent_id: audit
-viewable: true
+parent_id: admin
 ---
 # Studio Ready-State Audit
 

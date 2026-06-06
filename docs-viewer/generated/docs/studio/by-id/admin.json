@@ -1,0 +1,9 @@
+{
+  "doc_id": "admin",
+  "title": "Admin",
+  "added_date": "2026-06-06",
+  "last_updated": "2026-06-06",
+  "source_path": "admin.md",
+  "viewer_url": "/docs/?scope=studio&doc=admin",
+  "content_html": "<h1>Admin</h1>\n<p>This section contains guidance about the Local Admin App.</p>\n"
+}

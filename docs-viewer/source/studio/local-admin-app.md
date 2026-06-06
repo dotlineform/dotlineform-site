@@ -3,8 +3,7 @@ doc_id: local-admin-app
 title: Local Admin App
 added_date: 2026-06-06
 last_updated: 2026-06-06
-parent_id: studio
-viewable: true
+parent_id: admin
 ---
 # Local Admin App
 

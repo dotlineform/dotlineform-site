@@ -2,9 +2,8 @@
 doc_id: scripts-studio-audit-service
 title: Studio Audit Runner
 added_date: 2026-05-03
-last_updated: "2026-05-23"
-parent_id: audit
-viewable: true
+last_updated: 2026-05-23
+parent_id: admin
 ---
 # Studio Audit Runner
 

@@ -3,8 +3,7 @@ doc_id: studio-activity
 title: Activity Report
 added_date: 2026-05-08
 last_updated: 2026-06-06
-parent_id: studio
-viewable: true
+parent_id: admin
 ---
 # Studio Activity
 

@@ -3,6 +3,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "admin",
+      "title": "Admin",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin.json",
+      "added_date": "2026-06-06"
+    },
+    {
       "doc_id": "site-request-admin-app-structure-batch-1",
       "title": "Admin App Structure Batch 1",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-1.json",
@@ -71,17 +77,9 @@
       "title": "Local Admin App",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json",
       "added_date": "2026-06-06",
-      "parent_id": "studio",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "task-batch-template",
-      "title": "Task Batch Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
-      "added_date": "2026-06-05 10:36",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home"
+      "parent_id": "admin",
+      "parent_title": "Admin"
     }
   ],
-  "generated_at": "2026-06-06T19:26:04Z"
+  "generated_at": "2026-06-06T20:19:34Z"
 }

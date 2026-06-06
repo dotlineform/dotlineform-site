@@ -3,9 +3,7 @@ doc_id: studio-python-ruby-script-inventory
 title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
 last_updated: 2026-06-06
-ui_status: reference
-parent_id: audit
-viewable: true
+parent_id: admin
 ---
 # Studio Python And Ruby Script Inventory
 

@@ -3,8 +3,7 @@ doc_id: config-analytics-config-json
 title: Analytics Config JSON
 added_date: 2026-06-02
 last_updated: 2026-06-03
-parent_id: studio
-viewable: true
+parent_id: analytics
 ---
 # Analytics Config JSON
 

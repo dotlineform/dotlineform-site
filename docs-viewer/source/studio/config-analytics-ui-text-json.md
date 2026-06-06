@@ -3,8 +3,7 @@ doc_id: config-analytics-ui-text-json
 title: Analytics UI Text Config
 added_date: 2026-06-02
 last_updated: 2026-06-03
-parent_id: studio
-viewable: true
+parent_id: analytics
 ---
 # Analytics UI Text Config
 

@@ -4,7 +4,7 @@ title: Studio Docs Inventory
 added_date: 2026-05-19
 last_updated: 2026-05-19
 ui_status: urgent
-parent_id: audit
+parent_id: admin
 ---
 # Studio Document Inventory
 
