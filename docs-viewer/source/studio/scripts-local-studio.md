@@ -12,9 +12,9 @@ Scripts:
 
 ```bash
 bin/local-all
+bin/local-admin
 bin/local-studio
 bin/local-analytics
-bin/local-ui-catalogue
 bin/public-site-preview
 bin/public-site-build
 docs-viewer/bin/docs-viewer
@@ -22,12 +22,11 @@ docs-viewer/bin/docs-viewer
 
 ## Purpose
 
-Local Studio, Local Analytics, UI Catalogue, public Jekyll preview, and Docs Viewer have separate launcher commands.
+Local Studio, Local Admin, Local Analytics, public Jekyll preview, and Docs Viewer have separate launcher commands.
 
 `bin/local-studio` 
 - starts the Local Studio app for Studio catalogue/audit/activity/admin APIs
 - the docs live rebuild watcher
-- UI Catalogue
 - Python startup maintenance tasks.
 
 The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
@@ -35,9 +34,8 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 `bin/local-analytics`
 - starts the standalone Local Analytics app for tag and Data Sharing routes/APIs.
 
-`bin/local-ui-catalogue`
-- starts the standalone UI Catalogue demo app
-- only use if `local-all` isn't running
+`bin/local-admin`
+- starts the Local Admin app for cross-repo operations and Admin-hosted UI Catalogue routes.
 
 `docs-viewer/bin/docs-viewer`
 - starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
@@ -52,8 +50,8 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 - orchestration runner
 
 Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal when Studio links need a live public-site preview host.
+Run `bin/local-admin` when working only on Admin or UI Catalogue routes.
 Run `bin/local-analytics` when working only on Analytics or Data Sharing.
-Run `bin/local-ui-catalogue` when working only on UI Catalogue demos.
 Run `bin/local-all` when a local session needs the sibling services supervised together.
 
 Each command:
@@ -84,6 +82,16 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `STUDIO_APP_ACCESS_LOG`
   default: `0`
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Studio app request
+- `ADMIN_APP_ENABLED`
+  default: `1`
+  used by `bin/local-all`; set to `0` to skip the Local Admin child process
+- `ADMIN_APP_HOST`
+  default: `127.0.0.1`
+- `ADMIN_APP_PORT`
+  default: `8768`
+- `ADMIN_APP_ACCESS_LOG`
+  default: `0`
+  set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Admin app request
 - `ANALYTICS_APP_ENABLED`
   default: `1`
   used by `bin/local-all`; set to `0` to skip the Local Analytics child process
@@ -94,16 +102,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `ANALYTICS_APP_ACCESS_LOG`
   default: `0`
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Analytics app request
-- `UI_CATALOGUE_APP_ENABLED`
-  default: `1`
-  used by `bin/local-all`; set to `0` to skip the UI Catalogue child process
-- `UI_CATALOGUE_APP_HOST`
-  default: `127.0.0.1`
-- `UI_CATALOGUE_APP_PORT`
-  default: `8767`
-- `UI_CATALOGUE_APP_ACCESS_LOG`
-  default: `0`
-  set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each UI Catalogue app request
 - `DOCS_WATCH_ENABLED`
   default: `1`
 - `DOCS_WATCH_POLL_SECONDS`
@@ -144,10 +142,10 @@ Example:
 ```bash
 export STUDIO_APP_PORT=8765
 export STUDIO_APP_ACCESS_LOG=0
+export ADMIN_APP_PORT=8768
+export ADMIN_APP_ACCESS_LOG=0
 export ANALYTICS_APP_PORT=8766
 export ANALYTICS_APP_ACCESS_LOG=0
-export UI_CATALOGUE_APP_PORT=8767
-export UI_CATALOGUE_APP_ACCESS_LOG=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
@@ -156,18 +154,18 @@ export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 
 ### Start All
 
-Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, Local Analytics, UI Catalogue, and Docs Viewer web service host/port settings, and checks that enabled service ports are both distinct and available.
+Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, Local Admin, Local Analytics, and Docs Viewer web service host/port settings, and checks that enabled service ports are both distinct and available.
 If a configured port is unavailable or two services are configured for the same binding, the runner exits before starting any service.
 
 After preflight, `bin/local-all` starts:
 
 1. `bin/public-site-preview` when `PUBLIC_SITE_ENABLED` is not `0`
 2. `bin/local-studio`
-3. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
-4. `bin/local-ui-catalogue` when `UI_CATALOGUE_APP_ENABLED` is not `0`
+3. `bin/local-admin` when `ADMIN_APP_ENABLED` is not `0`
+4. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
 5. `docs-viewer/bin/docs-viewer`
 
-The runner prints the public-site preview, Local Studio app, Local Analytics app, UI Catalogue app, and Docs Viewer web service URLs, or the disabled reason for skipped optional children.
+The runner prints the public-site preview, Local Studio app, Local Admin app, Local Analytics app, and Docs Viewer web service URLs, or the disabled reason for skipped optional children.
 If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
 
 ### Local Studio
@@ -259,25 +257,26 @@ $HOME/miniconda3/bin/python3 analytics-app/app/server/analytics_app/analytics_ap
 - stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
 - intentionally does not provide compatibility aliases for old `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths
 
-### UI Catalogue App
+### Admin App
 
-Explicit UI Catalogue command:
+Explicit Admin command:
 
 ```bash
-bin/local-ui-catalogue
+bin/local-admin
 ```
 
 It runs:
 
 ```bash
-$HOME/miniconda3/bin/python3 ui-catalogue-app/app/server/ui_catalogue_app/ui_catalogue_app_server.py --host "$UI_CATALOGUE_APP_HOST" --port "$UI_CATALOGUE_APP_PORT"
+$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/admin_app_server.py --host "$ADMIN_APP_HOST" --port "$ADMIN_APP_PORT"
 ```
 
-- default URL: `http://127.0.0.1:8767/ui-catalogue/demos/`
-- owns isolated UI Catalogue demo pages and assets under `/ui-catalogue/...`
-- uses `UI_CATALOGUE_APP_HOST`, `UI_CATALOGUE_APP_PORT`, and `UI_CATALOGUE_APP_ACCESS_LOG`
+- default URL: `http://127.0.0.1:8768/admin/`
+- owns Admin pages under `/admin/...`
+- owns UI Catalogue demo pages and assets under `/admin/ui-catalogue/...`
+- uses `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, and `ADMIN_APP_ACCESS_LOG`
 - stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
-- intentionally does not provide compatibility aliases for old `/studio/ui-catalogue/...` paths
+- intentionally does not provide compatibility aliases for old `/studio/ui-catalogue/...` or `/ui-catalogue/...` paths
 
 ### Docs Viewer Web Service
 
@@ -342,8 +341,8 @@ At startup the runner prints quick links for:
 
 - Start All service URLs when `bin/local-all` is used
 - Local Studio App
+- Local Admin App
 - Local Analytics App
-- UI Catalogue App
 - Local Studio API ownership
 - Docs Live Watcher status
 - Series Tag Editor in Local Analytics:
@@ -353,7 +352,7 @@ At startup the runner prints quick links for:
 
 `bin/local-all` and `bin/local-studio` both trap `EXIT`, `INT`, and `TERM`.
 
-When you press `Ctrl+C`, `bin/local-all` stops the public-site preview when enabled, Local Studio runner, Local Analytics runner, UI Catalogue runner, and Docs Viewer service before exiting.
+When you press `Ctrl+C`, `bin/local-all` stops the public-site preview when enabled, Local Studio runner, Local Admin runner, Local Analytics runner, and Docs Viewer service before exiting.
 
 When you press `Ctrl+C` in `bin/local-studio`, it:
 
@@ -369,11 +368,11 @@ If either `bin/local-studio` child process exits unexpectedly, that runner stops
 `bin/local-studio` does not currently:
 
 - start Jekyll
+- start Local Admin
 - start Local Analytics
-- start UI Catalogue
 - start the Docs Viewer web service
 - serve `/docs/` or Docs Viewer management APIs
-- serve `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
+- serve `/admin/`, `/admin/ui-catalogue/...`, `/analytics/`, `/analytics/api/...`, or Data Sharing APIs
 - run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup
 - rebuild catalogue lookup artifacts on startup

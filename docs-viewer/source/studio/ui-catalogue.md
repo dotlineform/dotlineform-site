@@ -11,48 +11,48 @@ viewable: true
 This section is the top-level index for shared UI primitives, composition patterns, and isolated demo pages.
 
 The UI Catalogue is now a demo system, not a live-system CSS check. It exists to make patterns readable, inspectable, and reusable while keeping demo code separate from production Studio and Docs Viewer implementation code.
-The demo pages are now served by the standalone local UI Catalogue app.
+The demo pages are now served by the local Admin app.
 They do not mutate catalogue data and should not be wired through Local Studio routes.
 
 ## Demo Route Structure
 
 Published demo pages live under:
 
-- `/ui-catalogue/demos/`
-- `/ui-catalogue/demos/primitives/<primitive>/`
-- `/ui-catalogue/demos/patterns/<pattern>/`
+- `/admin/ui-catalogue/demos/`
+- `/admin/ui-catalogue/demos/primitives/<primitive>/`
+- `/admin/ui-catalogue/demos/patterns/<pattern>/`
 
 Reference pages live under:
 
-- `/ui-catalogue/palette/`
+- `/admin/ui-catalogue/palette/`
 
 Current demo pages:
 
-- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/button/)
-- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/input/)
-- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/list/)
-- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/modal-shell/)
-- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/primitives/panel/)
-- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/patterns/action-menu/)
-- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/patterns/reopenable-command-result/)
-- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/patterns/select-menu/)
-- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](http://127.0.0.1:8767/ui-catalogue/demos/patterns/column-links/)
+- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/button/)
+- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/input/)
+- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/list/)
+- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/modal-shell/)
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/panel/)
+- [Action Menu Pattern](/docs/?scope=studio&doc=ui-pattern-action-menu) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/action-menu/)
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/reopenable-command-result/)
+- [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/select-menu/)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/column-links/)
 
-The demo links target the default UI Catalogue app port.
-If `UI_CATALOGUE_APP_PORT` is changed from `8767`, adjust the port in the browser URL.
+The demo links target the default Admin app port.
+If `ADMIN_APP_PORT` is changed from `8768`, adjust the port in the browser URL.
 
-Retired Studio routes such as `/studio/ui-catalogue/demos/`, `/studio/ui-catalogue/button/`, and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the standalone demo route hierarchy.
-The retired public `/palette/` route should not be recreated; palette inspection belongs under `/ui-catalogue/palette/`.
-The palette page currently reads checked-in YAML at `ui-catalogue-app/source/palette/palette.yml`; future refresh work should convert that data to a UI Catalogue-owned JSON/JavaScript refresh path rather than restoring Jekyll data ownership.
+Retired Studio routes such as `/studio/ui-catalogue/demos/`, `/studio/ui-catalogue/button/`, and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the Admin-hosted demo route hierarchy.
+The retired public `/palette/` route should not be recreated; palette inspection belongs under `/admin/ui-catalogue/palette/`.
+The palette page currently reads checked-in YAML at `admin-app/ui-catalogue/source/palette/palette.yml`; future refresh work should convert that data to a UI Catalogue-owned JSON/JavaScript refresh path rather than restoring Jekyll data ownership.
 
 ## Demo Namespace
 
 Demo implementation lives outside the production Studio namespace:
 
-- demo CSS: `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
-- demo JS: `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
+- demo CSS: `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- demo JS: `admin-app/ui-catalogue/assets/js/ui-catalogue-demo.js`
 - demo classes: `uiCatalogueDemo*`
-- palette data: `ui-catalogue-app/source/palette/palette.yml`
+- palette data: `admin-app/ui-catalogue/source/palette/palette.yml`
 
 Do not import `studio/app/assets/css/studio.css` into demo pages to prove a primitive. Do not use `tagStudio*`, `docsViewer*`, or route-local production classes inside rendered demo markup unless the page is explicitly documenting a migration comparison.
 Do not put demo-only fragments in `_includes/`. Demo pages should own their rendered example markup directly.
@@ -69,16 +69,16 @@ The demo pages expose a demo-local ready contract:
 
 Current roots:
 
-- `/ui-catalogue/demos/` uses `#uiCatalogueDemoIndexRoot`
-- `/ui-catalogue/demos/primitives/button/` uses `#uiCatalogueDemoButtonRoot`
-- `/ui-catalogue/demos/primitives/input/` uses `#uiCatalogueDemoInputRoot`
-- `/ui-catalogue/demos/primitives/list/` uses `#uiCatalogueDemoListRoot`
-- `/ui-catalogue/demos/primitives/modal-shell/` uses `#uiCatalogueDemoModalShellRoot`
-- `/ui-catalogue/demos/primitives/panel/` uses `#uiCatalogueDemoPanelRoot`
-- `/ui-catalogue/demos/patterns/action-menu/` uses `#uiCatalogueDemoActionMenuRoot`
-- `/ui-catalogue/demos/patterns/reopenable-command-result/` uses `#uiCatalogueDemoReopenableCommandResultRoot`
-- `/ui-catalogue/demos/patterns/select-menu/` uses `#uiCatalogueDemoSelectMenuRoot`
-- `/ui-catalogue/demos/patterns/column-links/` uses `#uiCatalogueDemoColumnLinksRoot`
+- `/admin/ui-catalogue/demos/` uses `#uiCatalogueDemoIndexRoot`
+- `/admin/ui-catalogue/demos/primitives/button/` uses `#uiCatalogueDemoButtonRoot`
+- `/admin/ui-catalogue/demos/primitives/input/` uses `#uiCatalogueDemoInputRoot`
+- `/admin/ui-catalogue/demos/primitives/list/` uses `#uiCatalogueDemoListRoot`
+- `/admin/ui-catalogue/demos/primitives/modal-shell/` uses `#uiCatalogueDemoModalShellRoot`
+- `/admin/ui-catalogue/demos/primitives/panel/` uses `#uiCatalogueDemoPanelRoot`
+- `/admin/ui-catalogue/demos/patterns/action-menu/` uses `#uiCatalogueDemoActionMenuRoot`
+- `/admin/ui-catalogue/demos/patterns/reopenable-command-result/` uses `#uiCatalogueDemoReopenableCommandResultRoot`
+- `/admin/ui-catalogue/demos/patterns/select-menu/` uses `#uiCatalogueDemoSelectMenuRoot`
+- `/admin/ui-catalogue/demos/patterns/column-links/` uses `#uiCatalogueDemoColumnLinksRoot`
 
 This contract is intentionally separate from the production `data-studio-ready` route contract.
 
@@ -119,7 +119,7 @@ The current primitive set includes:
 - toolbar
 - modal shell
 
-Toolbar still needs a complete demo page. Modal shell now has a primitive demo page. Richer modal behavior should stay in `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js` or a scoped demo module under `ui-catalogue-app/app/assets/js/`.
+Toolbar still needs a complete demo page. Modal shell now has a primitive demo page. Richer modal behavior should stay in `admin-app/ui-catalogue/assets/js/ui-catalogue-demo.js` or a scoped demo module under `admin-app/ui-catalogue/assets/js/`.
 
 ## Composition Patterns
 
@@ -127,19 +127,19 @@ Composition patterns cover behavior that depends on route state, stored results,
 
 Pattern demos should follow:
 
-- route: `/ui-catalogue/demos/patterns/<pattern>/`
+- route: `/admin/ui-catalogue/demos/patterns/<pattern>/`
 - CSS/JS namespace: `uiCatalogueDemo*`
 
 ## Folder Structure
 
 Use this structure for new catalogue work:
 
-- `ui-catalogue-app/source/demos/primitives/<primitive>/index.md`
-- `ui-catalogue-app/source/demos/patterns/<pattern>/index.md`
-- `ui-catalogue-app/source/palette/palette.yml`
-- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
-- `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
-- `ui-catalogue-app/app/assets/docs/<primitive-or-pattern>/` for reference images
+- `admin-app/ui-catalogue/source/demos/primitives/<primitive>/index.md`
+- `admin-app/ui-catalogue/source/demos/patterns/<pattern>/index.md`
+- `admin-app/ui-catalogue/source/palette/palette.yml`
+- `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- `admin-app/ui-catalogue/assets/js/ui-catalogue-demo.js`
+- `admin-app/ui-catalogue/assets/docs/<primitive-or-pattern>/` for reference images
 
 Prefer one shared demo stylesheet until a pattern proves it needs its own scoped file.
 Keep route-local demo markup inside the route page. `_includes/` remains reserved for production, layout, or genuinely shared Jekyll partials.
@@ -148,16 +148,16 @@ Keep route-local demo markup inside the route page. `_includes/` remains reserve
 
 UI screenshots and reference images for this catalogue should live in the repo under:
 
-- `ui-catalogue-app/app/assets/docs/panel/`
-- `ui-catalogue-app/app/assets/docs/button/`
-- `ui-catalogue-app/app/assets/docs/input/`
-- `ui-catalogue-app/app/assets/docs/list/`
-- `ui-catalogue-app/app/assets/docs/toolbar/`
-- `ui-catalogue-app/app/assets/docs/modal-shell/`
-- `ui-catalogue-app/app/assets/docs/action-menu/`
-- `ui-catalogue-app/app/assets/docs/select-menu/`
-- `ui-catalogue-app/app/assets/docs/column-links/`
-- `ui-catalogue-app/app/assets/docs/reopenable-command-result/`
+- `admin-app/ui-catalogue/assets/docs/panel/`
+- `admin-app/ui-catalogue/assets/docs/button/`
+- `admin-app/ui-catalogue/assets/docs/input/`
+- `admin-app/ui-catalogue/assets/docs/list/`
+- `admin-app/ui-catalogue/assets/docs/toolbar/`
+- `admin-app/ui-catalogue/assets/docs/modal-shell/`
+- `admin-app/ui-catalogue/assets/docs/action-menu/`
+- `admin-app/ui-catalogue/assets/docs/select-menu/`
+- `admin-app/ui-catalogue/assets/docs/column-links/`
+- `admin-app/ui-catalogue/assets/docs/reopenable-command-result/`
 
 Use these folders for optimized documentation-facing assets only. Live route screenshots collected during UI Audit should be stored or referenced by the owning audit doc.
 

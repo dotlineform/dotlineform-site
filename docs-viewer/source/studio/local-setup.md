@@ -21,8 +21,8 @@ The local development stack is split into sibling services:
 
 - `bin/public-site-preview` for the public Jekyll preview
 - `bin/local-studio` for Local Studio catalogue, audit, activity, admin, and docs-watcher workflows
+- `bin/local-admin` for Admin operations and Admin-hosted UI Catalogue demos
 - `bin/local-analytics` for Analytics tag and Data Sharing routes/APIs
-- `bin/local-ui-catalogue` for isolated UI Catalogue demos
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode and docs management APIs
 - `bin/local-all` when one terminal should supervise the sibling services together
 

@@ -27,7 +27,7 @@ DEFAULT_HISTORY_WINDOW = "90 days"
 VALID_APPS = ("public-site", "studio", "analytics", "docs-viewer", "all")
 APP_ROOTS: dict[str, tuple[str, ...]] = {
     "public-site": ("_config.yml", "_includes", "_layouts", "assets/css", "assets/js", "index.md", "series", "work"),
-    "studio": ("studio", "ui-catalogue-app"),
+    "studio": ("studio",),
     "analytics": ("analytics-app",),
     "docs-viewer": ("docs-viewer", "assets/docs"),
 }
@@ -208,7 +208,7 @@ def file_family(path: Path, repo_root: Path = REPO_ROOT) -> str:
         return "root"
     if parts[0] == "assets" and len(parts) > 1:
         return f"assets/{parts[1]}"
-    if parts[0] in {"studio", "docs-viewer", "analytics-app", "ui-catalogue-app"}:
+    if parts[0] in {"studio", "docs-viewer", "analytics-app", "admin-app"}:
         return parts[0]
     return parts[0]
 
@@ -253,7 +253,7 @@ def import_export_scan(app: str, repo_root: Path = REPO_ROOT) -> dict[str, objec
     summary: dict[str, dict[str, int]] = collections.defaultdict(lambda: {"files": 0, "imports": 0, "exports": 0})
     cross_app_refs: list[dict[str, object]] = []
     file_results: list[dict[str, object]] = []
-    app_tokens = ("analytics-app", "docs-viewer", "studio", "ui-catalogue-app", "assets/js")
+    app_tokens = ("analytics-app", "docs-viewer", "studio", "admin-app", "assets/js")
 
     for path in files:
         if path.suffix not in {".js", ".py", ".rb"}:

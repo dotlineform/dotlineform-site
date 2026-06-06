@@ -39,7 +39,7 @@ The current script surface is organized by owner:
 - `analytics-app/` owns the Local Analytics app server, Analytics route shells, Analytics runtime config, Analytics frontend modules, tag APIs, tag-domain helper services, Data Sharing route/API dispatch, and Analytics tests.
 - `analytics-app/app/server/analytics_app/tag_services/` owns tag-domain source path contracts, validation, planning, dry-run/write transactions, route constants, and compact activity projection used by Analytics.
 - `data-sharing/` owns headless Data Sharing config, adapter registry, package path contracts, workflow dispatch, package I/O, and documents/tags adapters. The active browser-facing Data Sharing HTTP endpoints are hosted by Local Analytics.
-- `ui-catalogue-app/` owns the standalone UI Catalogue demo app, demo source, static demo assets, and UI Catalogue tests.
+- `admin-app/ui-catalogue/` owns UI Catalogue demo source and static demo assets; Admin app server code owns the `/admin/ui-catalogue/...` routes and tests.
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `docs-viewer/build/` owns Docs Viewer docs and search build implementations.

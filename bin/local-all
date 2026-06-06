@@ -32,9 +32,6 @@ ADMIN_APP_PORT="${ADMIN_APP_PORT:-8768}"
 ANALYTICS_APP_ENABLED="${ANALYTICS_APP_ENABLED:-1}"
 ANALYTICS_APP_HOST="${ANALYTICS_APP_HOST:-127.0.0.1}"
 ANALYTICS_APP_PORT="${ANALYTICS_APP_PORT:-8766}"
-UI_CATALOGUE_APP_ENABLED="${UI_CATALOGUE_APP_ENABLED:-1}"
-UI_CATALOGUE_APP_HOST="${UI_CATALOGUE_APP_HOST:-127.0.0.1}"
-UI_CATALOGUE_APP_PORT="${UI_CATALOGUE_APP_PORT:-8767}"
 DOCS_VIEWER_HOST="${DOCS_VIEWER_HOST:-127.0.0.1}"
 DOCS_VIEWER_PORT="${DOCS_VIEWER_PORT:-8776}"
 DOCS_VIEWER_BASE_URL="${DOCS_VIEWER_BASE_URL:-http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT}"
@@ -235,11 +232,6 @@ if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
 else
   echo "Local Analytics app: disabled by ANALYTICS_APP_ENABLED=0"
 fi
-if [ "$UI_CATALOGUE_APP_ENABLED" != "0" ]; then
-  echo "UI Catalogue app: http://$UI_CATALOGUE_APP_HOST:$UI_CATALOGUE_APP_PORT/ui-catalogue/demos/"
-else
-  echo "UI Catalogue app: disabled by UI_CATALOGUE_APP_ENABLED=0"
-fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 echo
 
@@ -255,9 +247,6 @@ fi
 if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
   remember_binding "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT"
 fi
-if [ "$UI_CATALOGUE_APP_ENABLED" != "0" ]; then
-  remember_binding "UI Catalogue" "$UI_CATALOGUE_APP_HOST" "$UI_CATALOGUE_APP_PORT"
-fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
 if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
@@ -271,9 +260,6 @@ if [ "$ADMIN_APP_ENABLED" != "0" ]; then
 fi
 if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
   require_open_port "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT" "ANALYTICS_APP_PORT"
-fi
-if [ "$UI_CATALOGUE_APP_ENABLED" != "0" ]; then
-  require_open_port "UI Catalogue" "$UI_CATALOGUE_APP_HOST" "$UI_CATALOGUE_APP_PORT" "UI_CATALOGUE_APP_PORT"
 fi
 require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VIEWER_PORT"
 
@@ -289,9 +275,6 @@ if [ "$ADMIN_APP_ENABLED" != "0" ]; then
 fi
 if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
   start_child "Local Analytics runner" "$ROOT_DIR/bin/local-analytics"
-fi
-if [ "$UI_CATALOGUE_APP_ENABLED" != "0" ]; then
-  start_child "UI Catalogue runner" "$ROOT_DIR/bin/local-ui-catalogue"
 fi
 start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
 

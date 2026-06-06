@@ -31,7 +31,7 @@ Split refresh status:
 
 - active Studio browser modules now live under `studio/app/frontend/js/`
 - active Analytics and Data Sharing browser modules now live under `analytics-app/app/frontend/js/`
-- active UI Catalogue demo modules now live under `ui-catalogue-app/app/assets/js/`
+- active UI Catalogue demo modules now live under `admin-app/ui-catalogue/assets/js/`
 - task 12 refreshed the table paths for the post-split app roots and moved Analytics tag/Data Sharing rows to their current `analytics-app/app/frontend/js/` owners
 - risk scores are carried forward from the current scored rows after the split cleanup; use the app-root path, family, and focus note as the ownership signal for future work
 - Slice 6 of the Studio JavaScript app shell work refreshed the active Studio module count, added the static shell/registry rows that were introduced during shell migration, and confirmed all configured Studio-local routes now use the JavaScript shell.
@@ -204,7 +204,7 @@ Docs Viewer entrypoint/runtime work is tracked separately in [Docs Viewer JavaSc
 | 142 | `analytics-app/app/frontend/js/analytics-tag-editor-suggestions.js` | Analytics tag routes | 1 | 1 | 1 | 1 | 4 | Tag suggestion helper. |
 | 143 | `analytics-app/app/frontend/js/analytics-tag-editor-interactions.js` | Analytics tag routes | 1 | 1 | 1 | 1 | 4 | Series tag editor selected-work, tag-entry, weight, restore, metrics, and dirty-save enablement interaction state owner. |
 | 144 | `analytics-app/app/frontend/js/tag-aliases-modal-workflow.js` | Analytics tag routes | 1 | 1 | 1 | 1 | 4 | Tag Aliases modal workflow owner for create/edit, promote, and demote state transitions, validation projection, tag selection, and popup matching. |
-| 145 | `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Standalone UI Catalogue demo support module. |
+| 145 | `admin-app/ui-catalogue/assets/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Admin-hosted UI Catalogue demo support module. |
 | 146 | `studio/app/frontend/js/catalogue-editor-route-boot.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue editor boot, route-state projection, required-element, and lookup-loading helper. |
 | 147 | `studio/app/frontend/js/catalogue-editor-action-workflow.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue save/build normalization, action presentation projection, pending build target projection, and action preview result contract helper. |
 | 148 | `analytics-app/app/frontend/js/tag-aliases-state.js` | Analytics tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases mutation-state projection helper. |

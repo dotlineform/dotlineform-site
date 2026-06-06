@@ -29,7 +29,7 @@ export R2_BUCKET="..."
 export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
 ```
 
-Local repo scripts, `bin/local-studio`, `bin/local-analytics`, `bin/local-ui-catalogue`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
+Local repo scripts, `bin/local-studio`, `bin/local-admin`, `bin/local-analytics`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
 Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
@@ -40,12 +40,12 @@ What the shared variables mean:
 Common local app runner variables:
 
 - `STUDIO_APP_HOST`, `STUDIO_APP_PORT`, `STUDIO_APP_ACCESS_LOG`
+- `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, `ADMIN_APP_ACCESS_LOG`
 - `ANALYTICS_APP_HOST`, `ANALYTICS_APP_PORT`, `ANALYTICS_APP_ACCESS_LOG`
-- `UI_CATALOGUE_APP_HOST`, `UI_CATALOGUE_APP_PORT`, `UI_CATALOGUE_APP_ACCESS_LOG`
 - `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`
 - `PUBLIC_SITE_ENABLED`, `PUBLIC_SITE_HOST`, `PUBLIC_SITE_PORT`, `PUBLIC_SITE_CONFIG`, `PUBLIC_SITE_LIVERELOAD`
 
-`bin/local-all` also reads `PUBLIC_SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ANALYTICS_APP_ENABLED`, and `UI_CATALOGUE_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
+`bin/local-all` also reads `PUBLIC_SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ADMIN_APP_ENABLED`, and `ANALYTICS_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
 
 Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 
@@ -110,7 +110,7 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 bin/local-studio
+bin/local-admin
 bin/local-analytics
-bin/local-ui-catalogue
 docs-viewer/bin/docs-viewer
 ```

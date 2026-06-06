@@ -20,6 +20,7 @@ ADMIN_ROUTE_COPY_FIELDS: tuple[str, ...] = ADMIN_ROUTE_REQUIRED_FIELDS
 ADMIN_ROUTE_REGISTRY_PATH = ("app", "routes")
 ADMIN_SERVED_ROUTE_PATHS: dict[str, str] = {
     "admin_home": "/admin/",
+    "admin_ui_catalogue": "/admin/ui-catalogue/",
 }
 
 
@@ -139,6 +140,10 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "config" / "admin-config.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-home.json",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-home.js",
+        repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-demo.css",
+        repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-shell.css",
+        repo_root / "admin-app" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-demo.js",
+        repo_root / "admin-app" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-shell.js",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"

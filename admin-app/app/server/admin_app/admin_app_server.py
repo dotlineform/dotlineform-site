@@ -30,12 +30,14 @@ if str(ADMIN_SERVER_DIR) not in sys.path:
 
 from admin_app_config import asset_version, runtime_config  # noqa: E402
 from admin_app_views import admin_home_view  # noqa: E402
+from ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view, ui_catalogue_palette_view  # noqa: E402
 
 
 STATIC_PREFIXES = (
     "/admin/app/assets/",
     "/admin/app/frontend/config/",
     "/admin/app/frontend/js/",
+    "/admin/ui-catalogue/assets/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -83,6 +85,16 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         if path in {"/admin", "/admin/"}:
             self.send_html(admin_home_view(self.version, self.repo_root))
             return
+        if path in {"/admin/ui-catalogue", "/admin/ui-catalogue/"}:
+            self.send_redirect("/admin/ui-catalogue/demos/")
+            return
+        if path in {"/admin/ui-catalogue/palette", "/admin/ui-catalogue/palette/"}:
+            self.send_html(ui_catalogue_palette_view(self.version, self.repo_root))
+            return
+        for route_path, view_id in UI_CATALOGUE_DEMO_ROUTES.items():
+            if path in {route_path.rstrip("/"), route_path}:
+                self.send_html(ui_catalogue_demo_view(self.version, self.repo_root, view_id))
+                return
         if self.is_allowed_static_path(path):
             self.send_static(path)
             return
@@ -110,8 +122,16 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def send_redirect(self, location: str) -> None:
+        self.send_response(HTTPStatus.FOUND)
+        self.send_header("Location", location)
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+
     def send_static(self, request_path: str) -> None:
-        if request_path.startswith("/admin/app/"):
+        if request_path.startswith("/admin/ui-catalogue/assets/"):
+            relative = f"admin-app/ui-catalogue/assets/{request_path.removeprefix('/admin/ui-catalogue/assets/')}"
+        elif request_path.startswith("/admin/app/"):
             relative = f"admin-app/app/{request_path.removeprefix('/admin/app/')}"
         else:
             relative = request_path.lstrip("/")

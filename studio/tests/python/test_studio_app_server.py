@@ -234,6 +234,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
     assert allowed("/ui-catalogue/app/assets/js/ui-catalogue-demo.js") is False
+    assert allowed("/admin/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
     assert allowed("/assets/studio/css/studio.css") is False
     assert allowed("/assets/studio/img/panel-backgrounds/aqua.jpg") is False
     assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
@@ -264,7 +265,7 @@ def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> 
             excludes.add(line.removeprefix("  - ").strip())
 
     assert "data-sharing/config/" in excludes
-    assert "ui-catalogue-app/" in excludes
+    assert "admin-app/" in excludes
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
 
@@ -279,6 +280,7 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
         assert "/assets/css/main.css" not in shell
         assert "/studio/ui-catalogue/" not in shell
         assert "/ui-catalogue/app/" not in shell
+        assert "/admin/ui-catalogue/assets/" not in shell
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:

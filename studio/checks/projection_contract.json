@@ -397,14 +397,14 @@
     },
     {
       "id": "ui_catalogue_demo_assets",
-      "classification": "ui_catalogue_app_asset",
+      "classification": "admin_app_asset",
       "repo_paths": [
-        "ui-catalogue-app/**"
+        "admin-app/ui-catalogue/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "ui-catalogue-app",
+          "admin-app",
           "studio/ui-catalogue",
           "assets/ui-catalogue",
           "assets/docs/ui-catalogue",

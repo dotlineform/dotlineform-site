@@ -155,13 +155,13 @@ Current local app boundaries:
 | Local app | Runner | Default URL | Dependency role |
 | --- | --- | --- | --- |
 | Public site preview | `bin/public-site-preview` | `http://127.0.0.1:4000/` | Ruby/Bundler/Jekyll stack from `Gemfile`, `Gemfile.lock`, and `.ruby-version`. |
-| Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, audit, activity, admin, docs watcher, and startup maintenance tasks. |
+| Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, docs watcher, and startup maintenance tasks. |
+| Local Admin | `bin/local-admin` | `http://127.0.0.1:8768/admin/` | Python runtime plus Admin source for operational pages and Admin-hosted UI Catalogue routes. |
 | Local Analytics | `bin/local-analytics` | `http://127.0.0.1:8766/analytics/` | Python runtime plus Analytics app source, Analytics tag helpers, and Data Sharing workflow/adapters. |
-| UI Catalogue | `bin/local-ui-catalogue` | `http://127.0.0.1:8767/ui-catalogue/demos/` | Python runtime for the small local static/demo server; no Jekyll or Studio service dependency. |
 | Docs Viewer | `docs-viewer/bin/docs-viewer` | `http://127.0.0.1:8776/docs/` | Python runtime plus Docs Viewer services, generated-read helpers, docs management, import/export, and conversion helpers. |
 
 `bin/local-all` supervises these sibling services when a local session needs the full stack.
-The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue does not depend on Studio route config.
+The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue routes do not depend on Studio route config.
 Docs Viewer docs/search generation, catalogue search generation, and catalogue prose rendering are Python app-generation paths.
 Ruby/Bundler/Jekyll is reserved for public-site preview/build and publish-sensitive verification.
 

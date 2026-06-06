@@ -11,7 +11,7 @@ This doc is the durable implementation contract for shared modal shells across S
 
 Demo reference:
 
-- [Modal shell primitive demo](http://127.0.0.1:8767/ui-catalogue/demos/primitives/modal-shell/)
+- [Modal shell primitive demo](http://127.0.0.1:8768/admin/ui-catalogue/demos/primitives/modal-shell/)
 
 ## Scope
 
@@ -155,9 +155,9 @@ Current live implementation sources:
 
 Current demo implementation lives in:
 
-- `ui-catalogue-app/app/assets/css/ui-catalogue-demo.css`
-- `ui-catalogue-app/app/assets/js/ui-catalogue-demo.js`
-- `ui-catalogue-app/source/demos/primitives/modal-shell/index.md`
+- `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- `admin-app/ui-catalogue/assets/js/ui-catalogue-demo.js`
+- `admin-app/ui-catalogue/source/demos/primitives/modal-shell/index.md`
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned JavaScript.
 Treat the demo as the modal shell contract reference, then map the structure into the live Studio namespace or the portable Docs Viewer namespace during page migration.

@@ -3,7 +3,7 @@
 Build palette data for the UI Catalogue palette page from assets/css/main.css.
 
 Default behavior is dry-run (prints the output path and row count).
-Use --write to persist ui-catalogue-app/source/palette/palette.yml.
+Use --write to persist admin-app/ui-catalogue/source/palette/palette.yml.
 """
 
 from __future__ import annotations
@@ -181,7 +181,7 @@ def to_yaml(items: List[Dict[str, str]]) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--css", default="assets/css/main.css", help="Input CSS path")
-    ap.add_argument("--output", default="ui-catalogue-app/source/palette/palette.yml", help="Output data path")
+    ap.add_argument("--output", default="admin-app/ui-catalogue/source/palette/palette.yml", help="Output data path")
     ap.add_argument("--write", action="store_true", help="Write output file (default is dry-run)")
     args = ap.parse_args()
 

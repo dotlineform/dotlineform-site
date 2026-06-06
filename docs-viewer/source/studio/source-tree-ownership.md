@@ -79,9 +79,9 @@ UI Catalogue is an isolated local demo system, not a Local Studio route family.
 
 | Path | Owner / role |
 | --- | --- |
-| `ui-catalogue-app/` | UI Catalogue demo source, palette reference data, demo app server, CSS, JavaScript helpers, reference assets, fixtures, and tests. |
+| `admin-app/ui-catalogue/` | UI Catalogue demo source, palette reference data, scoped CSS, JavaScript helpers, and reference assets served by the Admin app. |
 
-The active route namespaces are `/ui-catalogue/demos/...` for isolated demos and `/ui-catalogue/palette/` for palette reference data.
+The active route namespaces are `/admin/ui-catalogue/demos/...` for isolated demos and `/admin/ui-catalogue/palette/` for palette reference data.
 Retired Studio-hosted UI Catalogue routes should not be recreated.
 
 ## Docs Viewer

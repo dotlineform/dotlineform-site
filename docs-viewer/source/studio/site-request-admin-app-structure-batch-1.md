@@ -17,12 +17,12 @@ Summary: create the Admin app skeleton, visible home, route shell, stylesheet, l
 
 | ID | status | action |
 | --- | --- | --- |
-| 1.1 | planned | Create `admin-app/app/server/admin_app/` with a local Python app server, `/health`, `/admin/`, and static serving for Admin assets. |
-| 1.2 | planned | Create `admin-app/app/frontend/` with Admin route config, route shell modules, navigation helpers, and UI text config needed for the visible home. |
-| 1.3 | planned | Create `admin-app/app/assets/css/admin.css` for Admin shell, navigation, route layout, and Admin-owned page structure. |
-| 1.4 | planned | Add visible `/admin/` home navigation for audits, risk, activity, testing, UI Catalogue, Studio, Analytics, and Docs Viewer. |
-| 1.5 | planned | Add `bin/local-admin` and update `bin/local-all` so Admin starts as a focused sibling service. |
-| 1.6 | planned | Add focused Admin server tests and a route smoke that proves `/admin/` renders the expected navigation and local-only route contract. |
+| 1.1 | done | Create `admin-app/app/server/admin_app/` with a local Python app server, `/health`, `/admin/`, and static serving for Admin assets. |
+| 1.2 | done | Create `admin-app/app/frontend/` with Admin route config, route shell modules, navigation helpers, and UI text config needed for the visible home. |
+| 1.3 | done | Create `admin-app/app/assets/css/admin.css` for Admin shell, navigation, route layout, and Admin-owned page structure. |
+| 1.4 | done | Add visible `/admin/` home navigation for audits, risk, activity, testing, UI Catalogue, Studio, Analytics, and Docs Viewer. |
+| 1.5 | done | Add `bin/local-admin` and update `bin/local-all` so Admin starts as a focused sibling service. |
+| 1.6 | done | Add focused Admin server tests and a route smoke that proves `/admin/` renders the expected navigation and local-only route contract. |
 
 ## Steer for these tasks
 

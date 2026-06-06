@@ -31,6 +31,15 @@ Summary: move existing functional audit, risk, and activity pages from Studio to
 - Admin tests should assert each moved Admin route works, loads its expected config/data, and reaches the correct Admin API behavior.
 - Activity, audit, and risk output paths move to `var/admin/...`.
 
+## Batch 2 handoff
+
+- UI Catalogue source and assets now live under `admin-app/ui-catalogue/`.
+- Admin server code owns `/admin/ui-catalogue/`, `/admin/ui-catalogue/demos/...`, `/admin/ui-catalogue/palette/`, and `/admin/ui-catalogue/assets/...`.
+- The standalone `ui-catalogue-app/` source and `bin/local-ui-catalogue` launcher were retired; `bin/local-all` no longer starts a separate UI Catalogue service.
+- Admin UI Catalogue tests now live at `admin-app/tests/python/test_admin_ui_catalogue.py`, `admin-app/tests/smoke/admin_ui_catalogue_routes.py`, and `admin-app/tests/smoke/admin_ui_catalogue_modal_demo.py`.
+- The `ui-catalogue-smoke` runner profile points at the Admin-hosted UI Catalogue tests and passed in `var/test-runs/admin-ui-catalogue-batch-2/summary.md`.
+- Retired `/ui-catalogue/...` routes are not compatibility aliases; the Admin UI Catalogue route smoke asserts `/ui-catalogue/demos/` returns 404.
+
 ## Deliverables
 
 - Admin-hosted `/admin/audits/`, `/admin/risk/`, and `/admin/activity/`.

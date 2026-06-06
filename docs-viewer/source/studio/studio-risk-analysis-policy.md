@@ -371,7 +371,7 @@ Current active roots include:
 
 - Local Studio: `studio/app/frontend/js/`
 - Local Analytics and Data Sharing: `analytics-app/app/frontend/js/`
-- UI Catalogue: `ui-catalogue-app/app/assets/js/`
+- UI Catalogue: `admin-app/ui-catalogue/assets/js/`
 - public site/shared assets: `assets/js/` and route-specific public assets
 - Docs Viewer runtime: `docs-viewer/runtime/js/`
 
