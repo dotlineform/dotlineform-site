@@ -1,4 +1,4 @@
-"""Local Studio app adapter for risk evidence runs."""
+"""Local Admin app adapter for risk evidence runs."""
 
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ from studio.shared.python.studio_activity import (
 )
 
 
-RISK_RUNS_REL_DIR = Path("var/studio/risk/runs")
-RISK_RUN_API_PATH = "/studio/api/risk/runs"
+RISK_RUNS_REL_DIR = Path("var/admin/risk/runs")
+RISK_RUN_API_PATH = "/admin/api/risk/runs"
 VALID_APPS = ("public-site", "studio", "analytics", "docs-viewer", "all")
 VALID_RUNTIME_PROFILES = ("studio-smoke", "ui-catalogue-smoke", "analytics-smoke", "docs-viewer-smoke")
 VALID_SLUG = re.compile(r"^[A-Za-z0-9_.-]+$")
@@ -65,7 +65,7 @@ def risk_health_payload(repo_root: Path) -> dict[str, Any]:
     runs_root = repo_root / RISK_RUNS_REL_DIR
     return {
         "ok": True,
-        "service": "studio_risk_evidence",
+        "service": "admin_risk_evidence",
         "runs_root": str(RISK_RUNS_REL_DIR),
         "runs_root_exists": runs_root.exists(),
         "apps": list(VALID_APPS),
@@ -232,6 +232,8 @@ def run_risk_evidence_payload(repo_root: Path, body: dict[str, Any]) -> dict[str
         app,
         "--area",
         area,
+        "--runs-root",
+        str(repo_root / RISK_RUNS_REL_DIR),
     ]
     if run_id:
         argv.extend(["--run-id", run_id])

@@ -1,20 +1,20 @@
-import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
+import { getAdminText, loadAdminConfigWithText } from "./admin-config.js";
 import {
   AUDIT_API_ENDPOINTS,
   getJson,
   postJson,
   probeAuditApiHealth
-} from "./studio-transport.js";
+} from "./admin-transport.js";
 import {
-  initializeStudioRouteState
-} from "./studio-route-state.js";
+  initializeAdminRouteState
+} from "./admin-route-state.js";
 import {
   collectOperationalRouteElements,
   markOperationalRouteReady,
   projectOperationalRunButtonState,
   syncOperationalRouteBusyState
-} from "./studio-operational-route.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+} from "./admin-operational-route.js";
+import { buildAdminActivityContext } from "./admin-activity-context.js";
 
 const FALLBACK_AUDITS = Object.freeze([
   {
@@ -61,7 +61,7 @@ function studioAuditsMode(state) {
 
 function studioAuditsRouteOptions() {
   return {
-    route: "studio-audits",
+    route: "admin-audits",
     mode: studioAuditsMode,
     serviceAvailable: (state) => state.serviceAvailable,
     isBusy: (state) => state.isRunning,
@@ -144,7 +144,7 @@ function renderResult(config, result) {
       ${renderFindings(result.findings)}
       ${stdout ? `
         <details class="studioAuditsResult__details">
-          <summary>${escapeHtml(getStudioText(config, "studio_audits.output_label", "output"))}</summary>
+          <summary>${escapeHtml(getAdminText(config, "admin_audits.output_label", "output"))}</summary>
           <pre>${escapeHtml(stdout)}</pre>
         </details>
       ` : ""}
@@ -172,7 +172,7 @@ function renderAudits(state) {
             class="tagStudio__button tagStudio__button--defaultWidth"
             data-run-audit="${escapeHtml(audit.audit_id)}"
             ${disabled ? "disabled" : ""}
-          >${escapeHtml(runningThis ? getStudioText(state.config, "studio_audits.running_button", "Running...") : getStudioText(state.config, "studio_audits.run_button", "Run audit"))}</button>
+          >${escapeHtml(runningThis ? getAdminText(state.config, "admin_audits.running_button", "Running...") : getAdminText(state.config, "admin_audits.run_button", "Run audit"))}</button>
         </div>
         ${renderResult(state.config, result)}
       </article>
@@ -189,16 +189,16 @@ async function runAudit(state, auditId) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "studio_audits.status_running", "Running audit...")
+    getAdminText(state.config, "admin_audits.status_running", "Running audit...")
   );
 
   try {
     const result = await postJson(AUDIT_API_ENDPOINTS.run, {
       audit_id: auditId,
-      activity_context: buildStudioActivityContext({
-        pageId: "studio-audits",
+      activity_context: buildAdminActivityContext({
+        pageId: "admin-audits",
         actionId: "run-studio-audit",
-        route: "/studio/audits/?mode=manage",
+        route: "/admin/audits/",
         controlId: "runAudit",
         controlSelector: "[data-run-audit]",
         recordIdField: "audit_id",
@@ -211,15 +211,15 @@ async function runAudit(state, auditId) {
       state.statusNode,
       stateName,
       stateName === "success"
-        ? getStudioText(state.config, "studio_audits.status_passed", "Audit passed.")
-        : getStudioText(state.config, "studio_audits.status_failed", "Audit failed.")
+        ? getAdminText(state.config, "admin_audits.status_passed", "Audit passed.")
+        : getAdminText(state.config, "admin_audits.status_failed", "Audit failed.")
     );
   } catch (error) {
-    console.warn("studio_audits: audit run failed", error);
+    console.warn("admin_audits: audit run failed", error);
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "studio_audits.status_request_failed", "Audit request failed.")
+      getAdminText(state.config, "admin_audits.status_request_failed", "Audit request failed.")
     );
   } finally {
     state.isRunning = false;
@@ -250,10 +250,10 @@ async function init() {
   });
   if (!required.ok) return;
 
-  initializeStudioRouteState(root, { route: "studio-audits", mode: "summary" });
+  initializeAdminRouteState(root, { route: "admin-audits", mode: "summary" });
 
   try {
-    const config = await loadStudioConfigWithText("studio_audits");
+    const config = await loadAdminConfigWithText("admin_audits");
     const serviceAvailable = await probeAuditApiHealth();
     const audits = await loadAudits(serviceAvailable);
     const state = {
@@ -271,29 +271,29 @@ async function init() {
 
     setText(
       introNode,
-      getStudioText(config, "studio_audits.intro", "Run local Studio maintenance audits.")
+      getAdminText(config, "admin_audits.intro", "Run local Admin maintenance audits.")
     );
     setStatus(
       statusNode,
       serviceAvailable ? "" : "error",
       serviceAvailable
-        ? getStudioText(config, "studio_audits.idle_status", "Select an audit to run.")
-        : getStudioText(config, "studio_audits.service_unavailable", "Audit API unavailable. Start bin/local-studio to run audits.")
+        ? getAdminText(config, "admin_audits.idle_status", "Select an audit to run.")
+        : getAdminText(config, "admin_audits.service_unavailable", "Audit API unavailable. Start bin/local-admin to run audits.")
     );
     renderAudits(state);
     listNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-run-audit]") : null;
       if (!button) return;
       const auditId = normalizeText(button.getAttribute("data-run-audit"));
-      runAudit(state, auditId).catch((error) => console.warn("studio_audits: unexpected run failure", error));
+      runAudit(state, auditId).catch((error) => console.warn("admin_audits: unexpected run failure", error));
     });
 
     root.hidden = false;
     bootStatus.hidden = true;
     markRouteReady(state, true);
   } catch (error) {
-    console.warn("studio_audits: init failed", error);
-    bootStatus.textContent = "Failed to load Studio audits.";
+    console.warn("admin_audits: init failed", error);
+    bootStatus.textContent = "Failed to load Admin audits.";
     bootStatus.setAttribute("data-state", "error");
     root.hidden = false;
     const fallbackState = {

@@ -16,13 +16,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
 from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio.app.server.studio.studio_risk_api import append_risk_activity, risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -49,12 +47,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
     assert payload["app"]["routes"]["studio_home"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/?mode=manage"
-    assert payload["app"]["routes"]["studio_audits"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["studio_risk"]["path"] == "/studio/risk/?mode=manage"
-    assert payload["app"]["routes"]["studio_risk"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["activity"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["studio_works"]["shell_type"] == "javascript"
@@ -74,14 +68,12 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(str(view["id"]).startswith("ui_catalogue") for view in runtime["views"])
-    assert any(view["id"] == "studio_audits" and view["path"] == "/studio/audits/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "studio_risk" and view["path"] == "/studio/risk/?mode=manage" for view in runtime["views"])
+    assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert not any("doc_id" in view for view in runtime["views"])
     assert not any("docId" in view for view in runtime["views"])
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "activity" and view["path"] == "/studio/activity/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/?mode=manage" for view in runtime["views"])
@@ -94,6 +86,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "analytics" not in runtime["services"]
     assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
+    assert "audits" not in runtime["services"]
+    assert "risk" not in runtime["services"]
     assert "external_links" not in payload
     assert "catalogue" not in payload
     assert set(runtime["data_paths"]) == {"studio", "ui_text"}
@@ -111,9 +105,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
         "catalogue_field_registry",
     }
     assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
-    assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
-    assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
-    assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
     assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
     assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
@@ -139,10 +130,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_moment"] == "/studio/api/catalogue/moment/save"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
-    assert runtime["services"]["risk"]["base"] == "/studio/api/risk"
-    assert runtime["services"]["risk"]["health"] == "/studio/api/risk/health"
-    assert runtime["services"]["risk"]["producers"] == "/studio/api/risk/producers"
-    assert runtime["services"]["risk"]["runs"] == "/studio/api/risk/runs"
     assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]
@@ -165,7 +152,7 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     routes = payload["app"]["routes"]
 
     duplicate_path = json.loads(json.dumps(payload))
-    duplicate_path["app"]["routes"]["project_state"]["path"] = routes["studio_audits"]["path"]
+    duplicate_path["app"]["routes"]["project_state"]["path"] = routes["bulk_add_work"]["path"]
     with pytest.raises(RuntimeError, match="duplicate path"):
         validate_studio_route_registry(REPO_ROOT, duplicate_path)
 
@@ -221,7 +208,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
-    assert allowed("/studio/data/generated/activity/index.json") is True
+    assert allowed("/studio/data/generated/activity/index.json") is False
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
     assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
@@ -294,138 +281,6 @@ def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
         os.utime(public_css, (300, 300))
 
         assert asset_version(repo_root) == "200"
-
-
-def test_audit_api_routes_return_registry_and_validate_runs() -> None:
-    health_payload = audit_get_payload(REPO_ROOT, "/health")
-    audits_payload = audit_get_payload(REPO_ROOT, "/audits")
-
-    assert health_payload["ok"] is True
-    assert "studio-ready-state" in health_payload["audits"]
-    assert audits_payload["ok"] is True
-    assert any(audit["audit_id"] == "studio-ready-state" for audit in audits_payload["audits"])
-
-    with pytest.raises(ValueError, match="allowlisted"):
-        audit_post_response(REPO_ROOT, "/audits/run", {"audit_id": "not-allowlisted"})
-
-
-def test_risk_api_lists_producers_runs_and_reads_summary() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        run_dir = repo_root / "var" / "studio" / "risk" / "runs" / "sample-run"
-        run_dir.mkdir(parents=True)
-        (run_dir / "manifest.json").write_text(
-            json.dumps({"run_id": "sample-run", "app": "docs-viewer", "area": "runtime", "created_at_utc": "2026-05-31T12:00:00Z"}),
-            encoding="utf-8",
-        )
-        (run_dir / "summary.json").write_text(
-            json.dumps({"run_id": "sample-run", "app": "docs-viewer", "area": "runtime", "status": "passed", "warnings": [], "evidence": [{"artifact": "summary.json"}]}),
-            encoding="utf-8",
-        )
-        (run_dir / "summary.md").write_text("# Summary\n", encoding="utf-8")
-
-        health = risk_get_payload(repo_root, "/health")
-        producers = risk_get_payload(repo_root, "/producers")
-        runs = risk_get_payload(repo_root, "/runs")
-        summary = risk_get_payload(repo_root, "/runs/sample-run/summary")
-
-    assert health["ok"] is True
-    assert health["service"] == "studio_risk_evidence"
-    assert any(producer["producer_id"] == "runtime-checks" for producer in producers["producers"])
-    assert runs["runs"][0]["run_id"] == "sample-run"
-    assert runs["runs"][0]["summary_path"] == "var/studio/risk/runs/sample-run/summary.md"
-    assert summary["summary"]["status"] == "passed"
-    assert summary["summary_markdown"] == "# Summary\n"
-
-
-def test_risk_api_validates_run_requests_without_command_passthrough() -> None:
-    with pytest.raises(ValueError, match="allowlisted"):
-        risk_post_response(REPO_ROOT, "/runs", {"app": "bad", "area": "runtime", "dry_run": True})
-    with pytest.raises(ValueError, match="safe slug"):
-        risk_post_response(REPO_ROOT, "/runs", {"app": "docs-viewer", "area": "../bad", "dry_run": True})
-    with pytest.raises(ValueError, match="runtime profile"):
-        risk_post_response(REPO_ROOT, "/runs", {"app": "docs-viewer", "area": "runtime", "runtime_profiles": ["not-allowed"], "dry_run": True})
-
-    status, payload = risk_post_response(
-        REPO_ROOT,
-        "/runs",
-        {"app": "docs-viewer", "area": "runtime", "run_id": "risk-api-dry-run", "dry_run": True},
-    )
-
-    assert status == HTTPStatus.OK
-    assert payload["ok"] is True
-    assert payload["dry_run"] is True
-    assert "risk_evidence_pack.py" in payload["stdout"] or "Risk evidence pack dry run" in payload["stdout"]
-
-
-def test_risk_api_deletes_run_snapshots_with_path_validation() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        run_dir = repo_root / "var" / "studio" / "risk" / "runs" / "sample-run"
-        run_dir.mkdir(parents=True)
-        (run_dir / "summary.json").write_text(
-            json.dumps({"run_id": "sample-run", "app": "docs-viewer", "area": "runtime", "status": "passed"}),
-            encoding="utf-8",
-        )
-        (run_dir / "summary.md").write_text("# Summary\n", encoding="utf-8")
-
-        status, payload = risk_delete_response(repo_root, "/runs/sample-run")
-
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["status"] == "deleted"
-        assert payload["run_id"] == "sample-run"
-        assert payload["deleted_path"] == "var/studio/risk/runs/sample-run"
-        assert not run_dir.exists()
-
-        with pytest.raises(FileNotFoundError, match="does not exist"):
-            risk_delete_response(repo_root, "/runs/sample-run")
-        with pytest.raises(ValueError, match="safe slug"):
-            risk_delete_response(repo_root, "/runs/../bad")
-
-
-def test_risk_activity_append_uses_contract_context() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        contract_target = repo_root / "studio" / "data" / "config" / "runtime" / "activity-contract.json"
-        contract_target.parent.mkdir(parents=True)
-        contract_target.write_text(
-            (REPO_ROOT / "studio" / "data" / "config" / "runtime" / "activity-contract.json").read_text(encoding="utf-8"),
-            encoding="utf-8",
-        )
-        run_id = "risk-api-activity-test"
-        response = {
-            "ok": True,
-            "status": "passed",
-            "app": "docs-viewer",
-            "area": "runtime",
-            "run_id": run_id,
-            "summary_path": f"var/studio/risk/runs/{run_id}/summary.md",
-        }
-
-        append_risk_activity(
-            repo_root,
-            {
-                "activity_context": {
-                    "page_id": "studio-risk",
-                    "action_id": "run-risk-evidence",
-                    "route": "/studio/risk/?mode=manage",
-                    "control_id": "studioRiskRun",
-                    "control_selector": "#studioRiskRun",
-                    "correlation_id": f"pytest:{run_id}",
-                    "run_id": run_id,
-                },
-            },
-            response,
-            "2026-05-31T12:00:00Z",
-        )
-
-        activity_path = repo_root / "var" / "studio" / "activity" / "activity_log.json"
-        activity_payload = json.loads(activity_path.read_text(encoding="utf-8"))
-
-    assert response["activity_log"]["written_count"] == 1
-    assert activity_payload["entries"][0]["page_id"] == "studio-risk"
-    assert activity_payload["entries"][0]["script_purpose_id"] == "generate-report"
 
 
 def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
@@ -506,7 +361,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         assert open_payload["editor"] == "vscode"
 
 
-def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:
+def test_catalogue_read_route_returns_source_payloads() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
@@ -530,11 +385,10 @@ def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:
         )
 
         works_payload = catalogue_get_payload(repo_root, "/read", {"key": ["catalogue_works"]})
-        activity_payload = catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
 
         assert works_payload["works"]["00001"]["title"] == "One"
-        assert activity_payload["header"]["schema"] == "studio_activity_log_v1"
-        assert activity_payload["entries"] == []
+        with pytest.raises(ValueError, match="unsupported catalogue read key"):
+            catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
 
 
 def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> None:

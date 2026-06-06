@@ -20,7 +20,7 @@ from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RUNS_ROOT = REPO_ROOT / "var" / "studio" / "risk" / "runs"
+DEFAULT_RUNS_ROOT = REPO_ROOT / "var" / "studio" / "risk" / "runs"
 COMMAND_VERSION = "1"
 DEFAULT_HISTORY_WINDOW = "90 days"
 
@@ -886,7 +886,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--app", choices=VALID_APPS, required=True)
     parser.add_argument("--area", required=True, help="Risk area slug.")
-    parser.add_argument("--run-id", help="Optional run id for var/studio/risk/runs/.")
+    parser.add_argument("--run-id", help="Optional run id for the risk runs directory.")
+    parser.add_argument("--runs-root", type=Path, default=DEFAULT_RUNS_ROOT, help="Risk runs output root.")
     parser.add_argument("--since", default=DEFAULT_HISTORY_WINDOW, help="Git history window for touch counts.")
     parser.add_argument("--include-runtime", action="store_true", help="Run allowlisted runtime check profiles for the selected app.")
     parser.add_argument(
@@ -904,7 +905,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     run_id = slugify(args.run_id) if args.run_id else default_run_id(args.app, args.area)
-    run_dir = RUNS_ROOT / run_id
+    run_dir = args.runs_root.expanduser().resolve() / run_id
 
     if args.include_subjective_notes and not args.include_subjective_notes.exists():
         print(f"subjective notes file does not exist: {args.include_subjective_notes}", file=sys.stderr)

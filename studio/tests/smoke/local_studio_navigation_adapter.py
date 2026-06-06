@@ -194,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
             "/studio/catalogue-status/?mode=manage",
             "/studio/catalogue-series/?mode=manage",
             "/studio/studio-works/?mode=manage&sort=cat&dir=asc",
-            "/studio/activity/?mode=manage",
+            "/admin/",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")

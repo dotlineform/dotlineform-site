@@ -96,11 +96,11 @@ def test_append_hydrates_registry_labels_and_writes_feed() -> None:
                 "source_refs": [{"kind": "log", "path": "var/studio/catalogue/logs/catalogue_service_context.log"}],
             },
         )
-        if feed_path != repo_root.resolve() / "var/studio/activity/activity_log.json":
-            raise AssertionError("feed path should stay under var/studio/activity/")
+        if feed_path != repo_root.resolve() / "var/admin/activity/activity_log.json":
+            raise AssertionError("feed path should stay under var/admin/activity/")
         payload = json.loads(feed_path.read_text(encoding="utf-8"))
         entry = payload["entries"][0]
-        if payload["header"]["schema"] != "studio_activity_log_v1":
+        if payload["header"]["schema"] != "admin_activity_log_v1":
             raise AssertionError("unexpected feed schema")
         if entry["page_label"] != "catalogue work editor":
             raise AssertionError("page label was not hydrated from the activity contract")

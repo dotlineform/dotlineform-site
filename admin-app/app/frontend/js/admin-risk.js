@@ -1,19 +1,19 @@
-import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
+import { getAdminText, loadAdminConfigWithText } from "./admin-config.js";
 import {
   RISK_API_ENDPOINTS,
   deleteJson,
   getJson,
   postJson,
   probeRiskApiHealth
-} from "./studio-transport.js";
-import { initializeStudioRouteState } from "./studio-route-state.js";
+} from "./admin-transport.js";
+import { initializeAdminRouteState } from "./admin-route-state.js";
 import {
   collectOperationalRouteElements,
   markOperationalRouteReady,
   projectOperationalRunButtonState,
   syncOperationalRouteBusyState
-} from "./studio-operational-route.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+} from "./admin-operational-route.js";
+import { buildAdminActivityContext } from "./admin-activity-context.js";
 
 const DEFAULT_APPS = Object.freeze(["docs-viewer", "studio", "analytics", "public-site", "all"]);
 
@@ -52,7 +52,7 @@ function studioRiskMode(state) {
 
 function routeOptions() {
   return {
-    route: "studio-risk",
+    route: "admin-risk",
     mode: studioRiskMode,
     serviceAvailable: (state) => state.serviceAvailable,
     isBusy: (state) => state.isRunning,
@@ -71,8 +71,8 @@ function syncBusy(state) {
   setText(
     state.runButton,
     state.isRunning
-      ? getStudioText(state.config, "studio_risk.running_button", "Running...")
-      : getStudioText(state.config, "studio_risk.run_button", "Run evidence")
+      ? getAdminText(state.config, "admin_risk.running_button", "Running...")
+      : getAdminText(state.config, "admin_risk.run_button", "Run evidence")
   );
 }
 
@@ -100,7 +100,7 @@ function renderApps(state, apps) {
 function renderRuns(state, runs) {
   const rows = Array.isArray(runs) ? runs : [];
   if (!rows.length) {
-    state.runsNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getStudioText(state.config, "studio_risk.no_runs", "No risk evidence runs found."))}</p>`;
+    state.runsNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getAdminText(state.config, "admin_risk.no_runs", "No risk evidence runs found."))}</p>`;
     return;
   }
   state.runsNode.innerHTML = rows.map((run) => {
@@ -109,7 +109,7 @@ function renderRuns(state, runs) {
     const app = normalizeText(run && run.app);
     const area = normalizeText(run && run.area);
     const summaryPath = normalizeText(run && run.summary_path);
-    const deleteLabel = getStudioText(state.config, "studio_risk.delete_run_button", "Delete");
+    const deleteLabel = getAdminText(state.config, "admin_risk.delete_run_button", "Delete");
     return `<div class="studioRiskRun" data-risk-run-row="${escapeHtml(runId, true)}">
       <button type="button" class="studioRiskRun__open" data-risk-run-open="${escapeHtml(runId, true)}">
         <span class="studioRiskRun__id">${escapeHtml(runId)}</span>
@@ -171,9 +171,9 @@ async function loadRunSummary(state, runId) {
 
 async function deleteRunSnapshot(state, runId) {
   if (state.isRunning || !runId || !state.serviceAvailable) return;
-  const confirmTemplate = getStudioText(
+  const confirmTemplate = getAdminText(
     state.config,
-    "studio_risk.delete_confirm",
+    "admin_risk.delete_confirm",
     "Delete risk evidence snapshot {run_id}?"
   );
   if (!window.confirm(confirmTemplate.replace("{run_id}", runId))) {
@@ -181,17 +181,17 @@ async function deleteRunSnapshot(state, runId) {
   }
   state.isRunning = true;
   syncBusy(state);
-  setStatus(state.statusNode, "", getStudioText(state.config, "studio_risk.delete_status_running", "Deleting snapshot..."));
+  setStatus(state.statusNode, "", getAdminText(state.config, "admin_risk.delete_status_running", "Deleting snapshot..."));
   try {
     await deleteJson(RISK_API_ENDPOINTS.run(runId));
     if (state.loadedRunId === runId) {
       clearSummary(state);
     }
-    setStatus(state.statusNode, "success", getStudioText(state.config, "studio_risk.delete_status_deleted", "Risk evidence snapshot deleted."));
+    setStatus(state.statusNode, "success", getAdminText(state.config, "admin_risk.delete_status_deleted", "Risk evidence snapshot deleted."));
     await refreshRuns(state);
   } catch (error) {
-    console.warn("studio_risk: snapshot delete failed", error);
-    setStatus(state.statusNode, "error", getStudioText(state.config, "studio_risk.delete_status_failed", "Risk evidence snapshot delete failed."));
+    console.warn("admin_risk: snapshot delete failed", error);
+    setStatus(state.statusNode, "error", getAdminText(state.config, "admin_risk.delete_status_failed", "Risk evidence snapshot delete failed."));
   } finally {
     state.isRunning = false;
     syncBusy(state);
@@ -211,10 +211,10 @@ function buildRunPayload(state) {
     include_lighthouse: state.lighthouseInput.checked
   };
   if (!dryRun) {
-    payload.activity_context = buildStudioActivityContext({
-      pageId: "studio-risk",
+    payload.activity_context = buildAdminActivityContext({
+      pageId: "admin-risk",
       actionId: "run-risk-evidence",
-      route: "/studio/risk/?mode=manage",
+      route: "/admin/risk/",
       controlId: "studioRiskRun",
       controlSelector: "#studioRiskRun",
       recordIdField: "run_id",
@@ -233,15 +233,15 @@ async function runRiskEvidence(state) {
   }
   state.isRunning = true;
   syncBusy(state);
-  setStatus(state.statusNode, "", getStudioText(state.config, "studio_risk.status_running", "Running risk evidence..."));
+  setStatus(state.statusNode, "", getAdminText(state.config, "admin_risk.status_running", "Running risk evidence..."));
   try {
     const result = await postJson(RISK_API_ENDPOINTS.runs, payload);
     setStatus(
       state.statusNode,
       result.status === "passed" ? "success" : "error",
       result.status === "passed"
-        ? getStudioText(state.config, "studio_risk.status_passed", "Risk evidence run completed.")
-        : getStudioText(state.config, "studio_risk.status_failed", "Risk evidence run failed.")
+        ? getAdminText(state.config, "admin_risk.status_passed", "Risk evidence run completed.")
+        : getAdminText(state.config, "admin_risk.status_failed", "Risk evidence run failed.")
     );
     if (result.run_id && !result.dry_run) {
       await loadRunSummary(state, result.run_id);
@@ -251,8 +251,8 @@ async function runRiskEvidence(state) {
     }
     await refreshRuns(state);
   } catch (error) {
-    console.warn("studio_risk: risk run failed", error);
-    setStatus(state.statusNode, "error", getStudioText(state.config, "studio_risk.status_request_failed", "Risk evidence request failed."));
+    console.warn("admin_risk: risk run failed", error);
+    setStatus(state.statusNode, "error", getAdminText(state.config, "admin_risk.status_request_failed", "Risk evidence request failed."));
   } finally {
     state.isRunning = false;
     syncBusy(state);
@@ -292,10 +292,10 @@ async function init() {
   });
   if (!required.ok) return;
 
-  initializeStudioRouteState(root, { route: "studio-risk", mode: "idle" });
+  initializeAdminRouteState(root, { route: "admin-risk", mode: "idle" });
 
   try {
-    const config = await loadStudioConfigWithText("studio_risk");
+    const config = await loadAdminConfigWithText("admin_risk");
     const serviceAvailable = await probeRiskApiHealth();
     const state = {
       config,
@@ -318,21 +318,21 @@ async function init() {
       loadedRunId: ""
     };
 
-    setText(introNode, getStudioText(config, "studio_risk.intro", "Run and review local risk evidence packs."));
-    setText(document.getElementById("studioRiskAppLabel"), getStudioText(config, "studio_risk.app_label", "app"));
-    setText(document.getElementById("studioRiskAreaLabel"), getStudioText(config, "studio_risk.area_label", "area"));
-    setText(document.getElementById("studioRiskRunIdLabel"), getStudioText(config, "studio_risk.run_id_label", "run id"));
-    setText(document.getElementById("studioRiskDryRunLabel"), getStudioText(config, "studio_risk.dry_run_label", "dry run"));
-    setText(document.getElementById("studioRiskRuntimeLabel"), getStudioText(config, "studio_risk.runtime_label", "runtime checks"));
-    setText(document.getElementById("studioRiskLighthouseLabel"), getStudioText(config, "studio_risk.lighthouse_label", "Lighthouse hook"));
-    setText(document.getElementById("studioRiskRunsTitle"), getStudioText(config, "studio_risk.latest_runs_label", "recent runs"));
-    setText(document.getElementById("studioRiskSummaryTitle"), getStudioText(config, "studio_risk.summary_label", "summary"));
+    setText(introNode, getAdminText(config, "admin_risk.intro", "Run and review local risk evidence packs."));
+    setText(document.getElementById("studioRiskAppLabel"), getAdminText(config, "admin_risk.app_label", "app"));
+    setText(document.getElementById("studioRiskAreaLabel"), getAdminText(config, "admin_risk.area_label", "area"));
+    setText(document.getElementById("studioRiskRunIdLabel"), getAdminText(config, "admin_risk.run_id_label", "run id"));
+    setText(document.getElementById("studioRiskDryRunLabel"), getAdminText(config, "admin_risk.dry_run_label", "dry run"));
+    setText(document.getElementById("studioRiskRuntimeLabel"), getAdminText(config, "admin_risk.runtime_label", "runtime checks"));
+    setText(document.getElementById("studioRiskLighthouseLabel"), getAdminText(config, "admin_risk.lighthouse_label", "Lighthouse hook"));
+    setText(document.getElementById("studioRiskRunsTitle"), getAdminText(config, "admin_risk.latest_runs_label", "recent runs"));
+    setText(document.getElementById("studioRiskSummaryTitle"), getAdminText(config, "admin_risk.summary_label", "summary"));
     setStatus(
       statusNode,
       serviceAvailable ? "" : "error",
       serviceAvailable
-        ? getStudioText(config, "studio_risk.idle_status", "Choose an app and area.")
-        : getStudioText(config, "studio_risk.service_unavailable", "Risk API unavailable. Start bin/local-studio to run risk evidence.")
+        ? getAdminText(config, "admin_risk.idle_status", "Choose an app and area.")
+        : getAdminText(config, "admin_risk.service_unavailable", "Risk API unavailable. Start bin/local-admin to run risk evidence.")
     );
 
     let producers = null;
@@ -343,7 +343,7 @@ async function init() {
     runIdInput.value = defaultRunId(state);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      runRiskEvidence(state).catch((error) => console.warn("studio_risk: unexpected run failure", error));
+      runRiskEvidence(state).catch((error) => console.warn("admin_risk: unexpected run failure", error));
     });
     for (const input of [appSelect, areaInput]) {
       input.addEventListener("input", () => {
@@ -355,14 +355,14 @@ async function init() {
       const deleteButton = event.target && event.target.closest ? event.target.closest("[data-risk-run-delete]") : null;
       if (deleteButton) {
         deleteRunSnapshot(state, normalizeText(deleteButton.getAttribute("data-risk-run-delete"))).catch((error) => {
-          console.warn("studio_risk: unexpected snapshot delete failure", error);
+          console.warn("admin_risk: unexpected snapshot delete failure", error);
         });
         return;
       }
       const openButton = event.target && event.target.closest ? event.target.closest("[data-risk-run-open]") : null;
       if (!openButton) return;
       loadRunSummary(state, normalizeText(openButton.getAttribute("data-risk-run-open"))).catch((error) => {
-        console.warn("studio_risk: summary load failed", error);
+        console.warn("admin_risk: summary load failed", error);
       });
     });
     syncBusy(state);
@@ -372,8 +372,8 @@ async function init() {
     bootStatus.hidden = true;
     markReady(state, true);
   } catch (error) {
-    console.warn("studio_risk: init failed", error);
-    bootStatus.textContent = "Failed to load Studio risk.";
+    console.warn("admin_risk: init failed", error);
+    bootStatus.textContent = "Failed to load Admin risk.";
     bootStatus.setAttribute("data-state", "error");
     root.hidden = false;
     markReady({ root, serviceAvailable: false, isRunning: false, summaryLoaded: false }, true);

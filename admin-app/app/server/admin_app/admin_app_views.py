@@ -64,6 +64,147 @@ def admin_home_view(version: str, repo_root: Path) -> str:
 """
 
 
+def admin_audits_view(version: str) -> str:
+    return admin_route_view(
+        version,
+        title="Audits",
+        route_id="admin-audits",
+        script="/admin/app/frontend/js/admin-audits.js",
+        body="""<div
+          class="tagStudioPage studioAuditsPage"
+          id="studioAuditsRoot"
+          hidden
+          data-admin-route="admin-audits"
+          data-admin-ready="false"
+          data-admin-busy="false"
+        >
+          <div class="tagStudio__panel studioAuditsPage__panel">
+            <p class="studioAuditsPage__intro" id="studioAuditsIntro"></p>
+            <p class="tagStudio__status" id="studioAuditsStatus"></p>
+            <div class="studioAuditsPage__list" id="studioAuditsList"></div>
+          </div>
+        </div>
+        <p class="tagStudio__status" id="studioAuditsBootStatus">loading Admin audits...</p>""",
+    )
+
+
+def admin_risk_view(version: str) -> str:
+    return admin_route_view(
+        version,
+        title="Risk",
+        route_id="admin-risk",
+        script="/admin/app/frontend/js/admin-risk.js",
+        body="""<div
+          class="tagStudioPage studioRiskPage"
+          id="studioRiskRoot"
+          hidden
+          data-admin-route="admin-risk"
+          data-admin-ready="false"
+          data-admin-busy="false"
+        >
+          <div class="tagStudio__panel studioRiskPage__panel">
+            <p class="studioRiskPage__intro" id="studioRiskIntro"></p>
+            <p class="tagStudio__status" id="studioRiskStatus"></p>
+            <form class="studioRiskForm" id="studioRiskForm">
+              <label class="studioRiskField">
+                <span id="studioRiskAppLabel"></span>
+                <select class="tagStudio__input" id="studioRiskApp" name="app"></select>
+              </label>
+              <label class="studioRiskField">
+                <span id="studioRiskAreaLabel"></span>
+                <input class="tagStudio__input" id="studioRiskArea" name="area" value="runtime" autocomplete="off">
+              </label>
+              <label class="studioRiskField">
+                <span id="studioRiskRunIdLabel"></span>
+                <input class="tagStudio__input" id="studioRiskRunId" name="run_id" autocomplete="off">
+              </label>
+              <label class="studioRiskCheck">
+                <input type="checkbox" id="studioRiskDryRun" name="dry_run">
+                <span id="studioRiskDryRunLabel"></span>
+              </label>
+              <label class="studioRiskCheck">
+                <input type="checkbox" id="studioRiskRuntime" name="include_runtime">
+                <span id="studioRiskRuntimeLabel"></span>
+              </label>
+              <label class="studioRiskCheck">
+                <input type="checkbox" id="studioRiskLighthouse" name="include_lighthouse">
+                <span id="studioRiskLighthouseLabel"></span>
+              </label>
+              <div class="studioRiskActions">
+                <button type="submit" class="tagStudio__button tagStudio__button--defaultWidth" id="studioRiskRun"></button>
+              </div>
+            </form>
+          </div>
+          <section class="tagStudio__panel studioRiskPage__panel">
+            <h3 id="studioRiskSummaryTitle"></h3>
+            <div class="studioRiskSummary" id="studioRiskSummary"></div>
+          </section>
+          <section class="tagStudio__panel studioRiskPage__panel">
+            <h3 id="studioRiskRunsTitle"></h3>
+            <div class="studioRiskRuns" id="studioRiskRuns"></div>
+          </section>
+        </div>
+        <p class="tagStudio__status" id="studioRiskBootStatus">loading Admin risk...</p>""",
+    )
+
+
+def admin_activity_view(version: str) -> str:
+    return admin_route_view(
+        version,
+        title="Activity",
+        route_id="admin-activity",
+        script="/admin/app/frontend/js/admin-activity.js",
+        body="""<div
+          class="tagStudioPage buildActivityPage studioActivityPage"
+          id="studioActivityRoot"
+          hidden
+          data-admin-route="admin-activity"
+          data-admin-ready="false"
+          data-admin-busy="false"
+        >
+          <div class="tagStudio__panel buildActivityPage__panel">
+            <p class="buildActivityPage__meta" id="studioActivityMeta"></p>
+            <div id="studioActivityList"></div>
+          </div>
+        </div>
+        <p class="buildActivityPage__status" id="studioActivityStatus">loading Admin activity...</p>
+        <p class="buildActivityPage__empty" id="studioActivityEmpty" hidden>No Admin activity yet.</p>""",
+    )
+
+
+def admin_route_view(version: str, *, title: str, route_id: str, script: str, body: str) -> str:
+    escaped_version = html.escape(version, quote=True)
+    escaped_title = html.escape(title)
+    escaped_route_id = html.escape(route_id, quote=True)
+    escaped_script = html.escape(script, quote=True)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="{escaped_version}">
+  <meta name="dlf-admin-config-url" content="/admin/runtime-config.json">
+  <title>{escaped_title} | dotlineform Admin</title>
+  <link rel="stylesheet" href="/admin/app/assets/css/admin.css?v={escaped_version}">
+</head>
+<body class="adminApp">
+  <div class="adminShell">
+    {admin_header()}
+    <main class="adminMain">
+      <section class="adminRoute" data-admin-page="{escaped_route_id}">
+        <div class="adminRoute__header">
+          <h1 class="adminRoute__title">{escaped_title}</h1>
+        </div>
+        {body}
+      </section>
+    </main>
+  </div>
+  <script type="module" src="{escaped_script}?v={escaped_version}"></script>
+</body>
+</html>
+"""
+
+
 def render_home_groups(route_map: dict[str, dict[str, object]], ui_text: dict[str, object]) -> str:
     raw_groups = ui_text.get("groups")
     if not isinstance(raw_groups, list):

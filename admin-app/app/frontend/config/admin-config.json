@@ -14,22 +14,22 @@
         "label": "audits",
         "title": "Audits",
         "path": "/admin/audits/",
-        "script": "",
-        "nav": false
+        "script": "/admin/app/frontend/js/admin-audits.js",
+        "nav": true
       },
       "admin_risk": {
         "label": "risk",
         "title": "Risk",
         "path": "/admin/risk/",
-        "script": "",
-        "nav": false
+        "script": "/admin/app/frontend/js/admin-risk.js",
+        "nav": true
       },
       "admin_activity": {
         "label": "activity",
         "title": "Activity",
         "path": "/admin/activity/",
-        "script": "",
-        "nav": false
+        "script": "/admin/app/frontend/js/admin-activity.js",
+        "nav": true
       },
       "admin_testing": {
         "label": "testing",
@@ -52,6 +52,16 @@
       "studio": "/studio/",
       "analytics": "/analytics/",
       "docs_viewer": "/docs/"
+    }
+  },
+  "paths": {
+    "data": {
+      "ui_text": {
+        "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
+        "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
+        "admin_home": "/admin/app/frontend/config/ui-text/admin-home.json",
+        "admin_risk": "/admin/app/frontend/config/ui-text/admin-risk.json"
+      }
     }
   }
 }

@@ -1,13 +1,16 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
-import { loadStudioServerReadJson } from "./studio-data.js";
-import { openActivityDetailsModal } from "./activity-log-modals.js";
+  getAdminText,
+  loadAdminConfigWithText
+} from "./admin-config.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteReady
-} from "./studio-route-state.js";
+  ACTIVITY_API_ENDPOINTS,
+  getJson
+} from "./admin-transport.js";
+import { openActivityDetailsModal } from "./admin-activity-modals.js";
+import {
+  initializeAdminRouteState,
+  setAdminRouteReady
+} from "./admin-route-state.js";
 
 const SORT_KEYS = ["time", "status", "page", "action", "purpose"];
 
@@ -48,15 +51,15 @@ function statusMarker(status) {
 }
 
 function statusLabel(config, status) {
-  if (status === "completed") return getStudioText(config, "activity_log.status_completed", "completed");
-  if (status === "warning") return getStudioText(config, "activity_log.status_warning", "warning");
-  if (status === "failed") return getStudioText(config, "activity_log.status_failed", "failed");
-  return getStudioText(config, "activity_log.status_other", "status unknown");
+  if (status === "completed") return getAdminText(config, "admin_activity.status_completed", "completed");
+  if (status === "warning") return getAdminText(config, "admin_activity.status_warning", "warning");
+  if (status === "failed") return getAdminText(config, "admin_activity.status_failed", "failed");
+  return getAdminText(config, "admin_activity.status_other", "status unknown");
 }
 
 function sortButton(config, labelKey, fallback, sortKey, currentSortKey, sortDir) {
   const active = currentSortKey === sortKey;
-  const label = getStudioText(config, `activity_log.${labelKey}`, fallback);
+  const label = getAdminText(config, `admin_activity.${labelKey}`, fallback);
   const suffix = active ? (sortDir === "desc" ? " ↓" : " ↑") : "";
   return `<button type="button" class="tagStudioList__sortBtn" data-sort-key="${escapeHtml(sortKey)}" data-state="${active ? "active" : ""}">${escapeHtml(label + suffix)}</button>`;
 }
@@ -64,7 +67,7 @@ function sortButton(config, labelKey, fallback, sortKey, currentSortKey, sortDir
 function recordCountLabel(config, labelKey, fallback, group) {
   const count = Number(group && group.count) || 0;
   if (!count) return "";
-  const label = getStudioText(config, `activity_log.${labelKey}`, fallback);
+  const label = getAdminText(config, `admin_activity.${labelKey}`, fallback);
   return `${label} ${count}`;
 }
 
@@ -152,7 +155,7 @@ function renderList(config, listNode, state, entries) {
 }
 
 async function loadFeed() {
-  return loadStudioServerReadJson("activity_log", { cache: "no-store" });
+  return getJson(ACTIVITY_API_ENDPOINTS.feed);
 }
 
 function openActivityDetails(state, activityId) {
@@ -167,8 +170,8 @@ function applySort(state) {
 }
 
 function markRouteReady(root, ready, detail = {}) {
-  setStudioRouteReady(root, ready, {
-    route: "studio-activity",
+  setAdminRouteReady(root, ready, {
+    route: "admin-activity",
     mode: detail.mode || "empty",
     service: detail.service || "available",
     recordLoaded: Boolean(detail.recordLoaded)
@@ -182,18 +185,18 @@ async function init() {
   const listNode = document.getElementById("studioActivityList");
   const emptyNode = document.getElementById("studioActivityEmpty");
   if (!root || !statusNode || !metaNode || !listNode || !emptyNode) return;
-  initializeStudioRouteState(root, { route: "studio-activity" });
+  initializeAdminRouteState(root, { route: "admin-activity" });
 
   try {
-    const config = await loadStudioConfigWithText("activity_log");
+    const config = await loadAdminConfigWithText("admin_activity");
     const payload = await loadFeed();
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     metaNode.textContent = entries.length === 1
-      ? getStudioText(config, "activity_log.meta_summary_one", "1 recent activity row")
-      : getStudioText(config, "activity_log.meta_summary", "{count} recent activity rows", { count: entries.length });
+      ? getAdminText(config, "admin_activity.meta_summary_one", "1 recent activity row")
+      : getAdminText(config, "admin_activity.meta_summary", "{count} recent activity rows", { count: entries.length });
 
     if (!entries.length) {
-      emptyNode.textContent = getStudioText(config, "activity_log.empty_state", "No Studio activity yet.");
+      emptyNode.textContent = getAdminText(config, "admin_activity.empty_state", "No Admin activity yet.");
       emptyNode.hidden = false;
       root.hidden = false;
       statusNode.hidden = true;
@@ -234,12 +237,12 @@ async function init() {
     statusNode.hidden = true;
     markRouteReady(root, true, { mode: "list", recordLoaded: true });
   } catch (error) {
-    console.warn("activity_log: load failed", error);
+    console.warn("admin_activity: load failed", error);
     try {
-      const config = await loadStudioConfigWithText("activity_log");
-      statusNode.textContent = getStudioText(config, "activity_log.load_failed_error", "Failed to load Studio activity.");
+      const config = await loadAdminConfigWithText("admin_activity");
+      statusNode.textContent = getAdminText(config, "admin_activity.load_failed_error", "Failed to load Admin activity.");
     } catch (_configError) {
-      statusNode.textContent = "Failed to load Studio activity.";
+      statusNode.textContent = "Failed to load Admin activity.";
     }
     root.hidden = false;
     markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });

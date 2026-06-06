@@ -19,11 +19,6 @@ ROUTES = [
         "root": "#projectStateRoot",
         "button": "#projectStateRunButton",
     },
-    {
-        "path": "/studio/audits/",
-        "root": "#studioAuditsRoot",
-        "button": "[data-run-audit]",
-    },
 ]
 
 

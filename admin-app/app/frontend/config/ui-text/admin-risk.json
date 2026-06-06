@@ -1,7 +1,7 @@
 {
   "intro": "Run and review local risk evidence packs.",
   "idle_status": "Choose an app and area.",
-  "service_unavailable": "Risk API unavailable. Start bin/local-studio to run risk evidence.",
+  "service_unavailable": "Risk API unavailable. Start bin/local-admin to run risk evidence.",
   "app_label": "app",
   "area_label": "area",
   "run_id_label": "run id",

@@ -1,9 +1,9 @@
 {
-  "intro": "Run local Studio maintenance audits.",
+  "intro": "Run local Admin maintenance audits.",
   "run_button": "Run audit",
   "running_button": "Running...",
   "idle_status": "Select an audit to run.",
-  "service_unavailable": "Audit API unavailable. Start bin/local-studio to run audits.",
+  "service_unavailable": "Audit API unavailable. Start bin/local-admin to run audits.",
   "status_running": "Running audit...",
   "status_passed": "Audit passed.",
   "status_failed": "Audit failed.",

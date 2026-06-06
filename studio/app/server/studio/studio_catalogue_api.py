@@ -70,10 +70,8 @@ from studio_activity import append_studio_activity  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
-STUDIO_ACTIVITY_FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
 PROJECT_STATE_REPORT_API_PATH = "/studio/api/catalogue/project-state-report"
 CATALOGUE_READ_KEYS = {
-    "activity_log",
     "catalogue_works",
     "catalogue_work_details",
     "catalogue_series",
@@ -150,8 +148,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         raise ValueError(f"unsupported catalogue read key: {key}")
 
     paths = catalogue_paths(repo_root)
-    if key == "activity_log":
-        return load_activity_feed(repo_root, STUDIO_ACTIVITY_FEED_REL_PATH, "studio_activity_log_v1")
     if key == "catalogue_works":
         return load_source_payload(paths["works_path"], "works")
     if key == "catalogue_work_details":
@@ -426,19 +422,6 @@ def catalogue_paths(repo_root: Path) -> dict[str, Any]:
             (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
     }
-
-
-def load_activity_feed(repo_root: Path, rel_path: Path, schema: str) -> dict[str, Any]:
-    path = repo_root / rel_path
-    if not path.exists():
-        return {"header": {"schema": schema, "count": 0}, "entries": []}
-    payload = load_json_file(path)
-    if not isinstance(payload, dict):
-        raise ValueError(f"activity feed must be a JSON object: {rel_path}")
-    if not isinstance(payload.get("entries"), list):
-        payload = dict(payload)
-        payload["entries"] = []
-    return payload
 
 
 def load_source_payload(path: Path, object_key: str) -> dict[str, Any]:

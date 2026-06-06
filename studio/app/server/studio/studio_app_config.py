@@ -21,11 +21,8 @@ STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
 STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "studio_home": "/studio/",
-    "studio_audits": "/studio/audits/",
-    "studio_risk": "/studio/risk/",
     "project_state": "/studio/project-state/",
     "bulk_add_work": "/studio/bulk-add-work/",
-    "activity": "/studio/activity/",
     "catalogue_field_registry": "/studio/catalogue-field-registry/",
     "catalogue_status": "/studio/catalogue-status/",
     "studio_works": "/studio/studio-works/",
@@ -68,12 +65,6 @@ STUDIO_MEDIA: dict[str, object] = {
 }
 
 STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
-    "audits": {
-        "base": "/studio/api/audits",
-        "health": "/studio/api/audits/health",
-        "audits": "/studio/api/audits/audits",
-        "run": "/studio/api/audits/audits/run",
-    },
     "catalogue": {
         "base": "/studio/api/catalogue",
         "health": "/studio/api/catalogue/health",
@@ -101,12 +92,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_moment": "/studio/api/catalogue/moment/save",
         "project_state_report": "/studio/api/catalogue/project-state-report",
         "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
-    },
-    "risk": {
-        "base": "/studio/api/risk",
-        "health": "/studio/api/risk/health",
-        "producers": "/studio/api/risk/producers",
-        "runs": "/studio/api/risk/runs",
     },
 }
 
@@ -241,7 +226,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-home.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-home-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-shell.js",
@@ -252,14 +236,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-audits.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-risk-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-risk.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "activity-log.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "activity-log-modals.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",

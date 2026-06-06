@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Helpers for the unified Studio activity feed."""
+"""Helpers for the unified Admin activity feed."""
 
 from __future__ import annotations
 
@@ -13,11 +13,11 @@ from typing import Any, Dict, Iterable, List, Mapping
 
 
 ACTIVITY_CONTRACT_REL_PATH = Path("studio/data/config/runtime/activity-contract.json")
-JOURNAL_REL_PATH = Path("var/studio/activity/activity_log.jsonl")
-FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
+JOURNAL_REL_PATH = Path("var/admin/activity/activity_log.jsonl")
+FEED_REL_PATH = Path("var/admin/activity/activity_log.json")
 JOURNAL_LIMIT = 1000
 FEED_LIMIT = 100
-FEED_SCHEMA = "studio_activity_log_v1"
+FEED_SCHEMA = "admin_activity_log_v1"
 ACTIVITY_ID_SAFE_PATTERN = re.compile(r"[^A-Za-z0-9_.:-]+")
 
 
@@ -273,7 +273,7 @@ def studio_activity_entry(
 def _normalize_entry(entry: Mapping[str, Any], contract: Mapping[str, Any]) -> Dict[str, Any]:
     coerced = _coerce_json_value(dict(entry))
     if not isinstance(coerced, dict):
-        raise ValueError("Studio activity entry must normalize to an object")
+        raise ValueError("Admin activity entry must normalize to an object")
 
     labels = _contract_labels(contract, coerced)
     action_id = str(coerced.get("user_action_id") or coerced.get("action_id") or "").strip()
@@ -296,7 +296,7 @@ def _normalize_entry(entry: Mapping[str, Any], contract: Mapping[str, Any]) -> D
     }
     missing = [key for key in ("id", "correlation_id", "timestamp", "page_id", "user_action_id", "script_purpose_id") if not normalized.get(key)]
     if missing:
-        raise ValueError(f"Studio activity entry missing required fields: {', '.join(missing)}")
+        raise ValueError(f"Admin activity entry missing required fields: {', '.join(missing)}")
     return normalized
 
 

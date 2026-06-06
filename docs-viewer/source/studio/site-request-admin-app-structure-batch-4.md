@@ -32,6 +32,15 @@ Summary: move repo-scope verification ownership to Admin, including runner outpu
 - Misplaced tests and fixtures move to their correct owner during this batch.
 - Tests should assert Admin runner behavior and Admin output paths.
 
+## Batch 3 handoff
+
+- Audit, risk, and activity routes now live under `/admin/audits/`, `/admin/risk/`, and `/admin/activity/`.
+- Admin owns the moved browser APIs under `/admin/api/audits/...`, `/admin/api/risk/...`, and `/admin/api/activity/...`.
+- Activity output now writes to `var/admin/activity/`; risk evidence runs write to `var/admin/risk/runs/`.
+- Focused Admin operations tests live in `admin-app/tests/python/test_admin_operations.py` and `admin-app/tests/smoke/admin_operations_routes.py`.
+- `studio/commands/run_checks.py` still references the retired Studio audit/risk modules and retired Studio route smoke names. Move or rewrite those profile entries with the runner in this batch.
+- Durable docs still contain old Studio-hosted audit/risk/activity references; leave the broad docs cleanup for Batch 6 unless a runner/check doc must change to keep Batch 4 coherent.
+
 ## Deliverables
 
 - `admin-app/commands/run_checks.py`.

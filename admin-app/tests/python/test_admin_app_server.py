@@ -15,9 +15,10 @@ for path in (REPO_ROOT, ADMIN_SERVER_DIR, ADMIN_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
+from admin_activity_api import activity_get_payload  # noqa: E402
 from admin_app_config import load_admin_config, runtime_config, validate_admin_route_registry  # noqa: E402
 from admin_app_server import AdminAppRequestHandler, env_flag, parse_args  # noqa: E402
-from admin_app_views import admin_home_view  # noqa: E402
+from admin_app_views import admin_activity_view, admin_audits_view, admin_home_view, admin_risk_view  # noqa: E402
 
 
 def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
@@ -30,12 +31,20 @@ def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
     assert runtime["routes"]["runtime_config"] == "/admin/runtime-config.json"
     assert payload["app"]["routes"]["admin_home"]["path"] == "/admin/"
     assert payload["app"]["routes"]["admin_audits"]["path"] == "/admin/audits/"
+    assert payload["app"]["routes"]["admin_audits"]["script"] == "/admin/app/frontend/js/admin-audits.js"
     assert payload["app"]["routes"]["admin_risk"]["path"] == "/admin/risk/"
+    assert payload["app"]["routes"]["admin_risk"]["script"] == "/admin/app/frontend/js/admin-risk.js"
     assert payload["app"]["routes"]["admin_activity"]["path"] == "/admin/activity/"
+    assert payload["app"]["routes"]["admin_activity"]["script"] == "/admin/app/frontend/js/admin-activity.js"
     assert payload["app"]["routes"]["admin_testing"]["path"] == "/admin/testing/"
     assert payload["app"]["routes"]["admin_ui_catalogue"]["path"] == "/admin/ui-catalogue/"
     assert any(view["id"] == "admin_home" and view["path"] == "/admin/" for view in runtime["views"])
     assert runtime["data_paths"]["ui_text"]["admin_home"] == "/admin/app/frontend/config/ui-text/admin-home.json"
+    assert runtime["services"]["audits"]["run"] == "/admin/api/audits/audits/run"
+    assert runtime["services"]["risk"]["runs"] == "/admin/api/risk/runs"
+    assert runtime["services"]["activity"]["feed"] == "/admin/api/activity/feed"
+    assert runtime["data_paths"]["activity"]["feed"] == "var/admin/activity/activity_log.json"
+    assert runtime["data_paths"]["risk"]["runs"] == "var/admin/risk/runs"
 
 
 def test_admin_route_registry_validates_home_script() -> None:
@@ -57,6 +66,9 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
 
     assert allowed("/admin/app/assets/css/admin.css") is True
     assert allowed("/admin/app/frontend/js/admin-home.js") is True
+    assert allowed("/admin/app/frontend/js/admin-audits.js") is True
+    assert allowed("/admin/app/frontend/js/admin-risk.js") is True
+    assert allowed("/admin/app/frontend/js/admin-activity.js") is True
     assert allowed("/admin/app/frontend/config/admin-config.json") is True
     assert allowed("/admin/app/frontend/config/ui-text/admin-home.json") is True
 
@@ -81,6 +93,30 @@ def test_admin_home_renders_visible_navigation() -> None:
     assert "/admin/app/assets/css/admin.css?v=test-version" in html
     assert "/admin/app/frontend/js/admin-home.js?v=test-version" in html
     assert 'data-admin-ready="false"' in html
+
+
+def test_admin_route_views_render_admin_owned_shells() -> None:
+    audits_html = admin_audits_view("test-version")
+    risk_html = admin_risk_view("test-version")
+    activity_html = admin_activity_view("test-version")
+
+    assert "/admin/app/frontend/js/admin-audits.js?v=test-version" in audits_html
+    assert 'data-admin-route="admin-audits"' in audits_html
+    assert "/admin/app/frontend/js/admin-risk.js?v=test-version" in risk_html
+    assert 'data-admin-route="admin-risk"' in risk_html
+    assert "/admin/app/frontend/js/admin-activity.js?v=test-version" in activity_html
+    assert 'data-admin-route="admin-activity"' in activity_html
+    for html in (audits_html, risk_html, activity_html):
+        assert 'meta name="dlf-admin-config-url" content="/admin/runtime-config.json"' in html
+        assert "/studio/app/frontend/js/" not in html
+
+
+def test_admin_activity_api_returns_empty_admin_feed(tmp_path) -> None:
+    payload = activity_get_payload(tmp_path, "/feed")
+
+    assert payload["ok"] is True
+    assert payload["header"]["schema"] == "admin_activity_log_v1"
+    assert payload["entries"] == []
 
 
 def test_access_log_is_opt_in(monkeypatch) -> None:

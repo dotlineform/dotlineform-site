@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Allowlisted Studio audit registry and direct runner."""
+"""Allowlisted Admin audit registry and direct runner."""
 
 from __future__ import annotations
 
@@ -28,8 +28,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 from script_logging import append_script_log  # noqa: E402
 
 
-LOGS_REL_DIR = Path("var/studio/audits/logs")
-RUN_AUDIT_PATH = "/studio/api/audits/audits/run"
+LOGS_REL_DIR = Path("var/admin/audits/logs")
+RUN_AUDIT_PATH = "/admin/api/audits/audits/run"
 
 
 @dataclass(frozen=True)
@@ -94,7 +94,7 @@ def health_payload(repo_root: Path, audits: dict[str, AuditDefinition] | None = 
     audit_registry = audits or build_audit_registry(repo_root)
     return {
         "ok": True,
-        "service": "studio_audit_runner",
+        "service": "admin_audit_runner",
         "audits": sorted(audit_registry.keys()),
         "time_utc": utc_now(),
     }
@@ -189,11 +189,11 @@ def run_audit_payload(
                         status=status,
                         record_groups={"docs": [audit.audit_id]},
                         detail_items=[
-                            f"Ran Studio audit: {audit.label}.",
+                            f"Ran Admin audit: {audit.label}.",
                             f"Status: {response_payload['status']}; errors: {errors}; warnings: {warnings}.",
                             f"Duration: {response_payload['duration_seconds']} seconds.",
                         ],
-                        source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "studio_audit_runner.log")}],
+                        source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "admin_audit_runner.log")}],
                     )
                 )
                 response_payload["activity_log"] = {"written_count": 1}
@@ -216,7 +216,7 @@ def run_audit_payload(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run an allowlisted Studio audit directly.")
+    parser = argparse.ArgumentParser(description="Run an allowlisted Admin audit directly.")
     parser.add_argument("--repo-root", default="", help="Repo root path (auto-detected if omitted)")
     parser.add_argument("--audit-id", default="studio-ready-state", help="Allowlisted audit id to run")
     parser.add_argument("--list", action="store_true", help="Print the allowlisted audit registry and exit")

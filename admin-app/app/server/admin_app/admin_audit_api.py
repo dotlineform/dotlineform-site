@@ -1,4 +1,4 @@
-"""Local Studio app adapter for allowlisted audit routes."""
+"""Local Admin app adapter for allowlisted audit routes."""
 
 from __future__ import annotations
 
@@ -38,8 +38,8 @@ from studio_activity import (
 )
 
 
-LOGS_REL_DIR = Path("var/studio/audits/logs")
-RUN_AUDIT_API_PATH = "/studio/api/audits/audits/run"
+LOGS_REL_DIR = Path("var/admin/audits/logs")
+RUN_AUDIT_API_PATH = "/admin/api/audits/audits/run"
 
 
 def audit_get_payload(repo_root: Path, api_path: str) -> dict[str, Any]:

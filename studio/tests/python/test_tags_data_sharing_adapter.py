@@ -368,7 +368,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
         )
         output_path = root / payload["output_file"]
         package = read_json(output_path)
-        activity_line = (root / "var/studio/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
+        activity_line = (root / "var/admin/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
         activity = json.loads(activity_line)
 
     assert payload["ok"] is True
@@ -597,7 +597,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
             dependencies=dependencies(),
         )
         assignments = read_json(root / "analytics-app/data/canonical/tag-assignments.json")
-        activity_line = (root / "var/studio/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
+        activity_line = (root / "var/admin/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
         activity = json.loads(activity_line)
 
     assert preflight["requires_confirmation"] is True

@@ -3,7 +3,6 @@ import { CATALOGUE_READ_ENDPOINTS } from "./studio-transport.js";
 let studioConfigModulePromise = null;
 
 const CATALOGUE_SERVER_READ_KEYS = new Set([
-  "activity_log",
   "catalogue_works",
   "catalogue_work_details",
   "catalogue_series",

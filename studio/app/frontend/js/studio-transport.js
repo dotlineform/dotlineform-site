@@ -26,20 +26,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   health: "/studio/api/catalogue/health"
 });
 
-const AUDIT_API_ENDPOINTS = Object.freeze({
-  health: "/studio/api/audits/health",
-  audits: "/studio/api/audits/audits",
-  run: "/studio/api/audits/audits/run"
-});
-
-const RISK_API_ENDPOINTS = Object.freeze({
-  health: "/studio/api/risk/health",
-  producers: "/studio/api/risk/producers",
-  runs: "/studio/api/risk/runs",
-  run: (runId) => `/studio/api/risk/runs/${encodeURIComponent(String(runId || ""))}`,
-  runSummary: (runId) => `${RISK_API_ENDPOINTS.run(runId)}/summary`
-});
-
 const PROJECT_STATE_ENDPOINTS = Object.freeze({
   catalogueHealth: "/studio/api/catalogue/health",
   report: "/studio/api/catalogue/project-state-report",
@@ -58,12 +44,10 @@ const BULK_ADD_WORK_ENDPOINTS = Object.freeze({
 });
 
 export {
-  AUDIT_API_ENDPOINTS,
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
   PROJECT_STATE_ENDPOINTS,
-  RISK_API_ENDPOINTS,
 };
 
 export function configureStudioTransport(config) {
@@ -72,14 +56,6 @@ export function configureStudioTransport(config) {
 
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeAuditApiHealth(timeoutMs = 500) {
-  return probeHealth(AUDIT_API_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeRiskApiHealth(timeoutMs = 500) {
-  return probeHealth(RISK_API_ENDPOINTS.health, timeoutMs);
 }
 
 export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {

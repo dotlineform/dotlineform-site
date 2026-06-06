@@ -85,7 +85,6 @@ def assert_operational_route_helpers(page: Page) -> None:
             await Promise.all([
                 import('/studio/app/frontend/js/bulk-add-work.js'),
                 import('/studio/app/frontend/js/project-state.js'),
-                import('/studio/app/frontend/js/studio-audits.js'),
             ]);
             const registry = await import('/studio/app/frontend/js/studio-route-registry.js');
             const config = {

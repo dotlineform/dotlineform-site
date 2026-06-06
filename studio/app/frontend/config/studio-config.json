@@ -12,24 +12,6 @@
         "shell_type": "javascript",
         "ready_state_route_id": "studio-home"
       },
-      "studio_audits": {
-        "label": "audits",
-        "title": "Studio Audits",
-        "path": "/studio/audits/?mode=manage",
-        "script": "/studio/app/frontend/js/studio-audits.js",
-        "nav": false,
-        "shell_type": "javascript",
-        "ready_state_route_id": "studio-audits"
-      },
-      "studio_risk": {
-        "label": "risk",
-        "title": "Studio Risk",
-        "path": "/studio/risk/?mode=manage",
-        "script": "/studio/app/frontend/js/studio-risk.js",
-        "nav": false,
-        "shell_type": "javascript",
-        "ready_state_route_id": "studio-risk"
-      },
       "project_state": {
         "label": "project state",
         "title": "Project State",
@@ -47,15 +29,6 @@
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "bulk-add-work"
-      },
-      "activity": {
-        "label": "activity",
-        "title": "Studio Activity",
-        "path": "/studio/activity/?mode=manage",
-        "script": "/studio/app/frontend/js/activity-log.js",
-        "nav": false,
-        "shell_type": "javascript",
-        "ready_state_route_id": "studio-activity"
       },
       "catalogue_field_registry": {
         "label": "field registry",
@@ -142,13 +115,10 @@
         "catalogue_work_detail_editor": "/studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json",
         "catalogue_series_editor": "/studio/app/frontend/config/ui-text/catalogue-series-editor.json",
         "catalogue_moment_editor": "/studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
-        "activity_log": "/studio/app/frontend/config/ui-text/activity-log.json",
         "bulk_add_work": "/studio/app/frontend/config/ui-text/bulk-add-work.json",
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",
         "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
-        "studio_audits": "/studio/app/frontend/config/ui-text/studio-audits.json",
-        "studio_risk": "/studio/app/frontend/config/ui-text/studio-risk.json",
         "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
       }
     }

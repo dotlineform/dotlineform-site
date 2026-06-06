@@ -13,6 +13,7 @@ CONTRACT_REL_PATH = Path("studio/data/config/runtime/activity-contract.json")
 
 EXPECTED_SCHEMA = "activity_contract_v1"
 SURFACE_ROUTE_PREFIXES = {
+    "admin": "/admin/",
     "studio": "/studio/",
     "docs": "/docs/",
     "analytics": "/analytics/",

@@ -17,9 +17,7 @@ const HOME_COLUMNS = Object.freeze([
   Object.freeze({
     label: "admin",
     links: Object.freeze([
-      Object.freeze({ routeId: "studio_audits" }),
-      Object.freeze({ routeId: "studio_risk" }),
-      Object.freeze({ routeId: "activity" }),
+      Object.freeze({ href: "/admin/", label: "Admin" }),
       Object.freeze({ routeId: "catalogue_field_registry" })
     ])
   })
@@ -47,6 +45,9 @@ function renderHomeColumn(config, column) {
 }
 
 function renderHomeLink(config, link) {
+  if (link.href) {
+    return `<li><a class="studioHomeLinks__pill studioLinkList__item" href="${escapeHtml(link.href, true)}">${escapeHtml(link.label || link.href)}</a></li>`;
+  }
   const route = findStudioRoute(config, link.routeId);
   if (!route) return "";
   const href = appendRouteParams(route.path, link.params);

@@ -3,10 +3,6 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importModule("./studio-home-shell.js");
     return module.renderStudioHomeShell(config);
   },
-  activity: async (_config, importModule) => {
-    const module = await importModule("./activity-log-shell.js");
-    return module.renderActivityLogShell();
-  },
   bulk_add_work: async (config, importModule) => {
     const module = await importModule("./bulk-add-work-shell.js");
     return module.renderBulkAddWorkShell(config);
@@ -42,14 +38,6 @@ const ROUTE_BODY_RENDERERS = {
   studio_works: async (_config, importModule) => {
     const module = await importModule("./studio-works-shell.js");
     return module.renderStudioWorksShell();
-  },
-  studio_audits: async (_config, importModule) => {
-    const module = await importModule("./studio-audits-shell.js");
-    return module.renderStudioAuditsShell();
-  },
-  studio_risk: async (_config, importModule) => {
-    const module = await importModule("./studio-risk-shell.js");
-    return module.renderStudioRiskShell();
   }
 };
 

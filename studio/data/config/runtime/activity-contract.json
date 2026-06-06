@@ -907,35 +907,35 @@
         }
       }
     },
-    "studio-audits": {
-      "label": "studio audits",
-      "route": "/studio/audits/?mode=manage",
+    "admin-audits": {
+      "label": "admin audits",
+      "route": "/admin/audits/",
       "actions": {
         "run-studio-audit": {
-          "label": "run studio audit",
+          "label": "run admin audit",
           "status": "v1-target",
           "control_id": "runAudit",
           "control_selector": "[data-run-audit]",
           "control_label": "Run",
-          "endpoint": "/studio/api/audits/audits/run",
+          "endpoint": "/admin/api/audits/audits/run",
           "record_family": "audit",
           "record_id_field": "audit_id",
           "no_change_activity": "report",
           "report_forced_rewrites": true,
-          "notes": "Covers allowlisted Studio audit service runs.",
+          "notes": "Covers allowlisted Admin audit service runs.",
           "script_purposes": [
             {
               "id": "run-audit",
               "optional": false,
-              "when": "an allowlisted Studio audit completes"
+              "when": "an allowlisted Admin audit completes"
             }
           ]
         }
       }
     },
-    "studio-risk": {
-      "label": "studio risk",
-      "route": "/studio/risk/?mode=manage",
+    "admin-risk": {
+      "label": "admin risk",
+      "route": "/admin/risk/",
       "actions": {
         "run-risk-evidence": {
           "label": "run risk evidence",
@@ -943,12 +943,12 @@
           "control_id": "studioRiskRun",
           "control_selector": "#studioRiskRun",
           "control_label": "Run evidence",
-          "endpoint": "/studio/api/risk/runs",
+          "endpoint": "/admin/api/risk/runs",
           "record_family": "risk-run",
           "record_id_field": "run_id",
           "no_change_activity": "report",
           "report_forced_rewrites": true,
-          "notes": "Covers user-triggered risk evidence pack runs from Local Studio.",
+          "notes": "Covers user-triggered risk evidence pack runs from Admin.",
           "script_purposes": [
             {
               "id": "generate-report",
