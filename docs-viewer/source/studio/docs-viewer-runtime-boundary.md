@@ -1,24 +1,22 @@
 ---
 doc_id: docs-viewer-runtime-boundary
-title: Runtime Boundary
+title: Runtime
 added_date: 2026-03-31
 last_updated: 2026-06-05
 parent_id: docs-viewer
-viewable: true
 ---
-# Docs Viewer Runtime Boundary
+# Docs Viewer Runtime
 
 ## Purpose
 
 This document records the durable boundary between public read-only Docs Viewer installs, the local/manage Docs Viewer install, and shared lower-level runtime code.
 
-It is intentionally a policy and contract document, not an exhaustive module inventory.
-Detailed route, payload, and module ownership tables live in focused child documents:
+Detailed route, payload, and module ownership tables live in:
 
-- [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces)
-- [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts)
-- [Docs Viewer Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership)
-- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces)
+- [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts)
+- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership)
+- [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 
 The boundary exists so the repo can keep adding scope-specific docs behavior without forking stable viewer primitives or leaking local/manage tooling into public-reader routes.
 

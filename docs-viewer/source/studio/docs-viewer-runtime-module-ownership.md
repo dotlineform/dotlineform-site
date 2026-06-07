@@ -1,11 +1,9 @@
 ---
 doc_id: docs-viewer-runtime-module-ownership
-title: Docs Viewer Runtime Module Ownership
+title: Runtime Module Ownership
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: reference
 parent_id: docs-viewer-runtime-boundary
-viewable: true
 ---
 # Docs Viewer Runtime Module Ownership
 

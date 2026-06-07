@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-endpoints-source-config
-title: Docs Viewer Source Config Endpoints
+title: Source Config Endpoints
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: scripts-docs-management-endpoints

@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-endpoints-source-editor
-title: Docs Viewer Source Editor Endpoints
+title: Source Editor Endpoints
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: scripts-docs-management-endpoints

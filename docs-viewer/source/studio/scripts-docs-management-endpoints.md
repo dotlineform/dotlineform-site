@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-endpoints
-title: Docs Viewer Management Endpoint Overview
+title: Endpoint Overview
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: scripts-docs-management-server

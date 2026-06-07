@@ -1,11 +1,9 @@
 ---
 doc_id: docs-viewer-javascript-inventory
-title: Docs Viewer JavaScript Inventory
+title: JavaScript Inventory
 added_date: 2026-05-20
 last_updated: 2026-06-04
-ui_status: reference
-parent_id: admin
-viewable: true
+parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
 

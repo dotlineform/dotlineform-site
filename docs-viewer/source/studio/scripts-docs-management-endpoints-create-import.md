@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-endpoints-create-import
-title: Docs Viewer Create And Import Endpoints
+title: Create And Import Endpoints
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: scripts-docs-management-endpoints

@@ -11,6 +11,14 @@
       "parent_title": "Admin"
     },
     {
+      "doc_id": "scripts-docs-management-scripts-audit",
+      "title": "Audit Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json",
+      "added_date": "2026-06-07",
+      "parent_id": "scripts-docs-management-scripts",
+      "parent_title": "Scripts Overview"
+    },
+    {
       "doc_id": "audits",
       "title": "Audits",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/audits.json",
@@ -19,69 +27,61 @@
       "parent_title": "Admin"
     },
     {
-      "doc_id": "scripts-docs-management-scripts-audit",
-      "title": "Docs Viewer Audit Scripts",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Docs Viewer Management Script Overview"
-    },
-    {
       "doc_id": "scripts-docs-management-endpoints-create-import",
-      "title": "Docs Viewer Create And Import Endpoints",
+      "title": "Create And Import Endpoints",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json",
       "added_date": "2026-06-07",
       "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Docs Viewer Management Endpoint Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-endpoints-generated-reads",
-      "title": "Docs Viewer Generated Read Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Docs Viewer Management Endpoint Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-endpoints-health-capabilities",
-      "title": "Docs Viewer Health And Capabilities Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Docs Viewer Management Endpoint Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-scripts-import",
-      "title": "Docs Viewer Import Scripts",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Docs Viewer Management Script Overview"
+      "parent_title": "Endpoint Overview"
     },
     {
       "doc_id": "scripts-docs-management-endpoints",
-      "title": "Docs Viewer Management Endpoint Overview",
+      "title": "Endpoint Overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
       "added_date": "2026-06-07",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Viewer Management Services"
+      "parent_title": "Management Services"
     },
     {
-      "doc_id": "scripts-docs-management-scripts",
-      "title": "Docs Viewer Management Script Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts.json",
+      "doc_id": "scripts-docs-management-endpoints-generated-reads",
+      "title": "Generated Read Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json",
       "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Viewer Management Services"
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "scripts-docs-management-endpoints-health-capabilities",
+      "title": "Health And Capabilities Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json",
+      "added_date": "2026-06-07",
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "scripts-docs-management-scripts-import",
+      "title": "Import Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json",
+      "added_date": "2026-06-07",
+      "parent_id": "scripts-docs-management-scripts",
+      "parent_title": "Scripts Overview"
     },
     {
       "doc_id": "scripts-docs-management-scripts-read-config",
-      "title": "Docs Viewer Read And Config Scripts",
+      "title": "Read And Config Scripts",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json",
       "added_date": "2026-06-07",
       "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Docs Viewer Management Script Overview"
+      "parent_title": "Scripts Overview"
+    },
+    {
+      "doc_id": "scripts-docs-management-endpoints-rebuild-audit",
+      "title": "Rebuild And Audit Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-rebuild-audit.json",
+      "added_date": "2026-06-07",
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Endpoint Overview"
     }
   ],
-  "generated_at": "2026-06-07T21:17:21Z"
+  "generated_at": "2026-06-07T21:33:00Z"
 }

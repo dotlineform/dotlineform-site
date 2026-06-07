@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-server
-title: Docs Viewer Management Services
+title: Management Services
 added_date: 2026-04-24
 last_updated: 2026-06-07
 parent_id: docs-viewer
@@ -49,10 +49,8 @@ DOCS_VIEWER_WATCH_ENABLED
 
 `DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only. If the configured port is unavailable, startup fails instead of silently choosing another port.
 
-## New Reference Set
+## Reference
 
 - [Endpoint Overview](/docs/?scope=studio&doc=scripts-docs-management-endpoints) lists all GET and POST management endpoints and links to focused endpoint contracts.
 - [Script Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts) lists the service entrypoints, route dispatchers, helper modules, rebuild helpers, and maintenance scripts.
 - [Operations](/docs/?scope=studio&doc=scripts-docs-management-server-operations) records security constraints, operational notes, and verification references.
-
-Older mixed references have been replaced by the granular endpoint and script documents above.

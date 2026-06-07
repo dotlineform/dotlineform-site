@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-docs-management-scripts-rebuild-follow-through
-title: Docs Viewer Rebuild Follow-Through Scripts
+title: Rebuild Follow-Through Scripts
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: scripts-docs-management-scripts

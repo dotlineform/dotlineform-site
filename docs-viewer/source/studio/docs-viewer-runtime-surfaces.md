@@ -1,11 +1,9 @@
 ---
 doc_id: docs-viewer-runtime-surfaces
-title: Docs Viewer Runtime Surfaces
+title: Runtime Surfaces
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: reference
 parent_id: docs-viewer-runtime-boundary
-viewable: true
 ---
 # Docs Viewer Runtime Surfaces
 
@@ -47,7 +45,6 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | `docs-viewer/static/css/docs-viewer.css` | loaded | loaded | Basic/public viewer styling and portable Docs Viewer tokens. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | Report styling is manage-only until a report is promoted. |
 | `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | Management shell/modal styling only. |
-| Studio CSS | absent | absent | Standalone Docs Viewer pages should not depend on Studio CSS. |
 
 `docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks.
 

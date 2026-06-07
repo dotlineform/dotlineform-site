@@ -27,12 +27,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audits.json"
         },
         {
-          "doc_id": "docs-viewer-javascript-inventory",
-          "title": "Docs Viewer JavaScript Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-          "ui_status": "reference"
-        },
-        {
           "doc_id": "local-admin-app",
           "title": "Local Admin App",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
@@ -400,130 +394,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json"
         },
         {
-          "doc_id": "scripts-docs-management-server",
-          "title": "Docs Viewer Management Services",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
-          "children": [
-            {
-              "doc_id": "scripts-docs-management-server-generated-reads",
-              "title": "Docs Management Service Generated Reads Replaced",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-generated-reads.json",
-              "viewable": false
-            },
-            {
-              "doc_id": "scripts-docs-management-server-import-rebuild",
-              "title": "Docs Management Service Import And Rebuild Replaced",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-import-rebuild.json",
-              "viewable": false
-            },
-            {
-              "doc_id": "scripts-docs-management-server-write-actions",
-              "title": "Docs Management Service Write Actions Replaced",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-write-actions.json",
-              "viewable": false
-            },
-            {
-              "doc_id": "scripts-docs-management-endpoints",
-              "title": "Docs Viewer Management Endpoint Overview",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
-              "children": [
-                {
-                  "doc_id": "scripts-docs-management-endpoints-create-import",
-                  "title": "Docs Viewer Create And Import Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-generated-reads",
-                  "title": "Docs Viewer Generated Read Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-health-capabilities",
-                  "title": "Docs Viewer Health And Capabilities Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-rebuild-audit",
-                  "title": "Docs Viewer Rebuild And Audit Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-rebuild-audit.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-scope-lifecycle",
-                  "title": "Docs Viewer Scope Lifecycle Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-scope-lifecycle.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-source-config",
-                  "title": "Docs Viewer Source Config Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-config.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-source-editor",
-                  "title": "Docs Viewer Source Editor Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-editor.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-endpoints-source-mutations",
-                  "title": "Docs Viewer Source Mutation Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-mutations.json"
-                }
-              ]
-            },
-            {
-              "doc_id": "scripts-docs-management-server-operations",
-              "title": "Docs Viewer Management Operations",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json"
-            },
-            {
-              "doc_id": "scripts-docs-management-scripts",
-              "title": "Docs Viewer Management Script Overview",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts.json",
-              "children": [
-                {
-                  "doc_id": "scripts-docs-management-scripts-audit",
-                  "title": "Docs Viewer Audit Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-import",
-                  "title": "Docs Viewer Import Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-read-config",
-                  "title": "Docs Viewer Read And Config Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-rebuild-follow-through",
-                  "title": "Docs Viewer Rebuild Follow-Through Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-rebuild-follow-through.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-route-dispatch",
-                  "title": "Docs Viewer Route Dispatch Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-route-dispatch.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-service-entrypoints",
-                  "title": "Docs Viewer Service Entrypoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-service-entrypoints.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-source-editor",
-                  "title": "Docs Viewer Source Editor Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-editor.json"
-                },
-                {
-                  "doc_id": "scripts-docs-management-scripts-source-mutations",
-                  "title": "Docs Viewer Source Mutation Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-mutations.json"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "doc_id": "scripts-docs-export",
           "title": "Documents Package Preparation Script",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json"
@@ -550,6 +420,112 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-live-rebuild-watcher.json"
         },
         {
+          "doc_id": "scripts-docs-management-server",
+          "title": "Management Services",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
+          "children": [
+            {
+              "doc_id": "scripts-docs-management-endpoints",
+              "title": "Endpoint Overview",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
+              "children": [
+                {
+                  "doc_id": "scripts-docs-management-endpoints-create-import",
+                  "title": "Create And Import Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-generated-reads",
+                  "title": "Generated Read Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-health-capabilities",
+                  "title": "Health And Capabilities Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-rebuild-audit",
+                  "title": "Rebuild And Audit Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-rebuild-audit.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-scope-lifecycle",
+                  "title": "Scope Lifecycle Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-scope-lifecycle.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-source-config",
+                  "title": "Source Config Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-config.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-source-editor",
+                  "title": "Source Editor Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-editor.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-source-mutations",
+                  "title": "Source Mutation Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-mutations.json"
+                }
+              ]
+            },
+            {
+              "doc_id": "scripts-docs-management-server-operations",
+              "title": "Management Operations",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json"
+            },
+            {
+              "doc_id": "scripts-docs-management-scripts",
+              "title": "Scripts Overview",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts.json",
+              "children": [
+                {
+                  "doc_id": "scripts-docs-management-scripts-audit",
+                  "title": "Audit Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-import",
+                  "title": "Import Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-read-config",
+                  "title": "Read And Config Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-rebuild-follow-through",
+                  "title": "Rebuild Follow-Through Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-rebuild-follow-through.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-route-dispatch",
+                  "title": "Route Dispatch Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-route-dispatch.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-service-entrypoints",
+                  "title": "Service Entrypoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-service-entrypoints.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-source-editor",
+                  "title": "Source Editor Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-editor.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-scripts-source-mutations",
+                  "title": "Source Mutation Scripts",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-mutations.json"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "doc_id": "docs-viewer-media-handling",
           "title": "Media Handling",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-media-handling.json"
@@ -562,7 +538,8 @@
         {
           "doc_id": "docs-viewer-overview",
           "title": "Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
+          "ui_status": "urgent"
         },
         {
           "doc_id": "docs-viewer-panel-hosts",
@@ -603,26 +580,28 @@
         },
         {
           "doc_id": "docs-viewer-runtime-boundary",
-          "title": "Runtime Boundary",
+          "title": "Runtime",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
           "children": [
             {
               "doc_id": "docs-viewer-generated-data-contracts",
-              "title": "Docs Viewer Generated Data Contracts",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json",
-              "ui_status": "reference"
+              "title": "Generated Data Contracts",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json"
+            },
+            {
+              "doc_id": "docs-viewer-javascript-inventory",
+              "title": "JavaScript Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json"
             },
             {
               "doc_id": "docs-viewer-runtime-module-ownership",
-              "title": "Docs Viewer Runtime Module Ownership",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json",
-              "ui_status": "reference"
+              "title": "Runtime Module Ownership",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json"
             },
             {
               "doc_id": "docs-viewer-runtime-surfaces",
-              "title": "Docs Viewer Runtime Surfaces",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
-              "ui_status": "reference"
+              "title": "Runtime Surfaces",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json"
             }
           ]
         },
@@ -1202,5 +1181,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T21:17:21Z"
+  "generated_at": "2026-06-07T22:03:07Z"
 }

@@ -1,11 +1,9 @@
 ---
 doc_id: docs-viewer-generated-data-contracts
-title: Docs Viewer Generated Data Contracts
+title: Generated Data Contracts
 added_date: 2026-06-05
 last_updated: 2026-06-05
-ui_status: reference
 parent_id: docs-viewer-runtime-boundary
-viewable: true
 ---
 # Docs Viewer Generated Data Contracts
 
