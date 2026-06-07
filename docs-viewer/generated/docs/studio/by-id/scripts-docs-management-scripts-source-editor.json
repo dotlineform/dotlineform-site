@@ -1,0 +1,10 @@
+{
+  "doc_id": "scripts-docs-management-scripts-source-editor",
+  "title": "Docs Viewer Source Editor Scripts",
+  "added_date": "2026-06-07",
+  "last_updated": "2026-06-07",
+  "source_path": "scripts-docs-management-scripts-source-editor.md",
+  "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-scripts-source-editor",
+  "parent_id": "scripts-docs-management-scripts",
+  "content_html": "<h1>Docs Viewer Source Editor Scripts</h1>\n<h2><code>docs-viewer/services/docs_management_source_service.py</code></h2>\n<p>Purpose: source body read/rebuild and local editor open helpers.</p>\n<p>Ownership: owns the source-editor API contract and local source-open behavior.</p>\n<p>Responsibilities:</p>\n<ul>\n<li>resolves selected docs through the configured source model</li>\n<li>verifies source paths stay inside scope roots</li>\n<li>parses exact existing front matter blocks</li>\n<li>returns source body text without front matter</li>\n<li>returns <code>sha256:&lt;digest&gt;</code> revision tokens for stale-write protection</li>\n<li>preserves front matter exactly during body-only writes</li>\n<li>normalizes submitted body line endings</li>\n<li>runs targeted docs payload and docs-search rebuild follow-through after body writes</li>\n<li>opens source docs with the configured or preferred local Markdown editor</li>\n<li>logs source-editor rebuild and open-source events</li>\n</ul>\n<p>Not responsible for:</p>\n<ul>\n<li>metadata/front matter mutation workflows outside body-only editing</li>\n<li>staged import conversion</li>\n<li>route path constants</li>\n</ul>\n<h2>Editor Selection</h2>\n<p><code>DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP</code> in <code>var/local/site.env</code> wins when set. Without that setting, default editor selection checks:</p>\n<pre><code class=\"language-text\">MarkEdit\nTypora\nMarked 2\nMarked\n</code></pre>\n<p>If none are installed, macOS Launch Services chooses the default application for the Markdown file.</p>\n"
+}

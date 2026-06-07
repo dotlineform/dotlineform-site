@@ -1,47 +1,42 @@
 ---
 doc_id: scripts-docs-management-server
-title: Management Service
+title: Docs Viewer Management Services
 added_date: 2026-04-24
-last_updated: 2026-06-02
+last_updated: 2026-06-07
 parent_id: docs-viewer
 viewable: true
 ---
-# Docs Management Service
+# Docs Viewer Management Services
 
-Service modules:
+Docs Viewer management is the local service boundary that lets `/docs/?mode=manage` read generated Docs Viewer data, inspect source configuration, edit Markdown source docs, import staged files, run rebuilds, and perform local-only maintenance actions.
+
+The management surface is served by the standalone Docs Viewer service:
 
 ```text
+docs-viewer/bin/docs-viewer
 docs-viewer/services/docs_viewer_service.py
 docs-viewer/services/docs_management_service.py
 ```
 
-`docs-viewer/services/docs_viewer_service.py` is the standalone local Docs Viewer HTTP service.
-It serves the built-in `/docs/` manage shell, Docs Viewer runtime/config/static files, generated-data reads, and the management API from the Docs Viewer service base URL configured in `var/local/site.env`.
+The browser talks to the standalone service at `DOCS_VIEWER_BASE_URL`. Local Studio renders links to Docs Viewer, but it does not host `/docs/`, proxy `/studio/api/docs/...`, or provide generated-data passthroughs.
 
-`docs-viewer/services/docs_management_service.py` owns the shared Docs Viewer management route dispatcher used by the standalone service.
-Local Studio no longer serves the Docs Viewer `/docs/` shell, Docs Viewer runtime/static/config files, or `/studio/api/docs/...` proxy routes.
-Local Studio and Local Analytics do not expose Docs Viewer service-link config or generated-data passthroughs.
-Data Sharing calls use the standalone Local Analytics same-origin API under `/analytics/api/data-sharing/...`.
-Docs Viewer and Local Studio do not provide Data Sharing API compatibility routes.
-
-The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
-Use `docs-viewer/services/docs_viewer_service.py` or `docs-viewer/bin/docs-viewer` for the standalone Docs Viewer service.
-
-## Local Service Path
+## Runtime Boundary
 
 ```text
-browser -> /docs/ -> docs_viewer_service.py -> docs_management_service.py
-browser -> /docs/... API path -> docs_viewer_service.py -> docs_management_service.py
+browser -> /docs/                  -> docs_viewer_service.py
+browser -> /assets/docs/...        -> docs_viewer_service.py
+browser -> /docs/... API endpoints -> docs_viewer_service.py -> docs_management_service.py
 ```
 
-The service expects the project to provide:
+The service expects:
 
-- a Jekyll `_config.yml` at the repo root
-- `docs-viewer/config/scopes/docs_scopes.json` with at least one configured docs scope
-- Python dependencies needed by the docs import/export helpers
-- Python docs rebuild commands reached through `./docs-viewer/build/build_docs.py` and `./docs-viewer/build/build_search.py`
+- a project `_config.yml` at the repo root
+- `docs-viewer/config/scopes/docs_scopes.json`
+- generated docs/search artifacts for read endpoints
+- Python rebuild entrypoints at `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py`
+- local runtime settings in `var/local/site.env`
 
-Local service location is static for v1 and comes from `var/local/site.env`:
+Loopback host and port are configured with:
 
 ```text
 DOCS_VIEWER_HOST
@@ -52,33 +47,12 @@ DOCS_VIEWER_GENERATED_READS_ENABLED
 DOCS_VIEWER_WATCH_ENABLED
 ```
 
-`DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only.
-If the configured port is unavailable, startup fails with a clear error instead of falling back to another port.
-Open `/docs/` directly through the standalone Docs Viewer service when developer documentation is needed.
+`DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only. If the configured port is unavailable, startup fails instead of silently choosing another port.
 
-## Responsibilities
+## New Reference Set
 
-`docs-viewer/services/docs_management_service.py` dispatches route paths for the standalone Docs Viewer service.
-Focused modules own the workflow behavior behind it:
+- [Endpoint Overview](/docs/?scope=studio&doc=scripts-docs-management-endpoints) lists all GET and POST management endpoints and links to focused endpoint contracts.
+- [Script Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts) lists the service entrypoints, route dispatchers, helper modules, rebuild helpers, and maintenance scripts.
+- [Operations](/docs/?scope=studio&doc=scripts-docs-management-server-operations) records security constraints, operational notes, and verification references.
 
-- `docs-viewer/services/docs_management_context.py` owns shared paths, repo/root helpers, CORS origin checks, compact logs, and path formatting.
-- `docs-viewer/services/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
-- `docs-viewer/services/docs_management_capabilities_service.py` owns capability and scope availability payloads.
-- `docs-viewer/services/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, delete apply, and scope lifecycle apply routes.
-- `docs-viewer/services/docs_management_import_service.py` owns Docs/HTML import-source dependency wiring.
-- `docs-viewer/services/docs_management_source_service.py` owns source-file open behavior.
-- `docs-viewer/services/docs_management_broken_links_service.py` owns broken-links audit route behavior.
-
-Together these modules serve generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads; coordinate source mutations, imports, and rebuilds; append unified activity rows for covered actions; and coordinate successful source writes with the docs live watcher through short-lived suppression markers.
-
-Endpoint constants live in `docs-viewer/services/docs_management_routes.py`.
-HTTP transport for built-in manage mode lives in `docs-viewer/services/docs_viewer_service.py`.
-Local Studio and Local Analytics do not provide Docs Viewer API adapters, peer-service links, or Docs Viewer generated-data passthroughs.
-
-## Child References
-
-- [Generated Reads And Config](/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads) lists generated-data, source-config, capability, and source-config settings endpoints.
-- [Import And Rebuild](/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild) covers create/import, explicit rebuild, and broken-link audit endpoints.
-- [Data Sharing (Retired)](/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing) records the removed transitional Data Sharing endpoints.
-- [Write Actions](/docs/?scope=studio&doc=scripts-docs-management-server-write-actions) covers source-open, metadata, viewability, move, normalize, delete, and scope lifecycle endpoints.
-- [Operations](/docs/?scope=studio&doc=scripts-docs-management-server-operations) covers security constraints, operational notes, verification, and related references.
+Older mixed references have been replaced by the granular endpoint and script documents above.

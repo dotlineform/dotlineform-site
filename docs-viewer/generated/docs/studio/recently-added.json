@@ -19,67 +19,69 @@
       "parent_title": "Admin"
     },
     {
-      "doc_id": "risk-analysis-analytics",
-      "title": "Risk Analysis - Analytics App",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-analytics.json",
+      "doc_id": "scripts-docs-management-scripts-audit",
+      "title": "Docs Viewer Audit Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-scripts",
+      "parent_title": "Docs Viewer Management Script Overview"
     },
     {
-      "doc_id": "risk-analysis-docs-viewer",
-      "title": "Risk Analysis - Docs Viewer",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-docs-viewer.json",
+      "doc_id": "scripts-docs-management-endpoints-create-import",
+      "title": "Docs Viewer Create And Import Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Docs Viewer Management Endpoint Overview"
     },
     {
-      "doc_id": "risk-analysis-public-site",
-      "title": "Risk Analysis - Public Site",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-public-site.json",
+      "doc_id": "scripts-docs-management-endpoints-generated-reads",
+      "title": "Docs Viewer Generated Read Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Docs Viewer Management Endpoint Overview"
     },
     {
-      "doc_id": "risk-analysis-studio",
-      "title": "Risk Analysis - Studio App",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-studio.json",
+      "doc_id": "scripts-docs-management-endpoints-health-capabilities",
+      "title": "Docs Viewer Health And Capabilities Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Docs Viewer Management Endpoint Overview"
     },
     {
-      "doc_id": "risk-analysis-policy",
-      "title": "Risk Analysis Policy",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-policy.json",
+      "doc_id": "scripts-docs-management-scripts-import",
+      "title": "Docs Viewer Import Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-scripts",
+      "parent_title": "Docs Viewer Management Script Overview"
     },
     {
-      "doc_id": "risk-evidence-pack",
-      "title": "Risk Evidence Pack",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack.json",
+      "doc_id": "scripts-docs-management-endpoints",
+      "title": "Docs Viewer Management Endpoint Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Viewer Management Services"
     },
     {
-      "doc_id": "risk-ownership",
-      "title": "Risk Ownership",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json",
+      "doc_id": "scripts-docs-management-scripts",
+      "title": "Docs Viewer Management Script Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts.json",
       "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Viewer Management Services"
     },
     {
-      "doc_id": "admin",
-      "title": "Admin",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin.json",
-      "added_date": "2026-06-06"
+      "doc_id": "scripts-docs-management-scripts-read-config",
+      "title": "Docs Viewer Read And Config Scripts",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json",
+      "added_date": "2026-06-07",
+      "parent_id": "scripts-docs-management-scripts",
+      "parent_title": "Docs Viewer Management Script Overview"
     }
   ],
-  "generated_at": "2026-06-07T16:04:22Z"
+  "generated_at": "2026-06-07T21:17:21Z"
 }

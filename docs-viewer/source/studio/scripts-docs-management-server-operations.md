@@ -1,55 +1,61 @@
 ---
 doc_id: scripts-docs-management-server-operations
-title: Docs Management Service Operations
+title: Docs Viewer Management Operations
 added_date: 2026-05-19
-last_updated: 2026-06-02
+last_updated: 2026-06-07
 parent_id: scripts-docs-management-server
 ---
-# Docs Management Service Operations
+# Docs Viewer Management Operations
 
 ## Security Constraints
 
-- HTTP access is provided by the standalone Docs Viewer service at `DOCS_VIEWER_BASE_URL`
-- loopback binding and CORS are enforced by `docs-viewer/services/docs_viewer_service.py`
-- docs source write targets are allowlisted through `docs-viewer/config/scopes/docs_scopes.json`; in this repo the configured source roots are:
-  - `docs-viewer/source/studio/*.md`
-  - `docs-viewer/source/analysis/**/*.md`
-  - `docs-viewer/source/library/*.md`
-- non-source write targets are allowlisted to:
-  - `var/analytics/data-sharing/<data-domain>/exports/`
-  - `var/analytics/data-sharing/<data-domain>/import-preview/`
-  - `var/docs/logs/`
-  - `var/docs/watch-suppressions/`
-- scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
-- Docs management no longer creates local backup bundles before writes
-- source recovery now relies on Git history, the user's host/filesystem backups, or any explicit manual copy made before a risky operation
+- HTTP access is provided by the standalone Docs Viewer service at `DOCS_VIEWER_BASE_URL`.
+- Loopback binding, CORS, static-file routing, and request-size limits are enforced by `docs-viewer/services/docs_viewer_service.py`.
+- Endpoint constants are allowlisted by `docs-viewer/services/docs_management_routes.py`.
+- Docs source write targets are constrained by `docs-viewer/config/scopes/docs_scopes.json`.
+- Scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are not delete-eligible.
+- Source recovery relies on Git history, host/filesystem backups, or explicit manual copies made before risky operations.
+
+Configured source roots in this repo are:
+
+```text
+docs-viewer/source/studio/*.md
+docs-viewer/source/analysis/**/*.md
+docs-viewer/source/library/*.md
+```
+
+Local operational write targets include:
+
+```text
+var/docs/import-staging/
+var/docs/logs/
+var/docs/watch-suppressions/
+assets/docs/interactive/<scope>/
+```
 
 ## Operational Notes
 
-- normal `bin/local-studio` renders configured Docs Viewer links but does not host Docs Viewer management
-- shared Docs management dispatch lives in `docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, source opening, and broken-links audit
-- the old standalone Docs Management HTTP server and `127.0.0.1:8789` fallback have been removed
-- the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
-- if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
-- successful source writes leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the Docs management service
-- `var/` is excluded from Jekyll because logs, staged imports, local package artifacts, and watcher-suppression markers are local operational files rather than publishable site input
-- `docs-viewer/bin/docs-viewer` serves Docs Viewer management and generated docs/search reads without starting Jekyll
+- `bin/local-studio` starts Docs Viewer services and renders configured links, but Local Studio does not host Docs Viewer management itself.
+- `docs-viewer/bin/docs-viewer` serves `/docs/`, Docs Viewer static/runtime/config files, generated-data reads, and management endpoints without starting Jekyll.
+- The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
+- If the local service is unavailable, normal Docs Viewer reads can fall back to static generated JSON; manage mode remains read-only and shows an unavailable message.
+- Successful source writes create short-lived suppression markers under `var/docs/watch-suppressions/` so the live watcher can skip duplicate same-scope rebuilds for files already rebuilt by management endpoints.
+- `var/` is excluded from Jekyll because logs, staged imports, local package artifacts, and watcher suppressions are local operational files.
 
 ## Verification
 
-Export/import adapter behavior is covered by focused checks:
+Focused tests cover the current boundary:
 
-- `docs-viewer/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
-- `docs-viewer/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
-- `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, rebuild output, and confirmation gates.
-- `docs-viewer/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
-- `analytics-app/tests/python/test_analytics_data_sharing_api.py` verifies active adapter resolution, endpoint dispatch, and future stub rejection through the Analytics API boundary.
-- `analytics-app/tests/smoke/data_sharing_review.py` verifies the Analytics Data Sharing review route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+- `docs-viewer/tests/python/test_docs_import_service.py`
+- `docs-viewer/tests/python/test_docs_export.py`
+- `docs-viewer/tests/python/test_docs_import.py`
+- `docs-viewer/tests/python/test_docs_activity.py`
 
-The `docs` profile runs the parser and docs service checks.
-The `analytics-smoke` profile runs Analytics Data Sharing route and API smokes against the Local Analytics host.
+The `docs` check profile runs parser and docs service checks. Use the narrowest relevant check for source-only documentation edits, and rebuild generated Docs Viewer payloads only when the task explicitly calls for that follow-through.
 
 ## Related References
 
+- [Endpoint Overview](/docs/?scope=studio&doc=scripts-docs-management-endpoints)
+- [Script Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts)
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
