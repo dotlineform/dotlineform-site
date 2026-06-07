@@ -217,7 +217,6 @@ Durable docs that will need updates include:
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 - [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
-- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)
 - [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Testing](/docs/?scope=studio&doc=testing)
 - [Development Checklist](/docs/?scope=studio&doc=development-checklist)

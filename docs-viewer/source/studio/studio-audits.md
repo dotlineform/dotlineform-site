@@ -12,8 +12,6 @@ Current route:
 - `/admin/audits/`
 
 The audit page surfaces local maintenance audits inside Admin.
-This is the central audit-launching surface for risk operations.
-Do not recreate Studio audit routes; add allowlisted audits through the Admin app boundary described in [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations).
 
 The first version lists the Studio ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
 
@@ -55,10 +53,3 @@ When the service is available, the page fetches `/admin/api/audits/audits` to li
 - `studio-ready-state`
 
 Running the audit posts only the audit ID to `/admin/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
-
-## Related References
-
-- [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
-- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
-- [Studio Audits Page Request](/docs/?scope=studio&doc=site-request-studio-audits-page)
-- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)

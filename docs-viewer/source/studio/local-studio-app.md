@@ -9,13 +9,16 @@ viewable: true
 # Local Studio App
 
 This document defines the operational boundary for the Local Studio app server.
-Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and sibling-app boundary.
-Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route-local shell ownership.
-Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint groups and server adapter ownership.
+
+- Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and sibling-app boundary.
+- Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route-local shell ownership.
+- Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint groups and server adapter ownership.
 
 Local Studio is intentionally separate from the public dotlineform.com site.
-Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll preview/build work.
-Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site preview/build when no repo wrapper is needed.
+
+- Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll preview/build work.
+- Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site preview/build when no repo wrapper is needed.
+
 The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
 ## Server Boundary
@@ -102,12 +105,3 @@ Current focused Local Studio checks are grouped by ownership:
 - route shells: see [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - Docs Viewer boundary: `studio/tests/smoke/local_studio_app_docs_viewer.py`
 - Local Analytics sibling routes and APIs: `analytics-app/tests/python/test_analytics_app_server.py`, `analytics-app/tests/python/test_analytics_data_sharing_api.py`, `analytics-app/tests/smoke/local_analytics_app_tag_routes.py`, and `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
-
-## Related Docs
-
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
-- [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
-- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
-- [Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)

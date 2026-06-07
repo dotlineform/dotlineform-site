@@ -22,6 +22,12 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
         },
         {
+          "doc_id": "risk-ownership",
+          "title": "Risk Ownership",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json",
+          "ui_status": "review"
+        },
+        {
           "doc_id": "scripts-audit-site-consistency",
           "title": "Site Consistency Audit",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
@@ -35,25 +41,6 @@
           "doc_id": "studio-audits",
           "title": "Studio Audits",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-audits.json"
-        },
-        {
-          "doc_id": "studio-docs-inventory",
-          "title": "Studio Docs Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-docs-inventory.json",
-          "ui_status": "urgent"
-        },
-        {
-          "doc_id": "studio-python-ruby-script-inventory",
-          "title": "Studio Python And Ruby Script Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-python-ruby-script-inventory.json",
-          "children": [
-            {
-              "doc_id": "docs-build-management-import-export-improvements",
-              "title": "Docs Build Management Import Export Improvements",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
-              "ui_status": "done"
-            }
-          ]
         },
         {
           "doc_id": "scripts-audit-studio-ready-state",
@@ -77,14 +64,14 @@
               "title": "Javascript Inventory",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
               "ui_status": "reference"
-            },
-            {
-              "doc_id": "studio-javascript-payload-inventory",
-              "title": "Retired JavaScript Inventory Policy",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-javascript-payload-inventory.json",
-              "ui_status": "retired"
             }
           ]
+        },
+        {
+          "doc_id": "studio-risk-evidence-pack",
+          "title": "Studio Risk Evidence Pack",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
+          "ui_status": "draft"
         },
         {
           "doc_id": "studio-risk-priority-dashboard",
@@ -115,20 +102,6 @@
               "title": "Studio App Risk Inventory",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
               "ui_status": "draft"
-            },
-            {
-              "doc_id": "studio-risk-operations",
-              "title": "Studio Risk Operations",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-operations.json",
-              "ui_status": "review",
-              "children": [
-                {
-                  "doc_id": "studio-risk-evidence-pack",
-                  "title": "Studio Risk Evidence Pack",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-                  "ui_status": "draft"
-                }
-              ]
             }
           ]
         }
@@ -607,20 +580,6 @@
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-risk-analysis-inventory-redesign",
-          "title": "Risk Analysis Inventory Redesign Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-analysis-inventory-redesign.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-studio-risk-route",
-              "title": "Studio Risk Route Request",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-risk-route.json",
-              "ui_status": "done"
-            }
-          ]
         },
         {
           "doc_id": "site-request-risk-evidence-producers",
@@ -1576,5 +1535,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-06T20:19:34Z"
+  "generated_at": "2026-06-07T11:11:56Z"
 }

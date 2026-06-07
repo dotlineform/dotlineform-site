@@ -52,23 +52,6 @@ Studio landing and operational routes expose the shared route-ready contract:
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 - **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 
-Technical route and workflow docs:
-
-- **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
-- **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
-- **[Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)**
-- **[Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)**
-- **[Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)**
-- **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
-- **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
-- **[Library Documents](/docs/?scope=studio&doc=library-documents)**
-- **[Data Sharing](/docs/?scope=studio&doc=data-sharing)**
-- **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
-- **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
-- **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
-- **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
-- **[Studio Works](/docs/?scope=studio&doc=studio-works)**
-
 ## Local Development
 
 Use the repo-local runner from `dotlineform-site/`:

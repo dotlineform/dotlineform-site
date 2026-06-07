@@ -56,7 +56,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 4 | done | Wrap existing JavaScript inventory guardrail output as transition evidence. |
 | 5 | in progress | Add optional runtime producer hooks for existing smokes, Playwright, and Lighthouse when a targeted question requires them. Existing smoke profiles are allowlisted through `studio/commands/run_checks.py`; Lighthouse remains deferred until a safe URL contract exists. |
 | 6 | deferred | Define the compact `studio/data/generated/risk/` summary shape only if a Studio route needs to read current risk evidence. The first route reads summaries through the narrow Local Studio API, so no checked-in generated read model is needed yet. |
-| 7 | done | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. The route work is tracked in [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route). |
+| 7 | done | Add a Local Studio risk route or extend Audits only after the command-line evidence pack is useful. |
 | 8 | done | Migrate legacy inventory rerun instructions into evidence-pack producers, starting with Python/Ruby script-family metrics in `script-family-inventory.json`. |
 | 9 | planned | Implement [Studio Risk Route Exposure Evidence](/docs/?scope=studio&doc=studio-risk-route-exposure-evidence) and write `route-exposure.json`. |
 | 10 | planned | Implement the browser target contract from [Studio Risk Runtime Browser Evidence](/docs/?scope=studio&doc=studio-risk-runtime-browser-evidence). |

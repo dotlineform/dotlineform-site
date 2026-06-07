@@ -1,13 +1,13 @@
 ---
-doc_id: studio-risk-operations
-title: Studio Risk Operations
-added_date: 2026-05-31
-last_updated: 2026-06-06
+doc_id: risk-ownership
+title: Risk Ownership
+added_date: 2026-06-07
+last_updated: 2026-06-07
 ui_status: review
-parent_id: studio-risk-priority-dashboard
+parent_id: admin
 viewable: true
 ---
-# Studio Risk Operations
+# Risk Ownership
 
 This document records the previous Studio risk decision and the current Admin ownership boundary for risk-related audits, activity, scripts, reports, and local artifacts.
 
@@ -106,15 +106,3 @@ They use:
 - focused frontend modules for rendering and filtering
 - Admin API adapters with allowlisted behavior
 - app inventories and change requests as the source of priority state
-
-## Related References
-
-- [Studio Risk Priority Dashboard](/docs/?scope=studio&doc=studio-risk-priority-dashboard)
-- [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy)
-- [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack)
-- [Studio Risk Route Request](/docs/?scope=studio&doc=site-request-studio-risk-route)
-- [Studio Audits](/docs/?scope=studio&doc=studio-audits)
-- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
-- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
-- [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
-- [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)

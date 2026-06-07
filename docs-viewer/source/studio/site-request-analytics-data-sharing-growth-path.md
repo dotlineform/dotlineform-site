@@ -41,8 +41,7 @@ The risk is future feature growth drifting back into broad route families, gener
 [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) currently has 54 Analytics frontend modules, with 14 above target score 4 and 4 at score 6 or higher.
 The active rows are concentrated in tag editors, tag registry/aliases modals, Series Tags, and Data Sharing package routes.
 
-[Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) classifies `analytics-app/app/server/analytics_app/tag_services/` as medium maintenance, medium structure, and low performance risk across 10 files and 4,419 lines.
-It also notes that Data Sharing and tag import/apply flows remain broad enough to watch.
+`analytics-app/app/server/analytics_app/tag_services/`: 10 files and 4,419 lines.
 
 ## Implementation Tasks
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a21b6a84b74b2bb227321d2777a5f036",
-    "generated_at_utc": "2026-06-06T20:36:30Z",
-    "count": 276
+    "version": "blake2b-5135de8434a1d100fe7d8c42a35beb86",
+    "generated_at_utc": "2026-06-07T11:16:40Z",
+    "count": 270
   },
   "entries": [
     {
@@ -64,6 +64,28 @@
         "06"
       ],
       "search_text": "local-admin-app local admin app local admin app 2026-06-06 2026 06"
+    },
+    {
+      "id": "risk-ownership",
+      "kind": "doc",
+      "title": "Risk Ownership",
+      "href": "/docs/?scope=studio&doc=risk-ownership",
+      "last_updated": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-07 • Admin",
+      "search_terms": [
+        "risk-ownership",
+        "risk",
+        "ownership",
+        "risk ownership",
+        "admin",
+        "2026-06-07",
+        "2026",
+        "06",
+        "07"
+      ],
+      "search_text": "risk-ownership risk ownership risk ownership admin 2026-06-07 2026 06 07"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -135,86 +157,6 @@
         "02"
       ],
       "search_text": "studio-audits studio audits studio audits admin 2026-06-02 2026 06 02"
-    },
-    {
-      "id": "studio-docs-inventory",
-      "kind": "doc",
-      "title": "Studio Docs Inventory",
-      "href": "/docs/?scope=studio&doc=studio-docs-inventory",
-      "last_updated": "2026-05-19",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-05-19 • Admin",
-      "search_terms": [
-        "studio-docs-inventory",
-        "studio",
-        "docs",
-        "inventory",
-        "studio docs inventory",
-        "admin",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory admin 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "studio-python-ruby-script-inventory",
-      "kind": "doc",
-      "title": "Studio Python And Ruby Script Inventory",
-      "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "last_updated": "2026-06-06",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-06 • Admin",
-      "search_terms": [
-        "studio-python-ruby-script-inventory",
-        "studio",
-        "python",
-        "ruby",
-        "script",
-        "inventory",
-        "studio python and ruby script inventory",
-        "and",
-        "admin",
-        "2026-06-06",
-        "2026",
-        "06"
-      ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and admin 2026-06-06 2026 06"
-    },
-    {
-      "id": "docs-build-management-import-export-improvements",
-      "kind": "doc",
-      "title": "Docs Build Management Import Export Improvements",
-      "href": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
-      "last_updated": "2026-05-25",
-      "parent_id": "studio-python-ruby-script-inventory",
-      "parent_title": "Studio Python And Ruby Script Inventory",
-      "display_meta": "2026-05-25 • Studio Python And Ruby Script Inventory",
-      "search_terms": [
-        "docs-build-management-import-export-improvements",
-        "docs",
-        "build",
-        "management",
-        "import",
-        "export",
-        "improvements",
-        "docs build management import export improvements",
-        "studio python and ruby script inventory",
-        "studio",
-        "python",
-        "and",
-        "ruby",
-        "script",
-        "inventory",
-        "2026-05-25",
-        "2026",
-        "05",
-        "25"
-      ],
-      "search_text": "docs-build-management-import-export-improvements docs build management import export improvements docs build management import export improvements studio python and ruby script inventory studio python and ruby script inventory 2026-05-25 2026 05 25"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -319,32 +261,28 @@
       "search_text": "javascript-inventory javascript inventory javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-31 2026 05 31"
     },
     {
-      "id": "studio-javascript-payload-inventory",
+      "id": "studio-risk-evidence-pack",
       "kind": "doc",
-      "title": "Retired JavaScript Inventory Policy",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-31",
-      "parent_id": "studio-risk-analysis-policy",
-      "parent_title": "Studio Risk Analysis Policy",
-      "display_meta": "2026-05-31 • Studio Risk Analysis Policy",
+      "title": "Studio Risk Evidence Pack",
+      "href": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
+      "last_updated": "2026-06-03",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-03 • Admin",
       "search_terms": [
-        "studio-javascript-payload-inventory",
+        "studio-risk-evidence-pack",
         "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "retired javascript inventory policy",
-        "retired",
-        "policy",
-        "studio risk analysis policy",
         "risk",
-        "analysis",
-        "2026-05-31",
+        "evidence",
+        "pack",
+        "studio risk evidence pack",
+        "admin",
+        "2026-06-03",
         "2026",
-        "05",
-        "31"
+        "06",
+        "03"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory retired javascript inventory policy retired policy studio risk analysis policy risk analysis 2026-05-31 2026 05 31"
+      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack admin 2026-06-03 2026 06 03"
     },
     {
       "id": "studio-risk-priority-dashboard",
@@ -475,56 +413,6 @@
         "31"
       ],
       "search_text": "studio-app-risk-inventory studio app risk inventory studio app risk inventory studio risk priority dashboard priority dashboard 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "studio-risk-operations",
-      "kind": "doc",
-      "title": "Studio Risk Operations",
-      "href": "/docs/?scope=studio&doc=studio-risk-operations",
-      "last_updated": "2026-05-31",
-      "parent_id": "studio-risk-priority-dashboard",
-      "parent_title": "Studio Risk Priority Dashboard",
-      "display_meta": "2026-05-31 • Studio Risk Priority Dashboard",
-      "search_terms": [
-        "studio-risk-operations",
-        "studio",
-        "risk",
-        "operations",
-        "studio risk operations",
-        "studio risk priority dashboard",
-        "priority",
-        "dashboard",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "studio-risk-operations studio risk operations studio risk operations studio risk priority dashboard priority dashboard 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "studio-risk-evidence-pack",
-      "kind": "doc",
-      "title": "Studio Risk Evidence Pack",
-      "href": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
-      "last_updated": "2026-06-03",
-      "parent_id": "studio-risk-operations",
-      "parent_title": "Studio Risk Operations",
-      "display_meta": "2026-06-03 • Studio Risk Operations",
-      "search_terms": [
-        "studio-risk-evidence-pack",
-        "studio",
-        "risk",
-        "evidence",
-        "pack",
-        "studio risk evidence pack",
-        "studio risk operations",
-        "operations",
-        "2026-06-03",
-        "2026",
-        "06",
-        "03"
-      ],
-      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack studio risk operations operations 2026-06-03 2026 06 03"
     },
     {
       "id": "analytics",
@@ -2599,62 +2487,6 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
-    },
-    {
-      "id": "site-request-risk-analysis-inventory-redesign",
-      "kind": "doc",
-      "title": "Risk Analysis Inventory Redesign Request",
-      "href": "/docs/?scope=studio&doc=site-request-risk-analysis-inventory-redesign",
-      "last_updated": "2026-05-31",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-31 • Change Requests",
-      "search_terms": [
-        "site-request-risk-analysis-inventory-redesign",
-        "site",
-        "request",
-        "risk",
-        "analysis",
-        "inventory",
-        "redesign",
-        "risk analysis inventory redesign request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "site-request-risk-analysis-inventory-redesign site request risk analysis inventory redesign risk analysis inventory redesign request change requests change requests 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "site-request-studio-risk-route",
-      "kind": "doc",
-      "title": "Studio Risk Route Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-risk-route",
-      "last_updated": "2026-05-31",
-      "parent_id": "site-request-risk-analysis-inventory-redesign",
-      "parent_title": "Risk Analysis Inventory Redesign Request",
-      "display_meta": "2026-05-31 • Risk Analysis Inventory Redesign Request",
-      "search_terms": [
-        "site-request-studio-risk-route",
-        "site",
-        "request",
-        "studio",
-        "risk",
-        "route",
-        "studio risk route request",
-        "risk analysis inventory redesign request",
-        "analysis",
-        "inventory",
-        "redesign",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "site-request-studio-risk-route site request studio risk route studio risk route request risk analysis inventory redesign request analysis inventory redesign 2026-05-31 2026 05 31"
     },
     {
       "id": "site-request-risk-evidence-producers",
@@ -6062,22 +5894,21 @@
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-06",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-06 • Studio",
       "search_terms": [
         "local-studio-app",
         "local",
         "studio",
         "app",
         "local studio app",
-        "2026-06-02",
+        "2026-06-06",
         "2026",
-        "06",
-        "02"
+        "06"
       ],
-      "search_text": "local-studio-app local studio app local studio app 2026-06-02 2026 06 02"
+      "search_text": "local-studio-app local studio app local studio app 2026-06-06 2026 06"
     },
     {
       "id": "local-studio-routes",

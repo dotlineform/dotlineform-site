@@ -17,7 +17,7 @@ please review the request and proposed tasks and identify any areas or tasks tha
 
 ~
 
-we now need to move the implementation batches out of the request doc into a focussed set of implementation docs:
+please create a focussed set of implementation docs:
 - a task tracker using `tasks-tracker-template.md` as the template,
 - a set of batch task delivery dos using `task-batch-template.md` as the template.
 Follow the guidance in the templates for what to include in them.

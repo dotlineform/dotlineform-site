@@ -38,9 +38,6 @@ The current risk evidence says the workflow is broad enough that optimisation wo
 
 ## Evidence
 
-[Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory) identifies the catalogue save/build path as the current Studio workflow priority.
-[Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) classifies `studio/services/catalogue/` as high maintenance, medium structure, and high performance risk across 38 files and 17,150 lines.
-
 Relevant owners include:
 
 - `studio/services/catalogue/catalogue_write_server.py`

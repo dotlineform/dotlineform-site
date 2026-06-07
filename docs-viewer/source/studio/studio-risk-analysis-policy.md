@@ -16,7 +16,6 @@ Use this policy with:
 - the dashboard child inventories for app-owned evidence: [Public Site Risk Inventory](/docs/?scope=studio&doc=public-site-risk-inventory), [Studio App Risk Inventory](/docs/?scope=studio&doc=studio-app-risk-inventory), [Analytics Risk Inventory](/docs/?scope=studio&doc=analytics-risk-inventory), and [Docs Viewer Risk Inventory](/docs/?scope=studio&doc=docs-viewer-risk-inventory)
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for browser JavaScript evidence during the inventory transition
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) for Docs Viewer browser JavaScript evidence during the inventory transition
-- [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) for script and backend-service evidence during the inventory transition
 
 ## Purpose
 

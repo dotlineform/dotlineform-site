@@ -80,7 +80,3 @@ What it is not for:
 - full field-level diffs
 - terminal output
 - background watcher activity without a meaningful initiating context
-
-## Related References
-
-- **[Studio Risk Operations](/docs/?scope=studio&doc=studio-risk-operations)**

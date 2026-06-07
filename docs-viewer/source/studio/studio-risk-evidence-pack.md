@@ -4,7 +4,7 @@ title: Studio Risk Evidence Pack
 added_date: 2026-05-31
 last_updated: 2026-06-03
 ui_status: draft
-parent_id: studio-risk-operations
+parent_id: admin
 viewable: true
 ---
 # Studio Risk Evidence Pack
