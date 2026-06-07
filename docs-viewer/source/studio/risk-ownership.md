@@ -3,19 +3,12 @@ doc_id: risk-ownership
 title: Risk Ownership
 added_date: 2026-06-07
 last_updated: 2026-06-07
-ui_status: review
 parent_id: admin
 viewable: true
 ---
 # Risk Ownership
 
-This document records the previous Studio risk decision and the current Admin ownership boundary for risk-related audits, activity, scripts, reports, and local artifacts.
-
-## Decision
-
-Risk operations now belong in the Admin app.
-
-Admin is the central home for:
+Risk operations belong in the Admin app. Admin is the central home for:
 
 - risk dashboards and app inventories
 - audit launcher UI
@@ -24,11 +17,6 @@ Admin is the central home for:
 - risk-related local read APIs
 - risk-related generated review artifacts that need to be inspected locally
 
-Local Studio remains focused on catalogue/public-site data maintenance and should not recreate audit, risk, activity, testing, or UI Catalogue routes.
-
-## Rationale
-
-Risk work is operational maintenance for the whole repo, so the active user surface is Admin.
 The current Admin app hosts:
 
 - `/admin/audits/`
@@ -44,8 +32,6 @@ The Admin app shell provides the correct boundary:
 - JavaScript owns the route UI
 - Python owns local APIs, filesystem access, process execution, and allowlists
 - browser code never sends command text, shell flags, arbitrary paths, or environment values
-
-This is the same boundary risk operations need.
 
 ## Ownership
 
@@ -82,7 +68,6 @@ Not allowed:
 - browser-controlled filesystem paths for audits or risk scripts
 - a generic "run command" API
 - a generic "read any risk file" API
-- a sibling localhost risk server for ordinary Admin risk work
 
 ## Activity Boundary
 
@@ -90,12 +75,12 @@ Risk-related actions that a user initiates from Admin should write unified activ
 
 Examples:
 
-- running a Studio audit
+- running an audit
 - generating a risk report
 - refreshing an app risk inventory from deterministic inputs
 - applying a risk-reduction change that writes generated review output
 
-Background watchers and purely informational route loads should not produce activity rows unless a future workflow needs an explicit review trail.
+Background watchers and purely informational route loads should not produce activity rows.
 
 ## Route Shape
 

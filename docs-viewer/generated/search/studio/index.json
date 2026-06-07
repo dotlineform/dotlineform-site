@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5135de8434a1d100fe7d8c42a35beb86",
-    "generated_at_utc": "2026-06-07T11:16:40Z",
+    "version": "blake2b-2c417660c7cd825001282c4c4e1da1a2",
+    "generated_at_utc": "2026-06-07T14:01:10Z",
     "count": 270
   },
   "entries": [
@@ -45,6 +45,30 @@
       "search_text": "studio-activity studio activity activity report report admin 2026-06-06 2026 06"
     },
     {
+      "id": "docs-viewer-javascript-inventory",
+      "kind": "doc",
+      "title": "Docs Viewer JavaScript Inventory",
+      "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
+      "last_updated": "2026-06-04",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-04 • Admin",
+      "search_terms": [
+        "docs-viewer-javascript-inventory",
+        "docs",
+        "viewer",
+        "javascript",
+        "inventory",
+        "docs viewer javascript inventory",
+        "admin",
+        "2026-06-04",
+        "2026",
+        "06",
+        "04"
+      ],
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory admin 2026-06-04 2026 06 04"
+    },
+    {
       "id": "local-admin-app",
       "kind": "doc",
       "title": "Local Admin App",
@@ -64,6 +88,29 @@
         "06"
       ],
       "search_text": "local-admin-app local admin app local admin app 2026-06-06 2026 06"
+    },
+    {
+      "id": "risk-evidence-pack",
+      "kind": "doc",
+      "title": "Risk Evidence Pack",
+      "href": "/docs/?scope=studio&doc=risk-evidence-pack",
+      "last_updated": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-07 • Admin",
+      "search_terms": [
+        "risk-evidence-pack",
+        "risk",
+        "evidence",
+        "pack",
+        "risk evidence pack",
+        "admin",
+        "2026-06-07",
+        "2026",
+        "06",
+        "07"
+      ],
+      "search_text": "risk-evidence-pack risk evidence pack risk evidence pack admin 2026-06-07 2026 06 07"
     },
     {
       "id": "risk-ownership",
@@ -207,34 +254,6 @@
       "search_text": "studio-risk-analysis-policy studio risk analysis policy studio risk analysis policy admin 2026-06-03 2026 06 03"
     },
     {
-      "id": "docs-viewer-javascript-inventory",
-      "kind": "doc",
-      "title": "Docs Viewer JavaScript Inventory",
-      "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-06-04",
-      "parent_id": "studio-risk-analysis-policy",
-      "parent_title": "Studio Risk Analysis Policy",
-      "display_meta": "2026-06-04 • Studio Risk Analysis Policy",
-      "search_terms": [
-        "docs-viewer-javascript-inventory",
-        "docs",
-        "viewer",
-        "javascript",
-        "inventory",
-        "docs viewer javascript inventory",
-        "studio risk analysis policy",
-        "studio",
-        "risk",
-        "analysis",
-        "policy",
-        "2026-06-04",
-        "2026",
-        "06",
-        "04"
-      ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory studio risk analysis policy studio risk analysis policy 2026-06-04 2026 06 04"
-    },
-    {
       "id": "javascript-inventory",
       "kind": "doc",
       "title": "Javascript Inventory",
@@ -259,30 +278,6 @@
         "31"
       ],
       "search_text": "javascript-inventory javascript inventory javascript inventory studio risk analysis policy studio risk analysis policy 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "studio-risk-evidence-pack",
-      "kind": "doc",
-      "title": "Studio Risk Evidence Pack",
-      "href": "/docs/?scope=studio&doc=studio-risk-evidence-pack",
-      "last_updated": "2026-06-03",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-03 • Admin",
-      "search_terms": [
-        "studio-risk-evidence-pack",
-        "studio",
-        "risk",
-        "evidence",
-        "pack",
-        "studio risk evidence pack",
-        "admin",
-        "2026-06-03",
-        "2026",
-        "06",
-        "03"
-      ],
-      "search_text": "studio-risk-evidence-pack studio risk evidence pack studio risk evidence pack admin 2026-06-03 2026 06 03"
     },
     {
       "id": "studio-risk-priority-dashboard",

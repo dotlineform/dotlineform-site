@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "risk-evidence-pack",
+      "title": "Risk Evidence Pack",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack.json",
+      "added_date": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
       "doc_id": "risk-ownership",
       "title": "Risk Ownership",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json",
@@ -71,15 +79,7 @@
       "added_date": "2026-06-06",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-admin-app-structure-tasks",
-      "title": "Admin App Structure Tasks",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-tasks.json",
-      "added_date": "2026-06-06",
-      "parent_id": "site-request-admin-app-structure",
-      "parent_title": "Admin App Structure Request"
     }
   ],
-  "generated_at": "2026-06-07T11:11:19Z"
+  "generated_at": "2026-06-07T13:40:56Z"
 }

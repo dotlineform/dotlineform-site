@@ -17,15 +17,25 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json"
         },
         {
+          "doc_id": "docs-viewer-javascript-inventory",
+          "title": "Docs Viewer JavaScript Inventory",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
+          "ui_status": "reference"
+        },
+        {
           "doc_id": "local-admin-app",
           "title": "Local Admin App",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
         },
         {
+          "doc_id": "risk-evidence-pack",
+          "title": "Risk Evidence Pack",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack.json"
+        },
+        {
           "doc_id": "risk-ownership",
           "title": "Risk Ownership",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json",
-          "ui_status": "review"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json"
         },
         {
           "doc_id": "scripts-audit-site-consistency",
@@ -54,24 +64,12 @@
           "ui_status": "review",
           "children": [
             {
-              "doc_id": "docs-viewer-javascript-inventory",
-              "title": "Docs Viewer JavaScript Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-              "ui_status": "reference"
-            },
-            {
               "doc_id": "javascript-inventory",
               "title": "Javascript Inventory",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
               "ui_status": "reference"
             }
           ]
-        },
-        {
-          "doc_id": "studio-risk-evidence-pack",
-          "title": "Studio Risk Evidence Pack",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-pack.json",
-          "ui_status": "draft"
         },
         {
           "doc_id": "studio-risk-priority-dashboard",
@@ -1535,5 +1533,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T11:11:56Z"
+  "generated_at": "2026-06-07T14:01:10Z"
 }
