@@ -13,19 +13,14 @@ Status:
 
 - proposed
 - this needs to happen **before** semantic-token insertion in [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
-- the separate [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor) can define source editing/rebuild behavior without waiting for this registry work
-- product and maintenance direction now belongs with Analytics
-- current v1 implementation still runs through Docs Viewer build/runtime/report code
 
 ## Summary
 
-Revisit and extend [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references) using the clarified Docs Viewer app/backend and module architecture.
+Current v1 behavior is documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation). Use that implementation doc as the stable baseline for this request.
 
-Current v1 behavior is documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
-Use that implementation doc as the stable baseline for this request.
-The original v1 request is now historical context, not the current implementation contract.
+Semantic references product and maintenance direction now belongs with Analytics, but current v1 implementation still runs through Docs Viewer build/runtime/report code.
 
-Since then, the broader Docs Viewer direction has become clearer:
+Docs Viewer direction is:
 
 - semantic links are dotlineform/Studio-specific integrations, not portable Docs Viewer core
 - Docs Viewer validates supported semantic types and actions, not target-object existence
@@ -58,8 +53,7 @@ V2 starts from that baseline and must make an explicit alignment decision:
 The v1 semantic-reference request was written before the current app-shell, panel-module, and browser-safe read rules were clarified.
 Some v1 language and possibly some implementation details imply tighter resolver validation than the current product model needs.
 
-The next work should avoid building on accidental assumptions.
-Before adding editor support, target pickers, tag references, graph views, or richer reports, the project should confirm that semantic references now follow the intended boundary:
+The next work should avoid building on accidental assumptions. Before adding editor support, target pickers, tag references, graph views, or richer reports, the project should confirm that semantic references now follow the intended boundary:
 
 - type/action validation belongs to Docs Viewer semantic-reference parsing
 - object existence belongs to Studio/public site data and ordinary link health
@@ -80,17 +74,6 @@ Before adding editor support, target pickers, tag references, graph views, or ri
 - preserve existing generated relationship artifacts unless a concrete v2 need requires a schema change
 - keep semantic links and editor tooling repo-specific, not portable Docs Viewer core
 - prepare for future info-panel/reference views without choosing a graph or visualization library now
-
-## Non-Goals
-
-- no portable generic semantic-link engine
-- no downstream host-extension contract in this slice
-- no full object-existence validation by Docs Viewer
-- no requirement that `work:99999` fail just because no matching work exists
-- no public authoring UI
-- no new visualization library integration
-- no broad rewrite of the docs builder beyond needed alignment/refactoring
-- no source editor implementation in this request, except defining the data/support contract it needs
 
 ## Clarified Model
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3df514f48becf53994d233d0b8f6ceda",
-    "generated_at_utc": "2026-06-07T17:02:56Z",
+    "version": "blake2b-1a6f08965c10acdcfa16e4b43a83b633",
+    "generated_at_utc": "2026-06-07T17:10:07Z",
     "count": 214
   },
   "entries": [
@@ -950,10 +950,10 @@
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-07",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-02 • Change Requests",
+      "display_meta": "2026-06-07 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-semantic-reference-editor",
         "site",
@@ -967,12 +967,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-02",
+        "2026-06-07",
         "2026",
         "06",
-        "02"
+        "07"
       ],
-      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-02 2026 06 02"
+      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-07 2026 06 07"
     },
     {
       "id": "site-request-docs-viewer-workspace-mount-architecture",
