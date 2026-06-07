@@ -9,5 +9,5 @@
   "ui_status": "report",
   "viewer_report": "docs_broken_links",
   "viewer_report_access": "manage",
-  "content_html": "<h1>Docs Broken Links</h1>\n<p>This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. The report lists missing target links:</p>\n<ul>\n<li>links inside rendered code blocks are ignored</li>\n<li>same-doc fragment links are ignored</li>\n<li>this includes <code>#section</code> and links back to the current docs page with a fragment</li>\n</ul>\n"
+  "content_html": "<h1>Docs Broken Links</h1>\n<p>This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. The report lists missing target links:</p>\n<ul>\n<li>links inside rendered code blocks are ignored</li>\n<li>same-doc fragment links are ignored, this includes <code>#section</code> and links back to the current docs page with a fragment</li>\n</ul>\n"
 }

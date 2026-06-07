@@ -14,5 +14,4 @@ viewer_report_access: manage
 This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. The report lists missing target links:
 
 - links inside rendered code blocks are ignored
-- same-doc fragment links are ignored
-- this includes `#section` and links back to the current docs page with a fragment
+- same-doc fragment links are ignored, this includes `#section` and links back to the current docs page with a fragment
