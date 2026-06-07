@@ -37,8 +37,8 @@ the form symbols, when layered into an image, describe the hidden meaning of the
 
 **composite**
 
-![3 symbols image 02]([[media:docs/analysis/img/3-symbols-image-02.webp]] "3 symbols image 02")<br>
-<span style="font-size: var(--font-caption);">[[ref:work:00638-002|3 symbols (untreated)]]</span>
+<!-- ![3 symbols image 02]([[media:docs/analysis/img/3-symbols-image-02.webp]] "3 symbols image 02")<br>
+<span style="font-size: var(--font-caption);">[[ref:work:00638-002|3 symbols (untreated)]]</span> -->
 
 The *real* is represented by a composite of 630 images appropriated from a systematic search of Google Images. The image selection process started with formulating a list of 21 words to be used as image search terms. A seed list of words beginning with the letters R, G and B was constructed, from which 21 words were selected randomly/intuitively.
 
