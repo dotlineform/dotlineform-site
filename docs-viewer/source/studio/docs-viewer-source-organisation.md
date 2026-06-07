@@ -141,11 +141,4 @@ When updating Docs Viewer docs:
 - document shared viewer behavior here if it applies to both Studio and Library
 - document route-shell or scope differences here if they affect how the common module is wired
 - document builder implementation in [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- leave payload-schema detail for [Shared Patterns](/docs/?scope=studio&doc=data-models-shared), [Studio Scope](/docs/?scope=studio&doc=data-models-studio), and [Library Scope](/docs/?scope=studio&doc=data-models-library)
-
-## Related References
-
-- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- leave payload-schema detail for [Shared Patterns](/docs/?scope=studio&doc=data-models-shared), [Studio Scope](/docs/?scope=studio&doc=data-models-studio), and [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes)

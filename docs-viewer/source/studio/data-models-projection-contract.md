@@ -13,13 +13,11 @@ This document defines the boundary between canonical source, public projections,
 It complements [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) by documenting the source/projection contract rather than the whole repo layout.
 
 The executable source of truth is `admin-app/checks/projection_contract.json`.
-This document explains that manifest; it should not become a parallel hand-maintained list.
-Run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
-When a built public site is available, pass `--site-root <path>` to audit public output from the same manifest.
 
-`public` means intended for dotlineform.com runtime output.
-It does not mean repository privacy.
-Canonical source can remain in a public repo while generated public projections omit source-only fields.
+- Run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
+- When a built public site is available, pass `--site-root <path>` to audit public output from the same manifest.
+
+`public` means intended for dotlineform.com runtime output. It does not mean repository privacy. Canonical source can remain in a public repo while generated public projections omit source-only fields.
 
 ## Contract Rules
 
@@ -54,15 +52,13 @@ Analytics tag registry, aliases, assignments, and groups are local Analytics sou
 | Scope | Canonical Source | Public Projection | Local Docs Viewer Projection | Owner |
 | --- | --- | --- | --- | --- |
 | Studio docs | `docs-viewer/source/studio/*.md` | none by default | `docs-viewer/generated/docs/studio/`, `docs-viewer/generated/search/studio/index.json`, `<DOCS_VIEWER_BASE_URL>/docs/` manage payload reads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
-| Library docs | `docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/analytics/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
-| Analysis docs | `docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
+| Library docs | `docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/analytics/data-sharing/library/` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) |
+| Analysis docs | `docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) |
 
-Docs source files are the canonical authored content.
-Generated Docs Viewer payloads are projections of that source.
+Docs source files are the canonical authored content. Generated Docs Viewer payloads are projections of that source.
 `viewable: false` can remain generated for manage-mode review while staying out of public/default tree discovery and search.
 
-The public site may publish Library and Analysis Docs Viewer payloads and search.
-It must not publish Studio docs payloads or Studio docs search unless a separate public Studio docs surface is intentionally defined.
+The public site may publish Library and Analysis Docs Viewer payloads and search. It must not publish Studio docs payloads or Studio docs search unless a separate public Studio docs surface is intentionally defined.
 
 ## Studio App Data
 
@@ -145,11 +141,3 @@ Existing enforcement is split across several checks and builders:
 - docs builder emits viewable/manage-mode metadata according to each scope contract
 - search builders own scope-specific flattened search projections
 - site consistency and field-registry checks catch selected catalogue/source relationship drift
-
-## Practical Update Rule
-
-When adding or changing a source field, generated artifact, local API payload, or public runtime JSON:
-
-- update the owning domain data-model doc
-- update this projection contract if the source/projection boundary changes
-- add or update a check when a source-only field could leak into public output
