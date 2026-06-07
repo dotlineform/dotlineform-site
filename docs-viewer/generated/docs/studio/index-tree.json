@@ -38,19 +38,24 @@
           "ui_status": "reference"
         },
         {
-          "doc_id": "docs-viewer-risk-inventory",
-          "title": "Docs Viewer Risk Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json"
-        },
-        {
           "doc_id": "local-admin-app",
           "title": "Local Admin App",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
         },
         {
-          "doc_id": "public-site-risk-inventory",
-          "title": "Public Site Risk Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json"
+          "doc_id": "risk-analysis-docs-viewer",
+          "title": "Risk Analysis - Docs Viewer",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-docs-viewer.json"
+        },
+        {
+          "doc_id": "risk-analysis-public-site",
+          "title": "Risk Analysis - Public Site",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-public-site.json"
+        },
+        {
+          "doc_id": "roisk-analysis-studio",
+          "title": "Risk Analysis - Studio",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/roisk-analysis-studio.json"
         },
         {
           "doc_id": "risk-analysis-policy",
@@ -71,11 +76,6 @@
           "doc_id": "scripts-audit-site-consistency",
           "title": "Site Consistency Audit",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
-        },
-        {
-          "doc_id": "studio-app-risk-inventory",
-          "title": "Studio App Risk Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json"
         },
         {
           "doc_id": "scripts-audit-studio-ready-state",
@@ -1506,5 +1506,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T15:49:21Z"
+  "generated_at": "2026-06-07T15:59:33Z"
 }

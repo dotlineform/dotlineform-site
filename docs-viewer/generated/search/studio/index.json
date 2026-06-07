@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d7a2b65a31d3fd6665d1b08bd0e075d7",
-    "generated_at_utc": "2026-06-07T15:49:22Z",
+    "version": "blake2b-fa6a670e0c6881bc12f7d049df5480cc",
+    "generated_at_utc": "2026-06-07T15:59:33Z",
     "count": 267
   },
   "entries": [
@@ -133,29 +133,6 @@
       "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory admin 2026-06-04 2026 06 04"
     },
     {
-      "id": "docs-viewer-risk-inventory",
-      "kind": "doc",
-      "title": "Docs Viewer Risk Inventory",
-      "href": "/docs/?scope=studio&doc=docs-viewer-risk-inventory",
-      "last_updated": "2026-06-06",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-06 • Admin",
-      "search_terms": [
-        "docs-viewer-risk-inventory",
-        "docs",
-        "viewer",
-        "risk",
-        "inventory",
-        "docs viewer risk inventory",
-        "admin",
-        "2026-06-06",
-        "2026",
-        "06"
-      ],
-      "search_text": "docs-viewer-risk-inventory docs viewer risk inventory docs viewer risk inventory admin 2026-06-06 2026 06"
-    },
-    {
       "id": "local-admin-app",
       "kind": "doc",
       "title": "Local Admin App",
@@ -177,28 +154,76 @@
       "search_text": "local-admin-app local admin app local admin app 2026-06-06 2026 06"
     },
     {
-      "id": "public-site-risk-inventory",
+      "id": "risk-analysis-docs-viewer",
       "kind": "doc",
-      "title": "Public Site Risk Inventory",
-      "href": "/docs/?scope=studio&doc=public-site-risk-inventory",
-      "last_updated": "2026-05-31",
+      "title": "Risk Analysis - Docs Viewer",
+      "href": "/docs/?scope=studio&doc=risk-analysis-docs-viewer",
+      "last_updated": "2026-06-07",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-05-31 • Admin",
+      "display_meta": "2026-06-07 • Admin",
       "search_terms": [
-        "public-site-risk-inventory",
+        "risk-analysis-docs-viewer",
+        "risk",
+        "analysis",
+        "docs",
+        "viewer",
+        "risk analysis - docs viewer",
+        "admin",
+        "2026-06-07",
+        "2026",
+        "06",
+        "07"
+      ],
+      "search_text": "risk-analysis-docs-viewer risk analysis docs viewer risk analysis - docs viewer admin 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "risk-analysis-public-site",
+      "kind": "doc",
+      "title": "Risk Analysis - Public Site",
+      "href": "/docs/?scope=studio&doc=risk-analysis-public-site",
+      "last_updated": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-07 • Admin",
+      "search_terms": [
+        "risk-analysis-public-site",
+        "risk",
+        "analysis",
         "public",
         "site",
-        "risk",
-        "inventory",
-        "public site risk inventory",
+        "risk analysis - public site",
         "admin",
-        "2026-05-31",
+        "2026-06-07",
         "2026",
-        "05",
-        "31"
+        "06",
+        "07"
       ],
-      "search_text": "public-site-risk-inventory public site risk inventory public site risk inventory admin 2026-05-31 2026 05 31"
+      "search_text": "risk-analysis-public-site risk analysis public site risk analysis - public site admin 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "roisk-analysis-studio",
+      "kind": "doc",
+      "title": "Risk Analysis - Studio",
+      "href": "/docs/?scope=studio&doc=roisk-analysis-studio",
+      "last_updated": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-07 • Admin",
+      "search_terms": [
+        "roisk-analysis-studio",
+        "roisk",
+        "analysis",
+        "studio",
+        "risk analysis - studio",
+        "risk",
+        "admin",
+        "2026-06-07",
+        "2026",
+        "06",
+        "07"
+      ],
+      "search_text": "roisk-analysis-studio roisk analysis studio risk analysis - studio risk admin 2026-06-07 2026 06 07"
     },
     {
       "id": "risk-analysis-policy",
@@ -291,30 +316,6 @@
         "26"
       ],
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit admin 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "studio-app-risk-inventory",
-      "kind": "doc",
-      "title": "Studio App Risk Inventory",
-      "href": "/docs/?scope=studio&doc=studio-app-risk-inventory",
-      "last_updated": "2026-05-31",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-05-31 • Admin",
-      "search_terms": [
-        "studio-app-risk-inventory",
-        "studio",
-        "app",
-        "risk",
-        "inventory",
-        "studio app risk inventory",
-        "admin",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "studio-app-risk-inventory studio app risk inventory studio app risk inventory admin 2026-05-31 2026 05 31"
     },
     {
       "id": "scripts-audit-studio-ready-state",

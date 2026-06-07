@@ -19,6 +19,30 @@
       "parent_title": "Admin"
     },
     {
+      "doc_id": "risk-analysis-docs-viewer",
+      "title": "Risk Analysis - Docs Viewer",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-docs-viewer.json",
+      "added_date": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
+      "doc_id": "risk-analysis-public-site",
+      "title": "Risk Analysis - Public Site",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-public-site.json",
+      "added_date": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
+      "doc_id": "roisk-analysis-studio",
+      "title": "Risk Analysis - Studio",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/roisk-analysis-studio.json",
+      "added_date": "2026-06-07",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
       "doc_id": "risk-analysis-policy",
       "title": "Risk Analysis Policy",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-policy.json",
@@ -55,31 +79,7 @@
       "added_date": "2026-06-06",
       "parent_id": "site-request-admin-app-structure-tasks",
       "parent_title": "Admin App Structure Tasks"
-    },
-    {
-      "doc_id": "site-request-admin-app-structure-batch-2",
-      "title": "Admin App Structure Batch 2",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-2.json",
-      "added_date": "2026-06-06",
-      "parent_id": "site-request-admin-app-structure-tasks",
-      "parent_title": "Admin App Structure Tasks"
-    },
-    {
-      "doc_id": "site-request-admin-app-structure-batch-3",
-      "title": "Admin App Structure Batch 3",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-3.json",
-      "added_date": "2026-06-06",
-      "parent_id": "site-request-admin-app-structure-tasks",
-      "parent_title": "Admin App Structure Tasks"
-    },
-    {
-      "doc_id": "site-request-admin-app-structure-batch-4",
-      "title": "Admin App Structure Batch 4",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-4.json",
-      "added_date": "2026-06-06",
-      "parent_id": "site-request-admin-app-structure-tasks",
-      "parent_title": "Admin App Structure Tasks"
     }
   ],
-  "generated_at": "2026-06-07T15:42:40Z"
+  "generated_at": "2026-06-07T15:59:05Z"
 }
