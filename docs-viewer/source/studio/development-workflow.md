@@ -59,10 +59,10 @@ They are planning and close-out artifacts, not the durable implementation log.
 
 ## 3. Shape The Implementation
 
-Prefer existing repo boundaries:
+Use existing repo boundaries:
 
 - Extend shared modules and primitives before creating one-off route-local patterns.
-- Prefer a package or directory namespace over a growing set of same-level helper modules when a helper surface has multiple responsibilities, is likely to grow, or is becoming an explicit architecture boundary.
+- Use a package or directory namespace when a helper surface has multiple responsibilities, is likely to grow, or is becoming an explicit architecture boundary.
 - Keep UI shell, validation, data mutation, and generated-output behavior separate.
 - Keep config ownership in checked-in config docs and loader modules.
 - Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
@@ -79,7 +79,7 @@ This is a list of the most common references within the documenattion:
 - For browser JavaScript maintenance-risk work, use [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy) for scoring.
 - For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview).
 
-If the work needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template).
+When the work needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template).
 
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
@@ -104,7 +104,7 @@ Before editing, classify each key or payload field under review:
 - Do not move server-only source paths, write targets, adapter path contracts, output patterns, metadata contracts, activity emit metadata, or source-write scope into browser bootstrap config.
 - Keep browser public/config endpoints on explicit whitelists when they project domain config. Passing through nested source config is not an acceptable shortcut.
 - Keep UI copy in route UI-text bundles unless the string is operation-owned workflow metadata.
-- When a cleanup preserves a browser-visible surface, prefer a positive owner-contract test that asserts the allowed key set or whitelisted payload shape.
+- When a cleanup preserves a browser-visible surface, use a positive owner-contract test that asserts the allowed key set or whitelisted payload shape.
 - Update the owning config doc in the same slice with removed keys, retained keys, owner, and reason.
 
 Good cleanup outcomes include a narrower browser-facing payload, a clearer static-fallback contract, a server-only config path removed from public projection, or a focused test that prevents the surface from widening silently.
@@ -125,7 +125,7 @@ Before editing, answer:
 Refactoring: default rules:
 
 - Do not add a new complete responsibility to a file unless the same slice creates or extends the focused owner for that responsibility.
-- Prefer explicit input/output helpers over helper functions that read or mutate a broad route `state` object directly.
+- Use explicit input/output helpers over helper functions that read or mutate a broad route `state` object directly.
 - Define the owning surface before adding new UI behavior; do not let the current renderer or route shell become the owner by default.
 - When refactoring, extract around stable ownership boundaries such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic.
 
@@ -135,7 +135,6 @@ Refactoring: batch sizing:
 - A good batch usually moves one complete responsibility out of one route shell, applies one shared route-family pattern across sibling files, or installs one shared helper plus the routes that already need it.
 - A batch is too small when it only moves local helpers without changing ownership, testability, route-load behavior, or future-change destination.
 - A batch is too large when it spans unrelated route families, mixes public runtime and Studio-only risk, or requires several independent browser workflows to verify safely.
-- If a guardrail slice is needed first, define the follow-on score-moving slice, target score movement, and evidence required before rescoring.
 
 Task definition checklist:
 
@@ -167,7 +166,8 @@ Before editing, answer:
 - Which app context, state domain, service adapter, controller, or view owns it after the change?
 - What backend capability, generated-data contract, service endpoint, browser storage contract, or local-only read/write boundary does it consume?
 - Is the backend/service contract already clean enough, or does the child task need paired backend/service cleanup?
-- Did the review find a compatibility path, broad callback, broad state dependency, legacy storage migration, or temporary alias? If yes, remove it in this slice when the owner contract is clear. If removal is not safe, stop and create a named follow-up task with owner, removal/narrowing target, reason it cannot be removed now, and verification requirement before adding adjacent feature behavior.
+- Did the review find a compatibility path, broad callback, broad state dependency, legacy storage migration, or temporary alias? If yes, remove it in this slice when the owner contract is clear.
+- If code removal is not safe, stop and create a named follow-up task with owner, removal/narrowing target, reason it cannot be removed now, and verification requirement before adding adjacent feature behavior.
 - How does the slice preserve public read-only behavior without management assets or backend capability probes?
 - How does the slice preserve manage-mode backend authority for writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data?
 
@@ -193,16 +193,14 @@ Keep the implementation slice small enough to verify and summarize.
 
 During implementation:
 
-- preserve existing Jekyll, Liquid, JavaScript, CSS, and Python conventions
-- prefer structured parsers or config APIs over ad hoc string manipulation
-- keep unrelated refactors out of the change
-- avoid widening local write-service paths or CORS behavior
-- prefer direct browser reads for browser-safe repo/generated artifacts; do not add local server read endpoints merely to preserve a module boundary when the data is already safe and available as static JSON/config
+- use structured parsers or config APIs and not ad hoc string manipulation
+- report potential refactors
+- use direct browser reads for browser-safe repo/generated artifacts; do not add local server read endpoints merely to preserve a module boundary when the data is already safe and available as static JSON/config
 - reserve local service reads for source files, protected or local-only data, external workspace roots, capability checks, and data that cannot or should not be exposed as browser assets
-- use dry-run behavior for generators before write runs unless the task explicitly requires writing
+- validate dry-run behavior for generators before write runs
 - keep user-specific paths, tokens, and local credentials out of tracked docs and source
 
-If a request grows beyond a single safe slice, stop at a checkpoint with completed work, checks run, risks, and the next slice.
+When a request grows beyond a single safe slice, stop at a checkpoint with completed work, checks run, risks, and the next slice.
 
 ## 5. Verify Proportionally
 
@@ -243,15 +241,15 @@ Run a separate targeted docs sweep only when needed, against current owning docs
 
 ### Defensive Tests During Refactors
 
-Temporary defensive tests are useful while a migration or extraction is in progress, especially to catch accidental compatibility shims, proxy paths, or retired write surfaces.
-Before closeout, remove those tests unless they enforce a current architecture contract.
-
-If a defensive assertion remains, phrase it around the positive architecture that must hold, such as the owning service boundary, allowed route surface, capability model, or write contract.
-Avoid permanent tests that only enumerate historical "do not restore this old path" cases.
+- Temporary defensive tests are only useful while a migration or extraction is in progress, especially to catch accidental compatibility shims, proxy paths, or retired write surfaces.
+- Before closeout, remove those tests unless they enforce a current architecture contract.
+- When a defensive assertion remains, it must still assert the positive architecture that must hold, such as the owning service boundary, allowed route surface, capability model, or write contract.
+- Do not create permanent tests that enumerate historical "do not restore this old path" cases.
 
 ## 6. Update Docs And Generated Artifacts
 
-When behavior changes, update the owning reference doc in the same change.
+- When behavior changes, update the owning durable reference doc in the same change.
+- Do not treat the parent change request or task plan as a durable doc.
 
 ## 7. Close Out The Work
 

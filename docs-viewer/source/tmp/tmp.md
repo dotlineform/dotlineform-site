@@ -7,7 +7,8 @@ ui_status: draft
 ---
 
 
-
+list document line counts:
+`find ./docs-viewer/source/studio -name "*.md" -type f -print0 | xargs -0 wc -l | sort -nr`
 
 
 ~

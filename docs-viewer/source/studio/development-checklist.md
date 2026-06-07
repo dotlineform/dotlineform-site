@@ -42,7 +42,7 @@ Before moving or adding a Studio route:
 - keep route entry modules as orchestration shells for boot, required elements, event wiring, state handoff, and route-ready projection
 - keep service or mutation behavior in the owning API/domain modules
 - preserve existing DOM ids, `data-role` hooks, ready-state attributes, and UI text contracts unless the slice intentionally changes them
-- add or update a focused smoke for local app route readiness and representative behavior
+- add or update a focused smoke for local app route readiness
 - retire the old Jekyll route file once the local route is verified, unless there is a documented transition reason to keep it
 
 ## Public Link Resolver
@@ -58,38 +58,10 @@ When a route adds or touches public-content links:
 - do not use relative public-content hrefs such as `/works/...`, `/series/...`, `/moments/...`, `/library/`, or `/analysis/` directly in migrated Studio route output
 - do not default to `https://dotlineform.com` unless the action is explicitly a live-site action
 - do not add compatibility redirects or first-party links for retired public catalogue routes
-- keep public catalogue route construction and route-state parsing aligned with `assets/js/public-catalogue-runtime.js`
 - do not add derivable URL fields to generated public payloads unless the exception is documented
 - let missing public preview base config fail visibly rather than silently falling back to the Studio host
 - add smoke assertions that public links start with the configured public preview base
-
-Future route families still need to use the helper if they add public links.
-The current migrated route audit covered the existing local Studio route surfaces, not routes that will be created later.
-
-## Studio Route URL Builder
-
-Configured Studio routes may already contain query state such as `?mode=manage`.
-
-When a browser module appends record parameters to a configured Studio route:
-
-- use `buildStudioRouteUrl(config, routeKey, params)`
-- preserve configured query state such as `mode=manage`
-- avoid hand-built `?` or `&` concatenation for work, series, detail, moment, or tag editor links
-- keep fixed static navigation links acceptable when they do not append dynamic params
-- add smoke assertions for representative generated URLs when route config changes
-
-## UI Catalogue Demos
-
-UI Catalogue demos are first-class Studio reference surfaces even though they do not mutate catalogue data.
-
-Treat them as durable Studio surfaces because they are not public-site pages and otherwise have no visible runtime home.
-
-When changing UI Catalogue demo visibility:
-
-- keep demo markup, CSS, JS, and ready-state contracts separate from production Studio route contracts
-- keep demo routes discoverable from local Studio navigation or an equivalent local Studio entry surface
-- do not treat demos as proof that live production CSS is correct
-- verify representative demo pages through a browser smoke when routing, assets, or demo-ready behavior changes
+- Future route families still need to use the helper if they add public links.
 
 ## Local App JavaScript And Docs Viewer Runtime
 
@@ -156,9 +128,9 @@ Toolchain basics:
 
 When sweeping for stale references:
 
+- scan documents in `./docs-viewer/source/studio`
 - scan active code, config, runtime assets, scripts, tests, and current owning docs relevant to the change
 - scan active request or task docs when closing or updating that request
-- avoid broad historical-doc or log sweeps unless the task is specifically to clean that history
 
 For defensive tests during refactors:
 
@@ -183,7 +155,7 @@ Security defaults:
 - keep docs and examples machine-agnostic unless a local path is explicitly required
 - keep script examples project-local and use current entrypoint families such as `docs-viewer/build/...`, `studio/commands/...`, `studio/services/...`, and `bin/...`
 - do not publish machine-specific usernames, absolute filesystem paths, local mount details, credentials, tokens, or private keys
-- keep local write-service logs minimal and avoid full payload or file-content dumps
+- keep local write-service logs minimal and do not use full payload or file-content dumps
 - keep local write services bound to loopback with narrow write allowlists and localhost-only CORS
 
 ## Source Tree Ownership
@@ -191,19 +163,15 @@ Security defaults:
 When adding or moving repo source:
 
 - use [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) as the maintained ownership contract
-- keep Studio source, local services, frontend modules, checks, tests, UI Catalogue, and workflow source under `studio/`
 - keep public Jekyll layouts, includes, route pages, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
 - keep Docs Viewer source, runtime, CSS, config, build code, and services together under `docs-viewer/`
 - keep local working output, staging, and test logs under `var/` or other ignored output paths
-- do not reintroduce old source homes such as `assets/studio/`, `assets/docs-viewer/`, `_docs_catalogue/`, root `tests/`, root check folders, or `scripts/docs/`
 
 ## Closeout
 
 At closeout:
 
 - summarize changed files and the purpose of the change
-- report verification run and result
-- report generated payloads updated or intentionally not rebuilt
+- report any generated payloads updated
 - update owning docs and any implementation plan, task tracker, or change request status that changed
 - list remaining risks or follow-up tasks
-- mark an owning change request `done` only when durable docs contain the important decisions, verification is recorded, and remaining risks are explicit
