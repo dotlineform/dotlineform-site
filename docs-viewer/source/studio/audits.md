@@ -1,13 +1,13 @@
 ---
-doc_id: studio-audits
-title: Studio Audits
-added_date: 2026-05-03
-last_updated: 2026-06-02
+doc_id: audits
+title: Audits
+added_date: 2026-06-07
+last_updated: 2026-06-07
 parent_id: admin
 ---
-# Studio Audits
+# Audits
 
-Current route:
+Route:
 
 - `/admin/audits/`
 

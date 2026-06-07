@@ -3,7 +3,7 @@ doc_id: docs-viewer-risk-inventory
 title: Docs Viewer Risk Inventory
 added_date: 2026-05-31
 last_updated: 2026-06-06
-parent_id: studio-risk-priority-dashboard
+parent_id: admin
 ---
 # Docs Viewer Risk Inventory
 

@@ -3,7 +3,7 @@ doc_id: studio-app-risk-inventory
 title: Studio App Risk Inventory
 added_date: 2026-05-31
 last_updated: 2026-05-31
-parent_id: studio-risk-priority-dashboard
+parent_id: admin
 ---
 # Studio App Risk Inventory
 

@@ -4,7 +4,7 @@ title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
 last_updated: 2026-06-04
 ui_status: reference
-parent_id: studio-risk-priority-dashboard
+parent_id: admin
 viewable: true
 ---
 # Docs Viewer JavaScript Inventory

@@ -8,11 +8,6 @@ parent_id: admin
 # Local Admin App
 
 This document defines the operational boundary for the Local Admin app server.
-Use [Local Runners](/docs/?scope=studio&doc=scripts-local-studio) for startup behavior and environment variables.
-Use [Testing](/docs/?scope=studio&doc=testing) and [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) for check profile ownership and run-log behavior.
-
-Local Admin is a sibling local app, separate from Local Studio, Local Analytics, Docs Viewer, and public Jekyll preview/build.
-It is the home for cross-repo operational review, risk and audit work, test-run review, and Admin-hosted UI Catalogue routes.
 
 ## Server Boundary
 

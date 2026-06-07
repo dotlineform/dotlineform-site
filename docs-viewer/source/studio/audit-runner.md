@@ -1,11 +1,11 @@
 ---
-doc_id: scripts-studio-audit-service
-title: Studio Audit Runner
-added_date: 2026-05-03
-last_updated: 2026-05-23
+doc_id: audit-runner
+title: Audit Runner
+added_date: 2026-06-07
+last_updated: 2026-06-07
 parent_id: admin
 ---
-# Studio Audit Runner
+# Audit Runner
 
 Script:
 
@@ -13,15 +13,14 @@ Script:
 $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
 ```
 
-Normal local sessions do not start a standalone audit service because the Admin app server owns the active audit HTTP surface through `admin-app/app/server/admin_app/admin_audit_api.py`.
-For Codex automation, call `admin-app/app/server/admin_app/audit_runner.py` directly instead of starting a sibling localhost service.
-Risk-related audits follow the same rule: use the Admin app server and allowlisted audit runner, not a separate risk server.
+- Normal local sessions do not start a standalone audit service because the Admin app server owns the active audit HTTP surface through `admin-app/app/server/admin_app/admin_audit_api.py`.
+- For Codex automation, call `admin-app/app/server/admin_app/audit_runner.py` directly instead of starting a sibling localhost service.
+- Risk-related audits follow the same rule: use the Admin app server and allowlisted audit runner, not a separate risk server.
 
 ## Purpose
 
-The audit runner owns the allowlisted Studio maintenance audit registry and direct audit execution behavior.
+The audit runner owns the allowlisted maintenance audit registry and direct audit execution behavior.
 The active Admin browser endpoints are served by `admin-app/app/server/admin_app/admin_audit_api.py`, which imports the runner module.
-The retired standalone audit HTTP wrapper is no longer part of the local development stack.
 
 The first allowlisted audit is:
 
@@ -68,4 +67,4 @@ When the request includes valid Admin activity context from `/admin/audits/`, th
 - does not accept browser-controlled paths, flags, environment, or working directories
 - runs commands without a shell
 - writes only minimal local logs under `var/admin/audits/logs/`
-- writes unified activity rows only through the fixed local activity feed paths owned by `studio/shared/python/studio_activity.py`
+- writes unified activity rows only through the fixed local activity feed paths
