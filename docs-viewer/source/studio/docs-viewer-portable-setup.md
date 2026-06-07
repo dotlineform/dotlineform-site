@@ -13,9 +13,6 @@ This document answers two practical questions from the current implementation st
 - what must be copied into an existing Jekyll project to use the Docs Viewer
 - how to set up a new Library-style docs scope with one local management view and one read-only public view
 
-It intentionally describes the current repo as it is now after the initial shell/service extraction.
-The older portability plan for reducing host integration work lives in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
-
 ## Current Shape
 
 The Docs Viewer is not a separately packaged plugin yet.
@@ -38,8 +35,3 @@ It can switch the active scope with the `scope` query parameter.
 - [File Manifest](/docs/?scope=studio&doc=docs-viewer-portable-files) lists the current include, runtime, CSS, config, generated-output, script, dependency, and management-server copy set.
 - [Source Shape](/docs/?scope=studio&doc=docs-viewer-portable-source-shape) defines the required Markdown/front-matter shape for portable scopes.
 - [Scope Setup](/docs/?scope=studio&doc=docs-viewer-portable-scope-setup) gives the current Library-style scope setup procedure.
-
-## Related Planning
-
-Use this page as the current install guide.
-Use [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) for the ordered work to reduce hardcoded scope lists, move docs search under Docs Viewer ownership, extract CSS/config, and package the local management/import surface.

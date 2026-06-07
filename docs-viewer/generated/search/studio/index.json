@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cccdd2d3b0a88e41ed5ddfc75c8bec1c",
-    "generated_at_utc": "2026-06-07T17:42:11Z",
-    "count": 214
+    "version": "blake2b-73a6c490b0e3693eaaa4fab563d76390",
+    "generated_at_utc": "2026-06-07T18:12:09Z",
+    "count": 208
   },
   "entries": [
     {
@@ -862,62 +862,6 @@
       "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
     },
     {
-      "id": "site-request-catalogue-save-build-diagnostics",
-      "kind": "doc",
-      "title": "Catalogue Save Build Diagnostics Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-save-build-diagnostics",
-      "last_updated": "2026-05-31",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-31 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-save-build-diagnostics",
-        "site",
-        "request",
-        "catalogue",
-        "save",
-        "build",
-        "diagnostics",
-        "catalogue save build diagnostics request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-31",
-        "2026",
-        "05",
-        "31"
-      ],
-      "search_text": "site-request-catalogue-save-build-diagnostics site request catalogue save build diagnostics catalogue save build diagnostics request change requests change requests 2026-05-31 2026 05 31"
-    },
-    {
-      "id": "site-request-catalogue-work-unified-editor",
-      "kind": "doc",
-      "title": "Catalogue Work Unified Editor Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-work-unified-editor",
-        "site",
-        "request",
-        "catalogue",
-        "work",
-        "unified",
-        "editor",
-        "catalogue work unified editor request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-catalogue-work-unified-editor site request catalogue work unified editor catalogue work unified editor request change requests change requests 2026-05-02 2026 05 02"
-    },
-    {
       "id": "site-request-docs-semantic-references-v2",
       "kind": "doc",
       "title": "Docs Semantic References v2 Request",
@@ -1004,33 +948,6 @@
       "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
     },
     {
-      "id": "site-request-json-schema-adoption",
-      "kind": "doc",
-      "title": "JSON Schema Adoption Request",
-      "href": "/docs/?scope=studio&doc=site-request-json-schema-adoption",
-      "last_updated": "2026-05-26",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-26 • Change Requests",
-      "search_terms": [
-        "site-request-json-schema-adoption",
-        "site",
-        "request",
-        "json",
-        "schema",
-        "adoption",
-        "json schema adoption request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-26 2026 05 26"
-    },
-    {
       "id": "site-request-library-import-generated-parent-nodes",
       "kind": "doc",
       "title": "Library Import Generated Parent Nodes Request",
@@ -1060,33 +977,6 @@
         "26"
       ],
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
-    },
-    {
-      "id": "site-request-portable-docs-viewer",
-      "kind": "doc",
-      "title": "Portable Docs Viewer Request",
-      "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-27",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-27 • Change Requests",
-      "search_terms": [
-        "site-request-portable-docs-viewer",
-        "site",
-        "request",
-        "portable",
-        "docs",
-        "viewer",
-        "portable docs viewer request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-27",
-        "2026",
-        "05",
-        "27"
-      ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-27 2026 05 27"
     },
     {
       "id": "site-request-public-static-site-build",
@@ -1224,63 +1114,6 @@
         "07"
       ],
       "search_text": "risk-runtime-browser-evidence-plan risk runtime browser evidence plan risk runtime browser evidence - plan risk evidence producers request producers request 2026-06-07 2026 06 07"
-    },
-    {
-      "id": "site-request-studio-activity-follow-ups",
-      "kind": "doc",
-      "title": "Studio Activity Follow-Ups",
-      "href": "/docs/?scope=studio&doc=site-request-studio-activity-follow-ups",
-      "last_updated": "2026-05-08 21:36",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 21:36 • Change Requests",
-      "search_terms": [
-        "site-request-studio-activity-follow-ups",
-        "site",
-        "request",
-        "studio",
-        "activity",
-        "follow",
-        "ups",
-        "studio activity follow-ups",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-08 21:36",
-        "2026",
-        "05",
-        "08",
-        "21",
-        "36"
-      ],
-      "search_text": "site-request-studio-activity-follow-ups site request studio activity follow ups studio activity follow-ups change requests change requests 2026-05-08 21:36 2026 05 08 21 36"
-    },
-    {
-      "id": "site-request-studio-audits-page",
-      "kind": "doc",
-      "title": "Studio Audits Page Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-audits-page",
-      "last_updated": "2026-05-03",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
-      "search_terms": [
-        "site-request-studio-audits-page",
-        "site",
-        "request",
-        "studio",
-        "audits",
-        "page",
-        "studio audits page request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "site-request-studio-audits-page site request studio audits page studio audits page request change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "data-sharing",

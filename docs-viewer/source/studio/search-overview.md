@@ -124,12 +124,11 @@ Current build behavior:
 
 ## Extraction Direction
 
-The next cleanup should package the route adapter pattern and continue removing dotlineform-specific assumptions from Docs Viewer management and import flows.
-3. Move docs-search policy into Docs Viewer config/runtime.
-4. Keep Catalogue search build/runtime policy separate.
-5. Share only low-level helpers that are genuinely domain-neutral.
+The next work should package the route adapter pattern and continue removing dotlineform-specific assumptions from Docs Viewer management and import flows.
 
-The broader ordered plan is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
+- Move docs-search policy into Docs Viewer config/runtime.
+- Keep Catalogue search build/runtime policy separate.
+- Share only low-level helpers that are genuinely domain-neutral.
 
 ## Design Principles
 
@@ -162,4 +161,3 @@ As docs search moves under Docs Viewer, its policy should be documented there or
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)

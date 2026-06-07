@@ -209,18 +209,6 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
-          "doc_id": "site-request-catalogue-save-build-diagnostics",
-          "title": "Catalogue Save Build Diagnostics Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-save-build-diagnostics.json",
-          "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-catalogue-work-unified-editor",
-          "title": "Catalogue Work Unified Editor Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-work-unified-editor.json",
-          "ui_status": "paused"
-        },
-        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -239,22 +227,10 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-json-schema-adoption",
-          "title": "JSON Schema Adoption Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-json-schema-adoption.json",
-          "ui_status": "deferred"
-        },
-        {
           "doc_id": "site-request-library-import-generated-parent-nodes",
           "title": "Library Import Generated Parent Nodes Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-library-import-generated-parent-nodes.json",
-          "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-portable-docs-viewer",
-          "title": "Portable Docs Viewer Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-          "ui_status": "paused"
+          "ui_status": "draft"
         },
         {
           "doc_id": "site-request-public-static-site-build",
@@ -287,18 +263,6 @@
               "ui_status": "draft"
             }
           ]
-        },
-        {
-          "doc_id": "site-request-studio-activity-follow-ups",
-          "title": "Studio Activity Follow-Ups",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-activity-follow-ups.json",
-          "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-studio-audits-page",
-          "title": "Studio Audits Page Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-audits-page.json",
-          "ui_status": "paused"
         }
       ]
     },
@@ -1158,5 +1122,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T17:42:11Z"
+  "generated_at": "2026-06-07T18:15:27Z"
 }

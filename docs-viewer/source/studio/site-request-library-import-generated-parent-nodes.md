@@ -3,7 +3,7 @@ doc_id: site-request-library-import-generated-parent-nodes
 title: Library Import Generated Parent Nodes Request
 added_date: 2026-05-04
 last_updated: "2026-05-04 23:26"
-ui_status: paused
+ui_status: draft
 parent_id: change-requests
 viewable: true
 ---
@@ -114,67 +114,3 @@ Apply should:
 - Should generated parent docs have an empty body, a generated summary body, or a short review-only placeholder body?
 - Should generated parent node creation be selectable independently from child reparenting, or should selected children implicitly include the parent nodes needed by their mapping?
 - Should generated parent nodes be marked with `ui_status`, `node_kind`, or another front-matter field for later auditing?
-
-## Draft Implementation Tasks
-
-### Task 1. Define Import JSON Shape
-
-Status:
-
-- proposed
-
-Decide the exact `new_parent_nodes` shape and update parser detection, preview output, and docs.
-
-### Task 2. Extend Preview Reporting
-
-Status:
-
-- proposed
-
-Show declared generated parent nodes separately from existing document rows, including collisions, missing declarations, and proposed nesting.
-
-### Task 3. Add Preflight Contract
-
-Status:
-
-- proposed
-
-Extend hierarchy apply preflight to include create counts, reparent counts, reused parent counts, warnings, errors, and selected-row impact.
-
-### Task 4. Implement Source Creation
-
-Status:
-
-- proposed
-
-Create missing parent docs under `docs-viewer/source/library/` before applying selected child parent changes, with backups and source-write allowlists.
-
-### Task 5. Add Studio UI Review
-
-Status:
-
-- proposed
-
-Update `/studio/import/` so generated parent nodes are visible before apply and so the confirmation modal distinguishes creates from reparent writes.
-
-### Task 6. Add Verification
-
-Status:
-
-- proposed
-
-Add parser, service, and smoke coverage for declared parent node creation, undeclared unknown parents, duplicate generated ids, partial selection, backup creation, and generated Library docs output.
-
-## Benefits And Risks
-
-Benefits:
-
-- makes external hierarchy organization useful when the best hierarchy requires new grouping nodes
-- keeps model-generated structure auditable by requiring explicit node declarations
-- avoids silently converting every unknown `parent_id` into a new source doc
-
-Risks:
-
-- generated parent docs can clutter the Library if the external prompt creates too many weak groupings
-- source creation expands the blast radius beyond current parent-id-only writes
-- prompts and validation need to be strict enough that generated ids stay stable and reviewable

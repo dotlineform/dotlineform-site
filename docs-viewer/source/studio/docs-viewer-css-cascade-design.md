@@ -10,9 +10,12 @@ viewable: true
 
 ## Summary
 
-Docs Viewer should be portable without becoming visually isolated from the site that hosts it.
-Public host routes should provide page layout, prose defaults, and public-site chrome.
-Docs Viewer should provide its own portable base contract plus shell, navigation, search, result, bookmark, status, report, and management component styles.
+- Docs Viewer should be portable without becoming visually isolated from the site that hosts it.
+- Public host routes should provide page layout, prose defaults, and public-site chrome.
+- Docs Viewer should provide its own portable base contract plus shell, navigation, search, result, bookmark, status, report, and management component styles.
+- Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
+- Docs Viewer does not require the public host stylesheet to function.
+- The Docs Viewer include adds only Docs Viewer-owned stylesheets.
 
 ## Target Stylesheet Order
 
@@ -27,10 +30,6 @@ The intended cascade for local or standalone management routes is:
 2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
 3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
 4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
-
-Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
-Docs Viewer does not require the public host stylesheet to function.
-The Docs Viewer include adds only Docs Viewer-owned stylesheets.
 
 ## Host Stylesheet Responsibilities
 
@@ -48,8 +47,7 @@ Generated docs HTML is rendered inside:
 <div class="docsViewer__content content" id="docsViewerContent"></div>
 ```
 
-The `content` class is intentional.
-It lets generated markdown output inherit the host project's document typography and media behavior instead of requiring Docs Viewer to recreate every prose rule.
+The `content` class is intentional. It lets generated markdown output inherit the host project's document typography and media behavior instead of requiring Docs Viewer to recreate every prose rule.
 
 ## Docs Viewer Basic Stylesheet Responsibilities
 
@@ -189,6 +187,5 @@ After changing the cascade:
 
 ## Related Docs
 
-- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
