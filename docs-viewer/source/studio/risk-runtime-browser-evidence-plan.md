@@ -1,15 +1,15 @@
 ---
-doc_id: studio-risk-runtime-browser-evidence
-title: Studio Risk Runtime Browser Evidence
+doc_id: risk-runtime-browser-evidence-plan
+title: Risk Runtime Browser Evidence - Plan
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-07
 ui_status: draft
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
-# Studio Risk Runtime Browser Evidence
+# Risk Runtime Browser Evidence - Plan
 
-This document defines how runtime, Playwright, browser-devtools, and Lighthouse evidence should enter a [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+This document defines how runtime, Playwright, browser-devtools, and Lighthouse evidence should enter the [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
 
 ## Current Status
 
@@ -21,7 +21,7 @@ Implemented:
 - allowlisted `admin-app/commands/run_checks.py` profiles through `--runtime-profile`
 - `runtime-checks.json` summary records with profile names, exit codes, and linked `var/admin/test-runs/.../summary.md` paths
 
-Deferred:
+Not done:
 
 - Lighthouse execution
 - browser performance trace capture
@@ -40,8 +40,7 @@ Deferred:
 
 ## Lighthouse Integration Contract
 
-Lighthouse must not run against arbitrary browser-provided URLs.
-Before implementation, define an allowlisted target contract.
+Lighthouse must not run against arbitrary browser-provided URLs. Before implementation, define an allowlisted target contract.
 
 Recommended target config shape:
 

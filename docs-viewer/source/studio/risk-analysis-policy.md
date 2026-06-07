@@ -12,7 +12,7 @@ This document defines how risk analysis is classified, prioritised, and closed.
 - Risk analysis is an action-selection tool.
 - It should identify where a focused improvement will reduce the chance of breakage, accumulated drift, costly repair, or strategic blockage.
 - The expected output is a concrete app-improvement action with evidence that the relevant risk indicator moved.
-- The target artifact contract is [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+- The target artifact contract is [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
 
 ## Actual Risks
 

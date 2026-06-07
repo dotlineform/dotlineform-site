@@ -1,22 +1,22 @@
 ---
-doc_id: studio-risk-route-exposure-evidence
-title: Studio Risk Route Exposure Evidence
+doc_id: risk-route-exposure-evidence-plan
+title: Risk Route Exposure Evidence - Plan
 added_date: 2026-05-31
-last_updated: 2026-05-31
+last_updated: 2026-06-07
 ui_status: draft
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
-# Studio Risk Route Exposure Evidence
+# Risk Route Exposure Evidence - Plan
 
-This document defines the planned `route-exposure.json` producer for [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+This document defines the planned `route-exposure.json` producer for [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
 
 ## Current Status
 
 Status: planned.
 
-`route-exposure.json` is a planned producer artifact tracked by [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
-The runner currently omits it.
+`route-exposure.json` is a planned producer artifact tracked by [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers). The runner currently omits it.
+
 The producer should answer which routes are public, local-only, manage-only, or retired, and which runtime assets and service surfaces each route exposes.
 
 ## Purpose
@@ -96,10 +96,3 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 5 | planned | Add public/manage leakage checks, starting with Docs Viewer public read-only routes and management-only assets. |
 | 6 | planned | Add tests using small fixture route/config files. |
 | 7 | planned | Summarize route counts and warnings in `summary.json` and `summary.md`. |
-
-## Non-Goals
-
-- crawling every generated public page
-- proving route behavior by browser execution; use runtime/browser evidence for that
-- treating static route presence as write authority
-- adding browser-controlled path or route inputs

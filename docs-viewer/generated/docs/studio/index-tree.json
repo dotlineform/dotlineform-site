@@ -209,78 +209,6 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
-          "doc_id": "site-request-admin-app-structure",
-          "title": "Admin App Structure Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-admin-app-structure-tasks",
-              "title": "Admin App Structure Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-tasks.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-1",
-                  "title": "Admin App Structure Batch 1",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-1.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-2",
-                  "title": "Admin App Structure Batch 2",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-2.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-3",
-                  "title": "Admin App Structure Batch 3",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-3.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-4",
-                  "title": "Admin App Structure Batch 4",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-4.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-5",
-                  "title": "Admin App Structure Batch 5",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-5.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-admin-app-structure-batch-6",
-                  "title": "Admin App Structure Batch 6",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-app-structure-batch-6.json",
-                  "ui_status": "done"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-analytics-app-split",
-          "title": "Analytics App Split Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-analytics-app-split-follow-on",
-              "title": "Analytics App Split Follow-On Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-follow-on.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-analytics-app-split-tasks",
-              "title": "Analytics App Split Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-analytics-app-split-tasks.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-catalogue-save-build-diagnostics",
           "title": "Catalogue Save Build Diagnostics Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-save-build-diagnostics.json",
@@ -293,191 +221,9 @@
           "ui_status": "paused"
         },
         {
-          "doc_id": "site-request-data-sharing-docs-internal-index",
-          "title": "Data Sharing Docs Source Metadata Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-data-sharing-docs-internal-index-tasks",
-              "title": "Data Sharing Docs Source Metadata Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-tasks.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "site-request-data-sharing-docs-internal-index-batch-1",
-                  "title": "Data Sharing Docs Source Metadata Batch 1",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-1.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-data-sharing-docs-internal-index-batch-2",
-                  "title": "Data Sharing Docs Source Metadata Batch 2",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-2.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-data-sharing-docs-internal-index-batch-3",
-                  "title": "Data Sharing Docs Source Metadata Batch 3",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-3.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-data-sharing-docs-internal-index-batch-4",
-                  "title": "Data Sharing Docs Source Metadata Batch 4",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-4.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-data-sharing-docs-internal-index-batch-5",
-                  "title": "Data Sharing Docs Source Metadata Batch 5",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-docs-internal-index-batch-5.json",
-                  "ui_status": "done"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
-          "ui_status": "draft",
-          "children": [
-            {
-              "doc_id": "site-request-docs-semantic-references",
-              "title": "Docs Semantic References Request",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references.json",
-              "ui_status": "paused"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-docs-toolkit-extraction",
-          "title": "Docs Toolkit Extraction Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-toolkit-extraction.json",
-          "ui_status": "deferred"
-        },
-        {
-          "doc_id": "site-request-docs-viewer-markdown-editor",
-          "title": "Docs Viewer Markdown Editor Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-docs-viewer-markdown-editor-tasks",
-              "title": "Docs Viewer Markdown Editor Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-markdown-editor-tasks.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-docs-viewer-pre-editor-work",
-              "title": "Docs Viewer Pre-Editor Work Request",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-docs-viewer-pre-editor-work-tasks",
-              "title": "Docs Viewer Pre-Editor Work Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-pre-editor-work-tasks.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-docs-viewer-multi-panel-app-shell",
-          "title": "Docs Viewer Multi-Panel App Shell Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-          "ui_status": "done"
-        },
-        {
-          "doc_id": "site-request-docs-viewer-public-index-slimming",
-          "title": "Docs Viewer Public Index Slimming Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-docs-viewer-public-index-slimming-tasks",
-              "title": "Docs Viewer Public Index Slimming Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-tasks.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-1",
-                  "title": "Docs Viewer Public Index Slimming Batch 1",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-1.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-2",
-                  "title": "Docs Viewer Public Index Slimming Batch 2",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-2.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3",
-                  "title": "Docs Viewer Public Index Slimming Batch 3",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-3a",
-                  "title": "Docs Viewer Public Index Slimming Batch 3a",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-3a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-4",
-                  "title": "Docs Viewer Public Index Slimming Batch 4",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-4.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-5",
-                  "title": "Docs Viewer Public Index Slimming Batch 5",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-5.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-6",
-                  "title": "Docs Viewer Public Index Slimming Batch 6",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-6.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-7",
-                  "title": "Docs Viewer Public Index Slimming Batch 7",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-7.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "site-request-docs-viewer-public-index-slimming-batch-8",
-                  "title": "Docs Viewer Public Index Slimming Batch 8",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-index-slimming-batch-8.json",
-                  "ui_status": "done"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-docs-viewer-public-manage-entrypoints",
-          "title": "Docs Viewer Public/Manage Entrypoint Split Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-docs-viewer-public-manage-entrypoints-baseline",
-              "title": "Docs Viewer Public/Manage Entrypoint Baseline Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-public-manage-entrypoints-baseline.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-docs-viewer-runtime-risk-reduction",
-          "title": "Docs Viewer Runtime Risk Reduction Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-risk-reduction.json",
           "ui_status": "draft"
         },
         {
@@ -508,43 +254,13 @@
           "doc_id": "site-request-portable-docs-viewer",
           "title": "Portable Docs Viewer Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer.json",
-          "ui_status": "paused",
-          "children": [
-            {
-              "doc_id": "site-request-portable-docs-viewer-public-fixture-tasks",
-              "title": "Portable Docs Viewer Public Fixture Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-portable-docs-viewer-public-fixture-tasks.json",
-              "ui_status": "urgent"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-public-route-simplification",
-          "title": "Public Route Simplification Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-public-route-simplification-tasks",
-              "title": "Public Route Simplification Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-route-simplification-tasks.json",
-              "ui_status": "done"
-            }
-          ]
+          "ui_status": "paused"
         },
         {
           "doc_id": "site-request-public-static-site-build",
           "title": "Public Static Site Build Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
-          "ui_status": "draft",
-          "children": [
-            {
-              "doc_id": "site-request-public-static-site-build-tasks",
-              "title": "Public Static Site Build Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build-tasks.json",
-              "ui_status": "draft"
-            }
-          ]
+          "ui_status": "draft"
         },
         {
           "doc_id": "site-request-r2-media-upload-automation",
@@ -556,39 +272,19 @@
           "doc_id": "site-request-risk-evidence-producers",
           "title": "Risk Evidence Producers Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "in-progress",
+          "ui_status": "draft",
           "children": [
             {
-              "doc_id": "studio-risk-evidence-producer-roadmap",
-              "title": "Studio Risk Evidence Producer Roadmap",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-evidence-producer-roadmap.json",
+              "doc_id": "risk-route-exposure-evidence-plan",
+              "title": "Risk Route Exposure Evidence - Plan",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-route-exposure-evidence-plan.json",
               "ui_status": "draft"
             },
             {
-              "doc_id": "studio-risk-route-exposure-evidence",
-              "title": "Studio Risk Route Exposure Evidence",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-route-exposure-evidence.json",
+              "doc_id": "risk-runtime-browser-evidence-plan",
+              "title": "Risk Runtime Browser Evidence - Plan",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-runtime-browser-evidence-plan.json",
               "ui_status": "draft"
-            },
-            {
-              "doc_id": "studio-risk-runtime-browser-evidence",
-              "title": "Studio Risk Runtime Browser Evidence",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-runtime-browser-evidence.json",
-              "ui_status": "draft"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-rubyless-app-runtimes",
-          "title": "Rubyless App Runtimes Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-rubyless-app-runtimes-tasks",
-              "title": "Rubyless App Runtimes Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-rubyless-app-runtimes-tasks.json",
-              "ui_status": "done"
             }
           ]
         },
@@ -603,50 +299,6 @@
           "title": "Studio Audits Page Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-audits-page.json",
           "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-studio-javascript-app-shell",
-          "title": "Studio JavaScript App Shell Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-1",
-              "title": "Studio JavaScript App Shell Slice 1 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-1.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-2",
-              "title": "Studio JavaScript App Shell Slice 2 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-2.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-3",
-              "title": "Studio JavaScript App Shell Slice 3 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-3.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-4",
-              "title": "Studio JavaScript App Shell Slice 4 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-4.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-5",
-              "title": "Studio JavaScript App Shell Slice 5 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-5.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-studio-javascript-app-shell-slice-6",
-              "title": "Studio JavaScript App Shell Slice 6 Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-javascript-app-shell-slice-6.json",
-              "ui_status": "done"
-            }
-          ]
         }
       ]
     },
@@ -1506,5 +1158,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T16:15:26Z"
+  "generated_at": "2026-06-07T17:02:56Z"
 }
