@@ -10,26 +10,6 @@ ui_status: draft
 
 
 
-# tmp
-
-## Evidence Validity
-
-Risk evidence must test whether scripts, config keys, generated config payloads, and generated artifacts have an active workflow purpose.
-Ownership is necessary but not sufficient: a script, config key, or generated file can be correctly owned and still be harmful if its contract is speculative, unused, duplicated, or exposed to the wrong runtime surface.
-
-For script, config, and generated-artifact evidence, summaries should distinguish:
-
-- consumed by an active runtime, report, build, test, or documented operator workflow
-- retained only as source-of-truth input
-- browser-visible config or payload field with a current UI/runtime consumer
-- server-only source path, write target, adapter contract, output pattern, metadata contract, or activity-emitter field
-- transitional evidence with a retirement or migration task
-- unconsumed output that should be removed, stopped at the producer, or replaced with a smaller contract
-
-Temporary generated artifacts still need a consumer or explicit cleanup path.
-Do not treat "has an owner" as proof that the artifact should continue to exist.
-For browser-visible config evidence, record whether the field is part of an explicit whitelist or broad pass-through projection.
-
 ~
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,

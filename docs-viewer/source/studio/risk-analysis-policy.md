@@ -38,7 +38,21 @@ The actual risks this policy is trying to prevent are:
 - Frontend and backend evidence should be reviewed together when they belong to the same app.
 - The action should improve the app, not send the work into a technical rabbit hole because one layer has a convenient table.
 
-### Deterministic Inputs
+## Evidence Validity
+
+Risk evidence must test whether scripts, config keys, generated config payloads, and generated artifacts have an active workflow purpose.
+Ownership is necessary but not sufficient: a script, config key, or generated file can be correctly owned and still be harmful if its contract is speculative, unused, duplicated, or exposed to the wrong runtime surface.
+
+For script, config, and generated-artifact evidence, risk analysis should distinguish:
+
+- consumed by an active runtime, report, build, test, or documented operator workflow
+- retained only as source-of-truth input
+- browser-visible config or payload field with a current UI/runtime consumer
+- server-only source path, write target, adapter contract, output pattern, metadata contract, or activity-emitter field
+- transitional evidence with a retirement or migration task
+- unconsumed output that should be removed, stopped at the producer, or replaced with a smaller contract
+- for browser-visible config evidence, whether the field is part of an explicit whitelist or broad pass-through projection.
+- Do not treat "has an owner" as proof that the artifact should continue to exist. Temporary generated artifacts still need a consumer or explicit cleanup path.
 
 Useful deterministic inputs include:
 
@@ -164,10 +178,7 @@ Evidence of improvement:
 
 Each app has its own order of importance for the same indicator categories. It is a practical priority order for deciding what becomes actionable first.
 
-Examples:
-
-- high local-service elapsed time is not automatically a top Studio priority unless it affects development speed, hides repeated broad work, or blocks a higher-priority structural/workflow concern.
-- a local server path can have high performance risk, but if performance is low in that app's priority order then other work may take priority.
+For example: local-service elapsed time is not automatically a priority indicator unless it affects development speed, hides repeated broad work, or blocks a higher-priority structural/workflow concern. A local server path can have high performance risk, but if performance is low in that app's priority order then other work may take priority.
 
 ### Public Site
 
