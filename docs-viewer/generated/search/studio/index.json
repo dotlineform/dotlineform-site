@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5d18a62ef0b8b7a854be0bb58811e136",
-    "generated_at_utc": "2026-06-07T16:04:28Z",
+    "version": "blake2b-befab529751dc04c5f6d405ad423fe82",
+    "generated_at_utc": "2026-06-07T16:15:26Z",
     "count": 267
   },
   "entries": [
@@ -23,17 +23,15 @@
       "search_text": "admin 2026-06-06 2026 06"
     },
     {
-      "id": "studio-activity",
+      "id": "activity",
       "kind": "doc",
       "title": "Activity Report",
-      "href": "/docs/?scope=studio&doc=studio-activity",
+      "href": "/docs/?scope=studio&doc=activity",
       "last_updated": "2026-06-06",
       "parent_id": "admin",
       "parent_title": "Admin",
       "display_meta": "2026-06-06 • Admin",
       "search_terms": [
-        "studio-activity",
-        "studio",
         "activity",
         "activity report",
         "report",
@@ -42,7 +40,7 @@
         "2026",
         "06"
       ],
-      "search_text": "studio-activity studio activity activity report report admin 2026-06-06 2026 06"
+      "search_text": "activity activity report report admin 2026-06-06 2026 06"
     },
     {
       "id": "audit-runner",
