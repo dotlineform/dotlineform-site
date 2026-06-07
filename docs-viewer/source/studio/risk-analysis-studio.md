@@ -1,11 +1,11 @@
 ---
-doc_id: roisk-analysis-studio
-title: Risk Analysis - Studio
+doc_id: risk-analysis-studio
+title: Risk Analysis - Studio App
 added_date: 2026-06-07
 last_updated: 2026-06-07
 parent_id: admin
 ---
-# Risk Annlysis - Stusio
+# Risk Analysis - Studio App
 
 Policy: [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy).
 

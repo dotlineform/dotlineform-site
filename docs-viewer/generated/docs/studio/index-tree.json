@@ -17,11 +17,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json"
         },
         {
-          "doc_id": "analytics-risk-inventory",
-          "title": "Analytics Risk Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json"
-        },
-        {
           "doc_id": "audit-runner",
           "title": "Audit Runner",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json"
@@ -43,6 +38,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
         },
         {
+          "doc_id": "risk-analysis-analytics",
+          "title": "Risk Analysis - Analytics App",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-analytics.json"
+        },
+        {
           "doc_id": "risk-analysis-docs-viewer",
           "title": "Risk Analysis - Docs Viewer",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-docs-viewer.json"
@@ -53,9 +53,9 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-public-site.json"
         },
         {
-          "doc_id": "roisk-analysis-studio",
-          "title": "Risk Analysis - Studio",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/roisk-analysis-studio.json"
+          "doc_id": "risk-analysis-studio",
+          "title": "Risk Analysis - Studio App",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-studio.json"
         },
         {
           "doc_id": "risk-analysis-policy",
@@ -1506,5 +1506,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T15:59:33Z"
+  "generated_at": "2026-06-07T16:04:22Z"
 }
