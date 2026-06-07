@@ -3,9 +3,7 @@ doc_id: public-site-risk-inventory
 title: Public Site Risk Inventory
 added_date: 2026-05-31
 last_updated: 2026-05-31
-ui_status: draft
 parent_id: studio-risk-priority-dashboard
-viewable: true
 ---
 # Public Site Risk Inventory
 

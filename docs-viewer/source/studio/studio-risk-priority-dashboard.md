@@ -3,7 +3,6 @@ doc_id: studio-risk-priority-dashboard
 title: Studio Risk Priority Dashboard
 added_date: 2026-05-31
 last_updated: 2026-05-31
-ui_status: review
 parent_id: admin
 ---
 # Studio Risk Priority Dashboard

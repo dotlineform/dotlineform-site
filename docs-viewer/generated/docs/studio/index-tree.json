@@ -17,12 +17,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-activity.json"
         },
         {
-          "doc_id": "docs-viewer-javascript-inventory",
-          "title": "Docs Viewer JavaScript Inventory",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-          "ui_status": "reference"
-        },
-        {
           "doc_id": "local-admin-app",
           "title": "Local Admin App",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
@@ -60,46 +54,38 @@
         {
           "doc_id": "studio-risk-analysis-policy",
           "title": "Studio Risk Analysis Policy",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json",
-          "ui_status": "review",
-          "children": [
-            {
-              "doc_id": "javascript-inventory",
-              "title": "Javascript Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-              "ui_status": "reference"
-            }
-          ]
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-analysis-policy.json"
         },
         {
           "doc_id": "studio-risk-priority-dashboard",
           "title": "Studio Risk Priority Dashboard",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-risk-priority-dashboard.json",
-          "ui_status": "review",
           "children": [
             {
               "doc_id": "analytics-risk-inventory",
               "title": "Analytics Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json",
-              "ui_status": "draft"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-risk-inventory.json"
+            },
+            {
+              "doc_id": "docs-viewer-javascript-inventory",
+              "title": "Docs Viewer JavaScript Inventory",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
+              "ui_status": "reference"
             },
             {
               "doc_id": "docs-viewer-risk-inventory",
               "title": "Docs Viewer Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json",
-              "ui_status": "draft"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-risk-inventory.json"
             },
             {
               "doc_id": "public-site-risk-inventory",
               "title": "Public Site Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json",
-              "ui_status": "draft"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/public-site-risk-inventory.json"
             },
             {
               "doc_id": "studio-app-risk-inventory",
               "title": "Studio App Risk Inventory",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json",
-              "ui_status": "draft"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-app-risk-inventory.json"
             }
           ]
         }
@@ -1533,5 +1519,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T14:01:10Z"
+  "generated_at": "2026-06-07T15:09:15Z"
 }

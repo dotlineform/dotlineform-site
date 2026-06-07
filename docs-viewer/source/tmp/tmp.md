@@ -7,9 +7,7 @@ ui_status: draft
 ---
 
 
-File	Focus
-docs-viewer/runtime/js/docs-viewer-app-runtime.js	Private runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain.
-docs-viewer/runtime/js/docs-viewer-management-modals.js	management modal controller after transient modal shell and metadata parent-picker extraction.
+
 
 
 # tmp
