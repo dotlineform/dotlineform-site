@@ -219,11 +219,4 @@ It reads catalogue records, records target status, warns for missing/non-publish
 [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) owns the decision about whether to:
 
 - preserve this host-aware validation as intentional current behavior
-- or refactor semantic references so allowed type/action references render route-derived links and missing targets become separate link-health/editor-support findings
-
-## Historical And Follow-On Docs
-
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references) records the original v1 request.
-- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) records the follow-on alignment request.
-- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor) records the planned manage-mode Markdown editor.
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) records the planned semantic-token insertion support inside that editor.
+- or refactor semantic references so allowed type/action references render route-derived links and missing targets become separate link-health/editor-support findings.

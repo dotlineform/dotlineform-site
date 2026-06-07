@@ -46,10 +46,3 @@ Strict mode exits non-zero for warnings as well as errors. Without `--strict`, w
 The `quick` profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` includes this audit in strict mode.
 
 `--json` emits the same pass/fail status, counts, totals, and findings as structured JSON for the Admin audit route and API under `/admin/audits/`.
-
-## Related References
-
-- [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)
-- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
-- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
-- [Studio Audits](/docs/?scope=studio&doc=studio-audits)

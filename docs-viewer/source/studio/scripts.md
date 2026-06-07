@@ -31,8 +31,14 @@ For test strategy and profile selection, see [Testing](/docs/?scope=studio&doc=t
 ## Checks And Audits
 
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) is the entry point for check profiles and local run logs.
-- [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service) covers the allowlisted audit runner used by Admin audits.
-- [Projection Contract Audit](/docs/?scope=studio&doc=scripts-audit-projection-contract), [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state), [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency), and [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit) cover focused standalone audit commands.
+- [Audit Runner](/docs/?scope=studio&doc=audit-runner) covers the allowlisted audit runner used by Admin audits.
+
+focused standalone audit commands:
+
+- [Projection Contract Audit](/docs/?scope=studio&doc=scripts-audit-projection-contract),
+- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency),
+- [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
 
 ## Docs Viewer
 

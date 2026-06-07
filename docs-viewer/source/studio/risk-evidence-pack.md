@@ -9,7 +9,7 @@ parent_id: admin
 
 This document defines the artifact contract for producing app risk inventories.
 
-The goal is that every deterministic bullet in [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy) can point to:
+The goal is that every deterministic bullet in [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy) can point to:
 
 - a repeatable command or script
 - a machine-readable artifact

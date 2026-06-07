@@ -15,7 +15,7 @@ Status:
 
 ## Summary
 
-Complete the remaining Studio risk evidence producers for inclusion in [Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+Complete the remaining risk evidence producers for inclusion in [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
 
 ## Goals
 

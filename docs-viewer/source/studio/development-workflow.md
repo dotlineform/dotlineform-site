@@ -33,7 +33,7 @@ Use the smallest owning area that explains the change:
 - Studio route behavior: [Studio](/docs/?scope=studio&doc=studio)
 - UI primitives, modal patterns, or layout behavior: [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- Docs Viewer frontend-app architecture work: [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- Docs Viewer frontend-app architecture work: [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
 - Scripts, local services, and command behavior: [Scripts](/docs/?scope=studio&doc=scripts)
 - Source tree ownership or source/public boundary behavior: [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
@@ -76,8 +76,8 @@ This is a list of the most common references within the documenattion:
 - For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 - For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 - For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
-- For browser JavaScript maintenance-risk work, use [Studio Risk Analysis Policy](/docs/?scope=studio&doc=studio-risk-analysis-policy) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
-- For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview), and [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
+- For browser JavaScript maintenance-risk work, use [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy) for scoring.
+- For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview).
 
 If the work needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template).
 
@@ -121,7 +121,6 @@ Before editing, answer:
 - Which module owns that responsibility after the change?
 - Does the route shell keep only orchestration, config handoff, event wiring, ready/busy projection, and calls into focused owners?
 - Is there a focused module smoke check for behavior that moved out of route boot?
-- Does the inventory score need revisiting after the slice?
 
 Refactoring: default rules:
 
@@ -140,27 +139,17 @@ Refactoring: batch sizing:
 
 Task definition checklist:
 
-- target files and current inventory scores
 - responsibility being added, moved, pinned, or deliberately left in place
 - focused owner module after the slice
 - route/controller responsibilities that should remain local
 - behavior that must not be reintroduced into the high-risk file
 - acceptance checks and smoke-test file names
-- inventory rows to revisit after verification
 - owning docs and generated-payload follow-through
-
-For high risk controllers, leave a lightweight owner note in the relevant inventory or child doc when touched:
-
-- what remains in the controller
-- what moved to a focused owner
-- what future changes should use that owner
-- what should not be reintroduced into the controller
 
 Useful checks and follow-through:
 
 - Run `$HOME/miniconda3/bin/python3 admin-app/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
 - Use browser smokes only for integration behavior that needs a browser, such as route boot, service-backed route reads, and representative user workflows. Keep helper contracts in cheaper focused tests; do not create broad browser module-contract suites with duplicated runtime fixtures.
-- After material JavaScript risk-reduction work, update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), and update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when Docs Viewer-specific rows or follow-up tasks changed.
 
 ### Docs Viewer App Architecture Gate
 
@@ -169,7 +158,6 @@ Use this gate before changing Docs Viewer runtime/app architecture, especially w
 The current architecture is documented in:
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary),
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory).
 
 Use durable owner docs for current rules and follow-up notes, not a change request document.
 

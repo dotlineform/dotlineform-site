@@ -25,9 +25,6 @@ The first target is pragmatic rather than package-manager perfect:
 - Docs Viewer-owned import modal and local management server
 - a clear split between reusable Docs Viewer files and project-local route/theme/content files
 
-This request is narrower and more implementation-oriented than [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction).
-It uses the current dotlineform implementation as the first consumer and focuses on making the Docs Viewer self-contained enough to copy into another Jekyll repo.
-
 Current clarification:
 
 - Docs Viewer runtime, server/services, source config, UI text, CSS, assets, build scripts, and Docs Viewer source Markdown now live under the tracked top-level `docs-viewer/` boundary
@@ -485,8 +482,6 @@ Use two fixture proof levels.
 This should be the first portability fixture.
 It proves the static/read-only Docs Viewer contract for a host project that is not dotlineform.
 
-Task tracker: [Portable Docs Viewer Public Fixture Tasks](/docs/?scope=studio&doc=site-request-portable-docs-viewer-public-fixture-tasks).
-
 Scope:
 
 - minimal Jekyll fixture project or generated test fixture
@@ -543,9 +538,3 @@ For each implementation slice:
 - smoke `/docs/?scope=studio`, `/docs/?scope=library`, `/library/`, and `/analysis/` when viewer behavior changes
 - smoke public routes for absence of management CSS/JS when payload boundaries change
 - update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) when the install steps change
-
-## Related Docs
-
-- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Search Overview](/docs/?scope=studio&doc=search-overview)

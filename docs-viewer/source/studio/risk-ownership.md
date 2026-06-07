@@ -48,7 +48,7 @@ The Admin app shell provides the correct boundary:
 | Local risk reports/artifacts | `var/admin/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
 | Checked-in risk configuration | `admin-app/checks/` or `admin-app/data/config/` | Use `admin-app/checks/` for check-owned config and `admin-app/data/config/` for app/runtime-visible config. |
 
-The concrete run-directory and artifact contract is [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack).
+The concrete run-directory and artifact contract is [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
 
 ## Server Boundary
 

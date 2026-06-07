@@ -10,7 +10,6 @@ viewable: true
 # Public Route Model
 
 This document is the durable route contract for the public site.
-It records the implemented route model from [Public Route Simplification Request](/docs/?scope=studio&doc=site-request-public-route-simplification) so future build work can reference this spec directly.
 
 ## Route Principles
 

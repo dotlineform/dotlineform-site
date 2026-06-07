@@ -27,11 +27,3 @@ The report can show all configured docs scopes or one selected scope via `report
 It is read-only and does not edit source Markdown, validate catalogue data, run broken-link checks, or rebuild generated payloads.
 
 The current builder, renderer, artifact schema, validation behavior, and ownership split are documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
-
-## Related Requests
-
-- [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation)
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
-- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)

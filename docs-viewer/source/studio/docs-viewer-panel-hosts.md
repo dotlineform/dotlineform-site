@@ -369,10 +369,6 @@ What this means:
 - route state for rendered documents, search, and recent should remain stable while independently mounted main-view modules are added
 - reports remain on the existing document payload/report path until a future requirement needs shared main-view lifecycle or toolbar behavior
 
-Request owner:
-
-- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
-
 ### Markdown Source Editor
 
 Current state:
@@ -385,10 +381,6 @@ What this means:
 
 - source editing stays a manage-only hosted view and must not become public route UI
 - source writes must remain backend-owned
-
-Request owner:
-
-- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
 
 ### Semantic-Reference Token Tools
 
@@ -421,10 +413,6 @@ What this means:
 - do not add ad hoc toolbar controls per feature
 - add source-editor toolbar actions through the main-view toolbar projection model rather than route-local DOM mutations
 
-Request owner:
-
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-
 ### Additional Info Views
 
 Current state:
@@ -436,10 +424,6 @@ What this means:
 
 - each new info view needs a data contract, access policy, lifecycle behavior, and failure state
 - operational or write-adjacent views should start manage-only
-
-Request owner:
-
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), until split into smaller view-specific requests
 
 ### Panel State Persistence And URL Policy
 
@@ -455,10 +439,6 @@ What this means:
 - do not add query/hash state for panel layout opportunistically
 - decide which state is local preference, route state, or transient UI state before adding richer panels
 
-Request owner:
-
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-
 ### Optional Visualization Modules
 
 Current state:
@@ -471,18 +451,3 @@ What this means:
 - choose the data contract and user workflow before choosing a visualization library
 - heavy visualization code should be lazy-loaded only when the selected view needs it
 - public exposure needs a separate decision
-
-Request owner:
-
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell), until a visualization-specific request exists
-
-## Related References
-
-- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
-- [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
-- [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract)
-- [Docs Viewer Multi-Panel App Shell Request](/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell)
-- [Docs Viewer Markdown Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-markdown-editor)
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)

@@ -1,14 +1,14 @@
 ---
 doc_id: scripts-docs-broken-links
-title: Broken Links Audit
+title: Broken Links Script
 added_date: 2026-04-23
 last_updated: 2026-06-06
 parent_id: docs-viewer
 viewable: true
 ---
-# Docs Broken Links Audit Script
+# Docs Broken Links Script
 
-This script audits Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
+This script lists Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
 
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope studio
@@ -49,7 +49,7 @@ Ignored links:
 
 ## Data Source
 
-The audit reads generated docs payloads rather than raw source Markdown.
+The script reads generated docs payloads rather than raw source Markdown.
 
 Inputs:
 
@@ -66,12 +66,12 @@ Model:
 
 ## Docs Viewer Report
 
-The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same audit logic through the Docs management endpoint `POST /docs/broken-links`. This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. That keeps the browser report thin while leaving the audit reusable from the terminal.
+The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same logic through the Docs management endpoint `POST /docs/broken-links`. This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature. That keeps the browser report thin while leaving the script reusable from the terminal.
 
 The report depends on the local Docs management API through the configured Docs Viewer service.
 
 1. Docs Viewer loads this report-backed document in manage mode
 2. the report module selects the current or requested docs scope
 3. the report sends `POST <DOCS_VIEWER_BASE_URL>/docs/broken-links`
-4. the Docs Viewer service runs the shared docs broken-links audit logic for that scope
+4. the Docs Viewer service runs the shared docs broken-links logic for that scope
 5. the report renders the returned issue list

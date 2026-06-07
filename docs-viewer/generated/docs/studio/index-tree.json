@@ -397,7 +397,7 @@
         },
         {
           "doc_id": "scripts-docs-broken-links",
-          "title": "Broken Links Audit",
+          "title": "Broken Links Script",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json"
         },
         {
@@ -1158,5 +1158,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T17:02:56Z"
+  "generated_at": "2026-06-07T17:42:11Z"
 }

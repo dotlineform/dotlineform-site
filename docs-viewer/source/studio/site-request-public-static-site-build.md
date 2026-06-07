@@ -10,14 +10,10 @@ parent_id: change-requests
 
 Status:
 
-- in planning
+- draft
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - The migration decisions have been resolved and can be used to create an implementation task list.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
-
-## Task Tracker
-
-Use [Public Static Site Build Tasks](/docs/?scope=studio&doc=site-request-public-static-site-build-tasks) for the implementation sequence, task status, and verification checklist.
 
 ## Summary
 
@@ -39,12 +35,6 @@ GitHub Pages should deploy a generated artifact with `.nojekyll` at the artifact
 
 ## Context
 
-[Rubyless App Runtimes Request](/docs/?scope=studio&doc=site-request-rubyless-app-runtimes) removed Ruby/Jekyll from app runtimes and app-facing builders.
-It intentionally left Jekyll as the manual public-site preview/build layer until the public site itself could be replaced.
-
-This request should not redesign public routes.
-It should consume [Public Route Model](/docs/?scope=studio&doc=public-route-model).
-
 The current public build is still Jekyll-owned:
 
 - GitHub Pages runs an implicit Jekyll build when repository content changes.
@@ -55,8 +45,11 @@ The current public build is still Jekyll-owned:
 - public route pages such as `/series/`, `/recent/`, `/library/`, `/analysis/`, and `/catalogue/search/` still use Liquid for shell rendering and config injection.
 
 GitHub Pages without Jekyll publishes static files as-is from a configured source or Actions artifact.
-Because the current source tree is not the final static site, adding `.nojekyll` to the existing source root is not sufficient.
-The missing replacement is a deterministic static builder that produces the deployable HTML, assets, and public runtime payload surface that Jekyll currently emits.
+
+- Because the current source tree is not the final static site, adding `.nojekyll` to the existing source root is not sufficient.
+- The missing replacement is a deterministic static builder that produces the deployable HTML, assets, and public runtime payload surface that Jekyll currently emits.
+
+This request should not redesign public routes. It should consume [Public Route Model](/docs/?scope=studio&doc=public-route-model).
 
 ## Target Architecture
 

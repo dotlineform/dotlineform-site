@@ -17,8 +17,14 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py -
 This helper is the current JSON-source rebuild entrypoint for focused work, series, and moment scopes.
 
 It also supports a focused moment scope used by the first Studio moments import page.
-Scope planning rules for work, series, and moment builds live in `studio/services/catalogue/catalogue_build_scopes.py`; media readiness and local derivative work live in `studio/services/catalogue/catalogue_build_media.py`; field-aware build narrowing lives in `studio/services/catalogue/catalogue_build_field_plan.py`; generator/search command shapes and step result shaping live in `studio/services/catalogue/catalogue_build_commands.py`.
-`studio/services/catalogue/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
+
+Scripts:
+
+- Scope planning rules for work, series, and moment builds live in `studio/services/catalogue/catalogue_build_scopes.py`
+- media readiness and local derivative work live in `studio/services/catalogue/catalogue_build_media.py`
+- field-aware build narrowing lives in `studio/services/catalogue/catalogue_build_field_plan.py`
+- generator/search command shapes and step result shaping live in `studio/services/catalogue/catalogue_build_commands.py`
+- `studio/services/catalogue/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
 
 ## Common Runs
 
@@ -221,6 +227,6 @@ It keeps the current source/public-update boundary narrow:
 ## Related References
 
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
-- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Activity](/docs/?scope=studio&doc=activity)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

@@ -91,10 +91,6 @@ Public promotion acceptance should include:
 - manage smoke coverage proving the full management surface still loads through the manage entrypoint
 - source docs describing what was promoted and why it is public-safe
 
-Related implementation request:
-
-- [Docs Viewer Public/Manage Entrypoint Split Request](/docs/?scope=studio&doc=site-request-docs-viewer-public-manage-entrypoints)
-
 ## Route Capability Boundary
 
 Current route rules:

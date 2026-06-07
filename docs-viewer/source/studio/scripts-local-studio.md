@@ -316,7 +316,7 @@ For direct automation, call:
 $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
 ```
 
-Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service).
+Related doc: [Audit Runner](/docs/?scope=studio&doc=audit-runner).
 
 ### Docs Live Rebuild Watcher
 
