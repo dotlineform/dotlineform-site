@@ -9,14 +9,23 @@ viewable: true
 # Docs Viewer Config
 
 Docs Viewer configuration is split by audience.
-Source-side and local write settings stay in `docs-viewer/config/scopes/docs_scopes.json`.
-Browser-safe route records live in `docs-viewer/config/routes/docs-viewer-routes.json`.
-Browser-safe scope, display, and search settings live in `docs-viewer/config/defaults/docs-viewer-config.json`.
-Public read-only route defaults live in `docs-viewer/config/defaults/docs-viewer-public-config.json`.
-Standalone local service defaults and schema live in `docs-viewer/config/defaults/docs-viewer-service.json` and `docs-viewer/config/schema/docs-viewer-service.schema.json`.
-Visible viewer copy lives in `docs-viewer/config/ui-text/public.json` for public read-only routes and `docs-viewer/config/ui-text/manage.json` for the local management route.
-Site-wide media token resolution stays in `_config.yml`.
+
+## Host settings
+
 Local Docs Viewer service host, port, base URL, and capability flags are host runtime settings in `var/local/site.env`, not checked-in Docs Viewer defaults.
+
+Site-wide media token resolution stays in `_config.yml`.
+
+## Jekyll Site Config
+
+`_config.yml` owns site-wide rendering settings.
+
+- For docs media, its `media_base` value resolves rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens.
+- If `media_base` is blank, a token such as <code>&#91;&#91;media:docs/library/img/example.png&#93;&#93;</code> renders as `/docs/library/img/example.png`.
+- If `media_base` points at a remote media origin, the same token resolves below that origin.
+- `repo_assets` imports do not use `media_base`; they write literal `/assets/docs/<scope>/...` links.
+
+Changing storage mode does not migrate existing media or rewrite existing docs links.
 
 ## Source Scope Config
 
@@ -26,10 +35,10 @@ It is checked in and is read by docs builds, docs search builds, Docs Import, th
 In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the Docs Viewer service and shows it alongside browser and generated projections.
 The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
-The Docs Viewer service also exposes a source-config settings contract for manage-mode settings controls.
-That contract currently allows scoped `show_updated_date` edits only, blocks install-time fields such as route bases and source/output roots, and defers global settings such as `recently_added_limit`.
-It does not create a new settings layer; it describes guarded edits to the existing source config.
-The `/docs/` manage-mode Settings modal writes allowlisted changes through that contract and rebuilds the affected generated docs scope so browser payloads stay in sync.
+- The Docs Viewer service also exposes a source-config settings contract for manage-mode settings controls.
+- That contract currently allows scoped `show_updated_date` edits only, blocks install-time fields such as route bases and source/output roots, and defers global settings such as `recently_added_limit`.
+- It does not create a new settings layer; it describes guarded edits to the existing source config.
+- The `/docs/` manage-mode Settings modal writes allowlisted changes through that contract and rebuilds the affected generated docs scope so browser payloads stay in sync.
 
 Each scope entry owns:
 
@@ -105,12 +114,17 @@ Staged source image and file imports also remain manual-copy flows in this mode.
 Do not put R2 credentials or any other remote credentials in `docs-viewer/config/scopes/docs_scopes.json`, generated browser config, docs source, or UI text.
 Future remote upload support should read credentials from environment variables or platform secrets and fail closed when the backend is unavailable.
 
+## Local Service
+
+Standalone local service defaults and schema live in `docs-viewer/config/defaults/docs-viewer-service.json` and `docs-viewer/config/schema/docs-viewer-service.schema.json`.
+
 ## Browser Config
 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
-It is checked in and read by `docs-viewer/runtime/js/docs-viewer-route-config.js` before the app shell builds route context.
-Shared and standalone route shells should carry only `data-route-id` and `data-route-config-url` for boot route context.
-Inline route-config scripts and legacy route data attributes such as `data-index-url`, `data-viewer-scope`, and `data-management-base-url` are not route-config inputs.
+
+- It is checked in and read by `docs-viewer/runtime/js/docs-viewer-route-config.js` before the app shell builds route context.
+- Shared and standalone route shells should carry only `data-route-id` and `data-route-config-url` for boot route context.
+- Inline route-config scripts and legacy route data attributes such as `data-index-url`, `data-viewer-scope`, and `data-management-base-url` are not route-config inputs.
 
 Each route record owns:
 
@@ -127,6 +141,7 @@ For the local `/docs/` shell, `docs-viewer/services/docs_viewer_service.py` serv
 Backend reachability and write availability still come from the service capability flow, not from static route config.
 
 `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` are generated by `./docs-viewer/build/build_docs.py --write`.
+
 It exposes browser-safe settings only:
 
 - default scope id
@@ -142,7 +157,7 @@ The full config includes every configured Docs Viewer scope for the local manage
 The public config includes only static public read-only route scopes: entries whose source scope config has `include_scope_param: false` and a route base outside `/docs/`.
 Public route files such as `library/index.md` and `analysis/index.md` remain host/Jekyll pages that use the read-only adapter; the generated public config lets those pages resolve their scope from `viewer_base_url`.
 
-Do not hand-edit this file.
+Do not hand-edit `docs-viewer-config.json` or `docs-viewer-public-config.json`, because they are generated files.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.
 
 `docs_viewer.scope_type_badges` maps scope types to selector display labels and emoji.
@@ -161,15 +176,3 @@ It currently includes only reader-facing public-entrypoint text consumed during 
 Route records choose the bundle through `config_urls.ui_text`.
 Do not point public route records at the manage bundle, and do not keep shared compatibility UI-text paths for retired bundles.
 Do not put Studio-only copy or workflow-specific service contracts in either UI text bundle.
-
-## Jekyll Site Config
-
-`_config.yml` continues to own site-wide rendering settings.
-For docs media, its `media_base` value resolves rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens.
-If `media_base` is blank, a token such as <code>&#91;&#91;media:docs/library/img/example.png&#93;&#93;</code> renders as `/docs/library/img/example.png`.
-If `media_base` points at a remote media origin, the same token resolves below that origin.
-
-`repo_assets` imports do not use `media_base`; they write literal `/assets/docs/<scope>/...` links.
-
-Changing storage mode does not migrate existing media or rewrite existing docs links.
-Treat migration as a separate manual or scripted operation.

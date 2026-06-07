@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8506103a729d6de3dda50d1e87932b8e",
-    "generated_at_utc": "2026-06-07T19:51:09Z",
-    "count": 206
+    "version": "blake2b-ec473787078432316db7979da2fb23ac",
+    "generated_at_utc": "2026-06-07T20:43:12Z",
+    "count": 205
   },
   "entries": [
     {
@@ -1868,34 +1868,6 @@
         "02"
       ],
       "search_text": "scripts-docs-management-server scripts docs management server management service service docs viewer viewer 2026-06-02 2026 06 02"
-    },
-    {
-      "id": "scripts-docs-management-server-data-sharing",
-      "kind": "doc",
-      "title": "Docs Management Service Data Sharing (Retired)",
-      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
-      "last_updated": "2026-05-30",
-      "parent_id": "scripts-docs-management-server",
-      "parent_title": "Management Service",
-      "display_meta": "2026-05-30 • Management Service",
-      "search_terms": [
-        "scripts-docs-management-server-data-sharing",
-        "scripts",
-        "docs",
-        "management",
-        "server",
-        "data",
-        "sharing",
-        "docs management service data sharing (retired)",
-        "service",
-        "retired",
-        "management service",
-        "2026-05-30",
-        "2026",
-        "05",
-        "30"
-      ],
-      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing (retired) service retired management service 2026-05-30 2026 05 30"
     },
     {
       "id": "scripts-docs-management-server-generated-reads",
