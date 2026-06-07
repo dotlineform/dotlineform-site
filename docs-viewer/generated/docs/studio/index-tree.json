@@ -415,6 +415,12 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json"
         },
         {
+          "doc_id": "library-documents",
+          "title": "Library Documents",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
+          "ui_status": "report"
+        },
+        {
           "doc_id": "scripts-docs-live-rebuild-watcher",
           "title": "Live Rebuild Watcher",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-live-rebuild-watcher.json"
@@ -494,6 +500,11 @@
           ]
         },
         {
+          "doc_id": "docs-viewer-public-scopes",
+          "title": "Public Scopes",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-scopes.json"
+        },
+        {
           "doc_id": "docs-viewer-reports",
           "title": "Reports",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json"
@@ -520,29 +531,6 @@
               "title": "Docs Viewer Runtime Surfaces",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json",
               "ui_status": "reference"
-            }
-          ]
-        },
-        {
-          "doc_id": "docs-viewer-scopes",
-          "title": "Scopes",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-scopes.json",
-          "children": [
-            {
-              "doc_id": "data-models-analysis",
-              "title": "Analysis Scope",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-analysis.json"
-            },
-            {
-              "doc_id": "library-documents",
-              "title": "Library Documents",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
-              "ui_status": "report"
-            },
-            {
-              "doc_id": "data-models-library",
-              "title": "Library Scope",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-library.json"
             }
           ]
         },
@@ -1122,5 +1110,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T18:15:27Z"
+  "generated_at": "2026-06-07T19:51:09Z"
 }

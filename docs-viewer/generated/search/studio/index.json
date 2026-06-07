@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-73a6c490b0e3693eaaa4fab563d76390",
-    "generated_at_utc": "2026-06-07T18:12:09Z",
-    "count": 208
+    "version": "blake2b-8506103a729d6de3dda50d1e87932b8e",
+    "generated_at_utc": "2026-06-07T19:51:09Z",
+    "count": 206
   },
   "entries": [
     {
@@ -1795,6 +1795,29 @@
       "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-05-18 00:00 2026 05 18 00"
     },
     {
+      "id": "library-documents",
+      "kind": "doc",
+      "title": "Library Documents",
+      "href": "/docs/?scope=studio&doc=library-documents",
+      "last_updated": "2026-06-06",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-06 • Docs Viewer",
+      "search_terms": [
+        "library-documents",
+        "library",
+        "documents",
+        "library documents",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-06-06",
+        "2026",
+        "06"
+      ],
+      "search_text": "library-documents library documents library documents docs viewer docs viewer 2026-06-06 2026 06"
+    },
+    {
       "id": "scripts-docs-live-rebuild-watcher",
       "kind": "doc",
       "title": "Live Rebuild Watcher",
@@ -2179,6 +2202,30 @@
       "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape portable source shape portable setup setup 2026-05-19 2026 05 19"
     },
     {
+      "id": "docs-viewer-public-scopes",
+      "kind": "doc",
+      "title": "Public Scopes",
+      "href": "/docs/?scope=studio&doc=docs-viewer-public-scopes",
+      "last_updated": "2026-06-07",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-07 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-public-scopes",
+        "docs",
+        "viewer",
+        "public",
+        "scopes",
+        "public scopes",
+        "docs viewer",
+        "2026-06-07",
+        "2026",
+        "06",
+        "07"
+      ],
+      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-07 2026 06 07"
+    },
+    {
       "id": "docs-viewer-reports",
       "kind": "doc",
       "title": "Reports",
@@ -2300,97 +2347,6 @@
         "05"
       ],
       "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces docs viewer runtime surfaces runtime boundary boundary 2026-06-05 2026 06 05"
-    },
-    {
-      "id": "docs-viewer-scopes",
-      "kind": "doc",
-      "title": "Scopes",
-      "href": "/docs/?scope=studio&doc=docs-viewer-scopes",
-      "last_updated": "2026-05-20",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-20 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-scopes",
-        "docs",
-        "viewer",
-        "scopes",
-        "docs viewer",
-        "2026-05-20",
-        "2026",
-        "05",
-        "20"
-      ],
-      "search_text": "docs-viewer-scopes docs viewer scopes docs viewer 2026-05-20 2026 05 20"
-    },
-    {
-      "id": "data-models-analysis",
-      "kind": "doc",
-      "title": "Analysis Scope",
-      "href": "/docs/?scope=studio&doc=data-models-analysis",
-      "last_updated": "2026-06-05",
-      "parent_id": "docs-viewer-scopes",
-      "parent_title": "Scopes",
-      "display_meta": "2026-06-05 • Scopes",
-      "search_terms": [
-        "data-models-analysis",
-        "data",
-        "models",
-        "analysis",
-        "analysis scope",
-        "scope",
-        "scopes",
-        "2026-06-05",
-        "2026",
-        "06",
-        "05"
-      ],
-      "search_text": "data-models-analysis data models analysis analysis scope scope scopes 2026-06-05 2026 06 05"
-    },
-    {
-      "id": "library-documents",
-      "kind": "doc",
-      "title": "Library Documents",
-      "href": "/docs/?scope=studio&doc=library-documents",
-      "last_updated": "2026-06-06",
-      "parent_id": "docs-viewer-scopes",
-      "parent_title": "Scopes",
-      "display_meta": "2026-06-06 • Scopes",
-      "search_terms": [
-        "library-documents",
-        "library",
-        "documents",
-        "library documents",
-        "scopes",
-        "2026-06-06",
-        "2026",
-        "06"
-      ],
-      "search_text": "library-documents library documents library documents scopes 2026-06-06 2026 06"
-    },
-    {
-      "id": "data-models-library",
-      "kind": "doc",
-      "title": "Library Scope",
-      "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-06-05",
-      "parent_id": "docs-viewer-scopes",
-      "parent_title": "Scopes",
-      "display_meta": "2026-06-05 • Scopes",
-      "search_terms": [
-        "data-models-library",
-        "data",
-        "models",
-        "library",
-        "library scope",
-        "scope",
-        "scopes",
-        "2026-06-05",
-        "2026",
-        "06",
-        "05"
-      ],
-      "search_text": "data-models-library data models library library scope scope scopes 2026-06-05 2026 06 05"
     },
     {
       "id": "docs-viewer-semantic-references",

@@ -14,23 +14,15 @@ This document defines the current search-record shape for the docs-domain search
 
 It covers the current generated outputs for:
 
-- `docs-viewer/generated/search/studio/index.json`
-- `assets/data/search/library/index.json`
-
-These are the current search artifacts used by the inline Docs Viewer search on `/docs/` and `/library/`.
-
-For the wider docs-scope model that these artifacts sit on top of, use:
-
-- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
-- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
+- `docs-viewer/generated/search/studio/index.json` for local Studio scope
+- `assets/data/search/<scope>/index.json` for public library and analysis scopes
 
 ## Upstream Sources
 
 The docs-domain search builder reads the configured Docs Viewer source roots:
 
 - `docs-viewer/source/studio/*.md`
-- `docs-viewer/source/library/*.md`
-- `docs-viewer/source/analysis/**/*.md`
+- `docs-viewer/source/<scope>/*.md`
 
 It reads source front matter rather than public route payloads.
 Rows with `viewable: false` are excluded from the docs-domain search artifacts.
@@ -72,7 +64,7 @@ Current top-level example:
 }
 ```
 
-The Library artifact uses the same shape, but `header.scope` is `library` and `header.schema` is `search_index_library_v1`.
+The public artifacts use the same shape, but `header.scope` is `<scope>` and `header.schema` is `search_index_<scope>_v1`.
 
 ## Current Record Contract
 
@@ -118,6 +110,7 @@ Current builder entrypoint:
 ```bash
 ./docs-viewer/build/build_search.py --scope studio --write
 ./docs-viewer/build/build_search.py --scope library --write
+./docs-viewer/build/build_search.py --scope analysis --write
 ```
 
 ## Relationship To Other Search Artifacts
@@ -127,7 +120,7 @@ These docs-domain search artifacts are separate from:
 - `assets/data/search/catalogue/index.json`
 
 The dedicated `/catalogue/search/` page currently uses only `catalogue`.
-The Studio and Library artifacts are currently consumed by the shared Docs Viewer runtime for inline search.
+The local and public artifacts are currently consumed by the shared Docs Viewer runtime for inline search.
 
 ## Related documents
 

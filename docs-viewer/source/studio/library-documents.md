@@ -4,8 +4,7 @@ title: Library Documents
 added_date: 2026-05-07
 last_updated: 2026-06-06
 ui_status: report
-parent_id: docs-viewer-scopes
-viewable: true
+parent_id: docs-viewer
 viewer_report: docs_index_table
 viewer_report_access: manage
 viewer_report_preset: library_documents_admin
