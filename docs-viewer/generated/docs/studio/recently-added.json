@@ -3,6 +3,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "admin-checks",
+      "title": "Admin Checks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
+      "added_date": "2026-06-08",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
+      "doc_id": "admin-checks-report-files",
+      "title": "Admin Checks Files Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
+      "added_date": "2026-06-08",
+      "parent_id": "admin-checks",
+      "parent_title": "Admin Checks"
+    },
+    {
       "doc_id": "risk-evidence-pack-metrics",
       "title": "Risk Evidence Pack Metrics",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack-metrics.json",
@@ -11,77 +27,61 @@
       "parent_title": "Admin"
     },
     {
-      "doc_id": "audit-runner",
-      "title": "Audit Runner",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json",
-      "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "doc_id": "site-request-risk-evidence-producers-task-1-target-map-audit",
+      "title": "Risk Evidence Producers Task 1 Target Map Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-1-target-map-audit.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "scripts-docs-management-scripts-audit",
-      "title": "Audit Scripts",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Scripts Overview"
+      "doc_id": "site-request-risk-evidence-producers-task-2-checks-config",
+      "title": "Risk Evidence Producers Task 2 Checks Config",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-2-checks-config.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "audits",
-      "title": "Audits",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/audits.json",
-      "added_date": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin"
+      "doc_id": "site-request-risk-evidence-producers-task-3-orchestrator",
+      "title": "Risk Evidence Producers Task 3 Orchestrator",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-3-orchestrator.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "scripts-docs-management-endpoints-create-import",
-      "title": "Create And Import Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Endpoint Overview"
+      "doc_id": "site-request-risk-evidence-producers-task-4-report-producers",
+      "title": "Risk Evidence Producers Task 4 Files Report Producer",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-4-report-producers.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "scripts-docs-management-endpoints",
-      "title": "Endpoint Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-server",
-      "parent_title": "Management Services"
+      "doc_id": "site-request-risk-evidence-producers-task-5-admin-checks-api",
+      "title": "Risk Evidence Producers Task 5 Admin Checks API",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-5-admin-checks-api.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "scripts-docs-management-endpoints-generated-reads",
-      "title": "Generated Read Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Endpoint Overview"
+      "doc_id": "site-request-risk-evidence-producers-task-6-admin-checks-ui",
+      "title": "Risk Evidence Producers Task 6 Admin Checks UI",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-6-admin-checks-ui.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     },
     {
-      "doc_id": "scripts-docs-management-endpoints-health-capabilities",
-      "title": "Health And Capabilities Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-scripts-import",
-      "title": "Import Scripts",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Scripts Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-scripts-read-config",
-      "title": "Read And Config Scripts",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-scripts",
-      "parent_title": "Scripts Overview"
+      "doc_id": "site-request-risk-evidence-producers-task-7-tests",
+      "title": "Risk Evidence Producers Task 7 Tests",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-7-tests.json",
+      "added_date": "2026-06-08",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request"
     }
   ],
-  "generated_at": "2026-06-08T17:35:03Z"
+  "generated_at": "2026-06-08T21:52:57Z"
 }

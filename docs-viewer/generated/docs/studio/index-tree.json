@@ -17,6 +17,20 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/activity.json"
         },
         {
+          "doc_id": "admin-checks",
+          "title": "Admin Checks",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
+          "ui_status": "planned",
+          "children": [
+            {
+              "doc_id": "admin-checks-report-files",
+              "title": "Admin Checks Files Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
+              "ui_status": "planned"
+            }
+          ]
+        },
+        {
           "doc_id": "audit-runner",
           "title": "Audit Runner",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json"
@@ -247,7 +261,69 @@
           "doc_id": "site-request-risk-evidence-producers",
           "title": "Risk Evidence Producers Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "draft"
+          "ui_status": "planned",
+          "children": [
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-1-target-map-audit",
+              "title": "Risk Evidence Producers Task 1 Target Map Audit",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-1-target-map-audit.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-2-checks-config",
+              "title": "Risk Evidence Producers Task 2 Checks Config",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-2-checks-config.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-3-orchestrator",
+              "title": "Risk Evidence Producers Task 3 Orchestrator",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-3-orchestrator.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-4-report-producers",
+              "title": "Risk Evidence Producers Task 4 Files Report Producer",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-4-report-producers.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-5-admin-checks-api",
+              "title": "Risk Evidence Producers Task 5 Admin Checks API",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-5-admin-checks-api.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-6-admin-checks-ui",
+              "title": "Risk Evidence Producers Task 6 Admin Checks UI",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-6-admin-checks-ui.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-7-tests",
+              "title": "Risk Evidence Producers Task 7 Tests",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-7-tests.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-8-legacy-risk-review",
+              "title": "Risk Evidence Producers Task 8 Legacy Risk Review",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-8-legacy-risk-review.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-task-9-12-closeout",
+              "title": "Risk Evidence Producers Tasks 9-12 Closeout",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-9-12-closeout.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-report-target-map",
+              "title": "Target Map Report Request",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-target-map.json",
+              "ui_status": "planned"
+            }
+          ]
         }
       ]
     },
@@ -1172,5 +1248,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-08T19:37:32Z"
+  "generated_at": "2026-06-08T21:52:57Z"
 }
