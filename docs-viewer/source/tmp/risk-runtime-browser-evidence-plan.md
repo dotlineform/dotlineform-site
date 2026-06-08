@@ -2,9 +2,9 @@
 doc_id: risk-runtime-browser-evidence-plan
 title: Risk Runtime Browser Evidence - Plan
 added_date: 2026-05-31
-last_updated: 2026-06-07
+last_updated: 2026-06-08
 ui_status: draft
-parent_id: site-request-risk-evidence-producers
+parent_id: risks
 viewable: true
 ---
 # Risk Runtime Browser Evidence - Plan

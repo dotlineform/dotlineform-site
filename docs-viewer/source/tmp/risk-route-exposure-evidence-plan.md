@@ -2,9 +2,9 @@
 doc_id: risk-route-exposure-evidence-plan
 title: Risk Route Exposure Evidence - Plan
 added_date: 2026-05-31
-last_updated: 2026-06-07
+last_updated: 2026-06-08
 ui_status: draft
-parent_id: site-request-risk-evidence-producers
+parent_id: risks
 viewable: true
 ---
 # Risk Route Exposure Evidence - Plan
@@ -14,8 +14,6 @@ This document defines the planned `route-exposure.json` producer for [Risk Evide
 ## Current Status
 
 Status: planned.
-
-`route-exposure.json` is a planned producer artifact tracked by [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers). The runner currently omits it.
 
 The producer should answer which routes are public, local-only, manage-only, or retired, and which runtime assets and service surfaces each route exposes.
 

@@ -25,12 +25,6 @@
       "ui_status": "draft"
     },
     {
-      "doc_id": "plan",
-      "title": "Docs Viewer Workstream Priority Plan",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/plan.json",
-      "ui_status": "draft"
-    },
-    {
       "doc_id": "emoji",
       "title": "emoji",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
@@ -67,7 +61,21 @@
       "doc_id": "risks",
       "title": "risks",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/risks.json",
-      "ui_status": "draft"
+      "ui_status": "draft",
+      "children": [
+        {
+          "doc_id": "risk-route-exposure-evidence-plan",
+          "title": "Risk Route Exposure Evidence - Plan",
+          "content_url": "/docs-viewer/generated/docs/tmp/by-id/risk-route-exposure-evidence-plan.json",
+          "ui_status": "draft"
+        },
+        {
+          "doc_id": "risk-runtime-browser-evidence-plan",
+          "title": "Risk Runtime Browser Evidence - Plan",
+          "content_url": "/docs-viewer/generated/docs/tmp/by-id/risk-runtime-browser-evidence-plan.json",
+          "ui_status": "draft"
+        }
+      ]
     },
     {
       "doc_id": "tmp",
@@ -81,5 +89,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-05T16:02:27Z"
+  "generated_at": "2026-06-08T19:39:32Z"
 }

@@ -247,21 +247,7 @@
           "doc_id": "site-request-risk-evidence-producers",
           "title": "Risk Evidence Producers Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "draft",
-          "children": [
-            {
-              "doc_id": "risk-route-exposure-evidence-plan",
-              "title": "Risk Route Exposure Evidence - Plan",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-route-exposure-evidence-plan.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "risk-runtime-browser-evidence-plan",
-              "title": "Risk Runtime Browser Evidence - Plan",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-runtime-browser-evidence-plan.json",
-              "ui_status": "draft"
-            }
-          ]
+          "ui_status": "draft"
         }
       ]
     },
@@ -1186,5 +1172,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-08T17:35:03Z"
+  "generated_at": "2026-06-08T19:37:32Z"
 }

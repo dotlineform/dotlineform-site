@@ -8,7 +8,6 @@ ui_status: draft
 
 ## Risk evidence pack
 
-Use [Studio Risk Evidence Pack](/docs/?scope=studio&doc=studio-risk-evidence-pack) for current deterministic reruns.
 The old ad hoc `find`, `wc`, and inline Python snippets have been replaced by the `script-family-inventory.json` producer.
 
 Run this from `dotlineform-site/`:

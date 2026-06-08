@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-be49b28127215fa8adbd95d72bae5f80",
-    "generated_at_utc": "2026-06-08T17:35:03Z",
-    "count": 221
+    "version": "blake2b-7638111fc2cb006922ef3ac5746170fd",
+    "generated_at_utc": "2026-06-08T19:37:33Z",
+    "count": 219
   },
   "entries": [
     {
@@ -1060,60 +1060,6 @@
         "07"
       ],
       "search_text": "site-request-risk-evidence-producers site request risk evidence producers risk evidence producers request change requests change requests 2026-06-07 2026 06 07"
-    },
-    {
-      "id": "risk-route-exposure-evidence-plan",
-      "kind": "doc",
-      "title": "Risk Route Exposure Evidence - Plan",
-      "href": "/docs/?scope=studio&doc=risk-route-exposure-evidence-plan",
-      "last_updated": "2026-06-07",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-07 • Risk Evidence Producers Request",
-      "search_terms": [
-        "risk-route-exposure-evidence-plan",
-        "risk",
-        "route",
-        "exposure",
-        "evidence",
-        "plan",
-        "risk route exposure evidence - plan",
-        "risk evidence producers request",
-        "producers",
-        "request",
-        "2026-06-07",
-        "2026",
-        "06",
-        "07"
-      ],
-      "search_text": "risk-route-exposure-evidence-plan risk route exposure evidence plan risk route exposure evidence - plan risk evidence producers request producers request 2026-06-07 2026 06 07"
-    },
-    {
-      "id": "risk-runtime-browser-evidence-plan",
-      "kind": "doc",
-      "title": "Risk Runtime Browser Evidence - Plan",
-      "href": "/docs/?scope=studio&doc=risk-runtime-browser-evidence-plan",
-      "last_updated": "2026-06-07",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-07 • Risk Evidence Producers Request",
-      "search_terms": [
-        "risk-runtime-browser-evidence-plan",
-        "risk",
-        "runtime",
-        "browser",
-        "evidence",
-        "plan",
-        "risk runtime browser evidence - plan",
-        "risk evidence producers request",
-        "producers",
-        "request",
-        "2026-06-07",
-        "2026",
-        "06",
-        "07"
-      ],
-      "search_text": "risk-runtime-browser-evidence-plan risk runtime browser evidence plan risk runtime browser evidence - plan risk evidence producers request producers request 2026-06-07 2026 06 07"
     },
     {
       "id": "data-sharing",
