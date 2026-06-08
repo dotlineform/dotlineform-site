@@ -42,6 +42,7 @@ function createDocsViewerManagementStateFacade(domains) {
     managementBusy: sources.management,
     managementCapabilities: sources.management,
     managementCapabilityCheckId: sources.management,
+    managementCapabilityError: sources.management,
     managementChecked: sources.management,
     managementMessage: sources.management,
     managementMessageIsError: sources.management,
@@ -428,7 +429,7 @@ export function initDocsViewerManagement(context) {
     if (!state.managementChecked) {
       noteText = state.managementText.checkingNote;
     } else if (!state.managementAvailable) {
-      noteText = state.managementText.unavailableNote;
+      noteText = state.managementCapabilityError || state.managementText.unavailableNote;
       noteIsError = true;
     } else {
       noteText = managementNoteText();

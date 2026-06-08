@@ -512,6 +512,44 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
     assert capabilities["scopes"]["studio"]["generated_search_reads"] is False
 
 
+def test_capabilities_endpoint_returns_json_error_for_source_validation(monkeypatch: pytest.MonkeyPatch) -> None:
+    handler = object.__new__(docs_viewer_service.DocsViewerRequestHandler)
+    handler.server = type(
+        "Server",
+        (),
+        {
+            "repo_root": REPO_ROOT,
+            "docs_viewer_config": docs_viewer_service.DocsViewerServiceConfig(
+                host="127.0.0.1",
+                port=8776,
+                base_url="http://127.0.0.1:8776",
+                management_enabled=True,
+                generated_reads_enabled=True,
+                watch_enabled=True,
+            ),
+        },
+    )()
+    sent: dict[str, object] = {}
+
+    def fake_send_json(payload: object, status: object = docs_viewer_service.HTTPStatus.OK) -> None:
+        sent["payload"] = payload
+        sent["status"] = status
+
+    def fail_capabilities(_repo_root: Path) -> dict[str, object]:
+        raise ValueError("Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'")
+
+    monkeypatch.setattr(handler, "send_json", fake_send_json)
+    monkeypatch.setattr(docs_viewer_service.docs_service, "capabilities_payload", fail_capabilities)
+
+    handler.send_capabilities_json()
+
+    assert sent["status"] == docs_viewer_service.HTTPStatus.BAD_REQUEST
+    assert sent["payload"] == {
+        "ok": False,
+        "error": "Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'",
+    }
+
+
 def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:
         return docs_viewer_service.DocsViewerRequestHandler.is_allowed_static_path(object(), path)

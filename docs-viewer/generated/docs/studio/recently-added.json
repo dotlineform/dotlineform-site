@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "risk-evidence-pack-metrics",
+      "title": "Risk Evidence Pack Metrics",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack-metrics.json",
+      "added_date": "2026-06-08",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
       "doc_id": "audit-runner",
       "title": "Audit Runner",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-07",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview"
-    },
-    {
-      "doc_id": "scripts-docs-management-endpoints-rebuild-audit",
-      "title": "Rebuild And Audit Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-rebuild-audit.json",
-      "added_date": "2026-06-07",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Endpoint Overview"
     }
   ],
-  "generated_at": "2026-06-07T21:33:00Z"
+  "generated_at": "2026-06-08T17:35:03Z"
 }

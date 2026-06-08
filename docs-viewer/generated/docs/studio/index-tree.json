@@ -62,6 +62,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack.json"
         },
         {
+          "doc_id": "risk-evidence-pack-metrics",
+          "title": "Risk Evidence Pack Metrics",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack-metrics.json"
+        },
+        {
           "doc_id": "risk-ownership",
           "title": "Risk Ownership",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json"
@@ -1181,5 +1186,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-07T22:03:07Z"
+  "generated_at": "2026-06-08T17:35:03Z"
 }

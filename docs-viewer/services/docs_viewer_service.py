@@ -355,7 +355,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
             )
             return
         if path == routes.CAPABILITIES_PATH:
-            self.send_json(apply_capability_flags(docs_service.capabilities_payload(self.repo_root), self.config))
+            self.send_capabilities_json()
             return
         if path in GENERATED_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
@@ -425,6 +425,17 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def send_docs_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
             payload = docs_service.docs_management_get_payload(self.repo_root, api_path, query)
+            self.send_json(payload)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_capabilities_json(self) -> None:
+        try:
+            payload = apply_capability_flags(docs_service.capabilities_payload(self.repo_root), self.config)
             self.send_json(payload)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

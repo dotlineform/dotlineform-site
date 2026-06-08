@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d10ca71531d2bdf99625b21c82244316",
-    "generated_at_utc": "2026-06-07T21:59:15Z",
-    "count": 220
+    "version": "blake2b-be49b28127215fa8adbd95d72bae5f80",
+    "generated_at_utc": "2026-06-08T17:35:03Z",
+    "count": 221
   },
   "entries": [
     {
@@ -245,6 +245,30 @@
         "07"
       ],
       "search_text": "risk-evidence-pack risk evidence pack risk evidence pack admin 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "risk-evidence-pack-metrics",
+      "kind": "doc",
+      "title": "Risk Evidence Pack Metrics",
+      "href": "/docs/?scope=studio&doc=risk-evidence-pack-metrics",
+      "last_updated": "2026-06-08",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-08 • Admin",
+      "search_terms": [
+        "risk-evidence-pack-metrics",
+        "risk",
+        "evidence",
+        "pack",
+        "metrics",
+        "risk evidence pack metrics",
+        "admin",
+        "2026-06-08",
+        "2026",
+        "06",
+        "08"
+      ],
+      "search_text": "risk-evidence-pack-metrics risk evidence pack metrics risk evidence pack metrics admin 2026-06-08 2026 06 08"
     },
     {
       "id": "risk-ownership",

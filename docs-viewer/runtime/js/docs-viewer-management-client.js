@@ -28,10 +28,15 @@ export function fetchManagementJson(path, method, payload, options) {
   var fetchImpl = settings.fetch || defaultFetch;
   return fetchImpl(baseUrl + path, requestOptions).then(function (response) {
     return response.json().catch(function () {
-      throw new Error("HTTP " + response.status);
+      var error = new Error("HTTP " + response.status);
+      error.status = response.status;
+      throw error;
     }).then(function (responsePayload) {
       if (!response.ok || !responsePayload || !responsePayload.ok) {
-        throw new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
+        var error = new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
+        error.status = response.status;
+        error.payload = responsePayload;
+        throw error;
       }
       return responsePayload;
     });

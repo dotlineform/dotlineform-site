@@ -67,10 +67,21 @@ export function createDocsViewerManagementCapabilityController(options) {
     if (callbacks.renderSidebar) callbacks.renderSidebar();
   }
 
-  function markUnavailable() {
+  function capabilityErrorMessage(error) {
+    return error && error.message ? String(error.message) : "";
+  }
+
+  function shouldRetryCapabilityError(error) {
+    var status = error && typeof error.status === "number" ? error.status : 0;
+    if (status >= 400 && status < 500) return false;
+    return true;
+  }
+
+  function markUnavailable(error) {
     state.managementCapabilities = null;
     state.managementChecked = true;
     state.managementAvailable = false;
+    state.managementCapabilityError = capabilityErrorMessage(error);
     renderManagementUi();
   }
 
@@ -78,6 +89,7 @@ export function createDocsViewerManagementCapabilityController(options) {
     var capabilities = payload && payload.capabilities ? payload.capabilities : null;
     var scopeCaps = scopeManagementCapabilities(capabilities, viewerScope());
     state.managementCapabilities = capabilities;
+    state.managementCapabilityError = "";
     state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(capabilities, viewerScope());
     state.generatedDataReadChecked = true;
     state.managementChecked = true;
@@ -92,20 +104,21 @@ export function createDocsViewerManagementCapabilityController(options) {
         if (checkId !== state.managementCapabilityCheckId) return;
         applyCapabilities(payload);
       })
-      .catch(function () {
+      .catch(function (error) {
         if (checkId !== state.managementCapabilityCheckId) return;
-        if (attempt < context.MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
+        if (shouldRetryCapabilityError(error) && attempt < context.MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
           window.setTimeout(function () {
             checkManagementCapabilities(attempt + 1, checkId);
           }, context.MANAGEMENT_CAPABILITY_RETRY_DELAY_MS);
           return;
         }
-        markUnavailable();
+        markUnavailable(error);
       });
   }
 
   function startCapabilityCheck() {
     state.managementCapabilityCheckId += 1;
+    state.managementCapabilityError = "";
     checkManagementCapabilities(0, state.managementCapabilityCheckId);
   }
 
@@ -115,7 +128,7 @@ export function createDocsViewerManagementCapabilityController(options) {
     if (!state.managementMode) return;
 
     if (!context.managementBaseUrl) {
-      markUnavailable();
+      markUnavailable(new Error(state.managementText.serverNotConfiguredError));
       return;
     }
 
