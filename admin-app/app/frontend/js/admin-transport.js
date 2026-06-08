@@ -57,7 +57,7 @@ export async function postJson(url, payload, options = {}) {
     body: JSON.stringify(payload),
     signal: options.signal
   });
-  return responseJsonOrThrow(response);
+  return responseJsonOrThrow(response, options);
 }
 
 export async function getJson(url, options = {}) {
@@ -66,7 +66,7 @@ export async function getJson(url, options = {}) {
     cache: "no-store",
     signal: options.signal
   });
-  return responseJsonOrThrow(response);
+  return responseJsonOrThrow(response, options);
 }
 
 export async function deleteJson(url, options = {}) {
@@ -76,15 +76,18 @@ export async function deleteJson(url, options = {}) {
     cache: "no-store",
     signal: options.signal
   });
-  return responseJsonOrThrow(response);
+  return responseJsonOrThrow(response, options);
 }
 
-async function responseJsonOrThrow(response) {
+async function responseJsonOrThrow(response, options = {}) {
   let payload = null;
   try {
     payload = await response.json();
   } catch (_error) {
     throw new Error(`HTTP ${response.status}`);
+  }
+  if (response.ok && options.allowApiFailure) {
+    return payload;
   }
   if (!response.ok || !payload || !payload.ok) {
     const message = payload && payload.error ? payload.error : `HTTP ${response.status}`;

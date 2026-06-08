@@ -153,6 +153,26 @@ def run_browser_smoke(base_url: str, delete_fixture_run_dir: Path) -> None:
         page.locator("#studioRiskRunId").fill("admin-risk-route-smoke-dry-run")
         page.locator("#studioRiskRun").click()
         expect(page.locator("#studioRiskStatus")).to_contain_text("completed", timeout=10_000)
+        page.route(
+            "**/admin/api/risk/runs",
+            lambda route: route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(
+                    {
+                        "ok": False,
+                        "status": "failed",
+                        "run_id": "admin-risk-route-smoke-failed-run",
+                        "dry_run": True,
+                    }
+                ),
+            )
+            if route.request.method == "POST"
+            else route.continue_(),
+        )
+        page.locator("#studioRiskRunId").fill("admin-risk-route-smoke-failed-run")
+        page.locator("#studioRiskRun").click()
+        expect(page.locator("#studioRiskStatus")).to_contain_text("Risk evidence run failed.", timeout=10_000)
 
         page.route(
             "**/admin/api/activity/feed",

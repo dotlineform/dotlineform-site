@@ -737,7 +737,7 @@ def summarize_evidence(
         {
             "artifact": "javascript-inventory-guardrail.json",
             "status": str(guardrail["status"]),
-            "summary": f"{guardrail_totals.get('maintenance_2_files', 0)} maintenance>=2 JavaScript files in the legacy inventory.",
+            "summary": javascript_guardrail_summary(guardrail, guardrail_totals),
         }
     )
     if "runtime-checks" in artifacts:
@@ -769,6 +769,15 @@ def summarize_evidence(
         "evidence": evidence,
         "warnings": warnings,
     }
+
+
+def javascript_guardrail_summary(guardrail: dict[str, object], guardrail_totals: dict[str, object]) -> str:
+    if guardrail.get("score_mode") == "unscored-current-docs-viewer-inventory":
+        return (
+            f"{guardrail_totals.get('files', 0)} JavaScript files in the current unscored "
+            "Docs Viewer ownership inventory."
+        )
+    return f"{guardrail_totals.get('maintenance_2_files', 0)} maintenance>=2 JavaScript files in the legacy inventory."
 
 
 def dry_run(args: argparse.Namespace, run_id: str, run_dir: Path) -> int:

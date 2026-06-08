@@ -86,3 +86,25 @@ def test_parse_inventory_table_allows_zero_category_scores() -> None:
     assert rows[0].risk == 2
     assert rows[0].structural == 0
     assert rows[0].performance == 0
+
+
+def test_parse_inventory_table_accepts_current_docs_viewer_inventory_shape() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        source = root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-boot.js"
+        source.parent.mkdir(parents=True)
+        source.write_text("export const boot = true;\n", encoding="utf-8")
+        inventory = root / "inventory.md"
+        inventory.write_text(
+            "| File | Focus |\n"
+            "| --- | --- |\n"
+            "| docs-viewer-app-boot.js | App boot owner. |\n",
+            encoding="utf-8",
+        )
+
+        rows = guardrail.parse_inventory_table(inventory, root)
+
+    assert len(rows) == 1
+    assert rows[0].path == "docs-viewer/runtime/js/docs-viewer-app-boot.js"
+    assert rows[0].family == "Docs Viewer runtime"
+    assert rows[0].maintenance == 0

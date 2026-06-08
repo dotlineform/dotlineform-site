@@ -235,7 +235,7 @@ async function runRiskEvidence(state) {
   syncBusy(state);
   setStatus(state.statusNode, "", getAdminText(state.config, "admin_risk.status_running", "Running risk evidence..."));
   try {
-    const result = await postJson(RISK_API_ENDPOINTS.runs, payload);
+    const result = await postJson(RISK_API_ENDPOINTS.runs, payload, { allowApiFailure: true });
     setStatus(
       state.statusNode,
       result.status === "passed" ? "success" : "error",

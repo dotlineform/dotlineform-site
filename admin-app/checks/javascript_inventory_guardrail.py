@@ -13,7 +13,8 @@ from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INVENTORY = "docs-viewer/source/studio/javascript-inventory.md"
+DEFAULT_INVENTORY = "docs-viewer/source/studio/docs-viewer-javascript-inventory.md"
+DOCS_VIEWER_RUNTIME_JS_ROOT = Path("docs-viewer/runtime/js")
 
 
 @dataclass(frozen=True)
@@ -39,44 +40,83 @@ class InventoryRow:
 def parse_inventory_table(inventory_path: Path, repo_root: Path) -> list[InventoryRow]:
     rows: list[InventoryRow] = []
     for line in inventory_path.read_text(encoding="utf-8").splitlines():
-        if not line.startswith("|") or "`assets/" not in line:
+        if not line.startswith("|"):
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) < 9:
+        if len(cells) >= 9 and "`assets/" in line:
+            row = legacy_scored_inventory_row(cells, repo_root)
+        elif len(cells) >= 2 and cells[0].endswith(".js"):
+            row = current_docs_viewer_inventory_row(cells, repo_root, len(rows) + 1)
+        else:
             continue
-        path = cells[1].strip("`")
-        source_path = repo_root / path
-        if not source_path.exists():
-            raise FileNotFoundError(f"inventory row source is missing: {path}")
-        category_scores = {
-            "maintenance": int(cells[3]),
-            "structural": int(cells[4]),
-            "performance": int(cells[5]),
-            "architectural": int(cells[6]),
-        }
-        invalid_scores = {name: score for name, score in category_scores.items() if score < 0 or score > 3}
-        if invalid_scores:
-            formatted = ", ".join(f"{name}={score}" for name, score in invalid_scores.items())
-            raise ValueError(f"inventory row has category score outside 0..3 for {path}: {formatted}")
-        risk = int(cells[7])
-        expected_risk = sum(category_scores.values())
-        if risk != expected_risk:
-            raise ValueError(f"inventory row risk total mismatch for {path}: expected {expected_risk}, got {risk}")
-        rows.append(
-            InventoryRow(
-                rank=int(cells[0]),
-                path=path,
-                family=cells[2],
-                maintenance=category_scores["maintenance"],
-                structural=category_scores["structural"],
-                performance=category_scores["performance"],
-                architectural=category_scores["architectural"],
-                risk=risk,
-                focus=cells[8],
-                lines=count_lines(source_path),
-            )
-        )
+        rows.append(row)
     return rows
+
+
+def legacy_scored_inventory_row(cells: list[str], repo_root: Path) -> InventoryRow:
+    path = cells[1].strip("`")
+    source_path = repo_root / path
+    if not source_path.exists():
+        raise FileNotFoundError(f"inventory row source is missing: {path}")
+    category_scores = {
+        "maintenance": int(cells[3]),
+        "structural": int(cells[4]),
+        "performance": int(cells[5]),
+        "architectural": int(cells[6]),
+    }
+    invalid_scores = {name: score for name, score in category_scores.items() if score < 0 or score > 3}
+    if invalid_scores:
+        formatted = ", ".join(f"{name}={score}" for name, score in invalid_scores.items())
+        raise ValueError(f"inventory row has category score outside 0..3 for {path}: {formatted}")
+    risk = int(cells[7])
+    expected_risk = sum(category_scores.values())
+    if risk != expected_risk:
+        raise ValueError(f"inventory row risk total mismatch for {path}: expected {expected_risk}, got {risk}")
+    return InventoryRow(
+        rank=int(cells[0]),
+        path=path,
+        family=cells[2],
+        maintenance=category_scores["maintenance"],
+        structural=category_scores["structural"],
+        performance=category_scores["performance"],
+        architectural=category_scores["architectural"],
+        risk=risk,
+        focus=cells[8],
+        lines=count_lines(source_path),
+    )
+
+
+def current_docs_viewer_inventory_row(cells: list[str], repo_root: Path, rank: int) -> InventoryRow:
+    source_path, repo_path = resolve_current_docs_viewer_inventory_path(cells[0], repo_root)
+    return InventoryRow(
+        rank=rank,
+        path=repo_path,
+        family=current_docs_viewer_family(repo_path),
+        maintenance=0,
+        structural=0,
+        performance=0,
+        architectural=0,
+        risk=0,
+        focus=cells[1],
+        lines=count_lines(source_path),
+    )
+
+
+def resolve_current_docs_viewer_inventory_path(value: str, repo_root: Path) -> tuple[Path, str]:
+    file_name = value.strip().strip("`")
+    repo_path = DOCS_VIEWER_RUNTIME_JS_ROOT / file_name
+    source_path = repo_root / repo_path
+    if not source_path.exists():
+        raise FileNotFoundError(f"inventory row source is missing: {repo_path}")
+    return source_path, repo_path.as_posix()
+
+
+def current_docs_viewer_family(path: str) -> str:
+    if "/reports/" in path:
+        return "Reports"
+    if "/modules/" in path:
+        return "Modules"
+    return "Docs Viewer runtime"
 
 
 def count_lines(path: Path) -> int:
@@ -109,7 +149,7 @@ def git_touch_counts(repo_root: Path, since: str) -> collections.Counter[str]:
     counts: collections.Counter[str] = collections.Counter()
     for commit_paths in commits:
         for path in commit_paths:
-            if path.startswith("assets/") and path.endswith(".js"):
+            if path.endswith(".js"):
                 counts[path] += 1
     return counts
 
@@ -152,6 +192,7 @@ def summarize(
     )
 
     return {
+        "score_mode": score_mode(row_list),
         "totals": {
             "files": len(row_list),
             "lines": line_total,
@@ -183,6 +224,20 @@ def summarize(
     }
 
 
+def score_mode(rows: list[InventoryRow]) -> str:
+    if rows and all(row.path.startswith(DOCS_VIEWER_RUNTIME_JS_ROOT.as_posix()) for row in rows):
+        if all(
+            row.maintenance == 0
+            and row.structural == 0
+            and row.performance == 0
+            and row.architectural == 0
+            and row.risk == 0
+            for row in rows
+        ):
+            return "unscored-current-docs-viewer-inventory"
+    return "legacy-scored-inventory"
+
+
 def row_payload(row: InventoryRow, touch_counts: collections.Counter[str]) -> dict[str, object]:
     return {
         "path": row.path,
@@ -203,6 +258,7 @@ def print_report(summary: dict[str, object], *, since: str) -> None:
     assert isinstance(totals, dict)
     print("JavaScript inventory maintenance guardrail")
     print(f"history window: {since}")
+    print(f"score mode: {summary['score_mode']}")
     print(
         "maintenance>=2: "
         f"{totals['maintenance_2_files']} / {totals['files']} files "
