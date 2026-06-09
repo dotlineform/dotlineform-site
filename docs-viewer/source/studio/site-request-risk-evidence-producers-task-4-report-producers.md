@@ -21,7 +21,7 @@ Summary: Implement the v1 proof-of-concept `files` report. The durable reference
 | 4.2 | done | Read the selected scope from resolved config rather than duplicating path rules. |
 | 4.3 | done | Apply selected family, area, and route filters through the shared target resolver. |
 | 4.4 | done | Count included files, lines, and bytes. |
-| 4.5 | done | Produce `report.json` and `report.md`. |
+| 4.5 | done | Produce `report.json`, `report.md`, and `report.csv`. |
 | 4.6 | done | Support the initial `files` options `limit` and `sort`. |
 | 4.7 | done | Include focused unit tests for path inclusion/exclusion, line/byte counting, sorting, and markdown rendering. |
 
@@ -43,20 +43,21 @@ Report scripts are invoked with this internal argv contract:
 ```
 
 For `files.py`, read selected targets and merged options from the run manifest.
-Write these required artifacts under the provided output directory:
+Write these artifacts under the provided output directory:
 
 ```text
 report.json
 report.md
+report.csv
 ```
 
-The orchestrator marks a report as failed when the script exits non-zero or exits zero without those required artifacts.
+The orchestrator marks a report as failed when the script exits non-zero or exits zero without the required JSON and markdown artifacts.
 Dry-runs work now for the configured `files` report; write-runs for the real `files` report will fail until this batch adds `admin-app/checks/reports/files.py`.
 
 ## Deliverables
 
 - `admin-app/checks/reports/files.py`
-- report JSON and markdown outputs
+- report JSON, markdown, and CSV outputs
 - focused producer tests
 
 ## Implementation and policy guidance
@@ -77,15 +78,15 @@ Dry-runs work now for the configured `files` report; write-runs for the real `fi
 - `printf '%s\n' '{"scope":"docs-viewer","families":[],"areas":[],"routes":[],"reports":["files"],"options":{"files":{"limit":5,"sort":"lines_desc"}},"write":true}' | $HOME/miniconda3/bin/python3 admin-app/checks/run_reports.py`
 
 Focused pytest result: 18 passed.
-The orchestrator write run passed and wrote `var/admin/checks/20260609-190326-docs-viewer`.
-The produced `files` report recorded 440 files, 86,433 lines, and 3,517,712 bytes for the broad Docs Viewer scope.
+The orchestrator write run passed and wrote `var/admin/checks/20260609-194626-docs-viewer`.
+The produced `files` report recorded 440 files, 86,437 lines, and 3,518,142 bytes for the broad Docs Viewer scope.
 
 ## follow-on tasks
 
 - Batch 5 exposes these reports through the Admin checks API.
-- Batch 5 should read `run-summary.json`, `run-summary.md`, `files/report.json`, and `files/report.md` from `var/admin/checks/<run-id>/`.
+- Batch 5 should read `run-summary.json`, `run-summary.md`, `files/report.json`, `files/report.md`, and optionally `files/report.csv` from `var/admin/checks/<run-id>/`.
 - Batch 5 should treat report markdown as a raw string for display and should not render markdown to HTML server-side.
-- Batch 5 can use the written run `var/admin/checks/20260609-190326-docs-viewer` as a local fixture shape example, but the API tests should create their own temporary run artifacts.
+- Batch 5 can use the written run `var/admin/checks/20260609-194626-docs-viewer` as a local fixture shape example, but the API tests should create their own temporary run artifacts.
 
 ## task close
 

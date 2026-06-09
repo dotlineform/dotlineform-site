@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import csv
 import json
 import sys
 from pathlib import Path
@@ -71,7 +72,7 @@ def fake_config() -> dict[str, object]:
                 "label": "Files",
                 "script": "admin-app/checks/reports/files.py",
                 "description": "File count, line count, and byte size evidence.",
-                "default_options": {"limit": 50, "sort": "lines_desc"},
+                "default_options": {"limit": 20, "sort": "lines_desc"},
                 "allowed_options": {
                     "limit": {"type": "integer", "minimum": 1, "maximum": 500},
                     "sort": {"type": "string", "enum": ["lines_desc", "bytes_desc", "path_asc"]},
@@ -81,7 +82,7 @@ def fake_config() -> dict[str, object]:
     }
 
 
-def fake_manifest(*, limit: int = 50, sort: str = "lines_desc") -> dict[str, object]:
+def fake_manifest(*, limit: int = 20, sort: str = "lines_desc") -> dict[str, object]:
     return {
         "run_id": "pytest-run",
         "targets": {
@@ -151,6 +152,10 @@ def test_files_report_sorts_and_limits_markdown(tmp_path: Path) -> None:
     assert "Showing 1 of 2 files" in markdown
     assert "docs-viewer/runtime/js/docs-viewer-search.js" in markdown
     assert "docs-viewer/runtime/js/docs-viewer-shared.js" not in markdown
+    assert "| lines | size | family | path |" in markdown
+    assert "target_match" not in markdown
+    assert "direct" not in markdown
+    assert " KB" in markdown
 
 
 def test_files_report_bytes_sort(tmp_path: Path) -> None:
@@ -178,10 +183,14 @@ def test_files_report_writes_required_artifacts(tmp_path: Path) -> None:
     )
     output_dir = repo / "var" / "admin" / "checks" / "pytest-run" / "files"
 
-    json_path, md_path = report_module.write_outputs(report, report_module.render_markdown(report), output_dir)
+    json_path, md_path, csv_path = report_module.write_outputs(report, report_module.render_markdown(report), output_dir)
 
     assert json_path.name == "report.json"
     assert md_path.name == "report.md"
+    assert csv_path.name == "report.csv"
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["schema_version"] == "admin_checks_files_report_v1"
     assert md_path.read_text(encoding="utf-8").startswith("# Files Report\n")
+    csv_rows = list(csv.DictReader(csv_path.open(encoding="utf-8")))
+    assert csv_rows[0]["target_match"] == "direct"
+    assert csv_rows[0]["size_kb"] == "0"

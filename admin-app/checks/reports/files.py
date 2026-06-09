@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import json
 import sys
@@ -217,11 +218,11 @@ def build_report(
 
 
 def byte_label(value: int) -> str:
-    if value < 1024:
-        return f"{value}B"
-    if value < 1024 * 1024:
-        return f"{value / 1024:.1f}K"
-    return f"{value / (1024 * 1024):.1f}M"
+    return f"{round(value / 1024):,} KB"
+
+
+def csv_list(values: Iterable[str]) -> str:
+    return ";".join(values)
 
 
 def selected_text(values: Iterable[str]) -> str:
@@ -251,21 +252,20 @@ def render_markdown(report: Mapping[str, Any]) -> str:
         f"- routes: {selected_text(targets['routes'])}",
         f"- files: {report_totals['files']}",
         f"- total lines: {report_totals['lines']}",
-        f"- total bytes: {report_totals['bytes']} ({byte_label(int(report_totals['bytes']))})",
+        f"- total size: {byte_label(int(report_totals['bytes']))}",
         "",
         "## Largest Files",
         "",
-        table_row(["lines", "bytes", "family", "target", "path"]),
-        table_row(["---:", "---:", "---", "---", "---"]),
+        table_row(["lines", "size", "family", "path"]),
+        table_row(["---:", "---:", "---", "---"]),
     ]
     for row in shown_files:
         lines.append(
             table_row(
                 [
                     row["lines"],
-                    row["bytes"],
+                    byte_label(int(row["bytes"])),
                     row["family"],
-                    row["target_match"],
                     f"`{row['path']}`",
                 ]
             )
@@ -276,13 +276,50 @@ def render_markdown(report: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def write_outputs(report: Mapping[str, Any], markdown: str, output_dir: Path) -> tuple[Path, Path]:
+def write_csv(report: Mapping[str, Any], csv_path: Path) -> None:
+    fields = [
+        "path",
+        "lines",
+        "bytes",
+        "size_kb",
+        "family",
+        "families",
+        "areas",
+        "routes",
+        "shared_areas",
+        "shared_routes",
+        "target_match",
+    ]
+    with csv_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        for row in report["files"]:
+            writer.writerow(
+                {
+                    "path": row["path"],
+                    "lines": row["lines"],
+                    "bytes": row["bytes"],
+                    "size_kb": round(int(row["bytes"]) / 1024),
+                    "family": row["family"],
+                    "families": csv_list(row["families"]),
+                    "areas": csv_list(row["areas"]),
+                    "routes": csv_list(row["routes"]),
+                    "shared_areas": csv_list(row["shared_areas"]),
+                    "shared_routes": csv_list(row["shared_routes"]),
+                    "target_match": row["target_match"],
+                }
+            )
+
+
+def write_outputs(report: Mapping[str, Any], markdown: str, output_dir: Path) -> tuple[Path, Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     json_path = output_dir / "report.json"
     md_path = output_dir / "report.md"
+    csv_path = output_dir / "report.csv"
     json_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     md_path.write_text(markdown, encoding="utf-8")
-    return json_path, md_path
+    write_csv(report, csv_path)
+    return json_path, md_path, csv_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -305,13 +342,14 @@ def main() -> int:
         manifest = read_json_object(manifest_path, "run manifest")
         report = build_report(config=config, manifest=manifest, report_id=args.report_id, repo_root=REPO_ROOT)
         markdown = render_markdown(report)
-        json_path, md_path = write_outputs(report, markdown, output_dir)
+        json_path, md_path, csv_path = write_outputs(report, markdown, output_dir)
     except (ChecksConfigError, FilesReportError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
     print(f"Wrote {repo_relative(json_path)}")
     print(f"Wrote {repo_relative(md_path)}")
+    print(f"Wrote {repo_relative(csv_path)}")
     return 0
 
 

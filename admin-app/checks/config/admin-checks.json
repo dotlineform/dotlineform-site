@@ -784,7 +784,7 @@
       "script": "admin-app/checks/reports/files.py",
       "description": "File count, line count, and byte size evidence.",
       "default_options": {
-        "limit": 50,
+        "limit": 20,
         "sort": "lines_desc"
       },
       "allowed_options": {

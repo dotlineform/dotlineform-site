@@ -139,6 +139,7 @@ def report_artifact_paths(run_dir: Path, report_id: str, repo_root: Path = REPO_
         "output_dir": repo_relative(report_dir, repo_root),
         "report_json": repo_relative(report_dir / "report.json", repo_root),
         "report_markdown": repo_relative(report_dir / "report.md", repo_root),
+        "report_csv": repo_relative(report_dir / "report.csv", repo_root),
     }
 
 
@@ -356,6 +357,8 @@ def render_summary_markdown(summary: Mapping[str, Any]) -> str:
     for report in summary["reports"]:
         artifacts = report["artifacts"]
         artifact_text = f"`{artifacts['report_json']}`, `{artifacts['report_markdown']}`"
+        if artifacts.get("report_csv"):
+            artifact_text = f"{artifact_text}, `{artifacts['report_csv']}`"
         lines.append(f"| `{report['report_id']}` | `{report['status']}` | {artifact_text} |")
     errors = summary.get("errors", [])
     if errors:

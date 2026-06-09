@@ -128,7 +128,7 @@ Example:
   "reports": ["files"],
   "options": {
     "files": {
-      "limit": 50,
+      "limit": 20,
       "sort": "lines_desc"
     }
   },
@@ -158,6 +158,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/
   <report>/
     report.json
     report.md
+    report.csv  [optional]
 ```
 
 Run-level artifacts:
@@ -171,6 +172,7 @@ Report-level artifacts:
 
 - `report.json`: raw report metrics and selected target metadata
 - `report.md`: structured human-readable report
+- `report.csv`: optional full row export for reports that list files or similarly tabular records
 
 ## Markdown Display
 

@@ -36,6 +36,7 @@ Output artifacts:
 var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/files/
   report.json
   report.md
+  report.csv
 ```
 
 ## Inputs
@@ -47,7 +48,7 @@ Supported v1 options:
 
 | Option | Default | Purpose |
 | --- | --- | --- |
-| `limit` | `50` | Maximum number of per-file rows shown in the markdown report. |
+| `limit` | `20` | Maximum number of per-file rows shown in the markdown report. |
 | `sort` | `lines_desc` | Sort order for per-file rows. |
 
 ## Default Behavior
@@ -56,7 +57,7 @@ Supported v1 options:
 - apply selected file-family, functional-area, and route filters through the shared target resolver
 - exclude generated payloads, dependency folders, caches, local run outputs, and build outputs
 - sort rows by line count descending
-- write both machine-readable and human-readable report artifacts
+- write machine-readable JSON, human-readable markdown, and a full CSV file list
 
 ## Metrics
 
@@ -78,7 +79,18 @@ metadata and derived fields:
 | `files[].family` | File family from scope config, or `_unclassified`. |
 | `files[].areas` | Functional area ids matched by the file. |
 | `files[].routes` | Route ids matched by the file. |
-| `files[].target_match` | Whether the row matched directly, as a shared dependency, or as `_unclassified`. |
+| `files[].target_match` | Whether the row matched directly, as a shared dependency, or as `_unclassified`; included in JSON and CSV, not the markdown table. |
+
+`target_match` values:
+
+| Value | Meaning |
+| --- | --- |
+| `direct` | The file matched the selected target rules itself. For example, it matched the selected scope and any selected family, area, or route include rules. |
+| `shared` | The file was included because it is explicitly listed as a shared dependency for a selected area or route. |
+| `_unclassified` | The file is inside the selected scope but matched no configured file family. |
+
+`direct` does not mean the file is unique to one route or area.
+It means the row was selected by direct target matching rather than only by a shared dependency rule.
 
 ## Calculation Method
 
@@ -100,7 +112,8 @@ Measurement is file-local:
 4. Sum the measured values to produce `totals.lines` and `totals.bytes`.
 5. Count selected rows to produce `totals.files`.
 6. Sort the per-file rows according to the `sort` option.
-7. Limit the markdown table according to the `limit` option; the JSON artifact may retain the full selected row set.
+7. Limit the markdown table according to the `limit` option.
+8. Write the full selected row set to both `report.json` and `report.csv`.
 
 Manual equivalent for the measurement phase:
 
@@ -124,8 +137,12 @@ The markdown report should include:
 - selected families, areas, and routes when present
 - total file count
 - total line count
-- total byte size
+- total size in rounded KB
 - a per-file table sorted by the selected option
+- per-file sizes in rounded KB
+
+The markdown table intentionally omits `target_match` and other row-level targeting fields.
+Those fields belong in `report.json` and `report.csv` so the Admin UI can remain simple while still allowing manual filtering and sorting in spreadsheet tools.
 
 Example:
 
@@ -135,37 +152,21 @@ Scope:      docs-viewer
 
 files:      x
 total lc:   x
-total size: x
+total size: x KB
 
- lines      size  file
+ lines      size      file
  -------------------------------------------------------------------------
-   997       36K  ./docs-viewer/runtime/js/docs-viewer-management.js
-   905       32K  ./docs-viewer/runtime/js/docs-viewer-app-runtime.js
+   997     36 KB  ./docs-viewer/runtime/js/docs-viewer-management.js
+   905     32 KB  ./docs-viewer/runtime/js/docs-viewer-app-runtime.js
 ```
 
-## Verification
+## CSV Shape
 
-- focused tests for scope inclusion/exclusion
-- focused tests for target filtering
-- focused tests for line and byte counting
-- focused tests for sorting and limit behavior
-- focused tests for `report.json` and `report.md` shape
-- orchestrator dry run and write run for `docs-viewer` / `files`
-
-Implemented verification:
-
-- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/checks/reports/files.py admin-app/tests/python/test_files_report.py admin-app/checks/run_reports.py admin-app/tests/python/test_run_reports.py`
-- `$HOME/miniconda3/bin/python3 -m pytest admin-app/tests/python/test_files_report.py admin-app/tests/python/test_run_reports.py admin-app/tests/python/test_admin_checks_config.py admin-app/tests/python/test_target_map_resolver.py`
-- real orchestrator write run for broad `docs-viewer` / `files`
-
-Latest local write-run artifact:
+`report.csv` contains the full selected file row set for manual review in spreadsheet tools.
+It should include at least:
 
 ```text
-var/admin/checks/20260609-190326-docs-viewer/
-  run-summary.json
-  run-summary.md
-  files/report.json
-  files/report.md
+path,lines,bytes,size_kb,family,families,areas,routes,shared_areas,shared_routes,target_match
 ```
 
-That run passed and produced 440 files, 86,433 lines, and 3,517,712 bytes.
+List-valued fields are written as semicolon-separated values.

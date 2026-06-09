@@ -116,7 +116,7 @@ def make_fake_repo(tmp_path: Path) -> Path:
                 "label": "Success",
                 "script": "admin-app/checks/reports/success.py",
                 "description": "Successful fake report.",
-                "default_options": {"limit": 50},
+                "default_options": {"limit": 20},
                 "allowed_options": {"limit": {"type": "integer", "minimum": 1, "maximum": 100}},
             },
             "failure": {
