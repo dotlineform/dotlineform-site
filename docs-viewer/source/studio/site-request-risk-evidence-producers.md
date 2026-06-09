@@ -27,6 +27,8 @@ The new system is report-oriented:
 
 The first production report is `files` for line count and file size evidence.
 The `target-map` report is intentionally deferred to [Target Map Report Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-target-map) so v1 can prove the checks system with the simplest useful report first.
+A later dependency model for compound reports is captured as an option in [Risk Evidence Producers Report Dependencies](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-dependencies).
+Possible future dependency reports are captured as options in [Git History Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-git-history), [Imports Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-imports), and [Tests Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-tests).
 
 ## Current Implementation
 

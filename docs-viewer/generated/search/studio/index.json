@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4b5fe58eb6aec69798ddecb016e3c20c",
-    "generated_at_utc": "2026-06-09T18:56:39Z",
-    "count": 234
+    "version": "blake2b-9191df4803ca1cfe820194f7ebaf29d4",
+    "generated_at_utc": "2026-06-09T20:24:26Z",
+    "count": 238
   },
   "entries": [
     {
@@ -1176,6 +1176,88 @@
       "search_text": "site-request-risk-evidence-producers site request risk evidence producers risk evidence producers request change requests change requests 2026-06-09 2026 06 09"
     },
     {
+      "id": "site-request-risk-evidence-producers-report-git-history",
+      "kind": "doc",
+      "title": "Git History Report",
+      "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-git-history",
+      "last_updated": "2026-06-09",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
+      "search_terms": [
+        "site-request-risk-evidence-producers-report-git-history",
+        "site",
+        "request",
+        "risk",
+        "evidence",
+        "producers",
+        "report",
+        "git",
+        "history",
+        "git history report",
+        "risk evidence producers request",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "site-request-risk-evidence-producers-report-git-history site request risk evidence producers report git history git history report risk evidence producers request 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-risk-evidence-producers-report-imports",
+      "kind": "doc",
+      "title": "Imports Report",
+      "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-imports",
+      "last_updated": "2026-06-09",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
+      "search_terms": [
+        "site-request-risk-evidence-producers-report-imports",
+        "site",
+        "request",
+        "risk",
+        "evidence",
+        "producers",
+        "report",
+        "imports",
+        "imports report",
+        "risk evidence producers request",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "site-request-risk-evidence-producers-report-imports site request risk evidence producers report imports imports report risk evidence producers request 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-risk-evidence-producers-report-dependencies",
+      "kind": "doc",
+      "title": "Report Dependencies",
+      "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-dependencies",
+      "last_updated": "2026-06-09",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
+      "search_terms": [
+        "site-request-risk-evidence-producers-report-dependencies",
+        "site",
+        "request",
+        "risk",
+        "evidence",
+        "producers",
+        "report",
+        "dependencies",
+        "report dependencies",
+        "risk evidence producers request",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "site-request-risk-evidence-producers-report-dependencies site request risk evidence producers report dependencies report dependencies risk evidence producers request 2026-06-09 2026 06 09"
+    },
+    {
       "id": "site-request-risk-evidence-producers-task-1-target-map-audit",
       "kind": "doc",
       "title": "Risk Evidence Producers Task 1 Target Map Audit",
@@ -1442,7 +1524,7 @@
     {
       "id": "site-request-risk-evidence-producers-report-target-map",
       "kind": "doc",
-      "title": "Target Map Report Request",
+      "title": "Target Map Report",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-target-map",
       "last_updated": "2026-06-08",
       "parent_id": "site-request-risk-evidence-producers",
@@ -1458,14 +1540,41 @@
         "report",
         "target",
         "map",
-        "target map report request",
+        "target map report",
         "risk evidence producers request",
         "2026-06-08",
         "2026",
         "06",
         "08"
       ],
-      "search_text": "site-request-risk-evidence-producers-report-target-map site request risk evidence producers report target map target map report request risk evidence producers request 2026-06-08 2026 06 08"
+      "search_text": "site-request-risk-evidence-producers-report-target-map site request risk evidence producers report target map target map report risk evidence producers request 2026-06-08 2026 06 08"
+    },
+    {
+      "id": "site-request-risk-evidence-producers-report-tests",
+      "kind": "doc",
+      "title": "Tests Report",
+      "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-tests",
+      "last_updated": "2026-06-09",
+      "parent_id": "site-request-risk-evidence-producers",
+      "parent_title": "Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
+      "search_terms": [
+        "site-request-risk-evidence-producers-report-tests",
+        "site",
+        "request",
+        "risk",
+        "evidence",
+        "producers",
+        "report",
+        "tests",
+        "tests report",
+        "risk evidence producers request",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "site-request-risk-evidence-producers-report-tests site request risk evidence producers report tests tests report risk evidence producers request 2026-06-09 2026 06 09"
     },
     {
       "id": "data-sharing",

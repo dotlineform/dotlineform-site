@@ -1,13 +1,13 @@
 ---
 doc_id: site-request-risk-evidence-producers-report-target-map
-title: Target Map Report Request
+title: Target Map Report
 added_date: 2026-06-08
 last_updated: 2026-06-08
 ui_status: planned
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
-# Target Map Report Request
+# Target Map Report
 
 Status:
 

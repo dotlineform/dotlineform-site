@@ -279,6 +279,24 @@
           "ui_status": "in-progress",
           "children": [
             {
+              "doc_id": "site-request-risk-evidence-producers-report-git-history",
+              "title": "Git History Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-git-history.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-report-imports",
+              "title": "Imports Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-imports.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-report-dependencies",
+              "title": "Report Dependencies",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-dependencies.json",
+              "ui_status": "draft"
+            },
+            {
               "doc_id": "site-request-risk-evidence-producers-task-1-target-map-audit",
               "title": "Risk Evidence Producers Task 1 Target Map Audit",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-1-target-map-audit.json",
@@ -334,9 +352,15 @@
             },
             {
               "doc_id": "site-request-risk-evidence-producers-report-target-map",
-              "title": "Target Map Report Request",
+              "title": "Target Map Report",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-target-map.json",
               "ui_status": "planned"
+            },
+            {
+              "doc_id": "site-request-risk-evidence-producers-report-tests",
+              "title": "Tests Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-tests.json",
+              "ui_status": "draft"
             }
           ]
         }
@@ -1263,5 +1287,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T19:58:07Z"
+  "generated_at": "2026-06-09T20:24:45Z"
 }

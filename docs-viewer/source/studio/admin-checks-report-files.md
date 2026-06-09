@@ -38,7 +38,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/files/
 
 ## Inputs
 
-The report reads the selected scope and target filters from the resolved checks config.
+The report reads the selected scope and target filters from the resolved checks config `admin-app/checks/config/admin-checks.json`.
 It should not duplicate path rules locally.
 
 Supported options:
