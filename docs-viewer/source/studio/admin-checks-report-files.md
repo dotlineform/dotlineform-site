@@ -58,7 +58,14 @@ Supported v1 options:
 - sort rows by line count descending
 - write both machine-readable and human-readable report artifacts
 
-## Required Metrics
+## Metrics
+
+| Metric | Description |
+| --- | --- |
+| `files[].lines` | Line count for the file. |
+| `files[].bytes` | Byte size for the file. |
+
+metadata and derived fields:
 
 | Metric | Description |
 | --- | --- |
