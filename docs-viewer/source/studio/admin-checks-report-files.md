@@ -67,7 +67,7 @@ Supported v1 options:
 
 metadata and derived fields:
 
-| Metric | Description |
+| Value | Description |
 | --- | --- |
 | `totals.files` | Included file count. |
 | `totals.lines` | Total line count across included files. |
