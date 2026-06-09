@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers-task-7-tests
 title: Risk Evidence Producers Task 7 Tests
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ui_status: planned
 parent_id: site-request-risk-evidence-producers
 viewable: true
@@ -27,6 +27,14 @@ Summary: Add targeted verification for the checks config, runner, producers, API
 - Verification should stay focused; do not add broad browser smokes where lower-level tests cover the contract.
 - Add a check profile only after the underlying focused tests exist.
 - Use strict safe-path and invalid-id tests for local artifact access.
+
+## Batch 6 handoff
+
+- `/admin/checks/` is registered in the Admin route config, server route table, runtime config, home navigation, static policy, and UI text paths.
+- `admin-app/app/frontend/js/admin-checks.js` renders metadata-driven report, scope, family, area, route, and report-option controls from the checks API.
+- The UI run action always sends `write: true`; no dry-run control exists in Batch 6.
+- The run list is a top-level folder list from `var/admin/checks/`, starts with no selected folder, and selecting a run loads the selected report markdown as escaped preformatted text.
+- Delete remains a confirmed UI action against the validated checks API. Browser smoke verified the enabled Delete control, but the in-app browser automation surface could not accept the native `confirm` dialog; Batch 7 should cover reset-after-delete either with a focused browser route smoke that can handle dialogs or a cheaper frontend/module test if the harness supports it.
 
 ## Deliverables
 

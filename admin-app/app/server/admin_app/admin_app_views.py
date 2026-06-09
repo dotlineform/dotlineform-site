@@ -171,6 +171,67 @@ def admin_risk_view(version: str) -> str:
     )
 
 
+def admin_checks_view(version: str) -> str:
+    return admin_route_view(
+        version,
+        title="Checks",
+        route_id="admin-checks",
+        script="/admin/app/frontend/js/admin-checks.js",
+        body="""<div
+          class="tagStudioPage studioChecksPage"
+          id="studioChecksRoot"
+          hidden
+          data-admin-route="admin-checks"
+          data-admin-ready="false"
+          data-admin-busy="false"
+        >
+          <div class="studioChecksTop">
+            <section class="tagStudio__panel studioChecksPanel studioChecksControlsPanel">
+              <p class="tagStudio__status" id="studioChecksStatus"></p>
+              <form class="studioChecksForm" id="studioChecksForm">
+                <label class="studioChecksField">
+                  <span id="studioChecksReportLabel"></span>
+                  <select class="tagStudio__input" id="studioChecksReport" name="report"></select>
+                </label>
+                <label class="studioChecksField">
+                  <span id="studioChecksScopeLabel"></span>
+                  <select class="tagStudio__input" id="studioChecksScope" name="scope"></select>
+                </label>
+                <label class="studioChecksField">
+                  <span id="studioChecksFamilyLabel"></span>
+                  <select class="tagStudio__input" id="studioChecksFamily" name="family"></select>
+                </label>
+                <label class="studioChecksField">
+                  <span id="studioChecksAreaLabel"></span>
+                  <select class="tagStudio__input" id="studioChecksArea" name="area"></select>
+                </label>
+                <label class="studioChecksField">
+                  <span id="studioChecksRouteLabel"></span>
+                  <select class="tagStudio__input" id="studioChecksRoute" name="route"></select>
+                </label>
+                <div class="studioChecksOptions" id="studioChecksOptions"></div>
+                <div class="studioChecksActions">
+                  <button type="submit" class="tagStudio__button tagStudio__button--defaultWidth" id="studioChecksRun"></button>
+                </div>
+              </form>
+            </section>
+            <section class="tagStudio__panel studioChecksPanel studioChecksRunsPanel">
+              <div class="studioChecksPanelHead">
+                <h3 id="studioChecksRunsTitle"></h3>
+                <button type="button" class="tagStudio__button" id="studioChecksDelete"></button>
+              </div>
+              <select class="tagStudio__input studioChecksRunList" id="studioChecksRuns" size="8"></select>
+            </section>
+          </div>
+          <section class="tagStudio__panel studioChecksOutputPanel">
+            <div class="studioChecksArtifactPath" id="studioChecksArtifactPath"></div>
+            <pre class="studioChecksMarkdown" id="studioChecksMarkdown"></pre>
+          </section>
+        </div>
+        <p class="tagStudio__status" id="studioChecksBootStatus">loading Admin checks...</p>""",
+    )
+
+
 def admin_activity_view(version: str) -> str:
     return admin_route_view(
         version,

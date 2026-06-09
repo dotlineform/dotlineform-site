@@ -12,6 +12,15 @@ const RISK_API_ENDPOINTS = Object.freeze({
   runSummary: (runId) => `${RISK_API_ENDPOINTS.run(runId)}/summary`
 });
 
+const CHECKS_API_ENDPOINTS = Object.freeze({
+  health: "/admin/api/checks/health",
+  reports: "/admin/api/checks/reports",
+  runs: "/admin/api/checks/runs",
+  run: (runId) => `/admin/api/checks/runs/${encodeURIComponent(String(runId || ""))}`,
+  runSummary: (runId) => `${CHECKS_API_ENDPOINTS.run(runId)}/summary`,
+  report: (runId, reportId) => `${CHECKS_API_ENDPOINTS.run(runId)}/reports/${encodeURIComponent(String(reportId || ""))}`
+});
+
 const ACTIVITY_API_ENDPOINTS = Object.freeze({
   feed: "/admin/api/activity/feed"
 });
@@ -19,6 +28,7 @@ const ACTIVITY_API_ENDPOINTS = Object.freeze({
 export {
   ACTIVITY_API_ENDPOINTS,
   AUDIT_API_ENDPOINTS,
+  CHECKS_API_ENDPOINTS,
   RISK_API_ENDPOINTS
 };
 
@@ -28,6 +38,10 @@ export async function probeAuditApiHealth(timeoutMs = 500) {
 
 export async function probeRiskApiHealth(timeoutMs = 500) {
   return probeHealth(RISK_API_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeChecksApiHealth(timeoutMs = 500) {
+  return probeHealth(CHECKS_API_ENDPOINTS.health, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {

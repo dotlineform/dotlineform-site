@@ -17,6 +17,13 @@
         "script": "/admin/app/frontend/js/admin-audits.js",
         "nav": true
       },
+      "admin_checks": {
+        "label": "checks",
+        "title": "Checks",
+        "path": "/admin/checks/",
+        "script": "/admin/app/frontend/js/admin-checks.js",
+        "nav": true
+      },
       "admin_risk": {
         "label": "risk",
         "title": "Risk",
@@ -59,6 +66,7 @@
       "ui_text": {
         "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
         "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
+        "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json",
         "admin_home": "/admin/app/frontend/config/ui-text/admin-home.json",
         "admin_risk": "/admin/app/frontend/config/ui-text/admin-risk.json"
       }

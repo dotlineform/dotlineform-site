@@ -30,7 +30,7 @@ if str(ADMIN_SERVER_DIR) not in sys.path:
 
 from admin_app_config import asset_version, runtime_config  # noqa: E402
 from admin_activity_api import activity_get_payload  # noqa: E402
-from admin_app_views import admin_activity_view, admin_audits_view, admin_home_view, admin_risk_view, admin_testing_view  # noqa: E402
+from admin_app_views import admin_activity_view, admin_audits_view, admin_checks_view, admin_home_view, admin_risk_view, admin_testing_view  # noqa: E402
 from admin_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from admin_checks_api import ChecksConfigError, checks_delete_response, checks_get_payload, checks_post_response  # noqa: E402
 from admin_risk_api import risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
@@ -109,6 +109,9 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/admin/audits", "/admin/audits/"}:
             self.send_html(admin_audits_view(self.version))
+            return
+        if path in {"/admin/checks", "/admin/checks/"}:
+            self.send_html(admin_checks_view(self.version))
             return
         if path in {"/admin/risk", "/admin/risk/"}:
             self.send_html(admin_risk_view(self.version))

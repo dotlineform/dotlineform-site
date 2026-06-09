@@ -21,6 +21,7 @@ ADMIN_ROUTE_REGISTRY_PATH = ("app", "routes")
 ADMIN_SERVED_ROUTE_PATHS: dict[str, str] = {
     "admin_home": "/admin/",
     "admin_audits": "/admin/audits/",
+    "admin_checks": "/admin/checks/",
     "admin_risk": "/admin/risk/",
     "admin_activity": "/admin/activity/",
     "admin_testing": "/admin/testing/",
@@ -38,6 +39,12 @@ ADMIN_SERVICE_ENDPOINTS: dict[str, object] = {
         "health": "/admin/api/audits/health",
         "audits": "/admin/api/audits/audits",
         "run": "/admin/api/audits/audits/run",
+    },
+    "checks": {
+        "base": "/admin/api/checks",
+        "health": "/admin/api/checks/health",
+        "reports": "/admin/api/checks/reports",
+        "runs": "/admin/api/checks/runs",
     },
     "risk": {
         "base": "/admin/api/risk",
@@ -174,11 +181,13 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-home.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-activity.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-audits.json",
+        repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-checks.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-risk.json",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-context.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-modals.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-audits.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-checks.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-config.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-home.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-operational-route.js",
@@ -219,6 +228,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "ui_text": {
                 "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
                 "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
+                "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json",
                 "admin_home": "/admin/app/frontend/config/ui-text/admin-home.json",
                 "admin_risk": "/admin/app/frontend/config/ui-text/admin-risk.json",
             },
@@ -228,6 +238,9 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             },
             "risk": {
                 "runs": "var/admin/risk/runs",
+            },
+            "checks": {
+                "runs": "var/admin/checks",
             },
             "testing": {
                 "runs": "var/admin/test-runs",

@@ -3,7 +3,7 @@ doc_id: site-request-risk-evidence-producers-task-6-admin-checks-ui
 title: Risk Evidence Producers Task 6 Admin Checks UI
 added_date: 2026-06-08
 last_updated: 2026-06-09
-ui_status: planned
+ui_status: done
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
@@ -13,26 +13,24 @@ This is the delivery specification for Batch 6 in [Risk Evidence Producers Reque
 
 ### Batch 6: Add `/admin/checks/` UI
 
-Summary: Build the Admin route for selecting targets/reports, running checks, reading markdown artifacts, and deleting snapshots.
+Summary: Build the Admin route for selecting targets/reports, running checks, reading markdown artifacts, and deleting snapshots. Design steer is provided in the sections below.
 
 | ID | status | action |
 | --- | --- | --- |
-| 6.1 | planned | Add the Admin route shell, frontend module, route config, and UI text bundle. |
-| 6.2 | planned | Render scope, file-family, functional-area, route, and report selection from API metadata. |
-| 6.3 | planned | Render report-specific controls from allowlisted option metadata. |
-| 6.4 | planned | Support dry run and write run actions. |
-| 6.5 | planned | List recent runs and display run summary markdown. |
-| 6.6 | planned | Display selected report markdown. |
-| 6.7 | planned | Provide confirmed deletion for a selected local run snapshot. |
-| 6.8 | planned | Keep the UI dense and operational; avoid explanatory landing-page copy. |
+| 6.1 | done | Add the Admin route shell, frontend module, route config, and UI text bundle. |
+| 6.2 | done | Render scope, file-family, functional-area, route, and report selection from API metadata. |
+| 6.3 | done | Render report-specific controls from allowlisted option metadata. |
+| 6.4 | done | Support the validated write run action. |
+| 6.5 | done | List recent runs and restore selected run controls from run metadata. |
+| 6.6 | done | Display selected report markdown. |
+| 6.7 | done | Provide confirmed deletion for a selected local run snapshot. |
+| 6.8 | done | Keep the UI dense and operational; avoid explanatory landing-page copy. |
 
-## Steer for these tasks
+## Batch 5 handoff
 
 - This is an operational Admin UI, not a landing page.
 - Markdown is displayed as escaped preformatted text.
 - The UI can create validated runs and delete validated local snapshots only.
-
-## Batch 5 handoff
 
 Batch 5 added `admin-app/app/server/admin_app/admin_checks_api.py` and registered `/admin/api/checks/...` in the Admin server.
 
@@ -77,12 +75,44 @@ report_csv_exists
 Display `summary_markdown` and `report_markdown` as escaped preformatted text.
 Do not render markdown to HTML in Batch 6.
 
+## UI design
+
+The `/admin/checks/` page should contain 2 regions, top and bottom.
+
+top region contains two panels:
+top left panel contains:
+- vertically stacked dropdowns with left aligned labels for the report and filters selections:
+  - report name
+  - scope
+  - family
+  - area
+  - route
+- a 'run' button which runs the selected report with the selected filters
+top right panel contains:
+- a list control which lists the report folders in `var/admin/checks/`
+- a 'delete' button which deletes the selected folder
+
+bottom region contains:
+- the markdown artifact path.
+- the markdown file contents for the selected report.
+
+general behaviour:
+- 'run' generates the report, adds the folder to the list and selects it, displays the markdown in bottom panel
+- whilst the report is being generated, the mouse pointer shows 'busy' state.
+- selecting a report folder from the list sets the dropdowns to the selected report and filters for that report, and displays the markdown in the bottom panel.
+- 'delete' clears all the dropdowns, clears the displayed markdown, removes the selected folder from the list and deselects the list.
+
+implementation notes:
+- refer to `ui-catalogue.md` for ui guidance and framework. However, the `ui.md` child pages are stale and inconsistent because they don't reflect all the current apps, which own their own css, so a 'best attempt' will be needed until we review and update the entire UI guidance.
+- The Batch 6 UI always sends `write: true`; dry-run controls stay out of scope for this route.
+- Opening the artifact path in VS Code is deferred to a later enhancement using the same handler family as Docs Viewer.
+
 ## Deliverables
 
-- `/admin/checks/` route shell
-- frontend JS module
-- Admin config entries
-- UI text bundle
+- `/admin/checks/` route shell: done.
+- frontend JS module: done.
+- Admin config entries: done.
+- UI text bundle: done.
 
 ## Implementation and policy guidance
 
@@ -97,7 +127,12 @@ Do not render markdown to HTML in Batch 6.
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/app/server/admin_app/admin_app_config.py admin-app/app/server/admin_app/admin_app_views.py admin-app/app/server/admin_app/admin_app_server.py admin-app/tests/python/test_admin_app_server.py`
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/admin-config.json`
+- `$HOME/miniconda3/bin/python3 -m json.tool admin-app/app/frontend/config/ui-text/admin-checks.json`
+- `node --check admin-app/app/frontend/js/admin-checks.js`
+- `$HOME/miniconda3/bin/python3 -m pytest admin-app/tests/python/test_admin_app_server.py admin-app/tests/python/test_admin_checks_api.py`
+- Browser smoke against `http://127.0.0.1:8899/admin/checks/`: verified route boot, metadata controls, write-run behavior, run-folder selection, report markdown display, artifact path display, and enabled Delete control. The generated smoke run `20260609-215033-docs-viewer` was removed through the validated Admin checks API after the in-app browser automation surface could not accept the native `confirm` dialog.
 
 ## follow-on tasks
 
@@ -105,5 +140,5 @@ Do not render markdown to HTML in Batch 6.
 
 ## task close
 
-- Add a handoff note to Batch 7.
-- Set this batch status and front matter `ui_status` to `done`.
+- Batch 7 handoff note added.
+- Batch status and front matter `ui_status` set to `done`.
