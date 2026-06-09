@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9191df4803ca1cfe820194f7ebaf29d4",
-    "generated_at_utc": "2026-06-09T20:24:26Z",
+    "version": "blake2b-06fc9bac5ba101d524e1026b599cc0f4",
+    "generated_at_utc": "2026-06-09T20:32:10Z",
     "count": 238
   },
   "entries": [
@@ -1379,10 +1379,10 @@
       "kind": "doc",
       "title": "Risk Evidence Producers Task 5 Admin Checks API",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-5-admin-checks-api",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-09",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-08 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
       "search_terms": [
         "site-request-risk-evidence-producers-task-5-admin-checks-api",
         "site",
@@ -1397,22 +1397,22 @@
         "api",
         "risk evidence producers task 5 admin checks api",
         "risk evidence producers request",
-        "2026-06-08",
+        "2026-06-09",
         "2026",
         "06",
-        "08"
+        "09"
       ],
-      "search_text": "site-request-risk-evidence-producers-task-5-admin-checks-api site request risk evidence producers task 5 admin checks api risk evidence producers task 5 admin checks api risk evidence producers request 2026-06-08 2026 06 08"
+      "search_text": "site-request-risk-evidence-producers-task-5-admin-checks-api site request risk evidence producers task 5 admin checks api risk evidence producers task 5 admin checks api risk evidence producers request 2026-06-09 2026 06 09"
     },
     {
       "id": "site-request-risk-evidence-producers-task-6-admin-checks-ui",
       "kind": "doc",
       "title": "Risk Evidence Producers Task 6 Admin Checks UI",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-6-admin-checks-ui",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-09",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-08 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
       "search_terms": [
         "site-request-risk-evidence-producers-task-6-admin-checks-ui",
         "site",
@@ -1427,12 +1427,12 @@
         "ui",
         "risk evidence producers task 6 admin checks ui",
         "risk evidence producers request",
-        "2026-06-08",
+        "2026-06-09",
         "2026",
         "06",
-        "08"
+        "09"
       ],
-      "search_text": "site-request-risk-evidence-producers-task-6-admin-checks-ui site request risk evidence producers task 6 admin checks ui risk evidence producers task 6 admin checks ui risk evidence producers request 2026-06-08 2026 06 08"
+      "search_text": "site-request-risk-evidence-producers-task-6-admin-checks-ui site request risk evidence producers task 6 admin checks ui risk evidence producers task 6 admin checks ui risk evidence producers request 2026-06-09 2026 06 09"
     },
     {
       "id": "site-request-risk-evidence-producers-task-7-tests",

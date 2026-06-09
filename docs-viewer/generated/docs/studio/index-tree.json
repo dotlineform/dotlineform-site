@@ -324,7 +324,7 @@
               "doc_id": "site-request-risk-evidence-producers-task-5-admin-checks-api",
               "title": "Risk Evidence Producers Task 5 Admin Checks API",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-5-admin-checks-api.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-risk-evidence-producers-task-6-admin-checks-ui",
@@ -1287,5 +1287,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T20:24:45Z"
+  "generated_at": "2026-06-09T20:31:45Z"
 }

@@ -32,6 +32,7 @@ from admin_app_config import asset_version, runtime_config  # noqa: E402
 from admin_activity_api import activity_get_payload  # noqa: E402
 from admin_app_views import admin_activity_view, admin_audits_view, admin_home_view, admin_risk_view, admin_testing_view  # noqa: E402
 from admin_audit_api import audit_get_payload, audit_post_response  # noqa: E402
+from admin_checks_api import ChecksConfigError, checks_delete_response, checks_get_payload, checks_post_response  # noqa: E402
 from admin_risk_api import risk_delete_response, risk_get_payload, risk_post_response  # noqa: E402
 from admin_testing_api import testing_get_payload  # noqa: E402
 from ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_demo_view, ui_catalogue_palette_view  # noqa: E402
@@ -94,6 +95,9 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/admin/api/audits/"):
             self.send_audit_api_json(path.removeprefix("/admin/api/audits"))
             return
+        if path.startswith("/admin/api/checks/"):
+            self.send_checks_api_json(path.removeprefix("/admin/api/checks"), query)
+            return
         if path.startswith("/admin/api/risk/"):
             self.send_risk_api_json(path.removeprefix("/admin/api/risk"), query)
             return
@@ -146,6 +150,12 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
                 return
             self.send_risk_api_post_json(path.removeprefix("/admin/api/risk"))
             return
+        if path.startswith("/admin/api/checks/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_checks_api_post_json(path.removeprefix("/admin/api/checks"))
+            return
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_DELETE(self) -> None:
@@ -157,12 +167,18 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
                 return
             self.send_risk_api_delete_json(path.removeprefix("/admin/api/risk"))
             return
+        if path.startswith("/admin/api/checks/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_checks_api_delete_json(path.removeprefix("/admin/api/checks"))
+            return
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith(("/admin/api/audits/", "/admin/api/risk/")):
+        if not path.startswith(("/admin/api/audits/", "/admin/api/checks/", "/admin/api/risk/")):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -245,6 +261,16 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
+    def send_checks_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+        try:
+            self.send_json(checks_get_payload(self.repo_root, api_path, query))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except (ChecksConfigError, ValueError) as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
     def send_testing_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
             self.send_json(testing_get_payload(self.repo_root, api_path, query))
@@ -279,6 +305,18 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
+    def send_checks_api_post_json(self, api_path: str) -> None:
+        try:
+            body = self.read_json_body()
+            status, payload = checks_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except (ChecksConfigError, ValueError) as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
     def send_risk_api_delete_json(self, api_path: str) -> None:
         try:
             status, payload = risk_delete_response(self.repo_root, api_path)
@@ -286,6 +324,17 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_checks_api_delete_json(self, api_path: str) -> None:
+        try:
+            status, payload = checks_delete_response(self.repo_root, api_path)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except (ChecksConfigError, ValueError) as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)

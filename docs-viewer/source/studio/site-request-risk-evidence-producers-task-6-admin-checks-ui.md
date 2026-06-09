@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers-task-6-admin-checks-ui
 title: Risk Evidence Producers Task 6 Admin Checks UI
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ui_status: planned
 parent_id: site-request-risk-evidence-producers
 viewable: true
@@ -31,6 +31,51 @@ Summary: Build the Admin route for selecting targets/reports, running checks, re
 - This is an operational Admin UI, not a landing page.
 - Markdown is displayed as escaped preformatted text.
 - The UI can create validated runs and delete validated local snapshots only.
+
+## Batch 5 handoff
+
+Batch 5 added `admin-app/app/server/admin_app/admin_checks_api.py` and registered `/admin/api/checks/...` in the Admin server.
+
+Use these endpoints:
+
+```text
+GET    /admin/api/checks/health
+GET    /admin/api/checks/reports
+GET    /admin/api/checks/runs
+POST   /admin/api/checks/runs
+GET    /admin/api/checks/runs/<run-id>/summary
+GET    /admin/api/checks/runs/<run-id>/reports/<report-id>
+DELETE /admin/api/checks/runs/<run-id>
+```
+
+`GET /admin/api/checks/reports` returns safe metadata for scopes, families, areas, routes, reports, default options, and allowed options.
+Do not hard-code report option controls when this metadata is sufficient.
+
+`POST /admin/api/checks/runs` accepts the same JSON shape as the CLI orchestrator.
+The UI must not send command strings, script paths, output roots, environment values, or arbitrary local paths.
+The response includes a top-level `status` of `dry-run`, `passed`, or `failed`.
+
+Summary reads return:
+
+```text
+summary
+summary_markdown
+summary_path
+```
+
+Report reads return:
+
+```text
+report
+report_markdown
+report_path
+report_markdown_path
+report_csv_path
+report_csv_exists
+```
+
+Display `summary_markdown` and `report_markdown` as escaped preformatted text.
+Do not render markdown to HTML in Batch 6.
 
 ## Deliverables
 

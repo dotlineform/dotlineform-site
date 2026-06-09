@@ -145,6 +145,30 @@ Rules:
 - dry runs resolve the plan without writing run artifacts
 - write runs create ignored local artifacts under `var/admin/checks/`
 
+## API
+
+The local Admin checks API is registered under:
+
+```text
+/admin/api/checks/
+```
+
+Endpoints:
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/admin/api/checks/health` | Service health, config id, config version, runs root, and configured reports. |
+| `GET` | `/admin/api/checks/reports` | Safe metadata for scopes, families, areas, routes, reports, defaults, and allowed options. |
+| `GET` | `/admin/api/checks/runs` | Recent run summaries under `var/admin/checks/`. |
+| `POST` | `/admin/api/checks/runs` | Create a dry run or write run from a validated JSON run request. |
+| `GET` | `/admin/api/checks/runs/<run-id>/summary` | Read `run-summary.json` and raw `run-summary.md`. |
+| `GET` | `/admin/api/checks/runs/<run-id>/reports/<report-id>` | Read `report.json`, raw `report.md`, and optional CSV artifact metadata. |
+| `DELETE` | `/admin/api/checks/runs/<run-id>` | Delete one local run snapshot under `var/admin/checks/`. |
+
+The API validates run ids and report ids before reading or deleting local artifacts.
+It rejects paths that resolve outside the checks runs directory.
+It does not expose arbitrary local file reads, shell command strings, environment values, script paths, or output roots.
+
 ## Artifacts
 
 Each write run creates:
