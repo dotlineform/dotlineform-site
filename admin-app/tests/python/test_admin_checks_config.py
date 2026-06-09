@@ -95,6 +95,26 @@ def test_validate_run_request_rejects_unknown_scope_and_options() -> None:
             },
         )
 
+    with pytest.raises(checks_config.ChecksConfigError, match="unknown keys"):
+        checks_config.validate_run_request(
+            config,
+            {
+                "scope": "docs-viewer",
+                "reports": ["files"],
+                "output_root": "tmp",
+            },
+        )
+
+    with pytest.raises(checks_config.ChecksConfigError, match="request.write must be a boolean"):
+        checks_config.validate_run_request(
+            config,
+            {
+                "scope": "docs-viewer",
+                "reports": ["files"],
+                "write": "yes",
+            },
+        )
+
 
 def test_validate_run_request_returns_normalized_selection() -> None:
     config = loaded_config()

@@ -295,7 +295,7 @@
               "doc_id": "site-request-risk-evidence-producers-task-3-orchestrator",
               "title": "Risk Evidence Producers Task 3 Orchestrator",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-3-orchestrator.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-risk-evidence-producers-task-4-report-producers",
@@ -1264,5 +1264,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T18:05:20Z"
+  "generated_at": "2026-06-09T18:38:13Z"
 }

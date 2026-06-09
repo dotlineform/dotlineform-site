@@ -13,6 +13,7 @@ DEFAULT_CONFIG_PATH = Path("admin-app/checks/config/admin-checks.json")
 REPORTS_ROOT = Path("admin-app/checks/reports")
 REQUIRED_SCOPES = {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
 VALID_ROUTE_STATUSES = {"mapped", "inventory-only"}
+VALID_RUN_REQUEST_KEYS = {"scope", "families", "areas", "routes", "reports", "options", "write"}
 
 
 class ChecksConfigError(ValueError):
@@ -213,6 +214,10 @@ def validate_id_selection(config: Mapping[str, Any], section: str, selected: Any
 
 
 def validate_run_request(config: Mapping[str, Any], request: Mapping[str, Any]) -> dict[str, Any]:
+    unknown_keys = sorted(set(request).difference(VALID_RUN_REQUEST_KEYS))
+    if unknown_keys:
+        raise ChecksConfigError(f"request contains unknown keys: {', '.join(unknown_keys)}")
+
     scope = as_nonempty_string(request.get("scope"), "request.scope")
     scopes = set(as_object(config.get("scopes"), "scopes"))
     if scope not in scopes:
@@ -245,6 +250,10 @@ def validate_run_request(config: Mapping[str, Any], request: Mapping[str, Any]) 
         report_options = as_object(options.get(report_id, {}), f"request.options.{report_id}")
         validate_report_options_for_request(config, report_id, report_options)
 
+    write = request.get("write", False)
+    if not isinstance(write, bool):
+        raise ChecksConfigError("request.write must be a boolean")
+
     return {
         "scope": scope,
         "families": families,
@@ -252,5 +261,5 @@ def validate_run_request(config: Mapping[str, Any], request: Mapping[str, Any]) 
         "routes": routes,
         "reports": reports,
         "options": dict(options),
-        "write": bool(request.get("write", False)),
+        "write": write,
     }

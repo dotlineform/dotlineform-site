@@ -7,7 +7,7 @@ parent_id: admin-checks
 ---
 # Config and Target Map
 
-This document explains the relationship between the Admin checks config, the target-map audit, and the later `target-map` report.
+This document explains the relationship between the Admin checks config, the target-map resolver, the target-map audit, and the later `target-map` report.
 
 ## Core Idea
 
@@ -20,45 +20,100 @@ admin-app/checks/config/admin-checks.json
 That config defines scopes, file families, functional areas, routes, exclusions, shared dependencies, and report metadata.
 It should contain stable path and filename patterns, not a hand-maintained per-file inventory.
 
-The audit and report should both use shared resolver logic.
-They should not maintain separate implementations of path matching, target resolution, stale-pattern detection, shared dependency resolution, or boundary flag counts.
+The audit and report use shared resolver logic.
+They must not maintain separate implementations of path matching, target resolution, stale-pattern detection, shared dependency resolution, or boundary flag counts.
 
-The intended shared module shape is:
+The current module shape is:
 
 ```text
 admin-app/checks/
+  admin_checks_config.py
   target_map_resolver.py
   audit_target_map.py
   reports/
-    target_map.py
+    target_map.py  [deferred]
 ```
 
-## Transitional Bootstrap
+## Current State
 
-During Risk Evidence Producers Batch 1, `admin-app/checks/audit_target_map.py` temporarily owns draft target rules because `admin-checks.json` does not exist yet.
+Risk Evidence Producers Batch 2 promoted the draft target rules into `admin-app/checks/config/admin-checks.json`.
+`admin-app/checks/audit_target_map.py` now reads that durable config and calls `admin-app/checks/target_map_resolver.py`.
 
-In that bootstrap role, the audit:
+Current durable implementation:
 
-- scans real repo files
-- proposes the first target rules
-- calculates target-map findings from those draft rules
-- writes generated audit artifacts under `var/admin/checks/target-map-audit/`
-- includes a `proposed_admin_checks_config` payload for Batch 2
+- `admin-app/checks/config/admin-checks.json` defines the target map and report registry.
+- `admin-app/checks/admin_checks_config.py` validates the config and run requests.
+- `admin-app/checks/target_map_resolver.py` resolves scopes, families, areas, routes, shared dependencies, stale patterns, broad patterns, and boundary flags.
+- `admin-app/checks/audit_target_map.py` is a maintenance CLI wrapper around the config loader and resolver.
 
-Batch 2 should promote and refine that proposed config into `admin-app/checks/config/admin-checks.json`.
+Deferred implementation:
 
-After Batch 2, `audit_target_map.py` should stop owning embedded draft rules and read the durable config instead.
+- `admin-app/checks/reports/target_map.py` remains deferred until the normal checks system can run reports through the orchestrator.
 
-## Steady State
+## Target Layers
 
-Once `admin-checks.json` exists, responsibilities should be separated like this:
+The current target map has six scopes:
+
+```text
+admin
+analytics
+docs-viewer
+public-site
+studio
+all
+```
+
+Families are the most deterministic layer because they follow technical structure:
+
+```text
+admin-route
+build
+config
+public-route
+runtime-assets
+runtime-js
+services
+source-docs
+tests
+```
+
+Areas are workflow/product concepts and are intentionally less complete:
+
+```text
+activity
+catalogue
+config
+docs-build
+import-export
+management
+search
+```
+
+Routes are deterministic inventory entries derived from route configs, server dispatch, and public route files.
+Routes may be `mapped` or `inventory-only`.
+
+`mapped` routes have reviewed ownership patterns and can be selected by normal checks runs.
+`inventory-only` routes are present for surface-area tracking but still need ownership review before they become route filters.
+
+Current route status counts:
+
+```text
+mapped: 5
+inventory-only: 40
+```
+
+Docs Viewer management uses one route path, `/docs/`.
+The query state such as `?scope=studio&doc=...&mode=manage` is route state, not separate route ids.
+
+## Responsibility Split
 
 | File | Role |
 | --- | --- |
 | `admin-app/checks/config/admin-checks.json` | Durable target map contract and report registry. |
+| `admin-app/checks/admin_checks_config.py` | Config and run-request validation. |
 | `admin-app/checks/target_map_resolver.py` | Shared resolver for matching files to scopes, families, areas, routes, shared dependencies, stale patterns, and boundary flags. |
 | `admin-app/checks/audit_target_map.py` | Maintenance guardrail for config drift across the repo. |
-| `admin-app/checks/reports/target_map.py` | Normal report producer for target-map evidence in a checks run. |
+| `admin-app/checks/reports/target_map.py` | Deferred normal report producer for target-map evidence in a checks run. |
 
 ## Why Keep The Audit
 
