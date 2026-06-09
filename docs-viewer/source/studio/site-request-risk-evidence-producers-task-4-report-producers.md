@@ -3,7 +3,7 @@ doc_id: site-request-risk-evidence-producers-task-4-report-producers
 title: Risk Evidence Producers Task 4 Files Report Producer
 added_date: 2026-06-08
 last_updated: 2026-06-09
-ui_status: planned
+ui_status: done
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
@@ -13,17 +13,17 @@ This is the delivery specification for Batch 4 in [Risk Evidence Producers Reque
 
 ### Batch 4: Implement `files` report producer
 
-Summary: Implement the v1 proof-of-concept `files` report.
+Summary: Implement the v1 proof-of-concept `files` report. The durable reference for this report is [Files Report](/docs/?scope=studio&doc=admin-checks-report-files).
 
 | ID | status | action |
 | --- | --- | --- |
-| 4.1 | planned | Add `admin-app/checks/reports/files.py`. |
-| 4.2 | planned | Read the selected scope from resolved config rather than duplicating path rules. |
-| 4.3 | planned | Apply selected family, area, and route filters through the shared target resolver. |
-| 4.4 | planned | Count included files, lines, and bytes. |
-| 4.5 | planned | Produce `report.json` and `report.md`. |
-| 4.6 | planned | Support the initial `files` options `limit` and `sort`. |
-| 4.7 | planned | Include focused unit tests for path inclusion/exclusion, line/byte counting, sorting, and markdown rendering. |
+| 4.1 | done | Add `admin-app/checks/reports/files.py`. |
+| 4.2 | done | Read the selected scope from resolved config rather than duplicating path rules. |
+| 4.3 | done | Apply selected family, area, and route filters through the shared target resolver. |
+| 4.4 | done | Count included files, lines, and bytes. |
+| 4.5 | done | Produce `report.json` and `report.md`. |
+| 4.6 | done | Support the initial `files` options `limit` and `sort`. |
+| 4.7 | done | Include focused unit tests for path inclusion/exclusion, line/byte counting, sorting, and markdown rendering. |
 
 ## Steer for these tasks
 
@@ -72,13 +72,24 @@ Dry-runs work now for the configured `files` report; write-runs for the real `fi
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/checks/reports/files.py admin-app/tests/python/test_files_report.py admin-app/checks/run_reports.py admin-app/tests/python/test_run_reports.py`
+- `$HOME/miniconda3/bin/python3 -m pytest admin-app/tests/python/test_files_report.py admin-app/tests/python/test_run_reports.py admin-app/tests/python/test_admin_checks_config.py admin-app/tests/python/test_target_map_resolver.py`
+- `printf '%s\n' '{"scope":"docs-viewer","families":[],"areas":[],"routes":[],"reports":["files"],"options":{"files":{"limit":5,"sort":"lines_desc"}},"write":true}' | $HOME/miniconda3/bin/python3 admin-app/checks/run_reports.py`
+
+Focused pytest result: 18 passed.
+The orchestrator write run passed and wrote `var/admin/checks/20260609-190326-docs-viewer`.
+The produced `files` report recorded 440 files, 86,433 lines, and 3,517,712 bytes for the broad Docs Viewer scope.
 
 ## follow-on tasks
 
 - Batch 5 exposes these reports through the Admin checks API.
+- Batch 5 should read `run-summary.json`, `run-summary.md`, `files/report.json`, and `files/report.md` from `var/admin/checks/<run-id>/`.
+- Batch 5 should treat report markdown as a raw string for display and should not render markdown to HTML server-side.
+- Batch 5 can use the written run `var/admin/checks/20260609-190326-docs-viewer` as a local fixture shape example, but the API tests should create their own temporary run artifacts.
 
 ## task close
 
-- Add a handoff note to Batch 5.
-- Set this batch status and front matter `ui_status` to `done`.
+- Batch 4 is complete.
+- Added `admin-app/checks/reports/files.py`.
+- Added focused producer tests in `admin-app/tests/python/test_files_report.py`.
+- Confirmed the Batch 3 orchestrator can execute the real `files` report in write mode.

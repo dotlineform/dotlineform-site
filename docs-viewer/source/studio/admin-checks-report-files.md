@@ -2,8 +2,8 @@
 doc_id: admin-checks-report-files
 title: Files Report
 added_date: 2026-06-08
-last_updated: 2026-06-08
-ui_status: planned
+last_updated: 2026-06-09
+ui_status: done
 parent_id: admin-checks-reports
 ---
 # Files Report
@@ -80,6 +80,42 @@ metadata and derived fields:
 | `files[].routes` | Route ids matched by the file. |
 | `files[].target_match` | Whether the row matched directly, as a shared dependency, or as `_unclassified`. |
 
+## Calculation Method
+
+The report has two separate phases: target selection and measurement.
+
+Target selection is config-driven:
+
+1. Load the run manifest written by `admin-app/checks/run_reports.py`.
+2. Load `admin-app/checks/config/admin-checks.json`.
+3. Resolve the selected scope, families, areas, and routes through `admin-app/checks/target_map_resolver.py`.
+4. Keep files that satisfy the selected target filters, including explicit shared dependencies for selected areas or routes.
+5. Exclude generated payloads, dependency folders, caches, local run outputs, build outputs, canonical data, and retired prior-art paths through the shared resolver.
+
+Measurement is file-local:
+
+1. For each selected file, count newline-delimited text lines.
+2. For each selected file, read filesystem byte size.
+3. Store those measured values as `files[].lines` and `files[].bytes`.
+4. Sum the measured values to produce `totals.lines` and `totals.bytes`.
+5. Count selected rows to produce `totals.files`.
+6. Sort the per-file rows according to the `sort` option.
+7. Limit the markdown table according to the `limit` option; the JSON artifact may retain the full selected row set.
+
+Manual equivalent for the measurement phase:
+
+```bash
+find docs-viewer assets/docs \
+  -type f \
+  \( -name '*.css' -o -name '*.csv' -o -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.md' -o -name '*.py' -o -name '*.txt' -o -name '*.yaml' -o -name '*.yml' \) \
+  ! -path 'docs-viewer/generated/*' \
+  ! -path '*/__pycache__/*' \
+  -print0 | xargs -0 wc -l -c
+```
+
+That command is useful as a quick manual check for the broad Docs Viewer scope.
+It is not the durable report contract because it does not apply the full Admin checks target map, target intersections, shared dependencies, route status rules, or report option handling.
+
 ## Markdown Shape
 
 The markdown report should include:
@@ -115,3 +151,21 @@ total size: x
 - focused tests for sorting and limit behavior
 - focused tests for `report.json` and `report.md` shape
 - orchestrator dry run and write run for `docs-viewer` / `files`
+
+Implemented verification:
+
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/checks/reports/files.py admin-app/tests/python/test_files_report.py admin-app/checks/run_reports.py admin-app/tests/python/test_run_reports.py`
+- `$HOME/miniconda3/bin/python3 -m pytest admin-app/tests/python/test_files_report.py admin-app/tests/python/test_run_reports.py admin-app/tests/python/test_admin_checks_config.py admin-app/tests/python/test_target_map_resolver.py`
+- real orchestrator write run for broad `docs-viewer` / `files`
+
+Latest local write-run artifact:
+
+```text
+var/admin/checks/20260609-190326-docs-viewer/
+  run-summary.json
+  run-summary.md
+  files/report.json
+  files/report.md
+```
+
+That run passed and produced 440 files, 86,433 lines, and 3,517,712 bytes.

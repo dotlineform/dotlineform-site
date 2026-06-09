@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6efd2b801537b5ba31adc85bdbb18049",
-    "generated_at_utc": "2026-06-09T18:38:27Z",
+    "version": "blake2b-4b5fe58eb6aec69798ddecb016e3c20c",
+    "generated_at_utc": "2026-06-09T18:56:39Z",
     "count": 234
   },
   "entries": [
@@ -178,10 +178,10 @@
       "kind": "doc",
       "title": "Files Report",
       "href": "/docs/?scope=studio&doc=admin-checks-report-files",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-09",
       "parent_id": "admin-checks-reports",
       "parent_title": "Reports",
-      "display_meta": "2026-06-08 • Reports",
+      "display_meta": "2026-06-09 • Reports",
       "search_terms": [
         "admin-checks-report-files",
         "admin",
@@ -190,12 +190,12 @@
         "files",
         "files report",
         "reports",
-        "2026-06-08",
+        "2026-06-09",
         "2026",
         "06",
-        "08"
+        "09"
       ],
-      "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-08 2026 06 08"
+      "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-09 2026 06 09"
     },
     {
       "id": "local-admin-app",
