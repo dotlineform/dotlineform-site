@@ -49,8 +49,7 @@
                 {
                   "doc_id": "admin-checks-report-files",
                   "title": "Files Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
-                  "ui_status": "done"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json"
                 }
               ]
             }
@@ -1264,5 +1263,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T19:02:23Z"
+  "generated_at": "2026-06-09T19:58:07Z"
 }

@@ -3,7 +3,6 @@ doc_id: admin-checks-report-files
 title: Files Report
 added_date: 2026-06-08
 last_updated: 2026-06-09
-ui_status: done
 parent_id: admin-checks-reports
 ---
 # Files Report
@@ -13,8 +12,6 @@ This document defines the durable contract for the `files` report in [Admin Chec
 ## Purpose
 
 The `files` report provides file count, line count, and byte-size evidence for a selected checks scope and optional target filters.
-
-It is the v1 proof-of-concept report for the Admin Checks system.
 
 ## Report Contract
 
@@ -44,7 +41,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/files/
 The report reads the selected scope and target filters from the resolved checks config.
 It should not duplicate path rules locally.
 
-Supported v1 options:
+Supported options:
 
 | Option | Default | Purpose |
 | --- | --- | --- |
@@ -131,7 +128,7 @@ It is not the durable report contract because it does not apply the full Admin c
 
 ## Markdown Shape
 
-The markdown report should include:
+The markdown report includes:
 
 - report id and selected scope
 - selected families, areas, and routes when present
@@ -162,11 +159,8 @@ total size: x KB
 
 ## CSV Shape
 
-`report.csv` contains the full selected file row set for manual review in spreadsheet tools.
-It should include at least:
+`report.csv` contains the full selected file row set for manual review in spreadsheet tools:
 
 ```text
 path,lines,bytes,size_kb,family,families,areas,routes,shared_areas,shared_routes,target_match
 ```
-
-List-valued fields are written as semicolon-separated values.
