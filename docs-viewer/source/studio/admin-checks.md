@@ -2,7 +2,7 @@
 doc_id: admin-checks
 title: Admin Checks
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ui_status: planned
 parent_id: admin
 viewable: true
@@ -86,6 +86,8 @@ Files that match a scope but no configured family are reported as `_unclassified
 Those findings are mapping data and can be used by later risk reports when relevant.
 
 ## Target Map Audit
+
+The target-map architecture note is [Admin Checks Target Map Architecture](/docs/?scope=studio&doc=admin-checks-target-map-architecture).
 
 The target map is maintained by:
 

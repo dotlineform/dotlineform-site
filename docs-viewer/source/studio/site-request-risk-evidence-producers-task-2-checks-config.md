@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers-task-2-checks-config
 title: Risk Evidence Producers Task 2 Checks Config
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ui_status: planned
 parent_id: site-request-risk-evidence-producers
 viewable: true
@@ -27,16 +27,22 @@ Summary: Create the Admin checks config and registry contract from the v1 target
 | 2.8 | planned | Define initial report metadata for `files`, including script path, label, description, defaults, and allowed options. |
 | 2.9 | planned | Include exclusions for generated payloads, dependency folders, caches, local run artifacts, and build output. |
 | 2.10 | planned | Add a config loader that rejects unknown scopes, families, areas, routes, reports, script paths outside `admin-app/checks/reports/`, and unknown options. |
+| 2.11 | planned | Add `admin-app/checks/target_map_resolver.py` as the shared implementation for path matching, target resolution, stale-pattern detection, shared dependencies, and boundary flag counts. |
+| 2.12 | planned | Refactor `admin-app/checks/audit_target_map.py` to read `admin-app/checks/config/admin-checks.json` and call `target_map_resolver.py` instead of owning embedded draft target rules. |
 
 ## Steer for these tasks
 
 - `admin-app/checks/config/admin-checks.json` is the durable config path for this system.
 - The browser may receive safe projected metadata, but this config is not browser bootstrap config.
 - Target layers should remain facets inside a scope, not independent filesystem permissions.
+- The resolver is part of Batch 2 because Batch 3 orchestrator and Batch 4 report producers should consume shared target resolution rather than duplicating audit logic.
+- The deferred `target-map` report should reuse this resolver later, but `admin-app/checks/reports/target_map.py` is not part of Batch 2.
 
 ## Deliverables
 
 - `admin-app/checks/config/admin-checks.json`
+- `admin-app/checks/target_map_resolver.py`
+- refactored `admin-app/checks/audit_target_map.py`
 - config loader and validation helpers
 - initial report registry entry for `files`
 
@@ -45,10 +51,14 @@ Summary: Create the Admin checks config and registry contract from the v1 target
 - Include `config_id: "admin-checks"` and a numeric `version`.
 - Validate paths and script ownership before the orchestrator can use the config.
 - Keep shared dependencies explicit.
+- Keep target-map mechanics in `target_map_resolver.py`; `audit_target_map.py` should be a maintenance CLI wrapper around the resolver.
+- Do not create `admin-app/checks/reports/target_map.py` in this batch; that remains deferred to [Target Map Report Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-target-map).
 
 ## Proposed verification set
 
 - Focused config-loader tests for valid config, unknown ids, unknown options, invalid script paths, and excluded roots.
+- Focused resolver tests for scope inclusion/exclusion, family assignment, `_unclassified`, direct matches, shared dependency matches, intersected target filters, stale patterns, and boundary flags.
+- Run the refactored target-map audit in dry-run mode and confirm it reads `admin-checks.json`.
 - JSON parsing/validation for `admin-checks.json`.
 
 ## completed verification
@@ -57,7 +67,8 @@ Summary: Create the Admin checks config and registry contract from the v1 target
 
 ## follow-on tasks
 
-- Batch 3 consumes the validated registry to build the orchestrator.
+- Batch 3 consumes the validated registry and shared resolver to build the orchestrator.
+- Batch 4 consumes the shared resolver for the `files` report.
 
 ## task close
 

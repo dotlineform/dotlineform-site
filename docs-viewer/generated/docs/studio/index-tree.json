@@ -27,6 +27,12 @@
               "title": "Admin Checks Files Report",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
               "ui_status": "planned"
+            },
+            {
+              "doc_id": "admin-checks-target-map-architecture",
+              "title": "Admin Checks Target Map Architecture",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json",
+              "ui_status": "planned"
             }
           ]
         },
@@ -261,7 +267,7 @@
           "doc_id": "site-request-risk-evidence-producers",
           "title": "Risk Evidence Producers Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "planned",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "site-request-risk-evidence-producers-task-1-target-map-audit",
@@ -1248,5 +1254,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T11:03:30Z"
+  "generated_at": "2026-06-09T11:50:36Z"
 }

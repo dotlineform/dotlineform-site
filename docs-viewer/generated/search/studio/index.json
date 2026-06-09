@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f3d81fb67ebd721b22acb99c3eb23068",
-    "generated_at_utc": "2026-06-09T11:03:30Z",
-    "count": 231
+    "version": "blake2b-3d502e947903e7edd374541449a7edd1",
+    "generated_at_utc": "2026-06-09T11:48:49Z",
+    "count": 232
   },
   "entries": [
     {
@@ -48,21 +48,21 @@
       "kind": "doc",
       "title": "Admin Checks",
       "href": "/docs/?scope=studio&doc=admin-checks",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-09",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-08 • Admin",
+      "display_meta": "2026-06-09 • Admin",
       "search_terms": [
         "admin-checks",
         "admin",
         "checks",
         "admin checks",
-        "2026-06-08",
+        "2026-06-09",
         "2026",
         "06",
-        "08"
+        "09"
       ],
-      "search_text": "admin-checks admin checks admin checks 2026-06-08 2026 06 08"
+      "search_text": "admin-checks admin checks admin checks 2026-06-09 2026 06 09"
     },
     {
       "id": "admin-checks-report-files",
@@ -87,6 +87,31 @@
         "08"
       ],
       "search_text": "admin-checks-report-files admin checks report files admin checks files report admin checks 2026-06-08 2026 06 08"
+    },
+    {
+      "id": "admin-checks-target-map-architecture",
+      "kind": "doc",
+      "title": "Admin Checks Target Map Architecture",
+      "href": "/docs/?scope=studio&doc=admin-checks-target-map-architecture",
+      "last_updated": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Admin Checks",
+      "display_meta": "2026-06-09 • Admin Checks",
+      "search_terms": [
+        "admin-checks-target-map-architecture",
+        "admin",
+        "checks",
+        "target",
+        "map",
+        "architecture",
+        "admin checks target map architecture",
+        "admin checks",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "admin-checks-target-map-architecture admin checks target map architecture admin checks target map architecture admin checks 2026-06-09 2026 06 09"
     },
     {
       "id": "audit-runner",
@@ -1142,10 +1167,10 @@
       "kind": "doc",
       "title": "Risk Evidence Producers Task 2 Checks Config",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-2-checks-config",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-09",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-08 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
       "search_terms": [
         "site-request-risk-evidence-producers-task-2-checks-config",
         "site",
@@ -1159,12 +1184,12 @@
         "config",
         "risk evidence producers task 2 checks config",
         "risk evidence producers request",
-        "2026-06-08",
+        "2026-06-09",
         "2026",
         "06",
-        "08"
+        "09"
       ],
-      "search_text": "site-request-risk-evidence-producers-task-2-checks-config site request risk evidence producers task 2 checks config risk evidence producers task 2 checks config risk evidence producers request 2026-06-08 2026 06 08"
+      "search_text": "site-request-risk-evidence-producers-task-2-checks-config site request risk evidence producers task 2 checks config risk evidence producers task 2 checks config risk evidence producers request 2026-06-09 2026 06 09"
     },
     {
       "id": "site-request-risk-evidence-producers-task-3-orchestrator",

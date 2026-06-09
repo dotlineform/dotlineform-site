@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "admin-checks-target-map-architecture",
+      "title": "Admin Checks Target Map Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json",
+      "added_date": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Admin Checks"
+    },
+    {
       "doc_id": "admin-checks",
       "title": "Admin Checks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-08",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request"
-    },
-    {
-      "doc_id": "site-request-risk-evidence-producers-task-7-tests",
-      "title": "Risk Evidence Producers Task 7 Tests",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-7-tests.json",
-      "added_date": "2026-06-08",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
     }
   ],
-  "generated_at": "2026-06-08T21:52:57Z"
+  "generated_at": "2026-06-09T11:42:41Z"
 }

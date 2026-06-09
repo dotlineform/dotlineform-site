@@ -3,9 +3,8 @@ doc_id: site-request-risk-evidence-producers
 title: Risk Evidence Producers Request
 added_date: 2026-05-31
 last_updated: 2026-06-09
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
-viewable: true
 ---
 # Risk Evidence Producers Request
 
