@@ -3,6 +3,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "json",
+      "title": "json",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/json.json",
+      "added_date": "2026-06-09"
+    },
+    {
       "doc_id": "github-actions",
       "title": "github actions",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-actions.json",
@@ -59,13 +65,7 @@
       "title": "emoji",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
       "added_date": "2026-05-28"
-    },
-    {
-      "doc_id": "links",
-      "title": "links",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/links.json",
-      "added_date": "2026-05-28"
     }
   ],
-  "generated_at": "2026-06-08T19:15:30Z"
+  "generated_at": "2026-06-09T16:05:17Z"
 }

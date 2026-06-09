@@ -1,13 +1,12 @@
 ---
 doc_id: admin-checks-report-files
-title: Admin Checks Files Report
+title: Files Report
 added_date: 2026-06-08
 last_updated: 2026-06-08
 ui_status: planned
-parent_id: admin-checks
-viewable: true
+parent_id: admin-checks-reports
 ---
-# Admin Checks Files Report
+# Files Report
 
 This document defines the durable contract for the `files` report in [Admin Checks](/docs/?scope=studio&doc=admin-checks).
 

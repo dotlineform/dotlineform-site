@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-d0a9131a52a2b1bad345f6d9a696c5bf",
-    "generated_at_utc": "2026-06-08T19:39:32Z",
-    "count": 14
+    "version": "blake2b-ca829c8851eaf08bd3d3793d3b6be154",
+    "generated_at_utc": "2026-06-09T16:05:17Z",
+    "count": 15
   },
   "entries": [
     {
@@ -128,6 +128,22 @@
         "30"
       ],
       "search_text": "jekyll 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "json",
+      "kind": "doc",
+      "title": "json",
+      "href": "/docs/?scope=tmp&doc=json",
+      "last_updated": "2026-06-09",
+      "display_meta": "2026-06-09",
+      "search_terms": [
+        "json",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "json 2026-06-09 2026 06 09"
     },
     {
       "id": "links",

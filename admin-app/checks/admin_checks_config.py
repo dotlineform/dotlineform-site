@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = Path("admin-app/checks/config/admin-checks.json")
 REPORTS_ROOT = Path("admin-app/checks/reports")
 REQUIRED_SCOPES = {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
+VALID_ROUTE_STATUSES = {"mapped", "inventory-only"}
 
 
 class ChecksConfigError(ValueError):
@@ -113,6 +114,9 @@ def validate_links(config: Mapping[str, Any]) -> None:
         route_path = as_nonempty_string(route.get("path"), f"routes.{route_id}.path")
         if not route_path.startswith("/"):
             raise ChecksConfigError(f"routes.{route_id}.path must start with /")
+        status = as_nonempty_string(route.get("status", "mapped"), f"routes.{route_id}.status")
+        if status not in VALID_ROUTE_STATUSES:
+            raise ChecksConfigError(f"routes.{route_id}.status must be mapped or inventory-only")
         for area_id in as_string_list(route.get("areas", []), f"routes.{route_id}.areas", allow_empty=True):
             if area_id not in areas:
                 raise ChecksConfigError(f"routes.{route_id}.areas references unknown area: {area_id}")
@@ -217,6 +221,16 @@ def validate_run_request(config: Mapping[str, Any], request: Mapping[str, Any]) 
     families = validate_id_selection(config, "families", request.get("families", []), "request.families")
     areas = validate_id_selection(config, "areas", request.get("areas", []), "request.areas")
     routes = validate_id_selection(config, "routes", request.get("routes", []), "request.routes")
+    route_config = as_object(config.get("routes"), "routes")
+    inventory_only_routes = [
+        route_id
+        for route_id in routes
+        if as_object(route_config[route_id], f"routes.{route_id}").get("status") == "inventory-only"
+    ]
+    if inventory_only_routes:
+        raise ChecksConfigError(
+            f"request.routes includes inventory-only routes: {', '.join(sorted(inventory_only_routes))}"
+        )
     reports = validate_id_selection(config, "reports", request.get("reports", []), "request.reports")
     if not reports:
         raise ChecksConfigError("request.reports must not be empty")

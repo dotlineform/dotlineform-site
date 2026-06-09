@@ -28,29 +28,7 @@ while IFS= read -r -d '' file; do
 done | sort -nr
 ```
 
-risk-evidence-pack-metrics.md:
-please create a table showing the reporting artifacts that are/could be produced from these metrics.
-for example:
-report: files
-metrics: filename, size, line count
-example report:
-```
-dlf$ find ./docs-viewer/runtime/js -name "*.js" -type f -print0 |
-> while IFS= read -r -d '' file; do
->   lines=$(wc -l < "$file")
->   size=$(du -h "$file" | cut -f1)
->   printf "%8s  %8s  %s\n" "$lines" "$size" "$file"
-> done | sort -nr
-     997       36K  ./docs-viewer/runtime/js/docs-viewer-management.js
-     905       32K  ./docs-viewer/runtime/js/docs-viewer-app-runtime.js
-     562       28K  ./docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js
-     536       20K  ./docs-viewer/runtime/js/docs-html-import.js
-     510       20K  ./docs-viewer/runtime/js/docs-viewer-management-actions.js
-     451       20K  ./docs-viewer/runtime/js/docs-viewer-management-modals.js
-     443       16K  ./docs-viewer/runtime/js/docs-viewer-route-workflow.js
-     417       16K  ./docs-viewer/runtime/js/docs-viewer-search-controller.js
-     390       16K  ./docs-viewer/runtime/js/docs-viewer-config-controller.js
-```
+
 
 
 ~

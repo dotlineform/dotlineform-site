@@ -1,11 +1,10 @@
 ---
 doc_id: admin-checks
-title: Admin Checks
+title: Checks
 added_date: 2026-06-08
 last_updated: 2026-06-09
-ui_status: planned
+ui_status: ""
 parent_id: admin
-viewable: true
 ---
 # Admin Checks
 
@@ -31,31 +30,35 @@ Subsequent reports should get their own child docs once implemented.
 
 ## Config
 
-The config file:
-
 ```text
 admin-app/checks/config/admin-checks.json
 ```
 
-Required top-level fields:
+Top-level keys:
 
 ```json
 {
   "config_id": "admin-checks",
   "version": 1,
   "scopes": {},
+  "families": {},
+  "areas": {},
+  "routes": {},
   "reports": {}
 }
 ```
 
 The config defines:
 
-- scope ids, labels, included path prefixes, and exclusions
-- file family ids and path/pattern rules
-- functional area ids and path/pattern rules
-- route ids, URLs, API path links, and path/pattern rules
-- explicit shared dependencies
-- report ids, scripts, labels, defaults, and allowed options
+- `scopes` - the apps: scope ids, labels, included path prefixes, and exclusions
+- `families` - the technical layers: file family ids and path/pattern rules
+- `areas` - the functional/workflow areas and path/pattern rules
+- `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
+- `reports` - report ids, scripts, labels, defaults, and allowed options
+
+Routes may be `mapped` or `inventory-only`.
+Mapped routes are reviewed route targets and can be selected by normal checks runs.
+Inventory-only routes are deterministic route inventory entries that are visible to the audit but are not ready for route-scoped evidence runs.
 
 The browser may receive safe projected metadata from this config.
 The browser must not receive arbitrary local paths, command strings, environment values, or unvalidated report options.
@@ -80,7 +83,8 @@ Target filters are intersected for a run:
 - selecting families narrows to technical/layer targets
 - selecting areas narrows to functional/workflow targets
 - selecting routes narrows to UI/API route targets
-- explicitly configured shared dependencies can be included for selected areas or routes
+
+Explicitly configured shared dependencies can be included for selected `areas` or `routes`, e.g. specific docs viewer runtime files, data sharing files.
 
 Files that match a scope but no configured family are reported as `_unclassified`.
 Those findings are mapping data and can be used by later risk reports when relevant.

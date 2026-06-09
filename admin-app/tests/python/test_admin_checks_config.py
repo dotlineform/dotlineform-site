@@ -26,6 +26,10 @@ def test_load_checks_config_accepts_v1_config() -> None:
 
     assert config["config_id"] == "admin-checks"
     assert set(config["scopes"]) == {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
+    assert "runtime-assets" in config["families"]
+    assert config["routes"]["/library/"]["status"] == "mapped"
+    assert config["routes"]["/works/"]["status"] == "inventory-only"
+    assert config["routes"]["/studio/catalogue-work/"]["status"] == "inventory-only"
     assert config["reports"]["files"]["script"] == "admin-app/checks/reports/files.py"
 
 
@@ -78,6 +82,16 @@ def test_validate_run_request_rejects_unknown_scope_and_options() -> None:
                 "scope": "docs-viewer",
                 "reports": ["files"],
                 "options": {"files": {"sort": "random"}},
+            },
+        )
+
+    with pytest.raises(checks_config.ChecksConfigError, match="inventory-only routes"):
+        checks_config.validate_run_request(
+            config,
+            {
+                "scope": "public-site",
+                "routes": ["/works/"],
+                "reports": ["files"],
             },
         )
 

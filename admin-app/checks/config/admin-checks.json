@@ -51,7 +51,7 @@
     "studio": {
       "label": "Studio",
       "include": ["studio/", "data-sharing/"],
-      "exclude": ["studio/**/__pycache__/**", "studio/data/generated/", "studio/data/canonical/"]
+      "exclude": ["studio/**/__pycache__/**", "studio/data/generated/", "studio/data/canonical/", "studio/retired/"]
     },
     "all": {
       "label": "All",
@@ -93,7 +93,8 @@
         "docs-viewer/generated/",
         "studio/**/__pycache__/**",
         "studio/data/canonical/",
-        "studio/data/generated/"
+        "studio/data/generated/",
+        "studio/retired/"
       ]
     }
   },
@@ -107,6 +108,18 @@
         "assets/js/",
         "docs-viewer/runtime/js/",
         "studio/app/frontend/js/"
+      ]
+    },
+    "runtime-assets": {
+      "label": "Runtime assets",
+      "include": [
+        "admin-app/app/assets/",
+        "admin-app/ui-catalogue/assets/css/",
+        "analytics-app/app/assets/",
+        "assets/css/",
+        "docs-viewer/shell/",
+        "docs-viewer/static/",
+        "studio/app/assets/"
       ]
     },
     "services": {
@@ -142,6 +155,7 @@
         "_work_details/",
         "_works/",
         "_works_print/",
+        "data-sharing/README.md",
         "assets/docs/",
         "docs-viewer/source/",
         "admin-app/ui-catalogue/source/",
@@ -283,6 +297,7 @@
     "/admin/checks/": {
       "label": "Admin Checks",
       "path": "/admin/checks/",
+      "status": "mapped",
       "include": [
         "admin-app/checks/audit_target_map.py",
         "admin-app/checks/config/",
@@ -298,6 +313,7 @@
     "/admin/risk/": {
       "label": "Admin Risk",
       "path": "/admin/risk/",
+      "status": "mapped",
       "include": [
         "admin-app/app/frontend/js/admin-risk.js",
         "admin-app/app/frontend/config/ui-text/admin-risk.json",
@@ -308,9 +324,366 @@
       "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
       "areas": ["activity"]
     },
+    "/admin/": {
+      "label": "Admin Home",
+      "path": "/admin/",
+      "status": "inventory-only",
+      "include": [
+        "admin-app/app/frontend/js/admin-home.js",
+        "admin-app/app/frontend/config/ui-text/admin-home.json"
+      ],
+      "shared": [],
+      "areas": []
+    },
+    "/admin/audits/": {
+      "label": "Admin Audits",
+      "path": "/admin/audits/",
+      "status": "inventory-only",
+      "include": [
+        "admin-app/app/frontend/js/admin-audits.js",
+        "admin-app/app/frontend/config/ui-text/admin-audits.json",
+        "admin-app/app/server/admin_app/admin_audit_api.py",
+        "admin-app/app/server/admin_app/audit_runner.py"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": []
+    },
+    "/admin/activity/": {
+      "label": "Admin Activity",
+      "path": "/admin/activity/",
+      "status": "inventory-only",
+      "include": [
+        "admin-app/app/frontend/js/admin-activity*",
+        "admin-app/app/frontend/config/ui-text/admin-activity.json",
+        "admin-app/app/server/admin_app/admin_activity_api.py"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": ["activity"]
+    },
+    "/admin/testing/": {
+      "label": "Admin Testing",
+      "path": "/admin/testing/",
+      "status": "inventory-only",
+      "include": [
+        "admin-app/app/frontend/js/admin-testing.js",
+        "admin-app/app/server/admin_app/admin_testing_api.py"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/": {
+      "label": "Admin UI Catalogue",
+      "path": "/admin/ui-catalogue/",
+      "status": "inventory-only",
+      "include": [
+        "admin-app/ui-catalogue/",
+        "admin-app/app/server/admin_app/ui_catalogue_config.py",
+        "admin-app/app/server/admin_app/ui_catalogue_views.py"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/": {
+      "label": "UI Catalogue Demos",
+      "path": "/admin/ui-catalogue/demos/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/primitives/button/": {
+      "label": "UI Catalogue Button Demo",
+      "path": "/admin/ui-catalogue/demos/primitives/button/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/primitives/button/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/primitives/input/": {
+      "label": "UI Catalogue Input Demo",
+      "path": "/admin/ui-catalogue/demos/primitives/input/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/primitives/input/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/primitives/list/": {
+      "label": "UI Catalogue List Demo",
+      "path": "/admin/ui-catalogue/demos/primitives/list/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/primitives/list/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/primitives/modal-shell/": {
+      "label": "UI Catalogue Modal Shell Demo",
+      "path": "/admin/ui-catalogue/demos/primitives/modal-shell/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/primitives/modal-shell/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/primitives/panel/": {
+      "label": "UI Catalogue Panel Demo",
+      "path": "/admin/ui-catalogue/demos/primitives/panel/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/primitives/panel/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/patterns/action-menu/": {
+      "label": "UI Catalogue Action Menu Demo",
+      "path": "/admin/ui-catalogue/demos/patterns/action-menu/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/patterns/action-menu/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/patterns/column-links/": {
+      "label": "UI Catalogue Column Links Demo",
+      "path": "/admin/ui-catalogue/demos/patterns/column-links/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/patterns/column-links/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/patterns/reopenable-command-result/": {
+      "label": "UI Catalogue Reopenable Command Result Demo",
+      "path": "/admin/ui-catalogue/demos/patterns/reopenable-command-result/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/patterns/reopenable-command-result/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/admin/ui-catalogue/demos/patterns/select-menu/": {
+      "label": "UI Catalogue Select Menu Demo",
+      "path": "/admin/ui-catalogue/demos/patterns/select-menu/",
+      "status": "inventory-only",
+      "include": ["admin-app/ui-catalogue/source/demos/patterns/select-menu/index.md"],
+      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
+      "areas": []
+    },
+    "/analytics/": {
+      "label": "Analytics Home",
+      "path": "/analytics/",
+      "status": "inventory-only",
+      "include": ["analytics-app/app/frontend/config/analytics-config.json"],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_server.py"],
+      "areas": []
+    },
+    "/analytics/tag-groups/": {
+      "label": "Analytics Tag Groups",
+      "path": "/analytics/tag-groups/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/tag-groups.js",
+        "analytics-app/app/frontend/config/ui-text/tag-groups.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": []
+    },
+    "/analytics/tag-registry/": {
+      "label": "Analytics Tag Registry",
+      "path": "/analytics/tag-registry/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/tag-registry.js",
+        "analytics-app/app/frontend/config/ui-text/tag-registry.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": []
+    },
+    "/analytics/tag-aliases/": {
+      "label": "Analytics Tag Aliases",
+      "path": "/analytics/tag-aliases/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/tag-aliases.js",
+        "analytics-app/app/frontend/config/ui-text/tag-aliases.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": []
+    },
+    "/analytics/series-tags/": {
+      "label": "Analytics Series Tags",
+      "path": "/analytics/series-tags/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/series-tags.js",
+        "analytics-app/app/frontend/config/ui-text/series-tags.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": []
+    },
+    "/analytics/series-tag-editor/": {
+      "label": "Analytics Series Tag Editor",
+      "path": "/analytics/series-tag-editor/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/series-tag-editor-page.js",
+        "analytics-app/app/frontend/config/ui-text/series-tag-editor.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": []
+    },
+    "/analytics/data-sharing/prepare/": {
+      "label": "Analytics Data Sharing Prepare",
+      "path": "/analytics/data-sharing/prepare/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/data-sharing-prepare*",
+        "analytics-app/app/frontend/config/ui-text/data-sharing-prepare.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": ["import-export"]
+    },
+    "/analytics/data-sharing/review/": {
+      "label": "Analytics Data Sharing Review",
+      "path": "/analytics/data-sharing/review/",
+      "status": "inventory-only",
+      "include": [
+        "analytics-app/app/frontend/js/data-sharing-review*",
+        "analytics-app/app/frontend/config/ui-text/data-sharing-review.json"
+      ],
+      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "areas": ["import-export"]
+    },
+    "/studio/": {
+      "label": "Studio Home",
+      "path": "/studio/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/studio-home.js",
+        "studio/app/frontend/config/studio-config.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py", "studio/app/server/studio/studio_app_views.py"],
+      "areas": []
+    },
+    "/studio/project-state/": {
+      "label": "Studio Project State",
+      "path": "/studio/project-state/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/project-state*",
+        "studio/app/frontend/config/ui-text/project-state.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["activity"]
+    },
+    "/studio/bulk-add-work/": {
+      "label": "Studio Bulk Add Work",
+      "path": "/studio/bulk-add-work/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/bulk-add-work*",
+        "studio/app/frontend/config/ui-text/bulk-add-work.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue", "import-export"]
+    },
+    "/studio/catalogue-field-registry/": {
+      "label": "Studio Catalogue Field Registry",
+      "path": "/studio/catalogue-field-registry/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-field-registry*",
+        "studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
+        "studio/data/config/catalogue/catalogue-field-registry.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue", "config"]
+    },
+    "/studio/catalogue-status/": {
+      "label": "Studio Catalogue Drafts",
+      "path": "/studio/catalogue-status/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-status*",
+        "studio/app/frontend/config/ui-text/catalogue-status.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/studio/studio-works/": {
+      "label": "Studio Works",
+      "path": "/studio/studio-works/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/studio-works*",
+        "studio/app/frontend/config/ui-text/studio-works.json"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/studio/catalogue-series/": {
+      "label": "Studio Catalogue Series Editor",
+      "path": "/studio/catalogue-series/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-series*",
+        "studio/app/frontend/config/ui-text/catalogue-series-editor.json",
+        "studio/services/catalogue/catalogue_series_service.py"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/studio/catalogue-work/": {
+      "label": "Studio Catalogue Work Editor",
+      "path": "/studio/catalogue-work/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-work-*",
+        "studio/app/frontend/js/catalogue-work.js",
+        "studio/app/frontend/config/ui-text/catalogue-work-editor.json",
+        "studio/services/catalogue/catalogue_work_service.py"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/studio/catalogue-work-detail/": {
+      "label": "Studio Catalogue Work Detail Editor",
+      "path": "/studio/catalogue-work-detail/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-work-detail*",
+        "studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json",
+        "studio/services/catalogue/catalogue_work_detail_service.py"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/studio/catalogue-moment/": {
+      "label": "Studio Catalogue Moment Editor",
+      "path": "/studio/catalogue-moment/",
+      "status": "inventory-only",
+      "include": [
+        "studio/app/frontend/js/catalogue-moment*",
+        "studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
+        "studio/services/catalogue/catalogue_moment_service.py"
+      ],
+      "shared": ["studio/app/server/studio/studio_app_server.py"],
+      "areas": ["catalogue"]
+    },
+    "/": {
+      "label": "Home",
+      "path": "/",
+      "status": "inventory-only",
+      "include": ["index.md"],
+      "shared": [],
+      "areas": []
+    },
+    "/catalogue/search/": {
+      "label": "Catalogue Search",
+      "path": "/catalogue/search/",
+      "status": "inventory-only",
+      "include": ["catalogue/search/"],
+      "shared": ["assets/js/catalogue-search.js", "assets/js/search/"],
+      "areas": ["catalogue", "search"]
+    },
     "/library/": {
       "label": "Library",
       "path": "/library/",
+      "status": "mapped",
       "include": [
         "library/",
         "docs-viewer/source/library/",
@@ -328,6 +701,7 @@
     "/analysis/": {
       "label": "Analysis",
       "path": "/analysis/",
+      "status": "mapped",
       "include": [
         "analysis/",
         "docs-viewer/source/analysis/",
@@ -342,9 +716,50 @@
       ],
       "areas": ["search"]
     },
+    "/moments/": {
+      "label": "Moments",
+      "path": "/moments/",
+      "status": "inventory-only",
+      "include": ["moments/", "_moments/"],
+      "shared": [],
+      "areas": []
+    },
+    "/recent/": {
+      "label": "Recent",
+      "path": "/recent/",
+      "status": "inventory-only",
+      "include": ["recent/"],
+      "shared": [],
+      "areas": []
+    },
+    "/series/": {
+      "label": "Series",
+      "path": "/series/",
+      "status": "inventory-only",
+      "include": ["series/", "_series/"],
+      "shared": [],
+      "areas": []
+    },
+    "/work-details/": {
+      "label": "Work Details",
+      "path": "/work-details/",
+      "status": "inventory-only",
+      "include": ["work-details/", "_work_details/"],
+      "shared": [],
+      "areas": []
+    },
+    "/works/": {
+      "label": "Works",
+      "path": "/works/",
+      "status": "inventory-only",
+      "include": ["works/", "_works/"],
+      "shared": [],
+      "areas": []
+    },
     "/docs/": {
       "label": "Docs Viewer Management",
       "path": "/docs/",
+      "status": "mapped",
       "include": [
         "docs-viewer/runtime/js/docs-viewer-manage.js",
         "docs-viewer/runtime/js/docs-viewer-management*",

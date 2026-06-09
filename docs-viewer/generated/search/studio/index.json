@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3d502e947903e7edd374541449a7edd1",
-    "generated_at_utc": "2026-06-09T11:48:49Z",
-    "count": 232
+    "version": "blake2b-6435c0281eeb2e31bffc66878f10c358",
+    "generated_at_utc": "2026-06-09T18:05:20Z",
+    "count": 234
   },
   "entries": [
     {
@@ -42,76 +42,6 @@
         "06"
       ],
       "search_text": "activity activity report report admin 2026-06-06 2026 06"
-    },
-    {
-      "id": "admin-checks",
-      "kind": "doc",
-      "title": "Admin Checks",
-      "href": "/docs/?scope=studio&doc=admin-checks",
-      "last_updated": "2026-06-09",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-09 • Admin",
-      "search_terms": [
-        "admin-checks",
-        "admin",
-        "checks",
-        "admin checks",
-        "2026-06-09",
-        "2026",
-        "06",
-        "09"
-      ],
-      "search_text": "admin-checks admin checks admin checks 2026-06-09 2026 06 09"
-    },
-    {
-      "id": "admin-checks-report-files",
-      "kind": "doc",
-      "title": "Admin Checks Files Report",
-      "href": "/docs/?scope=studio&doc=admin-checks-report-files",
-      "last_updated": "2026-06-08",
-      "parent_id": "admin-checks",
-      "parent_title": "Admin Checks",
-      "display_meta": "2026-06-08 • Admin Checks",
-      "search_terms": [
-        "admin-checks-report-files",
-        "admin",
-        "checks",
-        "report",
-        "files",
-        "admin checks files report",
-        "admin checks",
-        "2026-06-08",
-        "2026",
-        "06",
-        "08"
-      ],
-      "search_text": "admin-checks-report-files admin checks report files admin checks files report admin checks 2026-06-08 2026 06 08"
-    },
-    {
-      "id": "admin-checks-target-map-architecture",
-      "kind": "doc",
-      "title": "Admin Checks Target Map Architecture",
-      "href": "/docs/?scope=studio&doc=admin-checks-target-map-architecture",
-      "last_updated": "2026-06-09",
-      "parent_id": "admin-checks",
-      "parent_title": "Admin Checks",
-      "display_meta": "2026-06-09 • Admin Checks",
-      "search_terms": [
-        "admin-checks-target-map-architecture",
-        "admin",
-        "checks",
-        "target",
-        "map",
-        "architecture",
-        "admin checks target map architecture",
-        "admin checks",
-        "2026-06-09",
-        "2026",
-        "06",
-        "09"
-      ],
-      "search_text": "admin-checks-target-map-architecture admin checks target map architecture admin checks target map architecture admin checks 2026-06-09 2026 06 09"
     },
     {
       "id": "audit-runner",
@@ -153,6 +83,119 @@
         "07"
       ],
       "search_text": "audits admin 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "admin-checks",
+      "kind": "doc",
+      "title": "Checks",
+      "href": "/docs/?scope=studio&doc=admin-checks",
+      "last_updated": "2026-06-09",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-09 • Admin",
+      "search_terms": [
+        "admin-checks",
+        "admin",
+        "checks",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "admin-checks admin checks 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "admin-checks-config",
+      "kind": "doc",
+      "title": "Checks Config",
+      "href": "/docs/?scope=studio&doc=admin-checks-config",
+      "last_updated": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Checks",
+      "display_meta": "2026-06-09 • Checks",
+      "search_terms": [
+        "admin-checks-config",
+        "admin",
+        "checks",
+        "config",
+        "checks config",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "admin-checks-config admin checks config checks config 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "admin-checks-target-map-architecture",
+      "kind": "doc",
+      "title": "Config and Target Map",
+      "href": "/docs/?scope=studio&doc=admin-checks-target-map-architecture",
+      "last_updated": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Checks",
+      "display_meta": "2026-06-09 • Checks",
+      "search_terms": [
+        "admin-checks-target-map-architecture",
+        "admin",
+        "checks",
+        "target",
+        "map",
+        "architecture",
+        "config and target map",
+        "config",
+        "and",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "admin-checks-target-map-architecture admin checks target map architecture config and target map config and 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "admin-checks-reports",
+      "kind": "doc",
+      "title": "Reports",
+      "href": "/docs/?scope=studio&doc=admin-checks-reports",
+      "last_updated": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Checks",
+      "display_meta": "2026-06-09 • Checks",
+      "search_terms": [
+        "admin-checks-reports",
+        "admin",
+        "checks",
+        "reports",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "admin-checks-reports admin checks reports 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "admin-checks-report-files",
+      "kind": "doc",
+      "title": "Files Report",
+      "href": "/docs/?scope=studio&doc=admin-checks-report-files",
+      "last_updated": "2026-06-08",
+      "parent_id": "admin-checks-reports",
+      "parent_title": "Reports",
+      "display_meta": "2026-06-08 • Reports",
+      "search_terms": [
+        "admin-checks-report-files",
+        "admin",
+        "checks",
+        "report",
+        "files",
+        "files report",
+        "reports",
+        "2026-06-08",
+        "2026",
+        "06",
+        "08"
+      ],
+      "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-08 2026 06 08"
     },
     {
       "id": "local-admin-app",

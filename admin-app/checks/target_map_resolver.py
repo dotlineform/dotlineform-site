@@ -51,6 +51,7 @@ GLOBAL_EXCLUDE_RULES: tuple[tuple[str, str], ...] = (
     ("assets/data/", "generated-output"),
     ("studio/data/generated/", "generated-output"),
     ("studio/data/canonical/", "canonical-data"),
+    ("studio/retired/", "retired-prior-art"),
     ("analytics-app/data/canonical/", "canonical-data"),
 )
 GLOBAL_EXCLUDE_PARTS = {

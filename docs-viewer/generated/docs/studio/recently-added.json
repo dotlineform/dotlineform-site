@@ -4,15 +4,23 @@
   "docs": [
     {
       "doc_id": "admin-checks-target-map-architecture",
-      "title": "Admin Checks Target Map Architecture",
+      "title": "Config and Target Map",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json",
       "added_date": "2026-06-09",
       "parent_id": "admin-checks",
-      "parent_title": "Admin Checks"
+      "parent_title": "Checks"
+    },
+    {
+      "doc_id": "admin-checks-reports",
+      "title": "Reports",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-reports.json",
+      "added_date": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Checks"
     },
     {
       "doc_id": "admin-checks",
-      "title": "Admin Checks",
+      "title": "Checks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
       "added_date": "2026-06-08",
       "parent_id": "admin",
@@ -20,11 +28,11 @@
     },
     {
       "doc_id": "admin-checks-report-files",
-      "title": "Admin Checks Files Report",
+      "title": "Files Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
       "added_date": "2026-06-08",
-      "parent_id": "admin-checks",
-      "parent_title": "Admin Checks"
+      "parent_id": "admin-checks-reports",
+      "parent_title": "Reports"
     },
     {
       "doc_id": "risk-evidence-pack-metrics",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-08",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request"
-    },
-    {
-      "doc_id": "site-request-risk-evidence-producers-task-6-admin-checks-ui",
-      "title": "Risk Evidence Producers Task 6 Admin Checks UI",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-6-admin-checks-ui.json",
-      "added_date": "2026-06-08",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
     }
   ],
-  "generated_at": "2026-06-09T11:42:41Z"
+  "generated_at": "2026-06-09T15:36:02Z"
 }

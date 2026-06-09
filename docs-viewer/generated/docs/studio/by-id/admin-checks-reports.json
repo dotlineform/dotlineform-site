@@ -1,0 +1,10 @@
+{
+  "doc_id": "admin-checks-reports",
+  "title": "Reports",
+  "added_date": "2026-06-09",
+  "last_updated": "2026-06-09",
+  "source_path": "admin-checks-reports.md",
+  "viewer_url": "/docs/?scope=studio&doc=admin-checks-reports",
+  "parent_id": "admin-checks",
+  "content_html": "<h1>Admin Checks Reports</h1>\n<p>This section describes the reports that surface admin checks metrics through the route <code>/admin/checks/</code>.</p>\n"
+}

@@ -25,6 +25,7 @@ def test_path_matching_supports_prefixes_and_globs() -> None:
 def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
+        "docs-viewer/static/css/docs-viewer.css",
         "docs-viewer/runtime/js/docs-viewer-search.js",
         "docs-viewer/runtime/js/docs-viewer-public.js",
         "docs-viewer/services/docs_management_routes.py",
@@ -35,6 +36,7 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     by_path = {row["path"]: row for row in scope["files"]}
 
     assert "docs-viewer/generated/docs/studio/index.json" not in by_path
+    assert by_path["docs-viewer/static/css/docs-viewer.css"]["families"] == ["runtime-assets"]
     assert by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["families"] == ["runtime-js"]
     assert "search" in by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["areas"]
     assert "/library/" in by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["shared_routes"]
@@ -76,8 +78,8 @@ def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependen
 def test_resolve_target_map_reports_unclassified_and_stale_patterns() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
-        "analytics-app/app/assets/css/analytics.css",
-        "docs-viewer/shell/docs-viewer-shell.html",
+        "analytics-app/unmapped.txt",
+        "docs-viewer/unmapped.txt",
     ]
 
     target_map = resolver.resolve_target_map(config, source_files=source_files, repo_root=REPO_ROOT)
@@ -87,3 +89,18 @@ def test_resolve_target_map_reports_unclassified_and_stale_patterns() -> None:
     assert analytics["totals"]["unclassified_files"] == 1
     assert docs_viewer["totals"]["unclassified_files"] == 1
     assert any(pattern["status"] == "stale" for pattern in docs_viewer["patterns"])
+
+
+def test_resolve_scope_excludes_retired_prior_art() -> None:
+    config = checks_config.load_checks_config(repo_root=REPO_ROOT)
+    source_files = [
+        "studio/app/assets/css/studio.css",
+        "studio/retired/thumbnail-quality/thumbnail-quality.css",
+    ]
+
+    scope = resolver.resolve_scope(config, "studio", source_files=source_files, global_source_files=source_files)
+    by_path = {row["path"]: row for row in scope["files"]}
+
+    assert by_path["studio/app/assets/css/studio.css"]["families"] == ["runtime-assets"]
+    assert "studio/retired/thumbnail-quality/thumbnail-quality.css" not in by_path
+    assert scope["totals"]["excluded_files"] == 1

@@ -229,7 +229,7 @@ Initial scope ids:
 
 Initial v1 target ids should stay small enough to verify against the real tree:
 
-- families: `runtime-js`, `services`, `build`, `source-docs`, `config`, `tests`, `admin-route`, `public-route`
+- families: `runtime-js`, `runtime-assets`, `services`, `build`, `source-docs`, `config`, `tests`, `admin-route`, `public-route`
 - areas: `search`, `management`, `import-export`, `config`, `activity`, `catalogue`, `docs-build`
 - routes: `/admin/checks/`, `/admin/risk/`, `/library/`, `/analysis/`, plus a representative Docs Viewer management route selected after the v1 target-map audit proposes the route map
 

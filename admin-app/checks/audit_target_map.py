@@ -25,6 +25,10 @@ def build_audit(config_path: Path = DEFAULT_CONFIG_PATH, repo_root: Path = REPO_
     config = load_checks_config(config_path, repo_root)
     resolved = resolve_target_map(config, repo_root=repo_root)
     scope_results = resolved["scopes"]
+    route_status_counts: dict[str, int] = {}
+    for route in config["routes"].values():
+        status = route.get("status", "mapped")
+        route_status_counts[status] = route_status_counts.get(status, 0) + 1
     return {
         "schema_version": "admin_checks_target_map_audit_v1",
         "audit_version": AUDIT_VERSION,
@@ -47,6 +51,7 @@ def build_audit(config_path: Path = DEFAULT_CONFIG_PATH, repo_root: Path = REPO_
             "families": sorted(config["families"]),
             "areas": sorted(config["areas"]),
             "routes": sorted(config["routes"]),
+            "route_status_counts": dict(sorted(route_status_counts.items())),
             "reports": sorted(config["reports"]),
         },
         "scopes": scope_results,
@@ -126,6 +131,7 @@ def render_markdown(audit: Mapping[str, object]) -> str:
             f"- families: {', '.join(f'`{key}`' for key in config_summary['families'])}",
             f"- areas: {', '.join(f'`{key}`' for key in config_summary['areas'])}",
             f"- routes: {', '.join(f'`{key}`' for key in config_summary['routes'])}",
+            f"- route statuses: {', '.join(f'{key}={value}' for key, value in config_summary['route_status_counts'].items())}",
             f"- reports: {', '.join(f'`{key}`' for key in config_summary['reports'])}",
             "",
             "## Findings For Review",

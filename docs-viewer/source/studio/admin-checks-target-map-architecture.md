@@ -1,13 +1,11 @@
 ---
 doc_id: admin-checks-target-map-architecture
-title: Admin Checks Target Map Architecture
+title: Config and Target Map
 added_date: 2026-06-09
 last_updated: 2026-06-09
-ui_status: planned
 parent_id: admin-checks
-viewable: true
 ---
-# Admin Checks Target Map Architecture
+# Config and Target Map
 
 This document explains the relationship between the Admin checks config, the target-map audit, and the later `target-map` report.
 
@@ -106,6 +104,8 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/target-map/
 
 The report answers a selected evidence question for a run.
 It should respect selected scope, family, area, and route filters from the run request.
+Normal report runs should only allow routes whose config status is `mapped`.
+Routes with status `inventory-only` are present for surface-area tracking but still need ownership review before they become route filters.
 
 The report can expose many of the same metrics as the audit, but its contract is different:
 

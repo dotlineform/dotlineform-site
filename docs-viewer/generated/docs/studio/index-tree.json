@@ -17,26 +17,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/activity.json"
         },
         {
-          "doc_id": "admin-checks",
-          "title": "Admin Checks",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
-          "ui_status": "planned",
-          "children": [
-            {
-              "doc_id": "admin-checks-report-files",
-              "title": "Admin Checks Files Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
-              "ui_status": "planned"
-            },
-            {
-              "doc_id": "admin-checks-target-map-architecture",
-              "title": "Admin Checks Target Map Architecture",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json",
-              "ui_status": "planned"
-            }
-          ]
-        },
-        {
           "doc_id": "audit-runner",
           "title": "Audit Runner",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json"
@@ -45,6 +25,36 @@
           "doc_id": "audits",
           "title": "Audits",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audits.json"
+        },
+        {
+          "doc_id": "admin-checks",
+          "title": "Checks",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
+          "children": [
+            {
+              "doc_id": "admin-checks-config",
+              "title": "Checks Config",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-config.json"
+            },
+            {
+              "doc_id": "admin-checks-target-map-architecture",
+              "title": "Config and Target Map",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json"
+            },
+            {
+              "doc_id": "admin-checks-reports",
+              "title": "Reports",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-reports.json",
+              "children": [
+                {
+                  "doc_id": "admin-checks-report-files",
+                  "title": "Files Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json",
+                  "ui_status": "planned"
+                }
+              ]
+            }
+          ]
         },
         {
           "doc_id": "local-admin-app",
@@ -1254,5 +1264,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T13:49:26Z"
+  "generated_at": "2026-06-09T18:05:20Z"
 }
