@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers
 title: Risk Evidence Producers Request
 added_date: 2026-05-31
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ui_status: planned
 parent_id: change-requests
 viewable: true
@@ -449,7 +449,7 @@ The locked v1 implementation keeps this as the only report producer.
 
 | ID | status | title |
 | --- | --- | --- |
-| 1 | planned | [Produce v1 target map audit](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-1-target-map-audit) |
+| 1 | done | [Produce v1 target map audit](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-1-target-map-audit) |
 | 2 | planned | [Define checks config, target layers, and report registry](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-2-checks-config) |
 | 3 | planned | [Build report orchestrator](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-3-orchestrator) |
 | 4 | planned | [Implement `files` report producer](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-4-report-producers) |

@@ -2,8 +2,8 @@
 doc_id: site-request-risk-evidence-producers-task-1-target-map-audit
 title: Risk Evidence Producers Task 1 Target Map Audit
 added_date: 2026-06-08
-last_updated: 2026-06-08
-ui_status: planned
+last_updated: 2026-06-09
+ui_status: done
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
@@ -17,14 +17,14 @@ Summary: Build the initial target-map audit and use it to propose the first real
 
 | ID | status | action |
 | --- | --- | --- |
-| 1.1 | planned | Add `admin-app/checks/audit_target_map.py` as the initial audit and future drift guardrail. |
-| 1.2 | planned | Scan real repo files for the initial scopes and proposed v1 target ids. |
-| 1.3 | planned | Produce `target-map.json` and `target-map.md` in dry-run output or under `var/admin/checks/target-map-audit/` for write mode. |
-| 1.4 | planned | Report included files, excluded files, file-family assignment, `_unclassified` files, multi-family matches, area matches, route matches, shared dependencies, stale patterns, and likely unmapped area/route files. |
-| 1.5 | planned | Flag likely boundary-crossing and unclear-ownership evidence, including files that cross frontend/backend, route/service, or script/config ownership boundaries. |
-| 1.6 | planned | Identify candidate Docs Viewer management route targets and recommend the representative v1 route once the family, area, and route map is visible. |
-| 1.7 | planned | Use the audit findings to propose the first `admin-checks.json` target rules. |
-| 1.8 | planned | Keep the first map pattern-based wherever possible; use explicit shared dependencies or overrides only for files that cannot be classified clearly by stable path/name rules. |
+| 1.1 | done | Add `admin-app/checks/audit_target_map.py` as the initial audit and future drift guardrail. |
+| 1.2 | done | Scan real repo files for the initial scopes and proposed v1 target ids. |
+| 1.3 | done | Produce `target-map.json` and `target-map.md` in dry-run output or under `var/admin/checks/target-map-audit/` for write mode. |
+| 1.4 | done | Report included files, excluded files, file-family assignment, `_unclassified` files, multi-family matches, area matches, route matches, shared dependencies, stale patterns, and likely unmapped area/route files. |
+| 1.5 | done | Flag likely boundary-crossing and unclear-ownership evidence, including files that cross frontend/backend, route/service, or script/config ownership boundaries. |
+| 1.6 | done | Identify candidate Docs Viewer management route targets and recommend the representative v1 route once the family, area, and route map is visible. |
+| 1.7 | done | Use the audit findings to propose the first `admin-checks.json` target rules. |
+| 1.8 | done | Keep the first map pattern-based wherever possible; use explicit shared dependencies or overrides only for files that cannot be classified clearly by stable path/name rules. |
 
 ## Steer for these tasks
 
@@ -54,7 +54,10 @@ Summary: Build the initial target-map audit and use it to propose the first real
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile admin-app/checks/audit_target_map.py`
+- `$HOME/miniconda3/bin/python3 admin-app/checks/audit_target_map.py`
+- `$HOME/miniconda3/bin/python3 admin-app/checks/audit_target_map.py --write`
+- Parsed `var/admin/checks/target-map-audit/target-map.json` and confirmed schema `admin_checks_target_map_audit_v1`, all six scopes, and the proposed Docs Viewer management route `/docs/`.
 
 ## follow-on tasks
 
@@ -62,5 +65,9 @@ Summary: Build the initial target-map audit and use it to propose the first real
 
 ## task close
 
-- Add a handoff note to Batch 2.
-- Set this batch status and front matter `ui_status` to `done`.
+- Batch 1 is complete.
+- Durable script: `admin-app/checks/audit_target_map.py`.
+- Generated local artifacts: `var/admin/checks/target-map-audit/target-map.json` and `var/admin/checks/target-map-audit/target-map.md`.
+- Proposed representative Docs Viewer management route: `/docs/`.
+- Latest written audit summary for `all`: 5,729 included files, 5,089 excluded files, 11 unclassified files, 50 multi-family files, 128 cross-area files, 10 cross-route files, 275 shared dependency files, and 15 stale patterns.
+- Task 2 should promote `proposed_admin_checks_config` from the audit JSON into durable `admin-app/checks/config/admin-checks.json`, then review the remaining unclassified and likely-unmapped findings as config refinement data.
