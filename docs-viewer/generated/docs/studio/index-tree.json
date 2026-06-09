@@ -279,7 +279,7 @@
               "doc_id": "site-request-risk-evidence-producers-task-2-checks-config",
               "title": "Risk Evidence Producers Task 2 Checks Config",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-task-2-checks-config.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-risk-evidence-producers-task-3-orchestrator",
@@ -1254,5 +1254,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-09T11:50:36Z"
+  "generated_at": "2026-06-09T13:49:26Z"
 }

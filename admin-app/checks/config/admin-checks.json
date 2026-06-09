@@ -1,0 +1,388 @@
+{
+  "config_id": "admin-checks",
+  "version": 1,
+  "source": {
+    "owner": "admin-app/checks",
+    "status": "initial-v1-target-map",
+    "seeded_from": "var/admin/checks/target-map-audit/target-map.json"
+  },
+  "scopes": {
+    "admin": {
+      "label": "Admin",
+      "include": ["admin-app/"],
+      "exclude": ["admin-app/**/__pycache__/**"]
+    },
+    "analytics": {
+      "label": "Analytics",
+      "include": ["analytics-app/"],
+      "exclude": ["analytics-app/**/__pycache__/**", "analytics-app/data/canonical/"]
+    },
+    "docs-viewer": {
+      "label": "Docs Viewer",
+      "include": ["docs-viewer/", "assets/docs/"],
+      "exclude": ["docs-viewer/**/__pycache__/**", "docs-viewer/generated/"]
+    },
+    "public-site": {
+      "label": "Public Site",
+      "include": [
+        "_config.yml",
+        "_data/",
+        "_includes/",
+        "_layouts/",
+        "_moments/",
+        "_series/",
+        "_work_details/",
+        "_works/",
+        "_works_print/",
+        "analysis/",
+        "assets/css/",
+        "assets/js/",
+        "catalogue/",
+        "index.md",
+        "library/",
+        "moments/",
+        "recent/",
+        "series/",
+        "work-details/",
+        "works/"
+      ],
+      "exclude": ["_site/", "assets/data/"]
+    },
+    "studio": {
+      "label": "Studio",
+      "include": ["studio/", "data-sharing/"],
+      "exclude": ["studio/**/__pycache__/**", "studio/data/generated/", "studio/data/canonical/"]
+    },
+    "all": {
+      "label": "All",
+      "include": [
+        "_config.yml",
+        "_data/",
+        "_includes/",
+        "_layouts/",
+        "_moments/",
+        "_series/",
+        "_work_details/",
+        "_works/",
+        "_works_print/",
+        "admin-app/",
+        "analysis/",
+        "analytics-app/",
+        "assets/css/",
+        "assets/docs/",
+        "assets/js/",
+        "catalogue/",
+        "data-sharing/",
+        "docs-viewer/",
+        "index.md",
+        "library/",
+        "moments/",
+        "recent/",
+        "series/",
+        "studio/",
+        "work-details/",
+        "works/"
+      ],
+      "exclude": [
+        "_site/",
+        "admin-app/**/__pycache__/**",
+        "analytics-app/**/__pycache__/**",
+        "analytics-app/data/canonical/",
+        "assets/data/",
+        "docs-viewer/**/__pycache__/**",
+        "docs-viewer/generated/",
+        "studio/**/__pycache__/**",
+        "studio/data/canonical/",
+        "studio/data/generated/"
+      ]
+    }
+  },
+  "families": {
+    "runtime-js": {
+      "label": "Runtime JavaScript",
+      "include": [
+        "admin-app/app/frontend/js/",
+        "admin-app/ui-catalogue/assets/js/",
+        "analytics-app/app/frontend/js/",
+        "assets/js/",
+        "docs-viewer/runtime/js/",
+        "studio/app/frontend/js/"
+      ]
+    },
+    "services": {
+      "label": "Services",
+      "include": [
+        "admin-app/app/server/",
+        "analytics-app/app/server/",
+        "data-sharing/data_sharing/",
+        "docs-viewer/services/",
+        "studio/app/server/",
+        "studio/services/",
+        "studio/shared/python/"
+      ]
+    },
+    "build": {
+      "label": "Build scripts",
+      "include": [
+        "admin-app/checks/",
+        "admin-app/commands/",
+        "bin/",
+        "data-sharing/schemas/",
+        "docs-viewer/bin/",
+        "docs-viewer/build/",
+        "studio/commands/",
+        "studio/checks/"
+      ]
+    },
+    "source-docs": {
+      "label": "Source documents",
+      "include": [
+        "_moments/",
+        "_series/",
+        "_work_details/",
+        "_works/",
+        "_works_print/",
+        "assets/docs/",
+        "docs-viewer/source/",
+        "admin-app/ui-catalogue/source/",
+        "README.md"
+      ]
+    },
+    "config": {
+      "label": "Configuration",
+      "include": [
+        "_config.yml",
+        "_data/",
+        "admin-app/app/frontend/config/",
+        "analytics-app/app/frontend/config/",
+        "data-sharing/config/",
+        "docs-viewer/config/",
+        "studio/data/config/",
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*config*.json"
+      ]
+    },
+    "tests": {
+      "label": "Tests and smokes",
+      "include": [
+        "admin-app/tests/",
+        "analytics-app/tests/",
+        "docs-viewer/tests/",
+        "studio/tests/",
+        "**/tests/"
+      ]
+    },
+    "admin-route": {
+      "label": "Admin routes",
+      "include": [
+        "admin-app/app/assets/",
+        "admin-app/app/frontend/",
+        "admin-app/app/server/admin_app/admin_*",
+        "admin-app/ui-catalogue/"
+      ]
+    },
+    "public-route": {
+      "label": "Public routes",
+      "include": [
+        "_includes/",
+        "_layouts/",
+        "analysis/",
+        "assets/css/",
+        "catalogue/",
+        "index.md",
+        "library/",
+        "moments/",
+        "recent/",
+        "series/",
+        "work-details/",
+        "works/",
+        "assets/js/",
+        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "docs-viewer/config/defaults/docs-viewer-public-config.json"
+      ]
+    }
+  },
+  "areas": {
+    "search": {
+      "label": "Search",
+      "include": [
+        "**/*search*",
+        "assets/js/search/",
+        "catalogue/search/",
+        "docs-viewer/runtime/js/docs-viewer-search*",
+        "docs-viewer/build/*search*",
+        "docs-viewer/tests/**/*search*",
+        "studio/services/catalogue/search/"
+      ],
+      "shared": ["docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"],
+      "routes": ["/library/", "/analysis/"]
+    },
+    "management": {
+      "label": "Management",
+      "include": [
+        "**/*management*",
+        "**/*manage*",
+        "docs-viewer/services/docs_management*",
+        "docs-viewer/tests/smoke/docs_viewer_management*"
+      ],
+      "shared": [
+        "docs-viewer/runtime/js/docs-viewer-app-context.js",
+        "docs-viewer/runtime/js/docs-viewer-service-context.js"
+      ],
+      "routes": ["/docs/"]
+    },
+    "import-export": {
+      "label": "Import/export",
+      "include": [
+        "**/*import*",
+        "**/*export*",
+        "data-sharing/",
+        "docs-viewer/services/docs_data_sharing/",
+        "docs-viewer/services/documents_data_sharing_adapter.py"
+      ],
+      "shared": ["docs-viewer/services/docs_management_data_sharing_service.py"]
+    },
+    "config": {
+      "label": "Config",
+      "include": ["_config.yml", "**/config/", "**/*config*", "studio/data/config/"]
+    },
+    "activity": {
+      "label": "Activity",
+      "include": [
+        "**/*activity*",
+        "admin-app/app/frontend/config/ui-text/admin-activity.json",
+        "admin-app/app/server/admin_app/admin_activity_api.py",
+        "docs-viewer/services/docs_activity.py"
+      ]
+    },
+    "catalogue": {
+      "label": "Catalogue",
+      "include": [
+        "**/*catalogue*",
+        "catalogue/",
+        "studio/services/catalogue/",
+        "studio/data/config/catalogue/"
+      ],
+      "shared": ["assets/js/search/"]
+    },
+    "docs-build": {
+      "label": "Docs build",
+      "include": [
+        "docs-viewer/build/",
+        "docs-viewer/services/docs_write_rebuild.py",
+        "docs-viewer/services/docs_live_rebuild_watcher.py",
+        "docs-viewer/services/docs_generated_reads.py",
+        "docs-viewer/tests/python/test_build_docs_python.py",
+        "docs-viewer/tests/python/test_build_search_python.py"
+      ],
+      "shared": ["docs-viewer/config/scopes/", "docs-viewer/source/"]
+    }
+  },
+  "routes": {
+    "/admin/checks/": {
+      "label": "Admin Checks",
+      "path": "/admin/checks/",
+      "include": [
+        "admin-app/checks/audit_target_map.py",
+        "admin-app/checks/config/",
+        "admin-app/checks/reports/",
+        "admin-app/checks/run_reports.py",
+        "admin-app/app/frontend/js/admin-checks.js",
+        "admin-app/app/frontend/config/ui-text/admin-checks.json",
+        "admin-app/app/server/admin_app/admin_checks_api.py"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": ["config"]
+    },
+    "/admin/risk/": {
+      "label": "Admin Risk",
+      "path": "/admin/risk/",
+      "include": [
+        "admin-app/app/frontend/js/admin-risk.js",
+        "admin-app/app/frontend/config/ui-text/admin-risk.json",
+        "admin-app/app/server/admin_app/admin_risk_api.py",
+        "admin-app/checks/risk_evidence_pack.py",
+        "admin-app/tests/**/*risk*"
+      ],
+      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "areas": ["activity"]
+    },
+    "/library/": {
+      "label": "Library",
+      "path": "/library/",
+      "include": [
+        "library/",
+        "docs-viewer/source/library/",
+        "docs-viewer/config/scopes/docs_scopes.json",
+        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "assets/js/search/"
+      ],
+      "shared": [
+        "docs-viewer/runtime/js/docs-viewer-public.js",
+        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "docs-viewer/runtime/js/docs-viewer-search*"
+      ],
+      "areas": ["search", "catalogue"]
+    },
+    "/analysis/": {
+      "label": "Analysis",
+      "path": "/analysis/",
+      "include": [
+        "analysis/",
+        "docs-viewer/source/analysis/",
+        "docs-viewer/config/scopes/docs_scopes.json",
+        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "assets/js/search/"
+      ],
+      "shared": [
+        "docs-viewer/runtime/js/docs-viewer-public.js",
+        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "docs-viewer/runtime/js/docs-viewer-search*"
+      ],
+      "areas": ["search"]
+    },
+    "/docs/": {
+      "label": "Docs Viewer Management",
+      "path": "/docs/",
+      "include": [
+        "docs-viewer/runtime/js/docs-viewer-manage.js",
+        "docs-viewer/runtime/js/docs-viewer-management*",
+        "docs-viewer/services/docs_management*",
+        "docs-viewer/services/docs_viewer_service.py",
+        "docs-viewer/config/routes/docs-viewer-routes.json",
+        "docs-viewer/config/ui-text/manage.json",
+        "docs-viewer/tests/**/*management*",
+        "docs-viewer/tests/smoke/docs_viewer_service_manage.py"
+      ],
+      "shared": [
+        "docs-viewer/runtime/js/docs-viewer-app-context.js",
+        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "docs-viewer/services/docs_management_routes.py"
+      ],
+      "areas": ["management", "import-export", "docs-build"]
+    }
+  },
+  "reports": {
+    "files": {
+      "label": "Files",
+      "script": "admin-app/checks/reports/files.py",
+      "description": "File count, line count, and byte size evidence.",
+      "default_options": {
+        "limit": 50,
+        "sort": "lines_desc"
+      },
+      "allowed_options": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "sort": {
+          "type": "string",
+          "enum": ["lines_desc", "bytes_desc", "path_asc"]
+        }
+      }
+    }
+  }
+}
