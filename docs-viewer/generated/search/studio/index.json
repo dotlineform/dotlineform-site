@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-875317976b9fc5593597bb2fe748cf0e",
-    "generated_at_utc": "2026-06-10T14:49:22Z",
+    "version": "blake2b-05a20b4af0f623613152536ed900b13e",
+    "generated_at_utc": "2026-06-10T16:07:35Z",
     "count": 237
   },
   "entries": [
@@ -5290,16 +5290,16 @@
       "kind": "doc",
       "title": "UI",
       "href": "/docs/?scope=studio&doc=ui",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
+      "last_updated": "2026-06-10",
+      "display_meta": "2026-06-10",
       "search_terms": [
         "ui",
-        "2026-05-15",
+        "2026-06-10",
         "2026",
-        "05",
-        "15"
+        "06",
+        "10"
       ],
-      "search_text": "ui 2026-05-15 2026 05 15"
+      "search_text": "ui 2026-06-10 2026 06 10"
     },
     {
       "id": "css-audit-spec",
@@ -5355,51 +5355,52 @@
       "kind": "doc",
       "title": "UI Audits",
       "href": "/docs/?scope=studio&doc=ui-audits",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-06-10",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
+      "display_meta": "2026-06-10 • UI",
       "search_terms": [
         "ui-audits",
         "ui",
         "audits",
         "ui audits",
-        "2026-05-15",
+        "2026-06-10",
         "2026",
-        "05",
-        "15"
+        "06",
+        "10"
       ],
-      "search_text": "ui-audits ui audits ui audits 2026-05-15 2026 05 15"
+      "search_text": "ui-audits ui audits ui audits 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-catalogue",
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-06-06",
+      "last_updated": "2026-06-10",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-06-06 • UI",
+      "display_meta": "2026-06-10 • UI",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
-        "2026-06-06",
+        "2026-06-10",
         "2026",
-        "06"
+        "06",
+        "10"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-06-06 2026 06"
+      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-pattern-action-menu",
       "kind": "doc",
       "title": "Action Menu Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-action-menu",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-pattern-action-menu",
         "ui",
@@ -5409,22 +5410,22 @@
         "action menu pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-pattern-action-menu ui pattern action menu action menu pattern ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-pattern-action-menu ui pattern action menu action menu pattern ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-primitive-button",
       "kind": "doc",
       "title": "Button Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-button",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-primitive-button",
         "ui",
@@ -5433,12 +5434,12 @@
         "button primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-pattern-column-links",
@@ -5494,10 +5495,10 @@
       "kind": "doc",
       "title": "Input Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-input",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-primitive-input",
         "ui",
@@ -5506,22 +5507,22 @@
         "input primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-primitive-list",
       "kind": "doc",
       "title": "List Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-list",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-primitive-list",
         "ui",
@@ -5530,12 +5531,12 @@
         "list primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-primitive-list ui primitive list list primitive ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-primitive-list ui primitive list list primitive ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "studio-ui-framework-modal-contract",
@@ -5594,10 +5595,10 @@
       "kind": "doc",
       "title": "Modal Shell Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-primitive-modal-shell",
         "ui",
@@ -5607,22 +5608,22 @@
         "modal shell primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-primitive-panel",
       "kind": "doc",
       "title": "Panel Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-panel",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-primitive-panel",
         "ui",
@@ -5631,12 +5632,12 @@
         "panel primitive",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-pattern-reopenable-command-result",
@@ -5669,10 +5670,10 @@
       "kind": "doc",
       "title": "Select Menu Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-select-menu",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-10",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-29 • UI Catalogue",
+      "display_meta": "2026-06-10 • UI Catalogue",
       "search_terms": [
         "ui-pattern-select-menu",
         "ui",
@@ -5682,12 +5683,12 @@
         "select menu pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-29",
+        "2026-06-10",
         "2026",
-        "05",
-        "29"
+        "06",
+        "10"
       ],
-      "search_text": "ui-pattern-select-menu ui pattern select menu select menu pattern ui catalogue catalogue 2026-05-29 2026 05 29"
+      "search_text": "ui-pattern-select-menu ui pattern select menu select menu pattern ui catalogue catalogue 2026-06-10 2026 06 10"
     },
     {
       "id": "studio-ui-framework-primitives",
@@ -5719,10 +5720,10 @@
       "kind": "doc",
       "title": "UI Conformance Spec",
       "href": "/docs/?scope=studio&doc=studio-ui-conformance",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-06-10",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
+      "display_meta": "2026-06-10 • UI",
       "search_terms": [
         "studio-ui-conformance",
         "studio",
@@ -5730,33 +5731,33 @@
         "conformance",
         "ui conformance spec",
         "spec",
-        "2026-05-15",
+        "2026-06-10",
         "2026",
-        "05",
-        "15"
+        "06",
+        "10"
       ],
-      "search_text": "studio-ui-conformance studio ui conformance ui conformance spec spec 2026-05-15 2026 05 15"
+      "search_text": "studio-ui-conformance studio ui conformance ui conformance spec spec 2026-06-10 2026 06 10"
     },
     {
       "id": "ui-framework",
       "kind": "doc",
       "title": "UI Framework",
       "href": "/docs/?scope=studio&doc=ui-framework",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-10",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-22 • UI",
+      "display_meta": "2026-06-10 • UI",
       "search_terms": [
         "ui-framework",
         "ui",
         "framework",
         "ui framework",
-        "2026-05-22",
+        "2026-06-10",
         "2026",
-        "05",
-        "22"
+        "06",
+        "10"
       ],
-      "search_text": "ui-framework ui framework ui framework 2026-05-22 2026 05 22"
+      "search_text": "ui-framework ui framework ui framework 2026-06-10 2026 06 10"
     }
   ]
 }

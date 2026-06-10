@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: 2026-06-06
+last_updated: 2026-06-10
 parent_id: ui
 viewable: true
 ---
@@ -14,6 +14,8 @@ The UI Catalogue is now a demo system, not a live-system CSS check. It exists to
 The demo pages are now served by the local Admin app.
 They do not mutate catalogue data and should not be wired through Local Studio routes.
 The durable Admin route and static-serving boundary is documented in [Local Admin App](/docs/?scope=studio&doc=local-admin-app).
+
+Use the catalogue to understand the shape and behavior of a primitive or pattern. Do not treat catalogue CSS classes as production names.
 
 ## Demo Route Structure
 
@@ -60,6 +62,8 @@ Do not put demo-only fragments in `_includes/`. Demo pages should own their rend
 
 Markup examples on demo pages should also use the demo namespace. That keeps the examples clear: designers and developers are reading a pattern that must be mapped from demo classes into the live implementation namespace when building real pages.
 
+`tagStudio*` is a legacy Studio implementation namespace, not a catalogue namespace. Do not add it to new demos and do not introduce new production usage just because an older primitive doc still names it as a current live example.
+
 ## Demo Ready State
 
 The demo pages expose a demo-local ready contract:
@@ -95,6 +99,8 @@ The catalogue separates:
 
 Use the catalogue when defining or discussing a shared element before or during implementation. Use UI Audit when checking whether live production pages actually conform to the intended pattern.
 
+If a requested UI element has no matching primitive or pattern, record that as a coverage gap. Do not stretch an unrelated primitive to cover it only to avoid naming the gap.
+
 ## Demo To Live Mapping
 
 Catalogue demos are not dual-purpose production checks.
@@ -108,6 +114,13 @@ When creating a live page from a demo:
 - verify the live result through UI Audit, not by making the demo import live CSS
 
 This keeps demo examples stable even when live implementation details evolve.
+
+Live namespace examples:
+
+- Docs Viewer maps shared ideas into `docsViewer*`.
+- Admin app routes should use Admin or route-owned classes.
+- Analytics routes should use Analytics or route-owned classes.
+- older Studio routes may still use legacy `tagStudio*`, but new work should avoid expanding that namespace.
 
 ## Primitive Scope
 
@@ -167,3 +180,5 @@ Use these folders for optimized documentation-facing assets only. Live route scr
 When a new shared element appears repeatedly, add a matching primitive or pattern doc under this page and publish an isolated demo route under the demo hierarchy.
 
 Do not add a new UI Catalogue page that imports production CSS as its primary implementation. If live CSS needs checking, create or update a UI Audit.
+
+If a live route relies on a pattern that is missing from the catalogue, the correct short-term result is a documented coverage gap plus a focused standardisation follow-up.

@@ -2,7 +2,7 @@
 doc_id: ui-primitive-list
 title: List Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-06-10
 parent_id: ui-catalogue
 ---
 # List Primitive
@@ -26,6 +26,12 @@ The list primitive covers repeated row surfaces such as:
 The primitive owns the outer list shell and common row rhythm.
 Page-specific classes still own data-specific column templates, row actions, responsive labels, and feature-specific cells.
 
+## Namespace Rule
+
+This primitive defines list structure and behavior, not a universal class prefix.
+
+Map the list shell into the owning app namespace. Do not introduce new `tagStudio*` list classes. Existing `tagStudioList*` names below describe older Studio implementation details only.
+
 ## Contract
 
 The list primitive should:
@@ -43,15 +49,15 @@ The list primitive currently defines four baseline versions:
 
 - simple list: minimal row treatment, no column headers, suitable for short lists where the surrounding page already explains the row context
 - sortable list: column headers become clickable buttons on sortable columns and show the active sort direction beside the label
-- dense list: works-index density for scan tables, using `tagStudioList--dense`, `--text-xs` type, no row dividers, sortable columns, and a bold title cell
+- dense list: works-index density for scan tables, using a dense list variant, small type, no row dividers, sortable columns, and a bold title cell
 - thumbnail list: the first column is a fixed media thumbnail; sorting may still exist, but it can be controlled by buttons or other controls outside the list
 
-The shared `tagStudioList` layer owns the optional width wrapper, row rhythm, header treatment, row-alignment modifiers, common cell text, cell links, sort indicator, and thumbnail frame.
+The shared list layer owns the optional width wrapper, row rhythm, header treatment, row-alignment modifiers, common cell text, cell links, sort indicator, and thumbnail frame.
 Page-specific classes still own column templates, row actions, chips, and responsive data labels.
 
 ## Implementation Notes
 
-Current live implementation lives in:
+Current legacy Studio implementation lives in:
 
 - `assets/studio/css/studio.css`
 
@@ -60,7 +66,7 @@ Current demo implementation lives in:
 - `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
 - `admin-app/ui-catalogue/source/demos/primitives/list/index.md`
 
-Primary classes:
+Legacy Studio classes:
 
 - `tagStudioList`
 - `tagStudioList--dense`
@@ -80,13 +86,13 @@ Primary classes:
 
 Dense list guidance:
 
-- add `tagStudioList--dense` to the `tagStudioList` wrapper
-- keep sortable columns as real `tagStudioList__sortBtn` buttons
+- add the dense variant to the list wrapper
+- keep sortable columns as real buttons
 - use page-specific header and row classes for the column template
-- use `tagStudioList__cellTitle` on the title cell so the shared bold rule applies
+- use the title-cell primitive class so the shared bold rule applies
 - do not add row dividers back locally unless the page needs a different list variant
 
-The UI Catalogue demo uses `uiCatalogueDemo*` classes. Use demo markup as the structural reference, then map it into the live list shell or a route-owned production variant.
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Use demo markup as the structural reference, then map it into the owning production namespace.
 
 ## Lifecycle Notes
 

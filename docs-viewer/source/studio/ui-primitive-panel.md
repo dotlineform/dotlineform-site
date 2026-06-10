@@ -2,7 +2,7 @@
 doc_id: ui-primitive-panel
 title: Panel Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-06-10
 parent_id: ui-catalogue
 ---
 # Panel Primitive
@@ -26,6 +26,12 @@ The panel primitive covers deliberate contained surfaces such as:
 
 Do not use panels as generic wrappers just to add a border around unrelated controls.
 
+## Namespace Rule
+
+This primitive defines panel purpose, containment, and link behavior, not one production class prefix.
+
+Map the panel into the owning app namespace. Do not introduce new `tagStudio*` panel classes. Existing `tagStudio*` names below describe older Studio implementation details only.
+
 ## Contract
 
 The panel primitive should:
@@ -40,7 +46,7 @@ The panel primitive should:
 
 ## Implementation Notes
 
-Current live implementation lives in:
+Current legacy Studio implementation lives in:
 
 - `assets/studio/css/studio.css`
 
@@ -53,10 +59,10 @@ Dark-mode panel surfaces must override the Studio surface token set together.
 Do not combine a light `--studio-surface` with global dark-mode text tokens such as `--muted`; that makes labels and disabled text low contrast on white panels.
 
 Image panel links are the exception to normal theme inheritance.
-The base `tagStudio__panelLink--image` variant keeps a dark text treatment over a light image overlay in both light and dark mode.
-Choose images and overlays that support that treatment, or use `tagStudio__panelLink--imageContrast` for the explicit white-text override.
+The legacy Studio image-panel variant keeps a dark text treatment over a light image overlay in both light and dark mode.
+Choose images and overlays that support that treatment, or use an explicit high-contrast image-panel variant for white text.
 
-Primary classes:
+Legacy Studio classes:
 
 - `tagStudio__panel`
 - `tagStudio__panel--compact`
@@ -65,7 +71,7 @@ Primary classes:
 - `tagStudio__panelLink--image`
 - `tagStudio__panelLink--imageContrast`
 
-The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into live production classes during page work.
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into the owning production namespace during page work.
 
 Jekyll-rendered image panel links should keep design-time asset selections in shared page data where possible.
 Asset width should be treated as an explicit page design variable.

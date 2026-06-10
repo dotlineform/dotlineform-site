@@ -2,7 +2,7 @@
 doc_id: ui-primitive-input
 title: Input Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-06-10
 parent_id: ui-catalogue
 ---
 # Input Primitive
@@ -23,13 +23,19 @@ The input primitive covers controls that assign or display a field value:
 - stepped numeric compositions
 - field label and control wrappers
 
+## Namespace Rule
+
+This primitive defines field anatomy and state behavior, not a universal CSS namespace.
+
+Map the structure into the owning app namespace. Do not introduce new `tagStudio*` classes. Existing `tagStudio*` names below describe older Studio implementation details only.
+
 ## Contract
 
 The shared input contract separates the field shell from the input surface:
 
-- `tagStudio__input` owns the visual control surface
-- `tagStudioField` owns label placement, control width, and add-on composition
-- `tagStudioField--fill` allows a field to fill its available layout area
+- an input-surface class owns the visual control surface
+- a field-shell class owns label placement, control width, and add-on composition
+- a fill variant allows a field to fill its available layout area
 - route-local CSS may set deliberate width constraints when the surrounding layout requires it
 
 Disabled means temporarily unavailable because the current state is incomplete.
@@ -37,7 +43,7 @@ Display-only values should use a readonly display treatment rather than a disabl
 
 ## Implementation Notes
 
-Current live implementation lives in:
+Current legacy Studio implementation lives in:
 
 - `assets/studio/css/studio.css`
 
@@ -46,7 +52,7 @@ Current demo implementation lives in:
 - `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
 - `admin-app/ui-catalogue/source/demos/primitives/input/index.md`
 
-Primary classes:
+Legacy Studio classes:
 
 - `tagStudio__input`
 - `tagStudio__input--defaultValue`
@@ -60,7 +66,7 @@ Primary classes:
 - `tagStudioField__stepButton`
 - `tagStudioField__incrementValue`
 
-The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into live `tagStudio*` or route-owned classes when implementing production pages.
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into the owning production namespace.
 
 ## Lifecycle Notes
 

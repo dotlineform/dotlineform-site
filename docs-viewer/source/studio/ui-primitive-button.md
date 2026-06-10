@@ -2,7 +2,7 @@
 doc_id: ui-primitive-button
 title: Button Primitive
 added_date: 2026-05-05
-last_updated: 2026-05-29
+last_updated: 2026-06-10
 parent_id: ui-catalogue
 ---
 # Button Primitive
@@ -31,6 +31,19 @@ Use the button primitive for commands such as:
 Do not use the button primitive for ordinary navigation.
 Navigation should use links or a documented link-style composition.
 
+## Namespace Rule
+
+This primitive defines behavior and visual expectations, not a universal CSS class name.
+
+Map the primitive into the owning app namespace:
+
+- Docs Viewer uses `docsViewer*`.
+- Admin app routes use Admin or route-owned classes.
+- Analytics routes use Analytics or route-owned classes.
+- older Studio routes may still use legacy `tagStudio*`.
+
+Do not introduce new `tagStudio*` button classes. Existing `tagStudio*` names below are legacy Studio implementation examples.
+
 ## Contract
 
 The shared command-button contract currently includes:
@@ -44,7 +57,7 @@ The shared command-button contract currently includes:
 
 ## Implementation Notes
 
-Current live implementation lives in:
+Current legacy Studio implementation lives in:
 
 - `assets/studio/css/studio.css`
 
@@ -53,14 +66,14 @@ Current demo implementation lives in:
 - `admin-app/ui-catalogue/assets/css/ui-catalogue-demo.css`
 - `admin-app/ui-catalogue/source/demos/primitives/button/index.md`
 
-Primary classes:
+Legacy Studio classes:
 
 - `tagStudio__button`
 - `tagStudio__button--defaultWidth`
 - `tagStudio__button--defaultAction`
 
-`tagStudio__button` uses the same compact height for page commands and modal actions.
-Use `tagStudio__button--defaultWidth` when commands in a row should share the standard minimum width, including modal action rows.
+In older Studio routes, `tagStudio__button` uses the same compact height for page commands and modal actions.
+Use the same default-width behavior in new app namespaces when commands in a row should share the standard minimum width, including modal action rows.
 
 Button-related visible copy belongs in the relevant route or feature `ui_text` config when the page is config-backed.
 

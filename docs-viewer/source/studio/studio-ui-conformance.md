@@ -2,18 +2,18 @@
 doc_id: studio-ui-conformance
 title: UI Conformance Spec
 added_date: 2026-04-21
-last_updated: 2026-05-15
+last_updated: 2026-06-10
 parent_id: ui
 viewable: true
 ---
 # UI Conformance Spec
 
-This document defines the current conformance test for Studio UI pages.
+This document defines the current conformance test for live UI routes.
 
 Use it when the task is:
 
-- check whether page X conforms to Studio UI standards
-- identify non-conforming UI on a Studio page
+- check whether route X conforms to current UI standards
+- identify non-conforming UI on a live app page
 - decide whether a deviation is fixable, intentional, or still outside current shared coverage
 - identify redundant route-local markup or CSS and the cleanup needed after a fix
 
@@ -25,7 +25,7 @@ Use UI Catalogue primitive and pattern docs, isolated demo pages, and shared fra
 
 Make the following test valid and repeatable:
 
-> check whether page X conforms to the full Studio design standards currently defined in the repo
+> check whether route X conforms to the UI standards currently defined in the repo
 
 The key constraint is `currently defined`.
 
@@ -35,11 +35,11 @@ If a page uses a pattern that has not yet been standardized enough to audit, the
 
 Use these sources in this order:
 
-1. UI Catalogue docs and isolated demo pages under `/admin/ui-catalogue/demos/`
+1. [UI](/docs/?scope=studio&doc=ui), UI Catalogue docs, and isolated demo pages under `/admin/ui-catalogue/demos/`
 2. [UI Framework](/docs/?scope=studio&doc=ui-framework)
-3. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
+3. Relevant app/runtime docs if they define route-specific behavior that does not conflict with the shared UI contract
 
-Do not treat UI Catalogue demo rendering as a live CSS check. For production conformance, map the demo pattern into the live namespace, then verify the live route through UI Audit.
+Do not treat UI Catalogue demo rendering as a live CSS check. For production conformance, map the demo pattern into the live app namespace, then verify the live route through UI Audit.
 
 ## Coverage Model
 
@@ -70,12 +70,13 @@ Current expected coverage:
   - list shell as a published primitive
   - toolbar as a published primitive
 - `uncovered`
-  - any page pattern that is not yet mapped into the shared `tagStudio*` layer or recorded as a permanent shared rule
+  - any page pattern that is not yet mapped into an app-owned production namespace or recorded as a permanent shared rule
 
 Implication:
 
 - a page can be audited fully only to the extent that its UI is covered by `authoritative` or `framework-only` rules
 - uncovered or partial areas must be flagged as coverage gaps, not hidden inside a generic pass/fail judgment
+- legacy `tagStudio*` usage is not itself evidence of a modern shared primitive; it is existing Studio implementation history unless the primitive doc explicitly says otherwise
 
 ## Audit Inputs
 
@@ -83,7 +84,7 @@ Use these sources while auditing:
 
 - the page route itself in a browser
 - the page template and relevant runtime JS
-- the shared Studio CSS
+- the production CSS used by the owning app or route
 - the relevant UI Catalogue docs and demo pages
 - the shared framework and rules docs
 
@@ -123,6 +124,8 @@ Every page-level conformance review should produce these sections:
 Start with one compact line:
 
 - `/studio/example/ : non-conforming`
+- `/docs/?scope=studio&doc=example : coverage gaps`
+- `/admin/example/ : conforming with cleanup`
 
 ### 2. Remediation Status
 
@@ -167,6 +170,7 @@ Minimum categories:
 - summaries/messages
 - list or result shells
 - route-specific compositions
+- app namespace and JS hook usage
 
 ### 5. Modal Composition
 
@@ -264,13 +268,13 @@ After identifying a fix, the reviewer should ask:
 1. Is the page compensating for a weak shared primitive?
 2. If the shared primitive is fixed, what local code becomes redundant?
 3. Does the page still carry old CSS, wrapper markup, or typography overrides that no longer serve a purpose?
-4. Can the route move closer to the shared `tagStudio*` layer after the fix?
+4. Can the route move closer to the applicable shared primitive or app-owned namespace after the fix?
 
 If yes, the audit should record the exact cleanup path rather than stopping at the first visible fix.
 
 ## Pass / Fail Rule
 
-A page can only be declared `conforming to full Studio UI standards` if:
+A page can only be declared `conforming to full UI standards` if:
 
 - every major UI area on the page is covered by `authoritative` or `framework-only` rules
 - no unresolved non-conformance remains in those covered areas
@@ -290,7 +294,7 @@ Outcome precedence:
 
 ## Signposting Rule
 
-If a user or future Codex session asks to check whether page X conforms to Studio UI standards, the expected reading order is:
+If a user or future Codex session asks to check whether route X conforms to UI standards, the expected reading order is:
 
 1. this document
 2. [UI Framework](/docs/?scope=studio&doc=ui-framework)

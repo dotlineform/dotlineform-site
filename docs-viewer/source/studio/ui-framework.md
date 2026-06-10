@@ -2,265 +2,198 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: 2026-05-22
+last_updated: 2026-06-10
 parent_id: ui
 ---
 # UI Framework
 
-This document defines the current site-wide UI framework.
+This document defines the current app-wide UI implementation model.
+
+It applies to visible UI work across Local Studio, Docs Viewer, Admin app routes, Analytics-owned tools, and public-site surfaces when they use shared UI patterns.
 
 References:
 
+- [UI](/docs/?scope=studio&doc=ui)
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [UI Audits](/docs/?scope=studio&doc=ui-audits)
 
-## Design Steps
+## Framework Goal
 
-For any UI task:
+The UI framework is a consistency contract, not a component framework.
 
-1. Identify the UI type before editing.
-2. Check whether the page should use an existing shared primitive or composition.
-3. Check whether visible runtime copy should come from `studio_config.json`.
-4. Check whether the issue is local or systemic.
-5. Only then move into the detailed framework or page docs.
+It should help developers:
 
-### Identify The UI Type
+- identify whether a UI element is already covered by a primitive or pattern
+- map shared designs into the owning app namespace
+- avoid mixing command, navigation, field, and panel semantics
+- keep JavaScript behavior separate from presentation classes
+- surface uncovered or partial patterns as real gaps
+- verify live routes against the applicable contract
 
-Decide which contract the change belongs to:
+## UI Surface Types
+
+Classify the surface before editing.
+
+Common types:
 
 - command button
-- link or route-entry action
-- pill or chip
-- panel or panel-link
-- input or search field
-- local command feedback/status
-- list shell or capped list
-- modal shell or modal action row
-- page-specific composition
+- navigation link or route-entry action
+- select menu or value picker
+- input field or field shell
+- list, table-like list, or result list
+- panel, panel link, or contained editor surface
+- modal shell, confirmation, notice, input, or choice dialog
+- local command status or reopenable result
+- app shell, route shell, or page-specific composition
 
-If the answer is unclear, stop and classify it first. Several recent inconsistencies came from mixing buttons, links, and route-local compositions.
+If a UI element combines several types, split the responsibilities. For example, a link should navigate; a button should run a command; a modal shell should own dialog mechanics but not the write operation.
 
-### Shared Primitive Check
+## Primitive And Pattern Workflow
 
-Before adding or changing UI:
+Before adding new markup or CSS:
 
-- check the isolated demo pages under `/admin/ui-catalogue/demos/`
-- map the demo structure into the shared layer or an owning route namespace before inventing unrelated markup or CSS
-- if the live page fails after mapping a catalogue pattern, use UI Audit to decide whether the issue is in the live route, the shared production primitive, or the demo pattern
-- if a pattern is repeated but not yet formalized, decide whether it is:
-  - a shared primitive
-  - a shared composition
-  - or a truly route-specific layout
-- use this is a prompt to call out the need to define a new shared primitive or composition pattern
+1. Check [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for the nearest primitive or pattern.
+2. Read the primitive or pattern doc for anatomy, lifecycle, accessibility, and ownership.
+3. Treat the Admin catalogue demo as a design reference, not production CSS.
+4. Map the pattern into the live app's namespace and state model.
+5. If no usable primitive exists, call that out as a UI coverage gap.
+6. If the pattern is repeated enough to standardise, add or request a primitive or pattern doc and demo.
 
-### UI Copy Check
+The UI Catalogue proves the isolated pattern. It does not prove the live route. Live routes still need route-level verification or UI Audit.
 
-For Studio pages, visible runtime copy should normally come from route-scoped files under `studio/app/frontend/config/ui-text/`, loaded through `paths.data.ui_text` in `studio/app/frontend/config/studio-config.json`.
+## JavaScript App Model
 
-Check these points:
+Most local tools are JavaScript app surfaces, even when their shell is rendered by Jekyll or a static route. Treat them as apps when they have route state, async reads, service calls, generated data, management capability checks, or write workflows.
 
-- if the runtime calls `getStudioText(config, "<scope>.<key>")`, the matching `ui_text.<scope>` block must exist
-- do not let JS fallback strings become the real source of truth
-- route paths belong in config routes
-- visible button labels, headings, placeholders, status text, and other runtime copy belong in `ui_text`
-- build-time-only design selections for static pages belong in Jekyll data, not Studio runtime config
+JavaScript app surfaces should follow these rules:
 
-Relevant references:
+- templates own stable shell regions and major layout containers
+- JavaScript owns dynamic fragments, state projection, command dispatch, and async lifecycle
+- route controllers receive explicit refs, services, config, and callbacks
+- shared helpers should receive normalized records or options rather than reading broad global state
+- route-owned state decides which commands are hidden, disabled, busy, or selected
+- service writes and rebuilds stay behind named backend endpoints with server-side validation
+- visible status should be adjacent to the command or region it describes
 
-- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
-- [Studio Config And Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+Do not add a global framework or implicit plugin system to solve a page-local UI problem. Add narrow shared helpers only when several routes need the same lifecycle or interaction contract.
 
-### Fast Rules
+## CSS And Hook Boundary
 
-Use these default checks on every Studio UI task:
+Keep these responsibilities separate:
 
-- buttons are commands, not navigation
-- route-entry actions should usually be links, not buttons
-- shared command buttons should use the shared size/width contract unless reviewed otherwise
-- command feedback should stay adjacent to the related control area
-- capped-list search should appear only when the list is actually truncated
-- if a row already has a clear link to the target record, do not duplicate that same navigation as a button
-- do not use a panel as a generic wrapper just to get a border around unrelated controls
-- if a static Studio route gains async data, service checks, or route commands, replace the static ready initializer with a route-specific ready/busy contract before treating it as smoke-test ready
-
-### Close-Out Checklist
-
-Before finishing Studio UI work:
-
-- update `studio_config.json` if visible runtime copy changed
-- update shared docs if the contract changed
-- verify desktop and mobile behavior
-- run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
-
-The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
-
-## Site UI Contract Boundary
-
-Use three separate UI contracts across the site:
-
-- `class=""`
-  presentation only
-- stable `id=""`, `data-role=""`, or feature-scoped `data-*`
-  JS lookup only
-- `data-role=""`
-  use when a reusable semantic JS hook is needed
-- `data-state=""` and `aria-*`
-  runtime state only
+- `class=""`: presentation and layout
+- stable `id=""`: single known element lookup or test hook
+- `data-role=""`: reusable semantic JS hook inside a feature
+- feature-scoped `data-*`: route or app state hooks
+- `data-state=""` and `aria-*`: runtime state and accessibility
 
 Rules:
 
-- JS behavior must not query styling classes when a stable hook can be exposed.
-- Prefer explicit `data-role`, stable `id`, or feature-scoped `data-*` hooks over presentational selectors.
-- JS must not toggle presentation classes such as `.is-active`, `.is-error`, or page-specific BEM classes.
-- Page templates should own major layout containers and section boundaries.
-- JS should generate only the inner dynamic fragments that actually change at runtime.
+- JS behavior should not query presentational classes when a stable hook can be exposed.
+- JS should not toggle route-local presentation classes as its primary state model.
+- State should project through `disabled`, `hidden`, `aria-*`, `data-state`, or explicit render output.
+- Page templates should expose stable shells; generated markup should remain small and inspectable.
 
-For Studio-generated markup, use `studio/app/frontend/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place.
+## Namespace Ownership
 
-## Site Interaction Defaults
+Production markup must use an owning namespace:
 
-### Progressive enhancement
+- Docs Viewer uses `docsViewer*`.
+- UI Catalogue demos use `uiCatalogueDemo*` and only inside Admin-hosted demo pages.
+- Admin app routes should use Admin or route-owned namespaces.
+- Analytics-owned routes should use Analytics or route-owned namespaces.
+- Public-site page patterns should use public-site namespaces.
+- Legacy Studio routes may still contain `tagStudio*`, but new work should not expand that namespace.
 
-Site interactions should default to progressive enhancement:
+`tagStudio*` is historical. It is doubly confusing now that tags belong to Analytics. When docs mention `tagStudio*`, read it as a legacy Studio production mapping, not a universal primitive namespace.
 
-- preserve baseline links, buttons, keyboard behavior, and visible controls
-- add JS behavior on top of existing navigation and control flows rather than replacing them
-- keep behavior scoped to the relevant content region rather than binding globally unless the page architecture genuinely requires it
+If a shared production namespace is needed to replace `tagStudio*`, define that as a focused migration request. Do not create compatibility aliases casually.
 
-### Header navigation overflow
+## Copy Ownership
 
-When a section-specific header has more top-level links than fit on narrow screens:
+Visible runtime copy should come from the owning app's normal UI text source when that app is config-backed.
 
-- keep the primary/root destination visible as a normal link
-- move secondary destinations behind the shared `nav-more` menu at mobile widths
-- use the existing `data-nav-more` disclosure behavior so Escape, outside-click close, active-state styling, and ordinary links stay consistent
-- keep the desktop link row unchanged unless the desktop layout also overflows
+Examples:
 
-### Prev/next and paginated navigation
+- Docs Viewer management copy belongs in Docs Viewer UI text config.
+- Studio app copy belongs in Studio route UI text config.
+- Admin app copy belongs in Admin app route data or code-owned copy according to that route's contract.
+- static public page copy may stay in page source or Jekyll data.
 
-For any image viewer, detail viewer, or paginated grid:
+JS fallback strings are acceptable defensive defaults, but they should not become the real source of product copy for config-backed apps.
 
-- reuse the existing previous/next controls or the same underlying URL/state-generation logic already used by the UI
-- do not invent a parallel navigation model in JS
-- preserve existing first/last behavior exactly, including wrapping if the current controls already wrap
-- if no valid previous/next action exists, do nothing in that direction
+## Ready, Busy, And Capability State
 
-### Swipe navigation default
+Every app route with async behavior should expose a route-appropriate readiness contract.
 
-Horizontal swipe is the default progressive enhancement for:
+Rules:
 
-- image viewers with existing previous/next navigation
-- paginated thumbnail grids with existing previous/next pagination controls
+- ready means the shell has loaded enough for the route to be usable or for an error state to be visible
+- busy should be scoped to the operation or route region that is busy
+- command buttons disable while conflicting operations run
+- capability checks should hide unavailable features only when the feature truly cannot be used
+- unsupported write services should report a clear management or service-unavailable state
 
-Required implementation rules:
+Do not copy `data-studio-ready` into non-Studio apps. Use the route's own ready contract unless a shared contract has been explicitly defined.
 
-- use Pointer Events as the primary input model unless a page has a clear incompatible constraint
-- activate swipe only from the main media or grid region, not from the whole document by default
-- use stable DOM hooks such as `data-role`, stable `id`, or feature-scoped `data-*`, not presentational class names
-- resolve navigation from the existing prev/next anchors or buttons at gesture time
-- preserve click/tap navigation, keyboard navigation, visible controls, and ordinary vertical scroll
-- use conservative gesture thresholds and ignore taps, small drags, slow drags, vertical scrolls, and diagonal movement
-- ignore multi-touch interactions
-- cancel tracking on `pointercancel`
-- apply `touch-action: pan-y` only on the specific swipe zone, not globally
+## Fast Rules
 
-Benefits:
+Use these checks on every UI task:
 
-- keeps navigation behavior consistent across input modes
-- avoids duplicated URL/state logic
-- reduces accidental regressions when navigation behavior changes
+- buttons are commands, not ordinary navigation
+- links navigate, even when styled as pills or cards
+- disabled means temporarily unavailable, not readonly display
+- route-entry actions should usually be links
+- command feedback stays near the command area
+- search controls appear only when useful for the list size or workflow
+- modal helpers own shell mechanics, not writes or route reloads
+- list row actions should not duplicate an obvious row title link unless the duplicate action has a distinct purpose
+- panels should contain coherent content, not arbitrary controls needing a border
+- demo classes never ship in production routes
+- gaps are findings, not excuses to invent silent local conventions
 
-Risks to watch:
+## Verification
 
-- accidental click activation after a successful swipe
-- over-broad swipe zones that interfere with vertical scrolling or interactive children
-- JS that reads visual class names instead of stable behavior hooks
+For UI implementation work, choose verification proportional to the change.
 
-## Docs Viewer UI Standards
+Common checks:
 
-These standards apply to the shared docs-viewer UI used by:
+- inspect the live route in a browser at desktop size
+- inspect mobile behavior for public pages and responsive app surfaces
+- verify keyboard behavior for menus, modals, and custom controls
+- run focused Playwright smoke tests when a route has one
+- run `node --check` for changed JavaScript modules
+- run relevant Python smoke or audit commands for route-owned UI checks
+- run UI Audit when a task is explicitly conformance work or when a shared pattern migration is risky
 
-- `/docs/`
-- `/library/`
-- `/analysis/`
+When a live route cannot be fully checked because the primitive or pattern is not defined, record a coverage gap and the minimum follow-up needed.
 
-Detailed runtime behavior still belongs in the docs-viewer and search sections. This document only records the current UI standards.
+## App-Specific Notes
 
-### Viewer anatomy
+### Docs Viewer
 
-The current shared viewer uses:
+Docs Viewer is a shared JavaScript app for `/docs/`, `/library/`, and `/analysis/`.
 
-- a left index rail for the docs tree
-- a right main pane for search, metadata, and content
-- a sticky sidebar on larger screens
-- desktop index-panel controls for direct expanded mode and one-step restore/collapse
-- a stacked single-column layout on smaller screens
+It uses `docsViewer*` classes and portable runtime modules. Do not map Docs Viewer UI into `tagStudio*`.
 
-The docs tree remains visible while the right pane switches between:
+Current standards:
 
-- doc-view mode
-- inline docs-search results mode
+- keep the document-reader layout quiet and scannable
+- keep the docs tree as the stable navigation surface
+- keep search and recently-added results inline in the main pane
+- keep management controls explicit and hidden from public read-only routes
+- use generated index options for scope-level tree visibility rather than hard-coded route checks
+- in manage mode, non-viewable docs are visible through manage controls and should have a clear non-viewable treatment
 
-This should stay a quiet document-reader layout rather than becoming an app-style workspace shell.
+### Admin App And UI Catalogue
 
-On larger screens, the index panel may collapse to a narrow visible strip or expand to occupy the viewer content area. A direct expand control should be visible only in normal state. A separate one-step control restores collapsed to normal, collapses normal to collapsed, and restores expanded to normal. The mobile stacked layout should remain unchanged because the document pane is already full width there.
+The Admin app hosts operational checks and UI Catalogue demo pages.
 
-### Search placement
+UI Catalogue demos use `uiCatalogueDemo*` classes to document primitives and patterns in isolation. Production routes should map those structures into their owning namespace.
 
-When docs search is enabled for a scope:
+### Local Studio And Legacy CSS
 
-- the search input lives in the main pane header
-- the recently-added command lives immediately before the search input
-- results replace the normal content pane
-- search is inline, not a floating overlay or dropdown
-- the docs tree remains the stable left-side navigation surface
+Older Studio routes still use shared CSS in `assets/studio/css/studio.css` and legacy `tagStudio*` classes.
 
-This keeps docs search visually tied to the current docs scope rather than the global site header.
-
-The recently-added command is part of the shared Docs Viewer shell. It should remain available on both `/docs/` and `/library/` when inline docs search is available, and it should render the same simple result-list shape as docs search.
-
-### Metadata and content framing
-
-In doc-view mode, the main pane should show:
-
-- search field first when available
-- status line below the search field
-- ancestor path, last-updated metadata, and optional summary metadata above document content
-- one readable content column rather than full-width text
-- linked or token-resolved Markdown images constrained to the content column width, with image-only paragraphs rendered as block media
-
-The ancestor path must not repeat the current doc title, because the rendered document H1 is the title. Root-level docs should hide the path line and let the updated date occupy the top metadata line.
-
-When a doc has summary metadata, show it below the updated date as secondary text rather than folding it into the authored body.
-
-In search mode, the main pane should show:
-
-- status line
-- one inline results list
-- one inline `more` control when needed
-
-In recently-added mode, the main pane should show:
-
-- status line
-- one inline capped results list
-- no separate `more` control
-
-### Tree and result styling
-
-The current shared treatment is:
-
-- tree links render as quiet pill-like rows, not file-manager rows
-- tree text uses the small text token so the index reads as secondary navigation and long titles fit better
-- result links render as simple stacked list items
-- result metadata stays secondary and muted
-- docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
-- docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
-- active state should be obvious without turning the viewer into a tabbed interface
-- scope-level structural visibility should come from generated docs index options rather than hard-coded scope checks in the viewer
-- in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, or operation results; the available local-server state should stay quiet
-- in manage mode, non-viewable docs remain visible by default and the checked-by-default `show viewable` checkbox controls whether viewable docs stay in the tree for context
-- non-viewable tree rows use a `✏️` title prefix plus the draft color from `studio_config.json`; they should not rely on bold text as the primary distinction
-- in manage mode, drag/drop tree moves should treat every doc node as a potential parent, and the root list as a root-level target
-- drop indicators should distinguish the target parent row from the root-level drop target
-- drag/drop tree moves update only `parent_id`; index order remains generated title order within each parent
+Those classes are current implementation details, not the target naming model. New work should avoid expanding `tagStudio*` unless the task is explicitly maintaining an existing legacy route and no scoped migration is in scope.

@@ -2,7 +2,7 @@
 doc_id: ui-primitive-modal-shell
 title: Modal Shell Primitive
 added_date: 2026-05-15
-last_updated: 2026-05-29
+last_updated: 2026-06-10
 parent_id: ui-catalogue
 ---
 # Modal Shell Primitive
@@ -17,6 +17,14 @@ Demo reference:
 
 The modal shell primitive covers the container, lifecycle, and action-row contract for modal UI.
 It does not own the domain action that caused the modal to open.
+
+## Namespace Rule
+
+This primitive defines modal anatomy and interaction behavior, not one production CSS namespace.
+
+Map the shell into the owning app namespace. Docs Viewer management can use `docsViewer*`; Admin routes can use Admin or route-owned names; older Studio routes may still use legacy `tagStudio*` helper output.
+
+Do not introduce new `tagStudio*` modal classes for new app surfaces.
 
 Use this primitive for:
 
@@ -55,7 +63,7 @@ The opener or route command owns service payload assembly, writes, rebuilds, del
 
 ## Canonical Implementation Direction
 
-The Studio canonical source should build from:
+The older Studio canonical source currently builds from:
 
 - `assets/studio/js/studio-modal.js`
 - `renderStudioModalFrame()`
@@ -63,7 +71,7 @@ The Studio canonical source should build from:
 - route-owned or shared modal hosts created through `createStudioModalHost()`
 
 Those helpers should be refined to match this full shell contract rather than treated as complete as-is.
-The shared Studio helper now provides:
+The legacy Studio helper now provides:
 
 - explicit header support in the shared frame helper
 - a standard status or validation slot
@@ -82,7 +90,7 @@ That implementation separation is acceptable only when it preserves this same sh
 Use these defaults before starting page-level modal migration:
 
 - action order is secondary, cancel, or close first and primary confirmation last/rightmost
-- action buttons use the shared `tagStudio__button--defaultWidth` minimum width
+- action buttons use the shared default-width button behavior in the owning app namespace
 - destructive actions do not get a separate default visual treatment unless a page audit proves the workflow needs one
 - destructive meaning should be carried by title, body copy, affected-record detail, and confirmation flow
 - shell size variants are `compact`, `default`, `wide`, and `document`
@@ -145,7 +153,7 @@ They are listed here to keep the primitive tied to actual page work, not to crea
 
 ## Implementation Notes
 
-Current live implementation sources:
+Current implementation sources:
 
 - `assets/studio/js/studio-modal.js`
 - `assets/studio/css/studio.css`
@@ -160,7 +168,7 @@ Current demo implementation lives in:
 - `admin-app/ui-catalogue/source/demos/primitives/modal-shell/index.md`
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned JavaScript.
-Treat the demo as the modal shell contract reference, then map the structure into the live Studio namespace or the portable Docs Viewer namespace during page migration.
+Treat the demo as the modal shell contract reference, then map the structure into the owning app namespace during page migration.
 
 ## Audit Notes
 

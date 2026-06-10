@@ -11,10 +11,6 @@ ui_status: draft
 
 ~
 
-🌍 Publish
-
-~
-
 `var/admin/risk/runs/20260608-163701-docs-viewer-runtime`
 
 ~
