@@ -240,7 +240,7 @@
           "doc_id": "site-request-docs-publish-gate",
           "title": "Docs Public Publish Gate",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate.json",
-          "ui_status": "draft",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "site-request-docs-publish-gate-implementation-plan",
@@ -1283,5 +1283,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T11:34:31Z"
+  "generated_at": "2026-06-10T14:29:55Z"
 }

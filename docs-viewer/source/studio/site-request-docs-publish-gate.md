@@ -3,9 +3,8 @@ doc_id: site-request-docs-publish-gate
 title: Docs Public Publish Gate
 added_date: 2026-06-10
 last_updated: 2026-06-10
-ui_status: draft
+ui_status: in-progress
 parent_id: change-requests
-viewable: true
 ---
 # Docs Public Publish Gate
 
