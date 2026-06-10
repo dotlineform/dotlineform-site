@@ -3,20 +3,36 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-admin-checks-operational-reports",
+      "title": "Admin Checks Operational Reports",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
+      "added_date": "2026-06-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
+      "doc_id": "site-request-report-code-surface",
+      "title": "Code Surface Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-code-surface.json",
+      "added_date": "2026-06-10",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
+    },
+    {
       "doc_id": "site-request-report-generated-payloads",
       "title": "Generated Payloads Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
+      "parent_id": "site-request-admin-checks-operational-reports",
+      "parent_title": "Admin Checks Operational Reports"
     },
     {
       "doc_id": "site-request-report-runtime-checks",
       "title": "Runtime Checks Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
+      "parent_id": "site-request-admin-checks-operational-reports",
+      "parent_title": "Admin Checks Operational Reports"
     },
     {
       "doc_id": "site-request-report-static-searches",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
-    },
-    {
-      "doc_id": "admin-checks-reports",
-      "title": "Reports",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-reports.json",
-      "added_date": "2026-06-09",
-      "parent_id": "admin-checks",
-      "parent_title": "Checks"
-    },
-    {
-      "doc_id": "site-request-report-tests",
-      "title": "Tests Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-tests.json",
-      "added_date": "2026-06-09",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-10T21:03:59Z"
+  "generated_at": "2026-06-10T21:51:14Z"
 }

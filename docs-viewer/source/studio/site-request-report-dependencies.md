@@ -27,7 +27,24 @@ That report might need data from:
 - `target-map` for scope, area, route, shared dependency, and boundary data
 - a future [Git History Report](/docs/?scope=studio&doc=site-request-report-git-history) for recent changes
 - a future [Imports Report](/docs/?scope=studio&doc=site-request-report-imports) for dependency references
+- a future [Code Surface Report](/docs/?scope=studio&doc=site-request-report-code-surface) for exposed symbol and handler counts
 - a future [Tests Report](/docs/?scope=studio&doc=site-request-report-tests) for test or smoke coverage links
+
+Another later dependency report could answer:
+
+```text
+Which files or families show repeated evidence of mixed responsibility?
+```
+
+That report should join narrow evidence from existing reports, for example:
+
+- `files` for unusually large files
+- `target-map` for cross-family, cross-area, cross-route, and shared-dependency evidence
+- `imports` for cross-target dependencies and hub files
+- `code-surface` for files with broad exported, top-level, handler, route, or endpoint surfaces
+- `git-history` for high recent churn
+- `tests` for missing discovered test links
+- `static-searches` for configured workflow, boundary, or responsibility tokens
 
 The report should not duplicate those producers' logic.
 It should read their JSON artifacts and compile a focused summary.
@@ -133,12 +150,45 @@ Its output could compile:
 - line count and byte size
 - recent change evidence
 - imports or dependency references
+- exported symbol and code-surface evidence
 - related tests or smoke checks
 - boundary flags or target-map findings
 
 This should remain a separate report.
 Do not add these drilldown fields to the `files` markdown report just to support exploratory analysis.
 For broad file lists, `report.csv` is the pragmatic manual analysis path.
+
+## Mixed Responsibility Report
+
+`mixed-responsibility` is a possible later dependency report once the narrow evidence reports exist.
+
+Its primary question would be:
+
+```text
+Which files or families repeatedly show evidence of mixed ownership or mixed workflow responsibility?
+```
+
+It should not calculate new low-level metrics.
+It should join existing report JSON by repo-relative `path` and compile a short ranked review list.
+
+Possible output sections:
+
+- files with repeated evidence across reports
+- families with many mixed-evidence files
+- files where size, broad code surface, cross-target imports, and churn overlap
+- files with boundary evidence but no discovered test link
+
+Example Markdown shape:
+
+```text
+Repeated mixed-responsibility evidence
+File                              Signals  Evidence
+--------------------------------  -------  ------------------------------
+docs-viewer-management.js               5  large,surface,cross-area,churn,tokens
+```
+
+This report should remain a review index.
+It should not declare pass/fail policy or prescribe a refactor.
 
 ## Open Design Points
 

@@ -232,15 +232,35 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
+          "doc_id": "site-request-admin-checks-operational-reports",
+          "title": "Admin Checks Operational Reports",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "site-request-report-generated-payloads",
+              "title": "Generated Payloads Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-runtime-checks",
+              "title": "Runtime Checks Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
+              "ui_status": "draft"
+            }
+          ]
+        },
+        {
           "doc_id": "site-request-admin-checks-reports",
           "title": "Admin Checks Reports",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-reports.json",
           "ui_status": "in-progress",
           "children": [
             {
-              "doc_id": "site-request-report-generated-payloads",
-              "title": "Generated Payloads Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
+              "doc_id": "site-request-report-code-surface",
+              "title": "Code Surface Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-code-surface.json",
               "ui_status": "draft"
             },
             {
@@ -259,12 +279,6 @@
               "doc_id": "site-request-report-dependencies",
               "title": "Report Dependencies",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-runtime-checks",
-              "title": "Runtime Checks Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
               "ui_status": "draft"
             },
             {
@@ -1240,5 +1254,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T21:03:59Z"
+  "generated_at": "2026-06-10T21:51:14Z"
 }

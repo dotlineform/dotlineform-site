@@ -15,25 +15,34 @@ This document describes a possible future report for [Admin Checks Reports](/doc
 
 The `imports` report would provide dependency-reference evidence for files selected by a checks run.
 
-It should answer questions such as:
+Primary review question:
+
+```text
+Which selected files depend on files outside their configured target boundary?
+```
+
+Secondary evidence:
 
 - which selected files import or reference other local modules
 - which selected files are imported by other files
-- where cross-scope or cross-layer references appear
-- which dependency references should appear in a file-profile summary
+- which selected files have unresolved local references
+- which dependency references should appear in a later file-profile summary
 
 ## Inputs
 
 - selected scope, family, area, and route filters from the run manifest
 - selected files resolved through `target_map_resolver.py`
-- language-specific parser or scanner rules for JavaScript, Python and relevant config files
+- resolved target-map data for selected and referenced files
+- language-specific parser or scanner rules for JavaScript, Python, CSS, and JSON/config references where practical
 
 Possible options:
 
-| Option | Purpose |
-| --- | --- |
-| `include_reverse_refs` | Include files outside the selected set that reference selected files. |
-| `include_external_packages` | Include package imports, not only repo-local references. |
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `limit` | `20` | Maximum files shown per Markdown section. |
+| `include_reverse_refs` | `true` | Include files outside the selected set that reference selected files. |
+| `include_external_packages` | `false` | Include package imports, not only repo-local references. |
+| `unresolved_limit` | `20` | Maximum unresolved references shown in Markdown. |
 
 ## Output
 
@@ -46,7 +55,7 @@ var/admin/checks/<run-id>/imports/
   report.csv
 ```
 
-Likely JSON and CSV fields:
+Required JSON fields:
 
 - `path`
 - `language`
@@ -55,9 +64,54 @@ Likely JSON and CSV fields:
 - `external_imports[]`
 - `reverse_refs[]`
 - `unresolved_refs[]`
-- `cross_scope_refs[]`
+- `cross_target_refs[]`
+- `import_count`
+- `local_import_count`
+- `reverse_ref_count`
+- `unresolved_ref_count`
+- `cross_target_ref_count`
 
 The stable join key for file-level consumers should be repo-relative `path`.
+
+Required per-reference fields:
+
+- `source_path`
+- `target_path` when resolved
+- `raw_reference`
+- `reference_kind`
+- `source_targets`
+- `target_targets`
+- `target_match`
+
+`target_match` should be one of:
+
+- `same-target`
+- `shared-target`
+- `cross-family`
+- `cross-area`
+- `cross-route`
+- `external-package`
+- `unresolved`
+
+## Markdown Shape
+
+The Markdown should answer the review question with bounded aligned `text` blocks, not a full dependency table.
+
+Sections:
+
+- summary counts
+- files with cross-target references
+- files with many reverse references
+- unresolved local references
+
+Example:
+
+```text
+Files with cross-target references
+File                              Cross refs  Main target
+--------------------------------  ----------  ----------------
+docs-viewer-management.js                  7  runtime-js / management
+```
 
 ## Calculation Method
 
@@ -67,9 +121,23 @@ Likely source forms:
 
 - Python `import` and `from ... import ...`
 - JavaScript `import`, `export ... from`, and dynamic import strings
-- local JSON/config references where they are part of route or module wiring
+- CSS `@import` and `url(...)` only when the target resolves to a selected code/config asset
+- local JSON/config references where they are part of route, module, or generated-data wiring
 
 The report should resolve references to repo-relative paths when possible and leave unresolved references visible as evidence rather than hiding them.
+It should compare source and target membership using the same target-map resolver data rather than inventing a separate ownership model.
+
+## Verification
+
+Focused tests should cover:
+
+- JavaScript static imports and dynamic import strings
+- Python imports that resolve to repo files
+- unresolved local references
+- reverse references from outside the selected set
+- cross-family, cross-area, and cross-route classification
+- Markdown output with no wide Markdown tables
+- option validation through `admin-checks-reports.json`
 
 ## Dependency Use
 

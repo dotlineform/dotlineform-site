@@ -15,10 +15,16 @@ This document describes a possible future report for [Admin Checks Reports](/doc
 
 The `git-history` report would provide recent-change evidence for files selected by a checks run.
 
-It should answer questions such as:
+Primary review question:
+
+```text
+Which selected files have unusual recent change activity?
+```
+
+Secondary evidence:
 
 - which selected files changed recently
-- which files have high recent churn
+- which selected files have high recent churn
 - which selected files have not changed in a long time
 - which reports or file profiles should show recent commit context
 
@@ -26,14 +32,15 @@ It should answer questions such as:
 
 - selected scope, family, area, and route filters from the run manifest
 - selected files resolved through `target_map_resolver.py`
-- report options such as history window, maximum commits per file, or since date
+- report options such as history window and bounded commit samples
 
 Possible options:
 
-| Option | Purpose |
-| --- | --- |
-| `since` | Git revision or date window, such as `90 days ago`. |
-| `max_commits_per_file` | Maximum commit samples to keep for each file. |
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `since` | `90 days ago` | Git date window for recent churn counts. |
+| `limit` | `20` | Maximum files shown per Markdown section. |
+| `max_commits_per_file` | `5` | Maximum commit samples to keep for each file. |
 
 ## Output
 
@@ -46,17 +53,48 @@ var/admin/checks/<run-id>/git-history/
   report.csv
 ```
 
-Likely JSON and CSV fields:
+Required JSON fields:
 
 - `path`
 - `commit_count`
+- `distinct_commit_days`
+- `authors[]`
+- `author_count`
 - `last_commit`
 - `last_commit_date`
 - `last_commit_subject`
 - `last_commit_author`
 - `recent_commits[]`
+- `stale_in_window`
+
+Required per-commit sample fields:
+
+- `hash`
+- `date`
+- `author`
+- `subject`
 
 The stable join key for file-level consumers should be repo-relative `path`.
+
+## Markdown Shape
+
+The Markdown should show bounded churn evidence, not a full commit log.
+
+Sections:
+
+- summary counts
+- high-churn files
+- files changed by multiple authors
+- selected files with no commits in the window
+
+Example:
+
+```text
+High-churn files
+File                              Commits  Days  Authors  Last change
+--------------------------------  -------  ----  -------  ----------
+docs-viewer-management.js              12     6        2  2026-06-08
+```
 
 ## Calculation Method
 
@@ -70,6 +108,18 @@ git log --since <window> -- <path>
 ```
 
 The producer should summarize per-file commit counts and keep bounded commit samples.
+It should run from the repo root and treat missing files as selected-file evidence only when they still exist in the resolved file set.
+
+## Verification
+
+Focused tests should use a temporary git repository and cover:
+
+- selected files with zero, one, and multiple commits in the window
+- author counting
+- commit sample limiting
+- CSV row shape
+- Markdown output with no wide Markdown tables
+- safe argv construction without shell interpolation
 
 ## Dependency Use
 

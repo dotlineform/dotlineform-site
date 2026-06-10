@@ -15,11 +15,16 @@ This document describes a possible future report for [Admin Checks Reports](/doc
 
 The `tests` report would provide evidence about test and smoke coverage links for files selected by a checks run.
 
-It should answer questions such as:
+Primary review question:
+
+```text
+Which selected files have no discovered test or smoke-check link?
+```
+
+Secondary evidence:
 
 - which selected files have obvious related tests or smoke checks
 - which test files target a selected route, area, or service
-- which selected files have no discovered test references
 - which test or smoke commands are relevant to a file-profile summary
 
 This report should describe evidence links.
@@ -34,11 +39,12 @@ It should not claim full code coverage unless a later coverage tool is explicitl
 
 Possible options:
 
-| Option | Purpose |
-| --- | --- |
-| `include_smokes` | Include Playwright or route smoke checks. |
-| `include_unit_tests` | Include Python or app-local unit tests. |
-| `match_mode` | Select conservative filename matching or broader reference scanning. |
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `limit` | `20` | Maximum files shown per Markdown section. |
+| `include_smokes` | `true` | Include Playwright or route smoke checks. |
+| `include_unit_tests` | `true` | Include Python or app-local unit tests. |
+| `match_mode` | `conservative` | Select conservative filename matching or broader reference scanning. |
 
 ## Output
 
@@ -51,18 +57,55 @@ var/admin/checks/<run-id>/tests/
   report.csv
 ```
 
-Likely JSON and CSV fields:
+Required JSON fields:
 
 - `path`
 - `related_tests[]`
 - `related_smokes[]`
-- `matched_by`
+- `matched_by[]`
 - `test_count`
 - `smoke_count`
 - `has_related_test`
 - `has_related_smoke`
+- `has_any_discovered_link`
+- `unlinked_reason`
 
 The stable join key for file-level consumers should be repo-relative `path`.
+
+Required per-link fields:
+
+- `path`
+- `kind`
+- `match_kind`
+- `confidence`
+
+`match_kind` should be one of:
+
+- `configured-target`
+- `filename-token`
+- `path-reference`
+- `route-reference`
+- `area-reference`
+
+## Markdown Shape
+
+The Markdown should prioritize missing evidence and keep linked evidence brief.
+
+Sections:
+
+- summary counts
+- selected files with no discovered test or smoke link
+- selected files with smoke links only
+- selected files with the most discovered links
+
+Example:
+
+```text
+No discovered test link
+File                              Family        Area
+--------------------------------  ------------  ----------------
+docs-viewer-management.js         runtime-js    management
+```
 
 ## Calculation Method
 
@@ -76,6 +119,18 @@ The first implementation should combine deterministic config links with conserva
 
 The report should avoid broad claims.
 `has_related_test: false` means no configured or discovered test link was found, not that the file is definitely untested.
+
+## Verification
+
+Focused tests should cover:
+
+- configured route or area test links
+- filename-token matches
+- explicit path-reference matches
+- unmatched selected files
+- smoke-only links
+- `match_mode` validation
+- Markdown output with no wide Markdown tables
 
 ## Dependency Use
 

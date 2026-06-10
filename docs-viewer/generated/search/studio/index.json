@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cae1bd6c2a16d17ad36d19b4851da923",
-    "generated_at_utc": "2026-06-10T21:03:59Z",
-    "count": 230
+    "version": "blake2b-50ee9d6ae3ae202633c090304d868242",
+    "generated_at_utc": "2026-06-10T21:51:14Z",
+    "count": 232
   },
   "entries": [
     {
@@ -955,6 +955,91 @@
       "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
     },
     {
+      "id": "site-request-admin-checks-operational-reports",
+      "kind": "doc",
+      "title": "Admin Checks Operational Reports",
+      "href": "/docs/?scope=studio&doc=site-request-admin-checks-operational-reports",
+      "last_updated": "2026-06-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-10 • Change Requests",
+      "search_terms": [
+        "site-request-admin-checks-operational-reports",
+        "site",
+        "request",
+        "admin",
+        "checks",
+        "operational",
+        "reports",
+        "admin checks operational reports",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "site-request-admin-checks-operational-reports site request admin checks operational reports admin checks operational reports change requests change requests 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "site-request-report-generated-payloads",
+      "kind": "doc",
+      "title": "Generated Payloads Report",
+      "href": "/docs/?scope=studio&doc=site-request-report-generated-payloads",
+      "last_updated": "2026-06-10",
+      "parent_id": "site-request-admin-checks-operational-reports",
+      "parent_title": "Admin Checks Operational Reports",
+      "display_meta": "2026-06-10 • Admin Checks Operational Reports",
+      "search_terms": [
+        "site-request-report-generated-payloads",
+        "site",
+        "request",
+        "report",
+        "generated",
+        "payloads",
+        "generated payloads report",
+        "admin checks operational reports",
+        "admin",
+        "checks",
+        "operational",
+        "reports",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "site-request-report-generated-payloads site request report generated payloads generated payloads report admin checks operational reports admin checks operational reports 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "site-request-report-runtime-checks",
+      "kind": "doc",
+      "title": "Runtime Checks Report",
+      "href": "/docs/?scope=studio&doc=site-request-report-runtime-checks",
+      "last_updated": "2026-06-10",
+      "parent_id": "site-request-admin-checks-operational-reports",
+      "parent_title": "Admin Checks Operational Reports",
+      "display_meta": "2026-06-10 • Admin Checks Operational Reports",
+      "search_terms": [
+        "site-request-report-runtime-checks",
+        "site",
+        "request",
+        "report",
+        "runtime",
+        "checks",
+        "runtime checks report",
+        "admin checks operational reports",
+        "admin",
+        "operational",
+        "reports",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "site-request-report-runtime-checks site request report runtime checks runtime checks report admin checks operational reports admin operational reports 2026-06-10 2026 06 10"
+    },
+    {
       "id": "site-request-admin-checks-reports",
       "kind": "doc",
       "title": "Admin Checks Reports",
@@ -982,22 +1067,22 @@
       "search_text": "site-request-admin-checks-reports site request admin checks reports admin checks reports change requests change requests 2026-06-10 2026 06 10"
     },
     {
-      "id": "site-request-report-generated-payloads",
+      "id": "site-request-report-code-surface",
       "kind": "doc",
-      "title": "Generated Payloads Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-generated-payloads",
+      "title": "Code Surface Report",
+      "href": "/docs/?scope=studio&doc=site-request-report-code-surface",
       "last_updated": "2026-06-10",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports",
       "display_meta": "2026-06-10 • Admin Checks Reports",
       "search_terms": [
-        "site-request-report-generated-payloads",
+        "site-request-report-code-surface",
         "site",
         "request",
         "report",
-        "generated",
-        "payloads",
-        "generated payloads report",
+        "code",
+        "surface",
+        "code surface report",
         "admin checks reports",
         "admin",
         "checks",
@@ -1007,7 +1092,7 @@
         "06",
         "10"
       ],
-      "search_text": "site-request-report-generated-payloads site request report generated payloads generated payloads report admin checks reports admin checks reports 2026-06-10 2026 06 10"
+      "search_text": "site-request-report-code-surface site request report code surface code surface report admin checks reports admin checks reports 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-report-git-history",
@@ -1090,33 +1175,6 @@
         "09"
       ],
       "search_text": "site-request-report-dependencies site request report dependencies report dependencies admin checks reports admin checks reports 2026-06-09 2026 06 09"
-    },
-    {
-      "id": "site-request-report-runtime-checks",
-      "kind": "doc",
-      "title": "Runtime Checks Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-runtime-checks",
-      "last_updated": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports",
-      "display_meta": "2026-06-10 • Admin Checks Reports",
-      "search_terms": [
-        "site-request-report-runtime-checks",
-        "site",
-        "request",
-        "report",
-        "runtime",
-        "checks",
-        "runtime checks report",
-        "admin checks reports",
-        "admin",
-        "reports",
-        "2026-06-10",
-        "2026",
-        "06",
-        "10"
-      ],
-      "search_text": "site-request-report-runtime-checks site request report runtime checks runtime checks report admin checks reports admin reports 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-report-static-searches",
