@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-738557bd8c56d9ac8e5e5a643d98b0db",
-    "generated_at_utc": "2026-06-10T10:44:00Z",
-    "count": 235
+    "version": "blake2b-d99d30d0e690ec5c83963388535d81e5",
+    "generated_at_utc": "2026-06-10T10:48:44Z",
+    "count": 236
   },
   "entries": [
     {
@@ -974,6 +974,34 @@
         "25"
       ],
       "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-docs-publish-gate",
+      "kind": "doc",
+      "title": "Docs Public Publish Gate",
+      "href": "/docs/?scope=studio&doc=site-request-docs-publish-gate",
+      "last_updated": "2026-06-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-10 • Change Requests",
+      "search_terms": [
+        "site-request-docs-publish-gate",
+        "site",
+        "request",
+        "docs",
+        "publish",
+        "gate",
+        "docs public publish gate",
+        "public",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "site-request-docs-publish-gate site request docs publish gate docs public publish gate public change requests change requests 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

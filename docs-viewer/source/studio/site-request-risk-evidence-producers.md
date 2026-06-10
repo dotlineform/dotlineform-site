@@ -3,7 +3,7 @@ doc_id: site-request-risk-evidence-producers
 title: Risk Evidence Producers Request
 added_date: 2026-05-31
 last_updated: 2026-06-10
-ui_status: in-progress
+ui_status: paused
 parent_id: change-requests
 ---
 # Risk Evidence Producers Request

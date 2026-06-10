@@ -237,6 +237,12 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
+          "doc_id": "site-request-docs-publish-gate",
+          "title": "Docs Public Publish Gate",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -276,7 +282,7 @@
           "doc_id": "site-request-risk-evidence-producers",
           "title": "Risk Evidence Producers Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "in-progress",
+          "ui_status": "paused",
           "children": [
             {
               "doc_id": "site-request-risk-evidence-producers-report-generated-payloads",
@@ -1269,5 +1275,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T10:26:31Z"
+  "generated_at": "2026-06-10T10:49:01Z"
 }
