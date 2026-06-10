@@ -13,6 +13,7 @@ Admin Checks is the durable home for the `/admin/checks/` report system.
 ## Purpose
 
 Admin Checks runs allowlisted reports against configured repo scopes and stores local report artifacts for review in Admin.
+Checks input is code, config, and structured data; Markdown source documents are excluded from target resolution and reports.
 
 Implemented reports include [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files) and [Admin Checks Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map).
 Subsequent reports should get their own child docs once implemented.
@@ -88,6 +89,7 @@ Explicitly configured shared dependencies can be included for selected `areas` o
 
 Files that match a scope but no configured family are reported as `_unclassified`.
 Those findings are mapping data and can be used by later risk reports when relevant.
+Markdown source documents do not enter this targeting model; `report.md` and `run-summary.md` remain normal human-readable output artifacts.
 
 ## Target Map Audit
 

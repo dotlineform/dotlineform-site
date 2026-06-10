@@ -166,7 +166,6 @@ runtime-js: Runtime JavaScript
 runtime-assets: Runtime assets
 services: Services
 build: Build scripts
-source-docs: Source documents
 config: Configuration
 tests: Tests and smokes
 admin-route: Admin routes
@@ -180,7 +179,6 @@ runtime-js       -> frontend JS runtime paths
 runtime-assets   -> CSS/static app assets and shell/static assets
 services         -> backend/service modules
 build            -> build/check/command scripts
-source-docs      -> source docs/content
 config           -> config files and config directories
 tests            -> tests and smokes
 admin-route      -> Admin route surface files
@@ -188,6 +186,9 @@ public-route     -> public route surface files
 ```
 
 The main wrinkle is that some files legitimately match more than one family. For example, Admin frontend config can be both `config` and `admin-route`; public Docs Viewer route config can be both `config` and `public-route`. That is fine as evidence, not necessarily a problem.
+
+Markdown source documents are not checks input.
+The checks source-file discovery includes code, config, and structured data such as JSON and CSS, but excludes `*.md` files.
 
 ## areas
 

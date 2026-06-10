@@ -29,22 +29,8 @@
         "_data/",
         "_includes/",
         "_layouts/",
-        "_moments/",
-        "_series/",
-        "_work_details/",
-        "_works/",
-        "_works_print/",
-        "analysis/",
         "assets/css/",
-        "assets/js/",
-        "catalogue/",
-        "index.md",
-        "library/",
-        "moments/",
-        "recent/",
-        "series/",
-        "work-details/",
-        "works/"
+        "assets/js/"
       ],
       "exclude": ["_site/", "assets/data/"]
     },
@@ -60,28 +46,14 @@
         "_data/",
         "_includes/",
         "_layouts/",
-        "_moments/",
-        "_series/",
-        "_work_details/",
-        "_works/",
-        "_works_print/",
         "admin-app/",
-        "analysis/",
         "analytics-app/",
         "assets/css/",
         "assets/docs/",
         "assets/js/",
-        "catalogue/",
         "data-sharing/",
         "docs-viewer/",
-        "index.md",
-        "library/",
-        "moments/",
-        "recent/",
-        "series/",
-        "studio/",
-        "work-details/",
-        "works/"
+        "studio/"
       ],
       "exclude": [
         "_site/",
@@ -116,6 +88,7 @@
         "admin-app/app/assets/",
         "admin-app/ui-catalogue/assets/css/",
         "analytics-app/app/assets/",
+        "assets/docs/",
         "assets/css/",
         "docs-viewer/shell/",
         "docs-viewer/static/",
@@ -145,21 +118,6 @@
         "docs-viewer/build/",
         "studio/commands/",
         "studio/checks/"
-      ]
-    },
-    "source-docs": {
-      "label": "Source documents",
-      "include": [
-        "_moments/",
-        "_series/",
-        "_work_details/",
-        "_works/",
-        "_works_print/",
-        "data-sharing/README.md",
-        "assets/docs/",
-        "docs-viewer/source/",
-        "admin-app/ui-catalogue/source/",
-        "README.md"
       ]
     },
     "config": {
@@ -201,16 +159,7 @@
       "include": [
         "_includes/",
         "_layouts/",
-        "analysis/",
         "assets/css/",
-        "catalogue/",
-        "index.md",
-        "library/",
-        "moments/",
-        "recent/",
-        "series/",
-        "work-details/",
-        "works/",
         "assets/js/",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json"
@@ -223,7 +172,6 @@
       "include": [
         "**/*search*",
         "assets/js/search/",
-        "catalogue/search/",
         "docs-viewer/runtime/js/docs-viewer-search*",
         "docs-viewer/build/*search*",
         "docs-viewer/tests/**/*search*",
@@ -293,7 +241,7 @@
         "docs-viewer/tests/python/test_build_search_python.py",
         "docs-viewer/tests/python/test_docs_publish_gate.py"
       ],
-      "shared": ["docs-viewer/config/scopes/", "docs-viewer/source/"]
+      "shared": ["docs-viewer/config/scopes/"]
     }
   },
   "routes": {
@@ -370,86 +318,6 @@
         "admin-app/app/server/admin_app/ui_catalogue_views.py"
       ],
       "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/": {
-      "label": "UI Catalogue Demos",
-      "path": "/admin/ui-catalogue/demos/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/primitives/button/": {
-      "label": "UI Catalogue Button Demo",
-      "path": "/admin/ui-catalogue/demos/primitives/button/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/primitives/button/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/primitives/input/": {
-      "label": "UI Catalogue Input Demo",
-      "path": "/admin/ui-catalogue/demos/primitives/input/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/primitives/input/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/primitives/list/": {
-      "label": "UI Catalogue List Demo",
-      "path": "/admin/ui-catalogue/demos/primitives/list/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/primitives/list/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/primitives/modal-shell/": {
-      "label": "UI Catalogue Modal Shell Demo",
-      "path": "/admin/ui-catalogue/demos/primitives/modal-shell/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/primitives/modal-shell/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/primitives/panel/": {
-      "label": "UI Catalogue Panel Demo",
-      "path": "/admin/ui-catalogue/demos/primitives/panel/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/primitives/panel/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/patterns/action-menu/": {
-      "label": "UI Catalogue Action Menu Demo",
-      "path": "/admin/ui-catalogue/demos/patterns/action-menu/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/patterns/action-menu/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/patterns/column-links/": {
-      "label": "UI Catalogue Column Links Demo",
-      "path": "/admin/ui-catalogue/demos/patterns/column-links/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/patterns/column-links/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/patterns/reopenable-command-result/": {
-      "label": "UI Catalogue Reopenable Command Result Demo",
-      "path": "/admin/ui-catalogue/demos/patterns/reopenable-command-result/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/patterns/reopenable-command-result/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
-      "areas": []
-    },
-    "/admin/ui-catalogue/demos/patterns/select-menu/": {
-      "label": "UI Catalogue Select Menu Demo",
-      "path": "/admin/ui-catalogue/demos/patterns/select-menu/",
-      "status": "inventory-only",
-      "include": ["admin-app/ui-catalogue/source/demos/patterns/select-menu/index.md"],
-      "shared": ["admin-app/app/server/admin_app/ui_catalogue_views.py"],
       "areas": []
     },
     "/analytics/": {
@@ -653,29 +521,11 @@
       "shared": ["studio/app/server/studio/studio_app_server.py"],
       "areas": ["catalogue"]
     },
-    "/": {
-      "label": "Home",
-      "path": "/",
-      "status": "inventory-only",
-      "include": ["index.md"],
-      "shared": [],
-      "areas": []
-    },
-    "/catalogue/search/": {
-      "label": "Catalogue Search",
-      "path": "/catalogue/search/",
-      "status": "inventory-only",
-      "include": ["catalogue/search/"],
-      "shared": ["assets/js/catalogue-search.js", "assets/js/search/"],
-      "areas": ["catalogue", "search"]
-    },
     "/library/": {
       "label": "Library",
       "path": "/library/",
       "status": "mapped",
       "include": [
-        "library/",
-        "docs-viewer/source/library/",
         "docs-viewer/config/scopes/docs_scopes.json",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "assets/js/search/"
@@ -692,8 +542,6 @@
       "path": "/analysis/",
       "status": "mapped",
       "include": [
-        "analysis/",
-        "docs-viewer/source/analysis/",
         "docs-viewer/config/scopes/docs_scopes.json",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "assets/js/search/"
@@ -704,46 +552,6 @@
         "docs-viewer/runtime/js/docs-viewer-search*"
       ],
       "areas": ["search"]
-    },
-    "/moments/": {
-      "label": "Moments",
-      "path": "/moments/",
-      "status": "inventory-only",
-      "include": ["moments/", "_moments/"],
-      "shared": [],
-      "areas": []
-    },
-    "/recent/": {
-      "label": "Recent",
-      "path": "/recent/",
-      "status": "inventory-only",
-      "include": ["recent/"],
-      "shared": [],
-      "areas": []
-    },
-    "/series/": {
-      "label": "Series",
-      "path": "/series/",
-      "status": "inventory-only",
-      "include": ["series/", "_series/"],
-      "shared": [],
-      "areas": []
-    },
-    "/work-details/": {
-      "label": "Work Details",
-      "path": "/work-details/",
-      "status": "inventory-only",
-      "include": ["work-details/", "_work_details/"],
-      "shared": [],
-      "areas": []
-    },
-    "/works/": {
-      "label": "Works",
-      "path": "/works/",
-      "status": "inventory-only",
-      "include": ["works/", "_works/"],
-      "shared": [],
-      "areas": []
     },
     "/docs/": {
       "label": "Docs Viewer Management",

@@ -22,6 +22,21 @@ def test_path_matching_supports_prefixes_and_globs() -> None:
     assert not resolver.path_matches("docs-viewer/services/", "docs-viewer/runtime/js/docs-viewer-search.js")
 
 
+def test_source_file_discovery_excludes_markdown_documents(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    (repo / "docs-viewer" / "source" / "studio").mkdir(parents=True)
+    (repo / "docs-viewer" / "source" / "studio" / "notes.md").write_text("# Notes\n", encoding="utf-8")
+    (repo / "docs-viewer" / "config").mkdir(parents=True)
+    (repo / "docs-viewer" / "config" / "docs-viewer.json").write_text("{}\n", encoding="utf-8")
+    (repo / "assets" / "css").mkdir(parents=True)
+    (repo / "assets" / "css" / "site.css").write_text(":root {}\n", encoding="utf-8")
+
+    assert resolver.iter_repo_source_files(repo) == [
+        "assets/css/site.css",
+        "docs-viewer/config/docs-viewer.json",
+    ]
+
+
 def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [

@@ -11,7 +11,7 @@ This document defines the durable contract for the `files` report in [Admin Chec
 
 ## Purpose
 
-The `files` report provides file count, line count, and byte-size evidence for a selected checks scope and optional target filters.
+The `files` report provides file count, line count, and byte-size evidence for code/data files in a selected checks scope and optional target filters.
 
 ## Report Contract
 
@@ -56,7 +56,8 @@ Supported `sort` values:
 
 ## Default Behavior
 
-- include source, config, and documentation files selected by scope config
+- include code, config, and structured data files selected by scope config
+- exclude Markdown source documents from checks input
 - apply selected file-family, functional-area, and route filters through the shared target resolver
 - exclude generated payloads, dependency folders, caches, local run outputs, and build outputs
 - sort rows by line count descending
@@ -125,7 +126,7 @@ Manual equivalent for the measurement phase:
 ```bash
 find docs-viewer assets/docs \
   -type f \
-  \( -name '*.css' -o -name '*.csv' -o -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.md' -o -name '*.py' -o -name '*.txt' -o -name '*.yaml' -o -name '*.yml' \) \
+  \( -name '*.css' -o -name '*.csv' -o -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.py' -o -name '*.txt' -o -name '*.yaml' -o -name '*.yml' \) \
   ! -path 'docs-viewer/generated/*' \
   ! -path '*/__pycache__/*' \
   -print0 | xargs -0 wc -l -c

@@ -19,7 +19,6 @@ SOURCE_EXTENSIONS = {
     ".js",
     ".json",
     ".liquid",
-    ".md",
     ".py",
     ".rb",
     ".scss",

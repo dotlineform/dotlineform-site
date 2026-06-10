@@ -15,6 +15,7 @@ The `target-map` report provides ownership, shared dependency, and boundary-cros
 
 The report is evidence, not pass/fail policy.
 Cross-boundary files can be legitimate shared utilities, route registries, config loaders, or orchestration scripts.
+Markdown source documents are excluded from checks input; the report focuses on code, config, and structured data files.
 
 ## Report Contract
 

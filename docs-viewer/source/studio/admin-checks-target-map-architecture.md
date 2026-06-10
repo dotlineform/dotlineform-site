@@ -70,7 +70,6 @@ public-route
 runtime-assets
 runtime-js
 services
-source-docs
 tests
 ```
 
@@ -142,6 +141,7 @@ It should make drift visible:
 - likely area or route files that are not mapped
 - shared dependencies used by many targets
 - generated, cache, dependency, build, and local run paths excluded by scope rules
+- Markdown source documents are excluded from checks input; report artifacts such as `report.md` remain normal outputs.
 
 The audit can later grow stricter maintenance modes such as `--strict` or `--changed-files`.
 Those modes should remain config guardrails, not report-run behavior.
