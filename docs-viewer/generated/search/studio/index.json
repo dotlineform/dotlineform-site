@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f04cb0991970bb784ae9a8478237f295",
-    "generated_at_utc": "2026-06-10T10:26:22Z",
+    "version": "blake2b-738557bd8c56d9ac8e5e5a643d98b0db",
+    "generated_at_utc": "2026-06-10T10:44:00Z",
     "count": 235
   },
   "entries": [
@@ -89,42 +89,42 @@
       "kind": "doc",
       "title": "Checks",
       "href": "/docs/?scope=studio&doc=admin-checks",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-09 • Admin",
+      "display_meta": "2026-06-10 • Admin",
       "search_terms": [
         "admin-checks",
         "admin",
         "checks",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "admin-checks admin checks 2026-06-09 2026 06 09"
+      "search_text": "admin-checks admin checks 2026-06-10 2026 06 10"
     },
     {
       "id": "admin-checks-config",
       "kind": "doc",
       "title": "Checks Config",
       "href": "/docs/?scope=studio&doc=admin-checks-config",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "admin-checks",
       "parent_title": "Checks",
-      "display_meta": "2026-06-09 • Checks",
+      "display_meta": "2026-06-10 • Checks",
       "search_terms": [
         "admin-checks-config",
         "admin",
         "checks",
         "config",
         "checks config",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "admin-checks-config admin checks config checks config 2026-06-09 2026 06 09"
+      "search_text": "admin-checks-config admin checks config checks config 2026-06-10 2026 06 10"
     },
     {
       "id": "admin-checks-target-map-architecture",
@@ -157,31 +157,31 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=admin-checks-reports",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "admin-checks",
       "parent_title": "Checks",
-      "display_meta": "2026-06-09 • Checks",
+      "display_meta": "2026-06-10 • Checks",
       "search_terms": [
         "admin-checks-reports",
         "admin",
         "checks",
         "reports",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "admin-checks-reports admin checks reports 2026-06-09 2026 06 09"
+      "search_text": "admin-checks-reports admin checks reports 2026-06-10 2026 06 10"
     },
     {
       "id": "admin-checks-report-files",
       "kind": "doc",
       "title": "Files Report",
       "href": "/docs/?scope=studio&doc=admin-checks-report-files",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "admin-checks-reports",
       "parent_title": "Reports",
-      "display_meta": "2026-06-09 • Reports",
+      "display_meta": "2026-06-10 • Reports",
       "search_terms": [
         "admin-checks-report-files",
         "admin",
@@ -190,12 +190,12 @@
         "files",
         "files report",
         "reports",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-09 2026 06 09"
+      "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-10 2026 06 10"
     },
     {
       "id": "local-admin-app",

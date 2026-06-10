@@ -1,8 +1,8 @@
 ---
 doc_id: admin-checks-config
 title: Checks Config
-added_date: 2026-06-00
-last_updated: 2026-06-09
+added_date: 2026-06-08
+last_updated: 2026-06-10
 ui_status: ""
 parent_id: admin-checks
 ---
@@ -275,7 +275,7 @@ total routes:   45
     },
   etc...
 ```
-list the routes: `jq -r '.routes | keys[]' admin-app/checks/config/admin-checks.json`
+Mapped routes include:
 
 ```
 /admin/checks/
@@ -327,7 +327,7 @@ So:
 
 Docs Viewer is different: `/docs/` is the route, while `?scope=studio&doc=...&mode=manage` is route state/query, not separate route ids. So keeping `/docs/` as the single route target is right.
 
-A good future guardrail would compare discovered routes against `admin-checks.json` and report:
+The target-map audit is the current guardrail for comparing discovered and configured route ownership. It should report:
 
 ```text
 route exists but is not mapped

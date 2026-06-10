@@ -2,7 +2,7 @@
 doc_id: admin-checks-report-files
 title: Files Report
 added_date: 2026-06-08
-last_updated: 2026-06-09
+last_updated: 2026-06-10
 parent_id: admin-checks-reports
 ---
 # Files Report
@@ -48,6 +48,12 @@ Supported options:
 | `limit` | `20` | Maximum number of per-file rows shown in the markdown report. |
 | `sort` | `lines_desc` | Sort order for per-file rows. |
 
+Supported `sort` values:
+
+- `lines_desc`
+- `bytes_desc`
+- `path_asc`
+
 ## Default Behavior
 
 - include source, config, and documentation files selected by scope config
@@ -57,6 +63,8 @@ Supported options:
 - write machine-readable JSON, human-readable markdown, and a full CSV file list
 
 ## Metrics
+
+Report schema version: `admin_checks_files_report_v1`
 
 | Metric | Description |
 | --- | --- |
@@ -144,17 +152,23 @@ Those fields belong in `report.json` and `report.csv` so the Admin UI can remain
 Example:
 
 ```text
-Report:     files
-Scope:      docs-viewer
+# Files Report
 
-files:      x
-total lc:   x
-total size: x KB
+- report: `files`
+- run: `<run-id>`
+- scope: `docs-viewer`
+- families: _all_
+- areas: _all_
+- routes: _all_
+- files: x
+- total lines: x
+- total size: x KB
 
- lines      size      file
- -------------------------------------------------------------------------
-   997     36 KB  ./docs-viewer/runtime/js/docs-viewer-management.js
-   905     32 KB  ./docs-viewer/runtime/js/docs-viewer-app-runtime.js
+## Largest Files
+
+| lines | size | family | path |
+| ---: | ---: | --- | --- |
+| 997 | 36 KB | runtime-js | `docs-viewer/runtime/js/docs-viewer-management.js` |
 ```
 
 ## CSV Shape

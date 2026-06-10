@@ -2,7 +2,7 @@
 doc_id: admin-checks
 title: Checks
 added_date: 2026-06-08
-last_updated: 2026-06-09
+last_updated: 2026-06-10
 ui_status: ""
 parent_id: admin
 ---
@@ -18,6 +18,7 @@ Admin Checks runs allowlisted reports against configured repo scopes and stores 
 
 The first v1 report is [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files).
 Subsequent reports should get their own child docs once implemented.
+Future report request docs live under [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) until a report is implemented and promoted into this durable Admin Checks section.
 
 ## Ownership
 
@@ -175,8 +176,8 @@ Each write run creates:
 
 ```text
 var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/
-  commands.json
   manifest.json
+  commands.json
   run-summary.json
   run-summary.md
   <report>/
@@ -187,9 +188,9 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/
 
 Run-level artifacts:
 
-- `manifest.json`: run id, targets, reports, options, repo commit, created timestamp, command contract version, status, and target-match counts
-- `commands.json`: orchestrator/report argv lists, working directories, timestamps, exit codes, duration, and safe output references
-- `run-summary.json`: machine-readable per-report status, artifact paths, warnings, errors, totals, and omitted reports
+- `manifest.json`: run id, run directory, config path, selected targets, reports, options, write flag, created and finished timestamps, command contract version, status, manifest path, and target-match counts
+- `commands.json`: orchestrator/report argv lists, working directories, timestamps, exit codes, duration, status, stdout/stderr excerpts, and errors when present
+- `run-summary.json`: machine-readable per-report status, artifact paths, errors, totals, selected targets, target-match counts, and run status
 - `run-summary.md`: compact human-readable summary for Admin display
 
 Report-level artifacts:
@@ -197,6 +198,16 @@ Report-level artifacts:
 - `report.json`: raw report metrics and selected target metadata
 - `report.md`: structured human-readable report
 - `report.csv`: optional full row export for reports that list files or similarly tabular records
+
+## Verification
+
+The focused Admin Checks profile is:
+
+```text
+admin-app/commands/run_checks.py --profile admin-checks
+```
+
+It runs the target-map resolver, config validation, orchestrator, `files` report, and checks API tests.
 
 ## Markdown Display
 

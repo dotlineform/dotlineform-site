@@ -2,9 +2,9 @@
   "doc_id": "admin-checks-reports",
   "title": "Reports",
   "added_date": "2026-06-09",
-  "last_updated": "2026-06-09",
+  "last_updated": "2026-06-10",
   "source_path": "admin-checks-reports.md",
   "viewer_url": "/docs/?scope=studio&doc=admin-checks-reports",
   "parent_id": "admin-checks",
-  "content_html": "<h1>Admin Checks Reports</h1>\n<p>This section describes the reports that surface admin checks metrics through the route <code>/admin/checks/</code>.</p>\n"
+  "content_html": "<h1>Admin Checks Reports</h1>\n<p>This section describes the reports that surface admin checks metrics through the route <code>/admin/checks/</code>.</p>\n<p>Implemented reports:</p>\n<table>\n<thead>\n<tr>\n<th>Report</th>\n<th>Status</th>\n<th>Durable doc</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>files</code></td>\n<td>implemented</td>\n<td><a href=\"/docs/?scope=studio&amp;doc=admin-checks-report-files\">Files Report</a></td>\n</tr>\n</tbody>\n</table>\n<p>Future report candidates are tracked as request docs under <a href=\"/docs/?scope=studio&amp;doc=site-request-risk-evidence-producers\">Risk Evidence Producers Request</a> until implemented.</p>\n"
 }
