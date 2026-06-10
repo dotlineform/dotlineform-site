@@ -299,7 +299,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert result["diagnostics"]["recently_added_changed"] == 1
 
 
-def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows() -> None:
+def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_text(root / "_config.yml", "")
@@ -310,6 +310,7 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
         index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
         recently_added = read_json(root / "docs-viewer/generated/docs/library/recently-added.json")
         child_payload = read_json(root / "docs-viewer/generated/docs/library/by-id/child.json")
+        hidden_payload = read_json(root / "docs-viewer/generated/docs/library/by-id/hidden.json")
         browser_config = build_docs.browser_scope_config_payload(root, [config])
 
     assert result["diagnostics"]["docs_emitted"] == 6
@@ -354,16 +355,24 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     }
 
     assert index_tree["schema"] == "docs_index_tree_v1"
-    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent"]
-    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == ["child"]
-    flattened_tree_docs = [index_tree["docs"][0], *index_tree["docs"][0]["children"]]
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["manage-root", "parent"]
+    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == ["manage-child"]
+    assert [doc["doc_id"] for doc in index_tree["docs"][1]["children"]] == ["child", "hidden"]
+    assert [doc["doc_id"] for doc in index_tree["docs"][1]["children"][1]["children"]] == ["hidden-child"]
+    flattened_tree_docs = [
+        index_tree["docs"][0],
+        *index_tree["docs"][0]["children"],
+        index_tree["docs"][1],
+        *index_tree["docs"][1]["children"],
+        *index_tree["docs"][1]["children"][1]["children"],
+    ]
     assert all("parent_id" not in doc for doc in flattened_tree_docs)
-    assert all("viewable" not in doc for doc in flattened_tree_docs)
+    assert index_tree["docs"][1]["children"][1]["viewable"] is False
     assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in flattened_tree_docs)
     assert recently_added["schema"] == "docs_recently_added_v1"
     assert recently_added["limit"] == 2
-    assert [doc["doc_id"] for doc in recently_added["docs"]] == ["child", "parent"]
-    assert recently_added["docs"][0]["parent_title"] == "Parent"
+    assert [doc["doc_id"] for doc in recently_added["docs"]] == ["manage-child", "hidden-child"]
+    assert recently_added["docs"][0]["parent_title"] == "Manage Root"
     assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in recently_added["docs"])
     assert set(child_payload) == {"content_html", "last_updated", "summary", "title"}
     assert child_payload["title"] == "Child"
@@ -371,9 +380,10 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     assert child_payload["last_updated"] == "2026-06-03"
     assert "content_html" in child_payload
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
+    assert hidden_payload["title"] == "Hidden"
     assert browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert browser_config["scopes"][0]["recently_added_url"] == "/assets/data/docs/scopes/library/recently-added.json"
-    assert index_tree["docs"][0]["content_url"] == "/assets/data/docs/scopes/library/by-id/parent.json"
+    assert index_tree["docs"][1]["content_url"] == "/assets/data/docs/scopes/library/by-id/parent.json"
 
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:

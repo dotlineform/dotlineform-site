@@ -2,30 +2,9 @@
   "header": {
     "schema": "docs_semantic_references_index_v1",
     "scope": "analysis",
-    "count": 2,
-    "target_count": 2,
+    "count": 0,
+    "target_count": 0,
     "generated_at": "2026-06-10T14:50:43Z"
   },
-  "targets": [
-    {
-      "target_key": "work:00638",
-      "target_kind": "work",
-      "target_id": "00638",
-      "target_href": "/works/?work=00638",
-      "target_title": "3 symbols",
-      "target_status": "published",
-      "count": 1,
-      "bucket_url": "/assets/data/docs/scopes/analysis/references/by-target/work/00638.json"
-    },
-    {
-      "target_key": "work:00638002",
-      "target_kind": "work",
-      "target_id": "00638002",
-      "target_href": "",
-      "target_title": "",
-      "target_status": "missing",
-      "count": 1,
-      "bucket_url": "/assets/data/docs/scopes/analysis/references/by-target/work/00638002.json"
-    }
-  ]
+  "targets": []
 }

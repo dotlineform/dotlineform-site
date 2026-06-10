@@ -550,30 +550,6 @@ class DocsDataBuilder:
             return generated_at
         return utc_timestamp()
 
-    def descendants_for_roots(self, docs: list[DocRecord], roots: list[str]) -> set[str]:
-        by_parent: dict[str, list[str]] = {}
-        for doc in docs:
-            parent_id = self.effective_parent_id(doc, docs)
-            if parent_id:
-                by_parent.setdefault(parent_id, []).append(doc.doc_id)
-        hidden = set(roots)
-        queue = list(roots)
-        while queue:
-            current = queue.pop(0)
-            for child_id in by_parent.get(current, []):
-                if child_id in hidden:
-                    continue
-                hidden.add(child_id)
-                queue.append(child_id)
-        return hidden
-
-    def docs_for_public_payloads(self, docs: list[DocRecord]) -> list[DocRecord]:
-        if not self.public_readonly_scope:
-            return docs
-        hidden_roots = [doc.doc_id for doc in docs if not doc.viewable]
-        hidden = self.descendants_for_roots(docs, [*self.manage_only_tree_root_ids, *hidden_roots])
-        return [doc for doc in docs if doc.viewable and doc.doc_id not in hidden]
-
     def tree_entry(self, doc: DocRecord) -> dict[str, Any]:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
@@ -587,7 +563,7 @@ class DocsDataBuilder:
         return entry
 
     def index_tree_payload(self, docs: list[DocRecord], viewer_options: dict[str, Any]) -> dict[str, Any]:
-        included_docs = self.docs_for_public_payloads(self.ordered_docs_for_index(docs))
+        included_docs = self.ordered_docs_for_index(docs)
         included_ids = {doc.doc_id for doc in included_docs}
         included_by_parent: dict[str, list[DocRecord]] = {}
         for doc in included_docs:
@@ -654,7 +630,7 @@ class DocsDataBuilder:
 
     def recently_added_payload(self, docs: list[DocRecord]) -> dict[str, Any]:
         limit = self.recently_added_limit()
-        included_docs = self.docs_for_public_payloads(docs)
+        included_docs = docs
         title_by_id = {doc.doc_id: doc.title for doc in included_docs}
         ordered_docs = sorted(included_docs, key=lambda doc: (doc.title.lower(), doc.doc_id))
         ordered_docs.sort(key=lambda doc: doc.added_date, reverse=True)

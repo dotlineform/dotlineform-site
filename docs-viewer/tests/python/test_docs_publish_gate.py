@@ -64,12 +64,86 @@ def write_scope_config(root: Path) -> None:
 
 def prepare_publish_repo(root: Path) -> None:
     write_scope_config(root)
-    write_json(root / "docs-viewer/generated/docs/library/index-tree.json", {"docs": [{"doc_id": "library"}]})
-    write_json(root / "docs-viewer/generated/docs/library/recently-added.json", {"docs": [{"doc_id": "library"}]})
+    write_json(
+        root / "docs-viewer/generated/docs/library/index-tree.json",
+        {
+            "schema": "docs_index_tree_v1",
+            "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
+            "docs": [
+                {
+                    "doc_id": "library",
+                    "title": "Library",
+                    "content_url": "/assets/data/docs/scopes/library/by-id/library.json",
+                    "children": [
+                        {
+                            "doc_id": "hidden",
+                            "title": "Hidden",
+                            "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json",
+                            "viewable": False,
+                            "children": [
+                                {
+                                    "doc_id": "hidden-child",
+                                    "title": "Hidden Child",
+                                    "content_url": "/assets/data/docs/scopes/library/by-id/hidden-child.json",
+                                }
+                            ],
+                        }
+                    ],
+                },
+                {
+                    "doc_id": "manage-root",
+                    "title": "Manage Root",
+                    "content_url": "/assets/data/docs/scopes/library/by-id/manage-root.json",
+                },
+            ],
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/library/recently-added.json",
+        {
+            "schema": "docs_recently_added_v1",
+            "docs": [
+                {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json", "added_date": "2026-06-02"},
+                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "added_date": "2026-06-01"},
+            ],
+        },
+    )
     write_json(root / "docs-viewer/generated/docs/library/by-id/library.json", {"title": "Library"})
+    write_json(root / "docs-viewer/generated/docs/library/by-id/hidden.json", {"title": "Hidden"})
+    write_json(root / "docs-viewer/generated/docs/library/by-id/hidden-child.json", {"title": "Hidden Child"})
+    write_json(root / "docs-viewer/generated/docs/library/by-id/manage-root.json", {"title": "Manage Root"})
+    write_json(
+        root / "docs-viewer/generated/docs/library/references/index.json",
+        {
+            "header": {"schema": "docs_semantic_references_index_v1", "scope": "library", "count": 1, "target_count": 1},
+            "targets": [],
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/library/references/by-doc/hidden.json",
+        {
+            "header": {"schema": "docs_semantic_references_by_doc_v1", "scope": "library", "doc_id": "hidden", "count": 1},
+            "references": [{"source_doc_id": "hidden", "target_kind": "work", "target_id": "00638"}],
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/library/references/by-target/work/00638.json",
+        {
+            "header": {"schema": "docs_semantic_references_by_target_v1", "scope": "library", "count": 1},
+            "target_key": "work:00638",
+            "target_kind": "work",
+            "target_id": "00638",
+            "target_href": "/works/?work=00638",
+            "target_title": "3 symbols",
+            "target_status": "published",
+            "count": 1,
+            "references": [{"source_doc_id": "hidden", "source_title": "Hidden"}],
+        },
+    )
     write_json(root / "docs-viewer/generated/search/library/index.json", {"entries": [{"id": "library"}]})
     write_json(root / "assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
+    write_json(root / "assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
     write_json(root / "assets/data/search/library/index.json", {"entries": []})
 
 
@@ -84,8 +158,22 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert preview["operation"] == "confirm"
         assert preview["changed_count"] >= 3
         assert "assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
+        assert "assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
         assert applied["operation"] == "apply"
+        public_tree = json.loads((repo_root / "assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
+        recent = json.loads((repo_root / "assets/data/docs/scopes/library/recently-added.json").read_text(encoding="utf-8"))
+        references = json.loads((repo_root / "assets/data/docs/scopes/library/references/index.json").read_text(encoding="utf-8"))
+
+        assert public_tree["docs"][0]["doc_id"] == "library"
+        assert "children" not in public_tree["docs"][0]
+        assert recent["docs"][0]["doc_id"] == "library"
+        assert references["header"]["count"] == 0
         assert (repo_root / "assets/data/docs/scopes/library/by-id/library.json").exists()
+        assert not (repo_root / "assets/data/docs/scopes/library/by-id/hidden.json").exists()
+        assert not (repo_root / "assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
+        assert not (repo_root / "assets/data/docs/scopes/library/by-id/manage-root.json").exists()
+        assert not (repo_root / "assets/data/docs/scopes/library/references/by-doc/hidden.json").exists()
+        assert not (repo_root / "assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
         assert not (repo_root / "assets/data/docs/scopes/library/by-id/stale.json").exists()
         assert json.loads((repo_root / "assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
 
