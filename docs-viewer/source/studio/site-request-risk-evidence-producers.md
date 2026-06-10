@@ -8,11 +8,7 @@ parent_id: change-requests
 ---
 # Risk Evidence Producers Request
 
-Status:
-
-- spec locked for implementation
-- implementation tasks are listed in this document
-- no v1 open questions remain
+Status: planned additional reports
 
 ## Summary
 
@@ -26,66 +22,39 @@ The new system is report-oriented:
 - a run is one orchestrated execution of one or more reports against one scope
 
 The first production report is `files` for line count and file size evidence.
-The `target-map` report is intentionally deferred to [Target Map Report Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-target-map) so v1 can prove the checks system with the simplest useful report first.
-A later dependency model for compound reports is captured as an option in [Risk Evidence Producers Report Dependencies](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-dependencies).
-Possible future dependency reports are captured as options in [Git History Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-git-history), [Imports Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-imports), and [Tests Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-tests).
 
-## Current Implementation
+A later dependency model for compound reports is captured as an option in [Risk Evidence Producers Report Dependencies](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-dependencies).
+
+Possible future dependency reports are captured as options in:
+- [Git History Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-git-history)
+- [Imports Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-imports)
+- [Tests Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-tests)
+- [Static Searches](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-static-searches)
+- [Generated Payloads](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-generated-payloads)
+- [Script Family Inventory](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-script-family-inventory)
+- [JavaScript Inventory Guardrail](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-javascript-inventory-guardrail)
+- [Runtime Checks](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-runtime-checks)
+- [Subjective Notes](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-subjective-notes).
+
+## Legacy Risk Implementation
 
 - risk policy described in [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy).
-- initial implementation of [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
-- metrics and reports are listed in [Risk Evidence Pack Metrics](/docs/?scope=studio&doc=risk-evidence-pack-metrics). However the current list is a mix of reported fields, derived fields and metadata.
-- the risk evidence pack is run on `/admin/risk/`, however this is mainly surfacing summary information and doesn't clearly differentiate between metrics and reports.
+- legacy implementation of [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
+- legacy metrics and reports are listed in [Risk Evidence Pack Metrics](/docs/?scope=studio&doc=risk-evidence-pack-metrics). However the current list is a mix of reported fields, derived fields and metadata.
+- the legacy risk evidence pack is run on `/admin/risk/`, however this is mainly surfacing summary information and doesn't clearly differentiate between metrics and reports.
 - current scripts were written to support inventories of the apps, to measure the risk associated with each script family. these inventories have been retired pending review of the risk policy and implementation.
+- Existing `/admin/risk/` code is reusable prior art only. It should not define the final artifact paths, API names, route names, or report contract for the new system.
+- Existing `/admin/risk/` remains available until the new checks system has replicated or intentionally discarded its useful capabilities.
 
-## New Implementation
+## New Checks Implementation
 
-Before considering whether any new 'risk inventories' need to be defined, we need to create a structured way of collecting and reporting evidence.
-
-key features of the new implementation:
-
-- risk evidence is surfaced in reports which are defined as a combination of metrics
-- scripts for producing reports are all saved in a single location, `admin-app/checks/reports`
-- each script is responsible for producing artifacts for one report only.
-- there is a single orchestrator script which calls the report scripts. the reports to run should be passed to the orchestrator as JSON, enabling one or many reports to be run sequentially.
-- report artifacts for a run are saved in `var/admin/checks/<date-time>-<scope>/<report>`
-- the UI lists the reports available, the scope/script family to run them against (e.g. studio, docs viewer) and any other report-specific options.
-- the UI displays a read-only view of the run summary and (by selecting a report in the run) the report results (all markdown files).
-
-the implementation will in principle be able to report on the entire repo:
-
-- the apps Studio, Analytics, Docs Viewer, Admin
-- all documents
-- git history
-- logs
-- all test files and artifacts
-- the public site
-
-some reports by their nature may necessarily have smaller scope. scopes will be defined by folder and file level inclusion in `admin-app/checks/config/admin-checks.json`.
-
-## Locked Specification
-
-### Ownership
+The system is described in [Checks](/docs/?scope=studio&doc=admin-checks) and its child docs.
 
 - Admin owns the checks system, including the CLI runner, report scripts, local API, UI route, and ignored local artifacts.
 - The new route is `/admin/checks/`.
 - The new API namespace is `/admin/api/checks/`.
-- Existing `/admin/risk/` code is reusable prior art only. It should not define the final artifact paths, API names, route names, or report contract for the new system.
-- Existing `/admin/risk/` remains available until the new checks system has replicated or intentionally discarded its useful capabilities.
-
-### Source Layout
-
-```text
-admin-app/checks/
-  config/
-    admin-checks.json
-  run_reports.py
-  reports/
-    files.py
-```
-
-`admin-app/checks/reports/` is the only location for report producer scripts.
-The orchestrator is the only supported entry point for multi-report runs.
+- `admin-app/checks/reports/` is the only location for report producer scripts.
+- The orchestrator is the only supported entry point for multi-report runs.
 
 ### Run Contract
 
@@ -235,63 +204,6 @@ Initial v1 target ids should stay small enough to verify against the real tree:
 - areas: `search`, `management`, `import-export`, `config`, `activity`, `catalogue`, `docs-build`
 - routes: `/admin/checks/`, `/admin/risk/`, `/library/`, `/analysis/`, plus a representative Docs Viewer management route selected after the v1 target-map audit proposes the route map
 
-Example target config shape:
-
-```json
-{
-  "scopes": {
-    "docs-viewer": {
-      "label": "Docs Viewer",
-      "include": ["docs-viewer/"],
-      "exclude": ["docs-viewer/**/__pycache__/**"],
-      "families": {
-        "runtime-js": {
-          "label": "Runtime JavaScript",
-          "include": ["docs-viewer/runtime/js/"]
-        },
-        "services": {
-          "label": "Services",
-          "include": ["docs-viewer/services/"]
-        },
-        "build": {
-          "label": "Build scripts",
-          "include": ["docs-viewer/build/"]
-        },
-        "tests": {
-          "label": "Tests and smokes",
-          "include": ["docs-viewer/tests/"]
-        }
-      },
-      "areas": {
-        "search": {
-          "label": "Search",
-          "include": [
-            "docs-viewer/runtime/js/*search*",
-            "docs-viewer/services/*search*",
-            "docs-viewer/build/*search*",
-            "docs-viewer/tests/**/*search*"
-          ],
-          "shared": ["docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"],
-          "routes": ["library", "analysis"]
-        }
-      },
-      "routes": {
-        "library": {
-          "label": "Library",
-          "path": "/library/",
-          "include": [
-            "library.html",
-            "docs-viewer/runtime/js/docs-viewer*.js",
-            "docs-viewer/config/scopes/library*.json"
-          ],
-          "areas": ["search"]
-        }
-      }
-    }
-  }
-}
-```
-
 ### Artifact Contract
 
 Each write run creates:
@@ -344,43 +256,9 @@ The `/admin/checks/` UI should:
 The UI can create a new validated run and delete a selected local run snapshot.
 Snapshot deletion must follow the existing safe run-id validation pattern from Admin risk runs and only delete ignored local artifacts under `var/admin/checks/`.
 
-### First Report
-
-`files` measures file count, total line count, total byte size, and per-file line/size rows for a selected scope.
-
-Default `files` behavior:
-
-- include source/config/documentation files selected by scope config
-- exclude generated payloads, dependency folders, caches, local run outputs, and build outputs
-- sort by line count descending
-- render a markdown table and terminal-style summary
-- write `files/report.json` and `files/report.md`
-
-Required metrics:
-
-| Metric | Description |
-| --- | --- |
-| `totals.files` | Included file count. |
-| `totals.lines` | Total line count across included files. |
-| `totals.bytes` | Total byte size across included files. |
-| `files[].path` | Repo-relative path. |
-| `files[].lines` | Line count for the file. |
-| `files[].bytes` | Byte size for the file. |
-| `files[].family` | File family from scope config, or `_unclassified`. |
-| `files[].areas` | Functional area ids matched by the file. |
-| `files[].routes` | Route ids matched by the file. |
-| `files[].target_match` | Whether the row matched directly, as a shared dependency, or as `_unclassified`. |
-
-## Approach
-
-- keep the current implementation and route because it contains reusable ideas and code
-- start a new implementation for data collection and reporting
-- develop a new UI at `/admin/checks/`
-- when the new system is working and has effectively replicated or discarded the current risk evidence capabilities, the current implementation and route will be retired. scripts and artifacts that no longer serve an active role will be deleted. legacy reporting data and folder paths will be deleted.
-
 ## Durable Documentation
 
-[Admin Checks](/docs/?scope=studio&doc=admin-checks) is the durable technical home for the new checks system.
+[Checks](/docs/?scope=studio&doc=admin-checks) is the durable technical home for the new checks system.
 It owns the config, runner, route/API, artifact locations, target-map audit, markdown display, snapshot deletion, and report documentation structure.
 
 Each implemented report should have a child doc under [Admin Checks](/docs/?scope=studio&doc=admin-checks).
@@ -400,67 +278,3 @@ After v1, this request should become a tracker for subsequent report child reque
 - each report in a run saves files in `var/admin/checks/<date-time>-<scope>/<report>/`
     - `report.json` - raw data
     - `report.md` - structured report
-
-The artifact contract in [Locked Specification](#locked-specification) is the implementation contract. This section is retained as the original artifact sketch.
-
-## First Report Sketch
-
-The first report sketch was for file metrics: line count and file size.
-The locked v1 implementation keeps this as the only report producer.
-
-```
-    Report:     files
-    Scope:      docs-viewer
-
-    files:      x
-    total lc:   x
-    total size: x
-
-     lc        size  file
-     ------------------------------------------------------------------------- 
-     997       36K  ./docs-viewer/runtime/js/docs-viewer-management.js
-     905       32K  ./docs-viewer/runtime/js/docs-viewer-app-runtime.js
-     562       28K  ./docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js
-     536       20K  ./docs-viewer/runtime/js/docs-html-import.js
-     510       20K  ./docs-viewer/runtime/js/docs-viewer-management-actions.js
-     451       20K  ./docs-viewer/runtime/js/docs-viewer-management-modals.js
-     443       16K  ./docs-viewer/runtime/js/docs-viewer-route-workflow.js
-     417       16K  ./docs-viewer/runtime/js/docs-viewer-search-controller.js
-     390       16K  ./docs-viewer/runtime/js/docs-viewer-config-controller.js
-```
-
-## Acceptance Criteria
-
-- `/admin/checks/` can list configured scopes and reports.
-- `/admin/checks/` can list configured file families, functional areas, and routes for the selected scope.
-- The checks API exposes health, configured reports/scopes/target layers, recent runs, run summaries, and report markdown for safe run/report ids.
-- `admin-app/checks/audit_target_map.py` resolves configured scopes, families, areas, routes, shared dependencies, `_unclassified` files, stale patterns, and exclusions from real repo files.
-- The v1 target map is produced from an audit result rather than from an unverified hand-written list.
-- A dry run resolves a JSON request into a validated execution plan without writing artifacts.
-- A write run for `{"scope": "docs-viewer", "reports": ["files"]}` writes the locked artifact tree under `var/admin/checks/`.
-- A filtered write run can target a selected file family, functional area, or route while remaining inside the selected scope.
-- A validated delete action can remove one local checks run snapshot under `var/admin/checks/` and cannot delete outside that root.
-- The `files` report emits both machine-readable metrics and a human-readable markdown report.
-- Report script paths, scope ids, report ids, options, and artifact reads are all allowlisted or validated.
-- The browser cannot pass shell command text, arbitrary paths, environment values, or unvalidated report options.
-- The existing `/admin/risk/` route is still available until the closeout task retires it deliberately.
-- Source docs are updated, but Docs Viewer generated payloads are not rebuilt unless that follow-through is explicitly requested.
-
-## Implementation Tasks
-
-| ID | status | title |
-| --- | --- | --- |
-| 1 | done | [Produce v1 target map audit](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-1-target-map-audit) |
-| 2 | done | [Define checks config, target layers, and report registry](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-2-checks-config) |
-| 3 | planned | [Build report orchestrator](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-3-orchestrator) |
-| 4 | planned | [Implement `files` report producer](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-4-report-producers) |
-| 5 | planned | [Add Admin checks API](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-5-admin-checks-api) |
-| 6 | planned | [Add `/admin/checks/` UI](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-6-admin-checks-ui) |
-| 7 | done | [Add focused tests and verification commands](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-7-tests) |
-| 8 | planned | [Review legacy `/admin/risk/` capabilities and frame child requests](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-8-legacy-risk-review) |
-| 9-12 | planned | [Docs, cleanup, verification, and closeout](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-9-12-closeout) |
-
-## Open Questions
-
-None.
-V1 implementation decisions are resolved in this request.

@@ -11,8 +11,6 @@ viewable: true
 
 This document describes a possible future report for [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
-It is not part of the v1 implementation.
-
 ## Purpose
 
 The `tests` report would provide evidence about test and smoke coverage links for files selected by a checks run.

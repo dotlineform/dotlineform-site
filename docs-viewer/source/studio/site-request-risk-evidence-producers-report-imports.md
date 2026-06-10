@@ -11,8 +11,6 @@ viewable: true
 
 This document describes a possible future report for [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
-It is not part of the v1 implementation.
-
 ## Purpose
 
 The `imports` report would provide dependency-reference evidence for files selected by a checks run.

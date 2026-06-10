@@ -3,16 +3,14 @@ doc_id: site-request-risk-evidence-producers-report-target-map
 title: Target Map Report
 added_date: 2026-06-08
 last_updated: 2026-06-08
-ui_status: planned
+ui_status: draft
 parent_id: site-request-risk-evidence-producers
-viewable: true
 ---
 # Target Map Report
 
 Status:
 
-- planned after Risk Evidence Producers v1
-- not part of the v1 proof of concept
+- draft
 
 ## Summary
 

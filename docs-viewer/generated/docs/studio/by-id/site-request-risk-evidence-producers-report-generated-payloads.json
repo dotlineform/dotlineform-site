@@ -1,0 +1,11 @@
+{
+  "doc_id": "site-request-risk-evidence-producers-report-generated-payloads",
+  "title": "Generated Payloads Report",
+  "added_date": "2026-06-10",
+  "last_updated": "2026-06-10",
+  "source_path": "site-request-risk-evidence-producers-report-generated-payloads.md",
+  "viewer_url": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-generated-payloads",
+  "parent_id": "site-request-risk-evidence-producers",
+  "ui_status": "draft",
+  "content_html": "<h1>Generated Payloads Report</h1>\n<p>This document describes a possible future report for <a href=\"/docs/?scope=studio&amp;doc=site-request-risk-evidence-producers\">Risk Evidence Producers Request</a>.</p>\n<h2>Summary</h2>\n<p>Report id: <code>generated-payloads</code></p>\n<p>Source prior art: <code>admin-app/checks/risk_evidence_pack.py</code> <code>collect_generated_payloads</code>.</p>\n<p>Purpose: inventory generated JSON payload size, count, and shape evidence for selected target surfaces.</p>\n<p>Likely metrics:</p>\n<ul>\n<li>payload file count and total bytes</li>\n<li>counts and bytes grouped by generated root</li>\n<li>largest payloads</li>\n<li>JSON validity, top-level type, top-level keys, and array item counts</li>\n</ul>\n<p>Likely target layers:</p>\n<ul>\n<li>scope</li>\n<li>area</li>\n<li>route where generated payload roots clearly support one route</li>\n</ul>\n<p>Verification needs:</p>\n<ul>\n<li>fixture generated roots with valid and invalid JSON</li>\n<li>bounded largest-payload ordering tests</li>\n<li>safe generated-root allowlist validation</li>\n</ul>\n<p>Non-goals:</p>\n<ul>\n<li>no rebuild of generated payloads</li>\n<li>no schema migration or cleanup</li>\n</ul>\n"
+}
