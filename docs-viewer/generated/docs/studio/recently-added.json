@@ -19,25 +19,9 @@
       "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-report-script-family-inventory",
-      "title": "Script Family Inventory Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-script-family-inventory.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
-    },
-    {
       "doc_id": "site-request-report-static-searches",
       "title": "Static Searches Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
-    },
-    {
-      "doc_id": "site-request-report-subjective-notes",
-      "title": "Subjective Notes Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-subjective-notes.json",
       "added_date": "2026-06-10",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
@@ -81,7 +65,23 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
+    },
+    {
+      "doc_id": "admin-checks-reports",
+      "title": "Reports",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-reports.json",
+      "added_date": "2026-06-09",
+      "parent_id": "admin-checks",
+      "parent_title": "Checks"
+    },
+    {
+      "doc_id": "site-request-report-tests",
+      "title": "Tests Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-tests.json",
+      "added_date": "2026-06-09",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-10T20:48:05Z"
+  "generated_at": "2026-06-10T21:03:59Z"
 }

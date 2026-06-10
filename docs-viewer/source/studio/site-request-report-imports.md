@@ -26,7 +26,7 @@ It should answer questions such as:
 
 - selected scope, family, area, and route filters from the run manifest
 - selected files resolved through `target_map_resolver.py`
-- language-specific parser or scanner rules for JavaScript, Python, Ruby, and relevant config files
+- language-specific parser or scanner rules for JavaScript, Python and relevant config files
 
 Possible options:
 
@@ -67,7 +67,6 @@ Likely source forms:
 
 - Python `import` and `from ... import ...`
 - JavaScript `import`, `export ... from`, and dynamic import strings
-- Ruby `require` and `require_relative`
 - local JSON/config references where they are part of route or module wiring
 
 The report should resolve references to repo-relative paths when possible and leave unresolved references visible as evidence rather than hiding them.

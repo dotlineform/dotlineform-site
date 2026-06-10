@@ -15,8 +15,6 @@ This document describes a possible future report for [Admin Checks Reports](/doc
 
 Report id: `runtime-checks`
 
-Source prior art: retired legacy risk evidence pack `collect_runtime_checks` producer and `admin-app/commands/run_checks.py`.
-
 Purpose: link selected checks targets to allowlisted runtime profile results without letting the browser submit arbitrary commands.
 
 Likely metrics:

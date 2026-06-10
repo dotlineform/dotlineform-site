@@ -268,21 +268,9 @@
               "ui_status": "draft"
             },
             {
-              "doc_id": "site-request-report-script-family-inventory",
-              "title": "Script Family Inventory Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-script-family-inventory.json",
-              "ui_status": "draft"
-            },
-            {
               "doc_id": "site-request-report-static-searches",
               "title": "Static Searches Report",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-subjective-notes",
-              "title": "Subjective Notes Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-subjective-notes.json",
               "ui_status": "draft"
             },
             {
@@ -1252,5 +1240,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T20:48:05Z"
+  "generated_at": "2026-06-10T21:03:59Z"
 }

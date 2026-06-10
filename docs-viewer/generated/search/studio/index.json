@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9bb9795f98715ce74ed162e9d2f71598",
-    "generated_at_utc": "2026-06-10T20:48:05Z",
-    "count": 232
+    "version": "blake2b-cae1bd6c2a16d17ad36d19b4851da923",
+    "generated_at_utc": "2026-06-10T21:03:59Z",
+    "count": 230
   },
   "entries": [
     {
@@ -1119,35 +1119,6 @@
       "search_text": "site-request-report-runtime-checks site request report runtime checks runtime checks report admin checks reports admin reports 2026-06-10 2026 06 10"
     },
     {
-      "id": "site-request-report-script-family-inventory",
-      "kind": "doc",
-      "title": "Script Family Inventory Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-script-family-inventory",
-      "last_updated": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports",
-      "display_meta": "2026-06-10 • Admin Checks Reports",
-      "search_terms": [
-        "site-request-report-script-family-inventory",
-        "site",
-        "request",
-        "report",
-        "script",
-        "family",
-        "inventory",
-        "script family inventory report",
-        "admin checks reports",
-        "admin",
-        "checks",
-        "reports",
-        "2026-06-10",
-        "2026",
-        "06",
-        "10"
-      ],
-      "search_text": "site-request-report-script-family-inventory site request report script family inventory script family inventory report admin checks reports admin checks reports 2026-06-10 2026 06 10"
-    },
-    {
       "id": "site-request-report-static-searches",
       "kind": "doc",
       "title": "Static Searches Report",
@@ -1174,34 +1145,6 @@
         "10"
       ],
       "search_text": "site-request-report-static-searches site request report static searches static searches report admin checks reports admin checks reports 2026-06-10 2026 06 10"
-    },
-    {
-      "id": "site-request-report-subjective-notes",
-      "kind": "doc",
-      "title": "Subjective Notes Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-subjective-notes",
-      "last_updated": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports",
-      "display_meta": "2026-06-10 • Admin Checks Reports",
-      "search_terms": [
-        "site-request-report-subjective-notes",
-        "site",
-        "request",
-        "report",
-        "subjective",
-        "notes",
-        "subjective notes report",
-        "admin checks reports",
-        "admin",
-        "checks",
-        "reports",
-        "2026-06-10",
-        "2026",
-        "06",
-        "10"
-      ],
-      "search_text": "site-request-report-subjective-notes site request report subjective notes subjective notes report admin checks reports admin checks reports 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-report-tests",

@@ -15,8 +15,6 @@ This document describes a possible future report for [Admin Checks Reports](/doc
 
 Report id: `static-searches`
 
-Source prior art: retired legacy risk evidence pack `collect_static_searches` producer.
-
 Purpose: run allowlisted text-pattern inventories for selected checks targets and report matched files as evidence for maintenance review.
 
 Likely metrics:
