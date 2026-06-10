@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from http import HTTPStatus
 from pathlib import Path
@@ -115,6 +116,18 @@ def write_sample_run(repo_root: Path, run_id: str = "sample-run") -> Path:
     return run_dir
 
 
+def write_source_file_for_files_report(repo_root: Path) -> None:
+    source_path = repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-search.js"
+    source_path.parent.mkdir(parents=True, exist_ok=True)
+    source_path.write_text("const search = true;\n", encoding="utf-8")
+
+
+def copy_checks_package(repo_root: Path) -> None:
+    source = REPO_ROOT / "admin-app" / "checks"
+    destination = repo_root / "admin-app" / "checks"
+    shutil.copytree(source, destination, dirs_exist_ok=True)
+
+
 def test_checks_api_health_and_metadata(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     write_minimal_config(repo_root)
@@ -175,6 +188,38 @@ def test_checks_api_validates_run_requests_without_command_passthrough(tmp_path:
     assert not (repo_root / "var" / "admin" / "checks").exists()
 
 
+def test_checks_api_creates_write_run_with_files_report_artifacts(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    copy_checks_package(repo_root)
+    write_minimal_config(repo_root)
+    write_source_file_for_files_report(repo_root)
+
+    status, payload = checks_post_response(
+        repo_root,
+        "/runs",
+        {
+            "scope": "docs-viewer",
+            "families": ["runtime-js"],
+            "areas": ["search"],
+            "routes": ["/library/"],
+            "reports": ["files"],
+            "options": {"files": {"limit": 5}},
+            "write": True,
+        },
+    )
+
+    assert status == HTTPStatus.OK
+    assert payload["ok"] is True
+    assert payload["status"] == "passed"
+    assert payload["mode"] == "write"
+    run_dir = repo_root / payload["summary"]["run_dir"]
+    assert (run_dir / "manifest.json").is_file()
+    assert (run_dir / "run-summary.json").is_file()
+    assert (run_dir / "files" / "report.json").is_file()
+    assert (run_dir / "files" / "report.md").is_file()
+    assert payload["summary"]["reports"][0]["artifacts"]["report_json"].endswith("/files/report.json")
+
+
 def test_checks_api_deletes_run_snapshots_with_path_validation(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     write_minimal_config(repo_root)
@@ -200,6 +245,8 @@ def test_checks_api_rejects_unsafe_or_unknown_report_reads(tmp_path: Path) -> No
     write_minimal_config(repo_root)
     write_sample_run(repo_root)
 
+    with pytest.raises(ValueError, match="safe slug"):
+        checks_get_payload(repo_root, "/runs/../sample-run/summary")
     with pytest.raises(ValueError, match="safe slug"):
         checks_get_payload(repo_root, "/runs/sample-run/reports/../files")
     with pytest.raises(ValueError, match="allowlisted"):

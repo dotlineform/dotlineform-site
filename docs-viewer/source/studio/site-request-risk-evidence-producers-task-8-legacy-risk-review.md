@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers-task-8-legacy-risk-review
 title: Risk Evidence Producers Task 8 Legacy Risk Review
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-10
 ui_status: planned
 parent_id: site-request-risk-evidence-producers
 viewable: true
@@ -47,6 +47,13 @@ Summary: Review legacy risk producers after v1 works and create child requests f
 
 - Source review of legacy risk runner, API, UI, and tests.
 - Confirm child request docs link back to the parent request.
+
+## Batch 7 handoff
+
+- Focused tests now cover the Admin checks target-map resolver, config validation, run request validation, orchestrator dry-run and write-run behavior, `files` report output, and checks API reads, writes, deletion, and invalid-id rejection.
+- The narrow run-check profile is `admin-checks`; it runs the focused Admin checks pytest paths through `admin-app/commands/run_checks.py`.
+- Verification passed on 2026-06-10: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-checks --run-id batch-7-admin-checks`; summary: `var/admin/test-runs/batch-7-admin-checks/summary.md`.
+- No browser route smoke was added for Batch 7 because the delete/reset concern is covered at the API boundary with safe snapshot deletion and invalid-id rejection tests. Batch 8 can stay focused on legacy `/admin/risk/` capability review rather than UI smoke coverage.
 
 ## completed verification
 

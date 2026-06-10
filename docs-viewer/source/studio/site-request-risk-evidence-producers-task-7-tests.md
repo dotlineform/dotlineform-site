@@ -2,8 +2,8 @@
 doc_id: site-request-risk-evidence-producers-task-7-tests
 title: Risk Evidence Producers Task 7 Tests
 added_date: 2026-06-08
-last_updated: 2026-06-09
-ui_status: planned
+last_updated: 2026-06-10
+ui_status: done
 parent_id: site-request-risk-evidence-producers
 viewable: true
 ---
@@ -17,10 +17,10 @@ Summary: Add targeted verification for the checks config, runner, producers, API
 
 | ID | status | action |
 | --- | --- | --- |
-| 7.1 | planned | Add Python tests for target-map auditing, config validation, orchestrator dry-run/write-run behavior, safe path handling, and `files` report output. |
-| 7.2 | planned | Add API tests for health, metadata, run creation, safe summary/report reads, snapshot deletion, and invalid id rejection. |
-| 7.3 | planned | Add a focused Admin route smoke only if the UI behavior cannot be covered cheaply through lower-level tests. |
-| 7.4 | planned | Add the narrowest relevant `admin-app/commands/run_checks.py` profile entry only after the focused tests exist. |
+| 7.1 | done | Add Python tests for target-map auditing, config validation, orchestrator dry-run/write-run behavior, safe path handling, and `files` report output. |
+| 7.2 | done | Add API tests for health, metadata, run creation, safe summary/report reads, snapshot deletion, and invalid id rejection. |
+| 7.3 | done | Add a focused Admin route smoke only if the UI behavior cannot be covered cheaply through lower-level tests. |
+| 7.4 | done | Add the narrowest relevant `admin-app/commands/run_checks.py` profile entry only after the focused tests exist. |
 
 ## Steer for these tasks
 
@@ -54,7 +54,9 @@ Summary: Add targeted verification for the checks config, runner, producers, API
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m pytest -q admin-app/tests/python/test_target_map_resolver.py admin-app/tests/python/test_admin_checks_config.py admin-app/tests/python/test_run_reports.py admin-app/tests/python/test_files_report.py admin-app/tests/python/test_admin_checks_api.py` - 24 passed.
+- `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-checks --run-id batch-7-admin-checks` - passed; summary: `var/admin/test-runs/batch-7-admin-checks/summary.md`.
+- No focused Admin route smoke was added. The remaining Batch 6 delete/reset concern is covered at the validated API boundary by safe run snapshot deletion and invalid-id rejection tests.
 
 ## follow-on tasks
 
@@ -62,5 +64,5 @@ Summary: Add targeted verification for the checks config, runner, producers, API
 
 ## task close
 
-- Add a handoff note to Batch 8.
-- Set this batch status and front matter `ui_status` to `done`.
+- Batch 8 handoff note added.
+- Batch status and front matter `ui_status` set to `done`.

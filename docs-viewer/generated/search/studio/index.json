@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-016939fecf91698573591f7645fdd4a8",
-    "generated_at_utc": "2026-06-09T21:53:34Z",
+    "version": "blake2b-0e7b04cb53083316ec51f7eadef63104",
+    "generated_at_utc": "2026-06-10T10:10:37Z",
     "count": 238
   },
   "entries": [
@@ -1153,10 +1153,10 @@
       "kind": "doc",
       "title": "Risk Evidence Producers Request",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-09 • Change Requests",
+      "display_meta": "2026-06-10 • Change Requests",
       "search_terms": [
         "site-request-risk-evidence-producers",
         "site",
@@ -1168,12 +1168,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "site-request-risk-evidence-producers site request risk evidence producers risk evidence producers request change requests change requests 2026-06-09 2026 06 09"
+      "search_text": "site-request-risk-evidence-producers site request risk evidence producers risk evidence producers request change requests change requests 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-risk-evidence-producers-report-git-history",
@@ -1439,10 +1439,10 @@
       "kind": "doc",
       "title": "Risk Evidence Producers Task 7 Tests",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-7-tests",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-09 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-10 • Risk Evidence Producers Request",
       "search_terms": [
         "site-request-risk-evidence-producers-task-7-tests",
         "site",
@@ -1455,22 +1455,22 @@
         "tests",
         "risk evidence producers task 7 tests",
         "risk evidence producers request",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "site-request-risk-evidence-producers-task-7-tests site request risk evidence producers task 7 tests risk evidence producers task 7 tests risk evidence producers request 2026-06-09 2026 06 09"
+      "search_text": "site-request-risk-evidence-producers-task-7-tests site request risk evidence producers task 7 tests risk evidence producers task 7 tests risk evidence producers request 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-risk-evidence-producers-task-8-legacy-risk-review",
       "kind": "doc",
       "title": "Risk Evidence Producers Task 8 Legacy Risk Review",
       "href": "/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-8-legacy-risk-review",
-      "last_updated": "2026-06-08",
+      "last_updated": "2026-06-10",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request",
-      "display_meta": "2026-06-08 • Risk Evidence Producers Request",
+      "display_meta": "2026-06-10 • Risk Evidence Producers Request",
       "search_terms": [
         "site-request-risk-evidence-producers-task-8-legacy-risk-review",
         "site",
@@ -1484,12 +1484,12 @@
         "review",
         "risk evidence producers task 8 legacy risk review",
         "risk evidence producers request",
-        "2026-06-08",
+        "2026-06-10",
         "2026",
         "06",
-        "08"
+        "10"
       ],
-      "search_text": "site-request-risk-evidence-producers-task-8-legacy-risk-review site request risk evidence producers task 8 legacy review risk evidence producers task 8 legacy risk review risk evidence producers request 2026-06-08 2026 06 08"
+      "search_text": "site-request-risk-evidence-producers-task-8-legacy-risk-review site request risk evidence producers task 8 legacy review risk evidence producers task 8 legacy risk review risk evidence producers request 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-risk-evidence-producers-task-9-12-closeout",

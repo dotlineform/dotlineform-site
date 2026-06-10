@@ -304,6 +304,19 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Parse Studio activity contract JSON.",
         ),
     ),
+    "admin-checks": (
+        CheckCommand(
+            "admin-checks-python-pytest",
+            pytest_argv(
+                "admin-app/tests/python/test_target_map_resolver.py",
+                "admin-app/tests/python/test_admin_checks_config.py",
+                "admin-app/tests/python/test_run_reports.py",
+                "admin-app/tests/python/test_files_report.py",
+                "admin-app/tests/python/test_admin_checks_api.py",
+            ),
+            "Run focused Admin checks config, resolver, orchestrator, producer, and API tests.",
+        ),
+    ),
     "catalogue": (
         CheckCommand(
             "catalogue-python-pytest",

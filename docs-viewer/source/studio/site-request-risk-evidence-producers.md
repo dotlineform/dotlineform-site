@@ -2,7 +2,7 @@
 doc_id: site-request-risk-evidence-producers
 title: Risk Evidence Producers Request
 added_date: 2026-05-31
-last_updated: 2026-06-09
+last_updated: 2026-06-10
 ui_status: in-progress
 parent_id: change-requests
 ---
@@ -456,7 +456,7 @@ The locked v1 implementation keeps this as the only report producer.
 | 4 | planned | [Implement `files` report producer](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-4-report-producers) |
 | 5 | planned | [Add Admin checks API](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-5-admin-checks-api) |
 | 6 | planned | [Add `/admin/checks/` UI](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-6-admin-checks-ui) |
-| 7 | planned | [Add focused tests and verification commands](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-7-tests) |
+| 7 | done | [Add focused tests and verification commands](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-7-tests) |
 | 8 | planned | [Review legacy `/admin/risk/` capabilities and frame child requests](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-8-legacy-risk-review) |
 | 9-12 | planned | [Docs, cleanup, verification, and closeout](/docs/?scope=studio&doc=site-request-risk-evidence-producers-task-9-12-closeout) |
 
