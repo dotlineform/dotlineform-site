@@ -193,5 +193,5 @@ The `quick` profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_chec
 ## Related References
 
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
-- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)

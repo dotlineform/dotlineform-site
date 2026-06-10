@@ -80,7 +80,7 @@ The runner removes any existing temp build before `jekyll-temp-build` and remove
 
 - [Testing](/docs/?scope=studio&doc=testing)
 - [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
-- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)

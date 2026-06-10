@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-05a20b4af0f623613152536ed900b13e",
-    "generated_at_utc": "2026-06-10T16:07:35Z",
+    "version": "blake2b-70a84ff6fb18c72d5e4ceab39b77b7e2",
+    "generated_at_utc": "2026-06-10T16:28:40Z",
     "count": 237
   },
   "entries": [
@@ -5231,15 +5231,38 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-06-06",
-      "display_meta": "2026-06-06",
+      "last_updated": "2026-06-10",
+      "display_meta": "2026-06-10",
       "search_terms": [
         "testing",
-        "2026-06-06",
+        "2026-06-10",
         "2026",
-        "06"
+        "06",
+        "10"
       ],
-      "search_text": "testing 2026-06-06 2026 06"
+      "search_text": "testing 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "smoke-testing",
+      "kind": "doc",
+      "title": "Browser Smoke Testing",
+      "href": "/docs/?scope=studio&doc=smoke-testing",
+      "last_updated": "2026-06-10",
+      "parent_id": "testing",
+      "parent_title": "Testing",
+      "display_meta": "2026-06-10 • Testing",
+      "search_terms": [
+        "smoke-testing",
+        "smoke",
+        "testing",
+        "browser smoke testing",
+        "browser",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "smoke-testing smoke testing browser smoke testing browser 2026-06-10 2026 06 10"
     },
     {
       "id": "testing-pytest",
@@ -5262,28 +5285,6 @@
         "10"
       ],
       "search_text": "testing-pytest testing pytest 2026-05-14 16:10 2026 05 14 16 10"
-    },
-    {
-      "id": "studio-smoke-testing",
-      "kind": "doc",
-      "title": "Studio Smoke Testing",
-      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-13",
-      "parent_id": "testing",
-      "parent_title": "Testing",
-      "display_meta": "2026-05-13 • Testing",
-      "search_terms": [
-        "studio-smoke-testing",
-        "studio",
-        "smoke",
-        "testing",
-        "studio smoke testing",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
     },
     {
       "id": "ui",

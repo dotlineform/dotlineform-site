@@ -2,163 +2,144 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-06-06
+last_updated: 2026-06-10
 parent_id: ""
 ---
 # Testing
 
-This repo uses lightweight, opt-in checks rather than a mandatory full test suite.
+Use this page to choose practical verification for a change request.
 
-The goal is to give Codex a standard place to put repeatable checks, run logs, and verification notes when a change is too broad for manual review alone.
-The current Python checks are pytest-collected scripts under the owning app test directories.
-They use ordinary `assert` statements and are run by `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` through pytest.
-Tests, checks, smoke helpers, and public-surface audits are Admin/Codex development infrastructure when they span app boundaries.
-See [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) for the maintained repo ownership boundary.
+The repo uses lightweight, opt-in checks rather than a mandatory full test suite. The standard runner is:
 
-## When To Use Automated Checks
+```bash
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
+```
 
-Run automated checks when the blast radius is large enough that manual checks are likely to miss something.
+Choose the smallest profile or focused command that gives evidence for the risk you changed. Do not run broad profiles just to produce more output.
 
-Good candidates:
+## What To Run
 
-- build planners and artifact selection
-- schema or config contracts
-- generated docs/search payloads
-- source-data validation
-- local write-server behavior
-- Studio route behavior that can be smoke-tested reliably
+Use this as the first-pass decision table.
 
-Manual checks are still enough for small copy changes, narrow docs edits, and visual judgment that depends on feel, layout, or mobile ergonomics.
+| change area | usual evidence |
+| --- | --- |
+| narrow docs copy | manual read-through, then `git diff --check` |
+| generated Studio docs/search contracts | `--profile docs` or focused docs builder/tests |
+| Docs Viewer public or management behavior | `--profile docs`; add `--profile docs-viewer-smoke` for browser/runtime changes |
+| catalogue source, build, or publication behavior | `--profile catalogue`, focused `studio/tests/python/...`, or a narrow catalogue build preview |
+| Admin app checks, reports, risk, or operations pages | focused `admin-app/tests/python/...`; add `--profile admin-smoke` for route behavior |
+| UI Catalogue behavior | `--profile ui-catalogue-smoke` |
+| Analytics tags or data sharing | focused `analytics-app/tests/python/...`; add `--profile analytics-smoke` for route/API smoke behavior |
+| public site or Studio-owned browser behavior | `--profile studio-smoke` or a focused script under `studio/tests/smoke/` |
+| shared server, config, runner, or ownership boundary | `--profile quick`, then add owner-specific focused checks |
 
-## Structure
+Manual checks are still expected when the behavior depends on layout judgment, pointer feel, mobile ergonomics, or copy tone.
 
-- `studio/tests/python/`
-  Deterministic Studio catalogue and public-site checks. Files expose `test_*` functions for pytest collection; many can also run directly as scripts.
-- `studio/tests/smoke/`
-  Focused browser smoke scripts for Studio-owned route and module behavior.
-- `admin-app/tests/python/`
-  Admin server, runner, risk/audit/check, and Admin-hosted UI Catalogue checks.
-- `admin-app/tests/smoke/`
-  Admin home, operational route, and Admin-hosted UI Catalogue smoke scripts.
-- `analytics-app/tests/python/`
-  Analytics server, tag, and Data Sharing checks.
-- `docs-viewer/tests/python/`
-  Deterministic Docs Viewer service, source-model, generated-read, management, import/export, rebuild, and activity checks.
-- `docs-viewer/tests/smoke/`
-  Playwright scripts for Docs Viewer public read-only behavior, management UI, browser modules, and the standalone service manage shell.
-- `docs-viewer/tests/fixtures/`
-  Small stable fixtures, only where existing repo data is not safe or sufficient.
-- `var/admin/test-runs/`
-  Local check logs and summaries. This path is ignored by git.
+## Runner Profiles
 
-Fixtures should live with the owner that uses them.
-`studio/tests/fixtures/` is not a shared fixture bucket for Admin, Analytics, Docs Viewer, UI Catalogue, or repo-scope checks.
+`admin-app/commands/run_checks.py` writes logs under `var/admin/test-runs/` and prints the summary path.
 
-## Ownership Boundaries
-
-Tests should assert current owner contracts, not preserve historical compatibility surfaces.
-
-Useful compatibility lessons should become explicit architecture guards when they protect the current design.
-For example, Docs Viewer app-shell smokes may assert that the public runtime handle does not expose broad state, composition, session, management, or route-workflow bridges.
-That is a current architecture guard, not a reason to keep old runtime APIs.
-
-Config cleanup can leave durable tests when the surface matters.
-Prefer positive owner-contract assertions such as:
-
-- runtime config exposes only the current browser-facing data-path key set
-- public config endpoints return whitelisted UI-needed fields, not source-write paths or adapter internals
-- generated-default, route-registry, or activity-contract verifiers still run through pytest collection
-
-Avoid permanent tests that only name every retired key.
-If a retired-key assertion remains, pair it with the positive owner contract it protects, such as the allowed route surface, allowed browser payload shape, or server-only write boundary.
-
-Retire or rewrite tests when the behavior they cover is obsolete, duplicated, or better expressed through a focused owner module.
-Examples of current retired shapes include the old Docs visibility source input, Docs Viewer Markdown changelog migration, and catalogue media-section migration runners.
-
-Keep Studio and Docs Viewer smoke responsibilities separate:
-
-- `docs-viewer-smoke` owns Docs Viewer public read-only, management UI, browser-module, and standalone service checks.
-- `admin-smoke` owns Admin home and Admin operational route checks.
-- `studio-smoke` owns Studio browser workflows and Studio catalogue/public-site route/module checks.
-- `ui-catalogue-smoke` owns Admin-hosted UI Catalogue route and demo checks.
-- `studio-smoke` should not run Docs Viewer-owned smoke scripts.
-
-## Runner
-
-Use `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` to run one or more check profiles and write a local run summary.
-
-Examples:
+Common profiles:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile catalogue
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile ui-catalogue-smoke
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile analytics-smoke
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
 ```
 
-Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
-The `docs` profile includes Docs Viewer-owned pytest checks from `docs-viewer/tests/python/` plus Analytics-owned Data Sharing adapter checks.
-The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/`.
-Run `docs-viewer-smoke`, or at minimum `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a Docs Viewer change touches the shared public runtime, route shell, public config, public payload-loading contract, or management-only module boundary.
-Do not use the repo root or a stale `_site` directory as evidence for public read-only behavior; those targets can mask public-build exclusions.
-The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts for Studio catalogue/public-site behavior.
-The `admin-smoke` profile runs Admin route smoke checks without the Jekyll temp build.
-The `full` profile runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke`.
-Smoke profiles clean `/tmp/dlf-jekyll-build` before and after the run by default.
-Use `--keep-temp-build` only when inspecting the generated temp build after a failure.
+Profile roles:
 
-## Smoke Roles
-
-Default Docs Viewer smoke coverage:
-
-| script | profile role | responsibility |
-| --- | --- | --- |
-| `docs_viewer_service_manage.py` | `docs-viewer-smoke` | Standalone Docs Viewer service manage shell, generated tree/recent/by-id/search reads, rich manage info-panel metadata, and representative management API base. |
-| `public_docs_viewer_readonly.py` | `docs-viewer-smoke` | Public Library and Analysis installs stay read-only, load public tree/recent/by-id/search payloads, hydrate public info-panel metadata from by-id payloads, and do not request public docs `index.json`. |
-
-Focused Docs Viewer route smokes are opt-in unless a route-specific change needs them:
-
-| script | responsibility |
+| profile | role |
 | --- | --- |
-| `docs_viewer_route_navigation.py` | Route navigation, internal links, history, and Library route path behavior. |
-| `docs_viewer_route_index_panel.py` | Index-panel collapse, expand, restore, and expanded tree navigation behavior. |
-| `docs_viewer_route_search_missing_hash.py` | Search-route state, missing-doc routing, history recovery, and hash-target behavior. |
-| `docs_viewer_routes.py` | Aggregate wrapper for the focused route smoke slices. |
+| `quick` | whitespace, Python syntax, core pytest checks, projection contract, Studio ready-state audit, and key JSON parsing. |
+| `catalogue` | focused catalogue pytest checks plus a narrow field-aware build preview. |
+| `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
+| `docs-viewer-smoke` | temporary Jekyll build plus Docs Viewer public read-only and standalone manage-service smoke checks. |
+| `admin-smoke` | local Admin home and operations route smoke checks. |
+| `ui-catalogue-smoke` | Admin-hosted UI Catalogue tests, routes, and modal demo smoke checks. |
+| `analytics-smoke` | local Analytics tag API, tag route, modal, ready-state, and Data Sharing smoke checks. |
+| `studio-smoke` | temporary Jekyll build plus public-site and Studio-owned catalogue smoke checks. |
+| `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke`, `analytics-smoke`, or `ui-catalogue-smoke`. |
 
-Focused route smokes need a target that serves `/docs/`.
-Temporary public Jekyll builds can omit that route while still serving public `/library/` and `/analysis/` pages.
+Smoke profiles that need a public build use `/tmp/dlf-jekyll-build` and clean it by default. Use `--keep-temp-build` only when inspecting a failed smoke run.
 
-Studio route smoke scripts outside `studio-smoke` should stay opt-in until a route owner reviews setup requirements.
-Do not add all unprofiled Studio route smokes to default profiles just to increase coverage.
+## App Ownership
+
+Keep checks with the app that owns the behavior.
+
+Docs Viewer:
+
+- Python checks: `docs-viewer/tests/python/`
+- Browser smoke checks: `docs-viewer/tests/smoke/`
+- Fixtures: `docs-viewer/tests/fixtures/`
+- Typical profiles: `docs`, `docs-viewer-smoke`
+- Use `docs-viewer-smoke`, or at least `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a change touches the public runtime, route shell, public config, payload-loading contract, or management-only module boundary.
+
+Admin app and UI Catalogue:
+
+- Python checks: `admin-app/tests/python/`
+- Browser smoke checks: `admin-app/tests/smoke/`
+- Typical profiles: `quick`, `admin-smoke`, `ui-catalogue-smoke`
+- UI Catalogue is Admin-hosted; do not put its smoke coverage in Studio-owned profiles.
+
+Analytics app:
+
+- Python checks: `analytics-app/tests/python/`
+- Browser and API smoke checks: `analytics-app/tests/smoke/`
+- Typical profiles: `quick`, `docs` for Data Sharing adapter coverage, `analytics-smoke`
+- Tag management now belongs to Analytics. New Analytics checks should not use `tagStudio` naming.
+
+Studio and public site:
+
+- Python checks: `studio/tests/python/`
+- Browser smoke checks: `studio/tests/smoke/`
+- Typical profiles: `quick`, `catalogue`, `studio-smoke`
+- Studio-owned smokes cover public-site behavior and retained catalogue/public-route behavior. They should not absorb Docs Viewer, Admin, UI Catalogue, or Analytics smoke responsibilities.
+
+Cross-app checks:
+
+- Runner, audit, risk, activity, and inventory checks live under `admin-app/` when they are development infrastructure rather than product behavior.
+- See [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) for the maintained ownership boundary.
+
+## Browser Smoke Testing
+
+Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, modal behavior, or ready/busy state.
+
+Do not use a raw `file://` URL for routes that depend on module imports, same-origin asset paths, or local APIs. Use a running local app, a temporary Jekyll build, or the route-specific setup expected by the smoke script.
+
+See [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) for Playwright readiness, click, setup, and manual-check guidance.
 
 ## Python Test Style
 
-Python tests should stay small, deterministic, and local.
-Prefer direct module tests over broad end-to-end setup unless the integration boundary is the behavior being tested.
+Python checks should stay small, deterministic, and local.
 
 Current conventions:
 
-- keep tests in the owning app test directory, such as `studio/tests/python/`, `admin-app/tests/python/`, `analytics-app/tests/python/`, or `docs-viewer/tests/python/`
+- keep tests under the owning app test directory
 - use plain `assert`
-- run grouped profile checks through `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`, which calls the same interpreter with `-m pytest -q`
+- prefer direct module tests over broad end-to-end setup unless the integration boundary is the behavior being tested
+- run grouped checks through `admin-app/commands/run_checks.py`, which invokes pytest with the same Python interpreter
+- run focused checks with `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
 - avoid network access
 - use temporary directories or small fixtures when repo data would make the test brittle
 - keep direct script execution working where practical for narrow opt-in checks
-- when a direct verifier script belongs in `run_checks.py` or pytest, wrap it with a real `test_*` function so pytest collection cannot silently skip it
-- add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` when it covers a repeated risk
+- wrap reusable verifier scripts with real `test_*` functions so pytest collection cannot silently skip them
+- add the test to the smallest relevant runner profile when it protects a repeated risk
 
 See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.
-See [Local Admin App](/docs/?scope=studio&doc=local-admin-app) for Admin route, API, output-path, and UI Catalogue ownership.
 
-## Expected Close-Out
+## Close-Out
 
 When Codex runs checks, the final response should report:
 
-- which profiles ran
+- which profiles or focused commands ran
 - pass/fail status
-- the `var/admin/test-runs/.../summary.md` path
+- the `var/admin/test-runs/.../summary.md` path when `run_checks.py` was used
 - any failed command log paths
 - manual checks still needed
 
@@ -170,7 +151,7 @@ Automated checks:
 - catalogue: pass
 
 Logs:
-- var/admin/test-runs/20260501-171530/summary.md
+- var/admin/test-runs/20260610-171530/summary.md
 
 Manual checks:
 - Open /studio/catalogue-field-registry/
@@ -178,13 +159,17 @@ Manual checks:
 - Clear search
 ```
 
-## Current Scope
+## Current Gaps
 
-The MVP framework is deliberately small:
+The testing framework is intentionally incomplete.
 
-- pytest is the Python test collection layer, but `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` remains the top-level runner
-- no CI contract
-- no automatic full-suite run before every change
-- no broad fixture duplication
+Known gaps:
 
-Add a new check only when it captures repeatable risk that would otherwise be hard to verify.
+- there is no CI contract
+- there is no automatic full-suite run before every change
+- several smoke scripts are still opt-in because their setup requirements need owner review
+- profile names still preserve some historical Studio terminology
+- cross-app route coverage is uneven
+- not every route exposes the same ready/busy contract
+
+Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.

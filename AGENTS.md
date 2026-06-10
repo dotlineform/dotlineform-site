@@ -65,7 +65,7 @@
   - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product/runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable.
-- For Studio Playwright smoke tests, follow `docs-viewer/source/studio/studio-smoke-testing.md`.
+- For Playwright smoke tests, follow `docs-viewer/source/studio/smoke-testing.md`.
 
 ## Security And Sanitization
 

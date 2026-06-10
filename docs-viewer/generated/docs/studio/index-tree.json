@@ -1167,14 +1167,14 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json",
       "children": [
         {
+          "doc_id": "smoke-testing",
+          "title": "Browser Smoke Testing",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/smoke-testing.json"
+        },
+        {
           "doc_id": "testing-pytest",
           "title": "Pytest",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/testing-pytest.json"
-        },
-        {
-          "doc_id": "studio-smoke-testing",
-          "title": "Studio Smoke Testing",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-smoke-testing.json"
         }
       ]
     },
@@ -1283,5 +1283,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T16:04:50Z"
+  "generated_at": "2026-06-10T16:28:40Z"
 }

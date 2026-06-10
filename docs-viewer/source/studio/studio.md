@@ -50,7 +50,7 @@ Studio landing and operational routes expose the shared route-ready contract:
 - **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route-local shell ownership, retired route notes, page-level doc links, and route checks
 - **[Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)** for `/studio/api/...` endpoint groups and adapter ownership
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
-- **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
+- **[Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)** for Codex-run browser smoke-test harness rules
 
 ## Local Development
 
