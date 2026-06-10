@@ -62,7 +62,8 @@ Mapped routes are reviewed route targets and can be selected by normal checks ru
 Inventory-only routes are deterministic route inventory entries that are visible to the audit but are not ready for route-scoped evidence runs.
 
 The browser may receive safe projected metadata from this config.
-The browser must not receive arbitrary local paths, command strings, environment values, or unvalidated report options.
+The browser must not receive arbitrary local paths, command strings, environment values, or report option schemas.
+Admin UI runs use report defaults from `admin-app/checks/config/admin-checks.json`; edit that file directly when report options need different defaults.
 
 ## Targeting Model
 
@@ -128,16 +129,6 @@ Example:
   "areas": ["search"],
   "routes": [],
   "reports": ["files", "target-map"],
-  "options": {
-    "files": {
-      "limit": 20,
-      "sort": "lines_desc"
-    },
-    "target-map": {
-      "limit": 20,
-      "pattern_limit": 20
-    }
-  },
   "write": true
 }
 ```
@@ -145,9 +136,9 @@ Example:
 Rules:
 
 - scope, family, area, route, and report ids are allowlisted by config
-- report options are validated against allowed options
+- report options for Admin UI runs come from config defaults
 - report scripts are invoked by path and argv list
-- browser-provided command strings, shell flags, environment values, arbitrary paths, and output roots are prohibited
+- browser-provided command strings, shell flags, environment values, arbitrary paths, output roots, and report option overrides are prohibited
 - dry runs resolve the plan without writing run artifacts
 - write runs create ignored local artifacts under `var/admin/checks/`
 
@@ -164,7 +155,7 @@ Endpoints:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/admin/api/checks/health` | Service health, config id, config version, runs root, and configured reports. |
-| `GET` | `/admin/api/checks/reports` | Safe metadata for scopes, families, areas, routes, reports, defaults, and allowed options. |
+| `GET` | `/admin/api/checks/reports` | Safe metadata for scopes, families, areas, routes, and reports. |
 | `GET` | `/admin/api/checks/runs` | Recent run summaries under `var/admin/checks/`. |
 | `POST` | `/admin/api/checks/runs` | Create a dry run or write run from a validated JSON run request. |
 | `GET` | `/admin/api/checks/runs/<run-id>/summary` | Read `run-summary.json` and raw `run-summary.md`. |

@@ -21,7 +21,5 @@
   "runs_label": "run folders",
   "no_runs": "No checks runs found.",
   "markdown_empty": "No report selected.",
-  "artifact_path_label": "artifact",
-  "option_limit_label": "limit",
-  "option_sort_label": "sort"
+  "artifact_path_label": "artifact"
 }

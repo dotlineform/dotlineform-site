@@ -33,6 +33,7 @@ from run_reports import DEFAULT_RUNS_ROOT, run_request  # noqa: E402
 
 CHECKS_RUNS_REL_DIR = DEFAULT_RUNS_ROOT
 VALID_SLUG = re.compile(r"^[A-Za-z0-9_.-]+$")
+VALID_BROWSER_RUN_REQUEST_KEYS = {"scope", "families", "areas", "routes", "reports", "write"}
 
 
 def utc_now() -> str:
@@ -61,9 +62,25 @@ def checks_get_payload(repo_root: Path, api_path: str, query: dict[str, list[str
 def checks_post_response(repo_root: Path, api_path: str, body: Mapping[str, Any]) -> tuple[HTTPStatus, dict[str, Any]]:
     if api_path != "/runs":
         raise FileNotFoundError(f"Unknown checks API route: {api_path}")
-    result = run_request(body, config_path=DEFAULT_CONFIG_PATH, repo_root=repo_root, argv=["admin-app/checks/run_reports.py"])
+    result = run_request(normalized_browser_run_request(body), config_path=DEFAULT_CONFIG_PATH, repo_root=repo_root, argv=["admin-app/checks/run_reports.py"])
     status = "dry-run" if result["mode"] == "dry-run" else str(result["summary"].get("status"))
     return HTTPStatus.OK, {"ok": True, "status": status, **result, "time_utc": utc_now()}
+
+
+def normalized_browser_run_request(body: Mapping[str, Any]) -> dict[str, Any]:
+    unknown = sorted(set(body).difference(VALID_BROWSER_RUN_REQUEST_KEYS))
+    if unknown:
+        if "options" in unknown:
+            raise ValueError("report options are configured in admin-app/checks/config/admin-checks.json")
+        raise ValueError(f"request contains unknown keys: {', '.join(unknown)}")
+    return {
+        "scope": body.get("scope"),
+        "families": body.get("families", []),
+        "areas": body.get("areas", []),
+        "routes": body.get("routes", []),
+        "reports": body.get("reports", []),
+        "write": body.get("write", False),
+    }
 
 
 def checks_delete_response(repo_root: Path, api_path: str) -> tuple[HTTPStatus, dict[str, Any]]:
@@ -127,8 +144,6 @@ def project_reports(reports: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "id": report_id,
                 "label": report.get("label"),
                 "description": report.get("description"),
-                "default_options": report.get("default_options", {}),
-                "allowed_options": report.get("allowed_options", {}),
             }
         )
     return out

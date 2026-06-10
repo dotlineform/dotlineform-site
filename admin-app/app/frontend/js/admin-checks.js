@@ -91,89 +91,14 @@ function renderSelect(select, items, options = {}) {
   }
 }
 
-function reportById(state, reportId = state.reportSelect.value) {
-  return state.reports.find((report) => report.id === reportId) || null;
-}
-
-function renderOptionControls(state) {
-  const report = reportById(state);
-  const allowed = report && report.allowed_options && typeof report.allowed_options === "object"
-    ? report.allowed_options
-    : {};
-  const defaults = report && report.default_options && typeof report.default_options === "object"
-    ? report.default_options
-    : {};
-  state.optionsNode.textContent = "";
-  Object.entries(allowed).forEach(([optionId, schema]) => {
-    const field = document.createElement("label");
-    field.className = "studioChecksField";
-    field.dataset.checksOptionField = optionId;
-
-    const label = document.createElement("span");
-    label.textContent = getAdminText(state.config, `admin_checks.option_${optionId}_label`, optionId);
-    field.append(label);
-
-    const enumValues = schema && Array.isArray(schema.enum) ? schema.enum : null;
-    if (enumValues) {
-      const select = document.createElement("select");
-      select.className = "tagStudio__input";
-      select.dataset.checksOption = optionId;
-      enumValues.forEach((value) => {
-        select.append(new Option(String(value), String(value), defaults[optionId] === value, defaults[optionId] === value));
-      });
-      select.value = defaults[optionId] == null ? String(enumValues[0] || "") : String(defaults[optionId]);
-      field.append(select);
-    } else {
-      const input = document.createElement("input");
-      input.className = "tagStudio__input";
-      input.dataset.checksOption = optionId;
-      input.type = schema && schema.type === "integer" ? "number" : "text";
-      if (schema && Number.isInteger(schema.minimum)) input.min = String(schema.minimum);
-      if (schema && Number.isInteger(schema.maximum)) input.max = String(schema.maximum);
-      input.value = defaults[optionId] == null ? "" : String(defaults[optionId]);
-      field.append(input);
-    }
-    state.optionsNode.append(field);
-  });
-}
-
-function optionValueFromControl(control, schema) {
-  if (!control) return undefined;
-  if (schema && schema.type === "integer") {
-    const value = Number.parseInt(control.value, 10);
-    return Number.isFinite(value) ? value : undefined;
-  }
-  if (schema && schema.type === "boolean") {
-    return Boolean(control.checked);
-  }
-  return normalizeText(control.value);
-}
-
-function collectReportOptions(state) {
-  const report = reportById(state);
-  if (!report) return {};
-  const allowed = report.allowed_options && typeof report.allowed_options === "object" ? report.allowed_options : {};
-  const options = {};
-  Object.entries(allowed).forEach(([optionId, schema]) => {
-    const control = state.optionsNode.querySelector(`[data-checks-option="${CSS.escape(optionId)}"]`);
-    const value = optionValueFromControl(control, schema);
-    if (value !== undefined && value !== "") {
-      options[optionId] = value;
-    }
-  });
-  return options;
-}
-
 function buildRunPayload(state) {
   const reportId = state.reportSelect.value;
-  const options = collectReportOptions(state);
   return {
     scope: state.scopeSelect.value,
     families: state.familySelect.value ? [state.familySelect.value] : [],
     areas: state.areaSelect.value ? [state.areaSelect.value] : [],
     routes: state.routeSelect.value ? [state.routeSelect.value] : [],
     reports: [reportId],
-    options: Object.keys(options).length ? { [reportId]: options } : {},
     write: true
   };
 }
@@ -184,7 +109,6 @@ function resetControls(state) {
   renderSelect(state.familySelect, state.families, { includeAll: true, allLabel: state.allLabel });
   renderSelect(state.areaSelect, state.areas, { includeAll: true, allLabel: state.allLabel });
   renderSelect(state.routeSelect, state.routes, { includeAll: true, allLabel: state.allLabel });
-  renderOptionControls(state);
 }
 
 function clearOutput(state) {
@@ -262,7 +186,6 @@ async function loadRun(state, runId) {
   state.loadedReportId = reportId;
   if (reportId) state.reportSelect.value = reportId;
   applyTargetsToControls(state, summary.targets);
-  renderOptionControls(state);
   const reportPayload = reportId ? await getJson(CHECKS_API_ENDPOINTS.report(runId, reportId)) : null;
   renderArtifact(state, reportPayload || summaryPayload);
   setRunListSelection(state, runId);
@@ -344,7 +267,6 @@ async function init() {
   const familySelect = document.getElementById("studioChecksFamily");
   const areaSelect = document.getElementById("studioChecksArea");
   const routeSelect = document.getElementById("studioChecksRoute");
-  const optionsNode = document.getElementById("studioChecksOptions");
   const runButton = document.getElementById("studioChecksRun");
   const runsTitle = document.getElementById("studioChecksRunsTitle");
   const runsSelect = document.getElementById("studioChecksRuns");
@@ -361,7 +283,6 @@ async function init() {
     familySelect,
     areaSelect,
     routeSelect,
-    optionsNode,
     runButton,
     runsTitle,
     runsSelect,
@@ -387,7 +308,6 @@ async function init() {
       familySelect,
       areaSelect,
       routeSelect,
-      optionsNode,
       runButton,
       runsTitle,
       runsSelect,
@@ -422,7 +342,6 @@ async function init() {
     );
 
     reportSelect.addEventListener("change", () => {
-      renderOptionControls(state);
       syncBusy(state);
     });
     form.addEventListener("submit", (event) => {

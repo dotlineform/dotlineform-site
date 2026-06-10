@@ -140,7 +140,8 @@ def test_checks_api_health_and_metadata(tmp_path: Path) -> None:
     assert health["runs_root"] == "var/admin/checks"
     assert health["reports"] == ["files"]
     assert reports["reports"][0]["id"] == "files"
-    assert reports["reports"][0]["default_options"]["limit"] == 20
+    assert "default_options" not in reports["reports"][0]
+    assert "allowed_options" not in reports["reports"][0]
     assert reports["scopes"][0]["id"] == "admin"
 
 
@@ -173,11 +174,17 @@ def test_checks_api_validates_run_requests_without_command_passthrough(tmp_path:
             "/runs",
             {"scope": "docs-viewer", "reports": ["files"], "command": "rm -rf var", "write": False},
         )
+    with pytest.raises(ValueError, match="report options are configured"):
+        checks_post_response(
+            repo_root,
+            "/runs",
+            {"scope": "docs-viewer", "reports": ["files"], "options": {}, "write": False},
+        )
 
     status, payload = checks_post_response(
         repo_root,
         "/runs",
-        {"scope": "docs-viewer", "reports": ["files"], "options": {}, "write": False},
+        {"scope": "docs-viewer", "reports": ["files"], "write": False},
     )
 
     assert status == HTTPStatus.OK
@@ -203,7 +210,6 @@ def test_checks_api_creates_write_run_with_files_report_artifacts(tmp_path: Path
             "areas": ["search"],
             "routes": ["/library/"],
             "reports": ["files"],
-            "options": {"files": {"limit": 5}},
             "write": True,
         },
     )

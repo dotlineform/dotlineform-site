@@ -402,8 +402,7 @@ body.adminApp [hidden] {
   align-content: start;
 }
 
-.studioChecksForm,
-.studioChecksOptions {
+.studioChecksForm {
   display: grid;
   gap: 0.5rem;
 }

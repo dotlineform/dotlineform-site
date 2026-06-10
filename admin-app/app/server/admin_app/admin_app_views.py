@@ -149,7 +149,6 @@ def admin_checks_view(version: str) -> str:
                   <span id="studioChecksRouteLabel"></span>
                   <select class="tagStudio__input" id="studioChecksRoute" name="route"></select>
                 </label>
-                <div class="studioChecksOptions" id="studioChecksOptions"></div>
                 <div class="studioChecksActions">
                   <button type="submit" class="tagStudio__button tagStudio__button--defaultWidth" id="studioChecksRun"></button>
                 </div>
