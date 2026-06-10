@@ -2,7 +2,7 @@
 doc_id: admin-checks-target-map-architecture
 title: Config and Target Map
 added_date: 2026-06-09
-last_updated: 2026-06-09
+last_updated: 2026-06-10
 parent_id: admin-checks
 ---
 # Config and Target Map
@@ -114,6 +114,9 @@ The query state such as `?scope=studio&doc=...&mode=manage` is route state, not 
 | `admin-app/checks/target_map_resolver.py` | Shared resolver for matching files to scopes, families, areas, routes, shared dependencies, stale patterns, and boundary flags. |
 | `admin-app/checks/audit_target_map.py` | Maintenance guardrail for config drift across the repo. |
 | `admin-app/checks/reports/target_map.py` | Deferred normal report producer for target-map evidence in a checks run. |
+
+Docs Viewer publish-gate files are classified with the existing `/docs/` route plus the `management` and `docs-build` areas.
+Do not add a separate publishing area unless the workflow grows beyond the local management/build boundary.
 
 ## Why Keep The Audit
 

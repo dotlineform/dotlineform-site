@@ -85,8 +85,10 @@ def write_public_scope_config(root: Path) -> None:
                     "meta": "public scope",
                     "source": "docs-viewer/source/library",
                     "media_path_prefix": "docs/library",
-                    "output": "assets/data/docs/scopes/library",
-                    "search_output": "assets/data/search/library/index.json",
+                    "output": "docs-viewer/generated/docs/library",
+                    "search_output": "docs-viewer/generated/search/library/index.json",
+                    "publish_output": "assets/data/docs/scopes/library",
+                    "publish_search_output": "assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "parent",
@@ -305,9 +307,9 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
         write_public_source_docs(root)
         config = load_docs_scope_configs(root)["library"]
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
-        index_tree = read_json(root / "assets/data/docs/scopes/library/index-tree.json")
-        recently_added = read_json(root / "assets/data/docs/scopes/library/recently-added.json")
-        child_payload = read_json(root / "assets/data/docs/scopes/library/by-id/child.json")
+        index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
+        recently_added = read_json(root / "docs-viewer/generated/docs/library/recently-added.json")
+        child_payload = read_json(root / "docs-viewer/generated/docs/library/by-id/child.json")
         browser_config = build_docs.browser_scope_config_payload(root, [config])
 
     assert result["diagnostics"]["docs_emitted"] == 6
@@ -371,6 +373,7 @@ def test_python_docs_builder_public_tree_and_recently_added_filter_private_rows(
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert browser_config["scopes"][0]["recently_added_url"] == "/assets/data/docs/scopes/library/recently-added.json"
+    assert index_tree["docs"][0]["content_url"] == "/assets/data/docs/scopes/library/by-id/parent.json"
 
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:

@@ -124,10 +124,14 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if record is None:
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
-    expected_path = (generated_scope_config(repo_root, scope).output / "by-id" / f"{doc_id}.json").as_posix()
-    expected_url = f"/{expected_path}"
+    config = generated_scope_config(repo_root, scope)
+    expected_paths = {
+        (config.output / "by-id" / f"{doc_id}.json").as_posix(),
+        (config.publish_output / "by-id" / f"{doc_id}.json").as_posix(),
+    }
     content_url = str(record.get("content_url") or "").strip()
-    if content_url and urlparse(content_url).path != expected_url:
+    content_path = urlparse(content_url).path.lstrip("/") if content_url else ""
+    if content_path and content_path not in expected_paths:
         raise RuntimeError(f"generated docs index tree for {scope} has an unexpected payload path for {doc_id}")
 
     return read_generated_json(

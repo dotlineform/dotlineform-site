@@ -238,8 +238,10 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
       "scope_id": "library",
       "source": "docs-viewer/source/library",
       "media_path_prefix": "docs/library",
-      "output": "assets/data/docs/scopes/library",
-      "search_output": "assets/data/search/library/index.json",
+      "output": "docs-viewer/generated/docs/library",
+      "search_output": "docs-viewer/generated/search/library/index.json",
+      "publish_output": "assets/data/docs/scopes/library",
+      "publish_search_output": "assets/data/search/library/index.json",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library"
@@ -253,14 +255,14 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
         source_root.mkdir(parents=True)
         (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "assets/data/docs/scopes/library/by-id").mkdir(parents=True)
-        (repo_root / "assets/data/docs/scopes/library/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "assets/data/docs/scopes/library/index-tree.json").write_text(
+        (repo_root / "docs-viewer/generated/docs/library/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/generated/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/generated/docs/library/index-tree.json").write_text(
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "assets/data/docs/scopes/library/references").mkdir(parents=True)
-        (repo_root / "assets/data/docs/scopes/library/references/index.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/generated/docs/library/references").mkdir(parents=True)
+        (repo_root / "docs-viewer/generated/docs/library/references/index.json").write_text("{}", encoding="utf-8")
 
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 

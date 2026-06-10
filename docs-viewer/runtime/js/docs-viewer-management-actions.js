@@ -1,5 +1,7 @@
 import {
   applyManagedDocDelete,
+  applyManagedDocsPublish,
+  confirmManagedDocsPublish,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
@@ -307,6 +309,59 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
+  function publishConfirmBody(preview) {
+    var changed = Number(preview && preview.changed_count || 0);
+    var removed = Number(preview && preview.removed_count || 0);
+    var paths = preview && preview.paths ? preview.paths : {};
+    return [
+      "Publish working generated docs to public snapshots?",
+      "",
+      "Changed files: " + changed,
+      "Stale files to remove: " + removed,
+      "",
+      "From: " + String(paths.working_docs_root || ""),
+      "To: " + String(paths.published_docs_root || "")
+    ].join("\n");
+  }
+
+  function handlePublishDocs() {
+    setManagementBusy(true);
+    setManagementMessage(state.managementText.publishChecking || "Checking publish changes...", false);
+
+    confirmManagedDocsPublish(managementClientOptions())
+      .then(function (preview) {
+        setManagementBusy(false);
+        return openDocsViewerConfirmModal({
+          root: root,
+          title: state.managementText.publishConfirmTitle || "Publish docs",
+          body: publishConfirmBody(preview),
+          primaryLabel: state.managementText.publishConfirmButton || "Publish",
+          cancelLabel: state.managementText.cancelButton
+        });
+      })
+      .then(function (confirmed) {
+        if (!confirmed) {
+          setManagementMessage("", false);
+          return null;
+        }
+        setManagementBusy(true);
+        setManagementMessage(state.managementText.publishApplying || "Publishing docs...", false);
+        return applyManagedDocsPublish(managementClientOptions());
+      })
+      .then(function (payload) {
+        if (!payload) return;
+        setManagementMessage(payload.summary_text || state.managementText.publishApplied || "Docs published.", false);
+        if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || state.managementText.publishFailed || "Publish failed.", true);
+      })
+      .finally(function () {
+        setManagementBusy(false);
+        renderManagementUi();
+      });
+  }
+
   function handleMarkdownSource() {
     var doc = currentSelectedDoc();
     if (!doc || typeof context.requestMainView !== "function") return;
@@ -503,6 +558,7 @@ export function createDocsViewerManagementActionController(options) {
     handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
+    handlePublishDocs: handlePublishDocs,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit,
     handleStatusPillClick: handleStatusPillClick

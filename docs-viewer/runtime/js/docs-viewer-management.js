@@ -9,6 +9,7 @@ import {
   createDocsViewerManagementCapabilityController,
   scopeCreateSupported,
   scopeDeleteSupported,
+  scopePublishSupported,
   scopeLifecycleDeleteTargets
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -113,6 +114,7 @@ export function initDocsViewerManagement(context) {
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
   var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
+  var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
@@ -476,6 +478,11 @@ export function initDocsViewerManagement(context) {
       manageDeleteScopeButton.hidden = !deleteScopeAvailable;
       manageDeleteScopeButton.disabled = state.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
     }
+    if (managePublishButton) {
+      var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
+      managePublishButton.hidden = !publishAvailable;
+      managePublishButton.disabled = state.managementBusy || !publishAvailable;
+    }
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
@@ -708,6 +715,7 @@ export function initDocsViewerManagement(context) {
         draftToggle: draftToggle,
         manageDeleteScopeButton: manageDeleteScopeButton,
         manageNewScopeButton: manageNewScopeButton,
+        managePublishButton: managePublishButton,
         manageSettingsButton: manageSettingsButton,
         manageViewableButton: manageViewableButton,
         metadataNonViewableLabel: metadataNonViewableLabel,
@@ -786,6 +794,13 @@ export function initDocsViewerManagement(context) {
         hideContextMenu();
         hideManageActionsMenu();
         handleDeleteScope();
+      });
+    }
+    if (managePublishButton) {
+      managePublishButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        actionController.handlePublishDocs();
       });
     }
     if (manageActionsButton) {
@@ -929,6 +944,7 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
       reloadDocsIndex: reloadDocsIndex,
+      refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       renderStatusPills: renderStatusPills,
       setManagementBusy: setManagementBusy,

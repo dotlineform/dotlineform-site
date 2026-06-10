@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints
 title: Endpoint Overview
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-06-10
 parent_id: scripts-docs-management-server
 ---
 # Docs Viewer Management Endpoint Overview
@@ -32,6 +32,7 @@ Docs Viewer management endpoints are local-only JSON APIs served by the standalo
 | `GET /docs/source` | [Source Editor Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-editor) | Return Markdown body text and a revision token for one source doc. |
 | `GET /docs/import-source-files` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | List staged files that can be imported into docs source. |
 | `GET /docs/import-html-files` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Compatibility alias for staged import listing. |
+| `GET /docs/publish/status` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Report pending public-scope working-to-published changes. |
 
 ## POST Endpoints
 
@@ -55,5 +56,7 @@ Docs Viewer management endpoints are local-only JSON APIs served by the standalo
 | `POST /docs/scopes/create-apply` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Create a new manifest-owned scope after confirmation. |
 | `POST /docs/scopes/delete-preview` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Preview deletion of a manifest-owned scope. |
 | `POST /docs/scopes/delete-apply` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Delete a manifest-owned scope after confirmation. |
+| `POST /docs/publish/confirm` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Confirm the working-to-published diff for one public scope without writing. |
+| `POST /docs/publish/apply` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Sync working docs/search to public snapshots after `confirm: true`. |
 
 All JSON responses are sent with `Cache-Control: no-store`.

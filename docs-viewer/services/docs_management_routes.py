@@ -39,6 +39,9 @@ SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
 SCOPE_CREATE_APPLY_PATH = "/docs/scopes/create-apply"
 SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/delete-preview"
 SCOPE_DELETE_APPLY_PATH = "/docs/scopes/delete-apply"
+PUBLISH_STATUS_PATH = "/docs/publish/status"
+PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
+PUBLISH_APPLY_PATH = "/docs/publish/apply"
 
 GET_PATHS = (
     HEALTH_PATH,
@@ -60,6 +63,7 @@ GET_PATHS = (
     SOURCE_BODY_PATH,
     IMPORT_SOURCE_FILES_PATH,
     IMPORT_HTML_FILES_PATH,
+    PUBLISH_STATUS_PATH,
 )
 
 POST_PATHS = (
@@ -81,6 +85,8 @@ POST_PATHS = (
     SCOPE_CREATE_APPLY_PATH,
     SCOPE_DELETE_PREVIEW_PATH,
     SCOPE_DELETE_APPLY_PATH,
+    PUBLISH_CONFIRM_PATH,
+    PUBLISH_APPLY_PATH,
 )
 
 OPTIONS_PATHS = tuple(dict.fromkeys((*POST_PATHS, *GET_PATHS)))

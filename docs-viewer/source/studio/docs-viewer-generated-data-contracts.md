@@ -2,7 +2,7 @@
 doc_id: docs-viewer-generated-data-contracts
 title: Generated Data Contracts
 added_date: 2026-06-05
-last_updated: 2026-06-05
+last_updated: 2026-06-10
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer Generated Data Contracts
@@ -23,8 +23,13 @@ It separates public read-only route data from local/manage route data so payload
 
 | Scope kind | Docs root | Search root |
 | --- | --- | --- |
-| Public read-only | `assets/data/docs/scopes/<scope>/` | `assets/data/search/<scope>/index.json` |
+| Public read-only working generated | `docs-viewer/generated/docs/<scope>/` | `docs-viewer/generated/search/<scope>/index.json` |
+| Public read-only published snapshot | `assets/data/docs/scopes/<scope>/` | `assets/data/search/<scope>/index.json` |
 | Manage/local | `docs-viewer/generated/docs/<scope>/` | `docs-viewer/generated/search/<scope>/index.json` |
+
+Public-scope builders and docs-management rebuild follow-through write only the working generated roots.
+The public route contract reads only the published snapshot roots under `assets/data/`.
+Publishing is an explicit local management action that syncs the working docs/search payloads to the published snapshot roots after confirmation.
 
 ## Route Payload Contract
 

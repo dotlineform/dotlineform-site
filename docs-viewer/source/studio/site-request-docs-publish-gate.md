@@ -3,7 +3,7 @@ doc_id: site-request-docs-publish-gate
 title: Docs Public Publish Gate
 added_date: 2026-06-10
 last_updated: 2026-06-10
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 ---
 # Docs Public Publish Gate
@@ -18,6 +18,14 @@ The working generated payloads should be Docs Viewer-owned and should update imm
 
 The first implementation should be local and file-based.
 Later, the same user action could trigger a GitHub Actions build or deploy workflow, but that is out of scope for v1.
+
+## Closeout
+
+Implemented on 2026-06-10.
+Public scopes now rebuild working generated docs/search under `docs-viewer/generated/`, while public routes read published snapshots under `assets/data/`.
+Manage mode exposes a public-scope `Publish` action through the local Docs Viewer management service; publish confirmation reports the diff and publish apply syncs docs/search to the public snapshot roots with stale file removal.
+
+Verification is recorded in [Docs Public Publish Gate Implementation Plan](/docs/?scope=studio&doc=site-request-docs-publish-gate-implementation-plan).
 
 ## Problem
 

@@ -81,6 +81,16 @@ export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", scopedPayload({}, options), options);
 }
 
+export function confirmManagedDocsPublish(options) {
+  return fetchManagementJson("/docs/publish/confirm", "POST", scopedPayload({}, options), options);
+}
+
+export function applyManagedDocsPublish(options) {
+  return fetchManagementJson("/docs/publish/apply", "POST", scopedPayload({
+    confirm: true
+  }, options), options);
+}
+
 export function readManagedDocSource(docId, options) {
   var settings = options || {};
   var scope = encodeURIComponent(String(settings.scope || "").trim());

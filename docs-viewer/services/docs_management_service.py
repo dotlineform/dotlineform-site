@@ -24,6 +24,7 @@ import docs_activity  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
+import docs_publish_gate  # noqa: E402
 import docs_scope_manifest  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
@@ -142,5 +143,9 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.SCOPE_DELETE_APPLY_PATH:
         return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
+    if path == routes.PUBLISH_CONFIRM_PATH:
+        return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
+    if path == routes.PUBLISH_APPLY_PATH:
+        return HTTPStatus.OK, docs_publish_gate.publish_apply(repo_root, body)
 
     raise FileNotFoundError("Not found")

@@ -23,14 +23,17 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 
 def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, object]:
+    public_scope = scope_id in {"library", "analysis"}
     return {
         "scope_id": scope_id,
         "source": f"docs-viewer/source/{scope_id}",
         "media_path_prefix": f"docs/{scope_id}",
         "output": output,
         "search_output": search_output,
-        "viewer_base_url": "/docs/" if output.startswith("docs-viewer/") else f"/{scope_id}/",
-        "include_scope_param": output.startswith("docs-viewer/"),
+        "publish_output": f"assets/data/docs/scopes/{scope_id}" if public_scope else output,
+        "publish_search_output": f"assets/data/search/{scope_id}/index.json" if public_scope else search_output,
+        "viewer_base_url": f"/{scope_id}/" if public_scope else "/docs/",
+        "include_scope_param": not public_scope,
         "default_doc_id": scope_id,
     }
 
@@ -38,8 +41,8 @@ def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, ob
 def write_scope_config(root: Path, extra_scopes: list[dict[str, object]] | None = None) -> None:
     scopes = [
         scope_config("studio", "docs-viewer/generated/docs/studio", "docs-viewer/generated/search/studio/index.json"),
-        scope_config("library", "assets/data/docs/scopes/library", "assets/data/search/library/index.json"),
-        scope_config("analysis", "assets/data/docs/scopes/analysis", "assets/data/search/analysis/index.json"),
+        scope_config("library", "docs-viewer/generated/docs/library", "docs-viewer/generated/search/library/index.json"),
+        scope_config("analysis", "docs-viewer/generated/docs/analysis", "docs-viewer/generated/search/analysis/index.json"),
     ]
     scopes.extend(extra_scopes or [])
     write_json(
@@ -107,19 +110,19 @@ def write_public_generated_docs(root: Path) -> None:
         }
     ]
     write_json(
-        root / "assets/data/docs/scopes/library/index-tree.json",
+        root / "docs-viewer/generated/docs/library/index-tree.json",
         {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
     )
     write_json(
-        root / "assets/data/docs/scopes/library/recently-added.json",
+        root / "docs-viewer/generated/docs/library/recently-added.json",
         {"schema": "docs_recently_added_v1", "limit": 10, "docs": docs},
     )
     write_json(
-        root / "assets/data/docs/scopes/library/by-id/library.json",
+        root / "docs-viewer/generated/docs/library/by-id/library.json",
         {"title": "Library", "content_html": "<h1>Library</h1>"},
     )
     write_json(
-        root / "assets/data/docs/scopes/library/by-id/child.json",
+        root / "docs-viewer/generated/docs/library/by-id/child.json",
         {"title": "Child", "content_html": "<h1>Child</h1>"},
     )
 

@@ -304,6 +304,10 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         if isinstance(lifecycle, dict):
             lifecycle["create_apply"] = False
             lifecycle["delete_apply"] = False
+        publishing = capabilities.get("publishing")
+        if isinstance(publishing, dict):
+            publishing["apply"] = False
+            publishing["confirm"] = False
     if not config.generated_reads_enabled:
         scopes = capabilities.get("scopes")
         if isinstance(scopes, dict):

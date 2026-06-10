@@ -392,17 +392,21 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["ok"] is True
     assert payload["scope_id"] == "research"
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
-    assert payload["planned_scope_config"]["output"] == "assets/data/docs/scopes/research"
-    assert payload["planned_scope_config"]["search_output"] == "assets/data/search/research/index.json"
+    assert payload["planned_scope_config"]["output"] == "docs-viewer/generated/docs/research"
+    assert payload["planned_scope_config"]["search_output"] == "docs-viewer/generated/search/research/index.json"
+    assert payload["planned_scope_config"]["publish_output"] == "assets/data/docs/scopes/research"
+    assert payload["planned_scope_config"]["publish_search_output"] == "assets/data/search/research/index.json"
     assert payload["storage_contract"]["public_static_assets"] is True
     assert "public static assets" in payload["storage_contract"]["summary"]
     assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
-    assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
-    assert any(file["path"] == "assets/data/docs/scopes/research/index-tree.json" for file in payload["created_files"])
-    assert any(file["path"] == "assets/data/docs/scopes/research/recently-added.json" for file in payload["created_files"])
-    assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/research" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/research/index-tree.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/research/recently-added.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/search/research/index.json" for file in payload["created_files"])
+    assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["publish_files"])
+    assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["publish_files"])
     assert any(command["command"] == "./docs-viewer/build/build_docs.py --scope research --write" for command in payload["build_commands"])
 
 
@@ -499,7 +503,7 @@ def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
             raise AssertionError("Expected manage-mode scope config to reject public generated asset roots")
 
 
-def test_docs_scope_config_allows_public_readonly_assets_outputs() -> None:
+def test_docs_scope_config_requires_public_readonly_publish_outputs() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_json(
@@ -511,8 +515,10 @@ def test_docs_scope_config_allows_public_readonly_assets_outputs() -> None:
                         "scope_id": "research",
                         "source": "docs-viewer/source/research",
                         "media_path_prefix": "docs/research",
-                        "output": "assets/data/docs/scopes/research",
-                        "search_output": "assets/data/search/research/index.json",
+                        "output": "docs-viewer/generated/docs/research",
+                        "search_output": "docs-viewer/generated/search/research/index.json",
+                        "publish_output": "assets/data/docs/scopes/research",
+                        "publish_search_output": "assets/data/search/research/index.json",
                         "viewer_base_url": "/research/",
                         "include_scope_param": False,
                         "default_doc_id": "research",
@@ -522,8 +528,10 @@ def test_docs_scope_config_allows_public_readonly_assets_outputs() -> None:
         )
         configs = docs_scope_config.load_docs_scope_configs(repo_root)
 
-    assert configs["research"].output.as_posix() == "assets/data/docs/scopes/research"
-    assert configs["research"].search_output.as_posix() == "assets/data/search/research/index.json"
+    assert configs["research"].output.as_posix() == "docs-viewer/generated/docs/research"
+    assert configs["research"].search_output.as_posix() == "docs-viewer/generated/search/research/index.json"
+    assert configs["research"].publish_output.as_posix() == "assets/data/docs/scopes/research"
+    assert configs["research"].publish_search_output.as_posix() == "assets/data/search/research/index.json"
 
 
 def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -> None:
@@ -671,13 +679,17 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "docs-viewer/static/css/docs-viewer-reports.css" not in route_text
     assert source_payload["scopes"][1]["scope_id"] == "research"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/research/"
-    assert source_payload["scopes"][1]["output"] == "assets/data/docs/scopes/research"
-    assert source_payload["scopes"][1]["search_output"] == "assets/data/search/research/index.json"
+    assert source_payload["scopes"][1]["output"] == "docs-viewer/generated/docs/research"
+    assert source_payload["scopes"][1]["search_output"] == "docs-viewer/generated/search/research/index.json"
+    assert source_payload["scopes"][1]["publish_output"] == "assets/data/docs/scopes/research"
+    assert source_payload["scopes"][1]["publish_search_output"] == "assets/data/search/research/index.json"
     assert source_payload["scopes"][1]["include_scope_param"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
     recorded_paths = {file["path"] for file in records["research"]["files"]}
+    assert "docs-viewer/generated/docs/research/index-tree.json" in recorded_paths
+    assert "docs-viewer/generated/docs/research/recently-added.json" in recorded_paths
     assert "assets/data/docs/scopes/research/index-tree.json" in recorded_paths
     assert "assets/data/docs/scopes/research/recently-added.json" in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
@@ -1105,7 +1117,7 @@ def main() -> None:
         test_scope_create_preview_reports_committed_manage_mode_outputs,
         test_docs_scope_config_requires_search_output,
         test_docs_scope_config_rejects_manage_mode_assets_outputs,
-        test_docs_scope_config_allows_public_readonly_assets_outputs,
+        test_docs_scope_config_requires_public_readonly_publish_outputs,
         test_scope_create_preview_blocks_committed_manage_mode_assets_regression,
         test_scope_create_apply_blocks_committed_manage_mode_assets_regression,
         test_scope_create_apply_requires_confirmation,

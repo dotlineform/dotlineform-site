@@ -14,6 +14,8 @@ SCHEMA_VERSION = "docs_scopes_v1"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 PUBLIC_DOCS_OUTPUT_ROOT = Path("assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("assets/data/search")
+WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
+WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
 
 
 @dataclass(frozen=True)
@@ -32,6 +34,8 @@ class DocsScopeConfig:
     media_path_prefix: Path
     output: Path
     search_output: Path
+    publish_output: Path
+    publish_search_output: Path
     viewer_base_url: str
     include_scope_param: bool
     default_doc_id: str
@@ -101,6 +105,16 @@ def validate_generated_output_contract(
     field_prefix: str,
 ) -> None:
     if is_public_readonly_scope(viewer_base_url=viewer_base_url, include_scope_param=include_scope_param):
+        if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
+            raise ValueError(
+                f"docs scope config {field_prefix}.output for public scope {scope_id!r} "
+                "must be working generated output under docs-viewer/generated/docs"
+            )
+        if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
+            raise ValueError(
+                f"docs scope config {field_prefix}.search_output for public scope {scope_id!r} "
+                "must be working generated output under docs-viewer/generated/search"
+            )
         return
     if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
         raise ValueError(
@@ -167,6 +181,41 @@ def normalize_import_media_storage(
     )
 
 
+def publish_output_paths_for(
+    item: dict[str, Any],
+    *,
+    scope_id: str,
+    public_readonly: bool,
+    index: int,
+) -> tuple[Path, Path]:
+    if public_readonly:
+        publish_output = safe_relative_path(
+            item.get("publish_output"),
+            field=f"scopes[{index}].publish_output",
+        )
+        publish_search_output = safe_relative_path(
+            item.get("publish_search_output"),
+            field=f"scopes[{index}].publish_search_output",
+        )
+        expected_docs_parent = PUBLIC_DOCS_OUTPUT_ROOT
+        expected_search_parent = PUBLIC_SEARCH_OUTPUT_ROOT / scope_id
+        if not path_is_relative_to(publish_output, expected_docs_parent):
+            raise ValueError(
+                f"docs scope config scopes[{index}].publish_output for public scope {scope_id!r} "
+                "must be under assets/data/docs/scopes"
+            )
+        if not path_is_relative_to(publish_search_output, expected_search_parent):
+            raise ValueError(
+                f"docs scope config scopes[{index}].publish_search_output for public scope {scope_id!r} "
+                f"must be under {expected_search_parent.as_posix()}"
+            )
+        return publish_output, publish_search_output
+    return (
+        safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
+        safe_relative_path(item.get("search_output"), field=f"scopes[{index}].search_output"),
+    )
+
+
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
@@ -202,6 +251,10 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
         )
         viewer_base_url = normalize_viewer_base_url(item.get("viewer_base_url"))
         include_scope_param = item.get("include_scope_param") is True
+        public_readonly = is_public_readonly_scope(
+            viewer_base_url=viewer_base_url,
+            include_scope_param=include_scope_param,
+        )
         validate_generated_output_contract(
             scope_id=scope_id,
             output=output,
@@ -210,6 +263,12 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             include_scope_param=include_scope_param,
             field_prefix=f"scopes[{index}]",
         )
+        publish_output, publish_search_output = publish_output_paths_for(
+            item,
+            scope_id=scope_id,
+            public_readonly=public_readonly,
+            index=index,
+        )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
             scope_type=str(item.get("scope_type") or "").strip().lower(),
@@ -217,6 +276,8 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             media_path_prefix=media_path_prefix,
             output=output,
             search_output=search_output,
+            publish_output=publish_output,
+            publish_search_output=publish_search_output,
             viewer_base_url=viewer_base_url,
             include_scope_param=include_scope_param,
             default_doc_id=normalize_doc_id(

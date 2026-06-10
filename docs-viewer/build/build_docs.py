@@ -262,7 +262,7 @@ class DocsDataBuilder:
         self.show_updated_date = config.show_updated_date is not False
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
-        self.output_url_base = self.output_url_base_for(self.output_dir)
+        self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_simple_yaml_scalars(self.repo_root / "_config.yml")
         self.source_files_scanned = 0
         self.warnings: list[str] = []
@@ -434,6 +434,11 @@ class DocsDataBuilder:
 
     def content_url_for(self, doc_id: str) -> str:
         return f"{self.output_url_base}/by-id/{quote(str(doc_id))}.json"
+
+    def output_url_dir(self) -> Path:
+        if self.public_readonly_scope:
+            return self.repo_root / self.config.publish_output
+        return self.output_dir
 
     def output_url_base_for(self, output_dir: Path) -> str:
         try:
@@ -1457,15 +1462,27 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 
 def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
-    return f"/{config.output.as_posix().lstrip('/')}/index-tree.json"
+    output = config.publish_output if is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ) else config.output
+    return f"/{output.as_posix().lstrip('/')}/index-tree.json"
 
 
 def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
-    return f"/{config.output.as_posix().lstrip('/')}/recently-added.json"
+    output = config.publish_output if is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ) else config.output
+    return f"/{output.as_posix().lstrip('/')}/recently-added.json"
 
 
 def browser_search_index_url(config: DocsScopeConfig) -> str:
-    return f"/{config.search_output.as_posix().lstrip('/')}"
+    output = config.publish_search_output if is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ) else config.search_output
+    return f"/{output.as_posix().lstrip('/')}"
 
 
 def browser_search_policy_payload(config: DocsScopeConfig) -> dict[str, Any]:

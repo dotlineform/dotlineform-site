@@ -238,6 +238,7 @@
         "**/*management*",
         "**/*manage*",
         "docs-viewer/services/docs_management*",
+        "docs-viewer/services/docs_publish_gate.py",
         "docs-viewer/tests/smoke/docs_viewer_management*"
       ],
       "shared": [
@@ -287,8 +288,10 @@
         "docs-viewer/services/docs_write_rebuild.py",
         "docs-viewer/services/docs_live_rebuild_watcher.py",
         "docs-viewer/services/docs_generated_reads.py",
+        "docs-viewer/services/docs_publish_gate.py",
         "docs-viewer/tests/python/test_build_docs_python.py",
-        "docs-viewer/tests/python/test_build_search_python.py"
+        "docs-viewer/tests/python/test_build_search_python.py",
+        "docs-viewer/tests/python/test_docs_publish_gate.py"
       ],
       "shared": ["docs-viewer/config/scopes/", "docs-viewer/source/"]
     }
@@ -764,10 +767,12 @@
         "docs-viewer/runtime/js/docs-viewer-manage.js",
         "docs-viewer/runtime/js/docs-viewer-management*",
         "docs-viewer/services/docs_management*",
+        "docs-viewer/services/docs_publish_gate.py",
         "docs-viewer/services/docs_viewer_service.py",
         "docs-viewer/config/routes/docs-viewer-routes.json",
         "docs-viewer/config/ui-text/manage.json",
         "docs-viewer/tests/**/*management*",
+        "docs-viewer/tests/python/test_docs_publish_gate.py",
         "docs-viewer/tests/smoke/docs_viewer_service_manage.py"
       ],
       "shared": [

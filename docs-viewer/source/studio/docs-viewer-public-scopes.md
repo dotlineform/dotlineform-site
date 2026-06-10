@@ -2,7 +2,7 @@
 doc_id: docs-viewer-public-scopes
 title: Public Scopes
 added_date: 2026-03-31
-last_updated: 2026-06-07
+last_updated: 2026-06-10
 parent_id: docs-viewer
 ---
 # Public Scopes
@@ -23,11 +23,17 @@ Source and generated artifacts:
 
 - source docs:
   - `docs-viewer/source/<scope>/*.md`
-- generated docs data:
+- working generated docs data:
+  - `docs-viewer/generated/docs/<scope>/index-tree.json`
+  - `docs-viewer/generated/docs/<scope>/recently-added.json`
+  - `docs-viewer/generated/docs/<scope>/by-id/<doc_id>.json`
+- working docs search:
+  - `docs-viewer/generated/search/<scope>/index.json`
+- published docs data:
   - `assets/data/docs/scopes/<scope>/index-tree.json`
   - `assets/data/docs/scopes/<scope>/recently-added.json`
   - `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
-- docs search:
+- published docs search:
   - `assets/data/search/<scope>/index.json`
 - export configs:
   - `data-sharing/config/<scope>-export-configs.json`
@@ -62,6 +68,20 @@ Design:
 - export configs are defined separately from source docs by `data-sharing/config/<scope>-export-configs.json` and `data-sharing/config/<scope>-export-configs.schema.json`; export configs should read Docs Viewer source/generated fields without mutating them
 
 ## Generated Docs Data
+
+### Working And Published Roots
+
+Public scope source edits, live watcher rebuilds, and docs-management write follow-through rebuild working generated output under `docs-viewer/generated/`.
+Public routes read only the published snapshots under `assets/data/`.
+
+Publishing is a local management action:
+
+- `GET /docs/publish/status?scope=<scope>` reports pending working-to-published changes
+- `POST /docs/publish/confirm` reports the confirmation diff without writing
+- `POST /docs/publish/apply` requires `confirm: true` and syncs working docs/search to the published snapshot roots, removing stale published files
+
+The v1 publish gate is local and file-based.
+It does not add persistent confirmation ids, rollback, unpublish, publish manifests, or durable publish summary artifacts.
 
 ### `assets/data/docs/scopes/<scope>/index-tree.json`
 
@@ -203,8 +223,9 @@ Current consumers:
 
 Current dependencies:
 
-- docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- docs search is derived from Library source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
+- working docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- working docs search is derived from Library source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
+- public snapshots are updated only through the Docs Viewer `Publish docs` management action
 
 Current enforcement:
 

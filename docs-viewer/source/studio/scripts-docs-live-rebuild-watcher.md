@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: Live Rebuild Watcher
 added_date: 2026-04-24
-last_updated: 2026-06-01
+last_updated: 2026-06-10
 parent_id: docs-viewer
 viewable: true
 ---
@@ -32,6 +32,8 @@ The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is 
 
 It watches source roots only. It does not watch generated outputs under:
 
+- `docs-viewer/generated/docs/`
+- `docs-viewer/generated/search/`
 - `assets/data/docs/scopes/`
 - `assets/data/search/`
 
@@ -101,6 +103,7 @@ That means a source change under one docs root keeps both:
 - the current scope docs-search artifact
 
 in sync without touching the other docs scopes.
+For public scopes, these are the working generated artifacts under `docs-viewer/generated/`; the watcher does not publish to `assets/data/`.
 
 ## Change Types
 

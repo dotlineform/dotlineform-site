@@ -40,7 +40,7 @@ def scope_config(
     allow_nested_source: bool = False,
     allow_unresolved_parent_ids: bool = False,
 ) -> dict[str, object]:
-    return {
+    config = {
         "scope_id": scope_id,
         "scope_type": "local" if include_scope_param else "public",
         "source": source or f"docs-viewer/source/{scope_id}",
@@ -53,6 +53,10 @@ def scope_config(
         "allow_nested_source": allow_nested_source,
         "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
     }
+    if not include_scope_param:
+        config["publish_output"] = f"assets/data/docs/scopes/{scope_id}"
+        config["publish_search_output"] = f"assets/data/search/{scope_id}/index.json"
+    return config
 
 
 def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:

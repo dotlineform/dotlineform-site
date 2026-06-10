@@ -29,6 +29,27 @@ export function scopeDeleteSupported(capabilities) {
   return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
 }
 
+export function scopePublishSupported(capabilities, scope) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  var publishing = capabilities && capabilities.publishing && typeof capabilities.publishing === "object"
+    ? capabilities.publishing
+    : null;
+  var scopePublishing = scopeCaps && scopeCaps.publishing && typeof scopeCaps.publishing === "object"
+    ? scopeCaps.publishing
+    : null;
+  return Boolean(
+    publishing &&
+    publishing.confirm &&
+    publishing.apply &&
+    scopeCaps &&
+    scopeCaps.available &&
+    scopeCaps.publishable &&
+    scopePublishing &&
+    scopePublishing.confirm &&
+    scopePublishing.apply
+  );
+}
+
 export function scopeLifecycleDeleteTargets(capabilities) {
   var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
     ? capabilities.scopes

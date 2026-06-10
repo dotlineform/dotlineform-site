@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Builder
 added_date: 2026-04-23
-last_updated: 2026-06-01
+last_updated: 2026-06-10
 parent_id: docs-viewer
 viewable: true
 ---
@@ -39,12 +39,26 @@ Generated outputs:
 - `docs-viewer/generated/docs/studio/references/index.json`
 - `docs-viewer/generated/docs/studio/references/by-doc/<doc_id>.json`
 - `docs-viewer/generated/docs/studio/references/by-target/<target_kind>/<target_id_slug>.json`
+- `docs-viewer/generated/docs/analysis/index-tree.json`
+- `docs-viewer/generated/docs/analysis/recently-added.json`
+- `docs-viewer/generated/docs/analysis/by-id/<doc_id>.json`
+- `docs-viewer/generated/docs/library/index-tree.json`
+- `docs-viewer/generated/docs/library/recently-added.json`
+- `docs-viewer/generated/docs/library/by-id/<doc_id>.json`
+
+Published public snapshots:
+
 - `assets/data/docs/scopes/analysis/index-tree.json`
 - `assets/data/docs/scopes/analysis/recently-added.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
+- `assets/data/search/analysis/index.json`
 - `assets/data/docs/scopes/library/index-tree.json`
 - `assets/data/docs/scopes/library/recently-added.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
+- `assets/data/search/library/index.json`
+
+The builder writes the working generated outputs only.
+For public scopes, `publish_output` and `publish_search_output` in `docs-viewer/config/scopes/docs_scopes.json` name the published snapshot roots that public routes read after an explicit `Publish docs` action.
 
 Scope configuration:
 
@@ -52,8 +66,9 @@ Scope configuration:
 
 This config is the shared source of truth for docs scope ids, Markdown source roots, generated docs output roots, generated search output paths, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
 `./docs-viewer/build/build_docs.py`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
-The `output` field owns the generated docs payload root.
-The `search_output` field owns the generated docs-search index path.
+The `output` field owns the working generated docs payload root.
+The `search_output` field owns the working generated docs-search index path.
+For public scopes only, `publish_output` and `publish_search_output` own the public snapshot roots under `assets/data/`.
 
 ## What The Builder Does
 

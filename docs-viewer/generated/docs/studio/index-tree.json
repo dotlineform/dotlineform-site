@@ -240,13 +240,13 @@
           "doc_id": "site-request-docs-publish-gate",
           "title": "Docs Public Publish Gate",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "site-request-docs-publish-gate-implementation-plan",
               "title": "Docs Public Publish Gate Implementation Plan",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate-implementation-plan.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             }
           ]
         },
@@ -1283,5 +1283,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T14:29:55Z"
+  "generated_at": "2026-06-10T14:53:47Z"
 }

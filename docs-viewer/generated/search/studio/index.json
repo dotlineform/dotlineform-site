@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-73c48486800b8c78087295e67710d5e3",
-    "generated_at_utc": "2026-06-10T11:34:32Z",
+    "version": "blake2b-875317976b9fc5593597bb2fe748cf0e",
+    "generated_at_utc": "2026-06-10T14:49:22Z",
     "count": 237
   },
   "entries": [
@@ -131,10 +131,10 @@
       "kind": "doc",
       "title": "Config and Target Map",
       "href": "/docs/?scope=studio&doc=admin-checks-target-map-architecture",
-      "last_updated": "2026-06-09",
+      "last_updated": "2026-06-10",
       "parent_id": "admin-checks",
       "parent_title": "Checks",
-      "display_meta": "2026-06-09 • Checks",
+      "display_meta": "2026-06-10 • Checks",
       "search_terms": [
         "admin-checks-target-map-architecture",
         "admin",
@@ -145,12 +145,12 @@
         "config and target map",
         "config",
         "and",
-        "2026-06-09",
+        "2026-06-10",
         "2026",
         "06",
-        "09"
+        "10"
       ],
-      "search_text": "admin-checks-target-map-architecture admin checks target map architecture config and target map config and 2026-06-09 2026 06 09"
+      "search_text": "admin-checks-target-map-architecture admin checks target map architecture config and target map config and 2026-06-10 2026 06 10"
     },
     {
       "id": "admin-checks-reports",
@@ -1971,10 +1971,10 @@
       "kind": "doc",
       "title": "Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-10",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-01 • Docs Viewer",
+      "display_meta": "2026-06-10 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -1982,12 +1982,12 @@
         "builder",
         "docs viewer",
         "viewer",
-        "2026-06-01",
+        "2026-06-10",
         "2026",
         "06",
-        "01"
+        "10"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer viewer 2026-06-01 2026 06 01"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer viewer 2026-06-10 2026 06 10"
     },
     {
       "id": "config-docs-viewer",
@@ -2245,10 +2245,10 @@
       "kind": "doc",
       "title": "Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-10",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-01 • Docs Viewer",
+      "display_meta": "2026-06-10 • Docs Viewer",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -2259,12 +2259,12 @@
         "live rebuild watcher",
         "docs viewer",
         "viewer",
-        "2026-06-01",
+        "2026-06-10",
         "2026",
         "06",
-        "01"
+        "10"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher live rebuild watcher docs viewer viewer 2026-06-01 2026 06 01"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher live rebuild watcher docs viewer viewer 2026-06-10 2026 06 10"
     },
     {
       "id": "scripts-docs-management-server",
@@ -2297,10 +2297,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-06-10",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Services",
-      "display_meta": "2026-06-07 • Management Services",
+      "display_meta": "2026-06-10 • Management Services",
       "search_terms": [
         "scripts-docs-management-endpoints",
         "scripts",
@@ -2312,12 +2312,12 @@
         "overview",
         "management services",
         "services",
-        "2026-06-07",
+        "2026-06-10",
         "2026",
         "06",
-        "07"
+        "10"
       ],
-      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-06-10 2026 06 10"
     },
     {
       "id": "scripts-docs-management-endpoints-create-import",
@@ -2440,10 +2440,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-06-10",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-07 • Endpoint Overview",
+      "display_meta": "2026-06-10 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-scope-lifecycle",
         "scripts",
@@ -2456,12 +2456,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-07",
+        "2026-06-10",
         "2026",
         "06",
-        "07"
+        "10"
       ],
-      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-10 2026 06 10"
     },
     {
       "id": "scripts-docs-management-endpoints-source-config",
@@ -3010,10 +3010,10 @@
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=docs-viewer-public-scopes",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-06-10",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-07 • Docs Viewer",
+      "display_meta": "2026-06-10 • Docs Viewer",
       "search_terms": [
         "docs-viewer-public-scopes",
         "docs",
@@ -3022,12 +3022,12 @@
         "scopes",
         "public scopes",
         "docs viewer",
-        "2026-06-07",
+        "2026-06-10",
         "2026",
         "06",
-        "07"
+        "10"
       ],
-      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-07 2026 06 07"
+      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-10 2026 06 10"
     },
     {
       "id": "docs-viewer-reports",
@@ -3078,10 +3078,10 @@
       "kind": "doc",
       "title": "Generated Data Contracts",
       "href": "/docs/?scope=studio&doc=docs-viewer-generated-data-contracts",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-10",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-05 • Runtime",
+      "display_meta": "2026-06-10 • Runtime",
       "search_terms": [
         "docs-viewer-generated-data-contracts",
         "docs",
@@ -3091,12 +3091,12 @@
         "contracts",
         "generated data contracts",
         "runtime",
-        "2026-06-05",
+        "2026-06-10",
         "2026",
         "06",
-        "05"
+        "10"
       ],
-      "search_text": "docs-viewer-generated-data-contracts docs viewer generated data contracts generated data contracts runtime 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-generated-data-contracts docs viewer generated data contracts generated data contracts runtime 2026-06-10 2026 06 10"
     },
     {
       "id": "docs-viewer-javascript-inventory",

@@ -78,6 +78,12 @@ var MANAGEMENT_TEXT_KEYS = [
   ["scopeDeleteBlocked", "docs_viewer.scope_delete_blocked"],
   ["scopeDeleteBlockedTitle", "docs_viewer.scope_delete_blocked_title"],
   ["scopeDeleteResultTitle", "docs_viewer.scope_delete_result_title"],
+  ["publishChecking", "docs_viewer.publish_checking"],
+  ["publishConfirmTitle", "docs_viewer.publish_confirm_title"],
+  ["publishConfirmButton", "docs_viewer.publish_confirm_button"],
+  ["publishApplying", "docs_viewer.publish_applying"],
+  ["publishApplied", "docs_viewer.publish_applied"],
+  ["publishFailed", "docs_viewer.publish_failed"],
   ["importCancelButton", "docs_viewer.import_cancel_button"],
   ["copyLinkStatus", "docs_viewer.copy_link_status"],
   ["copyLinkFailed", "docs_viewer.copy_link_failed"]
@@ -151,6 +157,10 @@ export function applyDocsViewerManagementConfig(options) {
   state.managementText.scopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.scope_delete_menu_button", state.managementText.scopeDeleteMenuButton);
   if (refs.manageDeleteScopeButton) {
     setActionMenuButtonLabel(refs.manageDeleteScopeButton, state.managementText.scopeDeleteMenuButton);
+  }
+  state.managementText.publishButton = context.getConfigText(config, "docs_viewer.publish_confirm_button", state.managementText.publishButton || "Publish");
+  if (refs.managePublishButton) {
+    setActionMenuButtonLabel(refs.managePublishButton, state.managementText.publishButton);
   }
   state.managementText.copyLinkLabel = context.getConfigText(config, "docs_viewer.copy_link_label", state.managementText.copyLinkLabel);
   if (refs.contextCopyLinkButton) {

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "docs_semantic_references_by_target_v1",
+    "scope": "analysis",
+    "count": 1
+  },
+  "target_key": "work:00638",
+  "target_kind": "work",
+  "target_id": "00638",
+  "target_href": "/works/?work=00638",
+  "target_title": "3 symbols",
+  "target_status": "published",
+  "count": 1,
+  "references": [
+    {
+      "source_scope": "analysis",
+      "source_doc_id": "3-symbols",
+      "source_title": "3 symbols",
+      "source_path": "3-symbols.md",
+      "source_viewer_url": "/analysis/?doc=3-symbols",
+      "label": "3 symbols",
+      "action": "link",
+      "ordinal": 1
+    }
+  ]
+}

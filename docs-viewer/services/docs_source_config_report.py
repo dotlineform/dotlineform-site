@@ -140,6 +140,8 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                     "recently_added": (config.output / "recently-added.json").as_posix(),
                     "docs_payload_root": (config.output / "by-id").as_posix(),
                     "search_index": config.search_output.as_posix(),
+                    "publish_output": config.publish_output.as_posix(),
+                    "publish_search_index": config.publish_search_output.as_posix(),
                 },
                 "paths": {
                     "source_root": config.source.as_posix(),

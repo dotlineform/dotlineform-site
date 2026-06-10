@@ -8,6 +8,7 @@ from typing import Any
 import docs_generated_reads
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
+import docs_publish_gate
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
@@ -83,6 +84,11 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return read_source_body(repo_root, params)
     if path in {routes.IMPORT_SOURCE_FILES_PATH, routes.IMPORT_HTML_FILES_PATH}:
         return import_source_service.handle_import_source_files(repo_root)
+    if path == routes.PUBLISH_STATUS_PATH:
+        return docs_publish_gate.publish_status(
+            repo_root,
+            {"scope": docs_api_query_value(params, "scope")},
+        )
     if docs_api_query_value(params, "scope"):
         normalize_scope(repo_root, docs_api_query_value(params, "scope"))
     raise FileNotFoundError("Not found")

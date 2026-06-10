@@ -2,12 +2,17 @@
 doc_id: scripts-docs-management-endpoints-scope-lifecycle
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-06-10
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Scope Lifecycle Endpoints
 
 Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle deletion.
+
+For `public_readonly` scopes, lifecycle plans separate working generated roots from published snapshot roots.
+`output` and `search_output` point to `docs-viewer/generated/`; `publish_output` and `publish_search_output` point to `assets/data/`.
+Create-apply can rebuild the working generated outputs, but it does not publish them; use the `Publish docs` action for that explicit step.
+Delete-preview and delete-apply include both working generated paths and published snapshot paths for manifest-owned scopes.
 
 ## `POST /docs/scopes/create-preview`
 
