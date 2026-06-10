@@ -3,68 +3,52 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "site-request-docs-publish-gate",
-      "title": "Docs Public Publish Gate",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate.json",
-      "added_date": "2026-06-10",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-docs-publish-gate-implementation-plan",
-      "title": "Docs Public Publish Gate Implementation Plan",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate-implementation-plan.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-docs-publish-gate",
-      "parent_title": "Docs Public Publish Gate"
-    },
-    {
-      "doc_id": "site-request-risk-evidence-producers-report-generated-payloads",
+      "doc_id": "site-request-report-generated-payloads",
       "title": "Generated Payloads Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-generated-payloads.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-javascript-inventory-guardrail",
+      "doc_id": "site-request-report-javascript-inventory-guardrail",
       "title": "JavaScript Inventory Guardrail Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-javascript-inventory-guardrail.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-javascript-inventory-guardrail.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-runtime-checks",
+      "doc_id": "site-request-report-runtime-checks",
       "title": "Runtime Checks Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-runtime-checks.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-script-family-inventory",
+      "doc_id": "site-request-report-script-family-inventory",
       "title": "Script Family Inventory Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-script-family-inventory.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-script-family-inventory.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-static-searches",
+      "doc_id": "site-request-report-static-searches",
       "title": "Static Searches Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-static-searches.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-subjective-notes",
+      "doc_id": "site-request-report-subjective-notes",
       "title": "Subjective Notes Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-subjective-notes.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-subjective-notes.json",
       "added_date": "2026-06-10",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     },
     {
       "doc_id": "admin-checks-target-map-architecture",
@@ -75,13 +59,29 @@
       "parent_title": "Checks"
     },
     {
-      "doc_id": "site-request-risk-evidence-producers-report-git-history",
+      "doc_id": "site-request-report-git-history",
       "title": "Git History Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-git-history.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-git-history.json",
       "added_date": "2026-06-09",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
+    },
+    {
+      "doc_id": "site-request-report-imports",
+      "title": "Imports Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-imports.json",
+      "added_date": "2026-06-09",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
+    },
+    {
+      "doc_id": "site-request-report-dependencies",
+      "title": "Report Dependencies",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
+      "added_date": "2026-06-09",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-10T11:34:31Z"
+  "generated_at": "2026-06-10T17:28:04Z"
 }

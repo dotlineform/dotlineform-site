@@ -1,15 +1,15 @@
 ---
-doc_id: site-request-risk-evidence-producers-report-dependencies
+doc_id: site-request-report-dependencies
 title: Report Dependencies
 added_date: 2026-06-09
 last_updated: 2026-06-09
 ui_status: draft
-parent_id: site-request-risk-evidence-producers
+parent_id: site-request-admin-checks-reports
 viewable: true
 ---
 # Report Dependencies
 
-This document describes a possible later extension to [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
+This document describes a possible later extension to [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
 ## Purpose
 
@@ -25,9 +25,9 @@ That report might need data from:
 
 - `files` for line count, byte size, and family metadata
 - `target-map` for scope, area, route, shared dependency, and boundary data
-- a future [Git History Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-git-history) for recent changes
-- a future [Imports Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-imports) for dependency references
-- a future [Tests Report](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-tests) for test or smoke coverage links
+- a future [Git History Report](/docs/?scope=studio&doc=site-request-report-git-history) for recent changes
+- a future [Imports Report](/docs/?scope=studio&doc=site-request-report-imports) for dependency references
+- a future [Tests Report](/docs/?scope=studio&doc=site-request-report-tests) for test or smoke coverage links
 
 The report should not duplicate those producers' logic.
 It should read their JSON artifacts and compile a focused summary.

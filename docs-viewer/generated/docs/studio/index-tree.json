@@ -227,16 +227,76 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
       "children": [
         {
-          "doc_id": "site-request-docs-publish-gate",
-          "title": "Docs Public Publish Gate",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate.json",
-          "ui_status": "done",
+          "doc_id": "site-request-admin-checks-reports",
+          "title": "Admin Checks Reports",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-reports.json",
+          "ui_status": "in-progress",
           "children": [
             {
-              "doc_id": "site-request-docs-publish-gate-implementation-plan",
-              "title": "Docs Public Publish Gate Implementation Plan",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate-implementation-plan.json",
-              "ui_status": "done"
+              "doc_id": "site-request-report-generated-payloads",
+              "title": "Generated Payloads Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-git-history",
+              "title": "Git History Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-git-history.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-imports",
+              "title": "Imports Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-imports.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-javascript-inventory-guardrail",
+              "title": "JavaScript Inventory Guardrail Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-javascript-inventory-guardrail.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-dependencies",
+              "title": "Report Dependencies",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-runtime-checks",
+              "title": "Runtime Checks Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-script-family-inventory",
+              "title": "Script Family Inventory Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-script-family-inventory.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-static-searches",
+              "title": "Static Searches Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-subjective-notes",
+              "title": "Subjective Notes Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-subjective-notes.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-target-map",
+              "title": "Target Map Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-target-map.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "site-request-report-tests",
+              "title": "Tests Report",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-tests.json",
+              "ui_status": "draft"
             }
           ]
         },
@@ -275,80 +335,6 @@
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-risk-evidence-producers",
-          "title": "Risk Evidence Producers Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers.json",
-          "ui_status": "paused",
-          "children": [
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-generated-payloads",
-              "title": "Generated Payloads Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-generated-payloads.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-git-history",
-              "title": "Git History Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-git-history.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-imports",
-              "title": "Imports Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-imports.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-javascript-inventory-guardrail",
-              "title": "JavaScript Inventory Guardrail Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-javascript-inventory-guardrail.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-dependencies",
-              "title": "Report Dependencies",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-dependencies.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-runtime-checks",
-              "title": "Runtime Checks Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-runtime-checks.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-script-family-inventory",
-              "title": "Script Family Inventory Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-script-family-inventory.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-static-searches",
-              "title": "Static Searches Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-static-searches.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-subjective-notes",
-              "title": "Subjective Notes Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-subjective-notes.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-target-map",
-              "title": "Target Map Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-target-map.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-risk-evidence-producers-report-tests",
-              "title": "Tests Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-tests.json",
-              "ui_status": "draft"
-            }
-          ]
         }
       ]
     },
@@ -1273,5 +1259,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T16:57:25Z"
+  "generated_at": "2026-06-10T17:28:44Z"
 }

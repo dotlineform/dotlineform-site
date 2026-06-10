@@ -1,0 +1,11 @@
+{
+  "doc_id": "site-request-admin-checks-reports",
+  "title": "Admin Checks Reports",
+  "added_date": "2026-05-31",
+  "last_updated": "2026-06-10",
+  "source_path": "site-request-admin-checks-reports.md",
+  "viewer_url": "/docs/?scope=studio&doc=site-request-admin-checks-reports",
+  "parent_id": "change-requests",
+  "ui_status": "in-progress",
+  "content_html": "<h1>Admin Checks Reports</h1>\n<p>Status: planned additional reports</p>\n<h2>Summary</h2>\n<p>The Admin-owned checks system runs allowlisted evidence reports, stores structured artifacts, and exposes read-only report results in Admin.</p>\n<p>The system is described in <a href=\"/docs/?scope=studio&amp;doc=admin-checks\">Checks</a> and its child docs.</p>\n<ul>\n<li>Admin owns the checks system, including the CLI runner, report scripts, local API, UI route, and ignored local artifacts.</li>\n<li>The new route is <code>/admin/checks/</code>.</li>\n<li>The new API namespace is <code>/admin/api/checks/</code>.</li>\n<li><code>admin-app/checks/reports/</code> is the only location for report producer scripts.</li>\n<li>The orchestrator is the only supported entry point for multi-report runs.</li>\n</ul>\n<p>The system is report-oriented:</p>\n<ul>\n<li>a report is the user-facing output</li>\n<li>metrics are the measured fields used to produce a report</li>\n<li>producers are report scripts that collect metrics and render one report</li>\n<li>a run is one orchestrated execution of one or more reports against one scope</li>\n</ul>\n<p>The first production report is <code>files</code> for line count and file size evidence.</p>\n<p>Possible future dependency reports are captured as child documents.</p>\n<h2>Risk Policy</h2>\n<p>The ambition is that these reports will contribute to assessing the risks present in the repo apps.</p>\n<ul>\n<li>Risk policy is described in <a href=\"/docs/?scope=studio&amp;doc=risk-analysis-policy\">Risk Analysis Policy</a>.</li>\n</ul>\n<hr />\n"
+}

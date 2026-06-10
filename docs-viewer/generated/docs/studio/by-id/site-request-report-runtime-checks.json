@@ -1,0 +1,11 @@
+{
+  "doc_id": "site-request-report-runtime-checks",
+  "title": "Runtime Checks Report",
+  "added_date": "2026-06-10",
+  "last_updated": "2026-06-10",
+  "source_path": "site-request-report-runtime-checks.md",
+  "viewer_url": "/docs/?scope=studio&doc=site-request-report-runtime-checks",
+  "parent_id": "site-request-admin-checks-reports",
+  "ui_status": "draft",
+  "content_html": "<h1>Runtime Checks Report</h1>\n<p>This document describes a possible future report for <a href=\"/docs/?scope=studio&amp;doc=site-request-admin-checks-reports\">Admin Checks Reports</a>.</p>\n<h2>Summary</h2>\n<p>Report id: <code>runtime-checks</code></p>\n<p>Source prior art: retired legacy risk evidence pack <code>collect_runtime_checks</code> producer and <code>admin-app/commands/run_checks.py</code>.</p>\n<p>Purpose: link selected checks targets to allowlisted runtime profile results without letting the browser submit arbitrary commands.</p>\n<p>Likely metrics:</p>\n<ul>\n<li>requested profile ids</li>\n<li>profile exit codes</li>\n<li>run-check summary paths</li>\n<li>deferred or omitted runtime evidence reasons</li>\n</ul>\n<p>Likely target layers:</p>\n<ul>\n<li>scope</li>\n<li>route where a profile maps to a route smoke</li>\n</ul>\n<p>Verification needs:</p>\n<ul>\n<li>allowlist validation for profile ids</li>\n<li>fixture command runner tests for passed, failed, and deferred profiles</li>\n<li>safe summary-path reporting</li>\n</ul>\n<p>Non-goals:</p>\n<ul>\n<li>no arbitrary command execution</li>\n<li>no Lighthouse or browser automation until a URL/server contract is specified</li>\n</ul>\n"
+}

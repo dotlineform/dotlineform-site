@@ -1,23 +1,24 @@
 ---
-doc_id: site-request-risk-evidence-producers-report-target-map
+doc_id: site-request-report-target-map
 title: Target Map Report
 added_date: 2026-06-08
-last_updated: 2026-06-08
+last_updated: 2026-06-10
 ui_status: draft
-parent_id: site-request-risk-evidence-producers
+parent_id: site-request-admin-checks-reports
 ---
 # Target Map Report
 
-Status:
+Status: draft
 
-- draft
+This document describes a possible future report for [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
 ## Summary
 
-Implement a `target-map` report after the Admin checks system can run the v1 `files` report.
+Implement a `target-map` report now that Admin Checks v1 can run the `files` report.
 
-The v1 implementation includes `admin-app/checks/audit_target_map.py` to produce and maintain the family, area, and route map.
-This request turns that audit data into a normal checks report with `report.json` and `report.md` artifacts.
+The current implementation includes `admin-app/checks/audit_target_map.py` to produce and maintain the family, area, and route map.
+That audit writes maintenance artifacts under `var/admin/checks/target-map-audit/`.
+This request turns the same target-map evidence into a normal checks report with run-scoped `report.json` and `report.md` artifacts under `var/admin/checks/<run-id>/target-map/`.
 
 ## Purpose
 
@@ -28,12 +29,14 @@ This report should not automatically declare every cross-boundary file harmful.
 Shared utilities, central config loaders, route registries, and orchestration scripts can be valid.
 The report should separate expected shared dependencies from unclear ownership so subsequent risk analysis can decide what is actionable.
 
-## Dependencies
+## Current Baseline
 
-- Risk Evidence Producers v1 is implemented and can run the `files` report.
+- Admin Checks v1 is implemented and can run the `files` report.
 - `admin-app/checks/config/admin-checks.json` exists with scopes, families, areas, routes, reports, exclusions, and shared dependencies.
-- `admin-app/checks/audit_target_map.py` can resolve the target map from real repo files.
-- The orchestrator can run allowlisted report scripts and write report artifacts.
+- `admin-app/checks/target_map_resolver.py` resolves the target map from real repo files.
+- `admin-app/checks/audit_target_map.py` uses that resolver and writes target-map audit artifacts.
+- `admin-app/checks/run_reports.py` can run allowlisted report scripts and write report artifacts.
+- The legacy risk evidence pack, `/admin/risk/`, `/admin/api/risk/...`, and `var/admin/risk/` output root are retired.
 
 ## Report Contract
 
@@ -58,6 +61,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/target-map/
 ```
 
 The report should use the same resolver as the target-map audit.
+It should not duplicate target resolution logic or introduce a second target-map interpretation.
 
 ## Required Evidence
 
@@ -96,16 +100,17 @@ The `target-map` report should include evidence for:
 | --- | --- | --- |
 | 1 | planned | Add `target-map` report metadata to `admin-app/checks/config/admin-checks.json`. |
 | 2 | planned | Add `admin-app/checks/reports/target_map.py`. |
-| 3 | planned | Reuse the target-map audit resolver rather than duplicating target resolution logic. |
+| 3 | planned | Reuse `target_map_resolver.py` and, where practical, shared helpers from `audit_target_map.py`; do not duplicate target resolution logic. |
 | 4 | planned | Write `report.json` with target coverage, stale-pattern, shared-dependency, and boundary-flag metrics. |
 | 5 | planned | Write `report.md` with a readable target-map summary and review tables. |
-| 6 | planned | Add focused tests for report metrics, boundary flags, markdown rendering, and stale/broad pattern handling. |
+| 6 | planned | Add focused tests for report metrics, boundary flags, markdown rendering, stale/broad pattern handling, orchestrator integration, and artifact shape. |
 | 7 | planned | Run the report through the normal orchestrator against at least `docs-viewer`. |
 | 8 | planned | Update Checks docs once the report artifact shape is stable. |
 
 ## Proposed Verification
 
 - Focused tests for `target_map.py`.
+- Reuse existing target-map resolver/audit fixtures where they cover the same behavior.
 - Orchestrator dry run and write run for `docs-viewer` / `target-map`.
 - Inspect `report.json` and `report.md`.
 - Verify `_unclassified`, multi-family, cross-area, cross-route, shared-dependency, stale-pattern, and broad-pattern examples are represented when fixtures or real files contain them.
@@ -113,4 +118,4 @@ The `target-map` report should include evidence for:
 ## Open Questions
 
 None for request framing.
-Implementation details can be refined after v1 produces the initial target-map audit output.
+Implementation details can be refined against the current target-map audit output and Admin Checks report contract.

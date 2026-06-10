@@ -16,7 +16,7 @@ Admin Checks runs allowlisted reports against configured repo scopes and stores 
 
 The first v1 report is [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files).
 Subsequent reports should get their own child docs once implemented.
-Future report request docs live under [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) until a report is implemented and promoted into this durable Admin Checks section.
+Future report request docs live under [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports) until a report is implemented and promoted into this durable Admin Checks section.
 
 ## Ownership
 
@@ -108,8 +108,8 @@ var/admin/checks/target-map-audit/
 ```
 
 The audit is used to maintain the config map and review drift.
-It is not itself a v1 report producer.
-The deferred report request is [Target Map Report Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-target-map).
+
+The pending report request is [Target Map Report Request](/docs/?scope=studio&doc=site-request-report-target-map).
 
 Run the target-map audit when adding new routes, feature areas, app layers, or significant file moves.
 

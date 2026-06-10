@@ -1,0 +1,11 @@
+{
+  "doc_id": "site-request-report-javascript-inventory-guardrail",
+  "title": "JavaScript Inventory Guardrail Report",
+  "added_date": "2026-06-10",
+  "last_updated": "2026-06-10",
+  "source_path": "site-request-report-javascript-inventory-guardrail.md",
+  "viewer_url": "/docs/?scope=studio&doc=site-request-report-javascript-inventory-guardrail",
+  "parent_id": "site-request-admin-checks-reports",
+  "ui_status": "draft",
+  "content_html": "<h1>JavaScript Inventory Guardrail Report</h1>\n<p>This document describes a possible future report for <a href=\"/docs/?scope=studio&amp;doc=site-request-admin-checks-reports\">Admin Checks Reports</a>.</p>\n<h2>Summary</h2>\n<p>Report id: <code>javascript-inventory-guardrail</code></p>\n<p>Source prior art: <code>admin-app/checks/javascript_inventory_guardrail.py</code> and the legacy risk evidence adapter.</p>\n<p>Purpose: keep JavaScript inventory consistency and concentration evidence available as a normal checks report if the guardrail remains useful after v1 closeout.</p>\n<p>Likely metrics:</p>\n<ul>\n<li>inventoried JavaScript file count</li>\n<li>files by maintenance score or category</li>\n<li>high-concentration route or family findings</li>\n<li>recent touch counts when the guardrail has git evidence</li>\n</ul>\n<p>Likely target layers:</p>\n<ul>\n<li>scope</li>\n<li>family</li>\n<li>route</li>\n</ul>\n<p>Verification needs:</p>\n<ul>\n<li>focused fixtures for inventory parsing and scoring buckets</li>\n<li>command invocation tests that use explicit argv lists and bounded output artifacts</li>\n</ul>\n<p>Non-goals:</p>\n<ul>\n<li>no compatibility alias for the legacy risk artifact path</li>\n<li>no new scoring model in the migration request</li>\n</ul>\n"
+}

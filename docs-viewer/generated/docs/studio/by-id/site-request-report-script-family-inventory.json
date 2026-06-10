@@ -1,0 +1,11 @@
+{
+  "doc_id": "site-request-report-script-family-inventory",
+  "title": "Script Family Inventory Report",
+  "added_date": "2026-06-10",
+  "last_updated": "2026-06-10",
+  "source_path": "site-request-report-script-family-inventory.md",
+  "viewer_url": "/docs/?scope=studio&doc=site-request-report-script-family-inventory",
+  "parent_id": "site-request-admin-checks-reports",
+  "ui_status": "draft",
+  "content_html": "<h1>Script Family Inventory Report</h1>\n<p>This document describes a possible future report for <a href=\"/docs/?scope=studio&amp;doc=site-request-admin-checks-reports\">Admin Checks Reports</a>.</p>\n<h2>Summary</h2>\n<p>Report id: <code>script-family-inventory</code></p>\n<p>Source prior art: retired legacy risk evidence pack <code>collect_script_family_inventory</code> producer.</p>\n<p>Purpose: summarize Python and Ruby script concentration by active family roots.</p>\n<p>Likely metrics:</p>\n<ul>\n<li>Python and Ruby file counts</li>\n<li>total lines by family</li>\n<li>largest file per family</li>\n<li>largest included script files</li>\n</ul>\n<p>Likely target layers:</p>\n<ul>\n<li>scope</li>\n<li>family</li>\n</ul>\n<p>Verification needs:</p>\n<ul>\n<li>fixture roots for Python, Ruby, tests, smokes, and cache exclusions</li>\n<li>deterministic largest-file ordering tests</li>\n</ul>\n<p>Non-goals:</p>\n<ul>\n<li>no return to old ad hoc terminal rerun blocks</li>\n<li>no inclusion of test and smoke files unless a later request changes the scope</li>\n</ul>\n"
+}

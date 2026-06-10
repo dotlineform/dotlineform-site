@@ -1,15 +1,15 @@
 ---
-doc_id: site-request-risk-evidence-producers-report-generated-payloads
+doc_id: site-request-report-generated-payloads
 title: Generated Payloads Report
 added_date: 2026-06-10
 last_updated: 2026-06-10
 ui_status: draft
-parent_id: site-request-risk-evidence-producers
+parent_id: site-request-admin-checks-reports
 viewable: true
 ---
 # Generated Payloads Report
 
-This document describes a possible future report for [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
+This document describes a possible future report for [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
 ## Summary
 

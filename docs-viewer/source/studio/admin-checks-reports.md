@@ -14,5 +14,3 @@ Implemented reports:
 | Report | Status | Durable doc |
 | --- | --- | --- |
 | `files` | implemented | [Files Report](/docs/?scope=studio&doc=admin-checks-report-files) |
-
-Future report candidates are tracked as request docs under [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers) until implemented.

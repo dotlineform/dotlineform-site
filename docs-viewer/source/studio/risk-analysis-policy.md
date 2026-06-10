@@ -12,7 +12,7 @@ This document defines how risk analysis is classified, prioritised, and closed.
 - Risk analysis is an action-selection tool.
 - It should identify where a focused improvement will reduce the chance of breakage, accumulated drift, costly repair, or strategic blockage.
 - The expected output is a concrete app-improvement action with evidence that the relevant risk indicator moved.
-- The current evidence implementation is [Checks](/docs/?scope=studio&doc=admin-checks), with planned producers tracked under [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
+- The current evidence implementation is [Checks](/docs/?scope=studio&doc=admin-checks), with planned producers tracked under [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
 ## Actual Risks
 
