@@ -156,6 +156,7 @@ def test_checks_api_lists_runs_and_reads_summary_and_report(tmp_path: Path) -> N
 
     assert runs["runs"][0]["run_id"] == "sample-run"
     assert runs["runs"][0]["summary_path"] == "var/admin/checks/sample-run/run-summary.md"
+    assert runs["runs"][0]["report_ids"] == ["files"]
     assert summary["summary"]["status"] == "passed"
     assert summary["summary_markdown"] == "# Run Summary\n"
     assert report["report"]["totals"]["files"] == 1

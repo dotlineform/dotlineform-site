@@ -137,9 +137,11 @@ function renderRuns(state, runs, selectedRunId = "") {
   const options = [new Option("", "", selectedRunId === "", selectedRunId === "")];
   rows.forEach((run) => {
     const runId = normalizeText(run && run.run_id);
-    const status = normalizeText(run && run.status) || "unknown";
-    const scope = normalizeText(run && run.scope);
-    options.push(new Option(`${runId}  ${status}${scope ? `  ${scope}` : ""}`, runId, runId === selectedRunId, runId === selectedRunId));
+    const reportIds = Array.isArray(run && run.report_ids)
+      ? run.report_ids.map((reportId) => normalizeText(reportId)).filter(Boolean)
+      : [];
+    const label = reportIds.length ? `${runId} > ${reportIds.join(", ")}` : runId;
+    options.push(new Option(label, runId, runId === selectedRunId, runId === selectedRunId));
   });
   state.runsSelect.replaceChildren(...options);
   setRunListSelection(state, selectedRunId);

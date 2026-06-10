@@ -215,6 +215,11 @@ def compact_run_payload(repo_root: Path, run_dir: Path) -> dict[str, Any]:
     summary = read_json_object(run_dir / "run-summary.json")
     run_id = str(summary.get("run_id") or manifest.get("run_id") or run_dir.name)
     reports = summary.get("reports") if isinstance(summary.get("reports"), list) else []
+    report_ids = [
+        str(report["report_id"])
+        for report in reports
+        if isinstance(report, dict) and isinstance(report.get("report_id"), str) and report["report_id"]
+    ]
     targets = summary.get("targets") or manifest.get("targets") or {}
     if not isinstance(targets, dict):
         targets = {}
@@ -226,6 +231,7 @@ def compact_run_payload(repo_root: Path, run_dir: Path) -> dict[str, Any]:
         "scope": targets.get("scope"),
         "run_dir": repo_relative(run_dir, repo_root),
         "summary_path": repo_relative(run_dir / "run-summary.md", repo_root) if (run_dir / "run-summary.md").exists() else None,
+        "report_ids": report_ids,
         "report_count": len(reports),
         "failed_report_count": sum(1 for report in reports if isinstance(report, dict) and report.get("status") != "passed"),
     }
