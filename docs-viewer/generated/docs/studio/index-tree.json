@@ -86,16 +86,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-policy.json"
         },
         {
-          "doc_id": "risk-evidence-pack",
-          "title": "Risk Evidence Pack",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack.json"
-        },
-        {
-          "doc_id": "risk-evidence-pack-metrics",
-          "title": "Risk Evidence Pack Metrics",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-evidence-pack-metrics.json"
-        },
-        {
           "doc_id": "risk-ownership",
           "title": "Risk Ownership",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json"
@@ -1283,5 +1273,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T16:28:40Z"
+  "generated_at": "2026-06-10T16:57:25Z"
 }

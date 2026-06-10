@@ -536,7 +536,7 @@ def test_capabilities_endpoint_returns_json_error_for_source_validation(monkeypa
         sent["status"] = status
 
     def fail_capabilities(_repo_root: Path) -> dict[str, object]:
-        raise ValueError("Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'")
+        raise ValueError("Unknown parent_id 'missing-parent' for doc 'broken-parent-doc'")
 
     monkeypatch.setattr(handler, "send_json", fake_send_json)
     monkeypatch.setattr(docs_viewer_service.docs_service, "capabilities_payload", fail_capabilities)
@@ -546,7 +546,7 @@ def test_capabilities_endpoint_returns_json_error_for_source_validation(monkeypa
     assert sent["status"] == docs_viewer_service.HTTPStatus.BAD_REQUEST
     assert sent["payload"] == {
         "ok": False,
-        "error": "Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'",
+        "error": "Unknown parent_id 'missing-parent' for doc 'broken-parent-doc'",
     }
 
 

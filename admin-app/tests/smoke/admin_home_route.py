@@ -47,7 +47,7 @@ def main() -> int:
         expected = [
             "dotlineform admin",
             'href="/admin/audits/"',
-            'href="/admin/risk/"',
+            'href="/admin/checks/"',
             'href="/admin/activity/"',
             'href="/admin/testing/"',
             'href="/admin/ui-catalogue/"',

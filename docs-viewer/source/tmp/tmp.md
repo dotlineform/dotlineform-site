@@ -10,11 +10,6 @@ ui_status: draft
 
 
 
-
-~
-
-`var/admin/risk/runs/20260608-163701-docs-viewer-runtime`
-
 ~
 
 list document line counts:
@@ -35,8 +30,6 @@ done | sort -nr
 ```
 
 
-
-
 ~
 
 we are working on `site-request-docs-viewer-public-index-slimming-tasks.md`,
@@ -50,13 +43,6 @@ please create a focussed set of implementation docs:
 Follow the guidance in the templates for what to include in them.
 
 ~
-
----
-
-risk inventories should not be docs in the docs viewer scope.
-- they should be saved in var/ as .md, and surfaced as readonly markdown in an Admin risk report page.
-- they should not include tables, but lists formatted as columns - like they would be displayed in Terminal
-
 
 
 ---
@@ -113,26 +99,6 @@ equivalent to an app's 'settings' UI
 
 semantic [work_id]-[detail_id] link
 need more
-
----
-
-Checked-in configuration artifacts that the current site and build scripts load directly:
-
-site-wide Jekyll config in _config.yml
-shared catalogue/media/runtime defaults in _data/pipeline.json
-shared Studio/search browser config in assets/studio/data/studio_config.json
-the Studio/search config loader in assets/studio/js/studio-config.js
-Docs Viewer source scope config in docs-viewer/config/scopes/docs_scopes.json
-Docs Viewer browser config defaults in docs-viewer/config/defaults/docs-viewer-config.json and docs-viewer/config/defaults/docs-viewer-public-config.json
-Docs Viewer route-config registry in docs-viewer/config/routes/docs-viewer-routes.json
-Docs Viewer service defaults/schema in docs-viewer/config/defaults/docs-viewer-service.json and docs-viewer/config/schema/docs-viewer-service.schema.json
-Docs Viewer UI text in docs-viewer/config/ui-text/ui-text.json
-dedicated /catalogue/search/ runtime policy in assets/data/search/policy.json
-build-owned search source-family config in scripts/search/build_config.json
-Library sharing profile config patterns in data-sharing/config/library-export-configs.json
-Library sharing profile config schema in data-sharing/config/library-export-configs.schema.json
-Data Sharing adapter dispatch in data-sharing/config/adapters.json
-Data Sharing adapter schema in data-sharing/config/adapters.schema.json
 
 
 ---

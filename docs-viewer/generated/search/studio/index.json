@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-70a84ff6fb18c72d5e4ceab39b77b7e2",
-    "generated_at_utc": "2026-06-10T16:28:40Z",
-    "count": 237
+    "version": "blake2b-a6a0c8dc073b52fef864c1a372e64d6f",
+    "generated_at_utc": "2026-06-10T16:58:39Z",
+    "count": 235
   },
   "entries": [
     {
@@ -202,21 +202,22 @@
       "kind": "doc",
       "title": "Local Admin App",
       "href": "/docs/?scope=studio&doc=local-admin-app",
-      "last_updated": "2026-06-06",
+      "last_updated": "2026-06-10",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-06 • Admin",
+      "display_meta": "2026-06-10 • Admin",
       "search_terms": [
         "local-admin-app",
         "local",
         "admin",
         "app",
         "local admin app",
-        "2026-06-06",
+        "2026-06-10",
         "2026",
-        "06"
+        "06",
+        "10"
       ],
-      "search_text": "local-admin-app local admin app local admin app 2026-06-06 2026 06"
+      "search_text": "local-admin-app local admin app local admin app 2026-06-10 2026 06 10"
     },
     {
       "id": "risk-analysis-analytics",
@@ -319,10 +320,10 @@
       "kind": "doc",
       "title": "Risk Analysis Policy",
       "href": "/docs/?scope=studio&doc=risk-analysis-policy",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-06-10",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-07 • Admin",
+      "display_meta": "2026-06-10 • Admin",
       "search_terms": [
         "risk-analysis-policy",
         "risk",
@@ -330,81 +331,34 @@
         "policy",
         "risk analysis policy",
         "admin",
-        "2026-06-07",
+        "2026-06-10",
         "2026",
         "06",
-        "07"
+        "10"
       ],
-      "search_text": "risk-analysis-policy risk analysis policy risk analysis policy admin 2026-06-07 2026 06 07"
-    },
-    {
-      "id": "risk-evidence-pack",
-      "kind": "doc",
-      "title": "Risk Evidence Pack",
-      "href": "/docs/?scope=studio&doc=risk-evidence-pack",
-      "last_updated": "2026-06-07",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-07 • Admin",
-      "search_terms": [
-        "risk-evidence-pack",
-        "risk",
-        "evidence",
-        "pack",
-        "risk evidence pack",
-        "admin",
-        "2026-06-07",
-        "2026",
-        "06",
-        "07"
-      ],
-      "search_text": "risk-evidence-pack risk evidence pack risk evidence pack admin 2026-06-07 2026 06 07"
-    },
-    {
-      "id": "risk-evidence-pack-metrics",
-      "kind": "doc",
-      "title": "Risk Evidence Pack Metrics",
-      "href": "/docs/?scope=studio&doc=risk-evidence-pack-metrics",
-      "last_updated": "2026-06-08",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-08 • Admin",
-      "search_terms": [
-        "risk-evidence-pack-metrics",
-        "risk",
-        "evidence",
-        "pack",
-        "metrics",
-        "risk evidence pack metrics",
-        "admin",
-        "2026-06-08",
-        "2026",
-        "06",
-        "08"
-      ],
-      "search_text": "risk-evidence-pack-metrics risk evidence pack metrics risk evidence pack metrics admin 2026-06-08 2026 06 08"
+      "search_text": "risk-analysis-policy risk analysis policy risk analysis policy admin 2026-06-10 2026 06 10"
     },
     {
       "id": "risk-ownership",
       "kind": "doc",
       "title": "Risk Ownership",
       "href": "/docs/?scope=studio&doc=risk-ownership",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-06-10",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-07 • Admin",
+      "display_meta": "2026-06-10 • Admin",
       "search_terms": [
         "risk-ownership",
         "risk",
         "ownership",
         "risk ownership",
         "admin",
-        "2026-06-07",
+        "2026-06-10",
         "2026",
         "06",
-        "07"
+        "10"
       ],
-      "search_text": "risk-ownership risk ownership risk ownership admin 2026-06-07 2026 06 07"
+      "search_text": "risk-ownership risk ownership risk ownership admin 2026-06-10 2026 06 10"
     },
     {
       "id": "scripts-audit-site-consistency",

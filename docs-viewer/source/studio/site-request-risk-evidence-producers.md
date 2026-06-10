@@ -12,7 +12,7 @@ Status: planned additional reports
 
 ## Summary
 
-Replace the current risk evidence pack with an Admin-owned checks system that runs allowlisted evidence reports, stores structured artifacts, and exposes read-only report results in Admin.
+Replace the retired risk evidence pack with an Admin-owned checks system that runs allowlisted evidence reports, stores structured artifacts, and exposes read-only report results in Admin.
 
 The new system is report-oriented:
 
@@ -36,15 +36,12 @@ Possible future dependency reports are captured as options in:
 - [Runtime Checks](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-runtime-checks)
 - [Subjective Notes](/docs/?scope=studio&doc=site-request-risk-evidence-producers-report-subjective-notes).
 
-## Legacy Risk Implementation
+## Retired Legacy Risk Implementation
 
-- risk policy described in [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy).
-- legacy implementation of [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
-- legacy metrics and reports are listed in [Risk Evidence Pack Metrics](/docs/?scope=studio&doc=risk-evidence-pack-metrics). However the current list is a mix of reported fields, derived fields and metadata.
-- the legacy risk evidence pack is run on `/admin/risk/`, however this is mainly surfacing summary information and doesn't clearly differentiate between metrics and reports.
-- current scripts were written to support inventories of the apps, to measure the risk associated with each script family. these inventories have been retired pending review of the risk policy and implementation.
-- Existing `/admin/risk/` code is reusable prior art only. It should not define the final artifact paths, API names, route names, or report contract for the new system.
-- Existing `/admin/risk/` remains available until the new checks system has replicated or intentionally discarded its useful capabilities.
+- Risk policy is described in [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy).
+- The legacy risk evidence pack docs, script, `/admin/risk/` route, `/admin/api/risk/...` API, and `var/admin/risk/` output root are retired.
+- Legacy metrics and reports were a mix of reported fields, derived fields, and metadata. They should not define the final artifact paths, API names, route names, or report contract for the new system.
+- Useful prior-art ideas have been split into focused child docs under this request.
 
 ## New Checks Implementation
 

@@ -15,7 +15,7 @@ This document describes a possible future report for [Risk Evidence Producers Re
 
 Report id: `script-family-inventory`
 
-Source prior art: `admin-app/checks/risk_evidence_pack.py` `collect_script_family_inventory`.
+Source prior art: retired legacy risk evidence pack `collect_script_family_inventory` producer.
 
 Purpose: summarize Python and Ruby script concentration by active family roots.
 

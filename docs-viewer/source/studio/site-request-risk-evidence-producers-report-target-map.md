@@ -101,7 +101,7 @@ The `target-map` report should include evidence for:
 | 5 | planned | Write `report.md` with a readable target-map summary and review tables. |
 | 6 | planned | Add focused tests for report metrics, boundary flags, markdown rendering, and stale/broad pattern handling. |
 | 7 | planned | Run the report through the normal orchestrator against at least `docs-viewer`. |
-| 8 | planned | Update risk evidence metrics/docs once the report artifact shape is stable. |
+| 8 | planned | Update Checks docs once the report artifact shape is stable. |
 
 ## Proposed Verification
 

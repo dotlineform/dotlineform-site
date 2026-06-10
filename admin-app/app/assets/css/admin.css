@@ -258,7 +258,6 @@ body.adminApp [hidden] {
 
 .tagStudioPage,
 .studioAuditsPage__panel,
-.studioRiskPage__panel,
 .buildActivityPage__panel,
 .tagStudio__panel {
   display: grid;
@@ -280,12 +279,8 @@ body.adminApp [hidden] {
 .buildActivityPage__status,
 .buildActivityPage__empty,
 .studioAuditsPage__intro,
-.studioRiskPage__intro,
 .studioAuditsItem__body > p,
 .studioAuditsResult__meta,
-.studioRiskRun__meta,
-.studioRiskRun__path,
-.studioRiskSummaryCard__path,
 .adminTestingRun__meta,
 .adminTestingRun__path,
 .activityReport__meta {
@@ -339,8 +334,6 @@ body.adminApp [hidden] {
 }
 
 .studioAuditsPage__list,
-.studioRiskRuns,
-.studioRiskSummary,
 .adminTestingRuns,
 .activityReport__rows,
 .tagStudioList__rows {
@@ -354,9 +347,7 @@ body.adminApp [hidden] {
 }
 
 .studioAuditsItem__body > h3,
-.studioRiskPage__panel > h3,
 .studioAuditsResult__summary,
-.studioRiskSummaryCard__status,
 .adminTestingRun > h3 {
   margin: 0;
 }
@@ -386,21 +377,13 @@ body.adminApp [hidden] {
   font-weight: 700;
 }
 
-.studioAuditsResult__details pre,
-.studioRiskSummaryCard__markdown {
+.studioAuditsResult__details pre {
   overflow: auto;
   max-height: 24rem;
   padding: 0.75rem;
   border-radius: 6px;
   background: #1f2520;
   color: #f5f7f2;
-}
-
-.studioRiskForm {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  align-items: end;
 }
 
 .studioChecksPage[data-admin-busy="true"],
@@ -480,51 +463,6 @@ body.adminApp [hidden] {
   font-size: 0.86rem;
   line-height: 1.5;
   white-space: pre;
-}
-
-.studioRiskField,
-.studioRiskCheck {
-  display: grid;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-}
-
-.studioRiskCheck {
-  grid-template-columns: auto 1fr;
-  align-items: center;
-}
-
-.studioRiskActions {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.studioRiskRun {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem;
-  border: 1px solid var(--admin-border);
-  border-radius: 6px;
-  background: var(--admin-surface);
-}
-
-.studioRiskRun__open {
-  display: grid;
-  gap: 0.25rem;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-}
-
-.studioRiskRun__id,
-.studioRiskRun__path {
-  overflow-wrap: anywhere;
 }
 
 .tagStudioList__head,
@@ -660,8 +598,7 @@ body.adminApp [hidden] {
     padding-top: 24px;
   }
 
-  .studioChecksTop,
-  .studioRiskForm {
+  .studioChecksTop {
     grid-template-columns: minmax(0, 1fr);
   }
 }

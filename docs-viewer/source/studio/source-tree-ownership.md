@@ -48,7 +48,7 @@ The current Studio-owned source homes are:
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
 
 Risk operations are Admin-owned.
-Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; risk checks live under `admin-app/checks/`; ignored local risk reports and snapshots should default to `var/admin/risk/`.
+Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; checks report producers live under `admin-app/checks/reports/`; ignored local checks reports and snapshots should default to `var/admin/checks/`.
 
 Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
 
@@ -60,15 +60,15 @@ Current Admin-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/risk/activity/testing API dispatch, audit allowlist, and UI Catalogue static/view serving. |
+| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/checks/activity/testing API dispatch, audit allowlist, and UI Catalogue static/view serving. |
 | `admin-app/app/frontend/` | Admin browser modules, route modules, shell helpers, route state helpers, transport helpers, route registry, and Admin UI text config. |
 | `admin-app/app/assets/` | Admin-only CSS and static assets used by Local Admin routes. |
-| `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, risk, activity-contract, and other repo-scope verification checks. |
+| `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, activity-contract, report producer, and other repo-scope verification checks. |
 | `admin-app/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned profile registries. |
-| `admin-app/tests/` | Admin server tests, runner tests, risk/audit contract tests, Admin-hosted UI Catalogue tests, and Admin route smokes. |
+| `admin-app/tests/` | Admin server tests, runner tests, audit/check contract tests, Admin-hosted UI Catalogue tests, and Admin route smokes. |
 | `admin-app/ui-catalogue/` | UI Catalogue demo source, palette reference data, scoped CSS, JavaScript helpers, and reference assets served by the Admin app. |
 | `var/admin/activity/` | Ignored local unified activity feed and journal. |
-| `var/admin/risk/` | Ignored local risk evidence runs, snapshots, and review artifacts. |
+| `var/admin/checks/` | Ignored local Admin checks report runs, snapshots, and review artifacts. |
 | `var/admin/test-runs/` | Ignored local check profile summaries and command logs. |
 
 Admin routes and APIs live under `/admin/...` and `/admin/api/...`.

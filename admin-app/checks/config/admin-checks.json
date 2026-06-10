@@ -313,20 +313,6 @@
       "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
       "areas": ["config"]
     },
-    "/admin/risk/": {
-      "label": "Admin Risk",
-      "path": "/admin/risk/",
-      "status": "mapped",
-      "include": [
-        "admin-app/app/frontend/js/admin-risk.js",
-        "admin-app/app/frontend/config/ui-text/admin-risk.json",
-        "admin-app/app/server/admin_app/admin_risk_api.py",
-        "admin-app/checks/risk_evidence_pack.py",
-        "admin-app/tests/**/*risk*"
-      ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
-      "areas": ["activity"]
-    },
     "/admin/": {
       "label": "Admin Home",
       "path": "/admin/",

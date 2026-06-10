@@ -10,7 +10,7 @@ parent_id: admin
 
 Admin Checks is the durable home for the `/admin/checks/` report system.
 
-The system is separate from the current [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack), which remains tied to the existing `/admin/risk/` implementation until that route is deliberately retired.
+It replaces the retired legacy risk evidence pack, `/admin/risk/`, and `/admin/api/risk/...` surfaces.
 
 ## Purpose
 
@@ -28,6 +28,7 @@ Future report request docs live under [Risk Evidence Producers Request](/docs/?s
 - The report orchestrator is `admin-app/checks/run_reports.py`.
 - Report scripts live under `admin-app/checks/reports/`.
 - Checks config lives at `admin-app/checks/config/admin-checks.json`.
+- Local report artifacts live under `var/admin/checks/`.
 
 ## Config
 

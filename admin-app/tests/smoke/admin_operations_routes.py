@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Smoke-check Admin audits, risk, and activity routes."""
+"""Smoke-check Admin audits, checks, and activity routes."""
 
 from __future__ import annotations
 
 import argparse
-import datetime as dt
 import json
-import shutil
 import sys
 import urllib.request
 from pathlib import Path
@@ -23,32 +21,11 @@ sys.path.insert(0, str(SERVER_DIR))
 from admin_app_server import AdminAppServer  # noqa: E402
 
 
-DELETE_FIXTURE_RUN_ID = "admin-risk-route-smoke-delete-snapshot"
-
-
 def start_server() -> tuple[AdminAppServer, str]:
     server = AdminAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
-
-
-def write_delete_fixture() -> Path:
-    run_dir = REPO_ROOT / "var" / "admin" / "risk" / "runs" / DELETE_FIXTURE_RUN_ID
-    if run_dir.exists():
-        shutil.rmtree(run_dir)
-    run_dir.mkdir(parents=True)
-    created_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    (run_dir / "manifest.json").write_text(
-        json.dumps({"run_id": DELETE_FIXTURE_RUN_ID, "app": "docs-viewer", "area": "runtime", "created_at_utc": created_at}),
-        encoding="utf-8",
-    )
-    (run_dir / "summary.json").write_text(
-        json.dumps({"run_id": DELETE_FIXTURE_RUN_ID, "app": "docs-viewer", "area": "runtime", "status": "passed", "warnings": [], "evidence": []}),
-        encoding="utf-8",
-    )
-    (run_dir / "summary.md").write_text("# Smoke delete snapshot\n", encoding="utf-8")
-    return run_dir
 
 
 def activity_feed() -> dict[str, object]:
@@ -83,7 +60,7 @@ def assert_runtime(base_url: str) -> None:
     runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
     expected = {
         "admin_audits": "/admin/audits/",
-        "admin_risk": "/admin/risk/",
+        "admin_checks": "/admin/checks/",
         "admin_activity": "/admin/activity/",
     }
     for route_id, path in expected.items():
@@ -92,10 +69,12 @@ def assert_runtime(base_url: str) -> None:
             raise AssertionError(f"runtime config missing {route_id}: {runtime_views!r}")
     if runtime.get("services", {}).get("audits", {}).get("audits") != "/admin/api/audits/audits":
         raise AssertionError("runtime config missing Admin audit API")
-    if runtime.get("services", {}).get("risk", {}).get("runs") != "/admin/api/risk/runs":
-        raise AssertionError("runtime config missing Admin risk API")
+    if runtime.get("services", {}).get("checks", {}).get("runs") != "/admin/api/checks/runs":
+        raise AssertionError("runtime config missing Admin checks API")
     if runtime.get("services", {}).get("activity", {}).get("feed") != "/admin/api/activity/feed":
         raise AssertionError("runtime config missing Admin activity API")
+    if "admin_risk" in runtime_by_id or "risk" in runtime.get("services", {}):
+        raise AssertionError(f"runtime config still exposes retired Admin risk route/API: {runtime!r}")
 
 
 def assert_api_payloads(base_url: str) -> None:
@@ -108,17 +87,17 @@ def assert_api_payloads(base_url: str) -> None:
     ):
         raise AssertionError(f"Admin audits API returned unexpected payload: {audits_payload!r}")
 
-    with urllib.request.urlopen(f"{base_url}/admin/api/risk/producers", timeout=10) as response:
-        producers_payload = json.loads(response.read().decode("utf-8"))
-    if not producers_payload.get("ok") or not any(
-        producer.get("producer_id") == "runtime-checks"
-        for producer in producers_payload.get("producers", [])
-        if isinstance(producer, dict)
+    with urllib.request.urlopen(f"{base_url}/admin/api/checks/reports", timeout=10) as response:
+        checks_payload = json.loads(response.read().decode("utf-8"))
+    if not checks_payload.get("ok") or not any(
+        report.get("id") == "files"
+        for report in checks_payload.get("reports", [])
+        if isinstance(report, dict)
     ):
-        raise AssertionError(f"Admin risk API returned unexpected payload: {producers_payload!r}")
+        raise AssertionError(f"Admin checks API returned unexpected payload: {checks_payload!r}")
 
 
-def run_browser_smoke(base_url: str, delete_fixture_run_dir: Path) -> None:
+def run_browser_smoke(base_url: str) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
         console_errors: list[str] = []
@@ -135,44 +114,13 @@ def run_browser_smoke(base_url: str, delete_fixture_run_dir: Path) -> None:
         expect(audits_root).to_have_attribute("data-admin-mode", "summary", timeout=10_000)
         expect(page.locator("[data-run-audit]").first).to_be_enabled(timeout=10_000)
 
-        page.goto(f"{base_url}/admin/risk/", wait_until="domcontentloaded")
-        risk_root = page.locator("#studioRiskRoot")
-        expect(risk_root).to_be_visible(timeout=10_000)
-        expect(risk_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
-        expect(risk_root).to_have_attribute("data-admin-service", "available", timeout=10_000)
-        expect(page.locator("#studioRiskRun")).to_be_enabled(timeout=10_000)
-        expect(page.locator("#studioRiskApp")).to_have_value("docs-viewer")
-        delete_button = page.locator(f'[data-risk-run-delete="{DELETE_FIXTURE_RUN_ID}"]')
-        expect(delete_button).to_be_visible(timeout=10_000)
-        page.once("dialog", lambda dialog: dialog.accept())
-        delete_button.click()
-        expect(page.locator("#studioRiskStatus")).to_contain_text("deleted", timeout=10_000)
-        if delete_fixture_run_dir.exists():
-            raise AssertionError(f"delete fixture still exists: {delete_fixture_run_dir}")
-        page.locator("#studioRiskDryRun").check()
-        page.locator("#studioRiskRunId").fill("admin-risk-route-smoke-dry-run")
-        page.locator("#studioRiskRun").click()
-        expect(page.locator("#studioRiskStatus")).to_contain_text("completed", timeout=10_000)
-        page.route(
-            "**/admin/api/risk/runs",
-            lambda route: route.fulfill(
-                status=200,
-                content_type="application/json",
-                body=json.dumps(
-                    {
-                        "ok": False,
-                        "status": "failed",
-                        "run_id": "admin-risk-route-smoke-failed-run",
-                        "dry_run": True,
-                    }
-                ),
-            )
-            if route.request.method == "POST"
-            else route.continue_(),
-        )
-        page.locator("#studioRiskRunId").fill("admin-risk-route-smoke-failed-run")
-        page.locator("#studioRiskRun").click()
-        expect(page.locator("#studioRiskStatus")).to_contain_text("Risk evidence run failed.", timeout=10_000)
+        page.goto(f"{base_url}/admin/checks/", wait_until="domcontentloaded")
+        checks_root = page.locator("#studioChecksRoot")
+        expect(checks_root).to_be_visible(timeout=10_000)
+        expect(checks_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+        expect(checks_root).to_have_attribute("data-admin-service", "available", timeout=10_000)
+        expect(page.locator("#studioChecksRun")).to_be_enabled(timeout=10_000)
+        expect(page.locator("#studioChecksReport")).to_have_value("files")
 
         page.route(
             "**/admin/api/activity/feed",
@@ -203,12 +151,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
 
-    delete_fixture_run_dir = write_delete_fixture()
     server, base_url = start_server()
     try:
         assert_runtime(base_url)
         assert_api_payloads(base_url)
-        run_browser_smoke(base_url, delete_fixture_run_dir)
+        run_browser_smoke(base_url)
         print(f"Admin operations routes OK: {base_url}/admin/")
         return 0
     finally:

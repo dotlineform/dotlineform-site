@@ -57,7 +57,6 @@ means “files inside Docs Viewer scope that satisfy all selected target layers,
 
 ```text
 /admin/checks/
-/admin/risk/
 /docs/
 /library/
 /analysis/
@@ -279,7 +278,6 @@ Mapped routes include:
 
 ```
 /admin/checks/
-/admin/risk/
 /analysis/
 /docs/
 /library/

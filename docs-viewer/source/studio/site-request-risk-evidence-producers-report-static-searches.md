@@ -15,7 +15,7 @@ This document describes a possible future report for [Risk Evidence Producers Re
 
 Report id: `static-searches`
 
-Source prior art: `admin-app/checks/risk_evidence_pack.py` `collect_static_searches`.
+Source prior art: retired legacy risk evidence pack `collect_static_searches` producer.
 
 Purpose: run allowlisted text-pattern inventories for selected checks targets and report matched files as evidence for maintenance review.
 

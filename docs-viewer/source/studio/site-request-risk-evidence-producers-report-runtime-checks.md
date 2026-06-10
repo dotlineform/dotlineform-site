@@ -15,7 +15,7 @@ This document describes a possible future report for [Risk Evidence Producers Re
 
 Report id: `runtime-checks`
 
-Source prior art: `admin-app/checks/risk_evidence_pack.py` `collect_runtime_checks` and `admin-app/commands/run_checks.py`.
+Source prior art: retired legacy risk evidence pack `collect_runtime_checks` producer and `admin-app/commands/run_checks.py`.
 
 Purpose: link selected checks targets to allowlisted runtime profile results without letting the browser submit arbitrary commands.
 

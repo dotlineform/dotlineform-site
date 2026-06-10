@@ -188,7 +188,6 @@ def likely_unmapped_route(path: str, route_ids: Iterable[str]) -> list[str]:
     ids = set(route_ids)
     checks = {
         "/admin/checks/": ("admin-checks", "checks/", "run_reports", "target_map"),
-        "/admin/risk/": ("admin-risk", "risk"),
         "/library/": ("library",),
         "/analysis/": ("analysis",),
         "/docs/": ("docs-viewer-management", "docs_management", "docs-viewer-manage"),

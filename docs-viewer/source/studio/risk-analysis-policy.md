@@ -2,7 +2,7 @@
 doc_id: risk-analysis-policy
 title: Risk Analysis Policy
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-06-10
 parent_id: admin
 ---
 # Risk Analysis Policy
@@ -12,7 +12,7 @@ This document defines how risk analysis is classified, prioritised, and closed.
 - Risk analysis is an action-selection tool.
 - It should identify where a focused improvement will reduce the chance of breakage, accumulated drift, costly repair, or strategic blockage.
 - The expected output is a concrete app-improvement action with evidence that the relevant risk indicator moved.
-- The target artifact contract is [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
+- The current evidence implementation is [Checks](/docs/?scope=studio&doc=admin-checks), with planned producers tracked under [Risk Evidence Producers Request](/docs/?scope=studio&doc=site-request-risk-evidence-producers).
 
 ## Actual Risks
 

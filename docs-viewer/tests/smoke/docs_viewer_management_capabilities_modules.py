@@ -70,7 +70,7 @@ def assert_capability_error_projection(page: Page) -> None:
                             status: 400,
                             json: () => Promise.resolve({
                                 ok: false,
-                                error: "Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'"
+                                error: "Unknown parent_id 'missing-parent' for doc 'broken-parent-doc'"
                             })
                             });
                         }
@@ -91,7 +91,7 @@ def assert_capability_error_projection(page: Page) -> None:
     state = result["state"]
     if state["managementChecked"] is not True or state["managementAvailable"] is not False:
         raise AssertionError(f"unexpected capability state after failed retries: {result!r}")
-    expected = "Unknown parent_id 'audit' for doc 'risk-evidence-pack-metrics'"
+    expected = "Unknown parent_id 'missing-parent' for doc 'broken-parent-doc'"
     if state["managementCapabilityError"] != expected:
         raise AssertionError(f"capability error was not retained for UI projection: {result!r}")
     if not any(event.get("error") == expected for event in result["renderEvents"]):

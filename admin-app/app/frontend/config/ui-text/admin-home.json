@@ -6,7 +6,6 @@
       "links": [
         {"route_id": "admin_audits", "label": "audits"},
         {"route_id": "admin_checks", "label": "checks"},
-        {"route_id": "admin_risk", "label": "risk"},
         {"route_id": "admin_activity", "label": "activity"},
         {"route_id": "admin_testing", "label": "testing"}
       ]

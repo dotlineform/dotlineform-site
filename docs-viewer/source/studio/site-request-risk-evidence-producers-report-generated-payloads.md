@@ -15,7 +15,7 @@ This document describes a possible future report for [Risk Evidence Producers Re
 
 Report id: `generated-payloads`
 
-Source prior art: `admin-app/checks/risk_evidence_pack.py` `collect_generated_payloads`.
+Source prior art: retired legacy risk evidence pack `collect_generated_payloads` producer.
 
 Purpose: inventory generated JSON payload size, count, and shape evidence for selected target surfaces.
 

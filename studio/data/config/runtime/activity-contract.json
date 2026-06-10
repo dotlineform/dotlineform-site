@@ -933,32 +933,6 @@
         }
       }
     },
-    "admin-risk": {
-      "label": "admin risk",
-      "route": "/admin/risk/",
-      "actions": {
-        "run-risk-evidence": {
-          "label": "run risk evidence",
-          "status": "v1-target",
-          "control_id": "studioRiskRun",
-          "control_selector": "#studioRiskRun",
-          "control_label": "Run evidence",
-          "endpoint": "/admin/api/risk/runs",
-          "record_family": "risk-run",
-          "record_id_field": "run_id",
-          "no_change_activity": "report",
-          "report_forced_rewrites": true,
-          "notes": "Covers user-triggered risk evidence pack runs from Admin.",
-          "script_purposes": [
-            {
-              "id": "generate-report",
-              "optional": false,
-              "when": "a risk evidence run writes a summary"
-            }
-          ]
-        }
-      }
-    },
     "series-tags": {
       "label": "series tags",
       "route": "/analytics/series-tags/",

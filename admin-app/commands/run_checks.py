@@ -67,7 +67,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/checks/audit_public_build_surface.py",
                 "admin-app/checks/css_token_audit.py",
                 "admin-app/checks/javascript_inventory_guardrail.py",
-                "admin-app/checks/risk_evidence_pack.py",
                 "studio/services/media/publish_media_to_r2.py",
                 "studio/services/media/build_palette_data.py",
                 "studio/services/catalogue/catalogue_json_build.py",
@@ -247,7 +246,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             pytest_argv(
                 "admin-app/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
-                "admin-app/tests/python/test_risk_evidence_pack.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
                 "studio/tests/python/test_catalogue_invalidation.py",
                 "studio/tests/python/test_catalogue_lookup_refresh.py",

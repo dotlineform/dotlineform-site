@@ -138,7 +138,7 @@ For defensive tests during refactors:
 - remove temporary tests before closeout unless they enforce a current architecture contract
 - phrase permanent assertions around the positive architecture that must hold, such as the owning service boundary, allowed route surface, capability model, or write contract
 - do not keep adding permanent assertions that old behavior, retired files, removed fields, or obsolete calls do not happen; delete the old code path and test the current contract instead
-- use the `negative_test_assertion_inventory` static-search fixture in [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack) for durable repo-wide inventory of existing tests that need review against this rule
+- use the planned static-searches checks report for durable repo-wide inventory of existing tests that need review against this rule
 
 ## Security And Sanitization
 

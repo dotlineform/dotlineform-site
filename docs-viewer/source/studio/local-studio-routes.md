@@ -93,7 +93,7 @@ Docs Viewer, Admin, and Analytics/Data Sharing are sibling local apps with their
 
 - Docs Viewer manage mode is served by the standalone Docs Viewer service, not Local Studio.
 - Public `/library/` and `/analysis/` are public read-only Docs Viewer routes, not Local Studio routes.
-- Local Admin serves `/admin/...`, including `/admin/audits/`, `/admin/risk/`, `/admin/activity/`, `/admin/testing/`, and `/admin/ui-catalogue/...`.
+- Local Admin serves `/admin/...`, including `/admin/audits/`, `/admin/checks/`, `/admin/activity/`, `/admin/testing/`, and `/admin/ui-catalogue/...`.
 - Local Analytics serves `/analytics/...` and `/analytics/api/...`.
 
 The local `/docs/` route is no longer hosted by Local Studio.

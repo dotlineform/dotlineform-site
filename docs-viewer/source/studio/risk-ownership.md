@@ -2,7 +2,7 @@
 doc_id: risk-ownership
 title: Risk Ownership
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-06-10
 parent_id: admin
 viewable: true
 ---
@@ -12,19 +12,21 @@ Risk operations belong in the Admin app. Admin is the central home for:
 
 - risk dashboards and app inventories
 - audit launcher UI
+- checks report UI
 - unified activity review
 - allowlisted audit execution adapters
+- allowlisted checks report execution adapters
 - risk-related local read APIs
 - risk-related generated review artifacts that need to be inspected locally
 
 The current Admin app hosts:
 
 - `/admin/audits/`
-- `/admin/risk/`
+- `/admin/checks/`
 - `/admin/activity/`
 - `/admin/testing/`
 - `/admin/api/audits/...`
-- `/admin/api/risk/...`
+- `/admin/api/checks/...`
 - narrow Admin activity and testing APIs
 
 The Admin app shell provides the correct boundary:
@@ -41,14 +43,14 @@ The Admin app shell provides the correct boundary:
 | Risk/audit/check scripts | `admin-app/checks/` | Deterministic repo-scope checks and standalone audits live here unless a domain-specific service owns the behavior. |
 | Audit runner and API adapter | `admin-app/app/server/admin_app/` | `audit_runner.py` owns the allowlist; `admin_audit_api.py` exposes the Admin browser API. |
 | Audit UI | Admin app shell | `/admin/audits/` is the launch/read surface. |
-| Risk evidence API adapter | `admin-app/app/server/admin_app/` | `admin_risk_api.py` exposes producer listing, validated risk evidence runs, recent runs, summary reads, snapshot deletion, and Activity rows. |
-| Risk evidence UI | Admin app shell | `/admin/risk/` is the run/review/delete surface for risk evidence packs. |
+| Checks report API adapter | `admin-app/app/server/admin_app/` | `admin_checks_api.py` exposes report metadata, validated report runs, recent runs, summary/report reads, and snapshot deletion. |
+| Checks report UI | Admin app shell | `/admin/checks/` is the run/review/delete surface for checks reports. |
 | Activity UI | Admin app shell | `/admin/activity/` is the unified activity review surface. |
 | Unified activity writer/helpers | `studio/shared/python/studio_activity.py` and fixed activity paths | Domain services emit compact activity rows through shared helper contracts. The helper owns `var/admin/activity/activity_log.jsonl`, `var/admin/activity/activity_log.json`, and the checked-in activity contract path. |
-| Local risk reports/artifacts | `var/admin/risk/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
+| Local checks reports/artifacts | `var/admin/checks/` by default | Use for ignored local reports, metric snapshots, profiling exports, and review artifacts that should not be checked in. |
 | Checked-in risk configuration | `admin-app/checks/` or `admin-app/data/config/` | Use `admin-app/checks/` for check-owned config and `admin-app/data/config/` for app/runtime-visible config. |
 
-The concrete run-directory and artifact contract is [Risk Evidence Pack](/docs/?scope=studio&doc=risk-evidence-pack).
+The current report system is [Checks](/docs/?scope=studio&doc=admin-checks).
 
 ## Server Boundary
 
@@ -60,7 +62,7 @@ Allowed:
 - add narrow Admin API adapters under `admin-app/app/server/admin_app/`
 - add route-local JavaScript UI under `admin-app/app/frontend/js/`
 - read checked-in or generated risk summaries through explicit read keys or narrow endpoints
-- write local reports under `var/admin/risk/` from trusted Python code
+- write local reports under `var/admin/checks/` from trusted Python code
 
 Not allowed:
 
@@ -84,7 +86,7 @@ Background watchers and purely informational route loads should not produce acti
 
 ## Route Shape
 
-The current `/admin/audits/`, `/admin/risk/`, and `/admin/activity/` routes live in Admin.
+The current `/admin/audits/`, `/admin/checks/`, and `/admin/activity/` routes live in Admin.
 They use:
 
 - route-local shell/body modules
