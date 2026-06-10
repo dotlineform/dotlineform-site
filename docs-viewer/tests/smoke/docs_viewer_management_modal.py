@@ -283,6 +283,7 @@ def modal_state(page: Page, selector: str) -> dict[str, object]:
                 viewportWidth: window.innerWidth,
                 actionLabels: actions.map(button => button.textContent.trim()),
                 actionClasses: actions.map(button => button.className),
+                actionDisabled: actions.map(button => button.disabled),
                 activeId: active ? active.id || '' : '',
                 activeRole: active ? active.dataset.role || '' : '',
                 bodyText: modal.textContent || ''
@@ -506,6 +507,38 @@ def run_transient_confirm_check(page: Page) -> None:
     page.wait_for_function("() => window.__docsViewerManagementModalSmoke.confirmResult === false")
     if active_id(page) != "transientOpener":
         raise AssertionError("confirm modal did not return focus to opener")
+
+    page.locator("#transientOpener").focus()
+    page.evaluate(
+        """() => {
+            const smoke = window.__docsViewerManagementModalSmoke;
+            smoke.disabledConfirmResult = undefined;
+            smoke.disabledConfirmPromise = smoke.managementModals.openDocsViewerConfirmModal({
+                root: smoke.root,
+                title: 'Nothing to publish',
+                body: 'Changed files: 0',
+                primaryLabel: 'Publish',
+                cancelLabel: 'Cancel',
+                primaryDisabled: true
+            }).then(value => smoke.disabledConfirmResult = value);
+        }"""
+    )
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"]')")
+    page.wait_for_function("() => document.activeElement?.dataset.role === 'modal-cancel'")
+    state = assert_shell(
+        page,
+        '[data-role="docs-viewer-management-modal"]',
+        "Nothing to publish",
+        ["Publish", "Cancel"],
+        active_role="modal-cancel",
+        size_class="docsViewer__modalCard--compact",
+    )
+    if state["actionDisabled"] != [True, False]:
+        raise AssertionError(f"disabled confirm modal did not disable only primary action: {state!r}")
+    page.keyboard.press("Enter")
+    page.wait_for_function("() => window.__docsViewerManagementModalSmoke.disabledConfirmResult === false")
+    if active_id(page) != "transientOpener":
+        raise AssertionError("disabled confirm modal did not return focus to opener")
 
 
 def run_transient_notice_check(page: Page) -> None:

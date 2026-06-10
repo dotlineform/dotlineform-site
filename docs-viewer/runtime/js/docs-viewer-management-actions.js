@@ -324,6 +324,12 @@ export function createDocsViewerManagementActionController(options) {
     ].join("\n");
   }
 
+  function publishHasChanges(preview) {
+    var changed = Number(preview && preview.changed_count || 0);
+    var removed = Number(preview && preview.removed_count || 0);
+    return changed + removed > 0;
+  }
+
   function handlePublishDocs() {
     setManagementBusy(true);
     setManagementMessage(state.managementText.publishChecking || "Checking publish changes...", false);
@@ -336,7 +342,8 @@ export function createDocsViewerManagementActionController(options) {
           title: state.managementText.publishConfirmTitle || "Publish docs",
           body: publishConfirmBody(preview),
           primaryLabel: state.managementText.publishConfirmButton || "Publish",
-          cancelLabel: state.managementText.cancelButton
+          cancelLabel: state.managementText.cancelButton,
+          primaryDisabled: !publishHasChanges(preview)
         });
       })
       .then(function (confirmed) {
