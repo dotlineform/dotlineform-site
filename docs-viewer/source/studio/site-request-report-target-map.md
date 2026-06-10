@@ -3,7 +3,7 @@ doc_id: site-request-report-target-map
 title: Target Map Report
 added_date: 2026-06-08
 last_updated: 2026-06-10
-ui_status: draft
+ui_status: in-progress
 parent_id: site-request-admin-checks-reports
 ---
 # Target Map Report
