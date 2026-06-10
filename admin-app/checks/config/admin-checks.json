@@ -576,50 +576,5 @@
       ],
       "areas": ["management", "import-export", "docs-build"]
     }
-  },
-  "reports": {
-    "files": {
-      "label": "Files",
-      "script": "admin-app/checks/reports/files.py",
-      "description": "File count, line count, and byte size evidence.",
-      "produces_csv": true,
-      "default_options": {
-        "limit": 20,
-        "sort": "lines_desc"
-      },
-      "allowed_options": {
-        "limit": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 500
-        },
-        "sort": {
-          "type": "string",
-          "enum": ["lines_desc", "bytes_desc", "path_asc"]
-        }
-      }
-    },
-    "target-map": {
-      "label": "Target Map",
-      "script": "admin-app/checks/reports/target_map.py",
-      "description": "Target ownership, shared dependency, and boundary-crossing evidence.",
-      "produces_csv": false,
-      "default_options": {
-        "limit": 20,
-        "pattern_limit": 20
-      },
-      "allowed_options": {
-        "limit": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 500
-        },
-        "pattern_limit": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 500
-        }
-      }
-    }
   }
 }

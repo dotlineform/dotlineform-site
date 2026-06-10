@@ -71,7 +71,7 @@ def normalized_browser_run_request(body: Mapping[str, Any]) -> dict[str, Any]:
     unknown = sorted(set(body).difference(VALID_BROWSER_RUN_REQUEST_KEYS))
     if unknown:
         if "options" in unknown:
-            raise ValueError("report options are configured in admin-app/checks/config/admin-checks.json")
+            raise ValueError("report options are configured in admin-app/checks/config/admin-checks-reports.json")
         raise ValueError(f"request contains unknown keys: {', '.join(unknown)}")
     return {
         "scope": body.get("scope"),

@@ -10,6 +10,7 @@ from typing import Any, Mapping
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = Path("admin-app/checks/config/admin-checks.json")
+DEFAULT_REPORTS_CONFIG_PATH = Path("admin-app/checks/config/admin-checks-reports.json")
 REPORTS_ROOT = Path("admin-app/checks/reports")
 REQUIRED_SCOPES = {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
 VALID_ROUTE_STATUSES = {"mapped", "inventory-only"}
@@ -24,13 +25,31 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_report_registry(config_path: Path, repo_root: Path = REPO_ROOT) -> dict[str, Any]:
+    path = repo_root / config_path
+    payload = read_json(path)
+    if not isinstance(payload, dict):
+        raise ChecksConfigError(f"{config_path.as_posix()} must be a JSON object")
+    return payload
+
+
+def default_reports_config_path(config_path: Path) -> Path:
+    if config_path == DEFAULT_CONFIG_PATH:
+        return DEFAULT_REPORTS_CONFIG_PATH
+    return config_path.with_name("admin-checks-reports.json")
+
+
 def load_checks_config(config_path: Path | None = None, repo_root: Path = REPO_ROOT) -> dict[str, Any]:
-    path = repo_root / (config_path or DEFAULT_CONFIG_PATH)
+    resolved_config_path = config_path or DEFAULT_CONFIG_PATH
+    path = repo_root / resolved_config_path
     payload = read_json(path)
     if not isinstance(payload, dict):
         raise ChecksConfigError("admin checks config must be a JSON object")
-    validate_checks_config(payload)
-    return payload
+    config = dict(payload)
+    if "reports" not in config:
+        config["reports"] = load_report_registry(default_reports_config_path(resolved_config_path), repo_root)
+    validate_checks_config(config)
+    return config
 
 
 def as_object(value: Any, label: str) -> Mapping[str, Any]:

@@ -26,16 +26,18 @@ Future report request docs live under [Admin Checks Reports](/docs/?scope=studio
 - The API namespace is `/admin/api/checks/`.
 - The report orchestrator is `admin-app/checks/run_reports.py`.
 - Report scripts live under `admin-app/checks/reports/`.
-- Checks config lives at `admin-app/checks/config/admin-checks.json`.
+- Checks target-map config lives at `admin-app/checks/config/admin-checks.json`.
+- Checks report registry and defaults live at `admin-app/checks/config/admin-checks-reports.json`.
 - Local report artifacts live under `var/admin/checks/`.
 
 ## Config
 
 ```text
 admin-app/checks/config/admin-checks.json
+admin-app/checks/config/admin-checks-reports.json
 ```
 
-Top-level keys:
+Target-map config top-level keys:
 
 ```json
 {
@@ -44,12 +46,26 @@ Top-level keys:
   "scopes": {},
   "families": {},
   "areas": {},
-  "routes": {},
-  "reports": {}
+  "routes": {}
 }
 ```
 
-The config defines:
+Report registry top-level shape:
+
+```json
+{
+  "<report-id>": {
+    "label": "",
+    "script": "",
+    "description": "",
+    "produces_csv": false,
+    "default_options": {},
+    "allowed_options": {}
+  }
+}
+```
+
+The config files define:
 
 - `scopes` - the apps: scope ids, labels, included path prefixes, and exclusions
 - `families` - the technical layers: file family ids and path/pattern rules
@@ -61,9 +77,9 @@ Routes may be `mapped` or `inventory-only`.
 Mapped routes are reviewed route targets and can be selected by normal checks runs.
 Inventory-only routes are deterministic route inventory entries that are visible to the audit but are not ready for route-scoped evidence runs.
 
-The browser may receive safe projected metadata from this config.
+The browser may receive safe projected metadata from the merged checks config.
 The browser must not receive arbitrary local paths, command strings, environment values, or report option schemas.
-Admin UI runs use report defaults from `admin-app/checks/config/admin-checks.json`; edit that file directly when report options need different defaults.
+Admin UI runs use report defaults from `admin-app/checks/config/admin-checks-reports.json`; edit that file directly when report options need different defaults.
 
 ## Targeting Model
 

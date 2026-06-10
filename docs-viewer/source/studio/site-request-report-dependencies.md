@@ -34,23 +34,21 @@ It should read their JSON artifacts and compile a focused summary.
 
 ## Config Shape
 
-This should be an extension to the `reports` section of `admin-app/checks/config/admin-checks.json`.
+This should be an extension to `admin-app/checks/config/admin-checks-reports.json`.
 
 Example:
 
 ```json
 {
-  "reports": {
-    "file-profile": {
-      "label": "File Profile",
-      "script": "admin-app/checks/reports/file_profile.py",
-      "description": "Combined evidence for one selected file.",
-      "requires": ["files", "target-map", "git-history", "imports"],
-      "default_options": {},
-      "allowed_options": {
-        "path": {
-          "type": "string"
-        }
+  "file-profile": {
+    "label": "File Profile",
+    "script": "admin-app/checks/reports/file_profile.py",
+    "description": "Combined evidence for one selected file.",
+    "requires": ["files", "target-map", "git-history", "imports"],
+    "default_options": {},
+    "allowed_options": {
+      "path": {
+        "type": "string"
       }
     }
   }

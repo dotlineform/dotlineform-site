@@ -38,7 +38,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/files/
 
 ## Inputs
 
-The report reads the selected scope and target filters from the resolved checks config `admin-app/checks/config/admin-checks.json`.
+The report reads the selected scope and target filters from the resolved checks config loaded from `admin-app/checks/config/admin-checks.json` and `admin-app/checks/config/admin-checks-reports.json`.
 It should not duplicate path rules locally.
 
 Supported options:
@@ -105,7 +105,7 @@ The report has two separate phases: target selection and measurement.
 Target selection is config-driven:
 
 1. Load the run manifest written by `admin-app/checks/run_reports.py`.
-2. Load `admin-app/checks/config/admin-checks.json`.
+2. Load `admin-app/checks/config/admin-checks.json` and merge the report registry from `admin-app/checks/config/admin-checks-reports.json`.
 3. Resolve the selected scope, families, areas, and routes through `admin-app/checks/target_map_resolver.py`.
 4. Keep files that satisfy the selected target filters, including explicit shared dependencies for selected areas or routes.
 5. Exclude generated payloads, dependency folders, caches, local run outputs, build outputs, canonical data, and retired prior-art paths through the shared resolver.

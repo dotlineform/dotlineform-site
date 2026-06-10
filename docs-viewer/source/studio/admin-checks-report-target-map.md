@@ -44,6 +44,7 @@ var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/target-map/
 The report reads the selected scope and target filters from the run manifest written by `admin-app/checks/run_reports.py`.
 It resolves files through `admin-app/checks/target_map_resolver.py`.
 It must not duplicate target-map matching logic locally.
+Report defaults and allowed options are loaded from `admin-app/checks/config/admin-checks-reports.json`.
 
 Supported options:
 

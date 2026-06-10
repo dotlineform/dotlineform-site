@@ -30,7 +30,8 @@ The report should separate expected shared dependencies from unclear ownership s
 ## Current Baseline
 
 - Admin Checks v1 is implemented and can run the `files` report.
-- `admin-app/checks/config/admin-checks.json` exists with scopes, families, areas, routes, reports, exclusions, and shared dependencies.
+- `admin-app/checks/config/admin-checks.json` exists with scopes, families, areas, routes, exclusions, and shared dependencies.
+- `admin-app/checks/config/admin-checks-reports.json` exists with report metadata, defaults, and option schemas.
 - `admin-app/checks/target_map_resolver.py` resolves the target map from real repo files.
 - `admin-app/checks/audit_target_map.py` uses that resolver and writes target-map audit artifacts.
 - `admin-app/checks/run_reports.py` can run allowlisted report scripts and write report artifacts.

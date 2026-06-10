@@ -10,15 +10,15 @@ parent_id: admin-checks
 
 ```text
 admin-app/checks/config/admin-checks.json
+admin-app/checks/config/admin-checks-reports.json
 ```
-Top-level keys: `jq 'keys' admin-app/checks/config/admin-checks.json`
+Target-map config top-level keys: `jq 'keys' admin-app/checks/config/admin-checks.json`
 
 ```json
 [
   "areas",
   "config_id",
   "families",
-  "reports",
   "routes",
   "scopes",
   "source",
@@ -26,13 +26,15 @@ Top-level keys: `jq 'keys' admin-app/checks/config/admin-checks.json`
 ]
 ```
 
-The config defines:
+Report registry keys: `jq 'keys' admin-app/checks/config/admin-checks-reports.json`
+
+The config files define:
 
 - `scopes` - the apps: scope ids, labels, included path prefixes, and exclusions
 - `families` - the technical layers: file family ids and path/pattern rules
 - `areas` - the functional/workflow areas and path/pattern rules
 - `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
-- `reports` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
+- `admin-checks-reports.json` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
 
 Families tell us technical layer; routes tell us surface boundary; areas tell us workflow ownership.
 

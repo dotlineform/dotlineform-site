@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import sys
 from pathlib import Path
 
@@ -23,8 +24,12 @@ def loaded_config() -> dict[str, object]:
 
 def test_load_checks_config_accepts_v1_config() -> None:
     config = loaded_config()
+    raw_config = json.loads((REPO_ROOT / checks_config.DEFAULT_CONFIG_PATH).read_text(encoding="utf-8"))
+    report_config = json.loads((REPO_ROOT / checks_config.DEFAULT_REPORTS_CONFIG_PATH).read_text(encoding="utf-8"))
 
     assert config["config_id"] == "admin-checks"
+    assert "reports" not in raw_config
+    assert set(report_config) == {"files", "target-map"}
     assert set(config["scopes"]) == {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
     assert "runtime-assets" in config["families"]
     assert "source-docs" not in config["families"]

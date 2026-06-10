@@ -17,7 +17,13 @@ The target map has one durable source of truth:
 admin-app/checks/config/admin-checks.json
 ```
 
-That config defines scopes, file families, functional areas, routes, exclusions, shared dependencies, and report metadata.
+Report metadata and defaults live in:
+
+```text
+admin-app/checks/config/admin-checks-reports.json
+```
+
+The target-map config defines scopes, file families, functional areas, routes, exclusions, and shared dependencies.
 It should contain stable path and filename patterns, not a hand-maintained per-file inventory.
 
 The audit and report use shared resolver logic.
@@ -37,11 +43,12 @@ admin-app/checks/
 ## Current State
 
 Risk Evidence Producers Batch 2 promoted the draft target rules into `admin-app/checks/config/admin-checks.json`.
-`admin-app/checks/audit_target_map.py` now reads that durable config and calls `admin-app/checks/target_map_resolver.py`.
+`admin-app/checks/audit_target_map.py` now reads that durable target-map config and calls `admin-app/checks/target_map_resolver.py`.
 
 Current durable implementation:
 
-- `admin-app/checks/config/admin-checks.json` defines the target map and report registry.
+- `admin-app/checks/config/admin-checks.json` defines the target map.
+- `admin-app/checks/config/admin-checks-reports.json` defines the report registry and defaults.
 - `admin-app/checks/admin_checks_config.py` validates the config and run requests.
 - `admin-app/checks/target_map_resolver.py` resolves scopes, families, areas, routes, shared dependencies, stale patterns, broad patterns, and boundary flags.
 - `admin-app/checks/audit_target_map.py` is a maintenance CLI wrapper around the config loader and resolver.
@@ -105,7 +112,8 @@ The query state such as `?scope=studio&doc=...&mode=manage` is route state, not 
 
 | File | Role |
 | --- | --- |
-| `admin-app/checks/config/admin-checks.json` | Durable target map contract and report registry. |
+| `admin-app/checks/config/admin-checks.json` | Durable target map contract. |
+| `admin-app/checks/config/admin-checks-reports.json` | Report registry, default options, allowed options, and artifact metadata. |
 | `admin-app/checks/admin_checks_config.py` | Config and run-request validation. |
 | `admin-app/checks/target_map_resolver.py` | Shared resolver for matching files to scopes, families, areas, routes, shared dependencies, stale patterns, and boundary flags. |
 | `admin-app/checks/audit_target_map.py` | Maintenance guardrail for config drift across the repo. |
@@ -164,7 +172,7 @@ Routes with status `inventory-only` are present for surface-area tracking but st
 
 The report can expose many of the same metrics as the audit, but its contract is different:
 
-- it is allowlisted in `admin-checks.json`
+- it is allowlisted in `admin-checks-reports.json`
 - it runs through `run_reports.py`
 - it writes under a timestamped checks run
 - it is displayed in `/admin/checks/`
@@ -201,7 +209,8 @@ Use this split:
 
 | Kind | Path |
 | --- | --- |
-| Durable config | `admin-app/checks/config/admin-checks.json` |
+| Target-map config | `admin-app/checks/config/admin-checks.json` |
+| Report registry | `admin-app/checks/config/admin-checks-reports.json` |
 | Shared resolver | `admin-app/checks/target_map_resolver.py` |
 | Maintenance audit CLI | `admin-app/checks/audit_target_map.py` |
 | Report producer | `admin-app/checks/reports/target_map.py` |
