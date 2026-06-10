@@ -153,6 +153,12 @@ viewer_report: semantic_references
 
 Intro with [parent](parent.md), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
 
+<!-- [[ref:work:638999|commented missing work]] -->
+
+<!--
+[[ref:work:638998|commented missing work multiline]]
+-->
+
 `[[ref:series:26]]`
 
 ```text
@@ -282,12 +288,16 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert 'class="docsViewer__interactiveFrame"' in content_html
     assert "--docs-viewer-interactive-height: 420px" in content_html
     assert 'href="/works/?work=00638"' in content_html
+    assert "[[ref:work:638999|commented missing work]]" in content_html
+    assert "[[ref:work:638998|commented missing work multiline]]" in content_html
     assert "[[ref:series:26]]" in content_html
     assert "[[ref:moment:dark-sky]]" in content_html
     assert child["viewer_report"] == "semantic_references"
 
     assert references_index["header"]["schema"] == "docs_semantic_references_index_v1"
     assert references_index["header"]["count"] == 1
+    assert "638999" not in json.dumps(references_index)
+    assert "638998" not in json.dumps(references_index)
     assert references_index["targets"][0]["target_key"] == "work:00638"
     assert references_index["targets"][0]["bucket_url"] == "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
     assert target_payload["header"]["schema"] == "docs_semantic_references_by_target_v1"

@@ -48,6 +48,17 @@ def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: st
     )
 
 
+def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, title: str, content_html: str) -> None:
+    write_json(
+        repo_root / "docs-viewer/generated/docs" / scope / "by-id" / f"{doc_id}.json",
+        {
+            "title": title,
+            "last_updated": "2026-06-10",
+            "content_html": content_html,
+        },
+    )
+
+
 def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
@@ -73,6 +84,25 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     return temp_dir
 
 
+def make_public_repo(scope: str, content_html: str) -> tempfile.TemporaryDirectory[str]:
+    temp_dir = tempfile.TemporaryDirectory()
+    repo_root = Path(temp_dir.name)
+    (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+    for known_scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
+        docs = []
+        if known_scope == scope:
+            docs = [
+                {
+                    "doc_id": "source",
+                    "title": "Source",
+                    "content_url": f"/assets/data/docs/scopes/{scope}/by-id/source.json",
+                }
+            ]
+        write_json(repo_root / output_dir / "index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
+    write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
+    return temp_dir
+
+
 def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:
     content_html = """
     <p><a href="/docs/?scope=studio&amp;doc=missing-prose">Missing Prose</a></p>
@@ -90,9 +120,24 @@ def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:
     assert result["entries"][0]["from_page_source_path"] == "source.md"
 
 
+def test_public_reader_payloads_do_not_need_viewer_url_metadata() -> None:
+    content_html = """
+    <p><a href="/analysis/?doc=missing-analysis">Missing Analysis</a></p>
+    """
+    with make_public_repo("analysis", content_html) as temp_path:
+        result = docs_broken_links.audit_docs_broken_links(Path(temp_path), "analysis")
+
+    assert result["summary"] == {"total": 1}
+    assert result["entries"][0]["link_url"] == "/analysis/?doc=missing-analysis"
+    assert result["entries"][0]["from_page_scope"] == "analysis"
+    assert result["entries"][0]["from_page_doc_id"] == "source"
+    assert result["entries"][0]["from_page_url"] == "/analysis/?doc=source"
+
+
 def main() -> None:
     tests = [
         test_missing_docs_links_inside_code_blocks_are_ignored,
+        test_public_reader_payloads_do_not_need_viewer_url_metadata,
     ]
     for test in tests:
         test()

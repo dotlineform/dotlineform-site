@@ -816,6 +816,7 @@ class DocsDataBuilder:
         output: list[str] = []
         in_fence = False
         fence_marker = ""
+        in_html_comment = False
         for line in markdown.splitlines(keepends=True):
             fence_match = re.match(r"\A {0,3}(`{3,}|~{3,})", line)
             if fence_match:
@@ -828,8 +829,48 @@ class DocsDataBuilder:
                     fence_marker = marker[0]
                 output.append(line)
                 continue
-            output.append(line if in_fence else self.replace_semantic_ref_tokens_outside_inline_code(line, replacer))
+            if in_fence:
+                output.append(line)
+                continue
+            rendered_line, in_html_comment = self.replace_semantic_ref_tokens_outside_html_comments(
+                line,
+                replacer,
+                in_html_comment=in_html_comment,
+            )
+            output.append(rendered_line)
         return "".join(output)
+
+    def replace_semantic_ref_tokens_outside_html_comments(
+        self,
+        line: str,
+        replacer: Any,
+        *,
+        in_html_comment: bool,
+    ) -> tuple[str, bool]:
+        output: list[str] = []
+        index = 0
+        while index < len(line):
+            if in_html_comment:
+                end_index = line.find("-->", index)
+                if end_index < 0:
+                    output.append(line[index:])
+                    return "".join(output), True
+                comment_end = end_index + 3
+                output.append(line[index:comment_end])
+                index = comment_end
+                in_html_comment = False
+                continue
+
+            start_index = line.find("<!--", index)
+            segment_end = start_index if start_index >= 0 else len(line)
+            output.append(self.replace_semantic_ref_tokens_outside_inline_code(line[index:segment_end], replacer))
+            if start_index < 0:
+                return "".join(output), False
+            output.append(line[start_index:start_index + 4])
+            index = start_index + 4
+            in_html_comment = True
+
+        return "".join(output), in_html_comment
 
     def replace_semantic_ref_tokens_outside_inline_code(self, line: str, replacer: Any) -> str:
         output: list[str] = []

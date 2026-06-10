@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import parse_qs, quote, urljoin, urlparse
 
 from docs_scope_config import DOCS_SCOPE_CONFIGS
 
@@ -95,6 +95,15 @@ def normalize_text(value: Any) -> str:
     return WHITESPACE_PATTERN.sub(" ", str(value or "")).strip()
 
 
+def viewer_url_for(scope: str, doc_id: str) -> str:
+    config = DOCS_SCOPE_CONFIGS[scope]
+    pairs: list[str] = []
+    if config.include_scope_param:
+        pairs.append(f"scope={quote(scope)}")
+    pairs.append(f"doc={quote(doc_id)}")
+    return f"{config.viewer_base_url}?{'&'.join(pairs)}"
+
+
 def detect_repo_root(explicit_root: str | None = None) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
@@ -137,7 +146,7 @@ def flatten_index_tree(scope: str, docs: list[Any]) -> list[DocMeta]:
                     scope=scope,
                     doc_id=doc_id,
                     title=title,
-                    viewer_url="",
+                    viewer_url=viewer_url_for(scope, doc_id),
                     source_path="",
                 )
             )
