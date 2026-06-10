@@ -9,7 +9,7 @@ viewable: false
 # 3 symbols
 
 [[ref:work:00638|3 symbols]]<br>
-3 symbols (book ‘composite for 3 symbols’), 2007<br>
+3 symbols (book _composite for 3 symbols_), 2007<br>
 3 symbols (cards), 2008
 
 ![3 symbols image 01]([[media:docs/analysis/img/3-symbols-image-01.webp]] "3 symbols image 01")<br>
