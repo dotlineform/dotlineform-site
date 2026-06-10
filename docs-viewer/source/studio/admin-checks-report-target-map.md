@@ -50,7 +50,7 @@ Supported options:
 
 | Option | Default | Purpose |
 | --- | --- | --- |
-| `limit` | `20` | Maximum number of per-file rows shown per markdown review table. |
+| `limit` | `20` | Maximum number of per-file rows shown per markdown review block. |
 | `pattern_limit` | `20` | Maximum number of stale or broad pattern rows shown in markdown. |
 
 ## Metrics
@@ -80,19 +80,35 @@ Report schema version: `admin_checks_target_map_report_v1`
 
 ## Markdown Shape
 
+The markdown report is the quick human review surface.
+It should answer a small set of review questions, not expose every captured field.
+Complete evidence remains in `report.json`.
+
+The target-map markdown should answer:
+
+- Are any in-scope code files unclassified?
+- Do any files cross multiple families, areas, or routes?
+- Which files are intentional shared dependencies?
+- Which configured target patterns need cleanup?
+
+The markdown report uses bullets and fenced `text` blocks with space-padded columns.
+It intentionally avoids Markdown tables because target-map evidence often becomes too wide for plain Markdown previews.
+Scoped file rows should prefer the filename as the immediate identifier; the full repo-relative path remains available in `report.json`.
+
 The markdown report includes:
 
 - report id, run id, selected scope, and selected filters
 - top-level target-map totals
-- family, area, and route match counts
-- shared dependency review rows
-- boundary finding tables by flag
-- stale and broad pattern rows
+- review-question counts
+- family, area, and route match counts in aligned text blocks
+- shared dependency review rows in aligned text blocks
+- boundary finding rows by flag in aligned text blocks
+- stale and broad pattern rows in aligned text blocks
 - interpretation notes that separate evidence from pass/fail policy
 
 Example:
 
-```text
+````text
 # Target Map Report
 
 - report: `target-map`
@@ -109,4 +125,21 @@ Example:
 - shared dependency files: x
 - stale patterns: x
 - broad patterns: x
+
+## Review Questions
+
+- Are any in-scope code files unclassified? x
+- Do any files cross multiple families, areas, or routes? x
+- Which files are intentional shared dependencies? x
+- Which configured target patterns need cleanup? x
+
+## Boundary Findings
+
+### unclassified-family
+
+```text
+File                                Families                  Areas                         Routes
+----------------------------------  ------------------------  ----------------------------  --------------------------
+docs-viewer-management.js           _unclassified             management                    /docs/
 ```
+````

@@ -101,8 +101,42 @@ def selected_text(values: Iterable[str]) -> str:
     return ", ".join(f"`{item}`" for item in items) if items else "_all_"
 
 
-def table_row(cells: Iterable[object]) -> str:
-    return "| " + " | ".join(str(cell) for cell in cells) + " |"
+def short_file_name(path: str) -> str:
+    return Path(path).name
+
+
+def truncate_text(value: object, width: int) -> str:
+    text = str(value)
+    if len(text) <= width:
+        return text
+    if width <= 3:
+        return text[:width]
+    return f"{text[: width - 3]}..."
+
+
+def padded_cell(value: object, width: int, align: str) -> str:
+    text = truncate_text(value, width)
+    if align == "right":
+        return text.rjust(width)
+    return text.ljust(width)
+
+
+def render_text_columns(
+    lines: list[str],
+    columns: list[tuple[str, int, str]],
+    rows: Iterable[Iterable[object]],
+) -> None:
+    lines.append("```text")
+    lines.append("  ".join(padded_cell(header, width, align) for header, width, align in columns).rstrip())
+    lines.append("  ".join("-" * width for _header, width, _align in columns).rstrip())
+    for row in rows:
+        lines.append(
+            "  ".join(
+                padded_cell(value, width, align)
+                for value, (_header, width, align) in zip(row, columns, strict=True)
+            ).rstrip()
+        )
+    lines.append("```")
 
 
 def all_areas(file: Mapping[str, Any]) -> list[str]:
@@ -251,28 +285,28 @@ def build_report(
     }
 
 
-def render_file_table(lines: list[str], rows: list[Mapping[str, Any]], limit: int) -> None:
+def render_file_findings(lines: list[str], rows: list[Mapping[str, Any]], limit: int) -> None:
     shown = rows[:limit]
-    lines.extend(
+    render_text_columns(
+        lines,
         [
-            table_row(["path", "families", "areas", "routes", "flags"]),
-            table_row(["---", "---", "---", "---", "---"]),
-        ]
+            ("File", 34, "left"),
+            ("Families", 24, "left"),
+            ("Areas", 28, "left"),
+            ("Routes", 26, "left"),
+        ],
+        [
+            [
+                short_file_name(str(row["path"])),
+                ", ".join(row["families"]) or "_unclassified",
+                ", ".join(all_areas(row)) or "-",
+                ", ".join(all_routes(row)) or "-",
+            ]
+            for row in shown
+        ],
     )
-    for row in shown:
-        lines.append(
-            table_row(
-                [
-                    f"`{row['path']}`",
-                    ", ".join(row["families"]) or "_unclassified",
-                    ", ".join(all_areas(row)) or "-",
-                    ", ".join(all_routes(row)) or "-",
-                    ", ".join(row["boundary_flags"]),
-                ]
-            )
-        )
     if len(rows) > len(shown):
-        lines.append(table_row([f"_Showing {len(shown)} of {len(rows)} files._", "", "", "", ""]))
+        lines.extend(["", f"_Showing {len(shown)} of {len(rows)} files._"])
 
 
 def render_markdown(report: Mapping[str, Any]) -> str:
@@ -299,58 +333,81 @@ def render_markdown(report: Mapping[str, Any]) -> str:
         f"- stale patterns: {totals['stale_patterns']}",
         f"- broad patterns: {totals['broad_patterns']}",
         "",
+        "## Review Questions",
+        "",
+        f"- Are any in-scope code files unclassified? {totals['unclassified_files']}",
+        f"- Do any files cross multiple families, areas, or routes? {totals['multi_family_files'] + totals['cross_area_files'] + totals['cross_route_files']}",
+        f"- Which files are intentional shared dependencies? {totals['shared_dependency_files']}",
+        f"- Which configured target patterns need cleanup? {totals['stale_patterns'] + totals['broad_patterns']}",
+        "",
         "## Target Counts",
         "",
-        table_row(["target type", "counts"]),
-        table_row(["---", "---"]),
     ]
     for target_type, counts in report["target_counts"].items():
-        count_text = ", ".join(f"`{key}`={value}" for key, value in counts.items()) or "-"
-        lines.append(table_row([target_type, count_text]))
+        rows = [[key, value] for key, value in counts.items()]
+        lines.extend([f"### {target_type}", ""])
+        render_text_columns(lines, [("Target", 34, "left"), ("Files", 5, "right")], rows or [["-", 0]])
+        lines.append("")
 
     shared_rows = report["shared_dependencies"][:limit]
     if shared_rows:
-        lines.extend(["", "## Shared Dependencies", "", table_row(["path", "areas", "routes", "targets"]), table_row(["---", "---", "---", "---:"])])
-        for row in shared_rows:
-            lines.append(
-                table_row(
-                    [
-                        f"`{row['path']}`",
-                        ", ".join(row["shared_areas"]) or "-",
-                        ", ".join(row["shared_routes"]) or "-",
-                        row["target_count"],
-                    ]
-                )
-            )
+        lines.extend(["## Shared Dependencies", ""])
+        render_text_columns(
+            lines,
+            [
+                ("File", 34, "left"),
+                ("Areas", 28, "left"),
+                ("Routes", 26, "left"),
+                ("Targets", 7, "right"),
+            ],
+            [
+                [
+                    short_file_name(str(row["path"])),
+                    ", ".join(row["shared_areas"]) or "-",
+                    ", ".join(row["shared_routes"]) or "-",
+                    row["target_count"],
+                ]
+                for row in shared_rows
+            ],
+        )
         if len(report["shared_dependencies"]) > len(shared_rows):
             lines.extend(["", f"_Showing {len(shared_rows)} of {len(report['shared_dependencies'])} shared dependency files._"])
+        lines.append("")
 
     review_files_by_flag = report["review_files"]
     if review_files_by_flag:
-        lines.extend(["", "## Boundary Findings", ""])
+        lines.extend(["## Boundary Findings", ""])
         for flag in REVIEW_FLAGS:
             rows = review_files_by_flag.get(flag, [])
             if not rows:
                 continue
             lines.extend([f"### {flag}", ""])
-            render_file_table(lines, rows, limit)
+            render_file_findings(lines, rows, limit)
             lines.append("")
 
     review_patterns = [pattern for pattern in report["patterns"] if pattern["status"] in {"stale", "broad"}]
     if review_patterns:
-        lines.extend(["## Pattern Findings", "", table_row(["status", "target", "kind", "matches", "pattern"]), table_row(["---", "---", "---", "---:", "---"])])
-        for pattern in review_patterns[:pattern_limit]:
-            lines.append(
-                table_row(
-                    [
-                        pattern["status"],
-                        f"`{pattern['target_type']}.{pattern['target_id']}`",
-                        pattern["match_kind"],
-                        pattern["match_count"],
-                        f"`{pattern['pattern']}`",
-                    ]
-                )
-            )
+        lines.extend(["## Pattern Findings", ""])
+        render_text_columns(
+            lines,
+            [
+                ("Status", 8, "left"),
+                ("Target", 32, "left"),
+                ("Kind", 10, "left"),
+                ("Matches", 7, "right"),
+                ("Pattern", 52, "left"),
+            ],
+            [
+                [
+                    pattern["status"],
+                    f"{pattern['target_type']}.{pattern['target_id']}",
+                    pattern["match_kind"],
+                    pattern["match_count"],
+                    pattern["pattern"],
+                ]
+                for pattern in review_patterns[:pattern_limit]
+            ],
+        )
         if len(review_patterns) > pattern_limit:
             lines.extend(["", f"_Showing {pattern_limit} of {len(review_patterns)} pattern findings._"])
         lines.append("")

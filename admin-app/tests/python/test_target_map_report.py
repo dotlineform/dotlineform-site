@@ -233,9 +233,13 @@ def test_target_map_report_markdown_and_artifact_shape(tmp_path: Path) -> None:
     json_path, md_path = report_module.write_outputs(report, markdown, output_dir)
 
     assert "# Target Map Report" in markdown
+    assert "## Review Questions" in markdown
     assert "## Shared Dependencies" in markdown
     assert "## Boundary Findings" in markdown
     assert "## Pattern Findings" in markdown
+    assert "```text" in markdown
+    assert "| path |" not in markdown
+    assert "| status |" not in markdown
     assert "Showing 1 of" in markdown
     assert json_path.name == "report.json"
     assert md_path.name == "report.md"
