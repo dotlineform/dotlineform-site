@@ -51,6 +51,14 @@
       "parent_title": "Admin Checks Reports"
     },
     {
+      "doc_id": "admin-checks-report-target-map",
+      "title": "Target Map Report",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-target-map.json",
+      "added_date": "2026-06-10",
+      "parent_id": "admin-checks-reports",
+      "parent_title": "Reports"
+    },
+    {
       "doc_id": "admin-checks-target-map-architecture",
       "title": "Config and Target Map",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
-    },
-    {
-      "doc_id": "site-request-report-dependencies",
-      "title": "Report Dependencies",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
-      "added_date": "2026-06-09",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-10T17:28:04Z"
+  "generated_at": "2026-06-10T18:36:16Z"
 }

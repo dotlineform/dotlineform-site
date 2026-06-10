@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fe185eb1a09eea8199d4cbd99f085e67",
-    "generated_at_utc": "2026-06-10T17:33:00Z",
-    "count": 233
+    "version": "blake2b-f299f8c060d141b22634947662509eaa",
+    "generated_at_utc": "2026-06-10T18:36:16Z",
+    "count": 234
   },
   "entries": [
     {
@@ -196,6 +196,31 @@
         "10"
       ],
       "search_text": "admin-checks-report-files admin checks report files files report reports 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "admin-checks-report-target-map",
+      "kind": "doc",
+      "title": "Target Map Report",
+      "href": "/docs/?scope=studio&doc=admin-checks-report-target-map",
+      "last_updated": "2026-06-10",
+      "parent_id": "admin-checks-reports",
+      "parent_title": "Reports",
+      "display_meta": "2026-06-10 • Reports",
+      "search_terms": [
+        "admin-checks-report-target-map",
+        "admin",
+        "checks",
+        "report",
+        "target",
+        "map",
+        "target map report",
+        "reports",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "admin-checks-report-target-map admin checks report target map target map report reports 2026-06-10 2026 06 10"
     },
     {
       "id": "local-admin-app",

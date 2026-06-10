@@ -32,7 +32,7 @@ The config defines:
 - `families` - the technical layers: file family ids and path/pattern rules
 - `areas` - the functional/workflow areas and path/pattern rules
 - `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
-- `reports` - report ids, scripts, labels, defaults, and allowed options
+- `reports` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
 
 Families tell us technical layer; routes tell us surface boundary; areas tell us workflow ownership.
 

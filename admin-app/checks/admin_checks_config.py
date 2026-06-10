@@ -155,6 +155,9 @@ def validate_report_map(config: Mapping[str, Any]) -> None:
             raise ChecksConfigError(f"reports.{report_id}.script must be under {REPORTS_ROOT.as_posix()}/")
         if script.suffix != ".py":
             raise ChecksConfigError(f"reports.{report_id}.script must be a Python file")
+        produces_csv = report.get("produces_csv", False)
+        if not isinstance(produces_csv, bool):
+            raise ChecksConfigError(f"reports.{report_id}.produces_csv must be a boolean")
         validate_report_options(report_id, report)
 
 

@@ -31,6 +31,9 @@ def test_load_checks_config_accepts_v1_config() -> None:
     assert config["routes"]["/works/"]["status"] == "inventory-only"
     assert config["routes"]["/studio/catalogue-work/"]["status"] == "inventory-only"
     assert config["reports"]["files"]["script"] == "admin-app/checks/reports/files.py"
+    assert config["reports"]["files"]["produces_csv"] is True
+    assert config["reports"]["target-map"]["script"] == "admin-app/checks/reports/target_map.py"
+    assert config["reports"]["target-map"]["produces_csv"] is False
 
 
 def test_validate_checks_config_rejects_report_script_outside_reports() -> None:

@@ -14,7 +14,7 @@ Admin Checks is the durable home for the `/admin/checks/` report system.
 
 Admin Checks runs allowlisted reports against configured repo scopes and stores local report artifacts for review in Admin.
 
-The first v1 report is [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files).
+Implemented reports include [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files) and [Admin Checks Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map).
 Subsequent reports should get their own child docs once implemented.
 Future report request docs live under [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports) until a report is implemented and promoted into this durable Admin Checks section.
 
@@ -54,7 +54,7 @@ The config defines:
 - `families` - the technical layers: file family ids and path/pattern rules
 - `areas` - the functional/workflow areas and path/pattern rules
 - `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
-- `reports` - report ids, scripts, labels, defaults, and allowed options
+- `reports` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
 
 Routes may be `mapped` or `inventory-only`.
 Mapped routes are reviewed route targets and can be selected by normal checks runs.
@@ -109,7 +109,7 @@ var/admin/checks/target-map-audit/
 
 The audit is used to maintain the config map and review drift.
 
-The pending report request is [Target Map Report Request](/docs/?scope=studio&doc=site-request-report-target-map).
+The run-scoped target-map report is [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map).
 
 Run the target-map audit when adding new routes, feature areas, app layers, or significant file moves.
 
@@ -125,11 +125,15 @@ Example:
   "families": ["runtime-js", "services"],
   "areas": ["search"],
   "routes": [],
-  "reports": ["files"],
+  "reports": ["files", "target-map"],
   "options": {
     "files": {
       "limit": 20,
       "sort": "lines_desc"
+    },
+    "target-map": {
+      "limit": 20,
+      "pattern_limit": 20
     }
   },
   "write": true
@@ -206,7 +210,7 @@ The focused Admin Checks profile is:
 admin-app/commands/run_checks.py --profile admin-checks
 ```
 
-It runs the target-map resolver, config validation, orchestrator, `files` report, and checks API tests.
+It runs the target-map resolver, config validation, orchestrator, `files` report, `target-map` report, and checks API tests.
 
 ## Markdown Display
 

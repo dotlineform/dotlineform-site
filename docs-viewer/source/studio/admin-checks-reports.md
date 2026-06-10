@@ -14,3 +14,4 @@ Implemented reports:
 | Report | Status | Durable doc |
 | --- | --- | --- |
 | `files` | implemented | [Files Report](/docs/?scope=studio&doc=admin-checks-report-files) |
+| `target-map` | implemented | [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map) |

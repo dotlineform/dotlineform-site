@@ -3,12 +3,12 @@ doc_id: site-request-report-target-map
 title: Target Map Report
 added_date: 2026-06-08
 last_updated: 2026-06-10
-ui_status: in-progress
+ui_status: complete
 parent_id: site-request-admin-checks-reports
 ---
 # Target Map Report
 
-Status: in-progress
+Status: complete
 
 This document describes a new report for [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
@@ -96,24 +96,24 @@ The `target-map` report should include evidence for:
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Add `target-map` report metadata to `admin-app/checks/config/admin-checks.json`. |
-| 2 | planned | Add `admin-app/checks/reports/target_map.py`. |
-| 3 | planned | Reuse `target_map_resolver.py` and, where practical, shared helpers from `audit_target_map.py`; do not duplicate target resolution logic. |
-| 4 | planned | Write `report.json` with target coverage, stale-pattern, shared-dependency, and boundary-flag metrics. |
-| 5 | planned | Write `report.md` with a readable target-map summary and review tables. |
-| 6 | planned | Add focused tests for report metrics, boundary flags, markdown rendering, stale/broad pattern handling, orchestrator integration, and artifact shape. |
-| 7 | planned | Run the report through the normal orchestrator against at least `docs-viewer`. |
-| 8 | planned | Update Checks docs once the report artifact shape is stable. |
+| 1 | complete | Add `target-map` report metadata to `admin-app/checks/config/admin-checks.json`. |
+| 2 | complete | Add `admin-app/checks/reports/target_map.py`. |
+| 3 | complete | Reuse `target_map_resolver.py` and, where practical, shared helpers from `audit_target_map.py`; do not duplicate target resolution logic. |
+| 4 | complete | Write `report.json` with target coverage, stale-pattern, shared-dependency, and boundary-flag metrics. |
+| 5 | complete | Write `report.md` with a readable target-map summary and review tables. |
+| 6 | complete | Add focused tests for report metrics, boundary flags, markdown rendering, stale/broad pattern handling, orchestrator integration, and artifact shape. |
+| 7 | complete | Run the report through the normal orchestrator against at least `docs-viewer`. |
+| 8 | complete | Update Checks docs once the report artifact shape is stable. |
 
-## Proposed Verification
+## Verification
 
-- Focused tests for `target_map.py`.
-- Reuse existing target-map resolver/audit fixtures where they cover the same behavior.
-- Orchestrator dry run and write run for `docs-viewer` / `target-map`.
-- Inspect `report.json` and `report.md`.
-- Verify `_unclassified`, multi-family, cross-area, cross-route, shared-dependency, stale-pattern, and broad-pattern examples are represented when fixtures or real files contain them.
+- Focused tests for `target_map.py`: `admin-app/tests/python/test_target_map_report.py`.
+- Admin Checks profile: `admin-app/commands/run_checks.py --profile admin-checks`.
+- Orchestrator dry run for `docs-viewer` / `target-map`.
+- Orchestrator write run for `docs-viewer` / `target-map`: `var/admin/checks/20260610-183526-docs-viewer/`.
+- Inspected `report.json` and `report.md`; the write run produced `report.json` and `report.md` without a CSV artifact.
+- Fixture coverage verifies `_unclassified`, multi-family, cross-area, cross-route, shared-dependency, stale-pattern, and broad-pattern examples.
 
 ## Open Questions
 
-None for request framing.
-Implementation details can be refined against the current target-map audit output and Admin Checks report contract.
+None.

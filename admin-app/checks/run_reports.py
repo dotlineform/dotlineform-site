@@ -133,14 +133,22 @@ def create_run_dir(run_id: str, *, repo_root: Path = REPO_ROOT, runs_root: Path 
     return candidate
 
 
-def report_artifact_paths(run_dir: Path, report_id: str, repo_root: Path = REPO_ROOT) -> dict[str, str]:
+def report_artifact_paths(
+    run_dir: Path,
+    report_id: str,
+    repo_root: Path = REPO_ROOT,
+    *,
+    produces_csv: bool = False,
+) -> dict[str, str]:
     report_dir = run_dir / report_id
-    return {
+    paths = {
         "output_dir": repo_relative(report_dir, repo_root),
         "report_json": repo_relative(report_dir / "report.json", repo_root),
         "report_markdown": repo_relative(report_dir / "report.md", repo_root),
-        "report_csv": repo_relative(report_dir / "report.csv", repo_root),
     }
+    if produces_csv:
+        paths["report_csv"] = repo_relative(report_dir / "report.csv", repo_root)
+    return paths
 
 
 def build_plan(
@@ -168,13 +176,15 @@ def build_plan(
     reports: list[dict[str, Any]] = []
     for report_id in normalized_request["reports"]:
         report = config["reports"][report_id]
-        artifact_paths = report_artifact_paths(repo_root / planned_run_dir, report_id, repo_root)
+        produces_csv = bool(report.get("produces_csv", False))
+        artifact_paths = report_artifact_paths(repo_root / planned_run_dir, report_id, repo_root, produces_csv=produces_csv)
         reports.append(
             {
                 "report_id": report_id,
                 "label": report["label"],
                 "description": report["description"],
                 "script": report["script"],
+                "produces_csv": produces_csv,
                 "options": resolved_options[report_id],
                 "artifacts": artifact_paths,
             }
@@ -315,6 +325,14 @@ def invoke_report(
         ]
         error = f"report completed without required artifacts: {', '.join(missing)}"
 
+    result_artifacts = dict(report["artifacts"])
+    report_csv_path_text = result_artifacts.get("report_csv") or repo_relative(report_dir / "report.csv", repo_root)
+    report_csv = repo_root / report_csv_path_text
+    if report_csv.is_file():
+        result_artifacts["report_csv"] = report_csv_path_text
+    else:
+        result_artifacts.pop("report_csv", None)
+
     command = command_record(
         kind="report",
         report_id=report_id,
@@ -333,7 +351,7 @@ def invoke_report(
         "report_id": report_id,
         "status": status,
         "exit_code": completed.returncode,
-        "artifacts": report["artifacts"],
+        "artifacts": result_artifacts,
     }
     if error:
         result["error"] = error
@@ -407,7 +425,12 @@ def write_run_artifacts(
     plan["run_id"] = run_dir.name
     plan["run_dir"] = repo_relative(run_dir, repo_root)
     for report in plan["reports"]:
-        report["artifacts"] = report_artifact_paths(run_dir, report["report_id"], repo_root)
+        report["artifacts"] = report_artifact_paths(
+            run_dir,
+            report["report_id"],
+            repo_root,
+            produces_csv=bool(report.get("produces_csv", False)),
+        )
 
     manifest_path = run_dir / "manifest.json"
     manifest = {

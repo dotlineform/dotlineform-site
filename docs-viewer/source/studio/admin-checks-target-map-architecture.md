@@ -31,7 +31,7 @@ admin-app/checks/
   target_map_resolver.py
   audit_target_map.py
   reports/
-    target_map.py  [deferred]
+    target_map.py
 ```
 
 ## Current State
@@ -45,10 +45,7 @@ Current durable implementation:
 - `admin-app/checks/admin_checks_config.py` validates the config and run requests.
 - `admin-app/checks/target_map_resolver.py` resolves scopes, families, areas, routes, shared dependencies, stale patterns, broad patterns, and boundary flags.
 - `admin-app/checks/audit_target_map.py` is a maintenance CLI wrapper around the config loader and resolver.
-
-Deferred implementation:
-
-- `admin-app/checks/reports/target_map.py` remains deferred until the normal checks system can run reports through the orchestrator.
+- `admin-app/checks/reports/target_map.py` is the normal run-scoped checks report producer for target-map evidence.
 
 ## Target Layers
 
@@ -113,7 +110,7 @@ The query state such as `?scope=studio&doc=...&mode=manage` is route state, not 
 | `admin-app/checks/admin_checks_config.py` | Config and run-request validation. |
 | `admin-app/checks/target_map_resolver.py` | Shared resolver for matching files to scopes, families, areas, routes, shared dependencies, stale patterns, and boundary flags. |
 | `admin-app/checks/audit_target_map.py` | Maintenance guardrail for config drift across the repo. |
-| `admin-app/checks/reports/target_map.py` | Deferred normal report producer for target-map evidence in a checks run. |
+| `admin-app/checks/reports/target_map.py` | Normal report producer for target-map evidence in a checks run. |
 
 Docs Viewer publish-gate files are classified with the existing `/docs/` route plus the `management` and `docs-build` areas.
 Do not add a separate publishing area unless the workflow grows beyond the local management/build boundary.

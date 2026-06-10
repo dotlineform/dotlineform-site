@@ -310,6 +310,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/tests/python/test_admin_checks_config.py",
                 "admin-app/tests/python/test_run_reports.py",
                 "admin-app/tests/python/test_files_report.py",
+                "admin-app/tests/python/test_target_map_report.py",
                 "admin-app/tests/python/test_admin_checks_api.py",
             ),
             "Run focused Admin checks config, resolver, orchestrator, producer, and API tests.",
