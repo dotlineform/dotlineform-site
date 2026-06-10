@@ -10,8 +10,6 @@ parent_id: admin
 
 Admin Checks is the durable home for the `/admin/checks/` report system.
 
-It replaces the retired legacy risk evidence pack, `/admin/risk/`, and `/admin/api/risk/...` surfaces.
-
 ## Purpose
 
 Admin Checks runs allowlisted reports against configured repo scopes and stores local report artifacts for review in Admin.
