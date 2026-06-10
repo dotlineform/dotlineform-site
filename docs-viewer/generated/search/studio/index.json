@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d99d30d0e690ec5c83963388535d81e5",
-    "generated_at_utc": "2026-06-10T10:48:44Z",
-    "count": 236
+    "version": "blake2b-73c48486800b8c78087295e67710d5e3",
+    "generated_at_utc": "2026-06-10T11:34:32Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1002,6 +1002,34 @@
         "10"
       ],
       "search_text": "site-request-docs-publish-gate site request docs publish gate docs public publish gate public change requests change requests 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "site-request-docs-publish-gate-implementation-plan",
+      "kind": "doc",
+      "title": "Docs Public Publish Gate Implementation Plan",
+      "href": "/docs/?scope=studio&doc=site-request-docs-publish-gate-implementation-plan",
+      "last_updated": "2026-06-10",
+      "parent_id": "site-request-docs-publish-gate",
+      "parent_title": "Docs Public Publish Gate",
+      "display_meta": "2026-06-10 • Docs Public Publish Gate",
+      "search_terms": [
+        "site-request-docs-publish-gate-implementation-plan",
+        "site",
+        "request",
+        "docs",
+        "publish",
+        "gate",
+        "implementation",
+        "plan",
+        "docs public publish gate implementation plan",
+        "public",
+        "docs public publish gate",
+        "2026-06-10",
+        "2026",
+        "06",
+        "10"
+      ],
+      "search_text": "site-request-docs-publish-gate-implementation-plan site request docs publish gate implementation plan docs public publish gate implementation plan public docs public publish gate 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-docs-semantic-references-v2",

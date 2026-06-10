@@ -11,6 +11,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "site-request-docs-publish-gate-implementation-plan",
+      "title": "Docs Public Publish Gate Implementation Plan",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-publish-gate-implementation-plan.json",
+      "added_date": "2026-06-10",
+      "parent_id": "site-request-docs-publish-gate",
+      "parent_title": "Docs Public Publish Gate"
+    },
+    {
       "doc_id": "site-request-risk-evidence-producers-report-generated-payloads",
       "title": "Generated Payloads Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-generated-payloads.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-risk-evidence-producers",
       "parent_title": "Risk Evidence Producers Request"
-    },
-    {
-      "doc_id": "site-request-risk-evidence-producers-report-imports",
-      "title": "Imports Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-risk-evidence-producers-report-imports.json",
-      "added_date": "2026-06-09",
-      "parent_id": "site-request-risk-evidence-producers",
-      "parent_title": "Risk Evidence Producers Request"
     }
   ],
-  "generated_at": "2026-06-10T10:48:44Z"
+  "generated_at": "2026-06-10T11:34:31Z"
 }
