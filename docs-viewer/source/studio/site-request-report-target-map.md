@@ -8,17 +8,15 @@ parent_id: site-request-admin-checks-reports
 ---
 # Target Map Report
 
-Status: draft
+Status: in-progress
 
-This document describes a possible future report for [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
+This document describes a new report for [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports).
 
 ## Summary
 
-Implement a `target-map` report now that Admin Checks v1 can run the `files` report.
-
-The current implementation includes `admin-app/checks/audit_target_map.py` to produce and maintain the family, area, and route map.
-That audit writes maintenance artifacts under `var/admin/checks/target-map-audit/`.
-This request turns the same target-map evidence into a normal checks report with run-scoped `report.json` and `report.md` artifacts under `var/admin/checks/<run-id>/target-map/`.
+- The current Admin Checks implementation includes `admin-app/checks/audit_target_map.py` to produce and maintain the family, area, and route map.
+- That audit writes maintenance artifacts under `var/admin/checks/target-map-audit/`.
+- This request turns the same target-map evidence into a normal checks report with run-scoped `report.json` and `report.md` artifacts under `var/admin/checks/<run-id>/target-map/`.
 
 ## Purpose
 
