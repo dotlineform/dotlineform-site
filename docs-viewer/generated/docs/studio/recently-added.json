@@ -11,14 +11,6 @@
       "parent_title": "Admin Checks Reports"
     },
     {
-      "doc_id": "site-request-report-javascript-inventory-guardrail",
-      "title": "JavaScript Inventory Guardrail Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-javascript-inventory-guardrail.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
-    },
-    {
       "doc_id": "site-request-report-runtime-checks",
       "title": "Runtime Checks Report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
+    },
+    {
+      "doc_id": "site-request-report-dependencies",
+      "title": "Report Dependencies",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
+      "added_date": "2026-06-09",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-10T18:36:16Z"
+  "generated_at": "2026-06-10T20:48:05Z"
 }

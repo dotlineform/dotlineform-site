@@ -147,7 +147,6 @@ Task definition checklist:
 
 Useful checks and follow-through:
 
-- Run `$HOME/miniconda3/bin/python3 admin-app/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
 - Use browser smokes only for integration behavior that needs a browser, such as route boot, service-backed route reads, and representative user workflows. Keep helper contracts in cheaper focused tests; do not create broad browser module-contract suites with duplicated runtime fixtures.
 
 ### Docs Viewer App Architecture Gate

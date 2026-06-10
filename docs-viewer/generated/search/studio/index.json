@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f299f8c060d141b22634947662509eaa",
-    "generated_at_utc": "2026-06-10T18:36:16Z",
-    "count": 234
+    "version": "blake2b-9bb9795f98715ce74ed162e9d2f71598",
+    "generated_at_utc": "2026-06-10T20:48:05Z",
+    "count": 232
   },
   "entries": [
     {
@@ -1065,35 +1065,6 @@
       "search_text": "site-request-report-imports site request report imports imports report admin checks reports admin checks reports 2026-06-09 2026 06 09"
     },
     {
-      "id": "site-request-report-javascript-inventory-guardrail",
-      "kind": "doc",
-      "title": "JavaScript Inventory Guardrail Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-javascript-inventory-guardrail",
-      "last_updated": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports",
-      "display_meta": "2026-06-10 • Admin Checks Reports",
-      "search_terms": [
-        "site-request-report-javascript-inventory-guardrail",
-        "site",
-        "request",
-        "report",
-        "javascript",
-        "inventory",
-        "guardrail",
-        "javascript inventory guardrail report",
-        "admin checks reports",
-        "admin",
-        "checks",
-        "reports",
-        "2026-06-10",
-        "2026",
-        "06",
-        "10"
-      ],
-      "search_text": "site-request-report-javascript-inventory-guardrail site request report javascript inventory guardrail javascript inventory guardrail report admin checks reports admin checks reports 2026-06-10 2026 06 10"
-    },
-    {
       "id": "site-request-report-dependencies",
       "kind": "doc",
       "title": "Report Dependencies",
@@ -1231,34 +1202,6 @@
         "10"
       ],
       "search_text": "site-request-report-subjective-notes site request report subjective notes subjective notes report admin checks reports admin checks reports 2026-06-10 2026 06 10"
-    },
-    {
-      "id": "site-request-report-target-map",
-      "kind": "doc",
-      "title": "Target Map Report",
-      "href": "/docs/?scope=studio&doc=site-request-report-target-map",
-      "last_updated": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports",
-      "display_meta": "2026-06-10 • Admin Checks Reports",
-      "search_terms": [
-        "site-request-report-target-map",
-        "site",
-        "request",
-        "report",
-        "target",
-        "map",
-        "target map report",
-        "admin checks reports",
-        "admin",
-        "checks",
-        "reports",
-        "2026-06-10",
-        "2026",
-        "06",
-        "10"
-      ],
-      "search_text": "site-request-report-target-map site request report target map target map report admin checks reports admin checks reports 2026-06-10 2026 06 10"
     },
     {
       "id": "site-request-report-tests",

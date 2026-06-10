@@ -256,12 +256,6 @@
               "ui_status": "draft"
             },
             {
-              "doc_id": "site-request-report-javascript-inventory-guardrail",
-              "title": "JavaScript Inventory Guardrail Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-javascript-inventory-guardrail.json",
-              "ui_status": "draft"
-            },
-            {
               "doc_id": "site-request-report-dependencies",
               "title": "Report Dependencies",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
@@ -290,12 +284,6 @@
               "title": "Subjective Notes Report",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-subjective-notes.json",
               "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-target-map",
-              "title": "Target Map Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-target-map.json",
-              "ui_status": "complete"
             },
             {
               "doc_id": "site-request-report-tests",
@@ -1264,5 +1252,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-10T18:37:24Z"
+  "generated_at": "2026-06-10T20:48:05Z"
 }
