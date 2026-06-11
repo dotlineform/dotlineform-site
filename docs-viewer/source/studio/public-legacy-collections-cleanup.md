@@ -49,7 +49,7 @@ The legacy collection outputs still exist because `_config.yml` still defines pu
 - `work_details` with `layout: work_details` and permalink `/work_details/:name/`
 - `moments` with `layout: moment` and permalink `/moments/:name/`
 
-Several generated stubs are intentionally minimal or empty.
+Generated stubs are intentionally minimal or empty.
 They are no longer the canonical source of public page metadata or prose.
 
 ## Why This Is Wide
@@ -73,8 +73,6 @@ Current references and assumptions are spread across:
 - projection contracts and related tests
 - docs that still describe route stubs or Jekyll collection outputs as current build constraints
 
-Do not retire this with a single template deletion.
-
 ## Target Ownership
 
 After cleanup, public catalogue route ownership should be:
@@ -86,7 +84,7 @@ After cleanup, public catalogue route ownership should be:
 | Series browse shell | `series/index.md` |
 | Work browse/selected shell | `works/index.md` |
 | Work-detail shell | `work-details/index.md` |
-| Moment page shell | current or replacement moment route generator, without `_moments` as a required input contract |
+| Moment page shell | replacement moment route generator, without `_moments` as a required input contract |
 | Public work payloads | `assets/works/index/<work_id>.json` |
 | Public series payloads | `assets/series/index/<series_id>.json` |
 | Public moment payloads | `assets/moments/index/<moment_id>.json` |
@@ -95,11 +93,11 @@ After cleanup, public catalogue route ownership should be:
 
 ## Non-Goals
 
-- Do not add compatibility redirects for retired path-style routes.
+- Do not add compatibility redirects for retired path-style routes.\
+- Do not emit recovery pages for `/works/<work_id>/`, `/series/<series_id>/`, `/work_details/<detail_uid>/`, or other retired path-style catalogue routes.
 - Do not restore broad route aliases for `/works/<work_id>/`, `/series/<series_id>/`, or `/work_details/<detail_uid>/`.
 - Do not make generated public payloads serialize derivable route URLs.
-- Do not remove Jekyll itself in this cleanup unless the public static-site build path is being replaced at the same time.
-- Do not delete moment page support until the replacement moment route generation path is explicit.
+- Do not remove Jekyll itself in this cleanup.
 
 ## Cleanup Plan
 
@@ -159,22 +157,13 @@ Verification:
 
 ### Phase 3: Moment Route Replacement
 
-Moment routes need a separate decision because `/moments/<moment_id>/` remains canonical.
-The cleanup target is not "delete moment pages"; it is "stop treating `_moments` stubs as the route-input contract."
+The cleanup target is not "delete moment pages"; it is "stop treating `_moments` stubs as the route-input contract." `/moments/<moment_id>/` should move to generated non-collection pages.
 
-Implementation options:
-
-- generate moment pages from `assets/moments/index/<moment_id>.json` or canonical moment source records without writing `_moments/*.md`
-- keep a minimal Jekyll-compatible generated source only if Jekyll requires a file per moment during the current build era, but document it as a temporary build artifact
-- move moment page generation into a non-collection fixed build step when the public static-site builder replaces Jekyll collection output
+- move moment page generation into a non-collection fixed build step. generate moment pages from `assets/moments/index/<moment_id>.json` without writing `_moments/*.md`
 
 Verification:
 
-- public route smoke for `/moments/<moment_id>/`
-- moments browse recovery smoke for `/moments/` -> `/series/?mode=moments`
-- search result URL smoke for moment results
-- generated moment payload validation
-- Jekyll build or replacement public builder validation
+- replacement public builder validation
 
 ### Phase 4: Docs And Contract Cleanup
 
@@ -190,16 +179,6 @@ Likely affected docs:
 - [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
 - [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 
-Historical request docs do not need updating unless they are being used as active references.
-
-## Decisions
-
-- Old path-style routes should return normal 404s.
-  Do not emit recovery pages for `/works/<work_id>/`, `/series/<series_id>/`, `/work_details/<detail_uid>/`, or other retired path-style catalogue routes.
-- `/moments/<moment_id>/` should move earlier to generated non-collection pages.
-  Moment path routes remain canonical, but `_moments/` should not remain the route-input contract until the public static builder migration.
-- Retired collection directories should be deleted outright.
-  Do not move `_works/`, `_series/`, `_work_details/`, or `_moments/` into a retired/reference area.
 - No new audit is required solely for the "no work, series, or detail collection stubs are required" owner contract.
   Use the existing focused route, build, and test checks for the implementation slice.
 
