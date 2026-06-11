@@ -2,7 +2,7 @@
 doc_id: public-route-model
 title: Public Route Model
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-11
 ui_status: stable
 parent_id: architecture
 viewable: true
@@ -13,7 +13,7 @@ This document is the durable route contract for the public site.
 
 ## Route Principles
 
-- keep stable top-level public shells for `/series/`, `/works/`, `/recent/`, `/catalogue/search/`, `/library/`, and `/analysis/`
+- keep stable top-level public shells for `/series/`, `/works/`, `/moments/`, `/recent/`, `/catalogue/search/`, `/library/`, and `/analysis/`
 - prefer query/state-driven catalogue record views where this preserves user workflows with fewer generated HTML files
 - avoid generating per-record route stubs solely to keep URLs readable
 - do not add broad compatibility redirect tables for old per-record URLs
@@ -43,8 +43,8 @@ This document is the durable route contract for the public site.
 /work-details/                     work-detail shell
 /work-details/?detail=00001-001    selected work detail view
 
-/moments/                          explicit recovery route to /series/?mode=moments
-/moments/a-doll-story/             individual moment page
+/moments/                          moments browse shell
+/moments/?moment=a-doll-story      selected moment view
 
 /catalogue/search/                 public catalogue search shell
 /library/                          public read-only Library Docs Viewer install
@@ -52,8 +52,8 @@ This document is the durable route contract for the public site.
 /404.html                          clean recovery page for unknown or retired routes
 ```
 
-The public static-site builder should emit fixed route shells for the canonical shell routes and enumerate individual moment pages from public moment records or generated public moment data.
-It should not generate one HTML page per work, series, or work detail.
+The public static-site builder should emit fixed route shells for the canonical shell routes.
+It should not generate one HTML page per work, series, work detail, or moment.
 
 ## Retired Routes
 
@@ -65,6 +65,7 @@ Retired first-party public routes include:
 - `/works/<work_id>/`
 - `/series/<series_id>/`
 - `/work_details/<detail_uid>/`
+- `/moments/<moment_id>/`
 
 `/work-details/` is the canonical spelling for the work-detail shell.
 `/work_details/` is legacy and should not be restored.
@@ -81,17 +82,21 @@ Query parameters are route state, not compatibility shims for old paths.
 - `work` on `/works/` selects a work in the works shell.
 - `series` on `/works/` preserves visible series navigation context for a selected work.
 - `detail` on `/work-details/` selects a work detail in the work-detail shell.
+- `moment` on `/moments/` selects a moment in the moments shell.
 
 Important return paths should be represented by explicit in-page links.
 Browser history is useful but should not be the primary mechanism for required navigation context.
 
-## Moment Pages
+## Moment Routes
 
-Individual moment pages may remain path routes because the current interaction opens selected moments from the catalogue moments grid/list.
-They should be generated from public moment records or generated public moment data, not from Jekyll `_moments` stubs.
+Moments use the same shell, query-state, and generated-payload model as works, series, and work details.
+Selected moments are rendered by the `/moments/` shell from generated moment JSON, with the selected record identified by the `moment` query parameter.
 
-`/moments/` is a recovery route to `/series/?mode=moments`.
-It should not expose a directory listing or accidental 404 behavior.
+`/moments/<moment_id>/` is a retired path-style route.
+Do not generate one static HTML page per moment solely to keep path URLs readable.
+
+The earlier public route migration converted work and series pages from Jekyll/Liquid collection pages to runtime JavaScript plus generated JSON, but moments were not converted in the same slice.
+Moment cleanup therefore requires moving the moment rendering path onto the runtime payload model, not just deleting `_moments` files.
 
 ## URL Ownership
 
@@ -113,7 +118,6 @@ The public static-site builder should consume this route model directly.
 It should generate:
 
 - fixed public route shell HTML
-- individual moment page HTML
 - `404.html`
 - public route assets and generated public data required by those shells
 

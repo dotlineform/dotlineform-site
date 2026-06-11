@@ -167,9 +167,9 @@ Routes should be generated directly from [Public Route Model](/docs/?scope=studi
 Jekyll collection stubs are not static-builder inputs.
 
 The builder should emit fixed route shells for the canonical public routes, including `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, and `/analysis/`.
-Individual moment pages may remain path routes such as `/moments/a-doll-story/`, but they should be enumerated from public moment records rather than from `_moments` stubs.
+Selected moments should use `/moments/?moment=<moment_id>` and generated moment payloads, matching the shell/query model used for selected work views.
 
-Remaining `_works/`, `_series/`, `_work_details/`, `_moments/`, and related Jekyll collection outputs are legacy build-layer artifacts, not current publishing requirements for canonical work, series, or work-detail routes.
+Remaining `_works/`, `_series/`, `_work_details/`, `_moments/`, and related Jekyll collection outputs are legacy build-layer artifacts, not current publishing requirements for canonical work, series, work-detail, or moment routes.
 Their removal is tracked in [Public Legacy Collections Cleanup](/docs/?scope=studio&doc=public-legacy-collections-cleanup); the static builder must not treat them as route inputs.
 
 ### Route Parity
@@ -177,7 +177,7 @@ Their removal is tracked in [Public Legacy Collections Cleanup](/docs/?scope=stu
 The first production-equivalent static builder should provide parity for all public routes in the simplified route contract.
 The post-simplification public route surface is small enough that the first production-equivalent static builder should not stage only a subset.
 
-Required parity includes the public root and static pages, fixed catalogue shells, query-state catalogue routes, individual moment pages, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
+Required parity includes the public root and static pages, fixed catalogue shells, query-state catalogue routes including selected moments, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
 The route list should be derived from [Public Route Model](/docs/?scope=studio&doc=public-route-model) plus current top-level public pages and site-root publishing artifacts that remain intentionally public.
 `/palette/` is excluded from static public-site parity; palette inspection is owned by the UI Catalogue app at `/admin/ui-catalogue/palette/`.
 
