@@ -1,4 +1,3 @@
-import { formatWorkSelectionList as formatSelectionList } from "./catalogue-work-sections.js";
 import {
   catalogueEditorRecordLoaded,
   catalogueEditorRouteMode,
@@ -140,12 +139,6 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   callback(
     options,
     "setTextWithState",
-    state.contextNode,
-    text(options, "context_loaded", "Editing source metadata for work {work_id}.", { work_id: workId })
-  );
-  callback(
-    options,
-    "setTextWithState",
     state.statusNode,
     text(options, "save_status_loaded", "Loaded work {work_id}.", { work_id: workId })
   );
@@ -176,15 +169,6 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
   syncUrl(workIds.join(","));
-  callback(
-    options,
-    "setTextWithState",
-    state.contextNode,
-    text(options, "bulk_context_loaded", "Bulk editing {count} work records: {work_ids}.", {
-      count: String(workIds.length),
-      work_ids: formatSelectionList(workIds)
-    })
-  );
   callback(
     options,
     "setTextWithState",
@@ -224,8 +208,7 @@ export function setNewWorkMode(state, options = {}) {
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
   syncUrl("", "new");
-  callback(options, "setTextWithState", state.contextNode, text(options, "new_context_loaded", "Creating a draft work source record."));
-  callback(options, "setTextWithState", state.statusNode, "");
+  callback(options, "setTextWithState", state.statusNode, text(options, "new_status_loaded", "Creating a draft work source record."));
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
     callback(options, "setTextWithState", state.resultNode, "");
@@ -257,7 +240,7 @@ export function setEmptySearchMode(state, options = {}) {
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
   syncUrl("");
-  callback(options, "setTextWithState", state.contextNode, text(options, "missing_work_param", "Search for a work by work id."));
+  callback(options, "setTextWithState", state.statusNode, text(options, "missing_work_param", "Search for a work by work id."));
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
     callback(options, "setTextWithState", state.resultNode, "");

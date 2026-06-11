@@ -63,6 +63,8 @@
 - For Codex-run browser smokes, prefer local Playwright Chromium via the Miniconda environment:
   - Playwright CLI: `$HOME/miniconda3/bin/playwright`
   - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
+- For browser-smoke validation that may need escalation, prefer the central `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile <profile>` runner over ad hoc direct smoke-script execution when an appropriate profile exists. This keeps Codex approval scope stable across sessions.
+- When requesting escalated browser-smoke runs, use the same command shape that was first attempted, avoid shell-wrapper/path ambiguity where practical, and do not retry rejected escalation requests with alternate command shapes. Report the approval rejection and use the safest narrower verification available.
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product/runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable.
 - For Playwright smoke tests, follow `docs-viewer/source/studio/smoke-testing.md`.

@@ -63,7 +63,6 @@ WORK_EDITOR_DOM = """
       <button id="catalogueWorkPublication"></button>
       <button id="catalogueWorkDelete"></button>
       <div id="catalogueWorkSaveMode"></div>
-      <div id="catalogueWorkContext"></div>
       <div id="catalogueWorkStatus"></div>
       <div id="catalogueWorkWarning"></div>
       <div id="catalogueWorkResult"></div>
@@ -111,6 +110,7 @@ def assert_state_factory(page: Page) -> None:
                 detailsPanelTag: state.detailsPanelNode && state.detailsPanelNode.tagName,
                 filesPanelTag: state.filesPanelNode && state.filesPanelNode.tagName,
                 linksPanelTag: state.linksPanelNode && state.linksPanelNode.tagName,
+                contextNodeInState: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
                 routeOptionText: routeOptions.text('key', 'fallback'),
                 routeOptionCustom: routeOptions.customOption,
                 routeOptionUpdate: routeOptions.updateEditorState()
@@ -132,6 +132,7 @@ def assert_state_factory(page: Page) -> None:
     assert result["detailsPanelTag"] == "SECTION"
     assert result["filesPanelTag"] == "SECTION"
     assert result["linksPanelTag"] == "SECTION"
+    assert result["contextNodeInState"] is False
     assert result["routeOptionText"] == "key:fallback"
     assert result["routeOptionCustom"] == "custom"
     assert result["routeOptionUpdate"] == "update"
@@ -208,6 +209,52 @@ def assert_event_binder(page: Page) -> None:
     ]
 
 
+def assert_route_state_status_target(page: Page) -> None:
+    result = page.evaluate(
+        f"""async () => {{
+            document.body.innerHTML = `{WORK_EDITOR_DOM}`;
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const routeModule = await import('/studio/app/frontend/js/catalogue-work-route-state.js');
+            const elements = stateModule.collectWorkEditorElements();
+            const state = stateModule.createWorkEditorState(elements, {{
+                mediaConfigLoader: () => ({{}}),
+                modalHostFactory: () => ({{}})
+            }});
+            const textWrites = [];
+            const routeOptions = stateModule.createWorkRouteStateOptions(state, {{
+                text: (key) => key,
+                setTextWithState: (node, text) => textWrites.push({{ id: node && node.id, text }}),
+                setOpenInputMode: () => undefined,
+                setPopupVisibility: () => undefined,
+                applyDraftToInputs: () => undefined,
+                applyReadonly: () => undefined,
+                clearReadonlyFields: () => undefined,
+                updateEditorState: () => undefined
+            }});
+            routeModule.setLoadedWorkRecord(state, '00008', {{
+                work_id: '00008',
+                title: 'Smoke work',
+                year: '2026',
+                year_display: '2026',
+                status: 'draft',
+                series_ids: ['001']
+            }}, routeOptions);
+            routeModule.setNewWorkMode(state, routeOptions);
+            routeModule.setEmptySearchMode(state, routeOptions);
+            return {{
+                hasContextNode: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
+                statusTexts: textWrites
+                    .filter((write) => write.id === 'catalogueWorkStatus')
+                    .map((write) => write.text),
+                targetIds: Array.from(new Set(textWrites.map((write) => write.id))).sort()
+            }};
+        }}"""
+    )
+    assert result["hasContextNode"] is False
+    assert result["statusTexts"] == ["save_status_loaded", "new_status_loaded", "missing_work_param"]
+    assert result["targetIds"] == ["catalogueWorkResult", "catalogueWorkStatus", "catalogueWorkWarning"]
+
+
 def run(site_root: Path) -> None:
     server, base_url = start_static_server(site_root)
     try:
@@ -217,6 +264,7 @@ def run(site_root: Path) -> None:
             page.goto(f"{base_url}/", wait_until="domcontentloaded")
             assert_state_factory(page)
             assert_event_binder(page)
+            assert_route_state_status_target(page)
             browser.close()
     finally:
         server.shutdown()

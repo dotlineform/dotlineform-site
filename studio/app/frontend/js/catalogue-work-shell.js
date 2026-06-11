@@ -37,7 +37,6 @@ export function renderCatalogueWorkShell(config) {
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkNew">New</button>
               <span class="tagStudio__saveMode" id="catalogueWorkSaveMode"></span>
             </div>
-            <p class="tagStudio__contextHint" id="catalogueWorkContext"></p>
             <p class="tagStudio__status" id="catalogueWorkStatus"></p>
             <p class="tagStudio__saveWarning" id="catalogueWorkWarning"></p>
             <p class="tagStudio__saveResult" id="catalogueWorkResult"></p>
