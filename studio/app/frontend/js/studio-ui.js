@@ -40,7 +40,6 @@ export const seriesTagEditorUi = createUiContract({
     tagInput: "tag-input",
     addTag: "add-tag",
     save: "save",
-    saveMode: "save-mode",
     popup: "popup",
     popupList: "popup-list",
     modalHost: "modal-host",

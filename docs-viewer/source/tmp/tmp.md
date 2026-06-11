@@ -12,13 +12,10 @@ ui_status: draft
 config keys report:
 `var/ui-text-usage-map.md`
 
-add a field below the 'artist' row called 'staged prose'.
-this will display the file name `<work_id>.md` if it is saved in `var/docs/catalogue/import-staging/works/`
-to the right of the field, put the 'Import' prose button.
-delete the status messages (it will all be explained in the documentation).
-'No staged prose file exists at var/docs/catalogue/import-staging/works/00008.md.
-var/docs/catalogue/import-staging/works/00008.md
-Add staged Markdown at the expected ID-based path before importing prose.'
+work_id 00008 has a download `nerve.pdf` which is saved remotely, but the work page `http://127.0.0.1:4000/works/?series=105&work=00008` doesn't display any link to it. I'm now wondering if I removed the downloads link from the work pages (which was not a good idea) or if there is another reason why it's not showing?
+
+yes, the live site uses https://www.dotlineform.com/works/?series=105&work=00008
+I have a feeling that we reduced the `_works/*.md` to empty stubs whilst making the site use the new index page which builds pages solely using javascript, but then didn't retire the individual work page stubs or the collection. because the whole point was to remove reliance on jekyll routes whilst still being able to build the site using GitHub Pages/Jeklyll. I might be misunderstanding, the site doesn't need that _works collection anymore?
 
 
 

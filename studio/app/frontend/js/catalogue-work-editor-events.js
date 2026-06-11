@@ -75,15 +75,15 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
   state.newButton.addEventListener("click", () => {
     invoke(callbacks.setNewWorkMode);
   });
+  state.fieldsNode.addEventListener("click", (event) => {
+    const proseButton = closestTarget(event, '[data-prose-import="work"]');
+    if (!proseButton) return;
+    runAsync(callbacks.importWorkProse, "catalogue_work_editor: unexpected prose import failure");
+  });
   state.previewNode.addEventListener("click", (event) => {
     const mediaButton = closestTarget(event, '[data-media-refresh="work"]');
     if (!mediaButton) return;
     runAsync(callbacks.refreshWorkMedia, "catalogue_work_editor: unexpected media refresh failure");
-  });
-  state.readinessNode.addEventListener("click", (event) => {
-    const proseButton = closestTarget(event, "[data-prose-import]");
-    if (!proseButton) return;
-    runAsync(callbacks.importWorkProse, "catalogue_work_editor: unexpected prose import failure");
   });
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentWork, "catalogue_work_editor: unexpected save failure");

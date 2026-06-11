@@ -15,10 +15,8 @@ import {
   applyOperationalRunButtonState,
   collectOperationalRouteElements,
   markOperationalRouteReady,
-  renderOperationalServiceStatus,
   syncOperationalRouteBusyState
 } from "./studio-operational-route.js";
-import { buildSaveModeText } from "./studio-save-utils.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function normalizeText(value) {
@@ -166,7 +164,6 @@ async function init() {
   const loadingNode = document.getElementById("projectStateLoading");
   const emptyNode = document.getElementById("projectStateEmpty");
   const pageHeadingNode = document.getElementById("projectStatePageHeading");
-  const saveModeNode = document.getElementById("projectStateSaveMode");
   const contextNode = document.getElementById("projectStateContext");
   const statusNode = document.getElementById("projectStateStatus");
   const warningNode = document.getElementById("projectStateWarning");
@@ -187,7 +184,6 @@ async function init() {
     loadingNode,
     emptyNode,
     pageHeadingNode,
-    saveModeNode,
     contextNode,
     statusNode,
     warningNode,
@@ -243,15 +239,7 @@ async function init() {
     emptyNode.textContent = t(state, "empty_state", "");
     runButton.textContent = t(state, "run_button", "Run");
     openButton.textContent = t(state, "open_button", "Open file");
-    saveModeNode.textContent = buildSaveModeText(config, catalogueServerAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `project_state.${key}`, fallback, tokens));
     setTextWithState(contextNode, t(state, "context_hint", "Scan source project folders and primary images against works.json, then write the Markdown report. Include sub-folders only when you want nested project folders in the review."));
-    if (!catalogueServerAvailable) {
-      renderOperationalServiceStatus(statusNode, state, {
-        serviceAvailable: (routeState) => routeState.catalogueServerAvailable,
-        unavailableText: () => t(state, "server_unavailable_hint", "Local catalogue server unavailable. Report generation is disabled."),
-        unavailableState: "warn"
-      });
-    }
     runButton.addEventListener("click", () => {
       runReport(state).catch((error) => console.warn("project_state: unexpected report failure", error));
     });

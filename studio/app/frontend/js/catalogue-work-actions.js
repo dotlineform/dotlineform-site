@@ -562,6 +562,7 @@ export async function refreshBuildPreview(state, context) {
         : ""
     );
     state.buildPreview = null;
+    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -569,6 +570,7 @@ export async function refreshBuildPreview(state, context) {
   if (!state.currentWorkId || !state.serverAvailable) {
     setTextWithState(context, state.buildImpactNode, "");
     state.buildPreview = null;
+    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -576,6 +578,7 @@ export async function refreshBuildPreview(state, context) {
   if (!currentWorkIsPublished(state)) {
     setTextWithState(context, state.buildImpactNode, t(state, context, "build_preview_unpublished", "Site update unavailable while the work is not published."));
     state.buildPreview = null;
+    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -587,6 +590,7 @@ export async function refreshBuildPreview(state, context) {
     });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(context, state.buildImpactNode, "");
+    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
   } catch (error) {
@@ -597,6 +601,7 @@ export async function refreshBuildPreview(state, context) {
       `${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
   }
@@ -605,7 +610,7 @@ export async function refreshBuildPreview(state, context) {
 export async function previewCurrentBuildImpact(state, context) {
   if (!state.currentRecord || !state.currentWorkId || state.mode !== "single") return;
   if (!state.serverAvailable) {
-    setTextWithState(context, state.statusNode, t(state, context, "build_preview_server_unavailable", "Local catalogue server unavailable."), "error");
+    setTextWithState(context, state.statusNode, t(state, context, "build_preview_server_unavailable", "Public update preview unavailable."), "error");
     return;
   }
   if (!currentWorkIsPublished(state)) {
@@ -687,7 +692,7 @@ export async function importWorkProse(state, context) {
       );
       state.isBuilding = false;
       context.updateEditorState();
-      const proseRestoreFocus = state.readinessNode && state.readinessNode.querySelector('[data-prose-import="work"]');
+      const proseRestoreFocus = state.fieldsNode && state.fieldsNode.querySelector('[data-prose-import="work"]');
       confirmOverwrite = await confirmCatalogueActionModal(state, {
         title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
         message,

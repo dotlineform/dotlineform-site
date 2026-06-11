@@ -35,7 +35,6 @@ export function renderCatalogueWorkShell(config) {
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkNew">New</button>
-              <span class="tagStudio__saveMode" id="catalogueWorkSaveMode"></span>
             </div>
             <p class="tagStudio__status" id="catalogueWorkStatus"></p>
             <p class="tagStudio__saveWarning" id="catalogueWorkWarning"></p>
@@ -45,7 +44,6 @@ export function renderCatalogueWorkShell(config) {
           <div class="tagStudio__grid catalogueWorkPage__grid">
             <section class="tagStudio__panel tagStudio__panel--editor">
               <div class="tagStudio__headingRow">
-                <h2 class="tagStudio__heading">work metadata</h2>
                 <div class="catalogueWorkPage__actions">
                   <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkSave">Save</button>
                   <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkPublication">Publish</button>
@@ -57,7 +55,6 @@ export function renderCatalogueWorkShell(config) {
             </section>
 
             <aside class="tagStudio__panel catalogueWorkSummary">
-              <h2 class="tagStudio__heading">current record</h2>
               <div id="catalogueWorkPreview"></div>
               <div class="tagStudioForm__fields" id="catalogueWorkReadonly"></div>
               <p class="tagStudioForm__impact" id="catalogueWorkRuntimeState"></p>

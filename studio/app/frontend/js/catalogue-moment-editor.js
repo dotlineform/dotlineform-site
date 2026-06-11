@@ -43,9 +43,6 @@ import {
   writeRequestedImportFile
 } from "./catalogue-moment-import.js";
 import {
-  buildSaveModeText
-} from "./studio-save-utils.js";
-import {
   applyMomentRecordToInputs,
   clearMomentFieldMessages,
   clearMomentReadonly,
@@ -323,12 +320,6 @@ async function previewMoment(state, momentId) {
   } catch (error) {
     console.warn("catalogue_moment_editor: preview failed", error);
     state.serverAvailable = false;
-    setTextWithState(state.statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warning");
-    state.saveModeNode.textContent = buildSaveModeText(
-      state.config,
-      "offline",
-      (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_moment_editor.${key}`, fallback, tokens)
-    );
     updateDirtyState(state);
   }
 }
@@ -413,7 +404,6 @@ async function init() {
     popupListNode,
     openButton,
     newButton,
-    saveModeNode,
     contextNode,
     statusNode,
     warningNode,
@@ -443,7 +433,6 @@ async function init() {
   try {
     await configureCatalogueEditorRouteRuntime(state, {
       namespace: "catalogue_moment_editor",
-      saveModeNode: state.saveModeNode,
       applyText: () => {
         state.searchNode.placeholder = t(state, "search_placeholder", "find moment by id or title");
         state.openButton.textContent = t(state, "open_button", "Open");
@@ -467,8 +456,6 @@ async function init() {
     state.importFileNode.value = readRequestedImportFile();
 
     if (!state.serverAvailable) {
-      setTextWithState(state.statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warning");
-      setTextWithState(state.importStatusNode, t(state, "import_save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warning");
       updateDirtyState(state);
       updateImportState(state, buildImportContext(state));
       revealCatalogueEditorRoute(state, {

@@ -9,7 +9,6 @@ export function renderProjectStateShell() {
           <section class="tagStudio__panel tagStudio__panel--editor">
             <div class="tagStudio__headingRow">
               <h2 class="tagStudio__heading" id="projectStatePageHeading">project state</h2>
-              <span class="tagStudio__saveMode" id="projectStateSaveMode"></span>
             </div>
             <p class="tagStudio__contextHint" id="projectStateContext"></p>
             <p class="tagStudio__status" id="projectStateStatus"></p>

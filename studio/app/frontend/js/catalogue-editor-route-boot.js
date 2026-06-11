@@ -9,7 +9,6 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { buildSaveModeText } from "./studio-save-utils.js";
 
 function defaultItemsFromPayload(payload) {
   return Array.isArray(payload && payload.items) ? payload.items : [];
@@ -102,19 +101,10 @@ export async function configureCatalogueEditorRouteRuntime(state, options) {
   const namespace = options.namespace;
   const configLoader = options.configLoader || loadStudioConfigWithText;
   const healthProbe = options.healthProbe || probeCatalogueHealth;
-  const saveModeBuilder = options.saveModeBuilder || buildSaveModeText;
-  const textGetter = options.textGetter || getStudioText;
   const config = await configLoader(namespace);
   state.config = config;
   if (typeof options.applyText === "function") options.applyText(config);
   state.serverAvailable = Boolean(await healthProbe());
-  if (options.saveModeNode) {
-    options.saveModeNode.textContent = saveModeBuilder(
-      config,
-      state.serverAvailable ? "post" : "offline",
-      (cfg, key, fallback, tokens) => textGetter(cfg, `${namespace}.${key}`, fallback, tokens)
-    );
-  }
   return state.serverAvailable;
 }
 

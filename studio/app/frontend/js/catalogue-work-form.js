@@ -1,5 +1,8 @@
 import { displayValue } from "./catalogue-editor-records.js";
 import {
+  catalogueReadinessItem
+} from "./catalogue-editor-readiness.js";
+import {
   buildPublicSeriesUrl
 } from "./catalogue-public-links.js";
 import {
@@ -41,6 +44,39 @@ function notifyStateChange(options) {
   if (options && typeof options.onStateChange === "function") {
     options.onStateChange();
   }
+}
+
+function draftHasChanges(state, options) {
+  if (options && typeof options.draftHasChanges === "function") {
+    return Boolean(options.draftHasChanges(state));
+  }
+  return false;
+}
+
+function stagedProseFileName(state) {
+  const item = catalogueReadinessItem(state.buildPreview, "work_prose");
+  if (normalizeText(item && item.status) !== "ready") return "";
+  const sourcePath = normalizeText(item && item.source_path);
+  if (sourcePath) {
+    const parts = sourcePath.split("/");
+    return normalizeText(parts[parts.length - 1]);
+  }
+  const workId = normalizeText(state.currentWorkId);
+  return workId ? `${workId}.md` : "";
+}
+
+function stagedProseImportDisabled(state, options) {
+  const item = catalogueReadinessItem(state.buildPreview, "work_prose");
+  return (
+    !state.currentRecord ||
+    !state.currentWorkId ||
+    !state.serverAvailable ||
+    state.isSaving ||
+    state.isBuilding ||
+    state.isDeleting ||
+    draftHasChanges(state, options) ||
+    normalizeText(item && item.status) !== "ready"
+  );
 }
 
 function seriesDisplayTitle(state, seriesId) {
@@ -219,6 +255,37 @@ function renderField(field, fieldsNode, state, options) {
   state.fieldStatusNodes.set(field.key, message);
 }
 
+function renderStagedProseField(fieldsNode, state, options) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueWorkStagedProse";
+
+  const label = document.createElement("span");
+  label.className = "tagStudioForm__label";
+  label.textContent = formText(options, "staged_prose_label", "staged prose");
+  wrapper.appendChild(label);
+
+  const control = document.createElement("div");
+  control.className = "catalogueWorkStagedProse__control";
+
+  const value = document.createElement("span");
+  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  value.dataset.stagedProseValue = "work";
+  control.appendChild(value);
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "tagStudio__button tagStudio__button--defaultWidth";
+  button.dataset.proseImport = "work";
+  button.textContent = formText(options, "prose_import_button", "Import");
+  control.appendChild(button);
+
+  wrapper.appendChild(control);
+  fieldsNode.appendChild(wrapper);
+  state.stagedProseNode = value;
+  state.stagedProseButton = button;
+  updateStagedProseField(state, options);
+}
+
 function renderSeriesField(field, fieldsNode, state, options) {
   const wrapper = document.createElement("div");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueWorkForm__field--topAligned catalogueWorkSeriesPicker";
@@ -334,6 +401,7 @@ function renderReadonlyField(field, readonlyNode, state) {
 
 export function renderWorkEditorFields(state, elements, options = {}) {
   EDITABLE_FIELDS.forEach((field) => renderField(field, elements.fieldsNode, state, options));
+  renderStagedProseField(elements.fieldsNode, state, options);
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, elements.readonlyNode, state));
 }
 
@@ -341,6 +409,18 @@ export function applyWorkFormText(state, options = {}) {
   if (!state.seriesPicker) return;
   state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
   state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+  if (state.stagedProseButton) {
+    state.stagedProseButton.textContent = formText(options, "prose_import_button", "Import");
+  }
+}
+
+export function updateStagedProseField(state, options = {}) {
+  if (state.stagedProseNode) {
+    state.stagedProseNode.textContent = stagedProseFileName(state);
+  }
+  if (state.stagedProseButton) {
+    state.stagedProseButton.disabled = stagedProseImportDisabled(state, options);
+  }
 }
 
 export function setFieldNodeValue(node, value) {

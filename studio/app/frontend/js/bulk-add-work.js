@@ -13,7 +13,6 @@ import {
 import {
   collectOperationalRouteElements,
   markOperationalRouteReady,
-  renderOperationalServiceStatus,
   syncOperationalRouteBusyState
 } from "./studio-operational-route.js";
 import {
@@ -29,7 +28,6 @@ import {
   projectBulkAddWorkPreviewSuccess,
   renderBulkAddWorkPreviewState
 } from "./bulk-add-work-workflow.js";
-import { buildSaveModeText } from "./studio-save-utils.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function normalizeText(value) {
@@ -148,7 +146,6 @@ async function init() {
   const summaryHeadingNode = document.getElementById("bulkAddWorkSummaryHeading");
   const detailsHeadingNode = document.getElementById("bulkAddWorkDetailsHeading");
   const modeNode = document.getElementById("bulkAddWorkMode");
-  const saveModeNode = document.getElementById("bulkAddWorkSaveMode");
   const contextNode = document.getElementById("bulkAddWorkContext");
   const statusNode = document.getElementById("bulkAddWorkStatus");
   const warningNode = document.getElementById("bulkAddWorkWarning");
@@ -171,7 +168,6 @@ async function init() {
     summaryHeadingNode,
     detailsHeadingNode,
     modeNode,
-    saveModeNode,
     contextNode,
     statusNode,
     warningNode,
@@ -221,20 +217,11 @@ async function init() {
     emptyNode.textContent = t(state, "empty_state", "");
     previewButton.textContent = t(state, "preview_button", "Preview");
     applyButton.textContent = t(state, "apply_button", "Import");
-    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `bulk_add_work.${key}`, fallback, tokens));
     workbookNode.textContent = state.workbookPath;
     setTextWithState(
       contextNode,
       t(state, "context_hint", "Bulk import is one-way from {workbook} into canonical JSON. Use works mode for new works and work details mode for new detail rows.", { workbook: state.workbookPath })
     );
-    if (!state.serverAvailable) {
-      renderOperationalServiceStatus(statusNode, state, {
-        serviceAvailable: (routeState) => routeState.serverAvailable,
-        unavailableText: () => t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Import is disabled."),
-        unavailableState: "warn"
-      });
-    }
-
     modeNode.addEventListener("change", () => {
       state.mode = normalizeText(modeNode.value) || "works";
       setTextWithState(state.resultNode, "");

@@ -43,7 +43,8 @@ import {
   renderWorkEditorFields,
   setFieldNodeValue,
   setModeFieldAvailability,
-  updateFieldMessages
+  updateFieldMessages,
+  updateStagedProseField
 } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
@@ -358,6 +359,7 @@ function updateEditorState(state) {
   state.validationErrors = errors;
   updateFieldMessages(state, errors, workFormOptions(state));
   setModeFieldAvailability(state);
+  updateStagedProseField(state, workFormOptions(state));
   updateSummary(state);
   if (!hasRecord) {
     setTextWithState(state.buildImpactNode, "");
@@ -380,11 +382,7 @@ function updateEditorState(state) {
     message: t(state, "dirty_warning", "Unsaved source changes.")
   }));
   if (state.mode === "new" && !state.resultNode.textContent) {
-    setTextWithState(
-      state.statusNode,
-      state.serverAvailable ? "" : t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."),
-      state.serverAvailable ? "" : "warn"
-    );
+    setTextWithState(state.statusNode, "");
   } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
     setTextWithState(
       state.statusNode,
@@ -447,7 +445,8 @@ function workFormOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
-    onStateChange: () => updateEditorState(state)
+    onStateChange: () => updateEditorState(state),
+    draftHasChanges: () => draftHasChanges(state)
   };
 }
 
@@ -492,6 +491,7 @@ function workActionOptions(state) {
     draftHasChanges: () => draftHasChanges(state),
     changedWorkFieldNames: () => changedWorkFieldNames(state),
     updateEditorState: () => updateEditorState(state),
+    updateStagedProseField: () => updateStagedProseField(state, workFormOptions(state)),
     loadWorkLookupRecord: (workId) => loadWorkLookupRecord(state, workId),
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
@@ -548,7 +548,6 @@ function applyWorkEditorText(state, elements) {
 async function configureWorkEditorRuntime(state, elements) {
   return configureCatalogueEditorRouteRuntime(state, {
     namespace: "catalogue_work_editor",
-    saveModeNode: state.saveModeNode,
     applyText: () => applyWorkEditorText(state, elements)
   });
 }
@@ -589,7 +588,6 @@ async function init() {
   try {
     const serverAvailable = await configureWorkEditorRuntime(state, elements);
     if (!serverAvailable) {
-      setTextWithState(state.statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
       updateEditorState(state);
       markWorkEditorLoaded(state, elements);
       return;

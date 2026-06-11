@@ -900,8 +900,7 @@ a.tagStudio__panelLink--imageContrast:visited {
   width: min(100%, 26rem);
 }
 
-.tagStudio__inputRow--editor .tagStudio__button,
-.tagStudio__inputRow--editor .tagStudio__saveMode {
+.tagStudio__inputRow--editor .tagStudio__button {
   flex: 0 0 auto;
   white-space: nowrap;
 }
@@ -918,8 +917,7 @@ a.tagStudio__panelLink--imageContrast:visited {
   width: 100%;
 }
 
-.tagStudio__editorActionGrid > .tagStudio__button,
-.tagStudio__editorActionGrid > .tagStudio__saveMode {
+.tagStudio__editorActionGrid > .tagStudio__button {
   white-space: nowrap;
 }
 
@@ -2109,12 +2107,6 @@ span.tagStudio__input--readonlyDisplay {
   flex-wrap: wrap;
 }
 
-.tagStudio__saveMode {
-  color: var(--muted, var(--studio-muted-soft));
-  font-size: var(--font-small);
-  white-space: nowrap;
-}
-
 .tagStudio__workSelection {
   display: flex;
   align-items: center;
@@ -3268,9 +3260,17 @@ button.tagStudioList__cellLink {
 .catalogueWorkForm__field > .tagStudio__input,
 .catalogueWorkForm__field > .tagStudioForm__readonly,
 .catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
+.catalogueWorkForm__field > .catalogueWorkStagedProse__control,
 .catalogueWorkForm__field > .tagStudioForm__meta,
 .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
   grid-column: 2;
+}
+
+.catalogueWorkStagedProse__control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: center;
 }
 
 .catalogueWorkSeriesPicker__control {
@@ -3942,6 +3942,7 @@ button.tagStudioList__cellLink {
   .catalogueWorkForm__field > .tagStudioForm__label,
   .catalogueWorkForm__field > .tagStudio__input,
   .catalogueWorkForm__field > .tagStudioForm__readonly,
+  .catalogueWorkForm__field > .catalogueWorkStagedProse__control,
   .catalogueWorkForm__field > .tagStudioForm__meta,
   .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
     grid-column: 1;

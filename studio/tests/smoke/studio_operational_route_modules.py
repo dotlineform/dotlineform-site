@@ -51,10 +51,7 @@ def assert_operational_route_helpers(page: Page) -> None:
                 run,
                 missingNode: null
             });
-            const unavailable = module.renderOperationalServiceStatus(status, state, {
-                unavailableText: 'Service unavailable.',
-                unavailableState: 'error'
-            });
+            status.textContent = 'Idle';
             const disabled = module.applyOperationalRunButtonState(run, state, {
                 serviceAvailable: (routeState) => routeState.serviceAvailable,
                 isBusy: (routeState) => routeState.isRunning
@@ -119,10 +116,9 @@ def assert_operational_route_helpers(page: Page) -> None:
             const workRoute = registry.findStudioRoute(config, 'catalogue-work-editor');
             return {
                 required,
-                unavailable,
                 disabled,
                 statusText: status.textContent,
-                statusState: status.dataset.state,
+                statusState: status.dataset.state || '',
                 runDisabled: run.disabled,
                 ready: root.dataset.studioReady,
                 modeAfterReady: root.dataset.studioMode,
@@ -145,14 +141,9 @@ def assert_operational_route_helpers(page: Page) -> None:
     )
     assert result["required"]["ok"] is False
     assert result["required"]["missing"] == ["missingNode"]
-    assert result["unavailable"] == {
-        "rendered": True,
-        "message": "Service unavailable.",
-        "state": "error",
-    }
     assert result["disabled"]["disabled"] is True
-    assert result["statusText"] == "Service unavailable."
-    assert result["statusState"] == "error"
+    assert result["statusText"] == "Idle"
+    assert result["statusState"] == ""
     assert result["runDisabled"] is True
     assert result["ready"] == "true"
     assert result["busy"] == "true"

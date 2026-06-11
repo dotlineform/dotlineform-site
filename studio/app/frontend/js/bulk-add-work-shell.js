@@ -12,7 +12,6 @@ export function renderBulkAddWorkShell(config = {}) {
           <section class="tagStudio__panel tagStudio__panel--editor">
             <div class="tagStudio__headingRow">
               <h2 class="tagStudio__heading" id="bulkAddWorkPageHeading">bulk add work</h2>
-              <span class="tagStudio__saveMode" id="bulkAddWorkSaveMode"></span>
             </div>
 
             <p class="tagStudio__contextHint" id="bulkAddWorkContext"></p>

@@ -59,8 +59,7 @@ def assert_route_boot_helpers(page: Page) -> None:
                 bulkIds: ['001', '002'],
                 currentRecord: null,
                 serverAvailable: true,
-                isSaving: true,
-                saveModeNode: statusNode
+                isSaving: true
             };
             module.syncCatalogueEditorRouteBusyState(state, {
                 route: 'catalogue-test',
@@ -103,10 +102,8 @@ def assert_route_boot_helpers(page: Page) -> None:
             module.syncCatalogueEditorRouteBusyState(busyState, busyOptions);
             const available = await module.configureCatalogueEditorRouteRuntime(state, {
                 namespace: 'catalogue_test',
-                saveModeNode: statusNode,
                 configLoader: async () => ({ ui_text: {} }),
                 healthProbe: async () => false,
-                saveModeBuilder: (_config, mode) => `mode:${mode}`,
                 applyText: () => {
                     root.dataset.textApplied = 'true';
                 }
@@ -171,7 +168,7 @@ def assert_route_boot_helpers(page: Page) -> None:
     )
     assert result["collectedRoot"] is True
     assert result["missingIsNull"] is True
-    assert result["statusText"] == "mode:offline"
+    assert result["statusText"] == "Loaded"
     assert result["statusState"] == "success"
     assert result["busy"] == "true"
     assert result["customBusy"] == "true"

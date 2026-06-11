@@ -313,8 +313,8 @@ function updateEditorState(state) {
     const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
     setTextWithState(
       state.statusNode,
-      firstError || (state.serverAvailable ? "" : t(state, "create_mode_unavailable_hint", "Local catalogue server unavailable. Create is disabled.")),
-      firstError ? "error" : state.serverAvailable ? "" : "warn"
+      firstError || "",
+      firstError ? "error" : ""
     );
   } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
     setTextWithState(
@@ -465,7 +465,6 @@ async function init() {
     saveButton,
     publicationButton,
     deleteButton,
-    saveModeNode,
     contextNode,
     statusNode,
     warningNode,
@@ -482,7 +481,6 @@ async function init() {
   try {
     await configureCatalogueEditorRouteRuntime(state, {
       namespace: "catalogue_work_detail_editor",
-      saveModeNode,
       applyText: () => {
         applyWorkDetailFieldLabels(state, formContext);
         searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
@@ -493,7 +491,6 @@ async function init() {
       }
     });
     if (!state.serverAvailable) {
-      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
       updateEditorState(state);
       revealCatalogueEditorRoute(state, {
         loadingNode,

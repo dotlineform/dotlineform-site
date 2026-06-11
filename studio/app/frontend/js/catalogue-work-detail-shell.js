@@ -28,7 +28,6 @@ export function renderCatalogueWorkDetailShell(config) {
                 </div>
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailOpen">Open</button>
-              <span class="tagStudio__saveMode" id="catalogueWorkDetailSaveMode"></span>
             </div>
             <p class="tagStudio__contextHint" id="catalogueWorkDetailContext"></p>
             <p class="tagStudio__status" id="catalogueWorkDetailStatus"></p>

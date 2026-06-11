@@ -60,20 +60,6 @@ export function applyOperationalRunButtonState(button, state, options = {}) {
   return projection;
 }
 
-export function renderOperationalServiceStatus(node, state, options = {}) {
-  if (!node || isServiceAvailable(state, options)) return { rendered: false };
-  const message = resolveOption(state, options.unavailableText, "");
-  const status = resolveOption(state, options.unavailableState, "warn");
-  node.textContent = message || "";
-  if (status) node.dataset.state = status;
-  else delete node.dataset.state;
-  return {
-    rendered: true,
-    message: message || "",
-    state: status || ""
-  };
-}
-
 function isServiceAvailable(state, options) {
   return Boolean(resolveOption(
     state,

@@ -17,7 +17,6 @@ export function renderCatalogueMomentShell() {
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentOpen">Open</button>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentNew">New</button>
-              <span class="tagStudio__saveMode" id="catalogueMomentSaveMode"></span>
             </div>
             <p class="tagStudio__contextHint" id="catalogueMomentContext"></p>
             <p class="tagStudio__status" id="catalogueMomentStatus"></p>

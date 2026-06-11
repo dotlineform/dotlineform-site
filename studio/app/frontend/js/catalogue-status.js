@@ -227,7 +227,7 @@ async function init() {
     const config = await loadStudioConfigWithText("catalogue_status");
     const serverAvailable = await probeCatalogueReadHealth();
     if (!serverAvailable) {
-      loadingNode.textContent = getStudioText(config, "catalogue_status.server_unavailable_hint", "Local catalogue server unavailable. Catalogue drafts are disabled.");
+      loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue drafts.");
       root.hidden = false;
       markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });
       return;

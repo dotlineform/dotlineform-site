@@ -2,7 +2,7 @@
 doc_id: site-request-public-static-site-build
 title: Public Static Site Build Request
 added_date: 2026-06-01
-last_updated: 2026-06-02
+last_updated: 2026-06-11
 ui_status: draft
 parent_id: change-requests
 ---
@@ -14,6 +14,7 @@ Status:
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - The migration decisions have been resolved and can be used to create an implementation task list.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
+- [Public Legacy Collections Cleanup](/docs/?scope=studio&doc=public-legacy-collections-cleanup) tracks the separate cleanup for leftover Jekyll collection stubs.
 
 ## Summary
 
@@ -39,9 +40,9 @@ The current public build is still Jekyll-owned:
 
 - GitHub Pages runs an implicit Jekyll build when repository content changes.
 - Local public preview/build wrappers call `bundle exec jekyll serve` and `bundle exec jekyll build`.
-- `_config.yml` defines site values, collections, permalinks, defaults, and publish exclusions.
+- `_config.yml` defines site values, remaining collection outputs, permalinks, defaults, and publish exclusions.
 - `_layouts/` and `_includes/` contain Liquid templates for public routes.
-- `_works/`, `_series/`, `_moments/`, and `_work_details/` provide Jekyll collection stubs for route generation.
+- `_works/`, `_series/`, `_moments/`, and `_work_details/` are still present as Jekyll-era collection artifacts, but they are not required by the canonical live route model.
 - public route pages such as `/series/`, `/recent/`, `/library/`, `/analysis/`, and `/catalogue/search/` still use Liquid for shell rendering and config injection.
 
 GitHub Pages without Jekyll publishes static files as-is from a configured source or Actions artifact.
@@ -168,8 +169,8 @@ Jekyll collection stubs are not static-builder inputs.
 The builder should emit fixed route shells for the canonical public routes, including `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, and `/analysis/`.
 Individual moment pages may remain path routes such as `/moments/a-doll-story/`, but they should be enumerated from public moment records rather than from `_moments` stubs.
 
-Remaining `_works/`, `_series/`, `_work_details/`, and related Jekyll collection outputs are build-layer artifacts only while Jekyll remains the public build layer.
-They are not durable route contracts and should be removable once the static builder produces the fixed shells and individual moment pages directly.
+Remaining `_works/`, `_series/`, `_work_details/`, `_moments/`, and related Jekyll collection outputs are legacy build-layer artifacts, not current publishing requirements for canonical work, series, or work-detail routes.
+Their removal is tracked in [Public Legacy Collections Cleanup](/docs/?scope=studio&doc=public-legacy-collections-cleanup); the static builder must not treat them as route inputs.
 
 ### Route Parity
 

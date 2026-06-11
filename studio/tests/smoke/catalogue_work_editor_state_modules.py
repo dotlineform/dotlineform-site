@@ -149,6 +149,9 @@ def assert_event_binder(page: Page) -> None:
                 mediaConfigLoader: () => ({{}}),
                 modalHostFactory: () => ({{}})
             }});
+            state.fieldsNode.innerHTML = `
+              <button data-prose-import="work">prose</button>
+            `;
             state.filesResultsNode.innerHTML = `
               <button data-download-edit="2">edit download</button>
               <button data-download-delete="3">delete download</button>
@@ -159,9 +162,6 @@ def assert_event_binder(page: Page) -> None:
             `;
             state.previewNode.innerHTML = `
               <button data-media-refresh="work">media</button>
-            `;
-            state.readinessNode.innerHTML = `
-              <button data-prose-import>prose</button>
             `;
             window.__workEventCalls = [];
             const push = (...args) => window.__workEventCalls.push(args);
@@ -188,7 +188,7 @@ def assert_event_binder(page: Page) -> None:
     page.click("[data-link-delete]")
     page.click("#catalogueWorkNew")
     page.click('[data-media-refresh="work"]')
-    page.click("[data-prose-import]")
+    page.click('[data-prose-import="work"]')
     page.click("#catalogueWorkSave")
     page.click("#catalogueWorkPublication")
     page.click("#catalogueWorkDelete")
@@ -351,7 +351,8 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
                             title: 'prose',
                             status: 'ready',
                             exists: true,
-                            summary: 'Staged prose is ready.'
+                            summary: 'Staged prose is ready.',
+                            source_path: 'var/docs/catalogue/import-staging/works/00008.md'
                         }}
                     ]
                 }}
@@ -364,9 +365,13 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             sectionsModule.renderWorkCurrentPreview(state, options);
             sectionsModule.renderWorkReadiness(state, options);
             const refreshButton = state.previewNode.querySelector('[data-media-refresh="work"]');
+            const proseButton = state.fieldsNode.querySelector('[data-prose-import="work"]');
             return {{
                 captionText: state.previewNode.querySelector('.catalogueRecordPreview__caption').textContent.replace(/\\s+/g, ' ').trim(),
                 previewActionsText: state.previewNode.querySelector('.catalogueRecordPreview__actions').textContent.replace(/\\s+/g, ' ').trim(),
+                stagedProseLabel: state.fieldsNode.querySelector('.catalogueWorkStagedProse .tagStudioForm__label').textContent,
+                stagedProseValue: state.fieldsNode.querySelector('[data-staged-prose-value="work"]').textContent,
+                proseDisabled: proseButton ? proseButton.disabled : null,
                 refreshDisabled: refreshButton ? refreshButton.disabled : null,
                 readonlyFieldCount: state.readonlyNode.querySelectorAll('[data-readonly-field]').length,
                 readinessText: state.readinessNode.textContent.replace(/\\s+/g, ' ').trim()
@@ -375,12 +380,15 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
     )
     assert result["captionText"] == "nerve · July 1990 - January 1995 2263 x 1600 px"
     assert result["previewActionsText"] == "Preview update Refresh media"
+    assert result["stagedProseLabel"] == "staged prose"
+    assert result["stagedProseValue"] == "00008.md"
+    assert result["proseDisabled"] is False
     assert result["refreshDisabled"] is False
     assert result["readonlyFieldCount"] == 0
     assert "Source media is ready" not in result["readinessText"]
     assert "projects/nerve/nerve.jpg" not in result["readinessText"]
     assert "Local thumbnails are current" not in result["readinessText"]
-    assert "Staged prose is ready." in result["readinessText"]
+    assert "Staged prose is ready." not in result["readinessText"]
 
 
 def run(site_root: Path) -> None:
