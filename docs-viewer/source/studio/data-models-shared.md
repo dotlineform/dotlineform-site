@@ -2,7 +2,7 @@
 doc_id: data-models-shared
 title: Shared Patterns
 added_date: 2026-04-19
-last_updated: 2026-06-05
+last_updated: 2026-06-11
 parent_id: architecture
 ---
 # Shared Patterns
@@ -13,21 +13,21 @@ This document records the model conventions that recur across scopes.
 
 The current site uses a small number of repeated artifact patterns.
 
-### 1. Minimal route stubs
+### 1. Fixed Route Shells
 
 Examples:
 
-- `_works/*.md`
-- `_series/*.md`
-- `_work_details/*.md`
-- `_moments/*.md`
+- `works/index.md`
+- `series/index.md`
+- `work-details/index.md`
+- `moments/index.md`
 - `docs-viewer/source/studio/*.md`
 - `docs-viewer/source/library/*.md`
 - `docs-viewer/source/analysis/**/*.md`
 
 Purpose:
 
-- give Jekyll a stable route and identity record
+- give Jekyll a stable route surface
 - keep the route layer publishable and linkable
 - keep canonical runtime content in generated JSON when that content is too large or too dynamic for front matter alone
 

@@ -178,17 +178,17 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | title | owner surface | acceptance |
 | --- | --- | --- | --- | --- |
-| 1 | planned | Complete active-consumer inventory | code, config, tests, docs | each scan hit is classified; unknown active consumers are resolved before deletion |
-| 2 | planned | Retire work route-anchor stubs | `_works`, work builder, `_config.yml`, audits/tests | `_works/*.md` is no longer required or generated solely for `/works/<work_id>/`; `/works/?work=<id>` still renders from generated payloads |
-| 3 | planned | Retire series route-anchor stubs | `_series`, series builder, `_config.yml`, audits/tests | `_series/*.md` is no longer required or generated solely for `/series/<series_id>/`; `/series/?series=<id>` still renders from generated payloads |
-| 4 | planned | Retire work-detail route-anchor stubs | `_work_details`, detail builder, `_config.yml`, audits/tests | `_work_details/*.md` is no longer required or generated solely for `/work_details/<detail_uid>/`; `/work-details/?detail=<id>` still renders from generated payloads |
-| 5 | planned | Remove unused work, series, and detail layouts and defaults | `_layouts`, `_config.yml` | `work`, `series`, and `work_details` layouts/defaults are removed only after no active collection uses them |
-| 6 | planned | Retarget cleanup and delete behavior | catalogue cleanup and transaction services | delete/cleanup plans remove generated JSON, indexes, search payloads, and source-owned artifacts without depending on collection stubs |
-| 7 | planned | Retarget public-link and search URL construction | public runtime, Studio helpers, catalogue search | first-party links use canonical shell/query routes through shared helpers; no retired path-style links are emitted |
-| 8 | planned | Retarget audits and tests | `admin-app/checks/`, projection tests, catalogue tests | tests validate canonical shells and generated payload contracts instead of requiring route-anchor stubs |
-| 9 | planned | Convert moments to shell/query runtime | `_moments`, `moments/index.md`, public runtime, moment payloads | `/moments/?moment=<id>` renders from generated JSON; `_moments/*.md` and `/moments/<id>/` are no longer route contracts |
-| 10 | planned | Update docs and close stale contracts | studio docs | owning docs describe fixed shells, generated payloads, and query-state moment routing as current behavior |
-| 11 | planned | Final verification and closeout | build, smokes, docs | all required checks pass or are recorded with reason; generated Docs Viewer payload status is reported |
+| 1 | done | Complete active-consumer inventory | code, config, tests, docs | each scan hit is classified; unknown active consumers are resolved before deletion |
+| 2 | done | Retire work route-anchor stubs | `_works`, work builder, `_config.yml`, audits/tests | `_works/*.md` is no longer required or generated solely for `/works/<work_id>/`; `/works/?work=<id>` still renders from generated payloads |
+| 3 | done | Retire series route-anchor stubs | `_series`, series builder, `_config.yml`, audits/tests | `_series/*.md` is no longer required or generated solely for `/series/<series_id>/`; `/series/?series=<id>` still renders from generated payloads |
+| 4 | done | Retire work-detail route-anchor stubs | `_work_details`, detail builder, `_config.yml`, audits/tests | `_work_details/*.md` is no longer required or generated solely for `/work_details/<detail_uid>/`; `/work-details/?detail=<id>` still renders from generated payloads |
+| 5 | done | Remove unused work, series, and detail layouts and defaults | `_layouts`, `_config.yml` | `work`, `series`, and `work_details` layouts/defaults are removed only after no active collection uses them |
+| 6 | done | Retarget cleanup and delete behavior | catalogue cleanup and transaction services | delete/cleanup plans remove generated JSON, indexes, search payloads, and source-owned artifacts without depending on collection stubs |
+| 7 | done | Retarget public-link and search URL construction | public runtime, Studio helpers, catalogue search | first-party links use canonical shell/query routes through shared helpers; no retired path-style links are emitted |
+| 8 | done | Retarget audits and tests | `admin-app/checks/`, projection tests, catalogue tests | tests validate canonical shells and generated payload contracts instead of requiring route-anchor stubs |
+| 9 | done | Convert moments to shell/query runtime | `_moments`, `moments/index.md`, public runtime, moment payloads | `/moments/?moment=<id>` renders from generated JSON; `_moments/*.md` and `/moments/<id>/` are no longer route contracts |
+| 10 | done | Update docs and close stale contracts | studio docs | owning docs describe fixed shells, generated payloads, and query-state moment routing as current behavior |
+| 11 | done | Final verification and closeout | build, smokes, docs | all required checks pass or are recorded with reason; generated Docs Viewer payload status is reported |
 
 ### Task 1: Complete Active-Consumer Inventory
 

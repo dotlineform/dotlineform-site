@@ -89,17 +89,15 @@ Markdown report defaults to `var/studio/reports/audit-latest.md`.
 
 Source artifacts checked by the current audit include:
 
-- `_works/*.md`
-- `_series/*.md`
-- `_work_details/*.md`
-- `_moments/*.md`
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
+- `assets/data/moments_index.json`
 - `assets/works/index/*.json`
+- `assets/moments/index/*.json`
 - `analytics-app/data/canonical/tag-assignments.json`
 - generated URLs and media paths referenced by those artifacts
 
-Collection Markdown files are treated as route anchors. Their canonical IDs come from the filename stem when front matter omits `work_id`, `series_id`, `detail_uid`, or `moment_id`; work-detail parent `work_id` is derived from the `detail_uid` prefix.
+Generated JSON and index payloads are treated as route contracts. Work-detail parent `work_id` is derived from the `detail_uid` prefix or from the owning work payload.
 
 Target artifacts:
 

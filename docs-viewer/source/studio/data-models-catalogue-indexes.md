@@ -142,10 +142,10 @@ Current content families:
 - `sections[]`
 - ordered detail records grouped by section; nested detail records carry detail identity, title, and dimensions only, not route layout metadata
 
-Current site mapping:
+Current route mapping:
 
-- `/works/<work_id>/`
-- `/work_details/<detail_uid>/`
+- `/works/?work=<work_id>`
+- `/work-details/?detail=<detail_uid>`
 
 Why it is the most important catalogue record:
 
@@ -166,9 +166,9 @@ Current content families:
 - rendered prose as `content_html`
 - image list and dimensions
 
-Current site mapping:
+Current route mapping:
 
-- `/moments/<moment_id>/`
+- `/moments/?moment=<moment_id>`
 
 Why it exists:
 

@@ -147,7 +147,6 @@ def build_moment_runtime_record(
     source_image_exists: bool,
     width_px: Optional[int] = None,
     height_px: Optional[int] = None,
-    include_layout: bool = False,
 ) -> Dict[str, Any]:
     moment_id = moment_entry_id(moment_entry)
     title = coerce_string(moment_entry.get("title")) or moment_id
@@ -172,8 +171,6 @@ def build_moment_runtime_record(
         "width_px": coerce_int(width_px if width_px is not None else moment_entry.get("width_px")),
         "height_px": coerce_int(height_px if height_px is not None else moment_entry.get("height_px")),
     }
-    if include_layout:
-        moment_record["layout"] = "moment"
     return moment_record
 
 

@@ -137,7 +137,7 @@ Public Jekyll source and runtime remain outside `studio/`:
 | --- | --- |
 | `_config.yml`, `.ruby-version`, `Gemfile`, `Gemfile.lock` | Jekyll and package infrastructure. |
 | `_layouts/` and public `_includes/` | Public layouts/includes used by published routes. Studio-only and Docs Viewer shell internals do not belong here. |
-| `_works/`, `_series/`, `_moments/`, `_work_details/`, `_works_print/` | Public Jekyll collection/page source. |
+| `_works_print/` | Print-specific public Jekyll collection/page source. |
 | `works/`, `series/`, `catalogue/`, `recent/`, `search/`, `analysis/`, `library/`, `docs/`, `data/`, `logs/` | Public route surfaces and minimal route adapters when they publish pages or generated runtime payloads. |
 | `assets/js/` | Public browser runtime for published pages. |
 | `assets/css/main.css` | Public site CSS and genuinely shared public primitives. Studio-only selectors live under `studio/app/assets/css/`. |

@@ -122,4 +122,4 @@ It should generate:
 - public route assets and generated public data required by those shells
 
 It should not consume `_works/`, `_series/`, `_work_details/`, or `_moments` as route-input contracts.
-Those Jekyll collection outputs are build-layer artifacts only while Jekyll remains the public build layer.
+Those Jekyll collection outputs are retired; fixed shells and generated JSON are the route contract.

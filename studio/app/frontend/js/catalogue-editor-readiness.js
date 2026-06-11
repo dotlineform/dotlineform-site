@@ -77,7 +77,6 @@ export function cataloguePreviewFallback(item, options = {}) {
 export function catalogueGeneratedStatusText(preview, options = {}) {
   if (!preview) return normalizeText(options.missingText) || "-";
   const parts = [
-    preview.generated_page_exists ? "page yes" : "page no",
     preview.generated_json_exists ? "json yes" : "json no"
   ];
   if (options.includeIndex !== false) {

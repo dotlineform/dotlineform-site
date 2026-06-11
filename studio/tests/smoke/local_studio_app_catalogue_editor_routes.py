@@ -138,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
                     "url": "/studio/catalogue-moment/?moment=13-moments-in-october",
                     "root": "#catalogueMomentRoot",
                     "selector": "#catalogueMomentSummary a[href*='/moments/']",
-                    "prefix": f"{public_preview_base}/moments/13-moments-in-october/",
+                    "prefix": f"{public_preview_base}/moments/?moment=13-moments-in-october",
                 },
             ]
             for check in public_link_checks:

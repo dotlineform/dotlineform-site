@@ -234,7 +234,6 @@ def main() -> int:
                 "record": moment_record,
                 "record_hash": "hash-moment-current",
                 "preview": {
-                    "generated_page_exists": True,
                     "generated_json_exists": True,
                     "in_moments_index": True,
                     "source_image_exists": True,
@@ -250,10 +249,10 @@ def main() -> int:
         if request.method == "POST" and path == "/catalogue/prose/import-preview":
             fulfil_json(route, {
                 "ok": True,
-                "valid": True,
-                "overwrite_required": True,
-                "target_path": "_moments/smoke-moment.md",
-                "staging_path": "var/studio/catalogue/prose/smoke-moment.md",
+                    "valid": True,
+                    "overwrite_required": True,
+                    "target_path": "studio/data/canonical/catalogue-markdown/moments/smoke-moment.md",
+                    "staging_path": "var/studio/catalogue/prose/smoke-moment.md",
             })
             return
         if request.method == "POST" and path == "/catalogue/prose/import-apply":
@@ -262,7 +261,7 @@ def main() -> int:
             fulfil_json(route, {
                 "ok": True,
                 "changed": True,
-                "target_path": "_moments/smoke-moment.md",
+                "target_path": "studio/data/canonical/catalogue-markdown/moments/smoke-moment.md",
                 "imported_at_utc": "2026-05-15T12:00:00Z",
             })
             return
@@ -320,7 +319,7 @@ def main() -> int:
 
             page.locator(prose_button).click()
             prose_modal = assert_modal_shell(page, "Confirm prose overwrite", ["Cancel", "Overwrite"], args.timeout_ms)
-            if "_moments/smoke-moment.md" not in prose_modal["bodyText"]:
+            if "studio/data/canonical/catalogue-markdown/moments/smoke-moment.md" not in prose_modal["bodyText"]:
                 raise AssertionError(f"prose overwrite text missing from modal: {prose_modal!r}")
             close_with_escape(page, prose_button, args.timeout_ms)
             if prose_apply_requests:

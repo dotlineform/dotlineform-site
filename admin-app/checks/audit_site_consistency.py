@@ -4,11 +4,11 @@ Audit generated site consistency (read-only).
 
 Checks:
 - cross_refs: validate key cross-artifact references and duplicate IDs
-- schema: route-anchor ID format + generated JSON consistency rules
+- schema: generated route contract ID format + generated JSON consistency rules
 - json_schema: generated JSON shape and count checks (series/work indexes + work detail JSON)
 - links: generated link target existence + query-contract sanity
 - media: expected media/download file presence checks
-- orphans: orphan pages/JSON (and optional media scan)
+- orphans: orphan generated route contracts/JSON (and optional media scan)
 """
 
 import argparse
@@ -242,6 +242,58 @@ def load_detail_refs_from_work_json(site_root: Path, work_ids_scope: Optional[se
     return refs
 
 
+def load_object_map_keys(path: Path, map_key: str) -> Dict[str, Dict[str, Any]]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    rows = payload.get(map_key) if isinstance(payload, dict) else None
+    if not isinstance(rows, dict):
+        return {}
+    return {
+        normalize_text(key): {"path": str(path), "fm": {}}
+        for key in rows.keys()
+        if normalize_text(key) != ""
+    }
+
+
+def load_generated_route_contracts(site_root: Path) -> Tuple[
+    Dict[str, Dict[str, Any]],
+    Dict[str, Dict[str, Any]],
+    Dict[str, Dict[str, Any]],
+    Dict[str, Dict[str, Any]],
+]:
+    works = load_object_map_keys(site_root / "assets/data/works_index.json", "works")
+    series = load_object_map_keys(site_root / "assets/data/series_index.json", "series")
+    details = {
+        detail_uid: {"path": ref.get("path", ""), "fm": {"work_id": ref.get("work_id", "")}}
+        for detail_uid, ref in load_detail_refs_from_work_json(site_root).items()
+        if normalize_text(detail_uid) != ""
+    }
+    moments = load_object_map_keys(site_root / "assets/data/moments_index.json", "moments")
+    return works, series, details, moments
+
+
+def load_source_series_statuses(site_root: Path) -> Dict[str, str]:
+    path = site_root / "studio/data/canonical/catalogue/series.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    series_map = payload.get("series") if isinstance(payload, dict) else None
+    if not isinstance(series_map, dict):
+        return {}
+    statuses: Dict[str, str] = {}
+    for raw_sid, raw_row in series_map.items():
+        sid = normalize_text(raw_sid)
+        if sid == "" or not isinstance(raw_row, dict):
+            continue
+        statuses[sid] = normalize_text(raw_row.get("status")).lower() or "unknown"
+    return statuses
+
+
 def normalize_url(url: str) -> str:
     s = normalize_text(url)
     if s == "":
@@ -281,7 +333,7 @@ def check_cross_refs(
         errors += 1
         add_sample(samples, {"check": "cross_refs", "id": dup, "message": "duplicate detail_uid in _work_details"}, max_samples)
 
-    # Legacy _works front matter may still contain series_id; route-anchor stubs do not.
+    # Generated work route contracts may not include series membership directly.
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -292,9 +344,9 @@ def check_cross_refs(
             continue
         if sid not in series:
             errors += 1
-            add_sample(samples, {"check": "cross_refs", "id": wid, "path": row["path"], "message": f"missing series page for series_id '{sid}'"}, max_samples)
+            add_sample(samples, {"check": "cross_refs", "id": wid, "path": row["path"], "message": f"missing series contract for series_id '{sid}'"}, max_samples)
 
-    # _work_details route anchors derive the parent work id from the detail_uid prefix.
+    # Work-detail route contracts derive the parent work id from the detail_uid prefix.
     for duid, row in work_details.items():
         wid = work_id_for_detail(duid, row)
         if wid == "":
@@ -307,7 +359,7 @@ def check_cross_refs(
             errors += 1
             add_sample(samples, {"check": "cross_refs", "id": duid, "path": row["path"], "message": f"work detail references missing work_id '{wid}'"}, max_samples)
 
-    # series_index -> _series/_works references
+    # series_index -> series/work route contract references
     series_index_path = site_root / "assets/data/series_index.json"
     series_map = None
     if not series_index_path.exists():
@@ -334,7 +386,7 @@ def check_cross_refs(
                     continue
                 if sid_norm not in series:
                     errors += 1
-                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": "series_index references missing series page"}, max_samples)
+                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": "series_index references missing series contract"}, max_samples)
                 works_list = srow.get("works") if isinstance(srow, dict) else None
                 if not isinstance(works_list, list):
                     errors += 1
@@ -361,7 +413,7 @@ def check_cross_refs(
         if isinstance(maybe_works_map, dict):
             works_index_map = maybe_works_map
 
-    # Per-work JSON -> _work_details/_works references
+    # Per-work JSON -> work-detail/work route contract references
     detail_refs = load_detail_refs_from_work_json(site_root=site_root, work_ids_scope=work_ids_scope)
     for detail_uid_norm, ref in detail_refs.items():
         wid = normalize_text(ref.get("work_id"))
@@ -372,7 +424,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": f"work JSON references missing work_id '{wid}'"}, max_samples)
         if detail_uid_norm not in work_details:
             errors += 1
-            add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail page"}, max_samples)
+            add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail contract"}, max_samples)
 
     # tag_assignments -> series_index / works_index references
     assignments_path = site_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
@@ -393,6 +445,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing/invalid series map"}, max_samples)
         else:
             known_series_index_ids = set(series_map.keys()) if isinstance(series_map, dict) else set()
+            source_series_status_by_id = load_source_series_statuses(site_root)
             known_work_ids = {normalize_text(wid) for wid in works.keys()}
             known_work_ids.update(normalize_text(wid) for wid in works_index_map.keys())
             series_membership: Dict[str, Set[str]] = {}
@@ -411,6 +464,8 @@ def check_cross_refs(
                 if series_ids_scope is not None and sid_norm not in series_ids_scope:
                     continue
                 if sid_norm not in known_series_index_ids:
+                    if source_series_status_by_id.get(sid_norm) not in {"", "published"}:
+                        continue
                     warnings += 1
                     add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(assignments_path), "message": "tag_assignments series row is missing from series_index"}, max_samples)
                     continue
@@ -453,7 +508,7 @@ def check_schema(
     allowed_sort_fields = {"title", "year", "work_id", "title_sort"}
 
     # Parse/validate series sort_fields once for downstream work-level checks.
-    # Prefer canonical series_index.json data; fall back to _series front matter.
+    # Prefer canonical series_index.json data; keep fallback support for imported rows.
     sort_fields_by_series: Dict[str, List[str]] = {}
     sort_fields_raw_by_series: Dict[str, tuple[str, str]] = {}
     series_index_path = site_root / "assets/data/series_index.json"
@@ -520,7 +575,7 @@ def check_schema(
             add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": "sort_fields must include work_id exactly once"}, max_samples)
         sort_fields_by_series[sid] = parsed
 
-    # _works route anchors
+    # Work route contracts
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -531,19 +586,19 @@ def check_schema(
         fm_work_id = normalize_text(fm.get("work_id"))
         if fm_work_id and fm_work_id != wid:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "work_id front matter does not match route filename"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "work_id does not match generated contract id"}, max_samples)
         if not re_work_id.fullmatch(wid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid work_id format (expected 5 digits)"}, max_samples)
         layout = normalize_text(fm.get("layout"))
         if layout not in {"", "work"}:
             warnings += 1
-            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "works layout should be 'work'"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "work route contract should not carry a layout"}, max_samples)
         if sid != "" and not is_valid_series_ref(sid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
 
-    # _series route anchors
+    # Series route contracts
     for sid, row in series.items():
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
@@ -551,16 +606,16 @@ def check_schema(
         fm_series_id = normalize_series_ref(fm.get("series_id"))
         if fm_series_id and fm_series_id != sid:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series_id front matter does not match route filename"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series_id does not match generated contract id"}, max_samples)
         if not is_valid_series_ref(sid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
         layout = normalize_text(fm.get("layout"))
         if layout not in {"", "series"}:
             warnings += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series layout should be 'series'"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series route contract should not carry a layout"}, max_samples)
 
-    # _work_details route anchors
+    # Work-detail route contracts
     for duid, row in work_details.items():
         fm = row["fm"]
         wid = work_id_for_detail(duid, row)
@@ -577,7 +632,7 @@ def check_schema(
         fm_detail_uid = normalize_text(fm.get("detail_uid"))
         if fm_detail_uid and fm_detail_uid != duid:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid front matter does not match route filename"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid does not match generated contract id"}, max_samples)
         if not re_detail_uid.fullmatch(duid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "invalid detail_uid format (expected 00000-000)"}, max_samples)
@@ -587,13 +642,13 @@ def check_schema(
                 errors += 1
                 add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid prefix must match work_id"}, max_samples)
 
-    # _moments route anchors
+    # Moment route contracts
     for mid, row in moments.items():
         fm = row["fm"]
         fm_moment_id = normalize_text(fm.get("moment_id"))
         if fm_moment_id and fm_moment_id != mid:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "moment_id front matter does not match route filename"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "moment_id does not match generated contract id"}, max_samples)
         if not is_slug_safe(mid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "invalid moment_id slug format"}, max_samples)
@@ -824,7 +879,7 @@ def check_json_schema(
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "missing/invalid header object"}, max_samples)
             continue
-        for key in ("work_id", "count", "hash"):
+        for key in ("schema", "version", "generated_at_utc", "work_id", "count"):
             if key not in header:
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
@@ -909,7 +964,7 @@ def check_links(
             continue
         if sid != "" and sid not in series:
             errors += 1
-            add_sample(samples, {"check": "links", "id": wid, "path": row["path"], "message": f"work links to missing series target '/series/{sid}/'"}, max_samples)
+            add_sample(samples, {"check": "links", "id": wid, "path": row["path"], "message": f"work links to missing series target '/series/?series={sid}'"}, max_samples)
 
     for duid, row in work_details.items():
         wid = work_id_for_detail(duid, row)
@@ -921,7 +976,7 @@ def check_links(
                 continue
         if wid not in works:
             errors += 1
-            add_sample(samples, {"check": "links", "id": duid, "path": row["path"], "message": f"work detail links to missing work target '/works/{wid}/'"}, max_samples)
+            add_sample(samples, {"check": "links", "id": duid, "path": row["path"], "message": f"work detail links to missing work target '/works/?work={wid}'"}, max_samples)
 
     # Query-contract sanity: producer keys should be accepted by destination pages.
     work_page_accepts = {"series", "series_page", "from", "return_sort", "return_dir", "return_series", "details_section", "details_page"}
@@ -1031,7 +1086,7 @@ def check_orphans(
             continue
         if works_by_series.get(sid, 0) == 0:
             warnings += 1
-            add_sample(samples, {"check": "orphans", "id": sid, "path": row["path"], "message": "series page has no works"}, max_samples)
+            add_sample(samples, {"check": "orphans", "id": sid, "path": row["path"], "message": "series contract has no works"}, max_samples)
 
     for duid, row in work_details.items():
         wid = work_id_for_detail(duid, row)
@@ -1050,7 +1105,7 @@ def check_orphans(
                     "check": "orphans",
                     "id": duid,
                     "path": row["path"],
-                    "message": "work detail page is not present in any work JSON",
+                    "message": "work detail contract is not present in any work JSON",
                 },
                 max_samples,
             )
@@ -1198,10 +1253,10 @@ def main() -> None:
         import os
         os.chdir(site_root)
 
-        works, works_dups = load_collection("_works/*.md", "work_id")
-        series, series_dups = load_collection("_series/*.md", "series_id")
-        work_details, detail_dups = load_collection("_work_details/*.md", "detail_uid")
-        moments, _moment_dups = load_collection("_moments/*.md", "moment_id")
+        works, series, work_details, moments = load_generated_route_contracts(site_root)
+        works_dups: List[str] = []
+        series_dups: List[str] = []
+        detail_dups: List[str] = []
 
         checks: List[Dict[str, Any]] = []
         if "cross_refs" in checks_requested:

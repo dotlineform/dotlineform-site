@@ -40,9 +40,8 @@ The current public build is still Jekyll-owned:
 
 - GitHub Pages runs an implicit Jekyll build when repository content changes.
 - Local public preview/build wrappers call `bundle exec jekyll serve` and `bundle exec jekyll build`.
-- `_config.yml` defines site values, remaining collection outputs, permalinks, defaults, and publish exclusions.
+- `_config.yml` defines site values, permalinks, defaults, and publish exclusions.
 - `_layouts/` and `_includes/` contain Liquid templates for public routes.
-- `_works/`, `_series/`, `_moments/`, and `_work_details/` are still present as Jekyll-era collection artifacts, but they are not required by the canonical live route model.
 - public route pages such as `/series/`, `/recent/`, `/library/`, `/analysis/`, and `/catalogue/search/` still use Liquid for shell rendering and config injection.
 
 GitHub Pages without Jekyll publishes static files as-is from a configured source or Actions artifact.
@@ -169,8 +168,8 @@ Jekyll collection stubs are not static-builder inputs.
 The builder should emit fixed route shells for the canonical public routes, including `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, and `/analysis/`.
 Selected moments should use `/moments/?moment=<moment_id>` and generated moment payloads, matching the shell/query model used for selected work views.
 
-Remaining `_works/`, `_series/`, `_work_details/`, `_moments/`, and related Jekyll collection outputs are legacy build-layer artifacts, not current publishing requirements for canonical work, series, work-detail, or moment routes.
-Their removal is tracked in [Public Legacy Collections Cleanup](/docs/?scope=studio&doc=public-legacy-collections-cleanup); the static builder must not treat them as route inputs.
+Retired `_works/`, `_series/`, `_work_details/`, `_moments`, and related Jekyll collection outputs are not current publishing requirements for canonical work, series, work-detail, or moment routes.
+The static builder must not treat them as route inputs.
 
 ### Route Parity
 

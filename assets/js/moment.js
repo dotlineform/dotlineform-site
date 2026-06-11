@@ -5,8 +5,8 @@
   if (!runtime) return;
 
   var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
-  var momentId = runtime.text(root.getAttribute('data-moment-id'));
-  if (!momentId) return;
+  var routeState = runtime.parseRouteState(window.location);
+  var momentId = runtime.text(root.getAttribute('data-moment-id')) || runtime.text(routeState.moment);
 
   var imgBase = String(root.getAttribute('data-img-base') || '');
   var primarySuffix = runtime.text(root.getAttribute('data-primary-suffix')) || 'primary';
@@ -180,6 +180,83 @@
 
   function showLoadError() {
     applyContentHtml('<p>' + unavailableText + '</p>');
+  }
+
+  function formatBrowseDate(row) {
+    return formatDate({
+      date: row && row.date,
+      date_display: row && row.date_display
+    });
+  }
+
+  function renderBrowse(payload) {
+    var titleEl = document.getElementById('momentTitleText');
+    var dateEl = document.getElementById('momentDateText');
+    var heroEl = document.getElementById('momentHero');
+    var body = document.getElementById('momentBody');
+    if (titleEl) titleEl.textContent = 'moments';
+    document.title = 'moments | dotlineform';
+    if (dateEl) dateEl.hidden = true;
+    if (heroEl) heroEl.hidden = true;
+    if (!body) return;
+
+    var moments = payload && payload.moments && typeof payload.moments === 'object' ? payload.moments : {};
+    var rows = Object.keys(moments).map(function (id) {
+      var row = moments[id] && typeof moments[id] === 'object' ? moments[id] : {};
+      return {
+        id: runtime.text(row.moment_id) || id,
+        title: runtime.text(row.title) || id,
+        date: runtime.text(row.date),
+        date_display: runtime.text(row.date_display)
+      };
+    }).sort(function (a, b) {
+      var ad = runtime.text(a.date);
+      var bd = runtime.text(b.date);
+      if (ad !== bd) return ad < bd ? 1 : -1;
+      return a.title.localeCompare(b.title);
+    });
+
+    if (!rows.length) {
+      body.innerHTML = '<p>' + unavailableText + '</p>';
+      return;
+    }
+
+    var list = document.createElement('div');
+    list.className = 'index';
+    rows.forEach(function (row) {
+      var link = document.createElement('a');
+      link.className = 'index__item';
+      link.href = runtime.momentUrl(row.id, baseurl);
+
+      var title = document.createElement('span');
+      title.className = 'index__title';
+      title.textContent = row.title;
+      link.appendChild(title);
+
+      var dateText = formatBrowseDate(row);
+      if (dateText) {
+        var meta = document.createElement('span');
+        meta.className = 'index__meta';
+        meta.textContent = dateText;
+        link.appendChild(meta);
+      }
+
+      list.appendChild(link);
+    });
+
+    body.innerHTML = '';
+    body.appendChild(list);
+  }
+
+  if (!momentId) {
+    applyMetadata({ title: loadingText });
+    runtime.fetchJson(runtime.momentsIndexUrl(baseurl))
+      .then(renderBrowse)
+      .catch(function () {
+        applyMetadata({ title: unavailableText });
+        showLoadError();
+      });
+    return;
   }
 
   applyMetadata({ moment_id: momentId, title: loadingText });

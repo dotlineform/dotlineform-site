@@ -95,7 +95,6 @@ def test_runtime_record_uses_alt_fallback_and_omits_missing_images() -> None:
         source_image_exists=True,
         width_px=1200,
         height_px=800,
-        include_layout=True,
     )
 
     assert record == {
@@ -106,7 +105,6 @@ def test_runtime_record_uses_alt_fallback_and_omits_missing_images() -> None:
         "images": [{"file": "blue-sky.jpg", "alt": "Blue Sky"}],
         "width_px": 1200,
         "height_px": 800,
-        "layout": "moment",
     }
 
     no_image = moments.build_moment_runtime_record(
@@ -128,7 +126,6 @@ def test_moment_record_payload_shape() -> None:
             "images": [{"file": "blue-sky.jpg", "alt": "Blue Sky"}],
             "width_px": 1200,
             "height_px": 800,
-            "layout": "moment",
         },
         content_html="<p>Body</p>\n",
         generated_at_utc="2026-05-09T12:00:00Z",

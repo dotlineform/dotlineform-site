@@ -70,8 +70,8 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     expect(page.locator("[data-role='catalog-index-mode-btn'][data-mode='moments']")).to_have_attribute("aria-pressed", "true")
     expect(page.locator("#seriesIndexList .seriesIndexItem").first).to_be_visible(timeout=10_000)
     moment_href = first_href(page, "#seriesIndexList .seriesIndexItem")
-    if "/moments/" not in moment_href or "?mode=moments" in moment_href:
-        raise AssertionError(f"moment browse link should open an individual moment page: {moment_href!r}")
+    if "/moments/?" not in moment_href or "moment=" not in moment_href:
+        raise AssertionError(f"moment browse link should open the canonical selected-moment shell: {moment_href!r}")
 
     goto(page, base_url, "/series/?series=009&from=recent")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
@@ -108,17 +108,17 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     if "/works/?" not in detail_back_href or "work=00001" not in detail_back_href or "series=009" not in detail_back_href:
         raise AssertionError(f"detail back link is not canonical: {detail_back_href!r}")
 
-    goto(page, base_url, "/moments/a-doll-story/")
+    goto(page, base_url, "/moments/?moment=a-doll-story")
     expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#momentTitleText")).to_contain_text("a doll story", timeout=10_000)
 
     response = page.context.request.get(f"{base_url.rstrip('/')}/moments/")
     body = response.text()
-    if response.status != 200 or 'id="momentsRecoveryLink"' not in body or "/series/?mode=moments" not in body:
-        raise AssertionError("moments recovery route did not include the visible fallback link")
+    if response.status != 200 or 'id="momentPageRoot"' not in body:
+        raise AssertionError("moments shell did not render")
     goto(page, base_url, "/moments/")
-    page.wait_for_url("**/series/?mode=moments", timeout=10_000)
-    expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
+    expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
+    expect(page.locator("#momentBody .index__item").first).to_be_visible(timeout=10_000)
 
     goto(page, base_url, "/catalogue/search/")
     expect(page.locator("#studioSearchRoot")).to_be_visible(timeout=10_000)
@@ -129,7 +129,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
         raise AssertionError(f"catalogue search result link is not canonical: {search_href!r}")
 
     goto(page, base_url, "/work_details/not-a-real-detail/")
-    expect(page.locator("body")).to_contain_text("page unavailable", timeout=10_000)
+    expect(page.locator("body")).to_contain_text("page is unavailable", timeout=10_000)
     expect(page.locator("article.page a[href$='/series/']")).to_contain_text("return to works")
 
 

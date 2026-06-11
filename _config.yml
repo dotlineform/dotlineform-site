@@ -43,47 +43,14 @@ public_runtime_text:
   unavailable: "info not available"
 
 collections:
-  works:
-    output: true
-    permalink: /works/:name/
-  work_details:
-    output: true
-    permalink: /work_details/:name/
-  series:
-    output: true
-    permalink: /series/:name/
   studio_works:
     output: true
     permalink: /studio/studio-works/:name/
-  moments:
-    output: true
-    permalink: /moments/:name/
 
 # Any document can set published: false in its front matter to hide it from site.<collection> output/build.
 # no default has been set, so all documents are published by default.
 # This allows us to control visibility on a per-document basis without needing to set published: true for every document.
 defaults:
-  - scope:
-      path: ""
-      type: works
-    values:
-      layout: work
-  - scope:
-      path: ""
-      type: work_details
-    values:
-      layout: work_details
-  - scope:
-      path: ""
-      type: series
-    values:
-      layout: series
-  - scope:
-      path: ""
-      type: moments
-    values:
-      layout: moment
-  
   # Apply default layout automatically to other pages
   - scope:
       path: ""

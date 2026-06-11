@@ -25,23 +25,6 @@ permalink: /series/
   {%- assign thumb_moments_base_out = thumb_moments_base | relative_url -%}
 {%- endunless -%}
 
-{%- capture moments_index_items -%}
-[
-{%- assign first_moment = true -%}
-{%- for moment in site.moments -%}
-  {%- if moment.published == false -%}{%- continue -%}{%- endif -%}
-  {%- unless first_moment -%},{%- endunless -%}
-  {%- assign moment_id = moment.moment_id | default: moment.slug -%}
-  {
-    "moment_id": {{ moment_id | jsonify }},
-    "title": {{ moment.title | default: moment.slug | jsonify }},
-    "url": {{ moment.url | relative_url | jsonify }}
-  }
-  {%- assign first_moment = false -%}
-{%- endfor -%}
-]
-{%- endcapture -%}
-
 <div
   id="seriesIndexRoot"
   data-baseurl="{{ site.baseurl | default: '' }}"
@@ -209,7 +192,6 @@ permalink: /series/
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
     var momentsIndexUrl = baseurl + '/assets/data/moments_index.json';
-    var momentsItems = {{ moments_index_items | strip_newlines }};
     var pageSize = 80;
     var modeStorageKey = 'dlf.catalogIndex.mode';
     var defaultSort = {
@@ -640,14 +622,13 @@ permalink: /series/
     }
 
     function mergeMomentIndexItem(item, indexMap) {
-      var momentId = String((item && item.moment_id) || '').trim();
+      var momentId = String((item && item.moment_id) || (item && item.id) || '').trim();
       var row = indexMap && momentId ? indexMap[momentId] : null;
       return {
         moment_id: momentId,
         title: String((row && row.title) || (item && item.title) || momentId),
         date: String((row && row.date) || ''),
         date_display: String((row && row.date_display) || ''),
-        url: String((item && item.url) || ''),
         thumb_id: String((row && row.thumb_id) || '').trim()
       };
     }
@@ -664,7 +645,7 @@ permalink: /series/
         kind: 'moments',
         id: momentId,
         title: String((momentItem && momentItem.title) || momentId),
-        href: String((momentItem && momentItem.url) || ''),
+        href: runtime.momentUrl(momentId, baseurl),
         year_display: yearDisplay,
         year_sort: parseYearNumber(momentItem && momentItem.date, momentItem && momentItem.date_display),
         thumb_id: String((momentItem && momentItem.thumb_id) || '').trim()
@@ -891,9 +872,9 @@ permalink: /series/
             return buildSeriesItem(seriesMap[sid]);
           }).filter(Boolean);
         }
-        catalogueItems.moments = Array.isArray(momentsItems) ? momentsItems.map(function (item) {
-          return buildMomentItem(mergeMomentIndexItem(item, momentsIndexMap));
-        }).filter(Boolean) : [];
+        catalogueItems.moments = Object.keys(momentsIndexMap).map(function (momentId) {
+          return buildMomentItem(mergeMomentIndexItem({ moment_id: momentId }, momentsIndexMap));
+        }).filter(Boolean);
 
         if (!catalogueItems.works.length && !catalogueItems.moments.length) {
           empty.textContent = uiText.empty_works;

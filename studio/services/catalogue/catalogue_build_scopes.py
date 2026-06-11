@@ -318,7 +318,6 @@ def preview_moment_source(
         "staging_path": str(build_media.MOMENT_PROSE_STAGING_REL_DIR / filename),
         "target_path": str(CATALOGUE_MOMENT_PROSE_REL_DIR / filename),
         "metadata_path": str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME),
-        "generated_page_path": str(Path("_moments") / f"{moment_id}.md"),
         "generated_json_path": str(Path("assets/moments/index") / f"{moment_id}.json"),
         "moments_index_path": "assets/data/moments_index.json",
         "search_scope": "catalogue",
@@ -344,7 +343,6 @@ def preview_moment_source(
     source_image_path = (projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG) / source_image_file) if projects_base_dir else None
     preview["source_image_path"] = str(Path("moments") / "images" / Path(source_image_file).name)
     preview["source_image_exists"] = bool(source_image_path and source_image_path.exists())
-    preview["generated_page_exists"] = (repo_root / "_moments" / f"{moment_id}.md").exists()
     preview["generated_json_exists"] = (repo_root / "assets/moments/index" / f"{moment_id}.json").exists()
     preview["in_moments_index"] = False
 

@@ -201,7 +201,6 @@ def unique_existing_paths(paths: Iterable[Path]) -> list[Path]:
 def collect_moment_repo_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "_moments" / f"{moment_id}.md",
             repo_root / "assets" / "moments" / "index" / f"{moment_id}.json",
         ]
     )
@@ -236,7 +235,6 @@ def collect_moment_delete_cleanup(repo_root: Path, moment_id: str) -> Dict[str, 
 def collect_work_repo_artifacts(repo_root: Path, work_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "_works" / f"{work_id}.md",
             repo_root / "assets" / "works" / "index" / f"{work_id}.json",
         ]
     )
@@ -256,7 +254,7 @@ def collect_work_staged_media_artifacts(repo_root: Path, work_id: str) -> list[P
 
 
 def collect_detail_repo_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
-    return unique_existing_paths([repo_root / "_work_details" / f"{detail_uid}.md"])
+    return []
 
 
 def collect_detail_repo_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
@@ -275,7 +273,6 @@ def collect_detail_staged_media_artifacts(repo_root: Path, detail_uid: str) -> l
 def collect_series_repo_artifacts(repo_root: Path, series_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "_series" / f"{series_id}.md",
             repo_root / "assets" / "series" / "index" / f"{series_id}.json",
         ]
     )
@@ -383,7 +380,6 @@ def collect_catalogue_delete_cleanup(
 
 def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
     roots = [
-        repo_root / "_moments",
         repo_root / "assets" / "moments" / "index",
         repo_root / "assets" / "moments" / "img",
         repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments",
@@ -396,9 +392,6 @@ def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, An
 
 def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
     delete_roots = [
-        repo_root / "_works",
-        repo_root / "_work_details",
-        repo_root / "_series",
         repo_root / "assets" / "works" / "index",
         repo_root / "assets" / "series" / "index",
         repo_root / "assets" / "works" / "img",

@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue-maintenance
 title: Catalogue Model Maintenance
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-11
 parent_id: studio
 viewable: true
 ---
@@ -12,7 +12,7 @@ viewable: true
 
 Important dependencies:
 
-- `_work_details/*.md` depends on the parent work record for canonical detail data
+- generated work-detail route contracts depend on the parent work record for canonical detail data
 - `works_index.json` depends on valid `series_ids` membership
 - `series_index.json` depends on ordered work membership and stable `sort_fields`
 - catalogue search depends on series/work/moment generated catalogue data only; it does not consume Analytics tag source data
@@ -21,7 +21,7 @@ Current enforcement visible in code:
 
 - the generator writes and hashes the shared catalogue indexes and per-record catalogue payloads
 - the search builder writes the catalogue search artifact from those generated JSON families
-- the generator keeps `_moments`, `_series`, and `_works` stubs minimal and current
+- the generator keeps shared indexes and per-record public payloads current
 - the audit script checks:
   - `detail_uid` and `work_id` consistency
   - `series_index` membership integrity

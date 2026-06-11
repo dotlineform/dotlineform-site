@@ -41,8 +41,6 @@ def rel_paths(root: Path, paths) -> list[str]:
 def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        touch(root / "_works/00001.md")
-        touch(root / "_work_details/00001-001.md")
         touch(root / "assets/works/index/00001.json")
         touch(root / "assets/works/img/00001-thumb-800.jpg")
         touch(root / "assets/work_details/img/00001-001-thumb-800.jpg")
@@ -62,7 +60,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
             {"works": ["00001"], "work_details": ["00001-001"], "series": ["009"]},
         )
 
-    assert preview["repo_artifacts"] == 3
+    assert preview["repo_artifacts"] == 1
     assert preview["repo_media"] == 2
     assert preview["staged_media"] == 2
     assert preview["catalogue_search"] == "assets/data/search/catalogue/index.json"

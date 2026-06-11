@@ -101,7 +101,7 @@ Current route output:
 
 - `work`: `/works/?work=<work_id>`
 - `series`: `/series/?series=<series_id_or_slug>`
-- `moment`: `/moments/<moment_id>/`
+- `moment`: `/moments/?moment=<moment_id>`
 
 Current target-status behavior:
 

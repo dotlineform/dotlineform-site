@@ -98,12 +98,15 @@
     return appendQuery(buildPath(baseurl, '/work-details/'), params);
   }
 
-  function momentUrl(momentId, baseurl) {
-    return buildPath(baseurl, '/moments/' + encodeURIComponent(text(momentId)) + '/');
+  function momentUrl(momentId, baseurl, options) {
+    var id = text(momentId);
+    var params = Object.assign({}, options || {});
+    if (id) params.moment = id;
+    return appendQuery(buildPath(baseurl, '/moments/'), params);
   }
 
   function momentsRecoveryUrl(baseurl) {
-    return catalogueIndexUrl(baseurl, { mode: 'moments' });
+    return buildPath(baseurl, '/moments/');
   }
 
   function notFoundRecoveryUrl(baseurl) {
@@ -118,6 +121,7 @@
       series: text(params.get('series')).toLowerCase(),
       work: text(params.get('work')),
       detail: text(params.get('detail')),
+      moment: text(params.get('moment')),
       seriesPage: toPositiveInteger(params.get('series_page')),
       from: text(params.get('from')).toLowerCase()
     };
@@ -133,6 +137,10 @@
 
   function momentPayloadUrl(momentId, baseurl) {
     return buildPath(baseurl, '/assets/moments/index/' + encodeURIComponent(text(momentId)) + '.json');
+  }
+
+  function momentsIndexUrl(baseurl) {
+    return buildPath(baseurl, '/assets/data/moments_index.json');
   }
 
   function seriesIndexUrl(baseurl) {
@@ -268,6 +276,7 @@
     workPayloadUrl: workPayloadUrl,
     seriesPayloadUrl: seriesPayloadUrl,
     momentPayloadUrl: momentPayloadUrl,
+    momentsIndexUrl: momentsIndexUrl,
     seriesIndexUrl: seriesIndexUrl,
     worksIndexUrl: worksIndexUrl,
     workUrl: workUrl,

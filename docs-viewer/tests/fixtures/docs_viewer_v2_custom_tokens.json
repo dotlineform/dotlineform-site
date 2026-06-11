@@ -41,7 +41,7 @@
         "dark-sky": {
           "title": "Dark Sky",
           "status": "published",
-          "href": "/moments/dark-sky/"
+          "href": "/moments/?moment=dark-sky"
         }
       }
     }
@@ -264,7 +264,7 @@
         "html_contains": [
           "<code>[[ref:work:638]]</code>",
           "[[ref:series:26]]",
-          "href=\"/moments/dark-sky/\"",
+          "href=\"/moments/?moment=dark-sky\"",
           ">Dark Sky</a>"
         ],
         "plain_text": "Inline [[ref:work:638]] stays literal.\n\n[[ref:series:26]]\n\nOutside Dark Sky.",
@@ -274,7 +274,7 @@
             "target_kind": "moment",
             "target_id": "dark-sky",
             "target_key": "moment:dark-sky",
-            "target_href": "/moments/dark-sky/",
+            "target_href": "/moments/?moment=dark-sky",
             "target_title": "Dark Sky",
             "target_status": "published",
             "label": "Dark Sky",

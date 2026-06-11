@@ -174,7 +174,7 @@ def test_catalogue_cleanup_transaction_writes_deletes_and_reports_written_paths(
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source = root / "studio/data/canonical/catalogue/works.json"
-        artifact = root / "_works/00001.md"
+        artifact = root / "assets/works/index/00001.json"
         search_index = root / "assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
         write_text(artifact, "generated")
@@ -204,7 +204,7 @@ def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> No
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source = root / "studio/data/canonical/catalogue/works.json"
-        artifact = root / "_works/00001.md"
+        artifact = root / "assets/works/index/00001.json"
         search_index = root / "assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
         write_text(artifact, "generated")

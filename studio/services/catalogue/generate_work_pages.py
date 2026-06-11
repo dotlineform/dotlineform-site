@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-Generate Jekyll work/moment pages and JSON artifacts.
+Generate public catalogue JSON artifacts.
 
-This repo stores works as a Jekyll collection in `_works/`. The generator writes metadata-free
-Markdown route anchors (e.g. `_works/00286.md`) while runtime catalogue metadata lives in
-generated JSON artifacts.
+This repo stores public catalogue runtime metadata in generated JSON artifacts.
+Legacy Jekyll collection route stubs are retired and are not written by this generator.
 
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
@@ -43,9 +42,9 @@ Common flags:
 - --write: persist generated files + canonical source status/date updates
 - --force: regenerate even when generated output would otherwise match existing files
 - --work-ids / --work-ids-file: limit work/work_details generation scope
-- --series-ids / --series-ids-file: limit series page/JSON scope
+- --series-ids / --series-ids-file: limit series JSON scope
 - --moment-ids / --moment-ids-file: limit moments generation scope
-- --moments-output-dir: moment page destination
+- --moments-output-dir: retired compatibility option; route anchors are no longer written
 - --moments-json-dir: moment JSON output destination
 - --moments-index-json-path: moments index JSON output destination
 - --projects-base-dir: base path used for work/work_details dimension lookups and moment source-image lookup
@@ -405,16 +404,16 @@ def main() -> None:
     )
 
     # Output
-    ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
-    ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
+    ap.add_argument("--output-dir", default="_works", help="Retired compatibility option; work route stubs are no longer written")
+    ap.add_argument("--series-output-dir", default="_series", help="Retired compatibility option; series route stubs are no longer written")
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON files")
     ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
-    ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
+    ap.add_argument("--work-details-output-dir", default="_work_details", help="Retired compatibility option; work detail route stubs are no longer written")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--recent-index-json-path", default="assets/data/recent_index.json", help="Output path for generated recent publications index JSON")
     ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
-    ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
+    ap.add_argument("--moments-output-dir", default="_moments", help="Retired compatibility option; moment route stubs are no longer written")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
     ap.add_argument(
@@ -471,6 +470,7 @@ def main() -> None:
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
             "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,works-index-json,recent-index-json,moments,moments-index-json. "
+            "Retired page artifact names are accepted as aliases for the current generated JSON/index contracts. "
             "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
     )
@@ -552,10 +552,13 @@ def main() -> None:
             return True
         return name in selected_artifacts
 
-    run_work_pages = artifact_enabled("work-pages")
-    run_series_pages = artifact_enabled("series-pages")
-    run_work_details_pages = artifact_enabled("work-details-pages")
-    run_work_json = artifact_enabled("work-json") or run_work_pages
+    requested_work_pages = artifact_enabled("work-pages")
+    requested_series_pages = artifact_enabled("series-pages")
+    requested_work_details_pages = artifact_enabled("work-details-pages")
+    run_work_pages = False
+    run_series_pages = requested_series_pages
+    run_work_details_pages = False
+    run_work_json = artifact_enabled("work-json") or requested_work_pages or requested_work_details_pages
     run_works_index_json = True
     run_moments_artifact = artifact_enabled("moments")
     run_moments_index_json = True
@@ -566,14 +569,6 @@ def main() -> None:
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
             "to var/local/site.env or pass --projects-base-dir."
         )
-    # Output directory:
-    # - Use `works` for a normal pages folder.
-    # - Use `_works` if you're using a Jekyll collection.
-    out_dir = Path(args.output_dir).expanduser()
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    series_out_dir = Path(args.series_output_dir).expanduser()
-    series_out_dir.mkdir(parents=True, exist_ok=True)
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
 
@@ -581,8 +576,6 @@ def main() -> None:
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
     series_index_json_path = Path(args.series_index_json_path).expanduser()
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    work_details_out_dir = Path(args.work_details_output_dir).expanduser()
-    work_details_out_dir.mkdir(parents=True, exist_ok=True)
     works_json_dir = Path(args.works_json_dir).expanduser()
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
@@ -591,8 +584,6 @@ def main() -> None:
     recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
     work_storage_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    moments_out_dir = Path(args.moments_output_dir).expanduser()
-    moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_json_dir = Path(args.moments_json_dir).expanduser()
     moments_json_dir.mkdir(parents=True, exist_ok=True)
     moments_index_json_path = Path(args.moments_index_json_path).expanduser()
@@ -833,74 +824,8 @@ def main() -> None:
     today = dt.date.today()
     work_publish_transitions: List[Dict[str, Any]] = []
 
-    # Iterate each Works row and emit one Markdown file per work.
-    if run_work_processing:
-        for work_record in source_records.works.values():
-            status = normalize_status(work_record.get("status"))
-            raw_work_id = work_record.get("work_id")
-            if is_empty(raw_work_id):
-                skipped += 1
-                continue
-            wid = slug_id(raw_work_id)
-
-            if selected_ids is not None and wid not in selected_ids:
-                skipped += 1
-                continue
-
-            if not source_updates.is_actionable_status(status, refresh_published=refresh_published):
-                skipped += 1
-                continue
-
-            processed += 1
-            prefix = f"[{processed}/{total}] "
-            if run_work_pages:
-                canonical_work_fm = records.build_canonical_work_record(
-                    wid,
-                    work_meta_by_id=work_meta_by_id,
-                    source_work_record=source_records.works.get(wid, {}),
-                    series_title_by_id=series_title_by_id,
-                    series_sort_by_series_id=series_sort_by_series_id,
-                )
-                if canonical_work_fm is None:
-                    skipped += 1
-                    continue
-                work_page_content = writes.build_route_stub_content()
-                out_path = out_dir / f"{wid}.md"
-
-                def write_page(path: Path, label: str, page_content: str) -> bool:
-                    exists = path.exists()
-                    decision = writes.decide_route_stub_write(path_exists=exists, force=args.force)
-                    if not decision.should_write:
-                        print(f"{prefix}SKIP ({label}; route exists): {display_path(path)}")
-                        return False
-                    if args.write:
-                        path.write_text(page_content, encoding="utf-8")
-                        print(f"{prefix}WRITE ({label}): {display_path(path)}")
-                    else:
-                        print(f"{prefix}DRY-RUN: would write {display_path(path)} (overwrite={exists})")
-                    return True
-
-                if write_page(out_path, "work", work_page_content):
-                    written += 1
-                    if args.write:
-                        work_meta = work_meta_by_id.get(wid, {})
-                        publication_plan = source_updates.plan_work_publication_update(
-                            work_id=wid,
-                            status=work_record.get("status"),
-                            today=today,
-                            work_meta=work_meta if isinstance(work_meta, dict) else {},
-                            series_title_by_id=series_title_by_id,
-                        )
-                        if publication_plan.updates:
-                            update_source_work_record(wid, **publication_plan.updates)
-                        if "status" in publication_plan.updates:
-                            status_updated += 1
-                        if "published_date" in publication_plan.updates:
-                            published_date_updated += 1
-                        if publication_plan.transition is not None:
-                            work_publish_transitions.append(publication_plan.transition)
-                else:
-                    skipped += 1
+    if requested_work_pages and selected_artifacts is not None:
+        print("Work route stubs retired: work-pages maps to current work JSON/index generation.")
 
     if args.write and (
         status_updated > 0
@@ -913,10 +838,6 @@ def main() -> None:
         if work_dimensions_updated > 0:
             print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
     if run_work_processing:
-        print(
-            f"\nDone. {'Would write' if not args.write else 'Wrote'}: "
-            f"{written} works. Skipped: {skipped} works."
-        )
         print(f"Catalogue source: {display_path(json_source_dir)}")
         if args.write:
             print("Canonical source write-back runs after generation completes.")
@@ -1020,7 +941,6 @@ def main() -> None:
                 published_date = parse_date(series_record.get("published_date"))
                 series_output_record = compact_json_object({
                     "series_id": series_id,
-                    "layout": "series",
                     "status": status,
                     "published_date": published_date,
                     "title": series_title,
@@ -1044,23 +964,6 @@ def main() -> None:
                         "work_count": len(series_work_ids_sorted),
                     })
                 )
-                series_content = writes.build_route_stub_content()
-
-                series_path = series_out_dir / f"{series_id}.md"
-                series_exists = series_path.exists()
-                series_decision = writes.decide_route_stub_write(path_exists=series_exists, force=args.force)
-                if not series_decision.should_write:
-                    print(f"{prefix_s}SKIP (route exists): {display_path(series_path)}")
-                    series_skipped += 1
-                else:
-                    if args.write:
-                        series_path.write_text(series_content, encoding="utf-8")
-                        print(f"{prefix_s}WRITE: {display_path(series_path)}")
-                        series_written += 1
-                    else:
-                        print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_exists})")
-                        series_written += 1
-
                 payload = compact_json_object({
                     "header": {
                         "schema": "series_record_v1",
@@ -1190,140 +1093,8 @@ def main() -> None:
                 continue
             known_work_ids.add(slug_id(wid_raw))
 
-        if run_work_details_pages:
-            details_written = 0
-            details_skipped = 0
-            details_status_updated = 0
-            details_published_date_updated = 0
-            details_dimensions_updated = 0
-            project_folder_missing_warned = False
-            details_total = 0
-
-            for detail_source_record in source_records.work_details.values():
-                wid_raw = detail_source_record.get("work_id")
-                if is_empty(wid_raw):
-                    continue
-                wid = slug_id(wid_raw)
-                if selected_ids is not None and wid not in selected_ids:
-                    continue
-                status = normalize_status(detail_source_record.get("status"))
-                if source_updates.is_actionable_status(status, refresh_published=refresh_published):
-                    details_total += 1
-
-            details_processed = 0
-            for detail_source_record in source_records.work_details.values():
-                wid_raw = detail_source_record.get("work_id")
-                did_raw = detail_source_record.get("detail_id")
-                if is_empty(wid_raw) or is_empty(did_raw):
-                    details_skipped += 1
-                    continue
-
-                wid = slug_id(wid_raw)
-                if selected_ids is not None and wid not in selected_ids:
-                    details_skipped += 1
-                    continue
-
-                if wid not in known_work_ids:
-                    print(f"Warning: skipping work detail for unknown work_id {wid}: detail_id={did_raw}")
-                    details_skipped += 1
-                    continue
-
-                status = normalize_status(detail_source_record.get("status"))
-                if not source_updates.is_actionable_status(status, refresh_published=refresh_published):
-                    details_skipped += 1
-                    continue
-
-                details_processed += 1
-                prefix_d = f"[details {details_processed}/{details_total}] "
-
-                did = slug_id(did_raw, width=3)
-                detail_uid = f"{wid}-{did}"
-                details_subfolder = coerce_string(
-                    detail_source_record.get("details_subfolder") or detail_source_record.get("project_subfolder")
-                )
-                project_filename = coerce_string(detail_source_record.get("project_filename"))
-                width_px = coerce_int(detail_source_record.get("width_px"))
-                height_px = coerce_int(detail_source_record.get("height_px"))
-
-                # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
-                source_path_plan = source_updates.plan_detail_image_source_path(
-                    detail_uid=detail_uid,
-                    project_filename=project_filename,
-                    work_project_folder=work_project_folder_by_id.get(wid),
-                    details_subfolder=details_subfolder,
-                    projects_root=projects_root,
-                    has_project_folder_column=has_project_folder_col,
-                )
-                if source_path_plan.warning is not None and not project_folder_missing_warned:
-                    if source_path_plan.warning.code == source_updates.NO_PROJECT_FOLDER_COLUMN:
-                        print("Warning: work source records have no project_folder values; cannot persist work detail image dimensions.")
-                    else:
-                        print("Warning: missing work project_folder for one or more work detail records; cannot persist those image dimensions.")
-                    project_folder_missing_warned = True
-
-                src_path = source_path_plan.source_path
-                if src_path is not None:
-                    src_w, src_h = read_image_dims_px(src_path)
-                    if src_w is not None and src_h is not None:
-                        dimension_plan = source_updates.plan_dimension_update(
-                            record_kind=source_updates.WORK_DETAIL_RECORD,
-                            record_id=detail_uid,
-                            current_width_px=width_px,
-                            current_height_px=height_px,
-                            source_width_px=src_w,
-                            source_height_px=src_h,
-                        )
-                        width_px = dimension_plan.width_px
-                        height_px = dimension_plan.height_px
-                        if args.write and dimension_plan.updates:
-                            update_source_detail_record(detail_uid, **dimension_plan.updates)
-                            details_dimensions_updated += 1
-                    else:
-                        print(f"Warning: could not read dimensions for detail source image: {display_projects_path(src_path)}")
-                elif project_filename:
-                    print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
-
-                d_content = writes.build_route_stub_content()
-                d_path = work_details_out_dir / f"{detail_uid}.md"
-                d_exists = d_path.exists()
-                detail_decision = writes.decide_route_stub_write(path_exists=d_exists, force=args.force)
-                if not detail_decision.should_write:
-                    details_skipped += 1
-                    continue
-
-                if args.write:
-                    d_path.write_text(d_content, encoding="utf-8")
-                    print(f"{prefix_d}WRITE: {display_path(d_path)}")
-                    details_written += 1
-
-                    publication_plan = source_updates.plan_detail_publication_update(
-                        detail_uid=detail_uid,
-                        status=detail_source_record.get("status"),
-                        today=today,
-                    )
-                    if publication_plan.updates:
-                        update_source_detail_record(detail_uid, **publication_plan.updates)
-                    if "status" in publication_plan.updates:
-                        details_status_updated += 1
-                    if "published_date" in publication_plan.updates:
-                        details_published_date_updated += 1
-                else:
-                    print(f"{prefix_d}DRY-RUN: would write {display_path(d_path)} (overwrite={d_exists})")
-                    details_written += 1
-
-            if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
-                if details_status_updated > 0:
-                    print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
-                if details_published_date_updated > 0:
-                    print(f"Set work detail published_date for {details_published_date_updated} row(s).")
-                if details_dimensions_updated > 0:
-                    print(f"Updated work detail width_px/height_px for {details_dimensions_updated} row(s).")
-
-            print(
-                f"Work detail pages done. {'Would write' if not args.write else 'Wrote'}: {details_written}. Skipped: {details_skipped}."
-            )
-        else:
-            print("Work detail pages skipped: not selected by --only.")
+        if requested_work_details_pages and selected_artifacts is not None:
+            print("Work-detail route stubs retired: work-details-pages maps to current work JSON/index generation.")
 
         if run_work_json:
             # Build per-work JSON from Works rows (work-driven).
@@ -1616,7 +1387,6 @@ def main() -> None:
                 source_image_exists=source_image_exists,
                 width_px=width_px,
                 height_px=height_px,
-                include_layout=True,
             )
             source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
             source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
@@ -1628,22 +1398,6 @@ def main() -> None:
                 continue
 
             if moment_actionable:
-                m_content = writes.build_route_stub_content()
-                m_path = moments_out_dir / f"{moment_id}.md"
-                m_exists = m_path.exists()
-                moment_route_decision = writes.decide_route_stub_write(path_exists=m_exists, force=args.force)
-
-                if not moment_route_decision.should_write:
-                    moments_pages_skipped += 1
-                else:
-                    if args.write:
-                        m_path.write_text(m_content, encoding="utf-8")
-                        print(f"{prefix_m}WRITE: {display_path(m_path)}")
-                        moments_pages_written += 1
-                    else:
-                        print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
-                        moments_pages_written += 1
-
                 content_html = render_catalogue_prose_markdown(source_prose_path)
                 payload = moment_artifacts.build_moment_record_payload(
                     moment_record,
@@ -1673,9 +1427,6 @@ def main() -> None:
                         moments_json_written += 1
 
         if run_moments:
-            print(
-                f"Moment pages done. {'Would write' if not args.write else 'Wrote'}: {moments_pages_written}. Skipped: {moments_pages_skipped}."
-            )
             print(
                 f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
             )

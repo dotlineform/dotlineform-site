@@ -255,7 +255,7 @@ function renderSeriesLinks(entry, options) {
 function catalogueEntryHref(entry, baseurl) {
   if (entry.kind === "series") return withBaseUrl(baseurl, `/series/?series=${encodeURIComponent(entry.id)}`);
   if (entry.kind === "work") return withBaseUrl(baseurl, `/works/?work=${encodeURIComponent(entry.id)}`);
-  if (entry.kind === "moment") return withBaseUrl(baseurl, `/moments/${encodeURIComponent(entry.id)}/`);
+  if (entry.kind === "moment") return withBaseUrl(baseurl, `/moments/?moment=${encodeURIComponent(entry.id)}`);
   return withBaseUrl(baseurl, entry.href);
 }
 

@@ -254,7 +254,6 @@ def build_series_index_records(
         sort_fields = ",".join(context.series_sort_fields_by_series_id.get(sid, ["work_id"]))
         series_payload_unsorted[sid] = compact_json_object({
             "series_id": sid,
-            "layout": "series",
             "status": status,
             "published_date": parse_date(series_record.get("published_date")),
             "title": series_title,

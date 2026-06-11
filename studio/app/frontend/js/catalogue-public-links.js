@@ -26,7 +26,10 @@ export function buildPublicWorkDetailUrl(config, detailUid, params = {}) {
 
 export function buildPublicMomentUrl(config, momentId, params = {}) {
   const id = normalizeText(momentId);
-  return buildPublicCatalogueUrl(config, id ? `/moments/${encodeURIComponent(id)}/` : "/moments/", params);
+  return buildPublicCatalogueUrl(config, "/moments/", {
+    ...params,
+    moment: id
+  });
 }
 
 function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {

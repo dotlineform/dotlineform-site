@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue-source
 title: Catalogue Source Model
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-11
 parent_id: studio
 viewable: true
 ---
@@ -22,11 +22,11 @@ Current checked-in catalogue model families:
   - `_docs_catalogue/works/<work_id>.md`
   - `_docs_catalogue/series/<series_id>.md`
   - `_docs_catalogue/moments/<moment_id>.md`
-- route stubs:
-  - `_works/*.md`
-  - `_series/*.md`
-  - `_work_details/*.md`
-  - `_moments/*.md`
+- fixed public route shells:
+  - `works/index.md`
+  - `series/index.md`
+  - `work-details/index.md`
+  - `moments/index.md`
 - shared indexes:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
@@ -43,7 +43,7 @@ Current checked-in catalogue model families:
 
 Primary writers:
 
-- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) for the live rebuild path that refreshes route stubs, shared indexes, and per-record catalogue payloads
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) for the live rebuild path that refreshes shared indexes and per-record catalogue payloads
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) for `assets/data/search/catalogue/index.json`
 
 Primary validator:
@@ -211,70 +211,28 @@ Retired standalone file/link source files are no longer canonical source, and li
 
 ## Why The Model Is Split This Way
 
-The catalogue model is intentionally split between minimal route stubs and generated JSON.
+The catalogue model is intentionally split between fixed route shells and generated JSON.
 
 Why:
 
-- Jekyll still needs stable route pages for `/works/`, `/series/`, `/work_details/`, and `/moments/`
+- Jekyll still needs stable route pages for `/works/`, `/series/`, `/work-details/`, and `/moments/`
 - list pages need lightweight indexes, not full per-item prose and detail payloads
 - work and moment pages need richer page-local data such as `content_html`, dimensions, and detail sections
 - detail pages are cheaper to resolve through the owning work record than through a separate global detail index
 
-In practice this means the route stub gives the page an ID and fallback metadata, while the JSON record gives the page its canonical runtime content.
+In practice this means the route shell parses query state and loads JSON records for canonical runtime content.
 
-## Route Stubs
+## Fixed Route Shells
 
-### `_works/*.md`
+The public catalogue shells are:
 
-Purpose:
+- `/works/`, with selected state in `?work=<work_id>`
+- `/series/`, with selected state in `?series=<series_id>`
+- `/work-details/`, with selected state in `?detail=<detail_uid>`
+- `/moments/`, with selected state in `?moment=<moment_id>`
 
-- provide the public work route
-- carry route identity and a small fallback set of metadata
-
-Design:
-
-- intentionally minimal
-- the canonical detail/prose payload lives in `assets/works/index/<work_id>.json`
-
-### `_series/*.md`
-
-Purpose:
-
-- provide the public series route
-- carry route identity and title fallback
-
-Design:
-
-- intentionally minimal
-- series prose and canonical series metadata live in `assets/series/index/<series_id>.json`
-
-### `_work_details/*.md`
-
-Purpose:
-
-- provide one public route per detail image
-- identify the owning work and detail UID
-
-Design:
-
-- detail pages do not own a standalone detail JSON artifact
-- the page resolves through the parent work record in `assets/works/index/<work_id>.json`
-
-This keeps sibling ordering, section grouping, and detail metadata consistent with the owning work payload.
-
-### `_moments/*.md`
-
-Purpose:
-
-- provide the public moment route
-- carry route identity and title fallback
-
-Design:
-
-- canonical moment metadata comes from `assets/studio/data/catalogue/moments.json`
-- canonical moment prose comes from `_docs_catalogue/moments/<moment_id>.md`
-- runtime moment metadata and rendered prose are generated into `assets/moments/index/<moment_id>.json`
-- the Markdown stub exists mainly for route generation and fallback text
+The canonical work, series, and moment runtime payloads live under `assets/works/index/`, `assets/series/index/`, and `assets/moments/index/`.
+Work-detail pages resolve through the parent work payload so sibling ordering, section grouping, and detail metadata stay consistent with the owning work.
 
 ## Canonical Moment Source
 

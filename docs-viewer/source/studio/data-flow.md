@@ -2,7 +2,7 @@
 doc_id: data-flow
 title: Data Flow
 added_date: 2026-03-31
-last_updated: 2026-06-01
+last_updated: 2026-06-11
 parent_id: studio
 viewable: true
 ---
@@ -23,7 +23,7 @@ Current public browsing routes covered here:
 - `/works/?work=<work_id>`
 - `/work-details/?detail=<detail_uid>`
 - `/moments/`
-- `/moments/<moment_id>/`
+- `/moments/?moment=<moment_id>`
 
 The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
 
@@ -60,17 +60,15 @@ How the page uses them:
 - `works` mode is built from `series_index.json`
 - `moments` mode is built from `moments_index.json`
 - selected-series state is restored from `?series=<series_id>` and uses `assets/data/works_index.json` for lightweight work-card metadata
-- moment card URLs still come from `site.moments` URLs embedded into the page at build time
+- moment card URLs are built with the shared public route helper as `/moments/?moment=<moment_id>`
 
 This route does not read per-series, per-work, or per-moment JSON records.
 
-## 2. Legacy Series Collection Page
+## 2. Selected Series State
 
 User-facing step:
 
-- `/series/<series_id>/`
-- legacy Jekyll collection output
-- current first-party navigation uses `/series/?series=<series_id>`
+- `/series/?series=<series_id>`
 - shows a grid of all works in the series if reached directly
 - shows optional series prose below the grid
 
@@ -108,7 +106,6 @@ Current JSON used:
 Template:
 
 - `works/index.md`
-- `_layouts/work.html` remains as legacy Jekyll collection output while collections are still generated
 
 What `series_index.json` provides on the work page:
 
@@ -133,7 +130,6 @@ Current JSON used:
 Template:
 
 - `work-details/index.md`
-- `_layouts/work_details.html` remains as legacy Jekyll collection output while collections are still generated
 
 How the page works:
 
@@ -147,7 +143,7 @@ This route does not use a global detail index.
 
 User-facing step:
 
-- `/moments/<moment_id>/`
+- `/moments/?moment=<moment_id>`
 - shows one moment plus its prose body
 
 Current JSON used:
@@ -156,10 +152,10 @@ Current JSON used:
 
 Template and runtime:
 
-- `_layouts/moment.html`
+- `moments/index.md`
 - `assets/js/moment.js`
 
-The moment page is moment-local. It does not read `moments_index.json` at runtime.
+The selected moment view is moment-local after route parsing. `/moments/` without a selected moment reads `moments_index.json` and renders a browse list.
 
 ## Search Boundary
 
@@ -197,9 +193,10 @@ The implemented data flow is now:
    - uses `assets/works/index/<work_id>.json`
 
 5. `/moments/`
-   - recovers to `/series/?mode=moments` with a visible fallback link
+   - uses `assets/data/moments_index.json`
+   - renders the moments browse list
 
-6. `/moments/<moment_id>/`
+6. `/moments/?moment=<moment_id>`
    - uses `assets/moments/index/<moment_id>.json`
 
 7. `/catalogue/search/`

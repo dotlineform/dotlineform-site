@@ -178,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
         if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/?from=studio&work=00123":
             raise AssertionError(f"unexpected catalogue public work URL: {result['cataloguePublicWorkUrl']!r}")
-        if result["cataloguePublicMomentUrl"] != "http://127.0.0.1:4000/moments/13-moments-in-october/?from=studio":
+        if result["cataloguePublicMomentUrl"] != "http://127.0.0.1:4000/moments/?from=studio&moment=13-moments-in-october":
             raise AssertionError(f"unexpected catalogue public moment URL: {result['cataloguePublicMomentUrl']!r}")
         if "Missing Studio site base" not in result["cataloguePublicMissingBaseError"]:
             raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")

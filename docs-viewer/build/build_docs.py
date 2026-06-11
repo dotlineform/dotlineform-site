@@ -1017,6 +1017,8 @@ class DocsDataBuilder:
             return f"/works/?work={encoded_id}"
         if kind == "series":
             return f"/series/?series={encoded_id}"
+        if kind == "moment":
+            return f"/moments/?moment={encoded_id}"
         return f"{route_base}/{encoded_id}/"
 
     def normalize_numeric_semantic_id(self, value: str, width: int) -> str:

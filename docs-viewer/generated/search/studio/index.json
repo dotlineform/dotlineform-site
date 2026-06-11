@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0ac77a80a4ac5f20991ea575f9476bb6",
-    "generated_at_utc": "2026-06-11T21:19:10Z",
+    "version": "blake2b-3f3023f3d90345b2b9bf5d2c5549ee6d",
+    "generated_at_utc": "2026-06-11T21:41:25Z",
     "count": 233
   },
   "entries": [
@@ -871,10 +871,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-11",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-05 • Architecture",
+      "display_meta": "2026-06-11 • Architecture",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -883,12 +883,12 @@
         "shared patterns",
         "patterns",
         "architecture",
-        "2026-06-05",
+        "2026-06-11",
         "2026",
         "06",
-        "05"
+        "11"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-05 2026 06 05"
+      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-11 2026 06 11"
     },
     {
       "id": "site-shell-runtime",
@@ -4195,10 +4195,10 @@
       "kind": "doc",
       "title": "Catalogue Model Maintenance",
       "href": "/docs/?scope=studio&doc=data-models-catalogue-maintenance",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-11",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-19 • Studio",
+      "display_meta": "2026-06-11 • Studio",
       "search_terms": [
         "data-models-catalogue-maintenance",
         "data",
@@ -4208,12 +4208,12 @@
         "catalogue model maintenance",
         "model",
         "studio",
-        "2026-05-19",
+        "2026-06-11",
         "2026",
-        "05",
-        "19"
+        "06",
+        "11"
       ],
-      "search_text": "data-models-catalogue-maintenance data models catalogue maintenance catalogue model maintenance model studio 2026-05-19 2026 05 19"
+      "search_text": "data-models-catalogue-maintenance data models catalogue maintenance catalogue model maintenance model studio 2026-06-11 2026 06 11"
     },
     {
       "id": "catalogue-moment-editor",
@@ -4243,10 +4243,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-11",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-01 • Studio",
+      "display_meta": "2026-06-11 • Studio",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -4255,12 +4255,12 @@
         "catalogue scope",
         "scope",
         "studio",
-        "2026-06-01",
+        "2026-06-11",
         "2026",
         "06",
-        "01"
+        "11"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope studio 2026-06-01 2026 06 01"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope studio 2026-06-11 2026 06 11"
     },
     {
       "id": "catalogue-series-editor",
@@ -4290,10 +4290,10 @@
       "kind": "doc",
       "title": "Catalogue Source Model",
       "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-11",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-19 • Studio",
+      "display_meta": "2026-06-11 • Studio",
       "search_terms": [
         "data-models-catalogue-source",
         "data",
@@ -4303,12 +4303,12 @@
         "catalogue source model",
         "model",
         "studio",
-        "2026-05-19",
+        "2026-06-11",
         "2026",
-        "05",
-        "19"
+        "06",
+        "11"
       ],
-      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-05-19 2026 05 19"
+      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-06-11 2026 06 11"
     },
     {
       "id": "scripts-catalogue-source",
@@ -4632,22 +4632,22 @@
       "kind": "doc",
       "title": "Data Flow",
       "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-11",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-01 • Studio",
+      "display_meta": "2026-06-11 • Studio",
       "search_terms": [
         "data-flow",
         "data",
         "flow",
         "data flow",
         "studio",
-        "2026-06-01",
+        "2026-06-11",
         "2026",
         "06",
-        "01"
+        "11"
       ],
-      "search_text": "data-flow data flow data flow studio 2026-06-01 2026 06 01"
+      "search_text": "data-flow data flow data flow studio 2026-06-11 2026 06 11"
     },
     {
       "id": "config-data-sharing-files",

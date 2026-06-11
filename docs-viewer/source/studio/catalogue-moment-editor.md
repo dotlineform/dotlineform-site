@@ -68,11 +68,10 @@ The page root `#catalogueMomentRoot` implements the shared Studio ready-state co
 - `POST /studio/api/catalogue/publication-preview`
 - `POST /studio/api/catalogue/publication-apply`
 
-`Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment page/json/search output, and updates `assets/data/moments_index.json`.
+`Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment JSON/search output, and updates `assets/data/moments_index.json`.
 
 The internal scoped public update rebuilds:
 
-- `_moments/<moment_id>.md`
 - `assets/moments/index/<moment_id>.json`
 - `assets/data/moments_index.json`
 - catalogue search
@@ -127,7 +126,6 @@ If the preview has no blockers or validation errors, the page asks for confirmat
 The Studio delete removes:
 
 - the canonical moment metadata record through `GET /studio/api/catalogue/read?key=catalogue_moments`
-- `_moments/<moment_id>.md`
 - `assets/moments/index/<moment_id>.json`
 - matching published moment thumbnails under `assets/moments/img/`
 - matching repo-local staged media under `var/catalogue/media/moments/`

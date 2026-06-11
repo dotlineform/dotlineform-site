@@ -19,26 +19,6 @@
       "owner_doc": "data-models-catalogue-source"
     },
     {
-      "id": "catalogue_public_route_stubs",
-      "classification": "public_projection",
-      "repo_paths": [
-        "_works/*.md",
-        "_series/*.md",
-        "_work_details/*.md",
-        "_moments/*.md"
-      ],
-      "public_output": {
-        "policy": "allowed",
-        "paths": [
-          "works/*/index.html",
-          "series/*/index.html",
-          "work_details/*/index.html",
-          "moments/*/index.html"
-        ]
-      },
-      "owner_doc": "data-models-catalogue-source"
-    },
-    {
       "id": "catalogue_public_indexes",
       "classification": "public_projection",
       "repo_paths": [
