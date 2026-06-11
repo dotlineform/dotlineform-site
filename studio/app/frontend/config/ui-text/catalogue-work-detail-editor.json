@@ -77,7 +77,6 @@
   "media_refresh_status_success": "Media refresh completed.",
   "media_refresh_status_failed": "Media refresh failed.",
   "media_refresh_status_blocked": "Media refresh blocked.",
-  "media_refresh_result_success": "Thumbnails updated; primary variants staged for publishing.",
   "delete_confirm_title": "Confirm delete",
   "delete_confirm_button": "Delete",
   "confirm_cancel_button": "Cancel",

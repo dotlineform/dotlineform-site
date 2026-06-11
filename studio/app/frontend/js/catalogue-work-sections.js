@@ -3,7 +3,6 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  buildPublicSeriesUrl,
   buildPublicWorkUrl
 } from "./catalogue-public-links.js";
 import {
@@ -115,6 +114,12 @@ export function buildWorkRecordSummary(record) {
   return title || yearDisplay || "—";
 }
 
+function buildWorkImageDimensionSummary(record) {
+  const height = normalizeText(record && record.height_px);
+  const width = normalizeText(record && record.width_px);
+  return height && width ? `${height} x ${width} px` : "";
+}
+
 export function formatWorkSelectionList(ids) {
   const items = Array.isArray(ids) ? ids.slice(0, BULK_PREVIEW_LIMIT) : [];
   const suffix = Array.isArray(ids) && ids.length > items.length ? `, +${ids.length - items.length}` : "";
@@ -123,19 +128,6 @@ export function formatWorkSelectionList(ids) {
 
 function detailSectionLabel(state, options, sectionKey) {
   return normalizeText(sectionKey) || text(state, options, "details_section_blank", "root");
-}
-
-function buildSeriesSummaryHtml(state, options, seriesIds) {
-  if (!seriesIds.length) {
-    return escapeHtml(text(state, options, "context_series_empty", "No series assigned."));
-  }
-
-  return seriesIds.map((seriesId) => {
-    const seriesRecord = state.seriesById.get(seriesId);
-    const label = seriesRecord && seriesRecord.title ? `${seriesId} · ${seriesRecord.title}` : seriesId;
-    const href = buildPublicSeriesUrl(state.config, seriesId);
-    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
-  }).join("<br>");
 }
 
 function getWorkDetails(state, workId) {
@@ -240,6 +232,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
     notConfiguredText: text(state, options, "preview_not_configured", "Preview not configured.")
   });
   const caption = buildWorkRecordSummary(record);
+  const dimensionCaption = buildWorkImageDimensionSummary(record);
   const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
   const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
   const publicHref = buildPublicWorkUrl(state.config, record.work_id);
@@ -248,6 +241,16 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const previewTarget = isPublished ? "" : "_blank";
   const previewRel = isPublished ? "" : "noopener";
   const changedFields = changedWorkFieldNames(state, options);
+  const mediaSummaryItem = mediaItem ? catalogueReadinessItemSummary(mediaItem, { fallbackSummary: "—" }) : null;
+  const mediaRefreshDisabled = (
+    !state.serverAvailable ||
+    state.isSaving ||
+    state.isBuilding ||
+    state.isDeleting ||
+    draftHasChanges(state, options) ||
+    !mediaSummaryItem ||
+    !mediaSummaryItem.exists
+  );
   const previewDisabled = (
     !state.serverAvailable ||
     state.isSaving ||
@@ -260,16 +263,20 @@ export function renderWorkCurrentPreview(state, options = {}) {
   );
   const frameHtml = `
     <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
-      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" height="${escapeHtml(String(preview.height || 180))}" alt="${escapeHtml(caption)}">` : ""}
+      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
       <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
     </div>
   `;
   state.previewNode.innerHTML = `
     <figure class="catalogueRecordPreview">
       ${previewHref ? `<a class="catalogueRecordPreview__link" href="${escapeHtml(previewHref)}"${previewTarget ? ` target="${escapeHtml(previewTarget)}"` : ""}${previewRel ? ` rel="${escapeHtml(previewRel)}"` : ""}>${frameHtml}</a>` : frameHtml}
-      <figcaption class="catalogueRecordPreview__caption">${escapeHtml(caption)}</figcaption>
+      <figcaption class="catalogueRecordPreview__caption">
+        <span>${escapeHtml(caption)}</span>
+        ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
+      </figcaption>
       <div class="catalogueRecordPreview__actions">
         <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-action="preview-build-impact"${previewDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "build_preview_button", "Preview update"))}</button>
+        ${mediaSummaryItem ? `<button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
       </div>
     </figure>
   `;
@@ -290,7 +297,8 @@ export function renderWorkReadiness(state, options = {}) {
     state.readinessNode.innerHTML = "";
     return;
   }
-  const items = catalogueReadinessItems(state.buildPreview);
+  const items = catalogueReadinessItems(state.buildPreview)
+    .filter((item) => normalizeText(item && item.key) !== "work_media");
   if (!items.length) {
     state.readinessNode.innerHTML = "";
     return;
@@ -301,20 +309,13 @@ export function renderWorkReadiness(state, options = {}) {
     const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
     const tone = catalogueReadinessTone(summaryItem.status);
     const proseAction = summaryItem.key === "work_prose";
-    const mediaAction = summaryItem.key === "work_media";
     const proseActionDisabled = actionDisabled || (proseAction && summaryItem.status !== "ready");
-    const mediaActionDisabled = actionDisabled || !summaryItem.exists;
     const disabledNote = proseAction && actionDisabled
       ? (draftHasChanges(state, options)
         ? text(state, options, "readiness_save_first", "Save source changes before importing prose.")
         : text(state, options, "readiness_action_busy", "Wait for the current save or public update to finish."))
-      : mediaAction && actionDisabled
-        ? (draftHasChanges(state, options)
-          ? text(state, options, "media_refresh_save_first", "Save source changes before refreshing media.")
-          : text(state, options, "readiness_action_busy", "Wait for the current save or public update to finish."))
-        : "";
+      : "";
     const proseActionLabel = text(state, options, "prose_import_button", "Import staged prose");
-    const mediaActionLabel = text(state, options, "media_refresh_button", "Refresh media");
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
@@ -323,7 +324,6 @@ export function renderWorkReadiness(state, options = {}) {
           ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
           ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
           ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="work" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(proseActionLabel)}</button></div>` : ""}
-          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="work" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(mediaActionLabel)}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
@@ -514,7 +514,7 @@ export function updateWorkSummary(state, options = {}) {
     `;
     state.runtimeStateNode.textContent = state.rebuildPending
       ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
-      : text(state, options, "summary_rebuild_current", "source and public catalogue are aligned in this session");
+      : "";
     if (state.newDetailLinkNode) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
       state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor");
@@ -538,24 +538,11 @@ export function updateWorkSummary(state, options = {}) {
     ? `${record.work_id} · ${buildWorkRecordSummary(record)}`
     : "";
 
-  const seriesIds = parseSeriesIds(state.draft.series_ids);
-  const publicHref = record ? buildPublicWorkUrl(state.config, record.work_id) : "";
-  state.summaryNode.innerHTML = `
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_link", "Open public work page"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
-        ${record ? `<a href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">${escapeHtml(record.work_id)}</a>` : "—"}
-      </div>
-    </div>
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_series_label", "series"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueWorkSummary__series">${buildSeriesSummaryHtml(state, options, seriesIds)}</div>
-    </div>
-  `;
+  state.summaryNode.innerHTML = "";
 
   state.runtimeStateNode.textContent = state.rebuildPending
     ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
-    : text(state, options, "summary_rebuild_current", "source and public catalogue are aligned in this session");
+    : "";
   if (state.newDetailLinkNode) {
     if (record && isCurrentWorkPublished(state, options)) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");

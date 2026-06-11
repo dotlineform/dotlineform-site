@@ -197,12 +197,18 @@ Current save/publication flow:
 9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /studio/api/catalogue/build-preview` and shows the field-aware result in a modal without saving
 10. the same preview now also carries work media readiness and staged work prose readiness
 11. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
+
+changed image from object-fit: cover to contained natural sizing, with a 70vh / 42rem max-height for very tall images.
+
 12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `studio/data/canonical/catalogue-markdown/works/<work_id>.md` after overwrite confirmation when needed
 13. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
 14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
 15. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
 
+## Refresh media
+
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
+this is useful if only the image changed and the metadata doesn't need re-saving.
 
 ## Route Ready State
 

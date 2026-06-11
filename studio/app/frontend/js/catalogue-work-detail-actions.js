@@ -710,7 +710,6 @@ export async function refreshWorkDetailMedia(state, context) {
       return;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
-    setTextWithState(context, state.resultNode, t(state, context, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
   } catch (error) {
     setTextWithState(
       context,

@@ -1,5 +1,8 @@
 import { displayValue } from "./catalogue-editor-records.js";
 import {
+  buildPublicSeriesUrl
+} from "./catalogue-public-links.js";
+import {
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
   WORK_READONLY_FIELDS as READONLY_FIELDS,
   dedupeSeriesIds,
@@ -48,6 +51,14 @@ function seriesDisplayTitle(state, seriesId) {
 function formatSeriesChoice(state, seriesId) {
   const title = seriesDisplayTitle(state, seriesId);
   return title === seriesId ? seriesId : `${title} (${seriesId})`;
+}
+
+function publicSeriesHref(state, seriesId) {
+  try {
+    return buildPublicSeriesUrl(state.config, seriesId);
+  } catch (_error) {
+    return "";
+  }
 }
 
 function seriesSearchMatches(state, queryText) {
@@ -118,13 +129,22 @@ function renderSeriesPicker(state, options = {}) {
   const seriesIds = parseSeriesIds(state.draft && state.draft.series_ids);
   state.seriesPicker.hiddenInput.value = seriesIdsToText(seriesIds);
   state.seriesPicker.chipsNode.innerHTML = seriesIds.length
-    ? seriesIds.map((seriesId) => `
-      <span class="tagStudio__chip catalogueWorkSeriesPicker__chip">
-        <span class="tagStudio__chipText">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
+    ? seriesIds.map((seriesId) => {
+      const title = seriesDisplayTitle(state, seriesId);
+      const href = publicSeriesHref(state, seriesId);
+      const labelHtml = `
+        <span class="tagStudio__chipText">${escapeHtml(title)}</span>
         <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
+      `;
+      return `
+      <span class="tagStudio__chip catalogueWorkSeriesPicker__chip">
+        ${href
+          ? `<a class="catalogueWorkSeriesPicker__chipLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${labelHtml}</a>`
+          : labelHtml}
         <button type="button" class="tagStudio__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
       </span>
-    `).join("")
+    `;
+    }).join("")
     : `<span class="tagStudioForm__meta">${escapeHtml(formText(options, "series_picker_empty", "No series selected."))}</span>`;
 }
 

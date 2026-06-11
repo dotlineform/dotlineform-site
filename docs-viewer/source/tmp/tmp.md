@@ -6,8 +6,87 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+`studio/app/frontend/config/ui-text/catalogue-work-editor.json`
+ "save_status_loaded": "Loaded work {work_id}.",
+
+config keys report:
+`var/ui-text-usage-map.md`
+
+add a field below the 'artist' row called 'staged prose'.
+this will display the file name `<work_id>.md` if it is saved in `var/docs/catalogue/import-staging/works/`
+to the right of the field, put the 'Import' prose button.
+delete the status messages (it will all be explained in the documentation).
+'No staged prose file exists at var/docs/catalogue/import-staging/works/00008.md.
+var/docs/catalogue/import-staging/works/00008.md
+Add staged Markdown at the expected ID-based path before importing prose.'
 
 
+
+
+edit project filename
+status -> 'Unsaved source changes.'
+'preview update' modal opens:
+   Public update preview
+
+   Public update preview: work 00008; series 105, 026; catalogue search no. local media pending 1.
+
+   Changed fields: project_filename.
+
+   Rules: work_media_source.
+
+   Artifacts: local-media, source-json, studio-lookup.
+
+   Reasons:
+   - local-media, source-json, studio-lookup: Work source media folder and filename fields control Studio source-image editing, media readiness, and derivative generation; JSON rebuild follows only if derived dimensions change.
+
+status messages:
+source and public catalogue are aligned in this session
+Public update preview: work 00008; series 105, 026; catalogue search yes. local media pending 1.
+
+'work media' section:
+displays:
+Source media is ready and local thumbnails are current in assets/works/img/00008-thumb-96.webp.
+current filename 'projects/nerve/nerve.jpg'
+Local thumbnails are current for this record.
+Save source changes before refreshing media.
+
+
+
+
+
+I am doing some design and style changes to /studio/catalogue-work/ (using ?work=00008 as an example).
+
+
+
+in `studio/app/frontend/config/ui-text/catalogue-work-editor.json`,
+the save_status_loaded is not really needed for the UI. so I have set it to "". but is it used elsewhere in the code or could we simply remove the whole field?
+
+
+That’s a good cleanup direction. `ui-text` should probably hold copy that benefits from configuration: user-facing prose l
+ikely to change, route-specific labels, warnings, confirmation text, workflow status/result messages. It does not need every obvious or structural string.
+
+Good trim candidates:
+- Redundant “loaded” confirmations where the loaded record is already visible.
+- Static button labels that are not expected to vary per route, especially common ones like `Save`, `Delete`, `Cancel`, `Close`.
+- Internal-ish fallback labels where the UI element already provides context.
+- Text keys used only to mirror field names, if field metadata already owns labels.
+- One-off empty strings that exist only to suppress a hardcoded fallback.
+
+Keep in config:
+- Error and warning copy.
+- Confirmation modal text.
+- Destructive-action labels.
+- Workflow statuses for save/build/publish/delete/import/media refresh.
+- Route-specific placeholders or labels that shape workflow.
+- Anything reused across routes where consistency matters.
+
+If you want to do this safely, the process should be:
+1. Build a usage map: key → file/line references.
+2. Classify each key as configurable copy, static UI chrome, redundant status, field metadata, or stale.
+3. Remove stale/redundant keys only after changing code fallbacks or removing code reads.
+4. Keep tests focused on behavior, not exact configurable wording unless the wording is the behavior.
+
+There’s already precedent in [AGENTS.md](/Users/dlf/Developer/dotlineform/dotlineform-site/AGENTS.md:8) saying compatibility aliases are prohibited and config cleanup should be direct rather than layered.
 
 ~
 

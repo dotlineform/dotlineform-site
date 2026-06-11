@@ -61,11 +61,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.artist
 ]);
 
-const WORK_READONLY_FIELDS = Object.freeze([
-  Object.freeze({ key: "work_id", label: "work id" }),
-  Object.freeze({ key: "width_px", label: "width px" }),
-  Object.freeze({ key: "height_px", label: "height px" })
-]);
+const WORK_READONLY_FIELDS = Object.freeze([]);
 
 const WORK_STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const WORK_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;

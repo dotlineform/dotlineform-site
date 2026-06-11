@@ -27,7 +27,6 @@
   "new_summary_status": "draft source record; not published",
   "new_summary_next_label": "next step",
   "new_summary_next": "Create the draft, then continue editing or publish from edit mode.",
-  "context_series_empty": "No series assigned.",
   "dirty_warning": "Unsaved source changes.",
   "series_picker_label": "Find series by title",
   "series_picker_placeholder": "find series by title",
@@ -104,13 +103,11 @@
   "readiness_action_busy": "Wait for the current save or public update to finish.",
   "readiness_save_first": "Save source changes before importing prose.",
   "media_refresh_button": "Refresh media",
-  "media_refresh_save_first": "Save source changes before refreshing media.",
   "media_refresh_status_running": "Refreshing media…",
   "media_refresh_status_success": "Media refresh completed.",
   "media_refresh_status_failed": "Media refresh failed.",
   "media_refresh_status_blocked": "Media refresh blocked.",
-  "media_refresh_result_success": "Thumbnails updated; primary variants staged for publishing.",
-  "prose_import_button": "Import staged prose",
+  "prose_import_button": "Import",
   "prose_import_preview_running": "Previewing staged prose…",
   "prose_import_preview_invalid": "Staged prose is not ready to import.",
   "prose_import_confirm_title": "Confirm prose overwrite",
@@ -137,7 +134,6 @@
   "field_invalid_status": "Use blank, draft, or published.",
   "field_invalid_series_id": "Use comma-separated numeric series ids.",
   "field_unknown_series_id": "Unknown series id: {series_id}.",
-  "summary_public_link": "Open public work page",
   "summary_series_label": "series",
   "details_heading": "work details",
   "details_new_link": "new work detail →",
@@ -177,6 +173,5 @@
   "entry_modal_save_button": "Save",
   "entry_modal_cancel_button": "Cancel",
   "entry_modal_delete_button": "Delete",
-  "summary_rebuild_needed": "public update failed in this session",
-  "summary_rebuild_current": "source and public catalogue are aligned in this session"
+  "summary_rebuild_needed": "public update failed in this session"
 }

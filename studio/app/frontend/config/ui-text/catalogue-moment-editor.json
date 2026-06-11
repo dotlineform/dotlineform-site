@@ -109,7 +109,6 @@
   "media_refresh_status_success": "Media refresh completed.",
   "media_refresh_status_failed": "Media refresh failed.",
   "media_refresh_status_blocked": "Media refresh blocked.",
-  "media_refresh_result_success": "Thumbnails updated; primary variants staged for publishing.",
   "prose_import_button": "Import staged prose",
   "prose_import_preview_running": "Previewing staged prose...",
   "prose_import_preview_invalid": "Staged prose is not ready to import.",

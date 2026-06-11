@@ -157,8 +157,10 @@ def assert_event_binder(page: Page) -> None:
               <button data-link-edit="4">edit link</button>
               <button data-link-delete="5">delete link</button>
             `;
+            state.previewNode.innerHTML = `
+              <button data-media-refresh="work">media</button>
+            `;
             state.readinessNode.innerHTML = `
-              <button data-media-refresh>media</button>
               <button data-prose-import>prose</button>
             `;
             window.__workEventCalls = [];
@@ -185,7 +187,7 @@ def assert_event_binder(page: Page) -> None:
     page.click("[data-link-edit]")
     page.click("[data-link-delete]")
     page.click("#catalogueWorkNew")
-    page.click("[data-media-refresh]")
+    page.click('[data-media-refresh="work"]')
     page.click("[data-prose-import]")
     page.click("#catalogueWorkSave")
     page.click("#catalogueWorkPublication")
@@ -255,6 +257,132 @@ def assert_route_state_status_target(page: Page) -> None:
     assert result["targetIds"] == ["catalogueWorkResult", "catalogueWorkStatus", "catalogueWorkWarning"]
 
 
+def assert_series_chip_public_links(page: Page) -> None:
+    result = page.evaluate(
+        f"""async () => {{
+            document.body.innerHTML = `{WORK_EDITOR_DOM}`;
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const formModule = await import('/studio/app/frontend/js/catalogue-work-form.js');
+            const elements = stateModule.collectWorkEditorElements();
+            const state = stateModule.createWorkEditorState(elements, {{
+                mediaConfigLoader: () => ({{}}),
+                modalHostFactory: () => ({{}})
+            }});
+            state.config = {{
+                app: {{
+                    runtime: {{
+                        sites: {{
+                            public_preview: {{ base: 'http://127.0.0.1:4000' }}
+                        }}
+                    }}
+                }}
+            }};
+            state.draft = {{
+                series_ids: '026'
+            }};
+            state.baselineDraft = {{ ...state.draft }};
+            state.seriesById.set('026', {{ series_id: '026', title: 'collected 1989-1998' }});
+            formModule.renderWorkEditorFields(state, elements, {{ text: (_key, fallback) => fallback }});
+            const chipLink = document.querySelector('.catalogueWorkSeriesPicker__chipLink');
+            return {{
+                chipHref: chipLink && chipLink.href,
+                chipText: chipLink && chipLink.textContent.replace(/\\s+/g, ' ').trim()
+            }};
+        }}"""
+    )
+    assert result["chipHref"] == "http://127.0.0.1:4000/series/?series=026"
+    assert result["chipText"] == "collected 1989-1998 026"
+
+
+def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
+    result = page.evaluate(
+        f"""async () => {{
+            document.body.innerHTML = `{WORK_EDITOR_DOM}`;
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const formModule = await import('/studio/app/frontend/js/catalogue-work-form.js');
+            const sectionsModule = await import('/studio/app/frontend/js/catalogue-work-sections.js');
+            const elements = stateModule.collectWorkEditorElements();
+            const state = stateModule.createWorkEditorState(elements, {{
+                mediaConfigLoader: () => ({{}}),
+                modalHostFactory: () => ({{}})
+            }});
+            state.config = {{
+                app: {{
+                    runtime: {{
+                        sites: {{
+                            public_preview: {{ base: 'http://127.0.0.1:4000' }}
+                        }}
+                    }}
+                }}
+            }};
+            state.currentRecord = {{
+                work_id: '00008',
+                title: 'nerve',
+                status: 'published',
+                year_display: 'July 1990 - January 1995',
+                height_px: '2263',
+                width_px: '1600'
+            }};
+            state.currentWorkId = '00008';
+            state.serverAvailable = true;
+            state.draft = {{ ...state.currentRecord }};
+            state.baselineDraft = {{ ...state.draft }};
+            state.mediaConfig = {{
+                worksPrimaryBase: '/assets/works/img/',
+                primaryDisplayWidth: 800,
+                primaryFullWidth: 1600,
+                primarySuffix: 'primary',
+                assetFormat: 'webp'
+            }};
+            state.buildPreview = {{
+                readiness: {{
+                    items: [
+                        {{
+                            key: 'work_media',
+                            title: 'media',
+                            status: 'ready',
+                            exists: true,
+                            summary: 'Source media is ready and local thumbnails are current in assets/works/img/00008-thumb-96.webp.',
+                            source_path: 'projects/nerve/nerve.jpg',
+                            next_step: 'Local thumbnails are current for this record.'
+                        }},
+                        {{
+                            key: 'work_prose',
+                            title: 'prose',
+                            status: 'ready',
+                            exists: true,
+                            summary: 'Staged prose is ready.'
+                        }}
+                    ]
+                }}
+            }};
+            const options = {{
+                text: (_key, fallback) => fallback,
+                draftHasChanges: () => false
+            }};
+            formModule.renderWorkEditorFields(state, elements, options);
+            sectionsModule.renderWorkCurrentPreview(state, options);
+            sectionsModule.renderWorkReadiness(state, options);
+            const refreshButton = state.previewNode.querySelector('[data-media-refresh="work"]');
+            return {{
+                captionText: state.previewNode.querySelector('.catalogueRecordPreview__caption').textContent.replace(/\\s+/g, ' ').trim(),
+                previewActionsText: state.previewNode.querySelector('.catalogueRecordPreview__actions').textContent.replace(/\\s+/g, ' ').trim(),
+                refreshDisabled: refreshButton ? refreshButton.disabled : null,
+                readonlyFieldCount: state.readonlyNode.querySelectorAll('[data-readonly-field]').length,
+                readinessText: state.readinessNode.textContent.replace(/\\s+/g, ' ').trim()
+            }};
+        }}"""
+    )
+    assert result["captionText"] == "nerve · July 1990 - January 1995 2263 x 1600 px"
+    assert result["previewActionsText"] == "Preview update Refresh media"
+    assert result["refreshDisabled"] is False
+    assert result["readonlyFieldCount"] == 0
+    assert "Source media is ready" not in result["readinessText"]
+    assert "projects/nerve/nerve.jpg" not in result["readinessText"]
+    assert "Local thumbnails are current" not in result["readinessText"]
+    assert "Staged prose is ready." in result["readinessText"]
+
+
 def run(site_root: Path) -> None:
     server, base_url = start_static_server(site_root)
     try:
@@ -265,6 +393,8 @@ def run(site_root: Path) -> None:
             assert_state_factory(page)
             assert_event_binder(page)
             assert_route_state_status_target(page)
+            assert_series_chip_public_links(page)
+            assert_media_refresh_button_uses_preview_actions(page)
             browser.close()
     finally:
         server.shutdown()

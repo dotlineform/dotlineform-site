@@ -1,6 +1,6 @@
 # UI Text Usage Map
 
-Generated: 2026-06-11 11:18:36 local time
+Generated: 2026-06-11 12:24:38 local time
 
 Scope: `studio/app/frontend/config/ui-text/*.json` against route-scoped files under `studio/app/frontend/js/**/*.js`.
 
@@ -30,7 +30,7 @@ Route-scoped source sets:
 | `catalogue_series_editor` | 126 | 124 | 1 | 1 |
 | `catalogue_status` | 5 | 5 | 0 | 0 |
 | `catalogue_work_detail_editor` | 120 | 105 | 14 | 1 |
-| `catalogue_work_editor` | 180 | 174 | 4 | 2 |
+| `catalogue_work_editor` | 179 | 173 | 4 | 2 |
 | `project_state` | 27 | 27 | 0 | 0 |
 | `studio_works` | 1 | 1 | 0 | 0 |
 
@@ -548,7 +548,7 @@ Route-scoped source sets:
 
 | key | status | refs | value |
 | --- | --- | --- | --- |
-| `build_preview_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:272` | Preview update |
+| `build_preview_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:258` | Preview update |
 | `build_preview_failed` | exact | `studio/app/frontend/js/catalogue-work-actions.js:601`<br>`studio/app/frontend/js/catalogue-work-actions.js:649` | Public update preview unavailable. |
 | `build_preview_modal_artifacts` | exact | `studio/app/frontend/js/catalogue-editor-modal-formatters.js:123` | Artifacts: {artifacts}. |
 | `build_preview_modal_changed_fields` | exact | `studio/app/frontend/js/catalogue-editor-modal-formatters.js:119` | Changed fields: {fields}. |
@@ -574,7 +574,6 @@ Route-scoped source sets:
 | `bulk_save_result_success_partial` | exact | `studio/app/frontend/js/catalogue-work-actions.js:295` | Saved {count} work records at {saved_at}, but the public update failed. |
 | `bulk_status_loaded` | exact | `studio/app/frontend/js/catalogue-work-actions.js:316`<br>`studio/app/frontend/js/catalogue-work-editor.js:392`<br>`studio/app/frontend/js/catalogue-work-route-state.js:176` | Loaded {count} work records. |
 | `confirm_cancel_button` | exact | `studio/app/frontend/js/catalogue-work-actions.js:699`<br>`studio/app/frontend/js/catalogue-work-actions.js:850`<br>`studio/app/frontend/js/catalogue-work-actions.js:975` | Cancel |
-| `context_series_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:130` | No series assigned. |
 | `create_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:398` | Create |
 | `create_result_success` | exact | `studio/app/frontend/js/catalogue-work-actions.js:541` | Created draft work {work_id}. Opening edit mode... |
 | `create_status_failed` | exact | `studio/app/frontend/js/catalogue-work-actions.js:544` | Draft work create failed. |
@@ -591,15 +590,15 @@ Route-scoped source sets:
 | `delete_status_deleting` | not-detected |  | Deleting source record... |
 | `delete_status_failed` | exact | `studio/app/frontend/js/catalogue-work-actions.js:990` | Source delete failed. |
 | `delete_status_running` | exact | `studio/app/frontend/js/catalogue-work-actions.js:944`<br>`studio/app/frontend/js/catalogue-work-actions.js:984` | Preparing delete preview... |
-| `details_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:349` | No work details for this work. |
+| `details_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:335` | No work details for this work. |
 | `details_heading` | exact | `studio/app/frontend/js/catalogue-work-editor.js:534` | work details |
-| `details_more_count` | exact | `studio/app/frontend/js/catalogue-work-sections.js:381` | showing {visible} of {total} |
+| `details_more_count` | exact | `studio/app/frontend/js/catalogue-work-sections.js:367` | showing {visible} of {total} |
 | `details_new_link` | exact | `studio/app/frontend/js/catalogue-work-editor.js:535` | new work detail → |
-| `details_new_unavailable_draft` | exact | `studio/app/frontend/js/catalogue-work-sections.js:569` | Publish this work before adding work details. |
-| `details_search_no_match` | exact | `studio/app/frontend/js/catalogue-work-sections.js:374` | No matching detail ids for this work. |
+| `details_new_unavailable_draft` | exact | `studio/app/frontend/js/catalogue-work-sections.js:550` | Publish this work before adding work details. |
+| `details_search_no_match` | exact | `studio/app/frontend/js/catalogue-work-sections.js:360` | No matching detail ids for this work. |
 | `details_search_placeholder` | exact | `studio/app/frontend/js/catalogue-work-editor.js:536` | find detail by id |
-| `details_search_results` | exact | `studio/app/frontend/js/catalogue-work-sections.js:368` | matching details |
-| `details_section_blank` | exact | `studio/app/frontend/js/catalogue-work-sections.js:125` | root |
+| `details_search_results` | exact | `studio/app/frontend/js/catalogue-work-sections.js:354` | matching details |
+| `details_section_blank` | exact | `studio/app/frontend/js/catalogue-work-sections.js:124` | root |
 | `dirty_warning` | exact | `studio/app/frontend/js/catalogue-work-editor.js:380` | Unsaved source changes. |
 | `entry_modal_cancel_button` | exact | `studio/app/frontend/js/catalogue-work-editor-modals.js:96`<br>`studio/app/frontend/js/catalogue-work-editor-modals.js:147` | Cancel |
 | `entry_modal_delete_button` | exact | `studio/app/frontend/js/catalogue-work-editor-modals.js:95` | Delete |
@@ -623,7 +622,7 @@ Route-scoped source sets:
 | `files_delete_modal_title` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:37` | Delete download |
 | `files_edit_button` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:21` | Edit |
 | `files_edit_modal_title` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:27` | Edit download |
-| `files_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:415` | No downloads for this work. |
+| `files_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:401` | No downloads for this work. |
 | `files_filename_label` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:29` | filename |
 | `files_heading` | exact | `studio/app/frontend/js/catalogue-work-editor.js:537` | downloads |
 | `files_invalid_filename` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:33` | Each download needs a filename. |
@@ -636,7 +635,7 @@ Route-scoped source sets:
 | `links_delete_modal_title` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:71` | Delete link |
 | `links_edit_button` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:55` | Edit |
 | `links_edit_modal_title` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:61` | Edit link |
-| `links_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:442` | No links for this work. |
+| `links_empty` | exact | `studio/app/frontend/js/catalogue-work-sections.js:428` | No links for this work. |
 | `links_heading` | exact | `studio/app/frontend/js/catalogue-work-editor.js:539` | links |
 | `links_invalid_label` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:69` | Each link needs a label. |
 | `links_invalid_url` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:67` | Each link needs a URL. |
@@ -644,26 +643,26 @@ Route-scoped source sets:
 | `links_url_label` | exact | `studio/app/frontend/js/catalogue-editor-embedded-items.js:63` | URL |
 | `load_failed_error` | dynamic-family | `showCatalogueEditorInitError(..., namespace)` in catalogue-editor-route-boot.js | Failed to load catalogue source data for the work editor. |
 | `load_requested_work_failed` | exact | `studio/app/frontend/js/catalogue-work-selection.js:291` | Failed to load the requested work. |
-| `media_refresh_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:317` | Refresh media |
+| `media_refresh_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:303` | Refresh media |
 | `media_refresh_result_success` | exact | `studio/app/frontend/js/catalogue-work-actions.js:926` | Thumbnails updated; primary variants staged for publishing. |
-| `media_refresh_save_first` | exact | `studio/app/frontend/js/catalogue-work-sections.js:313` | Save source changes before refreshing media. |
+| `media_refresh_save_first` | exact | `studio/app/frontend/js/catalogue-work-sections.js:299` | Save source changes before refreshing media. |
 | `media_refresh_status_blocked` | exact | `studio/app/frontend/js/catalogue-work-actions.js:921` | Media refresh blocked. |
 | `media_refresh_status_failed` | exact | `studio/app/frontend/js/catalogue-work-actions.js:931` | Media refresh failed. |
 | `media_refresh_status_running` | exact | `studio/app/frontend/js/catalogue-work-actions.js:910` | Refreshing media… |
 | `media_refresh_status_success` | exact | `studio/app/frontend/js/catalogue-work-actions.js:925` | Media refresh completed. |
 | `missing_work_param` | exact | `studio/app/frontend/js/catalogue-work-route-state.js:243` | Search for a work by work id. |
 | `new_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:542` | New |
-| `new_meta` | exact | `studio/app/frontend/js/catalogue-work-sections.js:458` | Creating a draft work. |
-| `new_runtime_state` | exact | `studio/app/frontend/js/catalogue-work-sections.js:469` | Public site update is unavailable until the draft exists. |
+| `new_meta` | exact | `studio/app/frontend/js/catalogue-work-sections.js:444` | Creating a draft work. |
+| `new_runtime_state` | exact | `studio/app/frontend/js/catalogue-work-sections.js:455` | Public site update is unavailable until the draft exists. |
 | `new_status_loaded` | exact | `studio/app/frontend/js/catalogue-work-route-state.js:211` | Creating a draft work source record. |
-| `new_summary_next` | exact | `studio/app/frontend/js/catalogue-work-sections.js:466` | Create the draft, then continue editing or publish from edit mode. |
-| `new_summary_next_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:465` | next step |
-| `new_summary_status` | exact | `studio/app/frontend/js/catalogue-work-sections.js:462` | draft source record; not published |
-| `new_summary_status_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:461` | status |
+| `new_summary_next` | exact | `studio/app/frontend/js/catalogue-work-sections.js:452` | Create the draft, then continue editing or publish from edit mode. |
+| `new_summary_next_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:451` | next step |
+| `new_summary_status` | exact | `studio/app/frontend/js/catalogue-work-sections.js:448` | draft source record; not published |
+| `new_summary_status_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:447` | status |
 | `new_work_id_label` | exact | `studio/app/frontend/js/catalogue-work-route-state.js:204` | New work id |
 | `new_work_id_placeholder` | exact | `studio/app/frontend/js/catalogue-work-route-state.js:203` | new work id |
 | `open_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:541` | Open |
-| `prose_import_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:316` | Import staged prose |
+| `prose_import_button` | exact | `studio/app/frontend/js/catalogue-work-sections.js:302` | Import |
 | `prose_import_confirm_button` | exact | `studio/app/frontend/js/catalogue-work-actions.js:698` | Overwrite |
 | `prose_import_confirm_overwrite` | exact | `studio/app/frontend/js/catalogue-work-actions.js:685` | Overwrite existing prose source at {target_path} with staged file {staging_path}? |
 | `prose_import_confirm_title` | exact | `studio/app/frontend/js/catalogue-work-actions.js:696` | Confirm prose overwrite |
@@ -694,8 +693,8 @@ Route-scoped source sets:
 | `publication_unpublish_confirm_title` | exact | `studio/app/frontend/js/catalogue-work-actions.js:847` | Confirm unpublish |
 | `publication_unpublish_running` | exact | `studio/app/frontend/js/catalogue-work-actions.js:866` | Unpublishing work… |
 | `publish_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:343`<br>`studio/app/frontend/js/catalogue-work-editor.js:544` | Publish |
-| `readiness_action_busy` | exact | `studio/app/frontend/js/catalogue-work-sections.js:310`<br>`studio/app/frontend/js/catalogue-work-sections.js:314` | Wait for the current save or public update to finish. |
-| `readiness_save_first` | exact | `studio/app/frontend/js/catalogue-work-sections.js:309` | Save source changes before importing prose. |
+| `readiness_action_busy` | exact | `studio/app/frontend/js/catalogue-work-sections.js:296`<br>`studio/app/frontend/js/catalogue-work-sections.js:300` | Wait for the current save or public update to finish. |
+| `readiness_save_first` | exact | `studio/app/frontend/js/catalogue-work-sections.js:295` | Save source changes before importing prose. |
 | `save_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:399`<br>`studio/app/frontend/js/catalogue-work-editor.js:543` | Save |
 | `save_mode_local_server` | exact | `studio/app/frontend/js/studio-save-utils.js:7` | Local server |
 | `save_mode_offline` | exact | `studio/app/frontend/js/studio-save-utils.js:8` | Unavailable |
@@ -717,13 +716,13 @@ Route-scoped source sets:
 | `search_empty` | exact | `studio/app/frontend/js/catalogue-work-selection.js:152`<br>`studio/app/frontend/js/catalogue-work-selection.js:157`<br>`studio/app/frontend/js/catalogue-work-selection.js:197` | Enter a work id. |
 | `search_no_match` | exact | `studio/app/frontend/js/catalogue-work-selection.js:141` | No matching work ids. |
 | `search_placeholder` | exact | `studio/app/frontend/js/catalogue-work-editor.js:123` | find work id(s): 00001, 00003-00005 |
-| `series_picker_empty` | exact | `studio/app/frontend/js/catalogue-work-form.js:128` | No series selected. |
-| `series_picker_label` | exact | `studio/app/frontend/js/catalogue-work-form.js:231`<br>`studio/app/frontend/js/catalogue-work-form.js:323` | Find series by title |
-| `series_picker_placeholder` | exact | `studio/app/frontend/js/catalogue-work-form.js:230`<br>`studio/app/frontend/js/catalogue-work-form.js:322` | find series by title |
-| `summary_public_link` | exact | `studio/app/frontend/js/catalogue-work-sections.js:545` | Open public work page |
-| `summary_rebuild_current` | exact | `studio/app/frontend/js/catalogue-work-sections.js:517`<br>`studio/app/frontend/js/catalogue-work-sections.js:558` | source and public catalogue are aligned in this session |
-| `summary_rebuild_needed` | exact | `studio/app/frontend/js/catalogue-work-sections.js:516`<br>`studio/app/frontend/js/catalogue-work-sections.js:557` | public update failed in this session |
-| `summary_series_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:511`<br>`studio/app/frontend/js/catalogue-work-sections.js:551` | series |
+| `series_picker_empty` | exact | `studio/app/frontend/js/catalogue-work-form.js:148` | No series selected. |
+| `series_picker_label` | exact | `studio/app/frontend/js/catalogue-work-form.js:251`<br>`studio/app/frontend/js/catalogue-work-form.js:343` | Find series by title |
+| `series_picker_placeholder` | exact | `studio/app/frontend/js/catalogue-work-form.js:250`<br>`studio/app/frontend/js/catalogue-work-form.js:342` | find series by title |
+| `summary_public_link` | exact | `studio/app/frontend/js/catalogue-work-sections.js:530` | Open public work page |
+| `summary_rebuild_current` | exact | `studio/app/frontend/js/catalogue-work-sections.js:503`<br>`studio/app/frontend/js/catalogue-work-sections.js:539` | source and public catalogue are aligned in this session |
+| `summary_rebuild_needed` | exact | `studio/app/frontend/js/catalogue-work-sections.js:502`<br>`studio/app/frontend/js/catalogue-work-sections.js:538` | public update failed in this session |
+| `summary_series_label` | exact | `studio/app/frontend/js/catalogue-work-sections.js:497` | series |
 | `unknown_work_error` | exact | `studio/app/frontend/js/catalogue-work-selection.js:167`<br>`studio/app/frontend/js/catalogue-work-selection.js:207` | Unknown work id: {work_id}. |
 | `unpublish_button` | exact | `studio/app/frontend/js/catalogue-work-editor.js:342` | Unpublish |
 | `unpublish_confirm_default` | exact | `studio/app/frontend/js/catalogue-editor-modal-formatters.js:139` | Unpublish this work? |
@@ -1665,7 +1664,7 @@ Route-scoped source sets:
 ### `catalogue_work_editor`
 
 - `build_preview_button`
-  - `studio/app/frontend/js/catalogue-work-sections.js:272` `<button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-ac...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:258` `<button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-ac...`
 - `build_preview_failed`
   - `studio/app/frontend/js/catalogue-work-actions.js:601` ``${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${n...`
   - `studio/app/frontend/js/catalogue-work-actions.js:649` ``${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${n...`
@@ -1728,8 +1727,6 @@ Route-scoped source sets:
   - `studio/app/frontend/js/catalogue-work-actions.js:699` `cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),`
   - `studio/app/frontend/js/catalogue-work-actions.js:850` `cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),`
   - `studio/app/frontend/js/catalogue-work-actions.js:975` `cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),`
-- `context_series_empty`
-  - `studio/app/frontend/js/catalogue-work-sections.js:130` `return escapeHtml(text(state, options, "context_series_empty", "No series assigned."));`
 - `create_button`
   - `studio/app/frontend/js/catalogue-work-editor.js:398` `? t(state, "create_button", "Create")`
 - `create_result_success`
@@ -1762,23 +1759,23 @@ Route-scoped source sets:
   - `studio/app/frontend/js/catalogue-work-actions.js:944` `setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", ...`
   - `studio/app/frontend/js/catalogue-work-actions.js:984` `setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", ...`
 - `details_empty`
-  - `studio/app/frontend/js/catalogue-work-sections.js:349` `state.detailsResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:335` `state.detailsResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(...`
 - `details_heading`
   - `studio/app/frontend/js/catalogue-work-editor.js:534` `elements.detailsHeadingNode.textContent = t(state, "details_heading", "work details");`
 - `details_more_count`
-  - `studio/app/frontend/js/catalogue-work-sections.js:381` `? text(state, options, "details_more_count", "showing {visible} of {total}", {`
+  - `studio/app/frontend/js/catalogue-work-sections.js:367` `? text(state, options, "details_more_count", "showing {visible} of {total}", {`
 - `details_new_link`
   - `studio/app/frontend/js/catalogue-work-editor.js:535` `elements.newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail ...`
 - `details_new_unavailable_draft`
-  - `studio/app/frontend/js/catalogue-work-sections.js:569` `state.newDetailLinkNode.title = text(state, options, "details_new_unavailable_draft", "...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:550` `state.newDetailLinkNode.title = text(state, options, "details_new_unavailable_draft", "...`
 - `details_search_no_match`
-  - `studio/app/frontend/js/catalogue-work-sections.js:374` `blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "details_...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:360` `blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "details_...`
 - `details_search_placeholder`
   - `studio/app/frontend/js/catalogue-work-editor.js:536` `elements.detailSearchNode.placeholder = t(state, "details_search_placeholder", "find de...`
 - `details_search_results`
-  - `studio/app/frontend/js/catalogue-work-sections.js:368` `<h3 class="tagStudioForm__key">${escapeHtml(text(state, options, "details_search_result...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:354` `<h3 class="tagStudioForm__key">${escapeHtml(text(state, options, "details_search_result...`
 - `details_section_blank`
-  - `studio/app/frontend/js/catalogue-work-sections.js:125` `return normalizeText(sectionKey) \|\| text(state, options, "details_section_blank", "root");`
+  - `studio/app/frontend/js/catalogue-work-sections.js:124` `return normalizeText(sectionKey) \|\| text(state, options, "details_section_blank", "root");`
 - `dirty_warning`
   - `studio/app/frontend/js/catalogue-work-editor.js:380` `message: t(state, "dirty_warning", "Unsaved source changes.")`
 - `entry_modal_cancel_button`
@@ -1831,7 +1828,7 @@ Route-scoped source sets:
 - `files_edit_modal_title`
   - `studio/app/frontend/js/catalogue-editor-embedded-items.js:27` `editTitleKey: "files_edit_modal_title",`
 - `files_empty`
-  - `studio/app/frontend/js/catalogue-work-sections.js:415` `state.filesResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(st...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:401` `state.filesResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(st...`
 - `files_filename_label`
   - `studio/app/frontend/js/catalogue-editor-embedded-items.js:29` `firstLabelKey: "files_filename_label",`
 - `files_heading`
@@ -1857,7 +1854,7 @@ Route-scoped source sets:
 - `links_edit_modal_title`
   - `studio/app/frontend/js/catalogue-editor-embedded-items.js:61` `editTitleKey: "links_edit_modal_title",`
 - `links_empty`
-  - `studio/app/frontend/js/catalogue-work-sections.js:442` `state.linksResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(st...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:428` `state.linksResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(st...`
 - `links_heading`
   - `studio/app/frontend/js/catalogue-work-editor.js:539` `elements.linksHeadingNode.textContent = t(state, "links_heading", "links");`
 - `links_invalid_label`
@@ -1871,11 +1868,11 @@ Route-scoped source sets:
 - `load_requested_work_failed`
   - `studio/app/frontend/js/catalogue-work-selection.js:291` ``${text(context, "load_requested_work_failed", "Failed to load the requested work.")} $...`
 - `media_refresh_button`
-  - `studio/app/frontend/js/catalogue-work-sections.js:317` `const mediaActionLabel = text(state, options, "media_refresh_button", "Refresh media");`
+  - `studio/app/frontend/js/catalogue-work-sections.js:303` `const mediaActionLabel = text(state, options, "media_refresh_button", "Refresh media");`
 - `media_refresh_result_success`
   - `studio/app/frontend/js/catalogue-work-actions.js:926` `setTextWithState(context, state.resultNode, t(state, context, "media_refresh_result_suc...`
 - `media_refresh_save_first`
-  - `studio/app/frontend/js/catalogue-work-sections.js:313` `? text(state, options, "media_refresh_save_first", "Save source changes before refreshi...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:299` `? text(state, options, "media_refresh_save_first", "Save source changes before refreshi...`
 - `media_refresh_status_blocked`
   - `studio/app/frontend/js/catalogue-work-actions.js:921` `setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_blo...`
 - `media_refresh_status_failed`
@@ -1889,19 +1886,19 @@ Route-scoped source sets:
 - `new_button`
   - `studio/app/frontend/js/catalogue-work-editor.js:542` `elements.newButton.textContent = t(state, "new_button", "New");`
 - `new_meta`
-  - `studio/app/frontend/js/catalogue-work-sections.js:458` `state.metaNode.textContent = text(state, options, "new_meta", "Creating a draft work.");`
+  - `studio/app/frontend/js/catalogue-work-sections.js:444` `state.metaNode.textContent = text(state, options, "new_meta", "Creating a draft work.");`
 - `new_runtime_state`
-  - `studio/app/frontend/js/catalogue-work-sections.js:469` `state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public ...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:455` `state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public ...`
 - `new_status_loaded`
   - `studio/app/frontend/js/catalogue-work-route-state.js:211` `callback(options, "setTextWithState", state.statusNode, text(options, "new_status_loade...`
 - `new_summary_next`
-  - `studio/app/frontend/js/catalogue-work-sections.js:466` `<div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:452` `<div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state...`
 - `new_summary_next_label`
-  - `studio/app/frontend/js/catalogue-work-sections.js:465` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_next_...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:451` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_next_...`
 - `new_summary_status`
-  - `studio/app/frontend/js/catalogue-work-sections.js:462` `<div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:448` `<div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state...`
 - `new_summary_status_label`
-  - `studio/app/frontend/js/catalogue-work-sections.js:461` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_statu...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:447` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_statu...`
 - `new_work_id_label`
   - `studio/app/frontend/js/catalogue-work-route-state.js:204` `state.searchNode.setAttribute("aria-label", text(options, "new_work_id_label", "New wor...`
 - `new_work_id_placeholder`
@@ -1909,7 +1906,7 @@ Route-scoped source sets:
 - `open_button`
   - `studio/app/frontend/js/catalogue-work-editor.js:541` `elements.openButton.textContent = t(state, "open_button", "Open");`
 - `prose_import_button`
-  - `studio/app/frontend/js/catalogue-work-sections.js:316` `const proseActionLabel = text(state, options, "prose_import_button", "Import staged pro...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:302` `const proseActionLabel = text(state, options, "prose_import_button", "Import staged pro...`
 - `prose_import_confirm_button`
   - `studio/app/frontend/js/catalogue-work-actions.js:698` `primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),`
 - `prose_import_confirm_overwrite`
@@ -1972,10 +1969,10 @@ Route-scoped source sets:
   - `studio/app/frontend/js/catalogue-work-editor.js:343` `: t(state, "publish_button", "Publish");`
   - `studio/app/frontend/js/catalogue-work-editor.js:544` `elements.publicationButton.textContent = t(state, "publish_button", "Publish");`
 - `readiness_action_busy`
-  - `studio/app/frontend/js/catalogue-work-sections.js:310` `: text(state, options, "readiness_action_busy", "Wait for the current save or public up...`
-  - `studio/app/frontend/js/catalogue-work-sections.js:314` `: text(state, options, "readiness_action_busy", "Wait for the current save or public up...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:296` `: text(state, options, "readiness_action_busy", "Wait for the current save or public up...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:300` `: text(state, options, "readiness_action_busy", "Wait for the current save or public up...`
 - `readiness_save_first`
-  - `studio/app/frontend/js/catalogue-work-sections.js:309` `? text(state, options, "readiness_save_first", "Save source changes before importing pr...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:295` `? text(state, options, "readiness_save_first", "Save source changes before importing pr...`
 - `save_button`
   - `studio/app/frontend/js/catalogue-work-editor.js:399` `: t(state, "save_button", "Save");`
   - `studio/app/frontend/js/catalogue-work-editor.js:543` `elements.saveButton.textContent = t(state, "save_button", "Save");`
@@ -2027,24 +2024,23 @@ Route-scoped source sets:
 - `search_placeholder`
   - `studio/app/frontend/js/catalogue-work-editor.js:123` `state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, ...`
 - `series_picker_empty`
-  - `studio/app/frontend/js/catalogue-work-form.js:128` `: `<span class="tagStudioForm__meta">${escapeHtml(formText(options, "series_picker_empt...`
+  - `studio/app/frontend/js/catalogue-work-form.js:148` `: `<span class="tagStudioForm__meta">${escapeHtml(formText(options, "series_picker_empt...`
 - `series_picker_label`
-  - `studio/app/frontend/js/catalogue-work-form.js:231` `searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find s...`
-  - `studio/app/frontend/js/catalogue-work-form.js:323` `state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_pic...`
+  - `studio/app/frontend/js/catalogue-work-form.js:251` `searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find s...`
+  - `studio/app/frontend/js/catalogue-work-form.js:343` `state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_pic...`
 - `series_picker_placeholder`
-  - `studio/app/frontend/js/catalogue-work-form.js:230` `searchInput.placeholder = formText(options, "series_picker_placeholder", "find series b...`
-  - `studio/app/frontend/js/catalogue-work-form.js:322` `state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placehold...`
+  - `studio/app/frontend/js/catalogue-work-form.js:250` `searchInput.placeholder = formText(options, "series_picker_placeholder", "find series b...`
+  - `studio/app/frontend/js/catalogue-work-form.js:342` `state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placehold...`
 - `summary_public_link`
-  - `studio/app/frontend/js/catalogue-work-sections.js:545` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_li...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:530` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_li...`
 - `summary_rebuild_current`
-  - `studio/app/frontend/js/catalogue-work-sections.js:517` `: text(state, options, "summary_rebuild_current", "source and public catalogue are alig...`
-  - `studio/app/frontend/js/catalogue-work-sections.js:558` `: text(state, options, "summary_rebuild_current", "source and public catalogue are alig...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:503` `: text(state, options, "summary_rebuild_current", "source and public catalogue are alig...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:539` `: text(state, options, "summary_rebuild_current", "source and public catalogue are alig...`
 - `summary_rebuild_needed`
-  - `studio/app/frontend/js/catalogue-work-sections.js:516` `? text(state, options, "summary_rebuild_needed", "public update failed in this session")`
-  - `studio/app/frontend/js/catalogue-work-sections.js:557` `? text(state, options, "summary_rebuild_needed", "public update failed in this session")`
+  - `studio/app/frontend/js/catalogue-work-sections.js:502` `? text(state, options, "summary_rebuild_needed", "public update failed in this session")`
+  - `studio/app/frontend/js/catalogue-work-sections.js:538` `? text(state, options, "summary_rebuild_needed", "public update failed in this session")`
 - `summary_series_label`
-  - `studio/app/frontend/js/catalogue-work-sections.js:511` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_series_la...`
-  - `studio/app/frontend/js/catalogue-work-sections.js:551` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_series_la...`
+  - `studio/app/frontend/js/catalogue-work-sections.js:497` `<span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_series_la...`
 - `unknown_work_error`
   - `studio/app/frontend/js/catalogue-work-selection.js:167` `renderWorkSearchMatches(state, [], text(context, "unknown_work_error", "Unknown work id...`
   - `studio/app/frontend/js/catalogue-work-selection.js:207` `renderWorkSearchMatches(state, [], text(context, "unknown_work_error", "Unknown work id...`

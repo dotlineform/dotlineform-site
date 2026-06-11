@@ -386,7 +386,6 @@ export async function refreshMomentMedia(state, context) {
       return;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
-    setTextWithState(context, state.resultNode, t(state, context, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
   } catch (error) {
     setTextWithState(context, state.statusNode, `${t(state, context, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {

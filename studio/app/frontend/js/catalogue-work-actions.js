@@ -14,7 +14,6 @@ import {
 } from "./catalogue-editor-service-client.js";
 import { computeRecordHash } from "./catalogue-editor-records.js";
 import {
-  formatCatalogueBuildPreview,
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
@@ -587,10 +586,7 @@ export async function refreshBuildPreview(state, context) {
       extra_series_ids: state.pendingBuildExtraSeriesIds
     });
     state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(context, state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
-      text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
-      defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
-    }));
+    setTextWithState(context, state.buildImpactNode, "");
     context.renderCurrentPreview();
     context.renderReadiness();
   } catch (error) {
@@ -923,7 +919,6 @@ export async function refreshWorkMedia(state, context) {
       return;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
-    setTextWithState(context, state.resultNode, t(state, context, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
   } catch (error) {
     setTextWithState(
       context,
