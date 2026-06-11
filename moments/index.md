@@ -51,6 +51,9 @@ section: series
   </figure>
 
   <div class="content moment-body" id="momentBody"></div>
+  <nav class="page__nav moment__nav" id="momentBackNav" hidden>
+    <a id="momentBackLink" class="page__back" href="{{ '/series/?mode=moments' | relative_url }}" aria-label="Back to moments">←</a>
+  </nav>
 </article>
 <script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/js/moment.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

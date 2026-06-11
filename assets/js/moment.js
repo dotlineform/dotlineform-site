@@ -15,6 +15,8 @@
   if (!Number.isFinite(displayWidth) || displayWidth <= 0) displayWidth = 1600;
   var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
   var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
+  var backNav = document.getElementById('momentBackNav');
+  var backLink = document.getElementById('momentBackLink');
 
   var renderWidths = [];
   try {
@@ -182,6 +184,13 @@
     applyContentHtml('<p>' + unavailableText + '</p>');
   }
 
+  function setBackLinkVisible(visible) {
+    if (backLink) {
+      backLink.setAttribute('href', runtime.catalogueIndexUrl(baseurl, { mode: 'moments' }));
+    }
+    if (backNav) backNav.hidden = !visible;
+  }
+
   function formatBrowseDate(row) {
     return formatDate({
       date: row && row.date,
@@ -194,6 +203,7 @@
     var dateEl = document.getElementById('momentDateText');
     var heroEl = document.getElementById('momentHero');
     var body = document.getElementById('momentBody');
+    setBackLinkVisible(false);
     if (titleEl) titleEl.textContent = 'moments';
     document.title = 'moments | dotlineform';
     if (dateEl) dateEl.hidden = true;
@@ -260,6 +270,7 @@
   }
 
   applyMetadata({ moment_id: momentId, title: loadingText });
+  setBackLinkVisible(true);
 
   runtime.fetchJson(runtime.momentPayloadUrl(momentId, baseurl))
     .then(function (payload) {

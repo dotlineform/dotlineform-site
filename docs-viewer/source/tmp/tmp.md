@@ -6,19 +6,21 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+←
+
 `studio/app/frontend/config/ui-text/catalogue-work-editor.json`
  "save_status_loaded": "Loaded work {work_id}.",
 
 config keys report:
 `var/ui-text-usage-map.md`
 
-work_id 00008 has a download `nerve.pdf` which is saved remotely, but the work page `http://127.0.0.1:4000/works/?series=105&work=00008` doesn't display any link to it. I'm now wondering if I removed the downloads link from the work pages (which was not a good idea) or if there is another reason why it's not showing?
+---
 
-yes, the live site uses https://www.dotlineform.com/works/?series=105&work=00008
-I have a feeling that we reduced the `_works/*.md` to empty stubs whilst making the site use the new index page which builds pages solely using javascript, but then didn't retire the individual work page stubs or the collection. because the whole point was to remove reliance on jekyll routes whilst still being able to build the site using GitHub Pages/Jeklyll. I might be misunderstanding, the site doesn't need that _works collection anymore?
+## downloads
 
+work_id 00008 has a download `nerve.pdf` (which is saved remotely), but the work page `http://127.0.0.1:4000/works/?series=105&work=00008` doesn't display any link to it. 'downloads' and 'links' may have been dropped in a previous refactor, but need to be added back in the metadata section of a work page. they should be hidden if no downloads or links have been defined.
 
-
+---
 
 edit project filename
 status -> 'Unsaved source changes.'

@@ -111,6 +111,9 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     goto(page, base_url, "/moments/?moment=a-doll-story")
     expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#momentTitleText")).to_contain_text("a doll story", timeout=10_000)
+    moment_back_href = first_href(page, "#momentBackLink")
+    if "/series/?" not in moment_back_href or "mode=moments" not in moment_back_href:
+        raise AssertionError(f"moment back link should return to moments browse mode: {moment_back_href!r}")
 
     response = page.context.request.get(f"{base_url.rstrip('/')}/moments/")
     body = response.text()
@@ -119,6 +122,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     goto(page, base_url, "/moments/")
     expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#momentBody .index__item").first).to_be_visible(timeout=10_000)
+    expect(page.locator("#momentBackNav")).to_be_hidden(timeout=10_000)
 
     goto(page, base_url, "/catalogue/search/")
     expect(page.locator("#studioSearchRoot")).to_be_visible(timeout=10_000)
