@@ -341,7 +341,7 @@
                   "doc_id": "public-static-site-build-batch-02-builder-skeleton",
                   "title": "Public Static Site Build Batch 2 Builder Skeleton and Artifact Contract",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-02-builder-skeleton.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "public-static-site-build-batch-03-route-parity",
@@ -1305,5 +1305,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T15:46:49Z"
+  "generated_at": "2026-06-12T16:05:01Z"
 }

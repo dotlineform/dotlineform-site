@@ -1,0 +1,109 @@
+{
+  "schema_version": "public_site_config_v1",
+  "site": {
+    "title": "dotlineform",
+    "url": "https://www.dotlineform.com",
+    "baseurl": "",
+    "live_url": "https://www.dotlineform.com",
+    "timezone": "Europe/London"
+  },
+  "output": {
+    "default_destination": "_public_site",
+    "marker_file": ".public-site-artifact",
+    "nojekyll_file": ".nojekyll"
+  },
+  "root_artifacts": [
+    "CNAME",
+    "favicon.ico",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "apple-touch-icon.png",
+    "apple-touch-icon-precomposed.png",
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "safari-pinned-tab.svg",
+    "site.webmanifest"
+  ],
+  "initial_pages": {
+    "404.html": {
+      "title": "page unavailable",
+      "body_class": "page",
+      "heading": "page unavailable",
+      "message": "This page is unavailable.",
+      "link_href": "/series/",
+      "link_label": "return to works"
+    }
+  },
+  "audit": {
+    "required_files": [
+      ".public-site-artifact",
+      ".nojekyll",
+      "CNAME",
+      "favicon.ico",
+      "favicon-16x16.png",
+      "favicon-32x32.png",
+      "apple-touch-icon.png",
+      "apple-touch-icon-precomposed.png",
+      "android-chrome-192x192.png",
+      "android-chrome-512x512.png",
+      "safari-pinned-tab.svg",
+      "site.webmanifest",
+      "404.html"
+    ],
+    "denied_path_prefixes": [
+      ".git/",
+      ".github/",
+      ".codex/",
+      ".devcontainer/",
+      ".vscode/",
+      ".pytest_cache/",
+      ".pycache/",
+      "__pycache__/",
+      ".bundle/",
+      "node_modules/",
+      "vendor/",
+      "_site/",
+      "_public_site/",
+      "var/",
+      "logs/",
+      "_layouts/",
+      "_includes/",
+      "admin-app/",
+      "analytics-app/",
+      "studio/",
+      "data/",
+      "data-sharing/",
+      "docs-viewer/source/",
+      "docs-viewer/services/",
+      "docs-viewer/build/",
+      "docs-viewer/bin/",
+      "docs-viewer/shell/",
+      "docs-viewer/tests/",
+      "docs-viewer/runtime/js/reports/"
+    ],
+    "denied_file_patterns": [
+      "Gemfile",
+      "Gemfile.lock",
+      ".ruby-version",
+      "_config.yml",
+      "README.md",
+      "AGENTS.md",
+      "LICENSE",
+      "requirements.txt",
+      "*.xlsx",
+      "*.xls",
+      "*.pyc",
+      ".DS_Store",
+      "docs-html-import*.js",
+      "docs-viewer-manage.js",
+      "docs-viewer-management*.js",
+      "docs-viewer-config.json",
+      "docs-viewer-service.json",
+      "docs-viewer-routes.json"
+    ],
+    "denied_html_tokens": [
+      "{{",
+      "{%"
+    ]
+  }
+}

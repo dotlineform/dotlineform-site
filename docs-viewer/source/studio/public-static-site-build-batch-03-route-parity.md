@@ -45,6 +45,19 @@ Render helper owners:
 
 Do not implement compatibility redirects for retired path-style routes.
 
+## Batch 2 handoff
+
+Batch 2 created the static builder boundary:
+
+- Entry point: `public-site/build/build_site.py`.
+- Config owner: `public-site/config/public-site.json`.
+- Builder modules: `public_site_builder.config`, `public_site_builder.builder`, `public_site_builder.render`, and `public_site_builder.audit`.
+- Build wrapper: `bin/public-site-build`.
+- Static preview wrapper: `bin/public-site-preview-static`.
+- Default artifact output: `_public_site/`, guarded by `.public-site-artifact`.
+
+Batch 3 route work must extend these files rather than adding a second builder path. The initial `render_initial_page()` helper currently renders only `404.html`; replace or broaden it into shared layout helpers for all public route shells.
+
 ## Deliverables
 
 - Static-builder render helpers for shared layout, head metadata, navigation, footer, asset includes, catalogue shells, search shell, and Docs Viewer shell mounts.

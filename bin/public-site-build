@@ -13,16 +13,15 @@ if [ -f "$SITE_ENV_PATH" ]; then
   set +a
 fi
 
-if [ -x "$HOME/.rbenv/shims/bundle" ]; then
-  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
-else
-  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
+if [ -z "${PUBLIC_SITE_PYTHON:-}" ]; then
+  if [ -x "$HOME/miniconda3/bin/python3" ]; then
+    PUBLIC_SITE_PYTHON="$HOME/miniconda3/bin/python3"
+  else
+    PUBLIC_SITE_PYTHON="python3"
+  fi
 fi
 
-PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"
-
-echo "Building public site from $ROOT_DIR"
-echo "Jekyll config: $PUBLIC_SITE_CONFIG"
+echo "Building public-site artifact from $ROOT_DIR"
 echo
 
-"$BUNDLE_BIN" exec jekyll build --config "$PUBLIC_SITE_CONFIG" "$@"
+exec "$PUBLIC_SITE_PYTHON" public-site/build/build_site.py "$@"

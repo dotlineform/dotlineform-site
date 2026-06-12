@@ -3,7 +3,7 @@ doc_id: public-static-site-build-batch-02-builder-skeleton
 title: Public Static Site Build Batch 2 Builder Skeleton and Artifact Contract
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: planned
+ui_status: done
 parent_id: public-static-site-build-implementation-plan
 ---
 # Public Static Site Build Batch 2 Builder Skeleton and Artifact Contract
@@ -59,23 +59,30 @@ Purpose: create the `public-site/` builder boundary and the initial static artif
 
 | ID | status | action |
 | --- | --- | --- |
-| 2.1 | planned | Convert the Batch 1 handoff into module boundaries, CLI options, config fields, copy allowlists, and audit denylist tests before implementation starts. |
-| 2.2 | planned | Create the `public-site/` builder package, config file, and command wrappers. |
-| 2.3 | planned | Implement output-directory handling and artifact-root initialization with `.nojekyll`. |
-| 2.4 | planned | Implement the initial root artifact allowlist and source-leak audit shell, including the current `_site/` leak seeds from Batch 1. |
-| 2.5 | planned | Add `bin/public-site-preview-static` as the temporary static preview command that builds `_public_site/` once and serves it over HTTP. |
-| 2.6 | planned | Confirm the existing Jekyll preview and deploy path are still untouched and available as the parity baseline. |
-| 2.7 | planned | Record exact verification commands and update Batch 3 with route-rendering prerequisites and the final render helper module names. |
+| 2.1 | done | Convert the Batch 1 handoff into module boundaries, CLI options, config fields, copy allowlists, and audit denylist tests before implementation starts. |
+| 2.2 | done | Create the `public-site/` builder package, config file, and command wrappers. |
+| 2.3 | done | Implement output-directory handling and artifact-root initialization with `.nojekyll`. |
+| 2.4 | done | Implement the initial root artifact allowlist and source-leak audit shell, including the current `_site/` leak seeds from Batch 1. |
+| 2.5 | done | Add `bin/public-site-preview-static` as the temporary static preview command that builds `_public_site/` once and serves it over HTTP. |
+| 2.6 | done | Confirm the existing Jekyll preview and deploy path are still untouched and available as the parity baseline. |
+| 2.7 | done | Record exact verification commands and update Batch 3 with route-rendering prerequisites and the final render helper module names. |
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile public-site/build/build_site.py public-site/build/public_site_builder/*.py public-site/tests/test_build_site.py`
+- `bash -n bin/public-site-build bin/public-site-preview bin/public-site-preview-static`
+- `$HOME/miniconda3/bin/python3 -m json.tool public-site/config/public-site.json`
+- `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit`
+- `bin/public-site-build --destination _public_site --audit`
+- `bin/public-site-preview-static --port 4012`, then `curl -sS -I http://127.0.0.1:4012/404.html`; returned `HTTP/1.0 200 OK`; server stopped after verification.
+- `$HOME/miniconda3/bin/python3 -m pytest -q public-site/tests/test_build_site.py`; 3 tests passed.
 
 ## follow-on tasks
 
-- Batch 3 must implement render helpers for shared layout, head metadata, navigation, footer, Docs Viewer shell, static pages, and catalogue shells using the module names selected in this batch.
+- Batch 3 must extend `public_site_builder.render` and add route rendering modules without replacing the artifact guardrails introduced here.
+- Batch 3 must replace the initial minimal `404.html` renderer with the shared page/layout helpers used by all route shells.
+- Batch 4 must extend the copy/audit layer in `public_site_builder.builder` and `public_site_builder.audit` rather than adding a second artifact assembly path.
 
 ## batch close
 
-- Add a handoff note to [Batch 3](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity).
-- Set this batch status and front matter `ui_status` to `done` after the builder skeleton and artifact contract are verified.
+- Batch 2 is complete. Batch 3 starts from `public-site/build/build_site.py`, `public_site_builder.config`, `public_site_builder.builder`, `public_site_builder.render`, and `public_site_builder.audit`.

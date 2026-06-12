@@ -24,6 +24,18 @@ Batch 1 is complete. It fixed these implementation inputs:
 - The artifact audit must be allowlist-driven. Current Jekyll output leaks root/tooling files into `_site/`; the static artifact must exclude them.
 - Public Docs Viewer route shells must use `docs-viewer-public-routes.json`, not the private/manage route registry.
 
+### batch 2 summary
+
+Batch 2 is complete. It introduced the static builder boundary and initial artifact contract:
+
+- `public-site/config/public-site.json` owns the first public-site assembly config.
+- `public-site/build/build_site.py` builds `_public_site/` and supports `--destination` plus `--audit`.
+- `public_site_builder.builder` initializes guarded artifact output, writes `.nojekyll`, copies root browser/domain artifacts, and renders the initial non-Liquid `404.html`.
+- `public_site_builder.audit` verifies required files, source-leak denylist patterns, and absence of Liquid tokens in generated HTML.
+- `bin/public-site-build` now invokes the static builder.
+- `bin/public-site-preview-static` builds and serves `_public_site/` as the static comparison target.
+- `bin/public-site-preview` remains the Jekyll preview baseline for dual-running.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -64,7 +76,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | ID | status | title |
 | --- | --- | --- |
 | 1 | done | [Audit and Pre-Migration Decisions](/docs/?scope=studio&doc=public-static-site-build-batch-01-audit) |
-| 2 | planned | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
+| 2 | done | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
 | 3 | planned | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
