@@ -14,6 +14,7 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 
 ## Steer for these tasks
 
+- Complete or explicitly defer [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) before implementing asset-copy rules around route-owner modules.
 - Batch 1 is closed; use its explicit allowlists and denylist seeds.
 - The generated artifact must contain public runtime files and must not contain source-only trees.
 - The artifact copy layer is a positive allowlist. It must not copy arbitrary repo-root files, arbitrary `docs-viewer/` files, or private generated docs payloads.

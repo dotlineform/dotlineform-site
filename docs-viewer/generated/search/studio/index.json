@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-379450c7c39c67801e4bbb8c2fbcb896",
-    "generated_at_utc": "2026-06-12T16:32:14Z",
-    "count": 242
+    "version": "blake2b-ca7294219a88d9415d56ce1c0a633305",
+    "generated_at_utc": "2026-06-12T16:54:25Z",
+    "count": 243
   },
   "entries": [
     {
@@ -1565,6 +1565,38 @@
         "12"
       ],
       "search_text": "public-static-site-build-batch-03a-js-extraction public static site build batch 03a js extraction public static site build batch 3a public route javascript extraction 3a route javascript public static site build implementation plan implementation plan 2026-06-12 2026 06 12"
+    },
+    {
+      "id": "public-static-site-build-batch-03b-route-renderer-structure",
+      "kind": "doc",
+      "title": "Public Static Site Build Batch 3b Route Renderer Structure",
+      "href": "/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure",
+      "last_updated": "2026-06-12",
+      "parent_id": "public-static-site-build-implementation-plan",
+      "parent_title": "Public Static Site Build Implementation Plan",
+      "display_meta": "2026-06-12 • Public Static Site Build Implementation Plan",
+      "search_terms": [
+        "public-static-site-build-batch-03b-route-renderer-structure",
+        "public",
+        "static",
+        "site",
+        "build",
+        "batch",
+        "03b",
+        "route",
+        "renderer",
+        "structure",
+        "public static site build batch 3b route renderer structure",
+        "3b",
+        "public static site build implementation plan",
+        "implementation",
+        "plan",
+        "2026-06-12",
+        "2026",
+        "06",
+        "12"
+      ],
+      "search_text": "public-static-site-build-batch-03b-route-renderer-structure public static site build batch 03b route renderer structure public static site build batch 3b route renderer structure 3b public static site build implementation plan implementation plan 2026-06-12 2026 06 12"
     },
     {
       "id": "public-static-site-build-batch-04-assets-docs-viewer",

@@ -69,6 +69,20 @@ Batch 3 is complete for static route-shell rendering. It introduced the Python r
 
 Browser parity against `_public_site/` is carried into Batch 4 because the Batch 3 artifact intentionally does not yet copy the CSS, JS, generated data, thumbnails, or Docs Viewer runtime files that make those route shells executable.
 
+### batch 3b insertion
+
+Batch 3b is inserted before Batch 4 to keep the static route renderer maintainable before asset-copy and smoke-test dependencies grow around it.
+
+The intended module boundary is:
+
+- `public_site_builder.routes`: thin route registry only.
+- `public_site_builder.static_routes`: `/`, `/about/`, and `/404.html`.
+- `public_site_builder.catalogue_routes`: catalogue, work, work-detail, moment, and catalogue-search shells.
+- `public_site_builder.docs_routes`: `/library/` and `/analysis/` public Docs Viewer shells.
+- `public_site_builder.render`: shared document and HTML helper functions.
+
+Batch 3b is behavior-preserving. It must not add asset-copy behavior, browser smoke scope, route redesign, compatibility aliases, or a template engine.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -112,6 +126,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | done | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
 | 3a | done | [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) |
 | 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
+| 3b | planned | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
 | 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |

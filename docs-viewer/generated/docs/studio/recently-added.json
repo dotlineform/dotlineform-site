@@ -51,6 +51,14 @@
       "parent_title": "Public Static Site Build Implementation Plan"
     },
     {
+      "doc_id": "public-static-site-build-batch-03b-route-renderer-structure",
+      "title": "Public Static Site Build Batch 3b Route Renderer Structure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-03b-route-renderer-structure.json",
+      "added_date": "2026-06-12",
+      "parent_id": "public-static-site-build-implementation-plan",
+      "parent_title": "Public Static Site Build Implementation Plan"
+    },
+    {
       "doc_id": "public-static-site-build-batch-04-assets-docs-viewer",
       "title": "Public Static Site Build Batch 4 Public Asset and Docs Viewer Artifact Assembly",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-04-assets-docs-viewer.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-12",
       "parent_id": "public-static-site-build-implementation-plan",
       "parent_title": "Public Static Site Build Implementation Plan"
-    },
-    {
-      "doc_id": "public-static-site-build-implementation-plan",
-      "title": "Public Static Site Build Implementation Plan",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-implementation-plan.json",
-      "added_date": "2026-06-12",
-      "parent_id": "site-request-public-static-site-build",
-      "parent_title": "Public Static Site Build Request"
     }
   ],
-  "generated_at": "2026-06-12T16:32:14Z"
+  "generated_at": "2026-06-12T16:54:25Z"
 }
