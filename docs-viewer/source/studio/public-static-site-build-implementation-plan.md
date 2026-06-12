@@ -106,7 +106,8 @@ Batch 5 is in progress. The local workflow implementation is present, but it is 
 - The deploy job is gated by `PUBLIC_SITE_PAGES_DEPLOY_ENABLED == true` on `push` to `main`.
 - GitHub Pages remains on legacy branch publishing from `main /`; production cutover has not been performed.
 - The first remote dual-running workflow run passed on `main`; it built, audited, validated, uploaded the Pages artifact, and skipped deployment.
-- The workflow has been updated to current Pages action major versions after the first remote run reported a Node.js 20 deprecation warning from older Pages action versions.
+- The follow-up remote run passed with current Pages action major versions and no Node.js 20 deprecation warning.
+- Local dual-preview parity passed for the agreed route list against fresh Jekyll and static temporary builds.
 
 ### baseline verification set
 
@@ -139,7 +140,7 @@ Codex sandbox note: local service, browser, and temporary localhost checks requi
 - Batch 5 owns the dual-running period: the static GitHub Actions workflow runs checks, manual builds, and non-deploy validation while the current Jekyll path remains live.
 - The production cutover happens only when GitHub Pages is configured to deploy from the GitHub Actions Pages artifact instead of the current branch/Jekyll source, and the deploy workflow is enabled for `push` to `main`.
 - After cutover, commits to `main` update the live site only when the Actions workflow succeeds and deploys the generated artifact.
-- Batch 6 retargets `bin/public-site-preview` to the static build-and-serve path, then removes Ruby/Bundler tooling, `_config.yml`, `_layouts`, and `_includes` after a successful static Actions artifact deploy has been verified on the live site.
+- Batch 6 retargets `bin/public-site-preview` to the static build-and-serve path, adds scoped workflow triggers so unrelated `main` commits do not rebuild or deploy the public site, then removes Ruby/Bundler tooling, `_config.yml`, `_layouts`, and `_includes` after a successful static Actions artifact deploy has been verified on the live site.
 
 ## Implementation Tasks
 
@@ -167,6 +168,7 @@ The final batch includes the named closeout tasks from the tracker template: upd
 
 - Confirm removed Jekyll-era paths are not retained through import aliases, copied files, wrapper shims, or dual-build fallback logic.
 - Confirm source-only directories are absent from the generated public artifact.
+- Confirm public-site workflow path filters are derived from verified builder inputs and public artifact owners.
 
 ### task: verification
 

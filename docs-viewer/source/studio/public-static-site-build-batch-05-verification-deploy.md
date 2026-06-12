@@ -82,7 +82,7 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - The workflow runs on `pull_request`, `push` to `main`, and `workflow_dispatch`.
 - The build job uses `actions/checkout@v6`, `actions/setup-python@v6`, `actions/configure-pages@v6`, and `actions/upload-pages-artifact@v5`.
 - The deploy job uses `actions/deploy-pages@v5`.
-- The deploy job is gated and remains inactive until a `main` push runs with repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` set to `true`.
+- The deploy job is gated and remains inactive until a `main` push or `workflow_dispatch` run has repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` set to `true`.
 - The workflow file is local only until committed and pushed.
 - GitHub Pages still reports legacy branch publishing from `main /`; production cutover has not been performed.
 
@@ -115,9 +115,9 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 | 5.1 | done | Confirm the Batch 1 workflow defaults and replace placeholders with final Batch 2-4 command outputs before implementation. |
 | 5.2 | done | Implement the GitHub Actions Pages artifact workflow. |
 | 5.3 | done | Run the static workflow in dual-running mode without changing the live Jekyll publishing path. |
-| 5.4 | planned | Run local dual-preview parity checks against the same public route list before production cutover. |
+| 5.4 | done | Run local dual-preview parity checks against the same public route list before production cutover. |
 | 5.5 | done | Wire the full verification gate into pull request and `main` workflow paths. |
-| 5.6 | planned | Validate the Pages artifact contents with the named build-plus-audit command and deployment plumbing before production cutover. |
+| 5.6 | done | Validate the Pages artifact contents with the named build-plus-audit command and deployment plumbing before production cutover. |
 | 5.7 | planned | Switch GitHub Pages source to Actions artifact deployment only after the verification gate passes. |
 | 5.8 | planned | Verify a live static artifact deploy from `main`, then record the cutover timestamp, workflow run, artifact path, and residual risks for Jekyll removal. |
 
@@ -140,6 +140,17 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - Remote run `27434384898` skipped the `Deploy Pages artifact` job because `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` was empty.
 - `gh api repos/dotlineform/dotlineform-site/pages` still reports legacy Pages publishing from `main /`.
 - The first remote run used older Pages action major versions and reported a Node.js 20 deprecation warning from `actions/configure-pages@v5` and the upload artifact dependency. The local workflow has been updated to `actions/configure-pages@v6`, `actions/upload-pages-artifact@v5`, and `actions/deploy-pages@v5` for the next remote validation run.
+- Remote run `27434950394` for workflow `Public site` completed successfully on `main` push at commit `5dba605c6a3c01dd06119c3a9c3a85401157f1d1`.
+- Remote run `27434950394` built and audited `_public_site/`: 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+- Remote run `27434950394` validated the artifact, uploaded Pages artifact `7599482687`, and skipped the `Deploy Pages artifact` job because `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` was empty.
+- Remote run `27434950394` no longer reported the Node.js 20 deprecation warning after the Pages action version update.
+- Local dual-preview parity passed against fresh temporary outputs:
+  - Jekyll baseline: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`, served on `http://127.0.0.1:8181`.
+  - Static artifact: `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination /tmp/dlf-public-site-batch5-static --audit`, served on `http://127.0.0.1:8182`.
+- Local dual-preview smoke passed for both Jekyll and static outputs on `/series/`, `/series/?mode=moments`, `/recent/`, `/works/?work=00008&series=105`, `/catalogue/search/`, `/library/`, and `/analysis/`.
+- Local dual-preview smoke confirmed matching key route state: 80 work grid items, 56 moment grid items, 12 recent items, work `00008` title `nerve`, `nerve.pdf` download link to `https://media.dotlineform.com/works/files/nerve.pdf`, catalogue search ready text `Enter a search query.`, and public Docs Viewer `library` and `analysis` route IDs.
+- Local dual-preview smoke reported no browser console errors for the checked route list.
+- Temporary parity servers on ports `8181` and `8182` were stopped after verification.
 
 ## follow-on tasks
 

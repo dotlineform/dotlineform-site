@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 19:24"
+last_updated: "2026-06-12 20:05"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -67,8 +67,8 @@ The first repo-owned workflow is dual-running by default. It builds, audits, val
 
 The deploy job runs only when all of these are true:
 
-- The workflow event is a `push`.
-- The pushed ref is `refs/heads/main`.
+- The workflow event is a `push` or `workflow_dispatch`.
+- The workflow ref is `refs/heads/main`.
 - The repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
 
 Until that repository variable is enabled and the GitHub Pages source is switched to Actions artifact publishing, the current legacy Pages path remains live.

@@ -18,8 +18,9 @@ Purpose: remove or retire Jekyll/Ruby build artifacts, update docs, rerun final 
 - Do not remove Jekyll-era files before replacement behavior is verified.
 - Any retained Jekyll-era naming must have a non-Jekyll owner and a removal reason.
 - The current Jekyll local preview stops being supported only in this batch, after Batch 5 has recorded a successful live static Actions artifact deploy.
-- If Batch 5 has not recorded the production cutover, this batch is blocked.
+- Batch 5 production cutover is a required prerequisite for this batch.
 - Retarget `bin/public-site-preview` to the verified static build-and-serve path rather than removing the operator-facing preview command.
+- After live static deploy parity is proven, scope the public-site workflow triggers so unrelated `main` commits do not rebuild or deploy the public site.
 
 ## Batch 1 handoff
 
@@ -43,6 +44,7 @@ Keep or retarget only with a named non-Jekyll owner:
 - Final verification results and closeout notes.
 - Parent request and tracker status updates.
 - A local-preview transition note naming that `bin/public-site-preview` now serves the static artifact, the removal or retained owner of `bin/public-site-preview-static`, and when the old Jekyll preview stopped being supported.
+- Scoped public-site workflow triggers based on the verified builder inputs and public artifact owners.
 
 ## Implementation and policy guidance
 
@@ -50,10 +52,13 @@ Keep or retarget only with a named non-Jekyll owner:
 - Do not leave Ruby/Jekyll as a documented public-site build path.
 - Keep generated site output untracked on `main`.
 - Retarget old local preview wrappers only after the static preview command is documented and verified.
+- Keep the first production workflow unfiltered through Batch 5 cutover. Add workflow path filters in this batch only after the live Actions artifact deploy is verified.
+- Derive path filters from `public-site/config/public-site.json`, route-renderer owners, public Docs Viewer config/runtime owners, generated public payload owners, root metadata artifacts, and workflow files. Do not use broad app-only assumptions.
 
 ## Proposed verification set
 
 - Full static public-site verification gate.
+- Remote workflow validation after adding path filters: a public-site-relevant commit triggers the workflow, and a non-public-site commit does not trigger it.
 - Source/docs scans for stale Ruby, Bundler, Jekyll, Liquid, `_config.yml`, `_layouts`, and `_includes` command assumptions.
 - Artifact surface and source-leak audits after removals.
 - Browser smoke checks for the final static artifact.
@@ -66,13 +71,14 @@ Keep or retarget only with a named non-Jekyll owner:
 | ID | status | action |
 | --- | --- | --- |
 | 6.1 | planned | Confirm the Batch 1 Jekyll responsibility inventory against the Batch 5 deploy results before removing files. |
-| 6.2 | planned | Confirm Batch 5 recorded a successful live Actions artifact deploy; block this batch if cutover is incomplete. |
+| 6.2 | planned | Confirm Batch 5 recorded a successful live Actions artifact deploy before starting removal work. |
 | 6.3 | planned | Remove Ruby/Jekyll build files and wrappers after replacement behavior is verified; record any retained item with owner and removal reason. |
 | 6.4 | planned | Retarget `bin/public-site-preview` to the verified static build-and-serve path. |
 | 6.5 | planned | Remove `bin/public-site-preview-static` after the default preview command serves static output, or retain it with a documented owner and reason. |
-| 6.6 | planned | Update docs, setup commands, workflow docs, and source-organisation docs to make the static builder the only public build path and remove stale Jekyll/Ruby/Liquid assumptions. |
-| 6.7 | planned | Run final verification gate and stale-reference scans. |
-| 6.8 | planned | Close out the parent request, implementation tracker, and batch documents with verification results, retained risks, and follow-on work. |
+| 6.6 | planned | Add scoped workflow path filters after live static deploy parity is proven, then verify public-site-relevant commits trigger the workflow and unrelated commits do not. |
+| 6.7 | planned | Update docs, setup commands, workflow docs, and source-organisation docs to make the static builder the only public build path and remove stale Jekyll/Ruby/Liquid assumptions. |
+| 6.8 | planned | Run final verification gate and stale-reference scans. |
+| 6.9 | planned | Close out the parent request, implementation tracker, and batch documents with verification results, retained risks, and follow-on work. |
 
 ## completed verification
 

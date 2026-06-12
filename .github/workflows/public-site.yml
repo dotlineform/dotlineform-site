@@ -48,7 +48,7 @@ jobs:
         env:
           PUBLIC_SITE_PAGES_DEPLOY_ENABLED: ${{ vars.PUBLIC_SITE_PAGES_DEPLOY_ENABLED }}
         run: |
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && "$PUBLIC_SITE_PAGES_DEPLOY_ENABLED" == "true" ]]; then
+          if [[ "$GITHUB_REF" == "refs/heads/main" && "$PUBLIC_SITE_PAGES_DEPLOY_ENABLED" == "true" && ( "$GITHUB_EVENT_NAME" == "push" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ) ]]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
