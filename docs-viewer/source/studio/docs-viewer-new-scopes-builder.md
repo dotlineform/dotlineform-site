@@ -28,7 +28,7 @@ Current policy:
 - `New scope` defaults to a local-only uncommitted scope
 - public read-only scope creation is disabled until public Docs Viewer routes are data-driven
 - public scope deletion is disabled
-- the data-driven public route work is tracked in [Data-Driven Public Docs Scope Routes Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
+- the portable public install work is tracked in [Portable Static Docs Viewer Install Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
 
 ## Scope Creation Boundary
 

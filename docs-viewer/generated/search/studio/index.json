@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2ebd6f1bc826fb3988b7748b983417f",
-    "generated_at_utc": "2026-06-12T22:41:29Z",
+    "version": "blake2b-bacc46fdb13215361674be9417b3e588",
+    "generated_at_utc": "2026-06-12T23:06:35Z",
     "count": 233
   },
   "entries": [
@@ -1211,36 +1211,6 @@
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
     },
     {
-      "id": "site-request-data-driven-public-docs-scope-routes",
-      "kind": "doc",
-      "title": "Data-Driven Public Docs Scope Routes Request",
-      "href": "/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes",
-      "last_updated": "2026-06-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-12 • Change Requests",
-      "search_terms": [
-        "site-request-data-driven-public-docs-scope-routes",
-        "site",
-        "request",
-        "data",
-        "driven",
-        "public",
-        "docs",
-        "scope",
-        "routes",
-        "data-driven public docs scope routes request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-12",
-        "2026",
-        "06",
-        "12"
-      ],
-      "search_text": "site-request-data-driven-public-docs-scope-routes site request data driven public docs scope routes data-driven public docs scope routes request change requests change requests 2026-06-12 2026 06 12"
-    },
-    {
       "id": "site-request-docs-semantic-references-v2",
       "kind": "doc",
       "title": "Docs Semantic References v2 Request",
@@ -1356,6 +1326,40 @@
         "26"
       ],
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
+    },
+    {
+      "id": "site-request-data-driven-public-docs-scope-routes",
+      "kind": "doc",
+      "title": "Portable Static Docs Viewer Install Request",
+      "href": "/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes",
+      "last_updated": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
+      "search_terms": [
+        "site-request-data-driven-public-docs-scope-routes",
+        "site",
+        "request",
+        "data",
+        "driven",
+        "public",
+        "docs",
+        "scope",
+        "routes",
+        "portable static docs viewer install request",
+        "portable",
+        "static",
+        "viewer",
+        "install",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-data-driven-public-docs-scope-routes site request data driven public docs scope routes portable static docs viewer install request portable static viewer install change requests change requests 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-js-runtime-payload-review",

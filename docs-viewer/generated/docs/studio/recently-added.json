@@ -12,7 +12,7 @@
     },
     {
       "doc_id": "site-request-data-driven-public-docs-scope-routes",
-      "title": "Data-Driven Public Docs Scope Routes Request",
+      "title": "Portable Static Docs Viewer Install Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
       "added_date": "2026-06-12",
       "parent_id": "change-requests",
@@ -83,5 +83,5 @@
       "parent_title": "Checks"
     }
   ],
-  "generated_at": "2026-06-12T22:31:14Z"
+  "generated_at": "2026-06-12T23:06:35Z"
 }
