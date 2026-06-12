@@ -25,17 +25,6 @@ Added scoped workflow path filters to .github/workflows/public-site.yml.
 
 ~
 
-Next is the actual cutover. The two live-setting changes are:
-```
-gh variable set PUBLIC_SITE_PAGES_DEPLOY_ENABLED --body true
-gh api --method PUT repos/dotlineform/dotlineform-site/pages -f build_type=workflow
-```
-Then trigger the deploy:
-```
-gh workflow run "Public site" --ref main
-```
-
-
 ## VS Code menu ##
 
 - **Commit**: saves the selected/staged changes into your local Git history only. Nothing goes to GitHub. No GitHub Actions run. No live site update.
@@ -49,38 +38,6 @@ After that, we can decide whether to push to a branch/PR for the dual-running wo
 
 ~ 
 
-```
-brew install actionlint
-✔︎ JSON API packages.arm64_tahoe.jws.json                                                                                                                 Downloaded   15.2MB/ 15.2MB
-==> Would install 1 formula:
-actionlint
-==> Downloading https://ghcr.io/v2/homebrew/core/actionlint/manifests/1.7.12-1
-####### 100.0%
-==> Would install 2 dependencies for actionlint:
-gmp
-shellcheck
-==> Do you want to proceed with the installation? [y/n]
-==> Fetching downloads for: actionlint
-✔︎ Bottle Manifest gmp (6.3.0)                                                                                                                            Downloaded   13.3KB/ 13.3KB
-✔︎ Bottle Manifest shellcheck (0.11.0)                                                                                                                    Downloaded   11.0KB/ 11.0KB
-✔︎ Bottle gmp (6.3.0)                                                                                                                                     Downloaded    1.0MB/  1.0MB
-✔︎ Bottle actionlint (1.7.12)                                                                                                                             Downloaded    2.1MB/  2.1MB
-✔︎ Bottle shellcheck (0.11.0)                                                                                                                             Downloaded   14.1MB/ 14.1MB
-==> Installing dependencies for actionlint: gmp and shellcheck
-==> Installing actionlint dependency: gmp
-==> Pouring gmp--6.3.0.arm64_tahoe.bottle.tar.gz
-🍺  /opt/homebrew/Cellar/gmp/6.3.0: 22 files, 3.4MB
-==> Installing actionlint dependency: shellcheck
-==> Pouring shellcheck--0.11.0.arm64_tahoe.bottle.tar.gz
-🍺  /opt/homebrew/Cellar/shellcheck/0.11.0: 8 files, 68.4MB
-==> Installing actionlint
-==> Pouring actionlint--1.7.12.arm64_tahoe.bottle.1.tar.gz
-🍺  /opt/homebrew/Cellar/actionlint/1.7.12: 8 files, 6.0MB
-==> Running `brew cleanup actionlint`...
-Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
-Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
-```
-
 ←
 
 `studio/app/frontend/config/ui-text/catalogue-work-editor.json`
@@ -88,17 +45,6 @@ Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
 
 config keys report:
 `var/ui-text-usage-map.md`
-
----
-
-## downloads
-
-work_id 00008 has a download `nerve.pdf` (which is saved remotely), but the work page `http://127.0.0.1:4000/works/?series=105&work=00008` doesn't display any link to it. 'downloads' and 'links' may have been dropped from the UI in a previous refactor, but need to be added back in the metadata section of a work page. they should be hidden if no downloads or links have been defined.
-
-
-/assets/js/public-catalogue-runtime.js
-/assets/js/work.js
-in-line scripts
 
 ---
 

@@ -6,6 +6,48 @@ last_updated: 2026-06-12
 ui_status: draft
 ---
 
+Next is the actual cutover. The two live-setting changes are:
+```
+gh variable set PUBLIC_SITE_PAGES_DEPLOY_ENABLED --body true
+gh api --method PUT repos/dotlineform/dotlineform-site/pages -f build_type=workflow
+```
+Then trigger the deploy:
+```
+gh workflow run "Public site" --ref main
+```
+
+```
+brew install actionlint
+✔︎ JSON API packages.arm64_tahoe.jws.json                                                                                                                 Downloaded   15.2MB/ 15.2MB
+==> Would install 1 formula:
+actionlint
+==> Downloading https://ghcr.io/v2/homebrew/core/actionlint/manifests/1.7.12-1
+####### 100.0%
+==> Would install 2 dependencies for actionlint:
+gmp
+shellcheck
+==> Do you want to proceed with the installation? [y/n]
+==> Fetching downloads for: actionlint
+✔︎ Bottle Manifest gmp (6.3.0)                                                                                                                            Downloaded   13.3KB/ 13.3KB
+✔︎ Bottle Manifest shellcheck (0.11.0)                                                                                                                    Downloaded   11.0KB/ 11.0KB
+✔︎ Bottle gmp (6.3.0)                                                                                                                                     Downloaded    1.0MB/  1.0MB
+✔︎ Bottle actionlint (1.7.12)                                                                                                                             Downloaded    2.1MB/  2.1MB
+✔︎ Bottle shellcheck (0.11.0)                                                                                                                             Downloaded   14.1MB/ 14.1MB
+==> Installing dependencies for actionlint: gmp and shellcheck
+==> Installing actionlint dependency: gmp
+==> Pouring gmp--6.3.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/gmp/6.3.0: 22 files, 3.4MB
+==> Installing actionlint dependency: shellcheck
+==> Pouring shellcheck--0.11.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/shellcheck/0.11.0: 8 files, 68.4MB
+==> Installing actionlint
+==> Pouring actionlint--1.7.12.arm64_tahoe.bottle.1.tar.gz
+🍺  /opt/homebrew/Cellar/actionlint/1.7.12: 8 files, 6.0MB
+==> Running `brew cleanup actionlint`...
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+```
+
 > when we upload the generated site, are we uploading the whole thing or just deltas?
 
 Whole thing uploaded
