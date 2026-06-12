@@ -3,8 +3,8 @@ doc_id: public-legacy-collections-cleanup
 title: Public Legacy Collections Cleanup
 added_date: 2026-06-11
 last_updated: 2026-06-11
+ui_status: done
 parent_id: studio
-viewable: true
 ---
 # Public Legacy Collections Cleanup
 
