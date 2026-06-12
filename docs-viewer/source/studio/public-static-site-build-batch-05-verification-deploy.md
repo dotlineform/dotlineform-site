@@ -80,8 +80,8 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - `.github/workflows/public-site.yml` defines the repo-owned public-site workflow.
 - `public-site/build/validate_artifact.py` validates the Pages artifact after the build-plus-audit command.
 - The workflow runs on `pull_request`, `push` to `main`, and `workflow_dispatch`.
-- The build job uses `actions/checkout@v6`, `actions/setup-python@v6`, `actions/configure-pages@v5`, and `actions/upload-pages-artifact@v4`.
-- The deploy job uses `actions/deploy-pages@v4`.
+- The build job uses `actions/checkout@v6`, `actions/setup-python@v6`, `actions/configure-pages@v6`, and `actions/upload-pages-artifact@v5`.
+- The deploy job uses `actions/deploy-pages@v5`.
 - The deploy job is gated and remains inactive until a `main` push runs with repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` set to `true`.
 - The workflow file is local only until committed and pushed.
 - GitHub Pages still reports legacy branch publishing from `main /`; production cutover has not been performed.
@@ -114,7 +114,7 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 | --- | --- | --- |
 | 5.1 | done | Confirm the Batch 1 workflow defaults and replace placeholders with final Batch 2-4 command outputs before implementation. |
 | 5.2 | done | Implement the GitHub Actions Pages artifact workflow. |
-| 5.3 | planned | Run the static workflow in dual-running mode without changing the live Jekyll publishing path. |
+| 5.3 | done | Run the static workflow in dual-running mode without changing the live Jekyll publishing path. |
 | 5.4 | planned | Run local dual-preview parity checks against the same public route list before production cutover. |
 | 5.5 | done | Wire the full verification gate into pull request and `main` workflow paths. |
 | 5.6 | planned | Validate the Pages artifact contents with the named build-plus-audit command and deployment plumbing before production cutover. |
@@ -134,6 +134,12 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - `git diff --check -- .github/workflows/public-site.yml public-site/build/validate_artifact.py` passed.
 - `actionlint -version` reported `1.7.12`.
 - `actionlint .github/workflows/public-site.yml` passed with no findings.
+- Remote run `27434384898` for workflow `Public site` completed successfully on `main` push at commit `e1d7f4c405cff7e5e3a5280acf8b1c9249f4e572`.
+- Remote run `27434384898` built and audited `_public_site/`: 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+- Remote run `27434384898` validated the artifact and uploaded Pages artifact `7599255347`.
+- Remote run `27434384898` skipped the `Deploy Pages artifact` job because `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` was empty.
+- `gh api repos/dotlineform/dotlineform-site/pages` still reports legacy Pages publishing from `main /`.
+- The first remote run used older Pages action major versions and reported a Node.js 20 deprecation warning from `actions/configure-pages@v5` and the upload artifact dependency. The local workflow has been updated to `actions/configure-pages@v6`, `actions/upload-pages-artifact@v5`, and `actions/deploy-pages@v5` for the next remote validation run.
 
 ## follow-on tasks
 

@@ -105,6 +105,8 @@ Batch 5 is in progress. The local workflow implementation is present, but it is 
 - `public-site/build/validate_artifact.py` performs the post-build artifact validation used by the workflow.
 - The deploy job is gated by `PUBLIC_SITE_PAGES_DEPLOY_ENABLED == true` on `push` to `main`.
 - GitHub Pages remains on legacy branch publishing from `main /`; production cutover has not been performed.
+- The first remote dual-running workflow run passed on `main`; it built, audited, validated, uploaded the Pages artifact, and skipped deployment.
+- The workflow has been updated to current Pages action major versions after the first remote run reported a Node.js 20 deprecation warning from older Pages action versions.
 
 ### baseline verification set
 

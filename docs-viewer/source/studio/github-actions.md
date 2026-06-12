@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 17:18"
+last_updated: "2026-06-12 19:24"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -43,12 +43,12 @@ The workflow shape is:
   run: python public-site/build/build_site.py --destination _public_site --audit
 
 - name: Upload Pages artifact
-  uses: actions/upload-pages-artifact@v4
+  uses: actions/upload-pages-artifact@v5
   with:
     path: _public_site
 
 - name: Deploy to GitHub Pages
-  uses: actions/deploy-pages@v4
+  uses: actions/deploy-pages@v5
 ```
 
 The runner sequence is:
