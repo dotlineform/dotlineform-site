@@ -25,6 +25,12 @@ def stylesheet_tag(path: str, config: PublicSiteConfig) -> str:
     return f'<link rel="stylesheet" href="{versioned_asset(path, config)}">'
 
 
+def join_url(base: str, prefix: str) -> str:
+    if not base:
+        return "/" + prefix.strip("/") + "/"
+    return base.rstrip("/") + "/" + prefix.strip("/") + "/"
+
+
 def render_page(
     config: PublicSiteConfig,
     *,

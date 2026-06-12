@@ -83,6 +83,8 @@ The intended module boundary is:
 
 Batch 3b is behavior-preserving. It must not add asset-copy behavior, browser smoke scope, route redesign, compatibility aliases, or a template engine.
 
+Batch 3b is complete. The renderer split preserved the generated `_public_site/` HTML byte-for-byte against the Batch 3 artifact snapshot.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -126,7 +128,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 2 | done | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
 | 3a | done | [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) |
 | 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
-| 3b | planned | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
+| 3b | done | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
 | 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |

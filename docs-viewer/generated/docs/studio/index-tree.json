@@ -365,7 +365,7 @@
                   "doc_id": "public-static-site-build-batch-03b-route-renderer-structure",
                   "title": "Public Static Site Build Batch 3b Route Renderer Structure",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-03b-route-renderer-structure.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "public-static-site-build-batch-04-assets-docs-viewer",
@@ -1323,5 +1323,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T16:54:25Z"
+  "generated_at": "2026-06-12T17:03:41Z"
 }

@@ -3,7 +3,7 @@ doc_id: public-static-site-build-batch-03b-route-renderer-structure
 title: Public Static Site Build Batch 3b Route Renderer Structure
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: planned
+ui_status: done
 parent_id: public-static-site-build-implementation-plan
 ---
 # Public Static Site Build Batch 3b Route Renderer Structure
@@ -41,6 +41,16 @@ Do not create `public_site_builder.pipeline` in the first pass. Keep catalogue p
 - Focused tests that still prove the static artifact contains the required route files and no Liquid tokens.
 - A short durable guidance note in this document that names the module boundaries for future route additions.
 
+## Durable route-renderer guidance
+
+- Keep `public_site_builder.routes` as the route registry. Add output path strings there and keep page ownership visible from that file.
+- Put static non-catalogue routes in `public_site_builder.static_routes`.
+- Put catalogue, work, work-detail, moment, and catalogue-search route shells in `public_site_builder.catalogue_routes`.
+- Put public Docs Viewer route shells in `public_site_builder.docs_routes`.
+- Put shared HTML document helpers, asset URL helpers, script/style tag helpers, and common mount helpers in `public_site_builder.render`.
+- Keep catalogue pipeline helpers in `catalogue_routes.py` while catalogue routes are their only owner.
+- Add a new public route by choosing the owner module first, then registering the output path in `routes.py`.
+
 ## Implementation and policy guidance
 
 - Prefer moving functions intact before making small naming cleanups.
@@ -62,16 +72,22 @@ Do not create `public_site_builder.pipeline` in the first pass. Keep catalogue p
 
 | ID | status | action |
 | --- | --- | --- |
-| 3b.1 | planned | Move `/`, `/about/`, and `/404.html` rendering from `routes.py` to `static_routes.py`. |
-| 3b.2 | planned | Move catalogue, work, work-detail, moment, and catalogue-search rendering from `routes.py` to `catalogue_routes.py`. |
-| 3b.3 | planned | Move `/library/` and `/analysis/` public Docs Viewer rendering from `routes.py` to `docs_routes.py`. |
-| 3b.4 | planned | Keep `routes.py` as a thin registry that loads shared data once and maps output files to renderer calls. |
-| 3b.5 | planned | Confirm generated route HTML remains Liquid-free and script/style references remain equivalent to Batch 3. |
-| 3b.6 | planned | Record durable route-renderer module guidance in this document for future route additions. |
+| 3b.1 | done | Move `/`, `/about/`, and `/404.html` rendering from `routes.py` to `static_routes.py`. |
+| 3b.2 | done | Move catalogue, work, work-detail, moment, and catalogue-search rendering from `routes.py` to `catalogue_routes.py`. |
+| 3b.3 | done | Move `/library/` and `/analysis/` public Docs Viewer rendering from `routes.py` to `docs_routes.py`. |
+| 3b.4 | done | Keep `routes.py` as a thin registry that loads shared data once and maps output files to renderer calls. |
+| 3b.5 | done | Confirm generated route HTML remains Liquid-free and script/style references remain equivalent to Batch 3. |
+| 3b.6 | done | Record durable route-renderer module guidance in this document for future route additions. |
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile public-site/build/build_site.py public-site/build/public_site_builder/audit.py public-site/build/public_site_builder/builder.py public-site/build/public_site_builder/config.py public-site/build/public_site_builder/render.py public-site/build/public_site_builder/routes.py public-site/build/public_site_builder/static_routes.py public-site/build/public_site_builder/catalogue_routes.py public-site/build/public_site_builder/docs_routes.py`
+- `$HOME/miniconda3/bin/python3 -m pytest public-site/tests/test_build_site.py`
+- `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit`
+- `diff -ru /tmp/dlf-public-site-batch3b-before _public_site` returned no differences.
+- `rg -n '\{\{|\{%' _public_site --glob '*.html'` returned no matches.
+- Script/style reference spot check confirmed route HTML still references the Batch 3 route scripts and public Docs Viewer assets.
+- `git diff --check`
 
 ## follow-on tasks
 
@@ -79,5 +95,4 @@ Do not create `public_site_builder.pipeline` in the first pass. Keep catalogue p
 
 ## batch close
 
-- Set this batch status and front matter `ui_status` to `done` after the behavior-preserving module split is verified.
-- Keep Batch 4 planned until the route renderer structure is complete or an explicit deferral is recorded.
+- Batch 3b is complete. Batch 4 can proceed against the route-owner modules documented above.
