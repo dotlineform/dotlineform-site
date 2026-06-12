@@ -20,7 +20,12 @@ class PublicSiteConfig:
     marker_file: str
     nojekyll_file: str
     root_artifacts: tuple[str, ...]
+    public_files: tuple[str, ...]
+    public_trees: tuple[str, ...]
+    docs_viewer_runtime_entrypoints: tuple[str, ...]
+    docs_viewer_runtime_dynamic_files: tuple[str, ...]
     required_files: tuple[str, ...]
+    required_directories: tuple[str, ...]
     denied_path_prefixes: tuple[str, ...]
     denied_file_patterns: tuple[str, ...]
     denied_html_tokens: tuple[str, ...]
@@ -47,7 +52,12 @@ def load_config(path: Path) -> PublicSiteConfig:
         marker_file=_str_value(output, "marker_file"),
         nojekyll_file=_str_value(output, "nojekyll_file"),
         root_artifacts=_str_tuple(data, "root_artifacts"),
+        public_files=_str_tuple(data, "public_files"),
+        public_trees=_str_tuple(data, "public_trees"),
+        docs_viewer_runtime_entrypoints=_str_tuple(_dict_value(data, "docs_viewer_public_runtime"), "entrypoints"),
+        docs_viewer_runtime_dynamic_files=_str_tuple(_dict_value(data, "docs_viewer_public_runtime"), "dynamic_files"),
         required_files=_str_tuple(audit, "required_files"),
+        required_directories=_str_tuple(audit, "required_directories"),
         denied_path_prefixes=_str_tuple(audit, "denied_path_prefixes"),
         denied_file_patterns=_str_tuple(audit, "denied_file_patterns"),
         denied_html_tokens=_str_tuple(audit, "denied_html_tokens"),

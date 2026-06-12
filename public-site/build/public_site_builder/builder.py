@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +21,9 @@ def build_site(repo_root: Path, destination: Path, config: PublicSiteConfig) -> 
     _prepare_destination(repo_root.resolve(), destination, config.marker_file)
     _write_marker_files(destination, config)
     copied_count = _copy_root_artifacts(repo_root, destination, config)
+    copied_count += _copy_public_files(repo_root, destination, config.public_files)
+    copied_count += _copy_public_trees(repo_root, destination, config.public_trees)
+    copied_count += _copy_docs_viewer_public_runtime(repo_root, destination, config)
     rendered_count = _render_routes(repo_root, destination, config)
     return BuildResult(
         destination=destination,
@@ -55,16 +59,90 @@ def _write_marker_files(destination: Path, config: PublicSiteConfig) -> None:
 
 
 def _copy_root_artifacts(repo_root: Path, destination: Path, config: PublicSiteConfig) -> int:
-    copied_count = 0
     for relative in config.root_artifacts:
-        source = repo_root / relative
-        if not source.is_file():
-            raise FileNotFoundError(f"missing root artifact: {relative}")
-        target = destination / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        _copy_file(repo_root, destination, relative)
+    return len(config.root_artifacts)
+
+
+def _copy_public_files(repo_root: Path, destination: Path, relative_paths: tuple[str, ...]) -> int:
+    copied_count = 0
+    for relative in relative_paths:
+        _copy_file(repo_root, destination, relative)
         copied_count += 1
     return copied_count
+
+
+def _copy_public_trees(repo_root: Path, destination: Path, tree_roots: tuple[str, ...]) -> int:
+    copied_count = 0
+    for relative_root in tree_roots:
+        source_root = repo_root / relative_root
+        if not source_root.is_dir():
+            raise FileNotFoundError(f"missing public asset tree: {relative_root}")
+        for source in source_root.rglob("*"):
+            if not source.is_file() or not _is_publishable_source_file(source):
+                continue
+            relative = source.relative_to(repo_root).as_posix()
+            _copy_file(repo_root, destination, relative)
+            copied_count += 1
+    return copied_count
+
+
+def _copy_docs_viewer_public_runtime(repo_root: Path, destination: Path, config: PublicSiteConfig) -> int:
+    runtime_files = _resolve_docs_viewer_runtime_files(
+        repo_root,
+        config.docs_viewer_runtime_entrypoints + config.docs_viewer_runtime_dynamic_files,
+    )
+    copied_count = 0
+    for source in sorted(runtime_files):
+        relative = source.relative_to(repo_root).as_posix()
+        _copy_file(repo_root, destination, relative)
+        copied_count += 1
+    return copied_count
+
+
+def _resolve_docs_viewer_runtime_files(repo_root: Path, relative_paths: tuple[str, ...]) -> set[Path]:
+    resolved: set[Path] = set()
+    pending = [repo_root / relative for relative in relative_paths]
+    while pending:
+        source = pending.pop().resolve()
+        if source in resolved:
+            continue
+        if not source.is_file():
+            raise FileNotFoundError(f"missing Docs Viewer public runtime module: {source}")
+        if source.suffix != ".js":
+            raise RuntimeError(f"Docs Viewer public runtime module must be JavaScript: {source}")
+        resolved.add(source)
+        for import_path in _static_js_import_paths(source):
+            if not import_path.startswith("./") and not import_path.startswith("../"):
+                continue
+            imported = (source.parent / import_path).resolve()
+            pending.append(imported)
+    return resolved
+
+
+def _static_js_import_paths(source: Path) -> tuple[str, ...]:
+    text = source.read_text(encoding="utf-8")
+    matches = re.findall(r"import\s+(?:[\s\S]*?\s+from\s+)?[\"']([^\"']+)[\"']", text)
+    return tuple(path for path in matches if not path.startswith("http:") and not path.startswith("https:"))
+
+
+def _is_publishable_source_file(source: Path) -> bool:
+    if any(part.startswith(".") for part in source.parts):
+        return False
+    if "__pycache__" in source.parts:
+        return False
+    if source.suffix == ".pyc":
+        return False
+    return True
+
+
+def _copy_file(repo_root: Path, destination: Path, relative: str) -> None:
+    source = repo_root / relative
+    if not source.is_file():
+        raise FileNotFoundError(f"missing public artifact source: {relative}")
+    target = destination / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
 
 
 def _render_routes(repo_root: Path, destination: Path, config: PublicSiteConfig) -> int:

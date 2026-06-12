@@ -85,6 +85,18 @@ Batch 3b is behavior-preserving. It must not add asset-copy behavior, browser sm
 
 Batch 3b is complete. The renderer split preserved the generated `_public_site/` HTML byte-for-byte against the Batch 3 artifact snapshot.
 
+### batch 4 summary
+
+Batch 4 is complete. It made `_public_site/` an executable static artifact by adding allowlisted public asset, data, and Docs Viewer runtime assembly:
+
+- `public-site/config/public-site.json` now owns explicit public file, public tree, Docs Viewer public runtime, required file, and required directory inventories.
+- `public_site_builder.builder` copies root artifacts, public assets, generated public data, public Docs Viewer payloads, and the static import closure rooted at `docs-viewer-public.js`.
+- `public_site_builder.audit` verifies required files and required directories, then checks source-leak denylist patterns and generated HTML tokens.
+- The audited artifact contains 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+- Static artifact browser smoke and Jekyll baseline smoke both passed for `/series/`, `/series/?mode=moments`, `/recent/`, `/works/?work=00008&series=105`, `/catalogue/search/`, `/library/`, and `/analysis/`.
+- The work page smoke confirmed the Batch 0 metadata restoration path: work `00008` renders the `nerve.pdf` download link.
+- Batch 5 now has the exact build-plus-audit command, route smoke list, artifact counts, and Docs Viewer runtime/source-exclusion checks required for GitHub Actions validation.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -129,7 +141,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 3a | done | [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) |
 | 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 3b | done | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
-| 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
+| 4 | done | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
 | 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |
 

@@ -29,6 +29,44 @@ Purpose: make the static builder the GitHub Pages artifact deployment path after
 - Production cutover is the explicit GitHub Pages source change from legacy branch/Jekyll publishing to Actions artifact deployment plus enabling the deploy job for `push` to `main`.
 - Before cutover, the static workflow can run in manual/non-deploy dual-running mode while the current live site continues to publish through the legacy path.
 
+## Batch 4 handoff
+
+Batch 4 produced an audited static artifact at `_public_site/` with 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+
+The local build and audit command for the workflow gate is:
+
+```bash
+$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit
+```
+
+The Batch 5 workflow must run that command before uploading the Pages artifact. The first workflow version stays in dual-running mode: manual and verification runs are active, production deploy remains disabled until Pages source cutover is performed and recorded.
+
+Use this route list for local static smoke, Jekyll baseline parity, and workflow artifact validation:
+
+- `/series/`
+- `/series/?mode=moments`
+- `/recent/`
+- `/works/?work=00008&series=105`
+- `/catalogue/search/`
+- `/library/`
+- `/analysis/`
+
+Use this Jekyll baseline command for local dual-running comparison:
+
+```bash
+$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
+```
+
+Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/js`. The copied closure is rooted at `docs-viewer-public.js` plus `docs-viewer-metadata-info-view.js`. Artifact validation must confirm these source-only or private runtime surfaces are absent:
+
+- `docs-viewer/runtime/js/docs-viewer-management*.js`
+- `docs-viewer/runtime/js/docs-viewer-manage.js`
+- `docs-viewer/runtime/js/docs-html-import*.js`
+- `docs-viewer/runtime/js/reports/`
+- `docs-viewer/source/`
+- `docs-viewer/generated/docs/studio/`
+- `docs-viewer/generated/docs/tmp/`
+
 ## Deliverables
 
 - GitHub Actions workflow for pull request verification, `main` deploy, and manual `workflow_dispatch`.
@@ -44,7 +82,7 @@ Purpose: make the static builder the GitHub Pages artifact deployment path after
 - After cutover, commits to `main` update the live site only when the Actions workflow succeeds and deploys the generated artifact.
 - Use workflow concurrency so newer `main` deploys cancel older in-flight deploys.
 - Keep workflow permissions limited to Pages deployment requirements.
-- Avoid path filters for the first production workflow.
+- Use no path filters for the first production workflow.
 
 ## Proposed verification set
 

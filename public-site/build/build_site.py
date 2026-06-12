@@ -50,7 +50,7 @@ def main(argv: list[str] | None = None) -> int:
         destination = resolve_destination(config, args.destination)
         result = build_site(REPO_ROOT, destination, config)
         print(f"Built public site artifact: {result.destination}")
-        print(f"Copied root artifacts: {result.copied_count}")
+        print(f"Copied public files: {result.copied_count}")
         print(f"Rendered route pages: {result.rendered_count}")
         if args.audit:
             audit_result = audit_artifact(result.destination, config)

@@ -31,11 +31,18 @@ def test_build_site_writes_route_artifact(tmp_path: Path) -> None:
     assert (destination / "series" / "index.html").is_file()
     assert (destination / "works" / "index.html").is_file()
     assert (destination / "library" / "index.html").is_file()
+    assert (destination / "assets" / "css" / "main.css").is_file()
+    assert (destination / "assets" / "data" / "works_index.json").is_file()
+    assert (destination / "assets" / "works" / "index" / "00008.json").is_file()
+    assert (destination / "docs-viewer" / "runtime" / "js" / "docs-viewer-public.js").is_file()
+    assert not (destination / "docs-viewer" / "runtime" / "js" / "docs-viewer-management.js").exists()
+    assert not (destination / "docs-viewer" / "source").exists()
+    assert not any(path.name == ".DS_Store" for path in destination.rglob("*"))
     for html_path in destination.rglob("*.html"):
         html = html_path.read_text(encoding="utf-8")
         assert "{{" not in html
         assert "{%" not in html
-    assert audit_result.checked_count == len(config.required_files)
+    assert audit_result.checked_count > len(config.required_files)
 
 
 def test_build_site_refuses_non_artifact_destination(tmp_path: Path) -> None:

@@ -3,7 +3,7 @@ doc_id: public-static-site-build-batch-04-assets-docs-viewer
 title: Public Static Site Build Batch 4 Public Asset and Docs Viewer Artifact Assembly
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: planned
+ui_status: done
 parent_id: public-static-site-build-implementation-plan
 ---
 # Public Static Site Build Batch 4 Public Asset and Docs Viewer Artifact Assembly
@@ -14,7 +14,7 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 
 ## Steer for these tasks
 
-- Complete or explicitly defer [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) before implementing asset-copy rules around route-owner modules.
+- Use the Batch 3b route-owner modules as the implemented route boundary for asset-copy rules.
 - Batch 1 is closed; use its explicit allowlists and denylist seeds.
 - The generated artifact must contain public runtime files and must not contain source-only trees.
 - The artifact copy layer is a positive allowlist. It must not copy arbitrary repo-root files, arbitrary `docs-viewer/` files, or private generated docs payloads.
@@ -65,6 +65,16 @@ Denylist audit seeds include Jekyll files, root tooling/docs files, local app di
 - Public Docs Viewer copy rules for runtime modules, static CSS, public config, route config, and generated public docs/search payloads.
 - Source-leak and projection-contract audits against the generated artifact.
 
+## Batch 4 output
+
+The static builder now assembles `_public_site/` with these publishable surfaces:
+
+- Root metadata artifacts: `CNAME`, favicon/app icon files, `site.webmanifest`, `.nojekyll`, and `404.html`.
+- Public route assets: `assets/css/main.css`, public catalogue JavaScript, catalogue search runtime files, public generated catalogue/search JSON, thumbnails, public site image assets, and route index JSON files.
+- Public Docs Viewer assets: public config, public route config, public UI text, public CSS, generated `analysis` and `library` docs/search payloads, and the public runtime module closure.
+- Public Docs Viewer runtime closure: 44 modules under `docs-viewer/runtime/js`, rooted at `docs-viewer-public.js` plus `docs-viewer-metadata-info-view.js`.
+- Excluded surfaces: management runtime modules, reports runtime, Docs Viewer source docs, private generated `studio`/`tmp` docs payloads, source-only tooling, caches, and `.DS_Store`.
+
 ## Implementation and policy guidance
 
 - Keep domain-owned generated payloads with their current owners; the public-site builder assembles deployable copies.
@@ -84,23 +94,34 @@ Denylist audit seeds include Jekyll files, root tooling/docs files, local app di
 
 | ID | status | action |
 | --- | --- | --- |
-| 4.1 | planned | Convert the Batch 1 public asset and Docs Viewer inventories into explicit copy rules and audit fixtures. |
-| 4.2 | planned | Implement allowlisted static asset and public data copy rules. |
-| 4.3 | planned | Implement allowlisted public Docs Viewer artifact copy rules. |
-| 4.4 | planned | Implement source-leak and projection-contract audits using the Batch 1 denylist seeds and public-route copy allowlists. |
-| 4.5 | planned | Run representative static browser smoke checks for catalogue routes and public Docs Viewer mounts after assets are copied. |
-| 4.6 | planned | Run local dual-running parity checks against the same Jekyll baseline and static route list. |
-| 4.7 | planned | Record the complete public artifact surface for Batch 5 deployment checks. |
+| 4.1 | done | Convert the Batch 1 public asset and Docs Viewer inventories into explicit copy rules and audit fixtures. |
+| 4.2 | done | Implement allowlisted static asset and public data copy rules. |
+| 4.3 | done | Implement allowlisted public Docs Viewer artifact copy rules. |
+| 4.4 | done | Implement source-leak and projection-contract audits using the Batch 1 denylist seeds and public-route copy allowlists. |
+| 4.5 | done | Run representative static browser smoke checks for catalogue routes and public Docs Viewer mounts after assets are copied. |
+| 4.6 | done | Run local dual-running parity checks against the same Jekyll baseline and static route list. |
+| 4.7 | done | Record the complete public artifact surface for Batch 5 deployment checks. |
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m json.tool public-site/config/public-site.json` passed.
+- `$HOME/miniconda3/bin/python3 -m py_compile public-site/build/build_site.py public-site/build/public_site_builder/*.py` passed.
+- `$HOME/miniconda3/bin/python3 -m pytest public-site/tests/test_build_site.py` passed: 3 tests.
+- `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit` passed: 6899 copied public files, 11 rendered route pages, 6912 checked files.
+- Static artifact surface scans found no denied source-only roots, denied private Docs Viewer runtime files, `.DS_Store`, or Liquid tokens in generated HTML.
+- Static artifact browser smoke passed against `http://127.0.0.1:8174` for `/series/`, `/series/?mode=moments`, `/recent/`, `/works/?work=00008&series=105`, `/catalogue/search/`, `/library/`, and `/analysis/`.
+- The work page smoke confirmed work `00008` renders the `nerve.pdf` metadata download link to `https://media.dotlineform.com/works/files/nerve.pdf`.
+- Jekyll baseline dual-running smoke passed against an isolated build served from `/tmp/dlf-jekyll-build` for the same route list.
+- Browser console checks reported no errors for the static artifact or the Jekyll baseline route list.
 
 ## follow-on tasks
 
-- Update Batch 5 with exact artifact audit and smoke commands, including the final Docs Viewer runtime module list derived from `docs-viewer-public.js`.
+- Batch 5 workflow validation must run `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit` before artifact upload.
+- Batch 5 starts from the 6912-file audited artifact and the same route smoke list used in Batch 4.
+- Batch 5 first workflow version uses no path filters.
+- Batch 5 artifact validation checks the 44-module public Docs Viewer runtime closure and confirms management/source Docs Viewer files are absent.
 
 ## batch close
 
-- Add a handoff note to [Batch 5](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy).
-- Set this batch status and front matter `ui_status` to `done` after asset assembly and audits are verified.
+- Handoff note added to [Batch 5](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy).
+- Batch 4 is complete.

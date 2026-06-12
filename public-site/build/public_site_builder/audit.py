@@ -24,6 +24,14 @@ def audit_artifact(destination: Path, config: PublicSiteConfig) -> AuditResult:
     if missing:
         raise RuntimeError("artifact is missing required files: " + ", ".join(missing))
 
+    missing_directories = [
+        required
+        for required in config.required_directories
+        if not (destination / required).is_dir()
+    ]
+    if missing_directories:
+        raise RuntimeError("artifact is missing required directories: " + ", ".join(missing_directories))
+
     checked_count = 0
     for path in destination.rglob("*"):
         if not path.is_file():
