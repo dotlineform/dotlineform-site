@@ -56,6 +56,7 @@ timezone: Europe/London
 exclude:
   - scripts
   - _site
+  - _public_site
   - vendor
   - node_modules
   - .bundle
