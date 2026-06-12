@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-687cee5f9c3142a2704f1cf869476528",
-    "generated_at_utc": "2026-06-12T21:47:30Z",
-    "count": 232
+    "version": "blake2b-d2ebd6f1bc826fb3988b7748b983417f",
+    "generated_at_utc": "2026-06-12T22:41:29Z",
+    "count": 233
   },
   "entries": [
     {
@@ -12,16 +12,16 @@
       "kind": "doc",
       "title": "Admin",
       "href": "/docs/?scope=studio&doc=admin",
-      "last_updated": "2026-06-08",
-      "display_meta": "2026-06-08",
+      "last_updated": "2026-06-12",
+      "display_meta": "2026-06-12",
       "search_terms": [
         "admin",
-        "2026-06-08",
+        "2026-06-12",
         "2026",
         "06",
-        "08"
+        "12"
       ],
-      "search_text": "admin 2026-06-08 2026 06 08"
+      "search_text": "admin 2026-06-12 2026 06 12"
     },
     {
       "id": "activity",
@@ -849,10 +849,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-06-11",
+      "last_updated": "2026-06-12",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-11 • Architecture",
+      "display_meta": "2026-06-12 • Architecture",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -861,12 +861,12 @@
         "shared patterns",
         "patterns",
         "architecture",
-        "2026-06-11",
+        "2026-06-12",
         "2026",
         "06",
-        "11"
+        "12"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-11 2026 06 11"
+      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-12 2026 06 12"
     },
     {
       "id": "site-shell-runtime",
@@ -919,19 +919,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-25",
-      "display_meta": "2026-05-25",
+      "last_updated": "2026-06-12",
+      "display_meta": "2026-06-12",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-25",
+        "2026-06-12",
         "2026",
-        "05",
-        "25"
+        "06",
+        "12"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "change-requests change requests change requests 2026-06-12 2026 06 12"
     },
     {
       "id": "site-request-admin-checks-operational-reports",
@@ -1209,6 +1209,36 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-data-driven-public-docs-scope-routes",
+      "kind": "doc",
+      "title": "Data-Driven Public Docs Scope Routes Request",
+      "href": "/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes",
+      "last_updated": "2026-06-12",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-12 • Change Requests",
+      "search_terms": [
+        "site-request-data-driven-public-docs-scope-routes",
+        "site",
+        "request",
+        "data",
+        "driven",
+        "public",
+        "docs",
+        "scope",
+        "routes",
+        "data-driven public docs scope routes request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-12",
+        "2026",
+        "06",
+        "12"
+      ],
+      "search_text": "site-request-data-driven-public-docs-scope-routes site request data driven public docs scope routes data-driven public docs scope routes request change requests change requests 2026-06-12 2026 06 12"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
@@ -1556,10 +1586,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-06-06",
+      "last_updated": "2026-06-12",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-06 • Dev Home",
+      "display_meta": "2026-06-12 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1568,11 +1598,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-06",
+        "2026-06-12",
         "2026",
-        "06"
+        "06",
+        "12"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-06 2026 06"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-12 2026 06 12"
     },
     {
       "id": "development-workflow",
@@ -1868,22 +1899,22 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-06-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-06-12 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-25",
+        "2026-06-12",
         "2026",
-        "05",
-        "25"
+        "06",
+        "12"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-05-25 2026 05 25"
+      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-06-12 2026 06 12"
     },
     {
       "id": "docs-viewer-css-cascade-design",
@@ -2314,10 +2345,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-12",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-10 • Endpoint Overview",
+      "display_meta": "2026-06-12 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-scope-lifecycle",
         "scripts",
@@ -2330,12 +2361,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-10",
+        "2026-06-12",
         "2026",
         "06",
-        "10"
+        "12"
       ],
-      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-10 2026 06 10"
+      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-12 2026 06 12"
     },
     {
       "id": "scripts-docs-management-endpoints-source-config",
@@ -2711,10 +2742,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-29 • Docs Viewer",
+      "display_meta": "2026-06-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -2724,12 +2755,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-05-29",
+        "2026-06-12",
         "2026",
-        "05",
-        "29"
+        "06",
+        "12"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-29 2026 05 29"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-12 2026 06 12"
     },
     {
       "id": "docs-viewer-overview",
@@ -2833,10 +2864,10 @@
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-06-12",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-05-25 • Portable Setup",
+      "display_meta": "2026-06-12 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -2846,12 +2877,12 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-05-25",
+        "2026-06-12",
         "2026",
-        "05",
-        "25"
+        "06",
+        "12"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-12 2026 06 12"
     },
     {
       "id": "docs-viewer-portable-source-shape",

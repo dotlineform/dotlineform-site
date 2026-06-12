@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Docs Viewer generated document payloads without Ruby/Jekyll."""
+"""Build Docs Viewer generated document payloads."""
 
 from __future__ import annotations
 

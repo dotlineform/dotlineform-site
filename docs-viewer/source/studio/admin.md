@@ -2,12 +2,12 @@
 doc_id: admin
 title: Admin
 added_date: 2026-06-06
-last_updated: 2026-06-08
+last_updated: 2026-06-12
 parent_id: ""
 ---
 # Admin
 
-Local Admin is a sibling local app, separate from Local Studio, Local Analytics, Docs Viewer, and public Jekyll preview/build.
+Local Admin is a sibling local app, separate from Local Studio, Local Analytics, Docs Viewer, and public preview/build.
 
 It is the home for cross-repo operational review, risk and audit work, test-run review, and Admin-hosted UI Catalogue routes.
 

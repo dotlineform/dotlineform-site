@@ -25,7 +25,7 @@ SAFE_ROUTE_PART_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 PUBLIC_MODE = "public_readonly"
 LOCAL_COMMITTED_MODE = "local_committed"
 LOCAL_UNCOMMITTED_MODE = "local_uncommitted"
-PUBLISHING_MODES = (PUBLIC_MODE, LOCAL_COMMITTED_MODE, LOCAL_UNCOMMITTED_MODE)
+PUBLISHING_MODES = (LOCAL_UNCOMMITTED_MODE, LOCAL_COMMITTED_MODE)
 SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest"}
 
 
@@ -209,7 +209,12 @@ def manifest_scopes_by_id(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]
 
 
 def scope_delete_eligible(record: dict[str, Any] | None) -> bool:
-    return bool(record and record.get("user_created") is True and record.get("created_by_tool") is True)
+    return bool(
+        record
+        and record.get("user_created") is True
+        and record.get("created_by_tool") is True
+        and str(record.get("scope_type") or "").strip() != "public"
+    )
 
 
 def normalize_scope_id(value: Any) -> str:
@@ -239,6 +244,8 @@ def normalize_title(value: Any) -> str:
 
 def normalize_publishing_mode(value: Any) -> str:
     mode = str(value or "").strip().lower()
+    if mode == PUBLIC_MODE:
+        raise ValueError("public_readonly scope creation is disabled until public Docs Viewer routes are data-driven")
     if mode not in PUBLISHING_MODES:
         raise ValueError(f"publishing_mode must be one of: {', '.join(PUBLISHING_MODES)}")
     return mode
@@ -921,6 +928,20 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             "scope_id": scope_id,
             "allowed": False,
             "blockers": ["scope is not recorded in the docs scope manifest"],
+            "delete_files": [],
+            "missing_files": [],
+            "changed_files": [],
+            "build_commands": [],
+        }
+    if str(record.get("scope_type") or "").strip() == "public":
+        return {
+            "ok": True,
+            "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
+            "action": "delete_scope",
+            "operation": "preview",
+            "scope_id": scope_id,
+            "allowed": False,
+            "blockers": ["public scope deletion is disabled until public Docs Viewer routes are data-driven"],
             "delete_files": [],
             "missing_files": [],
             "changed_files": [],

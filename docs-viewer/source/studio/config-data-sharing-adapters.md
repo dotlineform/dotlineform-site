@@ -23,7 +23,7 @@ The registry is owned by the headless `data-sharing/` subsystem, not by Analytic
 Analytics reads this config through its same-origin Data Sharing API.
 Browser modules must not infer endpoint ownership or selectable-record behavior from the config file path.
 Local Studio does not serve Data Sharing config to browser routes.
-The Analytics app may serve the config it needs directly through its static allowlist, but public Jekyll builds exclude the directory because the configs are Analytics/Data Sharing runtime inputs rather than public site assets.
+The Analytics app may serve the config it needs directly through its static allowlist, but public builds should exclude the directory because the configs are Analytics/Data Sharing runtime inputs rather than public site assets.
 
 ## Current Mapping
 

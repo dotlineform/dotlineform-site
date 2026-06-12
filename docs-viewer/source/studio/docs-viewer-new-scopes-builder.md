@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-05-29
+last_updated: 2026-06-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -19,9 +19,16 @@ It should:
 
 - create the same files a developer would otherwise create by hand
 - keep all write behavior behind the loopback Docs Viewer service
-- preserve public read-only routes
+- preserve existing public read-only routes
 - show the planned write or delete set before any write
 - record ownership in a scope manifest so deletion can fail closed
+
+Current policy:
+
+- `New scope` defaults to a local-only uncommitted scope
+- public read-only scope creation is disabled until public Docs Viewer routes are data-driven
+- public scope deletion is disabled
+- the data-driven public route work is tracked in [Data-Driven Public Docs Scope Routes Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
 
 ## Scope Creation Boundary
 
@@ -30,9 +37,13 @@ A Docs Viewer scope is made from four parts:
 - source root, such as `docs-viewer/source/research/`
 - scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
 - generated viewer/search outputs, whose roots depend on publishing mode
-- optional read-only route page, such as `research/index.md`, only for public read-only scopes
 
-Public read-only scopes use generated outputs under:
+Existing public read-only scopes use working generated outputs under:
+
+- `docs-viewer/generated/docs/<scope>/`
+- `docs-viewer/generated/search/<scope>/index.json`
+
+and published snapshot outputs under:
 
 - `assets/data/docs/scopes/<scope>/`
 - `assets/data/search/<scope>/index.json`
@@ -55,32 +66,17 @@ Scope creation should run only through:
 - explicit write allowlists in the server
 - normal rebuild commands after the write
 
-Public read-only routes should keep using `docs_viewer_readonly_route.html`.
-They should not expose create-scope controls, management endpoints, Docs Import, or local write capabilities.
+Public read-only routes should not expose create-scope controls, management endpoints, Docs Import, or local write capabilities.
 
 ## Route Adapter Choices
 
-Use `docs_viewer_readonly_route.html` for public read-only routes.
-
-Example route file:
-
-```liquid
----
-layout: default
-title: "Research"
-section: research
-permalink: /research/
----
-
-{% include docs_viewer_readonly_route.html
-  search_placeholder='search research'
-  search_aria_label='Search research'
-%}
-```
+The public-site builder renders existing public read-only route shells through `public-site/build/public_site_builder/`.
+New public scopes must not create Markdown route files or generated Python source.
+The future public-scope lifecycle path should add or update data/config route records and let the static builder render route shells from those records.
 
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local management shell.
 In this repo, that route is `/docs/`.
-The retired Jekyll `docs_viewer_management_route.html` adapter should not be restored; public builds use read-only route shells, while the standalone Docs Viewer service serves `/docs/` management locally.
+Public builds use read-only route shells, while the standalone Docs Viewer service serves `/docs/` management locally.
 
 The management shell can switch scopes with the `scope` query parameter.
 Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.
@@ -89,18 +85,12 @@ Public read-only routes ignore and normalize away `scope` and `mode` so they can
 
 ### Public Read-Only Scope
 
-Use this option when the scope should become part of the published static site.
+This option is temporarily disabled in the New Scope modal and server lifecycle endpoints.
 
-Create and commit:
+Public scope creation should be re-enabled only after public Docs Viewer routes are data-driven.
+When that work is complete, public scope creation should update source/config records and route metadata, not write Markdown route stubs or Python source.
 
-- source root and Markdown files
-- `docs-viewer/config/scopes/docs_scopes.json` entry
-- read-only route page
-- generated docs tree, recently-added, by-id, and search JSON under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` if the repo tracks generated outputs for the site
-
-Then deploy through the normal static site workflow.
-Readers use the public route, such as `/research/`.
-Local edits still happen through `/docs/?scope=research&mode=manage`.
+Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>&mode=manage` and publish through the explicit `Publish docs` action.
 
 ### Committed Manage-Mode Scope
 
@@ -206,7 +196,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "create_apply": true,
     "delete_preview": true,
     "delete_apply": true,
-    "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
+    "publishing_modes": ["local_uncommitted", "local_committed"],
     "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
   }
 }
@@ -249,7 +239,7 @@ Required payload fields:
 
 Conditional and optional payload fields:
 
-- `public_route_path`: required for `public_readonly`
+- `public_route_path`: ignored for currently enabled local modes
 - `build_inline_search`: boolean, defaults true
 - `write_generated_outputs`: boolean, defaults true
 
@@ -260,8 +250,8 @@ Validation rules currently implemented:
 - `scope_id` must not already exist in the scope manifest
 - `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
-- `publishing_mode` must be `public_readonly`, `local_committed`, or `local_uncommitted`
-- `public_route_path` must use lowercase route segments with hyphens
+- `publishing_mode` must be `local_uncommitted` or `local_committed`
+- `public_readonly` is rejected until public Docs Viewer routes are data-driven
 - committed manage-mode generated docs output must not be under `assets/data/docs/scopes/`
 - committed manage-mode generated search output must not be under `assets/data/search/`
 - planned created paths must not already exist
@@ -289,18 +279,16 @@ Preview response fields:
 
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
 It reports planned generated docs/search outputs only when generated output writes are requested.
-It reports a public URL only for public read-only scopes.
+It does not report a public URL for currently enabled local scope modes.
 The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or manage-mode runtime data served by the local Docs Viewer service.
 
 Expected preview storage paths:
 
-- `public_readonly`: `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json`
 - `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
 - `local_uncommitted`: the same non-public generated path shape as `local_committed`, but the resulting local worktree changes should not be committed
 
 The planned source-scope config also stores browser-facing `scope_type` and `meta` values:
 
-- `public_readonly` -> `public`
 - `local_committed` -> `local`
 - `local_uncommitted` -> `local_uncommitted`
 
@@ -323,8 +311,8 @@ Apply behavior:
 - re-runs create-preview validation before any write
 - creates the source root and default welcome Markdown document
 - appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
-- creates a public read-only route page only for `public_readonly`
-- writes route-appropriate generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads when generated output is requested
+- does not create public route files
+- writes local generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads when generated output is requested
 - writes a user-created, tool-created manifest record
 - runs the docs build and, when requested, the docs search build after the config and source files are written
 
@@ -431,12 +419,10 @@ Minimum fields:
 - title
 - source root
 - default doc id
-- public route path, only when publishing as public read-only
 - whether to build inline search
 - whether generated outputs should be written immediately
 
-For public read-only scopes, the server should create the route page with `docs_viewer_readonly_route.html`.
-For local-only scopes, the server should skip route creation.
+For local scopes, the server skips public route creation.
 
 The server response should list:
 
@@ -444,10 +430,9 @@ The server response should list:
 - files changed
 - build commands run or suggested
 - resulting management URL
-- resulting public URL, only when a public route exists
 
 Create preview reports this planned write set without writing files.
-Create apply writes the allowlisted source-root, route-file, config, generated-output, and manifest changes after confirmation.
+Create apply writes the allowlisted source-root, config, generated-output, and manifest changes after confirmation.
 Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
 
 Scope lifecycle manifests record user-created route and generated-output paths such as scope-specific `index-tree.json`, `recently-added.json`, by-id payload directories, and search payloads.
@@ -460,7 +445,8 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 `New scope` opens a dedicated modal flow that:
 
 - collects scope id, title, source root, default doc id, publishing mode, generated-output choice, and inline-search choice
-- shows the public route path field only for `public_readonly`
+- defaults publishing mode to `local_uncommitted`
+- excludes `public_readonly` from the publishing-mode dropdown
 - previews the server-planned write set before enabling the save step
 - sends `confirm: true` only from the final save action
 - reports created files, changed files, build commands, and resulting URLs from the server response
@@ -488,7 +474,8 @@ Implementation ownership:
 - Public routes must remain read-only even if `mode=manage` or `scope=<other-scope>` appears in the URL.
 - The write server should validate scope ids and route paths before writing.
 - The write server should refuse paths outside the configured repo allowlist.
-- Manage-mode scopes must keep generated docs/search payloads out of `assets/data/docs/scopes/` and `assets/data/search/`; config loading, lifecycle preview/apply, and Ruby builders fail closed if a manage-mode scope points there.
+- Manage-mode scopes must keep generated docs/search payloads out of `assets/data/docs/scopes/` and `assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
+- Public read-only scope creation and deletion stay disabled until the data-driven public route request is implemented.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

@@ -2,17 +2,20 @@
 doc_id: scripts-docs-management-endpoints-scope-lifecycle
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-10
+last_updated: 2026-06-12
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Scope Lifecycle Endpoints
 
-Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle deletion.
+Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes and public scopes are blocked from lifecycle deletion.
 
-For `public_readonly` scopes, lifecycle plans separate working generated roots from published snapshot roots.
-`output` and `search_output` point to `docs-viewer/generated/`; `publish_output` and `publish_search_output` point to `assets/data/`.
-Create-apply can rebuild the working generated outputs, but it does not publish them; use the `Publish docs` action for that explicit step.
-Delete-preview and delete-apply include both working generated paths and published snapshot paths for manifest-owned scopes.
+Current create support is limited to local scope modes:
+
+- `local_uncommitted`
+- `local_committed`
+
+`public_readonly` creation is rejected until public Docs Viewer routes are data-driven.
+Public scope deletion is also rejected.
 
 ## `POST /docs/scopes/create-preview`
 
@@ -22,17 +25,19 @@ Expected data:
 {
   "scope_id": "notes",
   "title": "Notes",
+  "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
-  "viewer_base_url": "/notes/"
+  "build_inline_search": true,
+  "write_generated_outputs": true
 }
 ```
 
 Actions:
 
-- validates the new scope id, title, default doc id, publishing mode, route path, source root, and generated output paths
+- validates the new scope id, title, default doc id, publishing mode, source root, and generated output paths
 - checks for collisions with existing scopes and files
-- reports planned created files, changed files, build commands, management URL, and public URL
+- reports planned created files, changed files, build commands, and management URL
 - does not write files
 
 Returned data includes `schema_version`, `allowed`, `blockers`, planned scope config, planned manifest record, planned file changes, rebuild commands, URLs, and `dry_run: true`.
@@ -45,9 +50,11 @@ Expected data:
 {
   "scope_id": "notes",
   "title": "Notes",
+  "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
-  "viewer_base_url": "/notes/",
+  "build_inline_search": true,
+  "write_generated_outputs": true,
   "confirm": true
 }
 ```
@@ -60,7 +67,6 @@ Actions:
 - writes the default welcome source doc
 - updates `docs-viewer/config/scopes/docs_scopes.json`
 - writes or updates `docs-viewer/config/scopes/docs_scope_manifest.json`
-- writes an optional route page when the publishing mode requires one
 - rebuilds generated docs/search output for the new scope
 - logs a `docs_scope_create_apply` event
 
@@ -84,6 +90,7 @@ Actions:
 - verifies the scope is manifest-recorded, user-created, and tool-created
 - reports planned deleted files and config changes
 - blocks system-owned scopes
+- blocks public scopes
 - does not delete files
 
 Returned data includes `allowed`, `blockers`, manifest ownership metadata, planned deleted files, planned changed files, and `dry_run: true`.

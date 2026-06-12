@@ -209,19 +209,6 @@ Empty arrays are omitted from source records.
 
 Retired standalone file/link source files are no longer canonical source, and live source records no longer expose derived file/link compatibility maps. Workbook import helpers may still read legacy file/link sheets only to fold those rows into work-owned `downloads` and `links`.
 
-## Why The Model Is Split This Way
-
-The catalogue model is intentionally split between fixed route shells and generated JSON.
-
-Why:
-
-- Jekyll still needs stable route pages for `/works/`, `/series/`, `/work-details/`, and `/moments/`
-- list pages need lightweight indexes, not full per-item prose and detail payloads
-- work and moment pages need richer page-local data such as `content_html`, dimensions, and detail sections
-- detail pages are cheaper to resolve through the owning work record than through a separate global detail index
-
-In practice this means the route shell parses query state and loads JSON records for canonical runtime content.
-
 ## Fixed Route Shells
 
 The public catalogue shells are:

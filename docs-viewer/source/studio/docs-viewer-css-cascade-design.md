@@ -19,7 +19,7 @@ viewable: true
 
 ## Target Stylesheet Order
 
-The intended cascade for public Jekyll routes is:
+The intended cascade for public routes is:
 
 1. host layout stylesheet, currently `assets/css/main.css`
 2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`

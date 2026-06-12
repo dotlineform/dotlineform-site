@@ -11,6 +11,14 @@
       "parent_title": "Dev Home"
     },
     {
+      "doc_id": "site-request-data-driven-public-docs-scope-routes",
+      "title": "Data-Driven Public Docs Scope Routes Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
+      "added_date": "2026-06-12",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-public-js-runtime-payload-review",
       "title": "Public JavaScript Runtime and Payload Review Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-09",
       "parent_id": "admin-checks",
       "parent_title": "Checks"
-    },
-    {
-      "doc_id": "site-request-report-git-history",
-      "title": "Git History Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-git-history.json",
-      "added_date": "2026-06-09",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-12T21:30:03Z"
+  "generated_at": "2026-06-12T22:31:14Z"
 }

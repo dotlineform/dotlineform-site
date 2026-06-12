@@ -1195,6 +1195,14 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     auto_title = page.locator('[data-role="scope-title"]').input_value()
     if auto_title != "Private Notes":
         raise AssertionError(f"scope title did not auto-fill from scope id: {auto_title!r}")
+    mode_options = page.locator('[data-role="scope-publishing-mode"] option').evaluate_all(
+        "options => options.map(option => option.value)"
+    )
+    if mode_options != ["local_uncommitted", "local_committed"]:
+        raise AssertionError(f"scope publishing modes should exclude public_readonly: {mode_options!r}")
+    selected_mode = page.locator('[data-role="scope-publishing-mode"]').input_value()
+    if selected_mode != "local_uncommitted":
+        raise AssertionError(f"scope publishing mode did not default to the first local mode: {selected_mode!r}")
     page.locator('[data-role="scope-write-generated"]').uncheck()
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")
@@ -1204,8 +1212,8 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
         "title": "Private Notes",
         "source_root": "docs-viewer/source/private-notes",
         "default_doc_id": "private-notes",
-        "publishing_mode": "public_readonly",
-        "public_route_path": "/private-notes/",
+        "publishing_mode": "local_uncommitted",
+        "public_route_path": "",
         "build_inline_search": False,
         "write_generated_outputs": False,
     }

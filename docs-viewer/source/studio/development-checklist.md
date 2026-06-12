@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: dev-home
 viewable: true
 ---
@@ -32,22 +32,8 @@ When pruning, moving, or widening checked-in config or browser-visible payloads:
 - keep browser public/config endpoints on explicit whitelists when they project domain config
 - prefer positive owner-contract tests that assert allowed keys or whitelisted payload shape
 
-## Local Studio Route Migration
-
-Before moving or adding a Studio route:
-
-- classify the route family: Catalogue, Analytics, Docs Viewer, Data Sharing, Audit, operational report, UI Catalogue, or shared Studio shell
-- put route shell rendering in the owning view module, not in `studio_app_server.py`
-- add runtime view config in `studio/app/server/studio/studio_app_config.py`
-- keep route entry modules as orchestration shells for boot, required elements, event wiring, state handoff, and route-ready projection
-- keep service or mutation behavior in the owning API/domain modules
-- preserve existing DOM ids, `data-role` hooks, ready-state attributes, and UI text contracts unless the slice intentionally changes them
-- add or update a focused smoke for local app route readiness
-- retire the old Jekyll route file once the local route is verified, unless there is a documented transition reason to keep it
-
 ## Public Link Resolver
 
-Local Studio and public Jekyll preview are separate hosts.
 Studio links to public content must not accidentally resolve on the Studio app host.
 
 When a route adds or touches public-content links:
@@ -55,7 +41,6 @@ When a route adds or touches public-content links:
 - use `buildPublicSiteUrl(config, path, params)` for general public routes such as `/library/` and `/analysis/`
 - use `studio/app/frontend/js/catalogue-public-links.js` for public catalogue routes such as works, series, work details, and moments
 - keep editor-to-editor and Studio navigation links on local Studio routes
-- do not use relative public-content hrefs such as `/works/...`, `/series/...`, `/moments/...`, `/library/`, or `/analysis/` directly in migrated Studio route output
 - do not default to `https://dotlineform.com` unless the action is explicitly a live-site action
 - do not add compatibility redirects or first-party links for retired public catalogue routes
 - do not add derivable URL fields to generated public payloads unless the exception is documented
@@ -123,8 +108,8 @@ Toolchain basics:
 
 - run project commands from `dotlineform-site/`
 - use the configured Python interpreter for Python entrypoints and checks
-- use explicit rbenv shims for public Jekyll verification rather than relying on system Ruby or Bundler
-- if a Jekyll server is already running, verify one-off builds against a separate destination instead of the default `_site/`
+- use `bin/public-site-build --destination <path> --audit` for public static-site verification
+- if `bin/public-site-preview` is already running, verify one-off builds against a separate temporary destination rather than the default `_public_site/`
 
 When sweeping for stale references:
 
@@ -163,7 +148,7 @@ Security defaults:
 When adding or moving repo source:
 
 - use [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) as the maintained ownership contract
-- keep public Jekyll layouts, includes, route pages, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
+- keep public static route renderers, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
 - keep Docs Viewer source, runtime, CSS, config, build code, and services together under `docs-viewer/`
 - keep local working output, staging, and test logs under `var/` or other ignored output paths
 

@@ -15,7 +15,6 @@ Route:
 - new draft mode uses `?mode=new`
 
 The route shell is hosted by the local Studio app server.
-The old Jekyll route shell has been retired.
 
 This page edits one canonical series source record from `assets/studio/data/catalogue/series.json` through the local catalogue service and can also write affected work membership records in `assets/studio/data/catalogue/works.json`.
 

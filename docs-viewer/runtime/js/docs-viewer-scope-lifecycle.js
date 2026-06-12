@@ -23,10 +23,10 @@ export {
 };
 
 var DEFAULT_PUBLISHING_MODES = [
-  "public_readonly",
-  "local_committed",
-  "local_uncommitted"
+  "local_uncommitted",
+  "local_committed"
 ];
+var DISABLED_PUBLISHING_MODES = new Set(["public_readonly"]);
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -48,11 +48,16 @@ function publishingModes(capabilities) {
     ? lifecycle.publishing_modes
     : DEFAULT_PUBLISHING_MODES;
   var seen = new Set();
-  return rawModes.map(normalizeText).filter(function (mode) {
+  var modes = rawModes.map(normalizeText).filter(function (mode) {
     if (!mode || seen.has(mode)) return false;
+    if (DISABLED_PUBLISHING_MODES.has(mode)) return false;
     seen.add(mode);
     return true;
   });
+  var ordered = DEFAULT_PUBLISHING_MODES.filter(function (mode) {
+    return modes.includes(mode);
+  });
+  return ordered.length ? ordered : DEFAULT_PUBLISHING_MODES.slice();
 }
 
 function modeLabel(state, mode) {
@@ -182,7 +187,7 @@ function wireCreateForm(api, state) {
   }
 
   function syncMode() {
-    var mode = normalizeText(modeInput && modeInput.value) || "public_readonly";
+    var mode = normalizeText(modeInput && modeInput.value) || "local_uncommitted";
     if (modeNoteNode) modeNoteNode.textContent = modeNote(state, mode);
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
@@ -217,7 +222,7 @@ function collectCreatePayload(api, state) {
   var host = api.host;
   var scopeId = normalizeText(host.querySelector('[data-role="scope-id"]')?.value).toLowerCase();
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
-  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "public_readonly";
+  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_uncommitted";
   var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
   var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);

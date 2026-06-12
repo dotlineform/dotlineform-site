@@ -249,7 +249,7 @@ Inline SVG stays in the source doc because it remains readable as markup and doe
 ## Preview And Write Semantics
 
 Preview does not write source docs.
-It returns the proposed Markdown, media plan metadata, collision information, warnings, and Jekyll validation status.
+It returns the proposed Markdown, media plan metadata, collision information, warnings.
 
 Write happens only on create or confirmed overwrite.
 At write time, the service:

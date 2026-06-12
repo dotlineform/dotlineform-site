@@ -288,7 +288,6 @@ Mapped routes include:
 The **route ids/paths themselves** should be deterministic and discoverable from source:
 
 ```text
-Jekyll route files
 Docs Viewer route config
 Admin server route handlers
 Analytics server route handlers

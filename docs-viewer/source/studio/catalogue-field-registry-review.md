@@ -13,7 +13,7 @@ Route:
 - `/studio/catalogue-field-registry/`
 
 This Studio page is a read-only review surface for `studio/data/config/catalogue/catalogue-field-registry.json`.
-It is hosted by the local Studio app server, not by a Jekyll route shell.
+It is hosted by the local Studio app server.
 
 ## Route Ready State
 
@@ -49,7 +49,6 @@ The page:
 ## Local App Migration
 
 The page shell is mounted in the local Studio app server and reuses `studio/app/frontend/js/catalogue-field-registry-review.js`.
-The old Jekyll route shell has been retired.
 
 Focused smoke coverage:
 

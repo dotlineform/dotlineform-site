@@ -15,7 +15,6 @@ Route:
 - parent-scoped draft create mode uses `?work=<work_id>&mode=new`
 
 The route shell is hosted by the local Studio app server.
-The old Jekyll route shell has been retired.
 
 This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
 

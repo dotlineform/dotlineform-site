@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-05-25
+last_updated: 2026-06-12
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -24,8 +24,10 @@ Decide:
 - source root: for example `docs-viewer/source/research`
 - media path prefix: for example `docs/research`
 - import media storage: usually `repo_assets` for a new portable install without remote media
-- generated docs output: `assets/data/docs/scopes/research`
-- generated search output: `assets/data/search/research/index.json`
+- working generated docs output: `docs-viewer/generated/docs/research`
+- working generated search output: `docs-viewer/generated/search/research/index.json`
+- published docs output: `assets/data/docs/scopes/research`
+- published search output: `assets/data/search/research/index.json`
 - read-only route: for example `/research/`
 - root doc id: for example `research`
 
@@ -50,8 +52,10 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "scope_type": "public",
   "source": "docs-viewer/source/research",
   "media_path_prefix": "docs/research",
-  "output": "assets/data/docs/scopes/research",
-  "search_output": "assets/data/search/research/index.json",
+  "output": "docs-viewer/generated/docs/research",
+  "search_output": "docs-viewer/generated/search/research/index.json",
+  "publish_output": "assets/data/docs/scopes/research",
+  "publish_search_output": "assets/data/search/research/index.json",
   "viewer_base_url": "/research/",
   "include_scope_param": false,
   "default_doc_id": "research",
@@ -70,44 +74,51 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
-Only public read-only scopes should use `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` as generated output roots.
-Manage-mode scopes use `docs-viewer/generated/` roots instead, and the builders reject manage-mode configs that point generated docs/search output at public `assets/data/` roots.
+Public read-only scopes use `docs-viewer/generated/` as their working output roots and separate `assets/data/` publish roots.
+Manage-mode scopes use only `docs-viewer/generated/` roots, and the builders reject manage-mode configs that point generated docs/search output at public `assets/data/` roots.
 
 Running `./docs-viewer/build/build_docs.py --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
-The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to its Jekyll route after the docs build refreshes the config and generated docs payloads.
+The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to public route config after the docs build refreshes the config and generated docs payloads.
 `repo_assets` makes Docs Import copy imported images and files below `assets/docs/research/` and write literal `/assets/docs/research/...` links.
 Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
 
-### 4. Add The Read-Only Route
+### New Scope Action Status
 
-Create a Jekyll page such as `research/index.md`:
+The Docs Viewer New Scope action can still be used for manage-mode scope planning.
+Its public read-only path needs updating before it should be used to create a new public scope.
+The stale path still plans a legacy Markdown route stub; the current public site needs static-builder route records and renderer config instead.
 
-```liquid
----
-layout: default
-title: "Research"
-section: research
-permalink: /research/
----
+### 4. Add The Public Static Route
 
-{% include docs_viewer_readonly_route.html
-  search_placeholder='search research'
-  search_aria_label='Search research'
-%}
-```
+Add a public Docs Viewer route shell to the Python static-site builder rather than creating a Markdown route file.
+Current public Docs Viewer route shells are rendered by `public-site/build/public_site_builder/routes.py` through `render_docs_route()`.
 
-The route path is matched to `viewer_base_url` in the generated Docs Viewer browser config.
-Do not pass `allow_management`, `allow_scope_query`, or `management_base_url` on public read-only routes.
-The read-only adapter intentionally fixes those values to false.
+The route must also be represented in browser-safe route config:
 
-Read-only route adapter inputs:
+- `docs-viewer/config/routes/docs-viewer-routes.json`
+- `docs-viewer/config/routes/docs-viewer-public-routes.json`
 
-- `viewer_base_url`: optional override; defaults to the page permalink or URL
-- `viewer_scope`: optional fixed scope hint; normally omitted so the route is matched from `viewer_base_url`
-- `default_doc_id`: optional route-local fallback; normally omitted so scope config owns the default
-- `enable_search`: optional `false` to hide search controls
-- `search_placeholder`: optional search input placeholder
-- `search_aria_label`: optional search input label
+The static route shell sets:
+
+- `data-allow-management="false"`
+- `data-route-id="<scope>"`
+- `data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"`
+
+The route config record sets:
+
+- `route_id`: the public route id, normally the scope id
+- `route_path`: the public route path, such as `/research/`
+- `route_type`: `public`
+- `default_scope_id`: the fixed scope id
+- `default_doc_id`: the scope's default doc id
+- `include_scope_param`: `false`
+- `allow_scope_query`: `false`
+- `viewer_base_url`: the public route base
+- `docs_paths`: published `index-tree.json`, `recently-added.json`, and search index URLs
+- `config_urls.docs_viewer`: `/docs-viewer/config/defaults/docs-viewer-public-config.json`
+- `config_urls.ui_text`: `/docs-viewer/config/ui-text/public.json`
+
+Public-site config also needs to include the new public docs/search assets and the route artifact in the appropriate `public_files`, `public_trees`, and audit lists in `public-site/config/public-site.json`.
 
 Read-only canonical URL behavior:
 
@@ -131,7 +142,7 @@ Local Studio points Docs links, generated reads, and management actions at the c
 The standalone Docs Viewer service injects `DOCS_VIEWER_BASE_URL` into the served route-config registry for local management and generated-read URLs.
 The checked-in static route-config asset keeps those URLs blank so public builds do not expose localhost state.
 The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
-Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or the Docs Viewer runtime entrypoints.
+Adding a configured scope does not require editing Docs Viewer shell markup or the Docs Viewer runtime entrypoints.
 If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
 The scope delete lifecycle action removes the matching `ui_statuses_by_scope` entry from `docs-viewer/config/scopes/docs_scopes.json` along with the scope record.
 If the new scope uses a new availability type, add or update its `docs_viewer.scope_type_badges` entry so the management scope dropdown can prefix the scope name consistently.
@@ -159,8 +170,9 @@ Management canonical URL behavior:
 If the read-only route should have inline search, make sure the scope exists in `docs-viewer/config/scopes/docs_scopes.json`.
 The Docs Viewer search builder derives its input and output paths from that scope config:
 
-- input docs index: `assets/data/docs/scopes/<scope>/index.json`
-- search output: `assets/data/search/<scope>/index.json`
+- input docs tree: `docs-viewer/generated/docs/<scope>/index-tree.json`
+- working search output: `docs-viewer/generated/search/<scope>/index.json`
+- published search output: `assets/data/search/<scope>/index.json`
 
 Then build search with:
 
@@ -168,23 +180,25 @@ Then build search with:
 ./docs-viewer/build/build_search.py --scope research --write
 ```
 
-### 7. Build Docs Data
+### 7. Build Working Docs Data And Publish The Public Snapshot
 
-Build the viewer JSON:
+Build the working viewer JSON:
 
 ```sh
 ./docs-viewer/build/build_docs.py --scope research --write
 ```
 
-Build the search JSON if search is enabled:
+Build the working search JSON if search is enabled:
 
 ```sh
 ./docs-viewer/build/build_search.py --scope research --write
 ```
 
-After this, the public route should be able to fetch:
+Use the Docs Viewer `Publish docs` management action to copy the reviewed working outputs to the public snapshot roots.
+After publishing, the public route should be able to fetch:
 
-- `/assets/data/docs/scopes/research/index.json`
+- `/assets/data/docs/scopes/research/index-tree.json`
+- `/assets/data/docs/scopes/research/recently-added.json`
 - `/assets/data/docs/scopes/research/by-id/research.json`
 - `/assets/data/search/research/index.json`
 
@@ -192,8 +206,8 @@ After this, the public route should be able to fetch:
 
 Run the Docs Viewer service for management.
 Docs management is served through `DOCS_VIEWER_BASE_URL`; Local Studio only links to that peer service.
-The project still needs `_config.yml`, configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python dependencies used by those scripts.
-Ruby/Jekyll dependencies are only needed when the install also needs public-site preview/build parity.
+The project needs configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, public-site builder config under `public-site/config/`, and the Python dependencies used by those scripts.
+Public-site preview/build parity uses the Python static builder through `bin/public-site-build` and `bin/public-site-preview`.
 
 Then open:
 
@@ -261,7 +275,7 @@ Scope config example:
 }
 ```
 
-Do not create a Jekyll route page such as `notes/index.md`.
+Do not create a public static route shell, public route-config record, or published public payload root for a manage-mode-only scope.
 The scope is loaded through the local Docs Viewer management shell, not through a public static route.
 
 Build the generated docs and search payloads:
@@ -273,7 +287,8 @@ Build the generated docs and search payloads:
 
 After this, the local Docs Viewer service should be able to fetch:
 
-- `/docs-viewer/generated/docs/notes/index.json`
+- `/docs-viewer/generated/docs/notes/index-tree.json`
+- `/docs-viewer/generated/docs/notes/recently-added.json`
 - `/docs-viewer/generated/docs/notes/by-id/notes.json`
 - `/docs-viewer/generated/search/notes/index.json`
 

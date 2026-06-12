@@ -206,8 +206,7 @@ For the current repo, the Docs Viewer-specific import stack in `requirements.txt
 - `Pillow`: converts Markdown package images to 800px-max WebP outputs during Docs Import
 
 `requirements.txt` is the Python script dependency contract.
-It does not replace `Gemfile`, `Gemfile.lock`, or `.ruby-version`, which still own the Ruby/Jekyll build stack.
-It also does not mean every package is required for a read-only static viewer route.
+It does not mean every package is required for a read-only static viewer route.
 The parser/sanitizer/conversion packages are essential when the portable install includes Docs Import or the management server's import endpoints.
 
 For the full dependency-role explanation, see [Docs Viewer Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies).

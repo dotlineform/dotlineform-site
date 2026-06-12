@@ -13,7 +13,7 @@ Route:
 - `/studio/bulk-add-work/`
 
 This page runs the configured bulk-import workbook flow from `data/works_bulk_import.xlsx` into canonical catalogue source JSON.
-The route shell is served by the local Studio app, not by a Jekyll Studio page.
+The route shell is served by the local Studio app.
 The browser module still uses the existing sibling catalogue import preview/apply endpoints until those APIs are consolidated into the local app server.
 
 ## Current Scope

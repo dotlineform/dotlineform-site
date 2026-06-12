@@ -15,7 +15,6 @@ Route:
 - staged import mode uses `?file=<moment_id>.md`
 
 The route shell is hosted by the local Studio app server.
-The old Jekyll route shell has been retired.
 
 This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json` through the local catalogue service.
 It also imports new draft moments from staged body-only Markdown, so moment creation, review, save, publish, and unpublish now live on one Studio page.

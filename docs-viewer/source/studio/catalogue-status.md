@@ -9,7 +9,7 @@ viewable: true
 # Catalogue Drafts
 
 This document describes the Studio drafts page at `/studio/catalogue-status/`.
-The route shell is now hosted by the local Studio app server rather than Jekyll.
+The route shell is hosted by the local Studio app server.
 
 Family views:
 
@@ -45,7 +45,7 @@ The page reads canonical source JSON through the local Studio app catalogue API:
 - `GET /studio/api/catalogue/read?key=catalogue_moments`
 
 The logical keys are configured through `studio/app/frontend/config/studio-config.json` under `paths.data.studio`.
-The canonical source files now live under `studio/data/canonical/catalogue/`, and public Jekyll output excludes Studio-only catalogue source data.
+The canonical source files now live under `studio/data/canonical/catalogue/`, and public output excludes Studio-only catalogue source data.
 
 ## Current Behavior
 

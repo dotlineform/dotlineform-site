@@ -33,7 +33,8 @@ The current implementation is split into three layers.
 ### 1. Scope-owned route shells and service shell
 
 Public route pages identify the active Docs Viewer route through `data-route-id` and locate the browser-safe route-config registry through `data-route-config-url`.
-The local `/docs/` management route is rendered by the standalone Docs Viewer service from `docs-viewer/shell/docs-viewer-shell.html`, not by a Jekyll `docs/index.md` route.
+The local `/docs/` management route is rendered by the standalone Docs Viewer service from `docs-viewer/shell/docs-viewer-shell.html`.
+
 The registry defines scope-specific values such as:
 
 - the docs index URL
@@ -42,10 +43,10 @@ The registry defines scope-specific values such as:
 - the default root doc
 - whether the scope parameter is part of the canonical URL
 
-Current public Jekyll route shells:
+Current public route shells:
 
-- `library/index.md`
-- `analysis/index.md`
+- `library/index.html`
+- `analysis/index.html`
 
 Current management service shell:
 
@@ -108,7 +109,7 @@ This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
 
 When a management-capable route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, docs-search index, and generated reference JSON through that server.
-Local Studio uses this path because generated docs/search reads are served by the Python app rather than by Jekyll.
+Local Studio uses this path because generated docs/search reads are served by the Python app.
 Public/static builds leave `data-generated-base-url` blank, and the service context also strips any local generated-read service base URL from public read-only contexts, so `/library/` and `/analysis/` use generated JSON asset URLs directly without backend probes.
 The returned app handle is not a feature-module escape hatch: it does not expose broad app/session state, composition/session internals, management service handles, backend capability probes, the management lazy loader, or route workflow bridge methods.
 Management reload and selected-document refresh still use private callbacks inside the app runtime coordinator and management controller context.

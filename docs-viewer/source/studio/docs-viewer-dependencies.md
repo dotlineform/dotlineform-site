@@ -20,8 +20,6 @@ Python package dependencies for repo scripts are pinned in:
 - `requirements.txt`
 
 `requirements.txt` is the checked-in Python dependency contract for local and cloud script environments.
-It is not generated from the Docs Viewer code, and it does not install the Ruby/Jekyll stack.
-The Ruby/Jekyll build contract remains owned by `Gemfile`, `Gemfile.lock`, and `.ruby-version`.
 
 Portable Docs Viewer installs that copy the build scripts, Docs Viewer service, or Docs Import should also copy `requirements.txt` or an equivalent pinned dependency file.
 
@@ -42,12 +40,11 @@ The current checked-in Python packages are:
 The Docs HTML import implementation currently lives in `docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
 
-The shared Python Markdown renderer lives at `studio/shared/python/markdown_renderer.py`.
-It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
-Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
-Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
-Acceptance fixtures in `studio/tests/python/test_markdown_renderer_acceptance.py` assert rendered HTML semantics and generated plain text directly; they do not compare output to Jekyll or Kramdown.
-That no-parity policy is intentional: Python app builders protect generated app contracts, while Jekyll remains public-site preview/build tooling.
+- The shared Python Markdown renderer lives at `studio/shared/python/markdown_renderer.py`. It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
+- Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
+- Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
+- Acceptance fixtures in `studio/tests/python/test_markdown_renderer_acceptance.py` assert rendered HTML semantics and generated plain text directly.
+- Python app builders protect generated app contracts.
 
 ## Parser Stack Roles
 
@@ -73,7 +70,6 @@ A generic third-party HTML-to-Markdown converter is not the product logic bounda
 It should not be treated as:
 
 - a browser dependency manifest
-- a replacement for the Jekyll/Ruby dependency files
 - a complete list of system tools used by media workflows
 - proof that every package is required for every repo task
 

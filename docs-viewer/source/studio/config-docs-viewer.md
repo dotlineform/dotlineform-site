@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Config
 added_date: 2026-05-12
-last_updated: 2026-05-25
+last_updated: 2026-06-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -14,18 +14,9 @@ Docs Viewer configuration is split by audience.
 
 Local Docs Viewer service host, port, base URL, and capability flags are host runtime settings in `var/local/site.env`, not checked-in Docs Viewer defaults.
 
-Site-wide media token resolution stays in `_config.yml`.
+## Public Site Config
 
-## Jekyll Site Config
-
-`_config.yml` owns site-wide rendering settings.
-
-- For docs media, its `media_base` value resolves rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens.
-- If `media_base` is blank, a token such as <code>&#91;&#91;media:docs/library/img/example.png&#93;&#93;</code> renders as `/docs/library/img/example.png`.
-- If `media_base` points at a remote media origin, the same token resolves below that origin.
-- `repo_assets` imports do not use `media_base`; they write literal `/assets/docs/<scope>/...` links.
-
-Changing storage mode does not migrate existing media or rewrite existing docs links.
+[needs updating]
 
 ## Source Scope Config
 
@@ -155,7 +146,7 @@ It exposes browser-safe settings only:
 
 The full config includes every configured Docs Viewer scope for the local manage shell.
 The public config includes only static public read-only route scopes: entries whose source scope config has `include_scope_param: false` and a route base outside `/docs/`.
-Public route files such as `library/index.md` and `analysis/index.md` remain host/Jekyll pages that use the read-only adapter; the generated public config lets those pages resolve their scope from `viewer_base_url`.
+Public route files such as `library/index.md` and `analysis/index.md` should use the read-only adapter; the generated public config lets those pages resolve their scope from `viewer_base_url`.
 
 Do not hand-edit `docs-viewer-config.json` or `docs-viewer-public-config.json`, because they are generated files.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.
@@ -174,5 +165,6 @@ It currently includes only reader-facing public-entrypoint text consumed during 
 `docs-viewer/config/ui-text/manage.json` owns local/manage Docs Viewer copy, including management actions, settings, import workflow, scope lifecycle, status mutation, source-management, and manage-only modal text.
 
 Route records choose the bundle through `config_urls.ui_text`.
-Do not point public route records at the manage bundle, and do not keep shared compatibility UI-text paths for retired bundles.
-Do not put Studio-only copy or workflow-specific service contracts in either UI text bundle.
+
+- Do not point public route records at the manage bundle, and do not keep shared compatibility UI-text paths for retired bundles.
+- Do not put Studio-only copy or workflow-specific service contracts in either UI text bundle.
