@@ -97,6 +97,15 @@ Batch 4 is complete. It made `_public_site/` an executable static artifact by ad
 - The work page smoke confirmed the Batch 0 metadata restoration path: work `00008` renders the `nerve.pdf` download link.
 - Batch 5 now has the exact build-plus-audit command, route smoke list, artifact counts, and Docs Viewer runtime/source-exclusion checks required for GitHub Actions validation.
 
+### batch 5 summary
+
+Batch 5 is in progress. The local workflow implementation is present, but it is not active on GitHub until committed and pushed:
+
+- `.github/workflows/public-site.yml` builds, audits, validates, configures Pages, and uploads `_public_site/` as the Pages artifact.
+- `public-site/build/validate_artifact.py` performs the post-build artifact validation used by the workflow.
+- The deploy job is gated by `PUBLIC_SITE_PAGES_DEPLOY_ENABLED == true` on `push` to `main`.
+- GitHub Pages remains on legacy branch publishing from `main /`; production cutover has not been performed.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -142,7 +151,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 3b | done | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
 | 4 | done | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
-| 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
+| 5 | in progress | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
 | 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |
 
 The final batch includes the named closeout tasks from the tracker template: update docs, cleanup, verification, and close out.

@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 16:20"
+last_updated: "2026-06-12 17:05"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -21,13 +21,14 @@ The Actions workflow itself is just repo code, but the Pages cutover is a GitHub
 
 Current local and remote state:
 
-- `.github/` exists locally but does not yet contain repo-owned workflow files.
+- `.github/workflows/public-site.yml` exists locally as the repo-owned public-site workflow.
 - `gh` is installed at `/opt/homebrew/bin/gh`.
 - `gh` is authenticated as `dotlineform` with `repo` and `workflow` scopes.
 - `gh repo view` reports `dotlineform/dotlineform-site`, default branch `main`, public visibility, and admin viewer permission.
 - GitHub Actions are enabled for the repo and allowed actions are set to `all`.
 - The only workflow currently listed is GitHub's `pages-build-deployment`, which belongs to the current Pages path rather than a repo-owned workflow file.
 - GitHub Pages currently reports `build_type: legacy`, source `main /`, custom domain `www.dotlineform.com`, custom 404 enabled, and HTTPS enforced.
+- The local public-site workflow is not active on GitHub until it is committed and pushed.
 
 So from this session Codex can create and inspect workflow files locally, use `gh` to inspect repo/Pages/Actions state, and after a workflow has been pushed, trigger and inspect workflow runs. Production cutover remains an explicit approval step because it changes the live deployment source.
 
@@ -42,7 +43,7 @@ The workflow shape is:
   run: python public-site/build/build_site.py --destination _public_site --audit
 
 - name: Upload Pages artifact
-  uses: actions/upload-pages-artifact@v3
+  uses: actions/upload-pages-artifact@v4
   with:
     path: _public_site
 
@@ -59,6 +60,38 @@ The runner sequence is:
 - Publish that artifact with `actions/deploy-pages`.
 
 The local `_public_site/` directory is only preview/test output. The deployed `_public_site/` is created fresh by the workflow run.
+
+**Deployment gate**
+
+The first repo-owned workflow is dual-running by default. It builds, audits, validates, configures Pages, and uploads the Pages artifact, but it does not deploy until the live cutover is explicitly enabled.
+
+The deploy job runs only when all of these are true:
+
+- The workflow event is a `push`.
+- The pushed ref is `refs/heads/main`.
+- The repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
+
+Until that repository variable is enabled and the GitHub Pages source is switched to Actions artifact publishing, the current legacy Pages path remains live.
+
+**How workflow failures are debugged**
+
+The public-site Python builder runs on GitHub's Actions runner during Batch 5 deployment validation. Build and deployment failures are inspected in the GitHub Actions run logs first, then reproduced locally with the same build-plus-audit command.
+
+Use this local reproduction command for builder and artifact-audit failures:
+
+```bash
+$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit
+```
+
+Debugging sequence:
+
+- Inspect the GitHub Actions run log to identify the failing step.
+- Classify the failure as build, audit, artifact upload, permissions, or Pages deployment.
+- Reproduce build and audit failures locally with the same command.
+- Fix repo-owned builder, config, or content issues locally.
+- Push the fix and rerun the GitHub workflow.
+
+Build and audit failures normally reproduce locally. GitHub-only failures include Pages permissions, Pages environment settings, artifact deployment plumbing, and runner-specific filesystem assumptions such as filename case sensitivity.
 
 **What must happen on GitHub**
 
@@ -83,7 +116,7 @@ Manual runs are via `workflow_dispatch`: [manually run a workflow](https://docs.
 - Inspect GitHub repo, Pages, Actions, workflow, and run state with `gh`.
 - Trigger `workflow_dispatch` runs with `gh workflow run ...` after the workflow file exists on GitHub.
 - Inspect workflow run status and logs with `gh run list`, `gh run view`, and related commands.
-- Push branches or workflow commits if explicitly asked to publish local changes.
+- Push branches or workflow commits only after the user explicitly asks to publish local changes.
 - Prepare or execute the Pages-source cutover through `gh api` only after explicit approval, because it changes how the live site is deployed.
 
 **What remains user-owned**

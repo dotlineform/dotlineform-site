@@ -1,0 +1,72 @@
+name: Public site
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-site-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and validate Pages artifact
+    runs-on: ubuntu-latest
+    outputs:
+      deploy-enabled: ${{ steps.deploy-gate.outputs.enabled }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Build static public site
+        run: python public-site/build/build_site.py --destination _public_site --audit
+
+      - name: Validate Pages artifact
+        run: python public-site/build/validate_artifact.py --destination _public_site --expected-docs-runtime-count 44
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _public_site
+
+      - name: Evaluate deployment gate
+        id: deploy-gate
+        env:
+          PUBLIC_SITE_PAGES_DEPLOY_ENABLED: ${{ vars.PUBLIC_SITE_PAGES_DEPLOY_ENABLED }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && "$PUBLIC_SITE_PAGES_DEPLOY_ENABLED" == "true" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    name: Deploy Pages artifact
+    needs: build
+    if: ${{ needs.build.outputs.deploy-enabled == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
