@@ -132,7 +132,8 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - `$HOME/miniconda3/bin/python3 public-site/build/validate_artifact.py --destination /tmp/dlf-public-site-batch5 --expected-docs-runtime-count 44` passed: 6912 files checked and 44 Docs Viewer runtime modules.
 - `ruby -e 'require "yaml"; YAML.load_file(".github/workflows/public-site.yml"); puts "workflow YAML parsed"'` passed.
 - `git diff --check -- .github/workflows/public-site.yml public-site/build/validate_artifact.py` passed.
-- `actionlint` is not installed in this local shell.
+- `actionlint -version` reported `1.7.12`.
+- `actionlint .github/workflows/public-site.yml` passed with no findings.
 
 ## follow-on tasks
 

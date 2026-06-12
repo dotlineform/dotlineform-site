@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fa4d7fcd6457a4455a8fc75808a1ff65",
-    "generated_at_utc": "2026-06-12T17:49:10Z",
+    "version": "blake2b-294f830df4f38808d96b1b6f83577435",
+    "generated_at_utc": "2026-06-12T18:06:48Z",
     "count": 243
   },
   "entries": [
@@ -1949,10 +1949,10 @@
       "kind": "doc",
       "title": "GitHub Actions",
       "href": "/docs/?scope=studio&doc=github-actions",
-      "last_updated": "2026-06-12 17:05",
+      "last_updated": "2026-06-12 17:18",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 17:05 • Dev Home",
+      "display_meta": "2026-06-12 17:18 • Dev Home",
       "search_terms": [
         "github-actions",
         "github",
@@ -1961,14 +1961,14 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12 17:05",
+        "2026-06-12 17:18",
         "2026",
         "06",
         "12",
         "17",
-        "05"
+        "18"
       ],
-      "search_text": "github-actions github actions github actions dev home dev home 2026-06-12 17:05 2026 06 12 17 05"
+      "search_text": "github-actions github actions github actions dev home dev home 2026-06-12 17:18 2026 06 12 17 18"
     },
     {
       "id": "scripts-run-checks",

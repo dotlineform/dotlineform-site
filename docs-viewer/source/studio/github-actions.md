@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 17:05"
+last_updated: "2026-06-12 17:18"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -72,6 +72,30 @@ The deploy job runs only when all of these are true:
 - The repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
 
 Until that repository variable is enabled and the GitHub Pages source is switched to Actions artifact publishing, the current legacy Pages path remains live.
+
+**Where `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set**
+
+`PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is a GitHub Actions repository variable. It is not a tracked repo file and it is not stored in local environment files.
+
+Set it in the GitHub repository UI:
+
+```text
+Settings -> Secrets and variables -> Actions -> Variables -> Repository variables
+```
+
+The deploy gate reads it as:
+
+```yaml
+PUBLIC_SITE_PAGES_DEPLOY_ENABLED: ${{ vars.PUBLIC_SITE_PAGES_DEPLOY_ENABLED }}
+```
+
+Allowed cutover value:
+
+```text
+PUBLIC_SITE_PAGES_DEPLOY_ENABLED=true
+```
+
+Absent, empty, or any value other than exactly `true` keeps the deploy job skipped. Setting this variable is only one part of cutover; GitHub Pages must also be switched from legacy branch publishing to Actions artifact publishing.
 
 **How workflow failures are debugged**
 
