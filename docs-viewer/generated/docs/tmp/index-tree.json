@@ -31,9 +31,9 @@
       "ui_status": "draft"
     },
     {
-      "doc_id": "github-actions",
-      "title": "github actions",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-actions.json",
+      "doc_id": "github-notes",
+      "title": "github notes",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-notes.json",
       "ui_status": "draft"
     },
     {
@@ -94,5 +94,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-09T16:05:17Z"
+  "generated_at": "2026-06-12T17:42:29Z"
 }

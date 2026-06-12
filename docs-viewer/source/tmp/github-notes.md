@@ -1,8 +1,8 @@
 ---
-doc_id: github-actions
-title: "github actions"
+doc_id: github-notes
+title: "github notes"
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-06-12
 ui_status: draft
 ---
 

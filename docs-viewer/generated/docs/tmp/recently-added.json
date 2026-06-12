@@ -9,9 +9,9 @@
       "added_date": "2026-06-09"
     },
     {
-      "doc_id": "github-actions",
-      "title": "github actions",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-actions.json",
+      "doc_id": "github-notes",
+      "title": "github notes",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/github-notes.json",
       "added_date": "2026-06-02"
     },
     {
@@ -67,5 +67,5 @@
       "added_date": "2026-05-28"
     }
   ],
-  "generated_at": "2026-06-09T16:05:17Z"
+  "generated_at": "2026-06-12T17:42:29Z"
 }
