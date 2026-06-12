@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3f3023f3d90345b2b9bf5d2c5549ee6d",
-    "generated_at_utc": "2026-06-11T21:41:25Z",
-    "count": 233
+    "version": "blake2b-fa2051269b3d7afd20b49d46d8eaa9b8",
+    "generated_at_utc": "2026-06-12T13:54:27Z",
+    "count": 232
   },
   "entries": [
     {
@@ -1353,10 +1353,10 @@
       "kind": "doc",
       "title": "Public Static Site Build Request",
       "href": "/docs/?scope=studio&doc=site-request-public-static-site-build",
-      "last_updated": "2026-06-11",
+      "last_updated": "2026-06-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-11 • Change Requests",
+      "display_meta": "2026-06-12 • Change Requests",
       "search_terms": [
         "site-request-public-static-site-build",
         "site",
@@ -1368,12 +1368,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-11",
+        "2026-06-12",
         "2026",
         "06",
-        "11"
+        "12"
       ],
-      "search_text": "site-request-public-static-site-build site request public static build public static site build request change requests change requests 2026-06-11 2026 06 11"
+      "search_text": "site-request-public-static-site-build site request public static build public static site build request change requests change requests 2026-06-12 2026 06 12"
     },
     {
       "id": "site-request-r2-media-upload-automation",
@@ -4831,30 +4831,6 @@
         "26"
       ],
       "search_text": "scripts-project-state-report scripts project state report project state report studio 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "public-legacy-collections-cleanup",
-      "kind": "doc",
-      "title": "Public Legacy Collections Cleanup",
-      "href": "/docs/?scope=studio&doc=public-legacy-collections-cleanup",
-      "last_updated": "2026-06-11",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-06-11 • Studio",
-      "search_terms": [
-        "public-legacy-collections-cleanup",
-        "public",
-        "legacy",
-        "collections",
-        "cleanup",
-        "public legacy collections cleanup",
-        "studio",
-        "2026-06-11",
-        "2026",
-        "06",
-        "11"
-      ],
-      "search_text": "public-legacy-collections-cleanup public legacy collections cleanup public legacy collections cleanup studio 2026-06-11 2026 06 11"
     },
     {
       "id": "scripts-publish-media-to-r2",

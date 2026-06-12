@@ -3,14 +3,6 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "public-legacy-collections-cleanup",
-      "title": "Public Legacy Collections Cleanup",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-legacy-collections-cleanup.json",
-      "added_date": "2026-06-11",
-      "parent_id": "studio",
-      "parent_title": "Studio"
-    },
-    {
       "doc_id": "site-request-admin-checks-operational-reports",
       "title": "Admin Checks Operational Reports",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-09",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
+    },
+    {
+      "doc_id": "site-request-report-dependencies",
+      "title": "Report Dependencies",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
+      "added_date": "2026-06-09",
+      "parent_id": "site-request-admin-checks-reports",
+      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-11T14:17:18Z"
+  "generated_at": "2026-06-12T13:08:35Z"
 }

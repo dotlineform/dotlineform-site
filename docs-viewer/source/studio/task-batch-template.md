@@ -10,18 +10,7 @@ parent_id: dev-home
 
 This is the delivery specification for Batch [#] in [link to tasks tracker document].
 
-[include the task batch table here. Task rows use scoped IDs such as 1.1, 1.2 ...]
-
-example:
-
-### Batch [#]: [Batch title]
-
-Summary: [one-line summary of batch]
-
-| ID | status | action |
-| --- | --- | --- |
-| 1.1 | planned | description |
-| 1.2 | planned | description |
+Purpose: [one-line summary of batch]
 
 ## Steer for these tasks
 
@@ -42,7 +31,7 @@ Summary: [one-line summary of batch]
 
 ## Implementation and policy guidance
 
-- explain the key drivers from the parent request specification that are relevant to this task:
+- explain the key drivers from the parent request specification that are relevant to this batch:
     - expected design
     - how it should be implemented
     - what policies it must adhere to
@@ -50,8 +39,21 @@ Summary: [one-line summary of batch]
 
 ## Proposed verification set
 
-- list any specific verification or testing needed for this task
+- list any specific verification or testing needed for this batch
 - to be run only when the touched area warrants it.
+
+## Tasks
+
+[include the task batch table here. Task rows use scoped IDs such as 1.1, 1.2 ...]
+
+example:
+
+### Batch [#]: [Batch title]
+
+| ID | status | action |
+| --- | --- | --- |
+| 1.1 | planned | description |
+| 1.2 | planned | description |
 
 ## completed verification
 
@@ -59,12 +61,12 @@ Summary: [one-line summary of batch]
 
 ## follow-on tasks
 
-[to be conmpleted during the task]
+[to be completed during the current task]
 
 - list any follow-on tasks that need to be created
 - list any issues that were found during this task which need to be addressed
 
-## task close
+## batch close
 
 - add a handoff note to the following batch.
 - set the status of this batch in the top section and front matter `ui_status`.

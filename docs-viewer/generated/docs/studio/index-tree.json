@@ -1076,12 +1076,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-project-state-report.json"
         },
         {
-          "doc_id": "public-legacy-collections-cleanup",
-          "title": "Public Legacy Collections Cleanup",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/public-legacy-collections-cleanup.json",
-          "ui_status": "done"
-        },
-        {
           "doc_id": "scripts-publish-media-to-r2",
           "title": "Publish Media To R2",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-publish-media-to-r2.json"
@@ -1260,5 +1254,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-11T22:29:43Z"
+  "generated_at": "2026-06-12T13:08:35Z"
 }

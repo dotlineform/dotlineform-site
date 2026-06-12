@@ -10,6 +10,7 @@ section: works
 {% assign unavailable_text = public_text.unavailable | default: "info not available" %}
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_works = site.media_image_works | default: "/works/img" %}
+{% assign media_files_works = site.media_files_works | default: "/assets/works/files" %}
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_work_details = site.thumb_work_details | default: "/assets/work_details/img" %}
 {% assign pipeline = site.data.pipeline %}
@@ -23,11 +24,16 @@ section: works
 {% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
 {% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign works_img_base = media_base | append: media_image_works | append: "/" %}
+{% assign works_files_base = media_base | append: media_files_works | append: "/" %}
 {% assign details_thumb_base = thumb_base | append: thumb_work_details | append: "/" %}
 {% assign works_img_base_out = works_img_base %}
+{% assign works_files_base_out = works_files_base %}
 {% assign details_thumb_base_out = details_thumb_base %}
 {% unless works_img_base contains '://' %}
   {% assign works_img_base_out = works_img_base | relative_url %}
+{% endunless %}
+{% unless works_files_base contains '://' %}
+  {% assign works_files_base_out = works_files_base | relative_url %}
 {% endunless %}
 {% unless details_thumb_base contains '://' %}
   {% assign details_thumb_base_out = details_thumb_base | relative_url %}
@@ -38,6 +44,7 @@ section: works
   id="selectedWorkRoot"
   data-baseurl="{{ site.baseurl | default: '' }}"
   data-works-img-base="{{ works_img_base_out | escape }}"
+  data-works-files-base="{{ works_files_base_out | escape }}"
   data-details-thumb-base="{{ details_thumb_base_out | escape }}"
   data-primary-render-widths="{{ primary_render_widths | jsonify | escape }}"
   data-primary-display-width="{{ primary_display_width | escape }}"
@@ -71,6 +78,8 @@ section: works
       <div class="page__row" id="selectedWorkMediumRow" hidden><span id="selectedWorkMediumText"></span></div>
       <div class="page__row" id="selectedWorkDimensionsRow" hidden><span id="selectedWorkDimensionsText"></span></div>
       <div class="page__row" id="selectedWorkCatRow">cat. <span id="selectedWorkCatText"></span> <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ '/series/' | relative_url }}"></a></span></div>
+      <div class="page__row" id="selectedWorkDownloadsRow" hidden><span id="selectedWorkDownloadsLabel"></span> <span id="selectedWorkDownloadsLinks"></span></div>
+      <div class="page__row" id="selectedWorkLinksRow" hidden><span id="selectedWorkLinksLabel"></span> <span id="selectedWorkLinksLinks"></span></div>
     </div>
   </section>
   <section class="content work__prose" id="selectedWorkProseSection" hidden>
@@ -129,6 +138,7 @@ section: works
 
     var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
     var worksImgBase = String(root.getAttribute('data-works-img-base') || '').trim();
+    var worksFilesBase = String(root.getAttribute('data-works-files-base') || '').trim();
     var detailsThumbBase = String(root.getAttribute('data-details-thumb-base') || '').trim();
     var primaryDisplayWidth = runtime.toPositiveInteger(root.getAttribute('data-primary-display-width')) || 1200;
     var primaryFullWidth = runtime.toPositiveInteger(root.getAttribute('data-primary-full-width')) || primaryDisplayWidth;
@@ -175,6 +185,75 @@ section: works
 
     function workImageUrl(id, width) {
       return worksImgBase + encodeURIComponent(id) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat;
+    }
+
+    function isAbsoluteUrl(value) {
+      return /^(https?:)?\/\//i.test(value);
+    }
+
+    function safeHref(value) {
+      var href = runtime.text(value);
+      if (!href) return '';
+      if (/^(https?:|mailto:)/i.test(href)) return href;
+      if (href.charAt(0) === '/' || href.charAt(0) === '#') return href;
+      return '';
+    }
+
+    function encodedPath(value) {
+      return runtime.text(value).split('/').map(function (part) {
+        return encodeURIComponent(part);
+      }).join('/');
+    }
+
+    function workFileUrl(filename) {
+      var name = runtime.text(filename);
+      if (!name) return '';
+      if (isAbsoluteUrl(name)) return name;
+      if (name.charAt(0) === '/') return name;
+      return worksFilesBase.replace(/\/$/, '') + '/' + encodedPath(name);
+    }
+
+    function arrayFromPayload(payload, work, key) {
+      if (work && Array.isArray(work[key])) return work[key];
+      if (payload && Array.isArray(payload[key])) return payload[key];
+      return [];
+    }
+
+    function renderMetaLinks(rowId, labelId, linksId, singular, plural, entries, hrefForEntry) {
+      var row = document.getElementById(rowId);
+      var label = document.getElementById(labelId);
+      var links = document.getElementById(linksId);
+      if (!row || !label || !links) return;
+      var items = (Array.isArray(entries) ? entries : []).map(function (entry) {
+        var href = hrefForEntry(entry);
+        var text = runtime.text(entry && entry.label) || runtime.text(entry && entry.filename) || runtime.text(entry && entry.url);
+        if (!href || !text) return '';
+        return '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>';
+      }).filter(Boolean);
+      label.textContent = items.length === 1 ? singular : plural;
+      links.innerHTML = items.join(', ');
+      row.hidden = !items.length;
+    }
+
+    function renderDownloadsAndLinks(payload, work) {
+      renderMetaLinks(
+        'selectedWorkDownloadsRow',
+        'selectedWorkDownloadsLabel',
+        'selectedWorkDownloadsLinks',
+        'download',
+        'downloads',
+        arrayFromPayload(payload, work, 'downloads'),
+        function (entry) { return workFileUrl(entry && entry.filename); }
+      );
+      renderMetaLinks(
+        'selectedWorkLinksRow',
+        'selectedWorkLinksLabel',
+        'selectedWorkLinksLinks',
+        'link',
+        'links',
+        arrayFromPayload(payload, work, 'links'),
+        function (entry) { return safeHref(entry && entry.url); }
+      );
     }
 
     function dimensionsText(meta) {
@@ -277,6 +356,7 @@ section: works
         setRow('selectedWorkYearRow', 'selectedWorkYearText', runtime.text(work.year_display) || runtime.text(work.year));
         setRow('selectedWorkMediumRow', 'selectedWorkMediumText', runtime.text(work.medium_caption));
         setRow('selectedWorkDimensionsRow', 'selectedWorkDimensionsText', dimensionsText(work));
+        renderDownloadsAndLinks(payload, work);
         document.title = title + ' | dotlineform';
         renderMedia(work);
         updateBackLink(work);

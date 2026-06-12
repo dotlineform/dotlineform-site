@@ -6,6 +6,9 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+
+please create an implementation plan. use tasks-tracker-template.md to list the phases/batches, and task-batch-template.md for each batch to list the tasks.
+
 ←
 
 `studio/app/frontend/config/ui-text/catalogue-work-editor.json`
@@ -19,6 +22,11 @@ config keys report:
 ## downloads
 
 work_id 00008 has a download `nerve.pdf` (which is saved remotely), but the work page `http://127.0.0.1:4000/works/?series=105&work=00008` doesn't display any link to it. 'downloads' and 'links' may have been dropped from the UI in a previous refactor, but need to be added back in the metadata section of a work page. they should be hidden if no downloads or links have been defined.
+
+
+/assets/js/public-catalogue-runtime.js
+/assets/js/work.js
+in-line scripts
 
 ---
 

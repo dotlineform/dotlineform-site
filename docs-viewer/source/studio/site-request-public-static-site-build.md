@@ -2,7 +2,7 @@
 doc_id: site-request-public-static-site-build
 title: Public Static Site Build Request
 added_date: 2026-06-01
-last_updated: 2026-06-11
+last_updated: 2026-06-12
 ui_status: draft
 parent_id: change-requests
 ---
@@ -12,9 +12,9 @@ Status:
 
 - draft
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
-- The migration decisions have been resolved and can be used to create an implementation task list.
+- The core migration decisions have been resolved and can be used to create an implementation task list.
+- Flexible wording in this request is controlled by the pre-implementation decisions and initial audit requirements below; it is not an open-ended implementation escape hatch.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
-- [Public Legacy Collections Cleanup](/docs/?scope=studio&doc=public-legacy-collections-cleanup) tracks the separate cleanup for leftover Jekyll collection stubs.
 
 ## Summary
 
@@ -50,6 +50,30 @@ GitHub Pages without Jekyll publishes static files as-is from a configured sourc
 - The missing replacement is a deterministic static builder that produces the deployable HTML, assets, and public runtime payload surface that Jekyll currently emits.
 
 This request should not redesign public routes. It should consume [Public Route Model](/docs/?scope=studio&doc=public-route-model).
+
+The migration’s main benefit is changing the public site from “GitHub Pages runs Jekyll over the repo root, with exclusions” to “the repo produces an explicit deployable artifact.” That is a cleaner production contract.
+
+### Benefits ###
+
+- **Clear publish boundary:** Only files copied into `_public_site/` get deployed. No more relying on a long `_config.yml exclude` list to prevent source, Studio, services, logs, generated internals, etc. from leaking.
+- **Local and CI parity:** Local preview and production deploy can run the same builder. Today local/Jekyll/GitHub Pages behavior can drift.
+- **Remove Ruby/Jekyll dependency:** No `.ruby-version`, Bundler, GitHub Pages Jekyll version constraints, Liquid behavior, or gem issues for the public build.
+- **More deterministic deploys:** GitHub Actions builds, audits, uploads exactly one artifact. GitHub Pages just serves it.
+- **Better fit for current site shape:** The public site is already mostly static shells plus generated JSON/runtime assets. Jekyll is doing layout/config/copy/exclude work, not much content authoring.
+- **Source-leak checks become positive allowlists:** Instead of excluding many private paths, the builder can copy only known public route HTML, assets, payloads, config, `CNAME`, favicons, and `404.html`.
+- **Easier future host migration:** A static artifact with `.nojekyll` can move to any static host more easily than a repo-root Jekyll build.
+
+### Costs / Risks ###
+
+- **You now own the builder:** Jekyll’s rendering, includes, relative URLs, defaults, front matter handling, and copy rules need explicit replacements.
+- **Migration risk:** Route parity, canonical URLs, asset paths, Docs Viewer config paths, `404.html`, `CNAME`, favicons, and search/catalogue payloads can break if the artifact contract misses something.
+- **More code to maintain:** A Python builder can be simpler than Jekyll, but it is still bespoke build infrastructure.
+- **Less flexible authoring:** Liquid templates and Markdown pages are convenient for ad hoc public pages. A helper/component renderer makes changes more explicit, but less casual.
+- **Initial verification burden:** The migration needs strong browser smokes and artifact audits before switching deploys.
+- **Watch/preview convenience may regress at first:** The spec says one-shot build-and-serve first, no watch mode initially.
+- **Potential overengineering:** If Jekyll were only lightly annoying and stable, replacing it could be more work than value.
+
+The migration is worthwhile if the main problem is publish-boundary safety and build ownership. The long `exclude` list is a symptom: the repo root contains production assets mixed with source/tooling/private implementation files. A static artifact builder fixes that at the boundary. But it only pays off if the builder stays small and allowlist-driven; recreating a general Jekyll/Liquid replacement would be the wrong tradeoff.
 
 ## Target Architecture
 
@@ -105,6 +129,37 @@ Ruby, Bundler, Jekyll, Liquid, `Gemfile`, `Gemfile.lock`, and `.ruby-version` sh
 
 ## Migration Decisions
 
+### Ambiguity Control
+
+This request uses some conditional wording because the implementation must inspect the current public surface before deleting Jekyll-era behavior.
+Those conditionals must be resolved explicitly before code removal or deployment switch.
+
+The implementation task list must include two early work items:
+
+- pre-implementation decisions:
+  decide and record any known choices that can be made from this request and [Public Route Model](/docs/?scope=studio&doc=public-route-model) before coding begins.
+- initial public build audit:
+  inventory the current Jekyll responsibilities, public files, route shells, runtime assets, config injections, and deployment artifacts before replacing or deleting them.
+
+Pre-implementation decisions must resolve:
+
+- whether any current public route is deliberately excluded from static-builder parity; each exclusion needs the route, reason, replacement or retirement behavior, and expected public status.
+- whether file-based HTML snippets are allowed in the builder; if allowed, list the snippet files and the rendering helper that owns each one.
+- whether local and CI outputs both use `_public_site/` or whether CI uses an isolated temporary path; whichever path is chosen must be named in the task list and verification commands.
+- the exact GitHub Actions validation used for artifact contents; avoid the phrase “or equivalent” in the implementation task list unless the equivalent command is named.
+- whether any workflow permission, Pages environment, or deploy trigger differs from the default stated here; each deviation needs a repo-specific reason.
+
+The initial audit must inventory and classify:
+
+- every `_layout`, `_include`, and Liquid-rendered public route page, with the replacement public-site render helper named for each item.
+- every public Docs Viewer runtime, static, config, and route file that must remain deployable from `/docs-viewer/...`.
+- every site-root publishing artifact to be copied into the artifact root, including `CNAME`, favicon files, `apple-touch-icon` files, `safari-pinned-tab.svg`, `site.webmanifest`, and `404.html`; if one is absent or intentionally excluded, record that explicitly.
+- every Jekyll-era file or command to remove, retire, or keep; “remove” means delete, “retire” means replace with a compatibility wrapper that has an owner and removal criterion, and “keep” requires a non-Jekyll owner.
+- every source-leak and public-surface audit rule required to prove source-only trees are absent from the generated artifact.
+- every stale Jekyll/Ruby/Liquid reference in source docs, scripts, workflow files, and operator commands that must be removed or rewritten as part of closeout.
+
+Any remaining use of terms such as `if`, `may`, `avoid`, `unless`, `where applicable`, `later`, or `equivalent` in an implementation task must point to one of the decisions or audit records above.
+
 ### Builder Ownership
 
 The static builder should live under a new top-level `public-site/` boundary.
@@ -136,9 +191,9 @@ Avoid placing the builder under `studio/services/`, `docs-viewer/`, or a generic
 HTML rendering should use explicit Python rendering helpers/components rather than a general template engine.
 The public site has a small number of stable page shells, and the migration goal is to replace Jekyll/Liquid without recreating broad template semantics.
 
-Rendering should keep shared layout pieces in focused Python helpers for head metadata, navigation, asset includes, footer, Docs Viewer shell mounting, and catalogue route shells.
-Page renderers should pass structured data into those helpers and return complete HTML files.
-If file-based HTML snippets are useful, keep them narrow and static, not as a new general-purpose template language.
+- Rendering should keep shared layout pieces in focused Python helpers for head metadata, navigation, asset includes, footer, Docs Viewer shell mounting, and catalogue route shells.
+- Page renderers should pass structured data into those helpers and return complete HTML files.
+- If file-based HTML snippets are useful, keep them narrow and static, not as a new general-purpose template language.
 
 This keeps the build dependency surface small, makes escaping and URL generation explicit, and avoids carrying over Liquid-era indirection for pages that are not expected to change frequently.
 
@@ -163,21 +218,21 @@ The public-site builder may read those existing configs and generated outputs as
 ### Route Generation
 
 Routes should be generated directly from [Public Route Model](/docs/?scope=studio&doc=public-route-model) and from public catalogue projections or generated public data.
-Jekyll collection stubs are not static-builder inputs.
 
 The builder should emit fixed route shells for the canonical public routes, including `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, and `/analysis/`.
-Selected moments should use `/moments/?moment=<moment_id>` and generated moment payloads, matching the shell/query model used for selected work views.
-
-Retired `_works/`, `_series/`, `_work_details/`, `_moments`, and related Jekyll collection outputs are not current publishing requirements for canonical work, series, work-detail, or moment routes.
-The static builder must not treat them as route inputs.
 
 ### Route Parity
 
 The first production-equivalent static builder should provide parity for all public routes in the simplified route contract.
 The post-simplification public route surface is small enough that the first production-equivalent static builder should not stage only a subset.
 
-Required parity includes the public root and static pages, fixed catalogue shells, query-state catalogue routes including selected moments, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
+Required parity includes:
+- the public root and static pages,
+- fixed catalogue shells,
+- query-state catalogue routes including selected moments, catalogue search, public Docs Viewer installs for Library and Analysis, site-root publishing artifacts, and `404.html`.
+
 The route list should be derived from [Public Route Model](/docs/?scope=studio&doc=public-route-model) plus current top-level public pages and site-root publishing artifacts that remain intentionally public.
+
 `/palette/` is excluded from static public-site parity; palette inspection is owned by the UI Catalogue app at `/admin/ui-catalogue/palette/`.
 
 If a current public route is deliberately excluded, the implementation task list must name it and explain why before production deploy switches to the static builder.
@@ -187,17 +242,18 @@ If a current public route is deliberately excluded, the implementation task list
 Local static public-site output should be written to ignored `_public_site/`.
 This keeps the generated output visibly analogous to `_site` while avoiding Jekyll-specific naming.
 
-The builder's default local destination should be `_public_site/`, and `bin/public-site-build` plus `bin/public-site-preview` should use that path unless an explicit destination is provided.
-CI may use `_public_site/` or an isolated temporary path, but it should upload only the generated output directory as the Pages artifact.
-Do not use `_site/` for the replacement builder because that path remains associated with Jekyll and can confuse parity checks during migration.
+- The builder's default local destination should be `_public_site/`, and `bin/public-site-build` plus `bin/public-site-preview` should use that path unless an explicit destination is provided.
+- CI may use `_public_site/` or an isolated temporary path, but it should upload only the generated output directory as the Pages artifact.
+- Do not use `_site/` for the replacement builder because that path remains associated with Jekyll and can confuse parity checks during migration.
 
 ### Artifact Copy Policy
 
 Current site-root source files in `dotlineform-site/` should remain the source of truth for the first static-builder implementation, then be copied into the generated artifact root through an explicit allowlist.
 This preserves current custom-domain and browser metadata behavior without inventing a new asset ownership move during the build migration.
 
-The allowlist should include current `dotlineform-site/` publishing artifacts such as `CNAME`, favicon files, `apple-touch-icon` files, `safari-pinned-tab.svg`, `site.webmanifest`, and `404.html` where applicable.
-The builder should not copy arbitrary site-root files by default.
+- The allowlist should include current `dotlineform-site/` publishing artifacts such as `CNAME`, favicon files, `apple-touch-icon` files, `safari-pinned-tab.svg`, `site.webmanifest`, and `404.html` where applicable.
+- The builder should not copy arbitrary site-root files by default.
+
 If these artifacts later move under `public-site/`, that should be a separate ownership cleanup after the static-builder deployment path is verified.
 
 ### Local Preview
@@ -205,9 +261,9 @@ If these artifacts later move under `public-site/`, that should be a separate ow
 Local preview should use a Python preview command that runs the public builder once, serves the generated static output directory, and prints the local preview URL.
 `bin/public-site-preview` should remain the operator-facing wrapper and dispatch to the public-site preview/build implementation.
 
-The first implementation should not include watch mode.
-CSS/JavaScript fast-copy watching, template/data rebuild watching, and any richer preview rebuild loop should be deferred until the one-shot build-and-serve path is production-equivalent.
-The preview server should remain a convenience wrapper over generated static output, not a separate source of public-site behavior.
+- The first implementation should not include watch mode.
+- CSS/JavaScript fast-copy watching, template/data rebuild watching, and any richer preview rebuild loop should be deferred until the one-shot build-and-serve path is production-equivalent.
+- The preview server should remain a convenience wrapper over generated static output, not a separate source of public-site behavior.
 
 Watch mode is not a deployment mechanism.
 The production GitHub Actions path should always run the normal one-shot builder and upload the resulting artifact.
@@ -260,9 +316,9 @@ Switching production deploy is not complete until the verification gate passes a
 Jekyll/Ruby build artifacts should be removed as part of the static public-site builder implementation after parity verification passes.
 Do not defer Jekyll removal to a separate cleanup request unless implementation discovers a specific blocker.
 
-The implementation should remove or retire `Gemfile`, `Gemfile.lock`, `.ruby-version`, Jekyll-specific `_config.yml` usage, `_layouts/`, `_includes/`, Jekyll collection stubs, and wrapper logic that invokes Bundler or Jekyll.
-Documentation and verification commands should be updated in the same change so the repo no longer presents Ruby/Jekyll as the public-site build path.
-Any retained file or command with Jekyll-era naming must have an explicit owner and removal reason in the implementation closeout.
+- The implementation should remove or retire `Gemfile`, `Gemfile.lock`, `.ruby-version`, Jekyll-specific `_config.yml` usage, `_layouts/`, `_includes/`, Jekyll collection stubs, and wrapper logic that invokes Bundler or Jekyll.
+- Documentation and verification commands should be updated in the same change so the repo no longer presents Ruby/Jekyll as the public-site build path.
+- Any retained file or command with Jekyll-era naming must have an explicit owner and removal reason in the implementation closeout.
 
 ### Deployment Failure Policy
 
@@ -270,7 +326,13 @@ The fallback plan is to fix the static builder, workflow, or generated artifact 
 Do not maintain or document a parallel Jekyll/branch publishing fallback as part of normal operations.
 
 Before Jekyll removal and production deployment switch, the verification gate should reduce the chance of a failed artifact deploy.
-If deployment still fails, treat it as an implementation defect: inspect the failed workflow/artifact, correct the builder or workflow, rerun the required checks, and deploy again.
+
+If deployment still fails, treat it as an implementation defect:
+- inspect the failed workflow/artifact,
+- correct the builder or workflow,
+- rerun the required checks,
+- deploy again.
+
 A previous successful Actions artifact may be redeployed only if that path is available through GitHub Pages and does not require reintroducing Jekyll.
 
 ## Acceptance Criteria For The Spec
