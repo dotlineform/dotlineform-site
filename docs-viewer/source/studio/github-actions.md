@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 15:47"
+last_updated: "2026-06-12 16:20"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -30,6 +30,35 @@ Current local and remote state:
 - GitHub Pages currently reports `build_type: legacy`, source `main /`, custom domain `www.dotlineform.com`, custom 404 enabled, and HTTPS enforced.
 
 So from this session Codex can create and inspect workflow files locally, use `gh` to inspect repo/Pages/Actions state, and after a workflow has been pushed, trigger and inspect workflow runs. Production cutover remains an explicit approval step because it changes the live deployment source.
+
+**How `_public_site/` is uploaded**
+
+The static artifact directory is build output, not committed source. In Batch 5, GitHub Actions will create `_public_site/` on the Actions runner, upload that directory as the Pages artifact, then deploy that artifact through GitHub Pages.
+
+The workflow shape is:
+
+```yaml
+- name: Build static public site
+  run: python public-site/build/build_site.py --destination _public_site --audit
+
+- name: Upload Pages artifact
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: _public_site
+
+- name: Deploy to GitHub Pages
+  uses: actions/deploy-pages@v4
+```
+
+The runner sequence is:
+
+- Check out the repository.
+- Run the static public-site builder.
+- Create a fresh `_public_site/` directory on the runner.
+- Package exactly `_public_site/` with `actions/upload-pages-artifact`.
+- Publish that artifact with `actions/deploy-pages`.
+
+The local `_public_site/` directory is only preview/test output. The deployed `_public_site/` is created fresh by the workflow run.
 
 **What must happen on GitHub**
 
