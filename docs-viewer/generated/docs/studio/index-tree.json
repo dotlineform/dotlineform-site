@@ -297,6 +297,12 @@
           "ui_status": "draft"
         },
         {
+          "doc_id": "site-request-docs-viewer-runtime-js-ownership-split",
+          "title": "Docs Viewer Runtime JavaScript Ownership Split Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-js-ownership-split.json",
+          "ui_status": "planned"
+        },
+        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1260,5 +1266,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T23:06:35Z"
+  "generated_at": "2026-06-12T23:18:08Z"
 }

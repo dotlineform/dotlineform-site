@@ -118,4 +118,3 @@ Before implementation, decide:
 - [Portable Scope Setup](/docs/?scope=studio&doc=docs-viewer-portable-scope-setup)
 - [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
 - [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes)
-- [Public Site Static Build Request](/docs/?scope=studio&doc=site-request-public-static-site-build)

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bacc46fdb13215361674be9417b3e588",
-    "generated_at_utc": "2026-06-12T23:06:35Z",
-    "count": 233
+    "version": "blake2b-7f82503b3e7a2aa9d6012e06b4e218ba",
+    "generated_at_utc": "2026-06-12T23:18:08Z",
+    "count": 234
   },
   "entries": [
     {
@@ -919,19 +919,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-06-12",
-      "display_meta": "2026-06-12",
+      "last_updated": "2026-06-13",
+      "display_meta": "2026-06-13",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "change-requests change requests change requests 2026-06-12 2026 06 12"
+      "search_text": "change-requests change requests change requests 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-admin-checks-operational-reports",
@@ -1237,6 +1237,37 @@
         "02"
       ],
       "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "site-request-docs-viewer-runtime-js-ownership-split",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime JavaScript Ownership Split Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-runtime-js-ownership-split",
+      "last_updated": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-runtime-js-ownership-split",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "runtime",
+        "js",
+        "ownership",
+        "split",
+        "docs viewer runtime javascript ownership split request",
+        "javascript",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-docs-viewer-runtime-js-ownership-split site request docs viewer runtime js ownership split docs viewer runtime javascript ownership split request javascript change requests change requests 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
