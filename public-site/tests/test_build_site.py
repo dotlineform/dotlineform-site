@@ -18,7 +18,7 @@ from public_site_builder.config import load_config  # noqa: E402
 CONFIG_PATH = REPO_ROOT / "public-site" / "config" / "public-site.json"
 
 
-def test_build_site_writes_initial_artifact(tmp_path: Path) -> None:
+def test_build_site_writes_route_artifact(tmp_path: Path) -> None:
     config = load_config(CONFIG_PATH)
     destination = tmp_path / "artifact"
 
@@ -28,8 +28,14 @@ def test_build_site_writes_initial_artifact(tmp_path: Path) -> None:
     assert (destination / ".public-site-artifact").is_file()
     assert (destination / ".nojekyll").is_file()
     assert (destination / "CNAME").read_text(encoding="utf-8").strip()
-    assert "{{" not in (destination / "404.html").read_text(encoding="utf-8")
-    assert audit_result.checked_count == 13
+    assert (destination / "series" / "index.html").is_file()
+    assert (destination / "works" / "index.html").is_file()
+    assert (destination / "library" / "index.html").is_file()
+    for html_path in destination.rglob("*.html"):
+        html = html_path.read_text(encoding="utf-8")
+        assert "{{" not in html
+        assert "{%" not in html
+    assert audit_result.checked_count == len(config.required_files)
 
 
 def test_build_site_refuses_non_artifact_destination(tmp_path: Path) -> None:

@@ -10,11 +10,16 @@ from typing import Any
 class PublicSiteConfig:
     schema_version: str
     site: dict[str, Any]
+    assets: dict[str, Any]
+    runtime_text: dict[str, str]
+    media: dict[str, str]
+    thumbs: dict[str, str]
+    home_media: dict[str, str]
+    docs_viewer: dict[str, str]
     default_destination: str
     marker_file: str
     nojekyll_file: str
     root_artifacts: tuple[str, ...]
-    initial_pages: dict[str, dict[str, Any]]
     required_files: tuple[str, ...]
     denied_path_prefixes: tuple[str, ...]
     denied_file_patterns: tuple[str, ...]
@@ -32,11 +37,16 @@ def load_config(path: Path) -> PublicSiteConfig:
     return PublicSiteConfig(
         schema_version=schema_version,
         site=_dict_value(data, "site"),
+        assets=_dict_value(data, "assets"),
+        runtime_text=_string_dict(data, "runtime_text"),
+        media=_string_dict(data, "media"),
+        thumbs=_string_dict(data, "thumbs"),
+        home_media=_string_dict(data, "home_media"),
+        docs_viewer=_string_dict(data, "docs_viewer"),
         default_destination=_str_value(output, "default_destination"),
         marker_file=_str_value(output, "marker_file"),
         nojekyll_file=_str_value(output, "nojekyll_file"),
         root_artifacts=_str_tuple(data, "root_artifacts"),
-        initial_pages=_initial_pages(data),
         required_files=_str_tuple(audit, "required_files"),
         denied_path_prefixes=_str_tuple(audit, "denied_path_prefixes"),
         denied_file_patterns=_str_tuple(audit, "denied_file_patterns"),
@@ -65,15 +75,8 @@ def _str_tuple(data: dict[str, Any], key: str) -> tuple[str, ...]:
     return tuple(value)
 
 
-def _initial_pages(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    value = data.get("initial_pages", {})
-    if not isinstance(value, dict):
-        raise RuntimeError("public-site config field must be an object: initial_pages")
-    pages: dict[str, dict[str, Any]] = {}
-    for path, page in value.items():
-        if not isinstance(path, str) or not path:
-            raise RuntimeError("initial page paths must be non-empty strings")
-        if not isinstance(page, dict):
-            raise RuntimeError(f"initial page config must be an object: {path}")
-        pages[path] = page
-    return pages
+def _string_dict(data: dict[str, Any], key: str) -> dict[str, str]:
+    value = _dict_value(data, key)
+    if not all(isinstance(item_key, str) and isinstance(item_value, str) for item_key, item_value in value.items()):
+        raise RuntimeError(f"public-site config field must be an object of strings: {key}")
+    return dict(value)

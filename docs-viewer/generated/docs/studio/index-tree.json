@@ -353,7 +353,7 @@
                   "doc_id": "public-static-site-build-batch-03-route-parity",
                   "title": "Public Static Site Build Batch 3 Public Route Rendering Parity",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-03-route-parity.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "public-static-site-build-batch-03a-js-extraction",
@@ -1317,5 +1317,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T16:32:14Z"
+  "generated_at": "2026-06-12T16:43:36Z"
 }

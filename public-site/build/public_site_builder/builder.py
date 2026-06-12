@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .config import PublicSiteConfig
-from .render import render_initial_page
+from .routes import render_routes
 
 
 @dataclass(frozen=True)
@@ -20,7 +20,7 @@ def build_site(repo_root: Path, destination: Path, config: PublicSiteConfig) -> 
     _prepare_destination(repo_root.resolve(), destination, config.marker_file)
     _write_marker_files(destination, config)
     copied_count = _copy_root_artifacts(repo_root, destination, config)
-    rendered_count = _render_initial_pages(destination, config)
+    rendered_count = _render_routes(repo_root, destination, config)
     return BuildResult(
         destination=destination,
         copied_count=copied_count,
@@ -67,11 +67,11 @@ def _copy_root_artifacts(repo_root: Path, destination: Path, config: PublicSiteC
     return copied_count
 
 
-def _render_initial_pages(destination: Path, config: PublicSiteConfig) -> int:
+def _render_routes(repo_root: Path, destination: Path, config: PublicSiteConfig) -> int:
     rendered_count = 0
-    for relative_path, page in config.initial_pages.items():
+    for relative_path, html in render_routes(repo_root, config).items():
         target = destination / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(render_initial_page(config, page), encoding="utf-8")
+        target.write_text(html, encoding="utf-8")
         rendered_count += 1
     return rendered_count

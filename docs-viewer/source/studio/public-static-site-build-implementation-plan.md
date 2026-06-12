@@ -57,6 +57,18 @@ Batch 3a is complete. The extracted route-runtime owners are:
 
 The deeper review of public JavaScript module structure, inline policy, route-specific loading, generated payload sizes, and performance budgets is deferred to [Public JavaScript Runtime and Payload Review Request](/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review).
 
+### batch 3 summary
+
+Batch 3 is complete for static route-shell rendering. It introduced the Python route renderer and expanded the generated artifact contract:
+
+- `public_site_builder.routes` renders the canonical public route files: `/`, `/about/`, `/recent/`, `/series/`, `/works/`, `/work-details/`, `/moments/`, `/catalogue/search/`, `/library/`, `/analysis/`, and `/404.html`.
+- `public_site_builder.render` owns the shared HTML document shell, head metadata, public nav, footer, asset URL helpers, script/style tags, and public Docs Viewer mount shell.
+- `public-site/config/public-site.json` now carries the route-rendering constants for asset versioning, runtime fallback text, media bases, thumbnail bases, home media, and public Docs Viewer route/runtime/style paths.
+- The route shells emit script tags for the Batch 3a JS files and existing public runtime files; they do not re-embed the extracted route scripts in Python.
+- The static build audit now requires the route files and rejects Liquid tokens in generated HTML.
+
+Browser parity against `_public_site/` is carried into Batch 4 because the Batch 3 artifact intentionally does not yet copy the CSS, JS, generated data, thumbnails, or Docs Viewer runtime files that make those route shells executable.
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -99,7 +111,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 1 | done | [Audit and Pre-Migration Decisions](/docs/?scope=studio&doc=public-static-site-build-batch-01-audit) |
 | 2 | done | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
 | 3a | done | [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) |
-| 3 | planned | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
+| 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
 | 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |

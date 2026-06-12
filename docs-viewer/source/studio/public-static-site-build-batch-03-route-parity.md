@@ -3,7 +3,7 @@ doc_id: public-static-site-build-batch-03-route-parity
 title: Public Static Site Build Batch 3 Public Route Rendering Parity
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: planned
+ui_status: done
 parent_id: public-static-site-build-implementation-plan
 ---
 # Public Static Site Build Batch 3 Public Route Rendering Parity
@@ -86,13 +86,14 @@ Do not re-embed the extracted script bodies in Python strings.
 - Keep escaping and URL generation explicit.
 - Avoid recreating broad Liquid semantics.
 
-## Proposed verification set
+## Verification set
 
 - Static build success.
 - Route file presence checks in the generated artifact.
-- Browser smoke checks for representative catalogue routes and public Docs Viewer mounts against the static preview.
-- Baseline-vs-static browser checks for the same route list when route shells or runtime boot behavior changes.
-- Jekyll/static parity comparison for routes touched by this batch while Jekyll still exists.
+- Liquid-token checks for generated HTML.
+- Browser smoke checks for representative catalogue routes and public Docs Viewer mounts against the static preview after Batch 4 copies required assets and payloads.
+- Baseline-vs-static browser checks for the same route list after Batch 4 copies required assets and payloads.
+- Jekyll/static parity comparison for routes touched by this batch while Jekyll still exists, after Batch 4 makes the static artifact executable.
 
 ## Tasks
 
@@ -100,22 +101,28 @@ Do not re-embed the extracted script bodies in Python strings.
 
 | ID | status | action |
 | --- | --- | --- |
-| 3.1 | planned | Use the completed Batch 3a script-tag contract, then implement the Batch 1 route/helper inventory without adding broad Liquid semantics. |
-| 3.2 | planned | Implement shared render helpers and static page renderers. |
-| 3.3 | planned | Implement fixed catalogue, work, work-detail, moment, and search route shells. |
-| 3.4 | planned | Implement public Docs Viewer route shells for `/library/` and `/analysis/` using `docs-viewer-public-routes.json`. |
-| 3.5 | planned | Add route presence and representative browser smoke checks for the static preview. |
-| 3.6 | planned | Add local preview parity checks that compare the Jekyll baseline and static output on the same route list. |
+| 3.1 | done | Use the completed Batch 3a script-tag contract, then implement the Batch 1 route/helper inventory without adding broad Liquid semantics. |
+| 3.2 | done | Implement shared render helpers and static page renderers. |
+| 3.3 | done | Implement fixed catalogue, work, work-detail, moment, and search route shells. |
+| 3.4 | done | Implement public Docs Viewer route shells for `/library/` and `/analysis/` using `docs-viewer-public-routes.json`. |
+| 3.5 | deferred | Add representative browser smoke checks for the static preview after Batch 4 copies CSS, JS, data payloads, thumbnails, and Docs Viewer runtime files. |
+| 3.6 | deferred | Add local preview parity checks that compare the Jekyll baseline and static output on the same route list after Batch 4 makes `_public_site/` executable. |
 
 ## completed verification
 
-- Not started.
+- `$HOME/miniconda3/bin/python3 -m py_compile public-site/build/build_site.py public-site/build/public_site_builder/audit.py public-site/build/public_site_builder/builder.py public-site/build/public_site_builder/config.py public-site/build/public_site_builder/render.py public-site/build/public_site_builder/routes.py`
+- `$HOME/miniconda3/bin/python3 -m json.tool public-site/config/public-site.json`
+- `$HOME/miniconda3/bin/python3 -m pytest public-site/tests/test_build_site.py`
+- `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit`
+- `rg -n '\{\{|\{%' _public_site --glob '*.html'` returned no matches.
+- Route script-reference spot check confirmed generated HTML references the expected public runtime files and Batch 3a route scripts.
 
 ## follow-on tasks
 
-- Update Batch 4 with any route-specific asset or payload copy needs discovered during rendering, especially Docs Viewer runtime dependencies and catalogue JSON paths referenced by route data attributes.
+- Batch 4 must copy the public CSS/JS/data/thumb/Docs Viewer assets referenced by the generated route shells before browser parity can be completed.
+- Batch 4 must add the browser smoke and local dual-running parity checks deferred from this batch.
 
 ## batch close
 
-- Add a handoff note to [Batch 4](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer).
-- Set this batch status and front matter `ui_status` to `done` after route parity is verified.
+- Handoff note added to [Batch 4](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer).
+- Batch route-shell rendering is complete. Static browser parity remains owned by Batch 4 because route assets are not copied in Batch 3.

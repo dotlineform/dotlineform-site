@@ -7,6 +7,35 @@
     "live_url": "https://www.dotlineform.com",
     "timezone": "Europe/London"
   },
+  "assets": {
+    "version": "static"
+  },
+  "runtime_text": {
+    "loading": "loading...",
+    "unavailable": "info not available"
+  },
+  "media": {
+    "base": "https://media.dotlineform.com",
+    "image_works": "/works/img",
+    "files_works": "/works/files",
+    "image_work_details": "/work_details/img",
+    "image_moments": "/moments/img"
+  },
+  "thumbs": {
+    "base": "",
+    "works": "/assets/works/img",
+    "work_details": "/assets/work_details/img",
+    "moments": "/assets/moments/img"
+  },
+  "home_media": {
+    "base": "https://media.dotlineform.com",
+    "prefix": "/home/img"
+  },
+  "docs_viewer": {
+    "route_config_url": "/docs-viewer/config/routes/docs-viewer-public-routes.json",
+    "entrypoint": "/docs-viewer/runtime/js/docs-viewer-public.js",
+    "stylesheet": "/docs-viewer/static/css/docs-viewer.css"
+  },
   "output": {
     "default_destination": "_public_site",
     "marker_file": ".public-site-artifact",
@@ -24,20 +53,20 @@
     "safari-pinned-tab.svg",
     "site.webmanifest"
   ],
-  "initial_pages": {
-    "404.html": {
-      "title": "page unavailable",
-      "body_class": "page",
-      "heading": "page unavailable",
-      "message": "This page is unavailable.",
-      "link_href": "/series/",
-      "link_label": "return to works"
-    }
-  },
   "audit": {
     "required_files": [
       ".public-site-artifact",
       ".nojekyll",
+      "index.html",
+      "about/index.html",
+      "recent/index.html",
+      "series/index.html",
+      "works/index.html",
+      "work-details/index.html",
+      "moments/index.html",
+      "catalogue/search/index.html",
+      "library/index.html",
+      "analysis/index.html",
       "CNAME",
       "favicon.ico",
       "favicon-16x16.png",

@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None) -> int:
         result = build_site(REPO_ROOT, destination, config)
         print(f"Built public site artifact: {result.destination}")
         print(f"Copied root artifacts: {result.copied_count}")
-        print(f"Rendered initial pages: {result.rendered_count}")
+        print(f"Rendered route pages: {result.rendered_count}")
         if args.audit:
             audit_result = audit_artifact(result.destination, config)
             print(f"Artifact audit passed: {audit_result.checked_count} files checked")
