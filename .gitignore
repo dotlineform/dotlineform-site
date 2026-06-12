@@ -1,13 +1,6 @@
-# Jekyll output + caches
-_site/
+# output + caches
 _public_site/
-.jekyll-cache/
 .sass-cache/
-.jekyll-metadata
-
-# Bundler
-.bundle/
-vendor/bundle/
 
 # Python
 .venv/
