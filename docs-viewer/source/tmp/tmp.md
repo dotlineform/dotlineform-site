@@ -7,7 +7,7 @@ ui_status: draft
 ---
 
 
-please create an implementation plan. use tasks-tracker-template.md to list the phases/batches, and task-batch-template.md for each batch to list the tasks.
+
 
 ←
 

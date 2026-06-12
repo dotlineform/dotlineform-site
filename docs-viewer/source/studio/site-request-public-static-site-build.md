@@ -3,17 +3,15 @@ doc_id: site-request-public-static-site-build
 title: Public Static Site Build Request
 added_date: 2026-06-01
 last_updated: 2026-06-12
-ui_status: draft
+ui_status: in-progress
 parent_id: change-requests
 ---
 # Public Static Site Build Request
 
 Status:
 
-- draft
+- planned
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
-- The core migration decisions have been resolved and can be used to create an implementation task list.
-- Flexible wording in this request is controlled by the pre-implementation decisions and initial audit requirements below; it is not an open-ended implementation escape hatch.
 - [Public Static Site Build Implementation Plan](/docs/?scope=studio&doc=public-static-site-build-implementation-plan) tracks the implementation batches.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
 - [GitHub Actions](/docs/?scope=studio&doc=github-actions) includes local `gh` CLI setup
@@ -131,11 +129,6 @@ Ruby, Bundler, Jekyll, Liquid, `Gemfile`, `Gemfile.lock`, and `.ruby-version` sh
 
 ## Migration Decisions
 
-### Ambiguity Control
-
-This request uses some conditional wording because the implementation must inspect the current public surface before deleting Jekyll-era behavior.
-Those conditionals must be resolved explicitly before code removal or deployment switch.
-
 The implementation task list must include two early work items:
 
 - pre-implementation decisions:
@@ -159,8 +152,6 @@ The initial audit must inventory and classify:
 - every Jekyll-era file or command to remove, retire, or keep; “remove” means delete, “retire” means replace with a compatibility wrapper that has an owner and removal criterion, and “keep” requires a non-Jekyll owner.
 - every source-leak and public-surface audit rule required to prove source-only trees are absent from the generated artifact.
 - every stale Jekyll/Ruby/Liquid reference in source docs, scripts, workflow files, and operator commands that must be removed or rewritten as part of closeout.
-
-Any remaining use of terms such as `if`, `may`, `avoid`, `unless`, `where applicable`, `later`, or `equivalent` in an implementation task must point to one of the decisions or audit records above.
 
 ### Builder Ownership
 

@@ -323,7 +323,7 @@
           "doc_id": "site-request-public-static-site-build",
           "title": "Public Static Site Build Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
-          "ui_status": "draft",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "public-static-site-build-implementation-plan",
@@ -1305,5 +1305,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T14:35:14Z"
+  "generated_at": "2026-06-12T15:34:42Z"
 }
