@@ -7,10 +7,6 @@ parent_id: dev-home
 ---
 # GitHub Actions
 
-Relates to [Public Static Site Build Request](/docs/?scope=studio&doc=site-request-public-static-site-build).
-
-The Actions workflow itself is just repo code, but the Pages cutover is a GitHub repo setting.
-
 **What can be done locally / in VS Code**
 
 - Create `.github/workflows/public-site.yml`.

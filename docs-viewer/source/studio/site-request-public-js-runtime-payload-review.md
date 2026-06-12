@@ -11,18 +11,16 @@ parent_id: change-requests
 Status:
 
 - planned
-- This is a post-migration follow-up to [Public Static Site Build Request](/docs/?scope=studio&doc=site-request-public-static-site-build).
-- Do not start this request until the static public-site builder migration has completed production cutover or the migration closeout explicitly schedules it.
 
 ## Summary
 
-Review and refactor the public site's JavaScript runtime and generated payload loading after the static builder migration is complete.
+Review and refactor the public site's JavaScript runtime and generated payload loading.
 
 The goal is to make public route JavaScript easier to maintain and better aligned with public-site performance goals without changing the public route model or user-facing behavior by accident.
 
 ## Context
 
-During the static public-site builder migration, [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) moved large inline scripts from Jekyll route templates into public JS files:
+During the static public-site builder migration, large inline scripts were moved from route templates into public JS files:
 
 - `assets/js/series-index.js`
 - `assets/js/recent-index.js`
@@ -63,7 +61,6 @@ After the migration, the public site needs a separate review of:
 
 ## Non-Goals
 
-- Reopening the static public-site build migration.
 - Changing the public route model.
 - Redesigning public page layouts.
 - Replacing generated catalogue, docs, or search payload ownership.
@@ -122,16 +119,3 @@ Before refactoring, decide and record:
 - Payload/file-size report before and after refactors.
 - Generated artifact audit still passes after script changes.
 - Search, selected work, selected detail, moments, Library, and Analysis routes remain behavior-equivalent unless a recorded decision approves a change.
-
-## Relationship To Static Builder Migration
-
-This request is intentionally deferred until after the static builder migration.
-
-The migration should continue to prioritize:
-
-- replacing Jekyll/Liquid rendering;
-- preserving route behavior;
-- keeping artifact assembly allowlist-driven;
-- cutting over GitHub Pages to the static Actions artifact.
-
-This request picks up the deeper public-runtime and payload performance work after that cutover path is stable.

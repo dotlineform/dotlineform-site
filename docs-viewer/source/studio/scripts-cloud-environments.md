@@ -2,7 +2,7 @@
 doc_id: scripts-cloud-environments
 title: Cloud Environments
 added_date: 2026-04-14
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-06-12"
 parent_id: dev-home
 ---
 # Cloud Environments (Codex + Codespaces + R2)
@@ -11,7 +11,7 @@ This guide defines a practical cloud-native setup for this repo while preserving
 
 ## Goals
 
-- run the full script and Jekyll workflow in cloud-hosted dev environments
+- run the full script and publishing workflow in cloud-hosted dev environments
 - keep local and cloud command shapes consistent
 - keep source-media and remote-media boundaries explicit
 - avoid hardcoding machine-specific paths or credentials
@@ -29,16 +29,14 @@ For dependency-role guidance across local and cloud environments, including whic
 
 ## Baseline Runtime Contract
 
-The target parity baseline for publish-sensitive checks remains:
+The target parity baseline for publish-sensitive checks:
 
 - Python `3.12.7`
 - Python package `openpyxl 3.1.5`
-- Ruby `3.1.6`
-- Bundler `2.6.9`
-- Jekyll `3.10.0`
-- `github-pages` gem `232`
 
-Treat this as the compatibility target for local and cloud environments when you need predictable publish parity. Codex setup currently validates Ruby/Bundler availability but does **not** force Ruby `3.1.6` when a newer compatible Ruby is already active.
+[needs updating]
+
+Treat this as the compatibility target for local and cloud environments when you need predictable publish parity.
 
 ### Runtime modes
 
@@ -46,9 +44,7 @@ Cloud sessions can run in three practical modes:
 
 - **Fast script mode**: use preinstalled cloud runtimes and skip optional media packages.
 - **Fast + media mode**: same as fast mode, but include media packages when source conversion is needed (`ffmpeg`, `libheif` tools).
-- **Parity mode**: use the pinned Ruby/Bundler/Jekyll stack to match local + GitHub Pages behavior.
-
-Use parity mode for publish-sensitive flows (for example `bundle exec jekyll build --quiet`, docs rendering through Jekyll converters, and final verification before committing generated artifacts).
+- **Parity mode**: [needs updating for current local + GitHub Pages behavior].
 
 ## Implementation Steps
 
@@ -61,22 +57,22 @@ Required guidance:
 - run from repo root (`dotlineform-site/`)
 - prefer project-local script entrypoints (`./scripts/...`)
 - keep generator runs dry-run by default
-- verify Python, Ruby, and Jekyll versions before reporting environment issues
+- verify Python version before reporting environment issues
 - never hardcode R2 credentials; use environment variables and platform secrets stores
 
 ### 2) Add Codespaces runtime files
 
+[needs updating]
+
 Commit a `.devcontainer/` setup that installs:
 
 - Python runtime at the pinned major/minor line
-- Ruby `3.1.6` + Bundler `2.6.9`
 - `ffmpeg`
 - `libheif` toolchain (`heif-convert` availability)
 
 Recommended bootstrap actions in `postCreateCommand`:
 
 - install Python deps from `requirements.txt`
-- run `bundle _2.6.9_ install`
 - print version checks
 
 ### 2.1) Add a Codex setup script entrypoint
@@ -87,8 +83,7 @@ Current behavior:
 
 - run an apt phase (skipped when required commands already exist, or when apt/sudo is unavailable)
 - create/reuse `.venv`, upgrade pip, and install `requirements.txt`
-- verify Ruby runtime exists, detect Bundler, then run `bundle config set --local path vendor/bundle` + `bundle install`
-- print version diagnostics (`python3`, `ruby`, `bundle`, optional `ffmpeg`) and local bundle config
+- print version diagnostics (`python3`, optional `ffmpeg`)
 - avoid interactive sudo prompts (non-interactive only)
 
 Notes:
@@ -96,8 +91,6 @@ Notes:
 - `.codex/setup.sh` does not run docs/search/site builders by default; run those explicitly as follow-up verification.
 - Optional media packages are controlled by `SETUP_INSTALL_MEDIA_PACKAGES=1` during setup apt install.
 - apt package install can be skipped with `SETUP_SKIP_APT=1`; forced with `FORCE_APT_PACKAGES=1`.
-- If Bundler is missing or incompatible with the lockfile, setup installs a fallback user Bundler (optionally pinned via `BUNDLER_FALLBACK_VERSION`).
-- Keep Bundler/Jekyll checks pinned for parity verification runs.
 
 ### Calling setup.sh by runtime mode
 
@@ -145,8 +138,6 @@ bash .codex/setup.sh
 ### 3) Keep dependency declarations machine-readable
 
 - Python deps in `requirements.txt`
-- Ruby deps in `Gemfile` + `Gemfile.lock`
-- Ruby runtime in `.ruby-version`
 
 Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) to record what those checked-in dependencies are used for and how critical they are in cloud sessions.
 
@@ -193,17 +184,15 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 ./docs-viewer/build/build_docs.py
 ./docs-viewer/build/build_search.py --scope studio
-bundle exec jekyll build --quiet
 ```
 
 ## Verification Matrix
 
 ### Codex-run checks
 
-- verify active versions for Python/Ruby/Bundler/Jekyll
+- verify active version for Python
 - run at least one dry-run catalogue build
 - run docs and search builders in dry-run mode where supported
-- run one Jekyll build smoke check
 
 ### Manual checks
 
@@ -228,16 +217,13 @@ bundle exec jekyll build --quiet
 
 Potential future incompatibilities and how they surface:
 
-- **Ruby/Bundler lockfile mismatch**: setup output will show Bundler mismatch against `Gemfile.lock`; bundler install retries with fallback and surfaces hard failure if unresolved.
 - **Python dependency floor changes**: pip install errors in setup python phase will fail early before generator/build commands run.
-- **Jekyll/github-pages drift**: incompatibilities appear during explicit follow-up checks (`./docs-viewer/build/build_docs.py`, `bundle exec jekyll build --quiet`) even if setup itself passes.
 - **Media toolchain drift**: `ffmpeg`/`heif-convert` failures appear in media generation commands; setup only verifies `ffmpeg` when present.
 
 Recommended response loop:
 
 1. rerun setup with parity-oriented flags (`FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9`)
-2. run full parity checks (`./docs-viewer/build/build_docs.py`, `./docs-viewer/build/build_search.py --scope studio`, `bundle exec jekyll build --quiet`)
-3. if mismatch persists, update pinned versions in `.ruby-version`, `Gemfile.lock`, and cloud runtime files together (plus docs) in one change set
+2. run full parity checks (`./docs-viewer/build/build_docs.py`, `./docs-viewer/build/build_search.py --scope studio`)
 
 ## Codespaces Consistency Notes
 
@@ -258,4 +244,3 @@ Watch-outs:
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)
-- [Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config)

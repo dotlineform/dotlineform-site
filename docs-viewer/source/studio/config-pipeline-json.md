@@ -2,7 +2,7 @@
 doc_id: config-pipeline-json
 title: Pipeline Config JSON
 added_date: 2026-03-31
-last_updated: "2026-05-12 18:45"
+last_updated: "2026-05-12"
 parent_id: studio
 viewable: true
 ---
@@ -14,7 +14,7 @@ Config file:
 
 ## Scope
 
-`_data/pipeline.json` stores shared defaults for the current JSON-led catalogue workflow and the Liquid-rendered media/runtime surfaces that depend on the same variant and path conventions.
+`_data/pipeline.json` stores shared defaults for the current JSON-led catalogue workflow and the media/runtime surfaces that depend on the same variant and path conventions.
 
 Current responsibilities include:
 
@@ -32,26 +32,16 @@ Current Python callers load it through `scripts/pipeline_config.py`:
 - `scripts/media/make_srcset_images.py`
 - `admin-app/checks/audit_site_consistency.py`
 
-Current Jekyll/Liquid callers read it as `site.data.pipeline`:
-
-- `_layouts/work.html`
-- `_layouts/work_details.html`
-- `_layouts/moment.html`
-- `_layouts/series.html`
-- `series/index.md`
-- `studio/analytics/series-tag-editor/index.md`
-- `_includes/work_index_item.html`
-
 ## When it is read
 
 - at Python script startup when a script imports and loads shared pipeline config
-- during Jekyll page rendering for layouts and includes that read `site.data.pipeline`
+- [anything else?]
 
 ## Current boundaries
 
 What stays here:
 
-- shared defaults that need to be available to both scripts and Liquid templates
+- shared defaults that need to be available to scripts
 - relative path policy for generated media and source roots
 - image-variant policy that the current templates assume
 
@@ -69,12 +59,3 @@ The public works, work-detail, and moments index grid layouts read this policy t
 ```bash
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --thumbnail-only --force --write
 ```
-
-What does not stay here:
-
-- absolute local machine paths
-  those remain in environment variables referenced by this file
-- public site/media origin URLs
-  those stay in **[Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config)**
-- browser-side Studio/search path and text config
-  those stay in **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
