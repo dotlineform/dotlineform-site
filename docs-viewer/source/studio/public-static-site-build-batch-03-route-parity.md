@@ -14,10 +14,12 @@ Purpose: render production-equivalent public route shells without Jekyll or Liqu
 
 ## Steer for these tasks
 
+- Batch 3 is paused until [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) is complete.
 - Batch 1 is closed; route parity comes from [Public Route Model](/docs/?scope=studio&doc=public-route-model) and the Batch 1 route inventory.
 - Do not redesign public routes, visual design, or route behavior. Batch 1 must record a required migration exception before this batch changes them.
 - Use local dual-running preview for route parity: serve the Jekyll baseline and `_public_site/` static comparison target on separate ports and smoke the same route list against both.
 - Render `/library/` and `/analysis/` with `docs-viewer-public-routes.json`; do not use the private/manage Docs Viewer route registry.
+- Do not embed the large route runtime scripts in Python renderers. Emit script tags for the JS modules created in Batch 3a.
 
 ## Batch 1 handoff
 
@@ -58,11 +60,25 @@ Batch 2 created the static builder boundary:
 
 Batch 3 route work must extend these files rather than adding a second builder path. The initial `render_initial_page()` helper currently renders only `404.html`; replace or broaden it into shared layout helpers for all public route shells.
 
+## Batch 3a handoff
+
+Batch 3a extracted large route runtime scripts into public JS files. Python route renderers must emit these script tags:
+
+- `/series/`: `assets/js/public-catalogue-runtime.js`, then `assets/js/series-index.js`.
+- `/recent/`: `assets/js/public-catalogue-runtime.js`, then `assets/js/recent-index.js`.
+- `/works/`: `assets/js/public-catalogue-runtime.js`, `assets/js/work-page.js`, `assets/js/work.js`, then `assets/js/works-index.js`.
+- `/work-details/`: `assets/js/swipe-nav.js`, `assets/js/public-catalogue-runtime.js`, `assets/js/work-detail-page.js`, then `assets/js/work.js`.
+- `/moments/`: existing `assets/js/public-catalogue-runtime.js`, then `assets/js/moment.js`.
+- `/catalogue/search/`: existing module script `assets/js/catalogue-search.js`.
+
+Do not re-embed the extracted script bodies in Python strings.
+
 ## Deliverables
 
 - Static-builder render helpers for shared layout, head metadata, navigation, footer, asset includes, catalogue shells, search shell, and Docs Viewer shell mounts.
 - Generated HTML for the public root, static pages, catalogue shells, query-state shells, catalogue search, `/library/`, `/analysis/`, and `404.html`.
 - Route parity checks against the active Jekyll output while Jekyll remains available.
+- Python renderers that emit route shell contracts and script tags, not large inline runtime scripts.
 
 ## Implementation and policy guidance
 
@@ -84,7 +100,7 @@ Batch 3 route work must extend these files rather than adding a second builder p
 
 | ID | status | action |
 | --- | --- | --- |
-| 3.1 | planned | Confirm the Batch 2 helper module names, then implement the Batch 1 route/helper inventory without adding broad Liquid semantics. |
+| 3.1 | planned | Use the completed Batch 3a script-tag contract, then implement the Batch 1 route/helper inventory without adding broad Liquid semantics. |
 | 3.2 | planned | Implement shared render helpers and static page renderers. |
 | 3.3 | planned | Implement fixed catalogue, work, work-detail, moment, and search route shells. |
 | 3.4 | planned | Implement public Docs Viewer route shells for `/library/` and `/analysis/` using `docs-viewer-public-routes.json`. |

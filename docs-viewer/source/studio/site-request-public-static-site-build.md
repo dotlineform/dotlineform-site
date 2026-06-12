@@ -16,6 +16,7 @@ Status:
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
 - [GitHub Actions](/docs/?scope=studio&doc=github-actions) includes local `gh` CLI setup
 - Batch 1 audit and pre-migration decisions are complete.
+- [Public JavaScript Runtime and Payload Review Request](/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review) is a post-migration follow-up, not a blocker for this migration.
 
 ## Summary
 

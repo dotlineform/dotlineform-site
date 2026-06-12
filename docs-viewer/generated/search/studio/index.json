@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e56805f3ffaac3b9541a2680842e9ea6",
-    "generated_at_utc": "2026-06-12T15:26:16Z",
-    "count": 240
+    "version": "blake2b-379450c7c39c67801e4bbb8c2fbcb896",
+    "generated_at_utc": "2026-06-12T16:32:14Z",
+    "count": 242
   },
   "entries": [
     {
@@ -1349,6 +1349,37 @@
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
     },
     {
+      "id": "site-request-public-js-runtime-payload-review",
+      "kind": "doc",
+      "title": "Public JavaScript Runtime and Payload Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review",
+      "last_updated": "2026-06-12",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-12 • Change Requests",
+      "search_terms": [
+        "site-request-public-js-runtime-payload-review",
+        "site",
+        "request",
+        "public",
+        "js",
+        "runtime",
+        "payload",
+        "review",
+        "public javascript runtime and payload review request",
+        "javascript",
+        "and",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-12",
+        "2026",
+        "06",
+        "12"
+      ],
+      "search_text": "site-request-public-js-runtime-payload-review site request public js runtime payload review public javascript runtime and payload review request javascript and change requests change requests 2026-06-12 2026 06 12"
+    },
+    {
       "id": "site-request-public-static-site-build",
       "kind": "doc",
       "title": "Public Static Site Build Request",
@@ -1501,6 +1532,39 @@
         "12"
       ],
       "search_text": "public-static-site-build-batch-03-route-parity public static site build batch 03 route parity public static site build batch 3 public route rendering parity 3 rendering public static site build implementation plan implementation plan 2026-06-12 2026 06 12"
+    },
+    {
+      "id": "public-static-site-build-batch-03a-js-extraction",
+      "kind": "doc",
+      "title": "Public Static Site Build Batch 3a Public Route JavaScript Extraction",
+      "href": "/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction",
+      "last_updated": "2026-06-12",
+      "parent_id": "public-static-site-build-implementation-plan",
+      "parent_title": "Public Static Site Build Implementation Plan",
+      "display_meta": "2026-06-12 • Public Static Site Build Implementation Plan",
+      "search_terms": [
+        "public-static-site-build-batch-03a-js-extraction",
+        "public",
+        "static",
+        "site",
+        "build",
+        "batch",
+        "03a",
+        "js",
+        "extraction",
+        "public static site build batch 3a public route javascript extraction",
+        "3a",
+        "route",
+        "javascript",
+        "public static site build implementation plan",
+        "implementation",
+        "plan",
+        "2026-06-12",
+        "2026",
+        "06",
+        "12"
+      ],
+      "search_text": "public-static-site-build-batch-03a-js-extraction public static site build batch 03a js extraction public static site build batch 3a public route javascript extraction 3a route javascript public static site build implementation plan implementation plan 2026-06-12 2026 06 12"
     },
     {
       "id": "public-static-site-build-batch-04-assets-docs-viewer",

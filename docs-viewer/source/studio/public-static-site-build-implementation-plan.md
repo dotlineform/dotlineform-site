@@ -36,6 +36,27 @@ Batch 2 is complete. It introduced the static builder boundary and initial artif
 - `bin/public-site-preview-static` builds and serves `_public_site/` as the static comparison target.
 - `bin/public-site-preview` remains the Jekyll preview baseline for dual-running.
 
+### batch 3 pause and 3a insertion
+
+Batch 3 route rendering is paused before implementation because the current public route templates contain large inline JavaScript blocks. Moving those blocks into public JS modules first keeps runtime behavior in the JS layer and prevents Python renderers from owning long script strings.
+
+The inserted sequence is:
+
+- complete Batch 3a JS extraction and route-runtime cleanup;
+- then resume Batch 3 route rendering against static HTML shells that reference JS module files.
+
+Batch 3a is allowed to perform obvious behavior-preserving cleanup while extracting scripts. It is not a route redesign and does not change the public route model.
+
+Batch 3a is complete. The extracted route-runtime owners are:
+
+- `assets/js/series-index.js`
+- `assets/js/recent-index.js`
+- `assets/js/work-page.js`
+- `assets/js/works-index.js`
+- `assets/js/work-detail-page.js`
+
+The deeper review of public JavaScript module structure, inline policy, route-specific loading, generated payload sizes, and performance budgets is deferred to [Public JavaScript Runtime and Payload Review Request](/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review).
+
 ### baseline verification set
 
 Run the checks that match the touched area.
@@ -77,6 +98,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | --- | --- | --- |
 | 1 | done | [Audit and Pre-Migration Decisions](/docs/?scope=studio&doc=public-static-site-build-batch-01-audit) |
 | 2 | done | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
+| 3a | done | [Public Route JavaScript Extraction](/docs/?scope=studio&doc=public-static-site-build-batch-03a-js-extraction) |
 | 3 | planned | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
 | 5 | planned | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |

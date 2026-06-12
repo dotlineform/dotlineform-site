@@ -23,7 +23,7 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 Public copy allowlists start with:
 
 - Root artifacts: `CNAME`, favicon files, app icons, `safari-pinned-tab.svg`, `site.webmanifest`, rendered `404.html`, and generated `.nojekyll`.
-- Public CSS/JS: `assets/css/main.css`, public catalogue/search scripts, `site-nav.js`, `theme-toggle.js`, `swipe-nav.js`, `work.js`, and `moment.js`.
+- Public CSS/JS: `assets/css/main.css`, public catalogue/search scripts, `site-nav.js`, `theme-toggle.js`, `swipe-nav.js`, `work.js`, `moment.js`, `series-index.js`, `recent-index.js`, `work-page.js`, `works-index.js`, and `work-detail-page.js`.
 - Public catalogue/search data: `assets/data/*_index.json`, `assets/data/search/{catalogue,library,analysis}/index.json`, `assets/data/search/policy.json`, `assets/series/index/*.json`, `assets/works/index/*.json`, and `assets/moments/index/*.json`.
 - Public thumbnails/images: `assets/works/img/`, `assets/work_details/img/`, `assets/moments/img/`, and `assets/site/dotlineform.png`.
 - Public Docs Viewer config/runtime/static files: `docs-viewer/config/defaults/docs-viewer-public-config.json`, `docs-viewer/config/routes/docs-viewer-public-routes.json`, `docs-viewer/config/ui-text/public.json`, public runtime modules reachable from `docs-viewer-public.js`, public Docs Viewer CSS, `assets/data/docs/scopes/{analysis,library}/...`, and `assets/data/search/{analysis,library}/index.json`.

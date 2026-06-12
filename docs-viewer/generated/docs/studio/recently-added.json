@@ -11,6 +11,14 @@
       "parent_title": "Dev Home"
     },
     {
+      "doc_id": "site-request-public-js-runtime-payload-review",
+      "title": "Public JavaScript Runtime and Payload Review Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
+      "added_date": "2026-06-12",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "public-static-site-build-batch-01-audit",
       "title": "Public Static Site Build Batch 1 Audit and Pre-Migration Decisions",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-01-audit.json",
@@ -30,6 +38,14 @@
       "doc_id": "public-static-site-build-batch-03-route-parity",
       "title": "Public Static Site Build Batch 3 Public Route Rendering Parity",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-03-route-parity.json",
+      "added_date": "2026-06-12",
+      "parent_id": "public-static-site-build-implementation-plan",
+      "parent_title": "Public Static Site Build Implementation Plan"
+    },
+    {
+      "doc_id": "public-static-site-build-batch-03a-js-extraction",
+      "title": "Public Static Site Build Batch 3a Public Route JavaScript Extraction",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-03a-js-extraction.json",
       "added_date": "2026-06-12",
       "parent_id": "public-static-site-build-implementation-plan",
       "parent_title": "Public Static Site Build Implementation Plan"
@@ -65,23 +81,7 @@
       "added_date": "2026-06-12",
       "parent_id": "site-request-public-static-site-build",
       "parent_title": "Public Static Site Build Request"
-    },
-    {
-      "doc_id": "site-request-admin-checks-operational-reports",
-      "title": "Admin Checks Operational Reports",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
-      "added_date": "2026-06-10",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-report-code-surface",
-      "title": "Code Surface Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-code-surface.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
     }
   ],
-  "generated_at": "2026-06-12T14:35:14Z"
+  "generated_at": "2026-06-12T16:32:14Z"
 }
