@@ -14,9 +14,21 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 
 ## Steer for these tasks
 
-- This batch must be re-planned after Batch 1 closes.
-- Use explicit allowlists from the Batch 1 artifact inventory.
+- Batch 1 is closed; use its explicit allowlists and denylist seeds.
 - The generated artifact must contain public runtime files and must not contain source-only trees.
+- The artifact copy layer is a positive allowlist. It must not copy arbitrary repo-root files, arbitrary `docs-viewer/` files, or private generated docs payloads.
+
+## Batch 1 handoff
+
+Public copy allowlists start with:
+
+- Root artifacts: `CNAME`, favicon files, app icons, `safari-pinned-tab.svg`, `site.webmanifest`, rendered `404.html`, and generated `.nojekyll`.
+- Public CSS/JS: `assets/css/main.css`, public catalogue/search scripts, `site-nav.js`, `theme-toggle.js`, `swipe-nav.js`, `work.js`, and `moment.js`.
+- Public catalogue/search data: `assets/data/*_index.json`, `assets/data/search/{catalogue,library,analysis}/index.json`, `assets/data/search/policy.json`, `assets/series/index/*.json`, `assets/works/index/*.json`, and `assets/moments/index/*.json`.
+- Public thumbnails/images: `assets/works/img/`, `assets/work_details/img/`, `assets/moments/img/`, and `assets/site/dotlineform.png`.
+- Public Docs Viewer config/runtime/static files: `docs-viewer/config/defaults/docs-viewer-public-config.json`, `docs-viewer/config/routes/docs-viewer-public-routes.json`, `docs-viewer/config/ui-text/public.json`, public runtime modules reachable from `docs-viewer-public.js`, public Docs Viewer CSS, `assets/data/docs/scopes/{analysis,library}/...`, and `assets/data/search/{analysis,library}/index.json`.
+
+Denylist audit seeds include Jekyll files, root tooling/docs files, local app directories, private Docs Viewer configs/services/source/build/shell/tests, management runtime modules, generated `studio`/`tmp` docs/search payloads, `data/*.xlsx`, caches, logs, and `.DS_Store`.
 
 ## Deliverables
 
@@ -43,10 +55,10 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 
 | ID | status | action |
 | --- | --- | --- |
-| 4.1 | planned | Re-plan this batch from Batch 1 public asset and Docs Viewer inventories. |
+| 4.1 | planned | Convert the Batch 1 public asset and Docs Viewer inventories into explicit copy rules and audit fixtures. |
 | 4.2 | planned | Implement allowlisted static asset and public data copy rules. |
 | 4.3 | planned | Implement allowlisted public Docs Viewer artifact copy rules. |
-| 4.4 | planned | Implement source-leak and projection-contract audits. |
+| 4.4 | planned | Implement source-leak and projection-contract audits using the Batch 1 denylist seeds and public-route copy allowlists. |
 | 4.5 | planned | Record the complete public artifact surface for Batch 5 deployment checks. |
 
 ## completed verification
@@ -55,7 +67,7 @@ Purpose: copy only the publishable public assets and generated payloads needed b
 
 ## follow-on tasks
 
-- Update Batch 5 with exact artifact audit and smoke commands.
+- Update Batch 5 with exact artifact audit and smoke commands, including the final Docs Viewer runtime module list derived from `docs-viewer-public.js`.
 
 ## batch close
 

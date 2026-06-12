@@ -14,12 +14,20 @@ Purpose: make the static builder the GitHub Pages artifact deployment path after
 
 ## Steer for these tasks
 
-- This batch must be re-planned after Batch 1 closes and again after Batches 2-4 define exact build and audit commands.
+- Batch 1 is closed; re-check this batch after Batches 2-4 define final script paths and smoke commands.
 - Do not keep a branch/folder Pages source or Jekyll deploy fallback as part of normal operations.
 - GitHub Actions remains thin deployment plumbing around the repo-owned builder.
 - Start this batch with dual-running: the static Actions workflow runs checks and manual/non-deploy validation while the current Jekyll publishing path remains live.
 - The exact cutover point is the GitHub Pages source change to Actions artifact deployment plus enabling the deploy workflow for `push` to `main`.
 - Local preview dual-running remains available during this batch so failed production checks are reproduced against both the Jekyll baseline and static output.
+
+## Batch 1 handoff
+
+- Workflow validation must run `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit` before artifact upload.
+- Workflow defaults are fixed: `pull_request` verifies only, `push` to `main` deploys after cutover, `workflow_dispatch` is enabled, first version has no path filters, concurrency cancels older in-flight Pages deploys, the environment is `github-pages`, and permissions are limited to Pages deployment needs.
+- Current repo state supports local workflow authoring and `gh` inspection. `.github/` exists but has no repo-owned workflow file; `gh` is authenticated; current Pages is legacy branch publishing from `main /`.
+- Production cutover is the explicit GitHub Pages source change from legacy branch/Jekyll publishing to Actions artifact deployment plus enabling the deploy job for `push` to `main`.
+- Before cutover, the static workflow can run in manual/non-deploy dual-running mode while the current live site continues to publish through the legacy path.
 
 ## Deliverables
 
@@ -55,12 +63,12 @@ Purpose: make the static builder the GitHub Pages artifact deployment path after
 
 | ID | status | action |
 | --- | --- | --- |
-| 5.1 | planned | Re-plan this batch from Batch 1 decisions and Batches 2-4 command outputs. |
+| 5.1 | planned | Confirm the Batch 1 workflow defaults and replace placeholders with final Batch 2-4 command outputs before implementation. |
 | 5.2 | planned | Implement the GitHub Actions Pages artifact workflow. |
 | 5.3 | planned | Run the static workflow in dual-running mode without changing the live Jekyll publishing path. |
 | 5.4 | planned | Run local dual-preview parity checks against the same public route list before production cutover. |
 | 5.5 | planned | Wire the full verification gate into pull request and `main` workflow paths. |
-| 5.6 | planned | Validate the Pages artifact contents and deployment plumbing before production cutover. |
+| 5.6 | planned | Validate the Pages artifact contents with the named build-plus-audit command and deployment plumbing before production cutover. |
 | 5.7 | planned | Switch GitHub Pages source to Actions artifact deployment only after the verification gate passes. |
 | 5.8 | planned | Verify a live static artifact deploy from `main`, then record the cutover timestamp, workflow run, artifact path, and residual risks for Jekyll removal. |
 
@@ -70,7 +78,7 @@ Purpose: make the static builder the GitHub Pages artifact deployment path after
 
 ## follow-on tasks
 
-- Update Batch 6 with exact files, docs, and commands to remove or rewrite after static deploy parity is proven.
+- Update Batch 6 with exact files, docs, and commands to remove or rewrite after static deploy parity is proven, including any GitHub settings changed during cutover.
 
 ## batch close
 

@@ -329,13 +329,13 @@
               "doc_id": "public-static-site-build-implementation-plan",
               "title": "Public Static Site Build Implementation Plan",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-implementation-plan.json",
-              "ui_status": "planned",
+              "ui_status": "in-progress",
               "children": [
                 {
                   "doc_id": "public-static-site-build-batch-01-audit",
                   "title": "Public Static Site Build Batch 1 Audit and Pre-Migration Decisions",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-01-audit.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "public-static-site-build-batch-02-builder-skeleton",
@@ -1305,5 +1305,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T15:34:42Z"
+  "generated_at": "2026-06-12T15:46:49Z"
 }

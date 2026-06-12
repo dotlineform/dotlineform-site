@@ -10,11 +10,12 @@ parent_id: change-requests
 
 Status:
 
-- planned
+- in progress
 - This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
 - [Public Static Site Build Implementation Plan](/docs/?scope=studio&doc=public-static-site-build-implementation-plan) tracks the implementation batches.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
 - [GitHub Actions](/docs/?scope=studio&doc=github-actions) includes local `gh` CLI setup
+- Batch 1 audit and pre-migration decisions are complete.
 
 ## Summary
 

@@ -3,7 +3,7 @@ doc_id: public-static-site-build-implementation-plan
 title: Public Static Site Build Implementation Plan
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: planned
+ui_status: in-progress
 parent_id: site-request-public-static-site-build
 ---
 # Public Static Site Build Implementation Plan
@@ -11,6 +11,18 @@ parent_id: site-request-public-static-site-build
 This is the tracker for implementing [Public Static Site Build Request](/docs/?scope=studio&doc=site-request-public-static-site-build).
 
 The first phase is the audit and pre-migration work. Later phases are intentionally scoped at batch level until Batch 1 has produced the route, asset, config, and Jekyll-responsibility inventories that the implementation depends on.
+
+### batch 1 summary
+
+Batch 1 is complete. It fixed these implementation inputs:
+
+- Static parity includes every canonical route in [Public Route Model](/docs/?scope=studio&doc=public-route-model); retired path-style routes, `/palette/`, `/docs/`, Studio, Admin, Analytics, logs, and local service routes stay excluded.
+- The first builder uses Python render helpers, not file-based HTML snippets or a general template engine.
+- Local build, local static preview, CI verification, and Pages artifact upload use `_public_site/` by default.
+- The named build-plus-audit command for workflow validation is `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit`.
+- GitHub Actions uses the request defaults: `pull_request` verifies only, `push` to `main` deploys after cutover, `workflow_dispatch` is enabled, no first-version path filters, `github-pages` environment, and Pages-only deploy permissions.
+- The artifact audit must be allowlist-driven. Current Jekyll output leaks root/tooling files into `_site/`; the static artifact must exclude them.
+- Public Docs Viewer route shells must use `docs-viewer-public-routes.json`, not the private/manage route registry.
 
 ### baseline verification set
 
@@ -51,7 +63,7 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | title |
 | --- | --- | --- |
-| 1 | planned | [Audit and Pre-Migration Decisions](/docs/?scope=studio&doc=public-static-site-build-batch-01-audit) |
+| 1 | done | [Audit and Pre-Migration Decisions](/docs/?scope=studio&doc=public-static-site-build-batch-01-audit) |
 | 2 | planned | [Builder Skeleton and Artifact Contract](/docs/?scope=studio&doc=public-static-site-build-batch-02-builder-skeleton) |
 | 3 | planned | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 4 | planned | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |

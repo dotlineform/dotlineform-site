@@ -57,12 +57,12 @@ Manual runs are via `workflow_dispatch`: [manually run a workflow](https://docs.
 - Push branches or workflow commits if explicitly asked to publish local changes.
 - Prepare or execute the Pages-source cutover through `gh api` only after explicit approval, because it changes how the live site is deployed.
 
-**What likely needs you**
+**What remains user-owned**
 
 - Confirm before any command changes the live Pages source.
 - Confirm any GitHub environment protection rules.
-- Trigger or approve first remote workflow runs if GitHub asks.
-- Handle custom domain/DNS only if the existing Pages domain setup needs changes.
+- Complete any GitHub browser approval prompt for first remote workflow runs.
+- Handle custom domain/DNS changes. No DNS change is planned for the static-builder migration.
 
 The planned safe sequence is still:
 

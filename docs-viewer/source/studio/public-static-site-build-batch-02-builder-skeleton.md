@@ -14,10 +14,20 @@ Purpose: create the `public-site/` builder boundary and the initial static artif
 
 ## Steer for these tasks
 
-- This batch must be re-planned after Batch 1 closes.
-- Use the Batch 1 inventories to define builder modules, config fields, output path policy, and copy/audit allowlists.
+- Batch 1 is closed; use its decisions as implementation inputs.
+- Define builder modules, config fields, output path policy, and copy/audit allowlists from the Batch 1 inventories.
 - Keep the first builder small: create enough structure to emit an artifact root, `.nojekyll`, root publishing artifacts, and placeholder or parity shells selected by the refined plan.
 - Keep the existing Jekyll local preview and production publishing path intact. The static builder introduced here is a parallel path and parity target, not the live path.
+- Do not add file-based HTML snippets or a general template engine in this batch.
+
+## Batch 1 handoff
+
+- Default output path is `_public_site/` for local build, local static preview, CI verification, and Pages artifact upload.
+- Implement `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit` as the exact build-plus-audit command that Batch 5 will run in GitHub Actions.
+- Create `public-site/config/public-site.json` with public-site assembly values formerly owned by `_config.yml`: site identity, URL/base URL, media and thumbnail origins, public runtime text, Docs Viewer public mount/config paths, root artifact expectations, copy allowlists, and denylist audit rules.
+- Keep domain-owned configs and generated payloads with their current owners. The builder reads them as inputs and assembles deployable copies.
+- Root artifact allowlist starts with `CNAME`, favicons, app icons, `safari-pinned-tab.svg`, `site.webmanifest`, rendered `404.html`, and generated `.nojekyll`.
+- Initial source-leak audit must fail on root source/tooling files, local app directories, Jekyll files, private Docs Viewer files, `.DS_Store`, caches, logs, and private generated docs/search payloads.
 
 ## Deliverables
 
@@ -49,13 +59,13 @@ Purpose: create the `public-site/` builder boundary and the initial static artif
 
 | ID | status | action |
 | --- | --- | --- |
-| 2.1 | planned | Re-plan this batch from Batch 1 audit findings before implementation starts. |
+| 2.1 | planned | Convert the Batch 1 handoff into module boundaries, CLI options, config fields, copy allowlists, and audit denylist tests before implementation starts. |
 | 2.2 | planned | Create the `public-site/` builder package, config file, and command wrappers. |
 | 2.3 | planned | Implement output-directory handling and artifact-root initialization with `.nojekyll`. |
-| 2.4 | planned | Implement the initial root artifact allowlist and source-leak audit shell. |
+| 2.4 | planned | Implement the initial root artifact allowlist and source-leak audit shell, including the current `_site/` leak seeds from Batch 1. |
 | 2.5 | planned | Add `bin/public-site-preview-static` as the temporary static preview command that builds `_public_site/` once and serves it over HTTP. |
 | 2.6 | planned | Confirm the existing Jekyll preview and deploy path are still untouched and available as the parity baseline. |
-| 2.7 | planned | Record exact verification commands and update Batch 3 with route-rendering prerequisites. |
+| 2.7 | planned | Record exact verification commands and update Batch 3 with route-rendering prerequisites and the final render helper module names. |
 
 ## completed verification
 
@@ -63,7 +73,7 @@ Purpose: create the `public-site/` builder boundary and the initial static artif
 
 ## follow-on tasks
 
-- Fill in route rendering tasks after Batch 1 and Batch 2 identify the final render-helper boundaries.
+- Batch 3 must implement render helpers for shared layout, head metadata, navigation, footer, Docs Viewer shell, static pages, and catalogue shells using the module names selected in this batch.
 
 ## batch close
 

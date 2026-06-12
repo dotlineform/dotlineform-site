@@ -14,10 +14,36 @@ Purpose: render production-equivalent public route shells without Jekyll or Liqu
 
 ## Steer for these tasks
 
-- This batch must be re-planned after Batch 1 closes.
-- Route parity must come from [Public Route Model](/docs/?scope=studio&doc=public-route-model) and the Batch 1 route inventory.
+- Batch 1 is closed; route parity comes from [Public Route Model](/docs/?scope=studio&doc=public-route-model) and the Batch 1 route inventory.
 - Do not redesign public routes, visual design, or route behavior. Batch 1 must record a required migration exception before this batch changes them.
 - Use local dual-running preview for route parity: serve the Jekyll baseline and `_public_site/` static comparison target on separate ports and smoke the same route list against both.
+- Render `/library/` and `/analysis/` with `docs-viewer-public-routes.json`; do not use the private/manage Docs Viewer route registry.
+
+## Batch 1 handoff
+
+Render these route owners:
+
+- `routes.render_home_redirect()` for `/`.
+- `routes.render_about()` for `/about/`.
+- `routes.render_recent()` for `/recent/`.
+- `routes.render_series()` for `/series/` and query states.
+- `routes.render_works()` for `/works/` and query states.
+- `routes.render_work_details()` for `/work-details/` and query states.
+- `routes.render_moments()` for `/moments/` and query states.
+- `routes.render_catalogue_search()` for `/catalogue/search/`.
+- `routes.render_docs_viewer_route("library")` for `/library/`.
+- `routes.render_docs_viewer_route("analysis")` for `/analysis/`.
+- `routes.render_404()` for `/404.html`.
+
+Render helper owners:
+
+- `render.render_page()` for the full document shell.
+- `render.render_head()` for title, description, favicon/site manifest links, CSS, and deterministic asset versioning.
+- `render.render_nav()` and `render.render_nav_item()` for public navigation.
+- `render.render_footer()` for footer and global script includes.
+- `render.render_docs_viewer_shell()` for the public Docs Viewer mount.
+
+Do not implement compatibility redirects for retired path-style routes.
 
 ## Deliverables
 
@@ -45,10 +71,10 @@ Purpose: render production-equivalent public route shells without Jekyll or Liqu
 
 | ID | status | action |
 | --- | --- | --- |
-| 3.1 | planned | Re-plan this batch from Batch 1 route and Liquid responsibility inventories. |
+| 3.1 | planned | Confirm the Batch 2 helper module names, then implement the Batch 1 route/helper inventory without adding broad Liquid semantics. |
 | 3.2 | planned | Implement shared render helpers and static page renderers. |
 | 3.3 | planned | Implement fixed catalogue, work, work-detail, moment, and search route shells. |
-| 3.4 | planned | Implement public Docs Viewer route shells for `/library/` and `/analysis/`. |
+| 3.4 | planned | Implement public Docs Viewer route shells for `/library/` and `/analysis/` using `docs-viewer-public-routes.json`. |
 | 3.5 | planned | Add route presence and representative browser smoke checks for the static preview. |
 | 3.6 | planned | Add local preview parity checks that compare the Jekyll baseline and static output on the same route list. |
 
@@ -58,7 +84,7 @@ Purpose: render production-equivalent public route shells without Jekyll or Liqu
 
 ## follow-on tasks
 
-- Update Batch 4 with any route-specific asset or payload copy needs discovered during rendering.
+- Update Batch 4 with any route-specific asset or payload copy needs discovered during rendering, especially Docs Viewer runtime dependencies and catalogue JSON paths referenced by route data attributes.
 
 ## batch close
 

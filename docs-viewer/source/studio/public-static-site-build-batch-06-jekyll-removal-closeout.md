@@ -14,12 +14,27 @@ Purpose: remove or retire Jekyll/Ruby build artifacts, update docs, rerun final 
 
 ## Steer for these tasks
 
-- This batch must be re-planned after Batch 1 closes and after Batch 5 proves the static deploy path.
+- Batch 1 is closed; re-check this batch after Batch 5 proves the static deploy path.
 - Do not remove Jekyll-era files before replacement behavior is verified.
 - Any retained Jekyll-era naming must have a non-Jekyll owner and a removal reason.
 - The current Jekyll local preview stops being supported only in this batch, after Batch 5 has recorded a successful live static Actions artifact deploy.
 - If Batch 5 has not recorded the production cutover, this batch is blocked.
 - Retarget `bin/public-site-preview` to the verified static build-and-serve path rather than removing the operator-facing preview command.
+
+## Batch 1 handoff
+
+Jekyll-era removal candidates are:
+
+- `Gemfile`, `Gemfile.lock`, `.ruby-version`, `_config.yml`, `_layouts/`, and `_includes/`.
+- Bundler/Jekyll logic in `bin/public-site-build` and `bin/public-site-preview`.
+- Unused includes `_includes/work_index_item.html` and `_includes/artist_line.html`, after Batch 3 confirms they still have no active route usage.
+- Documentation and operator commands that present Ruby, Bundler, Jekyll, Liquid, `_config.yml`, `_layouts`, or `_includes` as the public build path.
+
+Keep or retarget only with a named non-Jekyll owner:
+
+- `bin/public-site-preview` remains the operator-facing preview command, but it must serve the static artifact after cutover.
+- `bin/public-site-preview-static` is temporary during dual-running and must be removed or given a retained owner once the default preview command serves static output.
+- Any retained file with Jekyll-era naming needs a closeout note that explains its new owner and why it remains.
 
 ## Deliverables
 
@@ -50,12 +65,12 @@ Purpose: remove or retire Jekyll/Ruby build artifacts, update docs, rerun final 
 
 | ID | status | action |
 | --- | --- | --- |
-| 6.1 | planned | Re-plan this batch from Batch 1 Jekyll responsibility inventory and Batch 5 deploy results. |
+| 6.1 | planned | Confirm the Batch 1 Jekyll responsibility inventory against the Batch 5 deploy results before removing files. |
 | 6.2 | planned | Confirm Batch 5 recorded a successful live Actions artifact deploy; block this batch if cutover is incomplete. |
 | 6.3 | planned | Remove Ruby/Jekyll build files and wrappers after replacement behavior is verified; record any retained item with owner and removal reason. |
 | 6.4 | planned | Retarget `bin/public-site-preview` to the verified static build-and-serve path. |
 | 6.5 | planned | Remove `bin/public-site-preview-static` after the default preview command serves static output, or retain it with a documented owner and reason. |
-| 6.6 | planned | Update docs, setup commands, workflow docs, and source-organisation docs to make the static builder the only public build path. |
+| 6.6 | planned | Update docs, setup commands, workflow docs, and source-organisation docs to make the static builder the only public build path and remove stale Jekyll/Ruby/Liquid assumptions. |
 | 6.7 | planned | Run final verification gate and stale-reference scans. |
 | 6.8 | planned | Close out the parent request, implementation tracker, and batch documents with verification results, retained risks, and follow-on work. |
 
