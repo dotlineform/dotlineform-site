@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import sys
 import tempfile
@@ -49,13 +50,18 @@ class FakeR2Client:
 def make_repo(root: Path) -> Path:
     repo = root / "repo"
     repo.mkdir()
-    (repo / "_config.yml").write_text(
-        "\n".join(
-            [
-                'media_image_works: "/works/img"',
-                'media_image_work_details: "/work_details/img"',
-                'media_image_moments: "/moments/img"',
-            ]
+    path = repo / "public-site/config/public-site.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "public_site_config_v1",
+                "media": {
+                    "image_works": "/works/img",
+                    "image_work_details": "/work_details/img",
+                    "image_moments": "/moments/img",
+                },
+            }
         )
         + "\n",
         encoding="utf-8",

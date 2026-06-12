@@ -53,7 +53,7 @@ SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upl
 def default_repo_root() -> Path:
     current = Path(__file__).resolve()
     for candidate in [current.parent, *current.parents]:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
     raise ValueError("could not resolve repo root")
 

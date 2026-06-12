@@ -3,7 +3,7 @@ doc_id: public-static-site-build-implementation-plan
 title: Public Static Site Build Implementation Plan
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-public-static-site-build
 ---
 # Public Static Site Build Implementation Plan
@@ -99,15 +99,28 @@ Batch 4 is complete. It made `_public_site/` an executable static artifact by ad
 
 ### batch 5 summary
 
-Batch 5 is in progress. The local workflow implementation is present, but it is not active on GitHub until committed and pushed:
+Batch 5 is complete. It made the static builder the live GitHub Pages deployment path:
 
 - `.github/workflows/public-site.yml` builds, audits, validates, configures Pages, and uploads `_public_site/` as the Pages artifact.
 - `public-site/build/validate_artifact.py` performs the post-build artifact validation used by the workflow.
-- The deploy job is gated by `PUBLIC_SITE_PAGES_DEPLOY_ENABLED == true` on `push` to `main`.
-- GitHub Pages remains on legacy branch publishing from `main /`; production cutover has not been performed.
+- The deploy job is gated by `PUBLIC_SITE_PAGES_DEPLOY_ENABLED == true` on `push` or `workflow_dispatch` to `main`.
+- GitHub Pages now uses Actions artifact publishing with `build_type: workflow`.
 - The first remote dual-running workflow run passed on `main`; it built, audited, validated, uploaded the Pages artifact, and skipped deployment.
 - The follow-up remote run passed with current Pages action major versions and no Node.js 20 deprecation warning.
 - Local dual-preview parity passed for the agreed route list against fresh Jekyll and static temporary builds.
+- Production cutover run `27436556962` deployed Pages artifact `7600112973` from commit `d4874d961faf617370f2bc399a66d933a3de6e30`.
+- Live production smoke passed for the agreed route list after cutover.
+
+### batch 6 summary
+
+Batch 6 is complete. It removed the Jekyll/Ruby public build path and closed the migration:
+
+- Removed `Gemfile`, `Gemfile.lock`, `.ruby-version`, `_config.yml`, `_layouts/`, `_includes/`, and old Markdown/Liquid public route stubs.
+- Retargeted `bin/public-site-preview` to build and serve the static artifact, and removed temporary `bin/public-site-preview-static`.
+- Updated root detection and media config consumers to use `public-site/config/public-site.json`.
+- Retargeted smoke-profile temporary public builds from `/tmp/dlf-jekyll-build` to `/tmp/dlf-public-site-build`.
+- Added scoped workflow path filters for public-site-owned inputs while keeping manual `workflow_dispatch` unfiltered.
+- Verified static build/audit, artifact validation, workflow lint, shell syntax, focused tests, quick profile, public route browser smoke, public Docs Viewer browser smoke, and the retargeted preview command.
 
 ### baseline verification set
 
@@ -137,8 +150,8 @@ Codex sandbox note: local service, browser, and temporary localhost checks requi
 - Local preview has its own dual-running period. The existing Jekyll preview remains the baseline, and a new static preview serves `_public_site/` as the static comparison target.
 - Batch 2 introduces `bin/public-site-preview-static` as the temporary static preview command. The default `bin/public-site-preview` must keep its current Jekyll behavior until Batch 6 retargets it.
 - During migration, local parity checks must be able to serve the Jekyll output and `_public_site/` on different ports and smoke the same public route list against both.
-- Batch 5 owns the dual-running period: the static GitHub Actions workflow runs checks, manual builds, and non-deploy validation while the current Jekyll path remains live.
-- The production cutover happens only when GitHub Pages is configured to deploy from the GitHub Actions Pages artifact instead of the current branch/Jekyll source, and the deploy workflow is enabled for `push` to `main`.
+- Batch 5 owned the dual-running period: the static GitHub Actions workflow ran checks, manual builds, and non-deploy validation while the current Jekyll path remained live.
+- The production cutover happened when GitHub Pages was configured to deploy from the GitHub Actions Pages artifact instead of the current branch/Jekyll source, and the deploy workflow was enabled for `push` and `workflow_dispatch` to `main`.
 - After cutover, commits to `main` update the live site only when the Actions workflow succeeds and deploys the generated artifact.
 - Batch 6 retargets `bin/public-site-preview` to the static build-and-serve path, adds scoped workflow triggers so unrelated `main` commits do not rebuild or deploy the public site, then removes Ruby/Bundler tooling, `_config.yml`, `_layouts`, and `_includes` after a successful static Actions artifact deploy has been verified on the live site.
 
@@ -154,8 +167,8 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 | 3 | done | [Public Route Rendering Parity](/docs/?scope=studio&doc=public-static-site-build-batch-03-route-parity) |
 | 3b | done | [Route Renderer Structure](/docs/?scope=studio&doc=public-static-site-build-batch-03b-route-renderer-structure) |
 | 4 | done | [Public Asset and Docs Viewer Artifact Assembly](/docs/?scope=studio&doc=public-static-site-build-batch-04-assets-docs-viewer) |
-| 5 | in progress | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
-| 6 | planned | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |
+| 5 | done | [Verification Gate and GitHub Pages Actions Deploy](/docs/?scope=studio&doc=public-static-site-build-batch-05-verification-deploy) |
+| 6 | done | [Jekyll Removal and Closeout](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout) |
 
 The final batch includes the named closeout tasks from the tracker template: update docs, cleanup, verification, and close out.
 

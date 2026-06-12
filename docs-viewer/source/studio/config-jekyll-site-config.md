@@ -2,11 +2,13 @@
 doc_id: config-jekyll-site-config
 title: Jekyll Site Config
 added_date: 2026-03-31
-last_updated: 2026-05-29
+last_updated: 2026-06-12
 parent_id: architecture
-viewable: true
+viewable: false
 ---
 # Jekyll Site Config
+
+Retired: `_config.yml` was removed during the static public-site build migration.
 
 Config file:
 
@@ -14,9 +16,9 @@ Config file:
 
 ## Scope
 
-`_config.yml` is the repo’s site-wide Jekyll config.
+`_config.yml` was the repo’s site-wide Jekyll config before the static public-site build migration.
 
-Current responsibilities include:
+Former responsibilities included:
 
 - site identity and canonical URLs
 - collection definitions and permalink structure
@@ -25,7 +27,7 @@ Current responsibilities include:
 - selected shell/runtime flags such as `enable_details_hash_scroll`
 - Jekyll build exclusions
 
-Current exclusions include local operational and non-site inputs such as:
+Former exclusions included local operational and non-site inputs such as:
 
 - `var`
 - `logs`
@@ -37,7 +39,7 @@ Current exclusions include local operational and non-site inputs such as:
 
 ## What calls it
 
-Current direct readers:
+Former direct readers:
 
 - Jekyll itself during `bundle exec jekyll serve` and `bundle exec jekyll build`
 - Liquid templates through `site.*` values such as:
@@ -49,26 +51,23 @@ Current direct readers:
   - `series/index.md`
   - `studio/analytics/series-tag-editor/index.md`
   - `_includes/work_index_item.html`
-- `docs-viewer/build/build_docs.py`, which reads `media_base` when resolving docs media tokens
+- `docs-viewer/build/build_docs.py`, which read `media_base` when resolving docs media tokens
 
-Some scripts also use `_config.yml` as a repo-root marker. In those cases they check for the file’s presence, but do not parse its fields.
+Current public-site config lives in `public-site/config/public-site.json`. Current repo-root detection uses that file.
 
 ## When it is read
 
-- at Jekyll startup for site build and serve
-- during template rendering whenever a page reads `site.*` values
-- during docs-data builds when docs media URLs are normalized
-- during some script startup flows when repo-root detection walks upward looking for `_config.yml`
+- no current runtime path should read `_config.yml`
 
 ## Current boundaries
 
-What stays here:
+Formerly here:
 
 - public site URL and media-origin settings
 - collection/permalink/default-layout behavior
 - site-shell booleans used by Liquid-rendered pages
 
-What does not stay here:
+Still elsewhere:
 
 - local filesystem roots and media-generation env var names
   those live in **[Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)**

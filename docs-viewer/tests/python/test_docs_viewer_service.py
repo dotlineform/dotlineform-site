@@ -14,10 +14,14 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICE_DIR = REPO_ROOT / "docs-viewer" / "services"
-if str(DOCS_SERVICE_DIR) not in sys.path:
-    sys.path.insert(0, str(DOCS_SERVICE_DIR))
+PUBLIC_SITE_BUILD_DIR = REPO_ROOT / "public-site" / "build"
+for path in (DOCS_SERVICE_DIR, PUBLIC_SITE_BUILD_DIR):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 import docs_viewer_service  # noqa: E402
+from public_site_builder.config import load_config  # noqa: E402
+from public_site_builder.docs_routes import render_docs_route  # noqa: E402
 
 
 STATIC_IMPORT_PATTERN = re.compile(
@@ -29,20 +33,6 @@ STATIC_IMPORT_PATTERN = re.compile(
 def write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload), encoding="utf-8")
-
-
-def jekyll_excludes(repo_root: Path) -> set[str]:
-    excludes: set[str] = set()
-    in_exclude = False
-    for line in (repo_root / "_config.yml").read_text(encoding="utf-8").splitlines():
-        if line == "exclude:":
-            in_exclude = True
-            continue
-        if in_exclude and line and not line.startswith("  "):
-            break
-        if in_exclude and line.startswith("  - "):
-            excludes.add(line.removeprefix("  - ").strip())
-    return excludes
 
 
 def static_module_imports(path: Path) -> list[str]:
@@ -77,7 +67,10 @@ def public_entry_static_import_graph(repo_root: Path, entry: Path) -> set[Path]:
 def test_load_service_config_reads_static_site_env() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         repo_root = Path(temp_dir)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_json(
+            repo_root / "public-site/config/public-site.json",
+            {"schema_version": "public_site_config_v1"},
+        )
         write_json(
             repo_root / "docs-viewer/config/defaults/docs-viewer-service.json",
             {
@@ -117,27 +110,33 @@ def test_load_service_config_reads_static_site_env() -> None:
 def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
     entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
-    excluded = jekyll_excludes(REPO_ROOT)
     blocked = sorted(
         path.relative_to(REPO_ROOT).as_posix()
         for path in graph
-        if path.relative_to(REPO_ROOT).as_posix() in excluded
+        if "management" in path.name or "manage" in path.name
     )
 
     assert blocked == []
 
 
-def test_public_readonly_route_include_uses_public_entrypoint_contract() -> None:
-    readonly_include = (REPO_ROOT / "_includes/docs_viewer_readonly_route.html").read_text(encoding="utf-8")
-    shell_include = (REPO_ROOT / "_includes/docs_viewer_shell.html").read_text(encoding="utf-8")
+def test_public_readonly_route_renderer_uses_public_entrypoint_contract() -> None:
+    config = load_config(REPO_ROOT / "public-site/config/public-site.json")
+    html = render_docs_route(
+        config,
+        title="Library",
+        section="library",
+        path="/library/",
+        route_id="library",
+        search_placeholder="Search library",
+        search_aria_label="Search library",
+    )
 
-    assert "route_config_url='/docs-viewer/config/routes/docs-viewer-public-routes.json'" in readonly_include
-    assert "allow_management=false" in readonly_include
-    assert "docs_viewer_management_route.html" not in readonly_include
-    assert "docs-viewer/static/css/docs-viewer.css" in shell_include
-    assert "docs-viewer/static/css/docs-viewer-manage.css" not in shell_include
-    assert "docs-viewer/static/css/docs-viewer-reports.css" not in shell_include
-    assert "default: '/docs-viewer/runtime/js/docs-viewer-public.js'" in shell_include
+    assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in html
+    assert 'data-allow-management="false"' in html
+    assert "docs-viewer/static/css/docs-viewer.css" in html
+    assert "docs-viewer/static/css/docs-viewer-management.css" not in html
+    assert "docs-viewer/static/css/docs-viewer-reports.css" not in html
+    assert 'src="/docs-viewer/runtime/js/docs-viewer-public.js' in html
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:

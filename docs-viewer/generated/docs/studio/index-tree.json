@@ -191,7 +191,8 @@
         {
           "doc_id": "config-jekyll-site-config",
           "title": "Jekyll Site Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-jekyll-site-config.json",
+          "viewable": false
         },
         {
           "doc_id": "data-models-projection-contract",
@@ -329,13 +330,13 @@
           "doc_id": "site-request-public-static-site-build",
           "title": "Public Static Site Build Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-static-site-build.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "public-static-site-build-implementation-plan",
               "title": "Public Static Site Build Implementation Plan",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-implementation-plan.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "public-static-site-build-batch-01-audit",
@@ -377,13 +378,13 @@
                   "doc_id": "public-static-site-build-batch-05-verification-deploy",
                   "title": "Public Static Site Build Batch 5 Verification Gate and GitHub Pages Actions Deploy",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-05-verification-deploy.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "public-static-site-build-batch-06-jekyll-removal-closeout",
                   "title": "Public Static Site Build Batch 6 Jekyll Removal and Closeout",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/public-static-site-build-batch-06-jekyll-removal-closeout.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1323,5 +1324,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T17:49:30Z"
+  "generated_at": "2026-06-12T19:40:18Z"
 }

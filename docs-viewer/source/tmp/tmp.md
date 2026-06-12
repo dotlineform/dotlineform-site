@@ -6,8 +6,34 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+One thing remains to observe after commit/push: confirm the scoped workflow triggers for this public-site-relevant change, then later confirm an unrelated main commit does not trigger it.
 
-actionlint is not installed here,
+
+python update needed?
+
+
+The remaining active-code references are mostly expected audit denylist strings, source-leak tests, and stale test fixtures. I’m updating the repo instructions and the remaining fixture roots; the audit denylist can still name former Jekyll files because it prevents them leaking if they ever reappear.
+
+Batch 6 is complete locally.
+What changed:
+Removed Jekyll/Ruby build files: Gemfile, Gemfile.lock, .ruby-version, _config.yml, _layouts/, _includes/, and old Markdown/Liquid route stubs.
+Retargeted bin/public-site-preview to build and serve the static artifact.
+Removed bin/public-site-preview-static.
+Updated repo-root/config consumers to use public-site/config/public-site.json.
+Retargeted smoke temp builds to /tmp/dlf-public-site-build.
+Added scoped workflow path filters to .github/workflows/public-site.yml.
+
+~
+
+Next is the actual cutover. The two live-setting changes are:
+```
+gh variable set PUBLIC_SITE_PAGES_DEPLOY_ENABLED --body true
+gh api --method PUT repos/dotlineform/dotlineform-site/pages -f build_type=workflow
+```
+Then trigger the deploy:
+```
+gh workflow run "Public site" --ref main
+```
 
 
 ## VS Code menu ##
@@ -20,6 +46,40 @@ actionlint is not installed here,
 For this moment, use **Commit** only.
 
 After that, we can decide whether to push to a branch/PR for the dual-running workflow test, or hold it local until the next step.
+
+~ 
+
+```
+brew install actionlint
+✔︎ JSON API packages.arm64_tahoe.jws.json                                                                                                                 Downloaded   15.2MB/ 15.2MB
+==> Would install 1 formula:
+actionlint
+==> Downloading https://ghcr.io/v2/homebrew/core/actionlint/manifests/1.7.12-1
+####### 100.0%
+==> Would install 2 dependencies for actionlint:
+gmp
+shellcheck
+==> Do you want to proceed with the installation? [y/n]
+==> Fetching downloads for: actionlint
+✔︎ Bottle Manifest gmp (6.3.0)                                                                                                                            Downloaded   13.3KB/ 13.3KB
+✔︎ Bottle Manifest shellcheck (0.11.0)                                                                                                                    Downloaded   11.0KB/ 11.0KB
+✔︎ Bottle gmp (6.3.0)                                                                                                                                     Downloaded    1.0MB/  1.0MB
+✔︎ Bottle actionlint (1.7.12)                                                                                                                             Downloaded    2.1MB/  2.1MB
+✔︎ Bottle shellcheck (0.11.0)                                                                                                                             Downloaded   14.1MB/ 14.1MB
+==> Installing dependencies for actionlint: gmp and shellcheck
+==> Installing actionlint dependency: gmp
+==> Pouring gmp--6.3.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/gmp/6.3.0: 22 files, 3.4MB
+==> Installing actionlint dependency: shellcheck
+==> Pouring shellcheck--0.11.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/shellcheck/0.11.0: 8 files, 68.4MB
+==> Installing actionlint
+==> Pouring actionlint--1.7.12.arm64_tahoe.bottle.1.tar.gz
+🍺  /opt/homebrew/Cellar/actionlint/1.7.12: 8 files, 6.0MB
+==> Running `brew cleanup actionlint`...
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+```
 
 ←
 

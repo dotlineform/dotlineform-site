@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: architecture
 viewable: true
 ---
@@ -16,8 +16,8 @@ Studio is the same-repo catalogue authoring and maintenance system for the site.
 It lives under `studio/`.
 Admin, Analytics, Docs Viewer, and Admin-hosted UI Catalogue are separate local app boundaries in the same repository.
 
-The public Jekyll site remains the publishing surface.
-It lives outside `studio/` and should contain only public publishing source, public runtime files, public assets, and generated public output needed by GitHub Pages/Jekyll.
+The public static site artifact is the publishing surface.
+Its builder and config live under `public-site/`; publishable runtime files, public assets, and generated public output remain outside `studio/`.
 
 The repo is intentionally one repository:
 
@@ -26,7 +26,7 @@ The repo is intentionally one repository:
 - Analytics owns tag maintenance, Data Sharing route/API workflows, semantic-reference maintenance, and future analysis/visualisation workflows.
 - Docs Viewer owns docs viewing, docs source management, Docs Viewer payloads, docs conversion helpers, and the `/docs/` manage-mode service.
 - UI Catalogue owns isolated UI demos and reference assets under Admin route ownership.
-- Jekyll owns public layouts, includes, route pages, public route JavaScript/CSS, public media, and generated public runtime payloads.
+- `public-site/` owns public route rendering, artifact assembly, and source-leak checks; public route JavaScript/CSS, public media, and generated public runtime payloads remain in their public asset/data paths.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
 - Local working output, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
 
@@ -129,16 +129,14 @@ Public read-only installs such as `/library/` and `/analysis/` consume generated
 Manage-mode `/docs/` is owned by the standalone Docs Viewer service.
 Local Studio may link to that configured service, but it should not be the durable owner of the Docs Viewer shell or management endpoints.
 
-## Public Jekyll Surface
+## Public Static Site Surface
 
-Public Jekyll source and runtime remain outside `studio/`:
+Public static-site source and runtime remain outside `studio/`:
 
 | Path family | Role |
 | --- | --- |
-| `_config.yml`, `.ruby-version`, `Gemfile`, `Gemfile.lock` | Jekyll and package infrastructure. |
-| `_layouts/` and public `_includes/` | Public layouts/includes used by published routes. Studio-only and Docs Viewer shell internals do not belong here. |
-| `_works_print/` | Print-specific public Jekyll collection/page source. |
-| `works/`, `series/`, `catalogue/`, `recent/`, `search/`, `analysis/`, `library/`, `docs/`, `data/`, `logs/` | Public route surfaces and minimal route adapters when they publish pages or generated runtime payloads. |
+| `public-site/build/` | Static builder, route renderers, artifact copier, and artifact audit. |
+| `public-site/config/public-site.json` | Public artifact assembly config, copy allowlists, denylist audit rules, and public runtime constants. |
 | `assets/js/` | Public browser runtime for published pages. |
 | `assets/css/main.css` | Public site CSS and genuinely shared public primitives. Studio-only selectors live under `studio/app/assets/css/`. |
 | `assets/data/docs/scopes/` | Generated Docs Viewer payloads consumed by public read-only installs. |
@@ -156,7 +154,7 @@ First-party public pages, catalogue search rendering, Docs Viewer semantic refer
 Generated output paths should make the flow obvious:
 
 ```text
-studio/ source and services -> generated public artifacts -> Jekyll/GitHub Pages site
+studio/ source and services -> generated public artifacts -> public-site builder -> GitHub Pages artifact
 ```
 
 Generated public artifacts remain outside `studio/` when public pages need them.

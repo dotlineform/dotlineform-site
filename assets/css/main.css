@@ -1381,7 +1381,7 @@ figure.diagram figcaption{
   border-radius: 2px;
 }
 
-/* cards/_includes  */
+/* cards */
 .workIndexItem,
 .seriesIndexItem{
   display: grid;

@@ -2,9 +2,59 @@ name: Public site
 
 on:
   pull_request:
+    paths:
+      - ".github/workflows/public-site.yml"
+      - "_data/**"
+      - "CNAME"
+      - "android-chrome-*.png"
+      - "apple-touch-icon*.png"
+      - "assets/css/**"
+      - "assets/data/**"
+      - "assets/docs/interactive/library/**"
+      - "assets/js/**"
+      - "assets/moments/**"
+      - "assets/series/**"
+      - "assets/site/**"
+      - "assets/work_details/**"
+      - "assets/works/**"
+      - "docs-viewer/config/defaults/docs-viewer-public-config.json"
+      - "docs-viewer/config/routes/docs-viewer-public-routes.json"
+      - "docs-viewer/config/ui-text/public.json"
+      - "docs-viewer/runtime/js/**"
+      - "docs-viewer/static/css/docs-viewer.css"
+      - "favicon*.png"
+      - "favicon.ico"
+      - "public-site/**"
+      - "safari-pinned-tab.svg"
+      - "site.webmanifest"
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/public-site.yml"
+      - "_data/**"
+      - "CNAME"
+      - "android-chrome-*.png"
+      - "apple-touch-icon*.png"
+      - "assets/css/**"
+      - "assets/data/**"
+      - "assets/docs/interactive/library/**"
+      - "assets/js/**"
+      - "assets/moments/**"
+      - "assets/series/**"
+      - "assets/site/**"
+      - "assets/work_details/**"
+      - "assets/works/**"
+      - "docs-viewer/config/defaults/docs-viewer-public-config.json"
+      - "docs-viewer/config/routes/docs-viewer-public-routes.json"
+      - "docs-viewer/config/ui-text/public.json"
+      - "docs-viewer/runtime/js/**"
+      - "docs-viewer/static/css/docs-viewer.css"
+      - "favicon*.png"
+      - "favicon.ico"
+      - "public-site/**"
+      - "safari-pinned-tab.svg"
+      - "site.webmanifest"
   workflow_dispatch:
 
 permissions:

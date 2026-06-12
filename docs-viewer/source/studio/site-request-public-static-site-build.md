@@ -3,19 +3,22 @@ doc_id: site-request-public-static-site-build
 title: Public Static Site Build Request
 added_date: 2026-06-01
 last_updated: 2026-06-12
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 ---
 # Public Static Site Build Request
 
 Status:
 
-- in progress
-- This request defines the migration spec for replacing the public Jekyll/Liquid build with a repo-owned static public-site build.
+- done
+- This request defined and delivered the migration from the public Jekyll/Liquid build to a repo-owned static public-site build.
 - [Public Static Site Build Implementation Plan](/docs/?scope=studio&doc=public-static-site-build-implementation-plan) tracks the implementation batches.
 - [Public Route Model](/docs/?scope=studio&doc=public-route-model) is the durable route contract for this migration.
 - [GitHub Actions](/docs/?scope=studio&doc=github-actions) includes local `gh` CLI setup
-- Batch 1 audit and pre-migration decisions are complete.
+- Batches 1-6 are complete.
+- GitHub Pages now deploys the `Public site` Actions artifact built from `_public_site/`.
+- Local preview/build now use the Python static builder.
+- Jekyll/Ruby public build files and route stubs have been removed.
 - [Public JavaScript Runtime and Payload Review Request](/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review) is a post-migration follow-up, not a blocker for this migration.
 
 ## Summary
@@ -38,13 +41,13 @@ GitHub Pages should deploy a generated artifact with `.nojekyll` at the artifact
 
 ## Context
 
-The current public build is still Jekyll-owned:
+Before this migration, the public build was Jekyll-owned:
 
 - GitHub Pages runs an implicit Jekyll build when repository content changes.
 - Local public preview/build wrappers call `bundle exec jekyll serve` and `bundle exec jekyll build`.
 - `_config.yml` defines site values, permalinks, defaults, and publish exclusions.
 - `_layouts/` and `_includes/` contain Liquid templates for public routes.
-- public route pages such as `/series/`, `/recent/`, `/library/`, `/analysis/`, and `/catalogue/search/` still use Liquid for shell rendering and config injection.
+- public route pages such as `/series/`, `/recent/`, `/library/`, `/analysis/`, and `/catalogue/search/` used Liquid for shell rendering and config injection.
 
 GitHub Pages without Jekyll publishes static files as-is from a configured source or Actions artifact.
 

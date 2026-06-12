@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 20:05"
+last_updated: "2026-06-12 20:15"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -26,11 +26,12 @@ Current local and remote state:
 - `gh` is authenticated as `dotlineform` with `repo` and `workflow` scopes.
 - `gh repo view` reports `dotlineform/dotlineform-site`, default branch `main`, public visibility, and admin viewer permission.
 - GitHub Actions are enabled for the repo and allowed actions are set to `all`.
-- The only workflow currently listed is GitHub's `pages-build-deployment`, which belongs to the current Pages path rather than a repo-owned workflow file.
-- GitHub Pages currently reports `build_type: legacy`, source `main /`, custom domain `www.dotlineform.com`, custom 404 enabled, and HTTPS enforced.
-- The local public-site workflow is not active on GitHub until it is committed and pushed.
+- The repo-owned `Public site` workflow is active on GitHub.
+- GitHub Pages currently reports `build_type: workflow`, custom domain `www.dotlineform.com`, custom 404 enabled, and HTTPS enforced.
+- Repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
+- Production cutover run `27436556962` deployed Pages artifact `7600112973` to `https://www.dotlineform.com/`.
 
-So from this session Codex can create and inspect workflow files locally, use `gh` to inspect repo/Pages/Actions state, and after a workflow has been pushed, trigger and inspect workflow runs. Production cutover remains an explicit approval step because it changes the live deployment source.
+So from this session Codex can create and inspect workflow files locally, use `gh` to inspect repo/Pages/Actions state, trigger workflow runs, and inspect workflow logs. Production deployment now runs through the repo-owned `Public site` workflow.
 
 **How `_public_site/` is uploaded**
 
@@ -63,7 +64,7 @@ The local `_public_site/` directory is only preview/test output. The deployed `_
 
 **Deployment gate**
 
-The first repo-owned workflow is dual-running by default. It builds, audits, validates, configures Pages, and uploads the Pages artifact, but it does not deploy until the live cutover is explicitly enabled.
+The repo-owned workflow builds, audits, validates, configures Pages, uploads the Pages artifact, and deploys when the deployment gate passes.
 
 The deploy job runs only when all of these are true:
 
@@ -71,7 +72,15 @@ The deploy job runs only when all of these are true:
 - The workflow ref is `refs/heads/main`.
 - The repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
 
-Until that repository variable is enabled and the GitHub Pages source is switched to Actions artifact publishing, the current legacy Pages path remains live.
+The legacy branch/Jekyll Pages path is no longer the live publishing path.
+
+**Scoped workflow triggers**
+
+The workflow is scoped with `paths` filters on `pull_request` and `push` so unrelated commits to `main` do not rebuild or deploy the public site.
+
+The filter includes the static builder, workflow file, public-site config, root pipeline data, public CSS/JS/assets, generated public payloads, public catalogue/media asset trees, and public Docs Viewer runtime/config/style owners.
+
+`workflow_dispatch` remains unfiltered so a manual run can still rebuild and deploy the public artifact when needed.
 
 **Where `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set**
 
@@ -117,12 +126,12 @@ Debugging sequence:
 
 Build and audit failures normally reproduce locally. GitHub-only failures include Pages permissions, Pages environment settings, artifact deployment plumbing, and runner-specific filesystem assumptions such as filename case sensitivity.
 
-**What must happen on GitHub**
+**What happened on GitHub**
 
-- GitHub Actions runs only after the workflow file exists on GitHub.
-- Manual runs require `workflow_dispatch`; GitHub supports running those from the Actions tab, GitHub CLI, or REST API.
-- Pages custom workflow deployment must be enabled/configured for the repo’s Pages source.
-- The actual cutover is: GitHub Pages source changes from branch/Jekyll publishing to GitHub Actions artifact publishing.
+- The workflow file exists on GitHub and runs as `Public site`.
+- Manual runs use `workflow_dispatch`; GitHub supports running those from the Actions tab, GitHub CLI, or REST API.
+- Pages custom workflow deployment is enabled for the repo's Pages source.
+- The actual cutover was: GitHub Pages source changed from branch/Jekyll publishing to GitHub Actions artifact publishing.
 
 Officially, GitHub Pages custom workflows use Actions plus the Pages artifact/deploy actions, and the deploy job needs `pages: write` and `id-token: write` permissions with a Pages environment, typically `github-pages`: [GitHub custom workflows for Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
@@ -141,7 +150,7 @@ Manual runs are via `workflow_dispatch`: [manually run a workflow](https://docs.
 - Trigger `workflow_dispatch` runs with `gh workflow run ...` after the workflow file exists on GitHub.
 - Inspect workflow run status and logs with `gh run list`, `gh run view`, and related commands.
 - Push branches or workflow commits only after the user explicitly asks to publish local changes.
-- Prepare or execute the Pages-source cutover through `gh api` only after explicit approval, because it changes how the live site is deployed.
+- Inspect or adjust the Pages-source configuration through `gh api` only after explicit approval, because it changes how the live site is deployed.
 
 **What remains user-owned**
 
@@ -150,9 +159,9 @@ Manual runs are via `workflow_dispatch`: [manually run a workflow](https://docs.
 - Complete any GitHub browser approval prompt for first remote workflow runs.
 - Handle custom domain/DNS changes. No DNS change is planned for the static-builder migration.
 
-The planned safe sequence is still:
+The current production path is:
 
-- build workflow locally,
-- push it in non-deploy/dual-running mode,
-- manually verify remote runs,
-- then switch Pages to Actions artifact deployment only after the artifact passes checks.
+- build `_public_site/` in GitHub Actions,
+- validate the artifact,
+- upload the Pages artifact,
+- deploy through `actions/deploy-pages`.

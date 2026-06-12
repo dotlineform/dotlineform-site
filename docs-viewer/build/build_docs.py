@@ -212,18 +212,12 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def load_simple_yaml_scalars(path: Path) -> dict[str, str]:
-    if not path.exists():
-        return {}
-    values: dict[str, str] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#") or ":" not in stripped:
-            continue
-        key, raw_value = stripped.split(":", 1)
-        value = str(parse_front_matter_value(raw_value))
-        values[key.strip()] = value.strip()
-    return values
+def load_public_site_config(repo_root: Path) -> dict[str, Any]:
+    path = repo_root / "public-site" / "config" / "public-site.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"public-site config must be a JSON object: {path}")
+    return payload
 
 
 def normalize_doc_ids(values: list[str] | tuple[str, ...] | None) -> list[str]:
@@ -263,7 +257,7 @@ class DocsDataBuilder:
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
-        self.site_config = load_simple_yaml_scalars(self.repo_root / "_config.yml")
+        self.site_config = load_public_site_config(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
         self._catalogue_cache: dict[str, dict[str, dict[str, Any]]] = {}
@@ -738,7 +732,8 @@ class DocsDataBuilder:
         if re.match(r"\A[a-z][a-z0-9+\-.]*://", relative_path, re.IGNORECASE):
             return relative_path
         clean_path = relative_path.lstrip("/")
-        media_base = str(self.site_config.get("media_base") or "").strip()
+        media = self.site_config.get("media")
+        media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
         return f"/{clean_path}" if not media_base else f"{media_base.rstrip('/')}/{clean_path}"
 
     def resolve_interactive_html_tokens(self, markdown: str) -> str:

@@ -15,7 +15,6 @@
           "studio/data/canonical/catalogue-markdown"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-catalogue-source"
     },
     {
@@ -86,7 +85,6 @@
           "studio/data/generated/activity/work-storage-index.json"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-catalogue"
     },
     {
@@ -107,7 +105,6 @@
           "analytics-app/data/canonical/tag-groups.json"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "analytics"
     },
     {
@@ -126,7 +123,6 @@
           "studio/data/config/runtime/activity-contract.json"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "config-studio-config-json"
     },
     {
@@ -141,7 +137,6 @@
           "docs-viewer/source/studio"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-studio"
     },
     {
@@ -158,7 +153,6 @@
           "docs-viewer/generated/docs/studio"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-studio"
     },
     {
@@ -173,7 +167,6 @@
           "docs-viewer/generated/search/studio"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "search-build-pipeline-studio"
     },
     {
@@ -188,7 +181,6 @@
           "docs-viewer/source/library"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-library"
     },
     {
@@ -233,7 +225,6 @@
           "docs-viewer/source/analysis"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "data-models-analysis"
     },
     {
@@ -357,7 +348,6 @@
           "assets/studio"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "local-studio-app-public-surface"
     },
     {
@@ -372,7 +362,6 @@
           "analytics-app"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "local-studio-app"
     },
     {
@@ -392,7 +381,6 @@
           "_includes/ui_catalogue_notes"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "ui-catalogue"
     },
     {
@@ -409,7 +397,6 @@
           "logs"
         ]
       },
-      "jekyll_exclude_required": true,
       "owner_doc": "local-setup"
     }
   ],
@@ -453,13 +440,13 @@
   ],
   "public_source_reference_audit": {
     "scan_paths": [
-      "_layouts/**/*.html",
-      "_includes/**/*.html",
       "assets/js/**/*.js",
       "assets/css/**/*.css",
-      "*.md"
+      "public-site/build/**/*.py"
     ],
-    "ignore_paths": [],
+    "ignore_paths": [
+      "public-site/build/validate_artifact.py"
+    ],
       "forbidden_substrings": [
         "assets/studio/",
         "/assets/studio/",

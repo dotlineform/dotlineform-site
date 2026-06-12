@@ -15,7 +15,7 @@ from typing import Any, Callable
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "_config.yml").exists():
+    if (_candidate / "public-site" / "config" / "public-site.json").exists():
         if str(_candidate) not in sys.path:
             sys.path.insert(0, str(_candidate))
         break
@@ -54,7 +54,7 @@ def utc_now() -> str:
 def find_repo_root(start: Path) -> Path | None:
     current = start.resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
     return None
 
@@ -62,8 +62,8 @@ def find_repo_root(start: Path) -> Path | None:
 def detect_repo_root(explicit_root: str) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
-        if not (repo_root / "_config.yml").exists():
-            raise SystemExit(f"--repo-root does not look like repo root (missing _config.yml): {repo_root}")
+        if not (repo_root / "public-site" / "config" / "public-site.json").exists():
+            raise SystemExit(f"--repo-root does not look like repo root (missing public-site/config/public-site.json): {repo_root}")
         return repo_root
 
     for start in [Path.cwd(), Path(__file__).resolve().parent]:

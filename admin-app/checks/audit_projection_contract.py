@@ -7,7 +7,7 @@ import argparse
 import json
 import sys
 from pathlib import Path, PurePosixPath
-from typing import Any, Iterable, Mapping
+from typing import Any, Mapping
 
 
 DEFAULT_CONTRACT_PATH = Path("admin-app/checks/projection_contract.json")
@@ -145,71 +145,6 @@ def validate_contract(contract: Mapping[str, Any]) -> None:
     as_string_list(source_audit.get("scan_paths"), "public_source_reference_audit.scan_paths")
     as_string_list(source_audit.get("ignore_paths"), "public_source_reference_audit.ignore_paths", allow_empty=True)
     as_string_list(source_audit.get("forbidden_substrings"), "public_source_reference_audit.forbidden_substrings")
-
-
-def split_exclude_values(config_path: Path) -> list[str]:
-    if not config_path.exists():
-        return []
-    values: list[str] = []
-    in_exclude = False
-    for raw_line in read_text(config_path).splitlines():
-        stripped = raw_line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if raw_line and not raw_line.startswith((" ", "\t", "-")):
-            in_exclude = stripped == "exclude:"
-            continue
-        if not in_exclude:
-            continue
-        if stripped.startswith("- "):
-            value = stripped[2:].strip().strip("'\"").rstrip("/")
-            if value:
-                values.append(value)
-    return values
-
-
-def root_for_pattern(path_pattern: str) -> str:
-    parts: list[str] = []
-    for part in PurePosixPath(path_pattern).parts:
-        if any(char in part for char in "*?["):
-            break
-        parts.append(part)
-    if not parts:
-        return path_pattern.rstrip("/")
-    root = PurePosixPath(*parts).as_posix()
-    if "." in PurePosixPath(root).name and root == path_pattern:
-        return root
-    return root.rstrip("/")
-
-
-def path_is_covered_by_exclude(path_pattern: str, excludes: Iterable[str]) -> bool:
-    root = root_for_pattern(path_pattern)
-    for raw_exclude in excludes:
-        exclude = raw_exclude.rstrip("/")
-        if not exclude:
-            continue
-        if root == exclude or root.startswith(f"{exclude}/"):
-            return True
-    return False
-
-
-def audit_jekyll_exclusions(repo_root: Path, contract: Mapping[str, Any]) -> list[str]:
-    failures: list[str] = []
-    excludes = split_exclude_values(repo_root / "_config.yml")
-    for family in contract["artifact_families"]:
-        if not family.get("jekyll_exclude_required"):
-            continue
-        family_id = family["id"]
-        for path_pattern in family["repo_paths"]:
-            if not path_is_covered_by_exclude(path_pattern, excludes):
-                failures.append(
-                    f"{family_id}: {_config_rel(path_pattern)} is not covered by _config.yml exclude"
-                )
-    return failures
-
-
-def _config_rel(path_pattern: str) -> str:
-    return path_pattern
 
 
 def glob_matches(root: Path, path_pattern: str) -> list[Path]:
@@ -393,7 +328,6 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     failures: list[str] = []
-    failures.extend(audit_jekyll_exclusions(repo_root, contract))
     failures.extend(audit_public_source_references(repo_root, contract))
     if not args.skip_field_leaks:
         failures.extend(audit_field_leaks(repo_root, contract))

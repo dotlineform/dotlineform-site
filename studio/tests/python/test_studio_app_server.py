@@ -23,10 +23,16 @@ from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
 
+def write_repo_marker(repo_root: Path) -> None:
+    path = repo_root / "public-site/config/public-site.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('{"schema_version":"public_site_config_v1"}\n', encoding="utf-8")
+
+
 def test_runtime_config_exposes_adapter_contract() -> None:
-    original_env = {key: os.environ.get(key) for key in ("JEKYLL_HOST", "JEKYLL_PORT", "PUBLIC_SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
-    os.environ["JEKYLL_HOST"] = "127.0.0.1"
-    os.environ["JEKYLL_PORT"] = "4000"
+    original_env = {key: os.environ.get(key) for key in ("PUBLIC_SITE_HOST", "PUBLIC_SITE_PORT", "PUBLIC_SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
+    os.environ["PUBLIC_SITE_HOST"] = "127.0.0.1"
+    os.environ["PUBLIC_SITE_PORT"] = "4000"
     os.environ.pop("PUBLIC_SITE_PREVIEW_BASE", None)
     os.environ.pop("PRODUCTION_SITE_BASE", None)
     try:
@@ -240,20 +246,12 @@ def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
     assert "/studio/api/data-sharing" not in transport_source
 
 
-def test_public_jekyll_build_and_studio_server_exclude_data_sharing_config() -> None:
-    excludes: set[str] = set()
-    in_exclude = False
-    for line in (REPO_ROOT / "_config.yml").read_text(encoding="utf-8").splitlines():
-        if line == "exclude:":
-            in_exclude = True
-            continue
-        if in_exclude and line and not line.startswith("  "):
-            break
-        if in_exclude and line.startswith("  - "):
-            excludes.add(line.removeprefix("  - ").strip())
+def test_public_artifact_audit_and_studio_server_exclude_data_sharing_config() -> None:
+    public_site_config = json.loads((REPO_ROOT / "public-site/config/public-site.json").read_text(encoding="utf-8"))
+    denied_prefixes = set(public_site_config["audit"]["denied_path_prefixes"])
 
-    assert "data-sharing/config/" in excludes
-    assert "admin-app/" in excludes
+    assert "data-sharing/" in denied_prefixes
+    assert "admin-app/" in denied_prefixes
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
 
@@ -292,7 +290,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         project_dir = projects_base / "projects" / "alpha"
         source_dir.mkdir(parents=True)
         project_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (project_dir / "one.jpg").write_bytes(b"")
         (project_dir / "extra.jpg").write_bytes(b"")
         (source_dir / "works.json").write_text(
@@ -367,7 +365,7 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00001": {"work_id": "00001", "title": "One", "status": "draft"}}}),
             encoding="utf-8",
@@ -398,7 +396,7 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
@@ -462,7 +460,7 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00042": {"work_id": "00042", "title": "Draft", "status": "draft", "series_ids": []}}}),
             encoding="utf-8",
@@ -494,7 +492,7 @@ def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps(
                 {
@@ -551,7 +549,7 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
@@ -600,7 +598,7 @@ def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps(
                 {
@@ -660,7 +658,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps(
                 {
@@ -721,7 +719,7 @@ def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route()
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps(
                 {
@@ -798,7 +796,7 @@ def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() ->
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
@@ -845,7 +843,7 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
-        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",

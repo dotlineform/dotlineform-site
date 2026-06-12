@@ -17,7 +17,7 @@ from typing import Dict, Iterable, List, Sequence
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "_config.yml").exists():
+    if (_candidate / "public-site" / "config" / "public-site.json").exists():
         if str(_candidate) not in sys.path:
             sys.path.insert(0, str(_candidate))
         break

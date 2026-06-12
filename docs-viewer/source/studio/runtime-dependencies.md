@@ -2,7 +2,7 @@
 doc_id: runtime-dependencies
 title: Runtime Dependencies
 added_date: 2026-04-23
-last_updated: 2026-06-01
+last_updated: 2026-06-12
 parent_id: dev-home
 ---
 # Runtime Dependencies
@@ -22,11 +22,6 @@ Current checked-in dependency sources:
 
 - Python packages:
   - `requirements.txt`
-- Ruby/Jekyll packages:
-  - `Gemfile`
-  - `Gemfile.lock`
-- Ruby runtime:
-  - `.ruby-version`
 - system tools and cloud bootstrap expectations:
   - `.codex/setup.sh`
   - `.devcontainer/` files when present
@@ -36,13 +31,12 @@ Current checked-in dependency sources:
 
 ## Dependency Categories
 
-The repo currently has five practical dependency layers:
+The repo currently has four practical dependency layers:
 
 1. Python packages from `requirements.txt`
-2. Ruby/Jekyll packages from the GitHub Pages stack
-3. external command-line tools used by media/generation workflows
-4. local app/service runners that consume Python, plus public-site preview/build runners that consume Ruby/Jekyll
-5. local or cloud runtime bootstrap scripts that install or verify the above
+2. external command-line tools used by media/generation workflows
+3. local app/service runners and public-site preview/build runners that consume Python
+4. local or cloud runtime bootstrap scripts that install or verify the above
 
 ## Python Packages
 
@@ -64,33 +58,6 @@ Current interpretation:
 - `Pillow` is checked-in because Markdown package imports convert local package images to WebP during write
 - `markdown-it-py` is checked in because Docs Viewer payload generation and catalogue prose rendering use a pinned Python Markdown renderer
 - in cloud environments that never touch Docs Import or generated Markdown rendering, these feature-specific packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
-
-## Ruby And Jekyll Stack
-
-The site build/runtime side is governed by the GitHub Pages Jekyll stack rather than ad hoc Ruby gems.
-
-Current checked-in sources:
-
-- `Gemfile`
-- `Gemfile.lock`
-- `.ruby-version`
-
-Current repo role:
-
-- build the site locally with Jekyll
-- render public-site Markdown through the Jekyll Markdown converter used by public preview/build
-- keep publish-sensitive checks aligned with the GitHub Pages-compatible stack
-
-Current practical dependency boundary:
-
-- `github-pages` is the top-level Ruby gem contract
-- Jekyll and related gems come through that stack
-- public-site preview/build and publish-sensitive site verification should therefore be treated as depending on the repo's pinned Ruby/Bundler/Jekyll contract, not just on “some Ruby”
-
-Local/cloud criticality:
-
-- local: critical for any Jekyll build, public-site rendering, or publish-sensitive verification
-- cloud: critical in parity mode and for final verification; less critical for Python-only script work that does not touch site rendering
 
 ## External Command-Line Tools
 
@@ -115,15 +82,14 @@ Current interpretation:
 ### Always important for parity
 
 - `requirements.txt`
-- `Gemfile` / `Gemfile.lock`
-- `.ruby-version`
+- `public-site/config/public-site.json`
 
 These are the main checked-in contracts that keep local and cloud runs aligned.
 
 ### Usually needed in both local and cloud
 
 - `openpyxl`
-- the pinned Ruby/Bundler/Jekyll stack when public-site rendering matters
+- the Python static builder when public-site rendering matters
 
 ### Feature-specific but now part of the repo baseline install
 
@@ -154,7 +120,7 @@ Current local app boundaries:
 
 | Local app | Runner | Default URL | Dependency role |
 | --- | --- | --- | --- |
-| Public site preview | `bin/public-site-preview` | `http://127.0.0.1:4000/` | Ruby/Bundler/Jekyll stack from `Gemfile`, `Gemfile.lock`, and `.ruby-version`. |
+| Public site preview | `bin/public-site-preview` | `http://127.0.0.1:4000/` | Python runtime plus `public-site/build/`, public assets, and generated public payloads. |
 | Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, docs watcher, and startup maintenance tasks. |
 | Local Admin | `bin/local-admin` | `http://127.0.0.1:8768/admin/` | Python runtime plus Admin source for operational pages and Admin-hosted UI Catalogue routes. |
 | Local Analytics | `bin/local-analytics` | `http://127.0.0.1:8766/analytics/` | Python runtime plus Analytics app source, Analytics tag helpers, and Data Sharing workflow/adapters. |
@@ -162,8 +128,7 @@ Current local app boundaries:
 
 `bin/local-all` supervises these sibling services when a local session needs the full stack.
 The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue routes do not depend on Studio route config.
-Docs Viewer docs/search generation, catalogue search generation, and catalogue prose rendering are Python app-generation paths.
-Ruby/Bundler/Jekyll is reserved for public-site preview/build and publish-sensitive verification.
+Docs Viewer docs/search generation, catalogue search generation, catalogue prose rendering, and public-site preview/build are Python app-generation paths.
 
 ## Codespaces And Codex Cloud Expectations
 
@@ -177,7 +142,7 @@ Current practical split:
 
 - critical for cloud parity:
   - Python packages in `requirements.txt`
-  - pinned Ruby/Bundler/Jekyll contract when running parity checks
+  - public-site static builder and config when running publish-sensitive checks
 - less critical for simple cloud sessions:
   - media system tools when the task does not touch media workflows
 
@@ -195,11 +160,6 @@ For Python packages:
 - update this doc
 - update [Local Setup](/docs/?scope=studio&doc=local-setup) or [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments) when bootstrap or verification guidance changes materially
 
-For Ruby/Jekyll changes:
-
-- keep `Gemfile.lock` and `.ruby-version` in sync with the intended parity contract
-- update this doc and the relevant setup/runtime docs
-
 For external command-line tools:
 
 - document whether they are baseline or workflow-specific
@@ -207,7 +167,7 @@ For external command-line tools:
 
 ## Benefits
 
-- makes `requirements.txt` and the Jekyll stack easier to reason about
+- makes `requirements.txt` and the public-site builder stack easier to reason about
 - clarifies which dependencies are baseline versus workflow-specific
 - reduces ambiguity when cloud sessions install the same dependency set as local work
 

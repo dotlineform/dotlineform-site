@@ -25,14 +25,24 @@
     "public-site": {
       "label": "Public Site",
       "include": [
-        "_config.yml",
         "_data/",
-        "_includes/",
-        "_layouts/",
         "assets/css/",
-        "assets/js/"
+        "assets/data/",
+        "assets/docs/interactive/library/",
+        "assets/js/",
+        "assets/moments/",
+        "assets/series/",
+        "assets/site/",
+        "assets/work_details/",
+        "assets/works/",
+        "docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "docs-viewer/config/ui-text/public.json",
+        "docs-viewer/runtime/js/",
+        "docs-viewer/static/css/docs-viewer.css",
+        "public-site/"
       ],
-      "exclude": ["_site/", "assets/data/"]
+      "exclude": ["_public_site/", "_site/"]
     },
     "studio": {
       "label": "Studio",
@@ -42,17 +52,21 @@
     "all": {
       "label": "All",
       "include": [
-        "_config.yml",
         "_data/",
-        "_includes/",
-        "_layouts/",
         "admin-app/",
         "analytics-app/",
         "assets/css/",
+        "assets/data/",
         "assets/docs/",
         "assets/js/",
+        "assets/moments/",
+        "assets/series/",
+        "assets/site/",
+        "assets/work_details/",
+        "assets/works/",
         "data-sharing/",
         "docs-viewer/",
+        "public-site/",
         "studio/"
       ],
       "exclude": [
@@ -123,7 +137,6 @@
     "config": {
       "label": "Configuration",
       "include": [
-        "_config.yml",
         "_data/",
         "admin-app/app/frontend/config/",
         "analytics-app/app/frontend/config/",
@@ -157,12 +170,12 @@
     "public-route": {
       "label": "Public routes",
       "include": [
-        "_includes/",
-        "_layouts/",
         "assets/css/",
         "assets/js/",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
-        "docs-viewer/config/defaults/docs-viewer-public-config.json"
+        "docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "public-site/build/",
+        "public-site/config/public-site.json"
       ]
     }
   },
@@ -208,7 +221,7 @@
     },
     "config": {
       "label": "Config",
-      "include": ["_config.yml", "**/config/", "**/*config*", "studio/data/config/"]
+      "include": ["**/config/", "**/*config*", "studio/data/config/"]
     },
     "activity": {
       "label": "Activity",

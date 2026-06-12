@@ -2,7 +2,7 @@
 doc_id: smoke-testing
 title: Browser Smoke Testing
 added_date: 2026-05-01
-last_updated: 2026-06-10
+last_updated: 2026-06-12
 parent_id: testing
 viewable: true
 ---
@@ -49,11 +49,11 @@ Do not put a smoke into `studio-smoke` just because it uses a browser. The profi
 Use the target the route expects:
 
 - local app server for Admin, Analytics, Docs Viewer manage-service, and operational app routes
-- temporary Jekyll build for public-site behavior and public Docs Viewer Library/Analysis installs
+- temporary static public-site build for public-site behavior and public Docs Viewer Library/Analysis installs
 - source module root for module-contract smokes that import frontend modules directly
 - route-specific fixture server only when the script owns that setup explicitly
 
-`docs-viewer-smoke` and `studio-smoke` prepare a temporary Jekyll build at `/tmp/dlf-jekyll-build`. They clean it before and after the run unless `--keep-temp-build` is used.
+`docs-viewer-smoke` and `studio-smoke` prepare a temporary static public-site build at `/tmp/dlf-public-site-build`. They clean it before and after the run unless `--keep-temp-build` is used.
 
 Do not use a raw `file://` URL for pages that depend on module imports, local services, or same-origin asset paths.
 
@@ -127,7 +127,7 @@ Do not use DOM activation for the primary action being verified. If the action b
 
 ## Public Builds
 
-For public-read behavior, use a fresh temporary Jekyll build.
+For public-read behavior, use a fresh temporary static public-site build.
 
 Do not use the repo root or a stale `_site` directory as evidence for public route behavior. Those targets can mask public-build exclusions, missing payloads, or local-only modules.
 

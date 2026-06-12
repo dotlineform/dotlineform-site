@@ -29,15 +29,12 @@ SOURCE_EXTENSIONS = {
     ".yml",
 }
 SOURCE_FILENAMES = {
-    "Gemfile",
-    "Gemfile.lock",
     "Rakefile",
     "Makefile",
 }
 
 GLOBAL_EXCLUDE_RULES: tuple[tuple[str, str], ...] = (
     (".git/", "dependency-cache"),
-    (".jekyll-cache/", "cache"),
     (".pytest_cache/", "cache"),
     (".ruff_cache/", "cache"),
     (".vscode/", "local-editor"),

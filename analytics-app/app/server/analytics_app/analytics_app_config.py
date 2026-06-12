@@ -272,11 +272,11 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
 
 
 def runtime_site_bases() -> dict[str, object]:
-    jekyll_host = os.environ.get("JEKYLL_HOST", "127.0.0.1").strip() or "127.0.0.1"
-    jekyll_port = os.environ.get("JEKYLL_PORT", "4000").strip() or "4000"
+    public_site_host = os.environ.get("PUBLIC_SITE_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    public_site_port = os.environ.get("PUBLIC_SITE_PORT", "4000").strip() or "4000"
     public_preview_base = os.environ.get("PUBLIC_SITE_PREVIEW_BASE", "").strip()
     if not public_preview_base:
-        public_preview_base = f"http://{jekyll_host}:{jekyll_port}"
+        public_preview_base = f"http://{public_site_host}:{public_site_port}"
     production_base = os.environ.get("PRODUCTION_SITE_BASE", PRODUCTION_SITE_BASE).strip() or PRODUCTION_SITE_BASE
 
     return {

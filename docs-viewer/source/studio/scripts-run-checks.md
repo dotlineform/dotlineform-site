@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: dev-home
 ---
 # Run Checks
@@ -37,7 +37,7 @@ Run the broad profile:
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
 ```
 
-Keep the temporary Jekyll smoke-test build for debugging:
+Keep the temporary public-site smoke-test build for debugging:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke --keep-temp-build
@@ -52,9 +52,9 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-vie
 - `docs`
   Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, Docs Broken Links behavior, and Docs Viewer contract fixtures from `docs-viewer/tests/python/`, plus Analytics-owned Data Sharing checks; then rebuilds generated Studio docs payloads and Studio docs search payloads.
 - `docs-viewer-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained Docs Viewer route, standalone service, and public read-only smoke checks. Browser module-contract suites are not required smoke targets.
+  Builds the static public site to a temporary destination and runs retained Docs Viewer route, standalone service, and public read-only smoke checks. Browser module-contract suites are not required smoke targets.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained Studio-owned browser smoke checks, including public-site theme behavior and catalogue route/module checks. Docs Viewer smoke checks live only in `docs-viewer-smoke`; Analytics smoke checks live only in `analytics-smoke`.
+  Builds the static public site to a temporary destination and runs retained Studio-owned browser smoke checks, including public-site theme behavior and catalogue route/module checks. Docs Viewer smoke checks live only in `docs-viewer-smoke`; Analytics smoke checks live only in `analytics-smoke`.
 - `admin-smoke`
   Runs Admin home and Admin operational route smoke checks.
 - `analytics-smoke`
@@ -73,8 +73,8 @@ Each run creates:
 - one `.log` file per command
 
 The summary file is the path Codex should report in close-out.
-Smoke profiles use `/tmp/dlf-jekyll-build` as a temporary Jekyll destination.
-The runner removes any existing temp build before `jekyll-temp-build` and removes the temp build again after the profile finishes, unless `--keep-temp-build` is passed.
+Smoke profiles use `/tmp/dlf-public-site-build` as a temporary static public-site destination.
+The runner removes any existing temp build before `public-site-temp-build` and removes the temp build again after the profile finishes, unless `--keep-temp-build` is passed.
 
 ## Related References
 

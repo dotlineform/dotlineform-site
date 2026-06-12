@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: local-setup
 viewable: true
 ---
@@ -22,7 +22,7 @@ docs-viewer/bin/docs-viewer
 
 ## Purpose
 
-Local Studio, Local Admin, Local Analytics, public Jekyll preview, and Docs Viewer have separate launcher commands.
+Local Studio, Local Admin, Local Analytics, public static preview, and Docs Viewer have separate launcher commands.
 
 `bin/local-studio` 
 - starts the Local Studio app for Studio catalogue routes and APIs
@@ -41,10 +41,9 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 - starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
 
 `bin/public-site-preview` and `bin/public-site-build`
-- public-site Jekyll commands that use `_config.yml` by default.
-- Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site work;
-- `bin/public-site-build` passes any extra arguments through to Jekyll, so an isolated verification build can use:
-  - `bin/public-site-build --destination /tmp/dlf-jekyll-build`
+- public static-site commands that use `public-site/config/public-site.json`.
+- `bin/public-site-build` passes builder arguments through, so an isolated verification build can use:
+  - `bin/public-site-build --destination /tmp/dlf-public-site-build --audit`
 
 `bin/local-all`
 - orchestration runner
@@ -59,7 +58,6 @@ Each command:
 - changes into the repo root
 - loads `var/local/site.env` when present
 - uses the repo's preferred Python executable for local app runners and maintenance tasks
-- uses the repo's preferred Ruby/Bundler stack only for explicit public-site preview/build commands
 - otherwise falls back to the corresponding executable on `PATH`
 
 ## Local Configuration
@@ -115,18 +113,14 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `1`
   used by `bin/local-all`; set to `0` to skip the public-site preview child process
 - `PUBLIC_SITE_HOST`
-  default: `JEKYLL_HOST` when set, otherwise `127.0.0.1`
+  default: `127.0.0.1`
   used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
 - `PUBLIC_SITE_PORT`
-  default: `JEKYLL_PORT` when set, otherwise `4000`
+  default: `4000`
   used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
-- `PUBLIC_SITE_CONFIG`
-  default: `_config.yml`
-  used by `bin/public-site-preview` and `bin/public-site-build`
-- `PUBLIC_SITE_LIVERELOAD`
-  default: `0`
-  accepted enabled values: `1`, `on`, `true`, or `yes`
-  used by `bin/public-site-preview`; can also be enabled per run with `bin/public-site-preview --livereload`
+- `PUBLIC_SITE_DESTINATION`
+  default: `_public_site`
+  used by `bin/public-site-preview`
 - `DOCS_VIEWER_HOST`
   default: `127.0.0.1`
   used by the Docs Viewer web service and preflighted by `bin/local-all`
@@ -200,7 +194,7 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 - route inventory: [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
 - endpoint inventory: [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)
 
-### Public Jekyll Preview
+### Public Static Preview
 
 Explicit public-site preview command:
 
@@ -208,17 +202,7 @@ Explicit public-site preview command:
 bin/public-site-preview
 ```
 
-It runs:
-
-```bash
-bundle exec jekyll serve --config "$PUBLIC_SITE_CONFIG" --host "$PUBLIC_SITE_HOST" --port "$PUBLIC_SITE_PORT"
-```
-
-Pass `--livereload` to enable Jekyll LiveReload for a preview session:
-
-```bash
-bin/public-site-preview --livereload
-```
+It runs the Python static builder, then serves the generated artifact with Python's HTTP server.
 
 Explicit public-site build command:
 
@@ -229,10 +213,10 @@ bin/public-site-build
 It runs:
 
 ```bash
-bundle exec jekyll build --config "$PUBLIC_SITE_CONFIG"
+$HOME/miniconda3/bin/python3 public-site/build/build_site.py
 ```
 
-Both public-site commands use `_config.yml` by default and do not start local Studio services.
+Both public-site commands use `public-site/config/public-site.json` by default and do not start local Studio services.
 
 ### Local Analytics App
 

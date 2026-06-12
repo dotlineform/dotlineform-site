@@ -69,7 +69,9 @@ def test_runtime_env_site_file_wins_over_inherited_shell() -> None:
 def test_missing_default_site_env_falls_back_to_process_env() -> None:
     with tempfile.TemporaryDirectory() as temp:
         repo = Path(temp)
-        (repo / "_config.yml").write_text("", encoding="utf-8")
+        marker = repo / "public-site/config/public-site.json"
+        marker.parent.mkdir(parents=True)
+        marker.write_text('{"schema_version":"public_site_config_v1"}\n', encoding="utf-8")
 
         values = local_env.runtime_env(repo_root=repo, environ={"DOTLINEFORM_PROJECTS_BASE_DIR": "/tmp/projects"})
 

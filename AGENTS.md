@@ -40,18 +40,14 @@
 - For commands that clearly bind loopback ports or launch browser smokes, run them with elevated localhost permissions immediately in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, say that the sandbox cannot reach it and use an isolated temporary build/server only if automated verification needs it.
 
-## Public Jekyll Toolchain
+## Public Static Site Toolchain
 
-- Ruby/Jekyll remains the public-site preview/build layer. App-facing Docs Viewer, search, catalogue search, and catalogue prose builders are Python-owned.
-- The public Jekyll layer expects `.ruby-version` = `3.1.6` and Bundler = `2.6.9`.
-- In Codex/sandbox runs, do not rely on system `ruby`/`bundle` (`/usr/bin/*`).
-- Use rbenv shims explicitly for verification:
-  - `$HOME/.rbenv/shims/ruby -v`
-  - `$HOME/.rbenv/shims/bundle -v`
-  - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet`
-- If `jekyll serve` is already running, do not verify against the default `_site/` destination concurrently. Use a separate destination such as `/tmp/dlf-jekyll-build`.
-- If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using shim commands before reporting an issue.
-- Local Studio is served by `bin/local-studio`, not by a Jekyll overlay.
+- The public-site preview/build layer is the Python static builder in `public-site/build/`.
+- `public-site/config/public-site.json` owns public-site assembly config and is the repo-root marker for local Python tooling.
+- Use `bin/public-site-build --destination <path> --audit` for public artifact builds.
+- Use `bin/public-site-preview` for local public-site preview; it builds `_public_site/` and serves it with Python's HTTP server.
+- For isolated verification, build to a temporary destination such as `/tmp/dlf-public-site-build` rather than relying on checked-out generated output.
+- Local Studio is served by `bin/local-studio`, not by the public-site preview server.
 
 ## Tests
 
@@ -82,7 +78,7 @@
 - Required shared env vars for media/generation flows: `DOTLINEFORM_PROJECTS_BASE_DIR`
 - Optional shared env var: `MAKE_SRCSET_JOBS`
 - Keep remote media credentials out of tracked files; use platform secret stores.
-- Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime work. For public Jekyll build or preview issues, also check Ruby, Bundler, and Jekyll.
+- Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime, public-site build, and preview work.
 - Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
 
 ## Git And Change Hygiene

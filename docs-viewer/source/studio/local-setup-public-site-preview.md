@@ -2,153 +2,82 @@
 doc_id: local-setup-public-site-preview
 title: Local Setup Public Site Preview
 added_date: 2026-05-23
-last_updated: 2026-05-23
+last_updated: 2026-06-12
 parent_id: local-setup
 ---
 # Local Setup Public Site Preview
 
-The public Jekyll site and Local Studio use separate commands.
+The public site and Local Studio use separate commands.
 
 Use `bin/local-studio` for Studio services.
-Use `bin/public-site-preview` or `bin/public-site-build` for public-site Jekyll work.
+Use `bin/public-site-preview` or `bin/public-site-build` for public-site static work.
 
 ## Preview versus build
 
-`bin/public-site-preview` starts a local Jekyll preview server.
-It is the normal command when you want to open the public site in a browser while editing public pages, layouts, includes, CSS, or public assets.
+`bin/public-site-preview` builds the static artifact and serves it with Python's HTTP server.
+It is the normal command when you want to open the public site in a browser while editing public route renderers, CSS, JavaScript, public assets, generated public payloads, or public Docs Viewer runtime/config files.
 
 ```bash
 bin/public-site-preview
 ```
 
-The preview command runs Jekyll serve with the repo defaults:
+The preview command runs the static builder first:
 
 ```bash
-bundle exec jekyll serve
+$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit
 ```
 
-`bin/public-site-build` runs a one-shot static build and exits.
+Then it serves `_public_site/` at `http://127.0.0.1:4000/`.
+
+`bin/public-site-build` runs the same builder and exits.
 Use it when you want to produce or verify the built site output without keeping a local preview server running.
 
 ```bash
-bin/public-site-build
+bin/public-site-build --destination /tmp/dlf-public-site-build --audit
 ```
 
-The build command runs:
+## CSS and runtime changes
 
-```bash
-bundle exec jekyll build
-```
+The static preview command rebuilds once at startup.
+After changing public CSS, JavaScript, route renderer code, public config, or generated public payloads, restart `bin/public-site-preview` or rerun `bin/public-site-build`.
 
-`bin/public-site-build` passes extra arguments through to Jekyll, so an isolated output directory can be requested like this:
+Browser cache can hide a CSS or JavaScript update; hard refresh if the page still shows the old assets.
 
-```bash
-bin/public-site-build --destination /tmp/dlf-jekyll-build
-```
+## Artifact boundary
 
-## CSS changes
+Only files copied or rendered into the configured destination are part of the public artifact.
+`public-site/config/public-site.json` owns the public file/tree allowlists, required artifact checks, denied source paths, and public runtime config values.
 
-`bin/public-site-preview` uses Jekyll serve, so Jekyll watches public-site source files and rebuilds changed pages and assets.
-The public Jekyll config excludes local Studio docs source, UI Catalogue source, and Studio-only asset roots, so ordinary Local Studio documentation and UI Catalogue edits do not trigger public-site preview rebuilds.
-For CSS changes, save the file and refresh the browser page.
+Generated local output stays untracked:
 
-This is watch-and-rebuild behavior, not hot module replacement.
+- `_public_site/` for local preview output
+- `/tmp/dlf-public-site-build` or another temporary destination for isolated checks
 
-Notes:
-
-- CSS files copied directly by Jekyll are available after the next rebuild.
-- Sass/SCSS files are compiled by Jekyll before the browser sees the change.
-- Browser cache can hide a CSS update; hard refresh if the page still shows the old styles.
-- Jekyll config changes normally require restarting `bin/public-site-preview`.
-
-## Local-only watch excludes
-
-The public Jekyll config excludes these local-only roots from conversion and watch:
-
-- `docs-viewer/source/studio/`
-- `docs-viewer/source/analysis/`
-- `docs-viewer/source/library/`
-- `_docs_catalogue/`
-- `_ui_catalogue_notes/`
-- `_includes/ui_catalogue_notes/`
-- `docs/`
-- `studio/`
-- `assets/ui-catalogue/`
-- `assets/docs/ui-catalogue/`
-- `assets/studio/`
-- `docs-viewer/generated/docs/studio/`
-- `docs-viewer/generated/search/studio/`
-
-Restart `bin/public-site-preview` after changing `_config.yml`; an already-running Jekyll process does not reload updated exclude rules.
-
-Committed manage-mode Docs Viewer scopes should keep generated runtime JSON under `docs-viewer/generated/`.
-Those payloads are for local Docs Viewer service reads, not public Jekyll preview/build output.
-If another committed manage-mode scope is added, keep its generated docs/search payloads under `docs-viewer/generated/` and keep that root excluded from public Jekyll builds.
-
-## LiveReload
-
-Jekyll can also refresh the browser automatically after rebuilds with LiveReload:
-
-```bash
-bin/public-site-preview --livereload
-```
-
-LiveReload is useful for public-site styling work because the browser tab reloads after Jekyll rebuilds.
-It is still page reload behavior, not true CSS hot injection.
-
-LiveReload caveats:
-
-- The page must be loaded from the Jekyll preview server.
-- The LiveReload websocket must be able to connect.
-- The LiveReload port can occasionally conflict with another local process.
-- It only affects the public Jekyll preview; it does not start or refresh Local Studio services.
-- Generated Studio or Docs Viewer payloads still depend on their own watcher/build flows.
-
-The project wrapper keeps LiveReload off by default.
-Enable it per run with `bin/public-site-preview --livereload`.
-To make it the local default, set this in `var/local/site.env`:
-
-```bash
-export PUBLIC_SITE_LIVERELOAD=1
-```
-
-Use `--no-livereload` to override that local default for a single run.
-
-## Wrapper versus raw Jekyll
-
-`bin/public-site-preview` is intentionally a thin project wrapper around `bundle exec jekyll serve`.
-It adds repo defaults, but raw `bundle exec jekyll serve` is also a supported public-preview workflow.
+## Wrapper defaults
 
 The wrapper:
 
 - changes into the repo root
 - loads `var/local/site.env` when present
-- prefers the configured Bundler shim when available
-- uses `PUBLIC_SITE_CONFIG`, defaulting to `_config.yml`
-- uses `PUBLIC_SITE_HOST` or `JEKYLL_HOST`, defaulting to `127.0.0.1`
-- uses `PUBLIC_SITE_PORT` or `JEKYLL_PORT`, defaulting to `4000`
-- uses `PUBLIC_SITE_LIVERELOAD`, defaulting to disabled
+- uses `PUBLIC_SITE_PYTHON`, defaulting to `$HOME/miniconda3/bin/python3` when available
+- uses `PUBLIC_SITE_HOST`, defaulting to `127.0.0.1`
+- uses `PUBLIC_SITE_PORT`, defaulting to `4000`
+- uses `PUBLIC_SITE_DESTINATION`, defaulting to `_public_site`
+- runs the artifact audit unless `--no-audit` is passed
 
-In practice, this command:
-
-```bash
-bin/public-site-preview
-```
-
-is roughly equivalent to:
+Examples:
 
 ```bash
-bundle exec jekyll serve \
-  --config _config.yml \
-  --host 127.0.0.1 \
-  --port 4000
+bin/public-site-preview --port 4010
+bin/public-site-preview --destination /tmp/dlf-public-site-preview
+bin/public-site-preview --no-audit
 ```
 
-Use `bin/public-site-preview` when you want those defaults loaded from `var/local/site.env`.
-Use raw `bundle exec jekyll serve` when you want the direct Jekyll command without repo wrapper behavior.
+The preview server is a static HTTP server. It does not watch files, run LiveReload, or start Local Studio services.
 
 ## Related References
 
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+- [GitHub Actions](/docs/?scope=studio&doc=github-actions)

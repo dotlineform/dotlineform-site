@@ -69,7 +69,7 @@ Every config contract review should answer:
 
 | file | role | edit class | contract doc |
 | --- | --- | --- | --- |
-| `_config.yml` | public Jekyll site config | maintainer-editable build config | [Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config) |
+| `public-site/config/public-site.json` | public static-site assembly config | maintainer-editable build config | [Public Static Site Build Request](/docs/?scope=studio&doc=site-request-public-static-site-build) |
 | `_data/pipeline.json` | shared catalogue/media pipeline defaults | maintainer-editable build config | [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json) |
 | `assets/data/search/policy.json` | public catalogue search runtime policy | maintainer-editable runtime config | [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json) |
 | `studio/services/catalogue/search/build_config.json` | catalogue search build policy | maintainer-editable build config | [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json) |

@@ -218,7 +218,7 @@ def write_activity_contract(root: Path) -> None:
 def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir: tempfile.TemporaryDirectory[str] = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
+    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
     write_json(root / "data-sharing/config/adapters.json", make_registry_payload())
     write_json(
         root / "analytics-app/data/canonical/tag-registry.json",

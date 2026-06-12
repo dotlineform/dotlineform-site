@@ -47,13 +47,13 @@ def _parse_utc(value: str) -> Optional[dt.datetime]:
 def _resolve_repo_root(script_path: Path, explicit_repo_root: Optional[Path]) -> Path:
     if explicit_repo_root is not None:
         repo_root = explicit_repo_root.expanduser().resolve()
-        if not (repo_root / "_config.yml").exists():
-            raise ValueError(f"repo root is missing _config.yml: {repo_root}")
+        if not (repo_root / "public-site" / "config" / "public-site.json").exists():
+            raise ValueError(f"repo root is missing public-site/config/public-site.json: {repo_root}")
         return repo_root
 
     script_dir = script_path.expanduser().resolve().parent
     for candidate in [script_dir, *script_dir.parents]:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
     raise ValueError("could not resolve repo root for logger")
 

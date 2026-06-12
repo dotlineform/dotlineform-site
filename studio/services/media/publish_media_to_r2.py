@@ -19,7 +19,7 @@ from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "_config.yml").exists():
+    if (_candidate / "public-site" / "config" / "public-site.json").exists():
         if str(_candidate) not in sys.path:
             sys.path.insert(0, str(_candidate))
         break
@@ -34,13 +34,13 @@ try:
         load_pipeline_config,
         media_mode_output_subdir,
     )
-    from local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
+    from local_env import SITE_ENV_REL_PATH, runtime_env
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.pipeline_config import (
         load_pipeline_config,
         media_mode_output_subdir,
     )
-    from studio.shared.python.local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
+    from studio.shared.python.local_env import SITE_ENV_REL_PATH, runtime_env
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -423,41 +423,25 @@ def is_relative_to(path: Path, root: Path) -> bool:
 
 
 def load_media_prefixes(repo_root: Path) -> Dict[str, str]:
-    raw_config = read_simple_yaml_scalars(repo_root / "_config.yml")
+    config_path = repo_root / "public-site" / "config" / "public-site.json"
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    media = payload.get("media") if isinstance(payload, dict) else None
+    if not isinstance(media, dict):
+        raise SystemExit(f"Error: public-site media config missing in {config_path}")
     defaults = {
         "media_image_works": "works/img",
         "media_image_work_details": "work_details/img",
         "media_image_moments": "moments/img",
     }
+    config_keys = {
+        "media_image_works": "image_works",
+        "media_image_work_details": "image_work_details",
+        "media_image_moments": "image_moments",
+    }
     return {
-        key: normalize_remote_prefix(str(raw_config.get(key, default_value)))
+        key: normalize_remote_prefix(str(media.get(config_keys[key], default_value)))
         for key, default_value in defaults.items()
     }
-
-
-def read_simple_yaml_scalars(path: Path) -> Dict[str, str]:
-    values: Dict[str, str] = {}
-    if not path.exists():
-        return values
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        stripped = raw_line.strip()
-        if stripped == "" or stripped.startswith("#") or ":" not in stripped:
-            continue
-        key, value = stripped.split(":", 1)
-        key = key.strip()
-        value = strip_inline_comment(value).strip()
-        values[key] = strip_env_value(value)
-    return values
-
-
-def strip_inline_comment(value: str) -> str:
-    quote: str | None = None
-    for index, char in enumerate(value):
-        if char in {"'", '"'}:
-            quote = char if quote is None else None if quote == char else quote
-        if char == "#" and quote is None:
-            return value[:index]
-    return value
 
 
 def normalize_remote_prefix(prefix: str) -> str:

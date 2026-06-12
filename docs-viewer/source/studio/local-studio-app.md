@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: studio
 viewable: true
 ---
@@ -16,8 +16,7 @@ This document defines the operational boundary for the Local Studio app server.
 
 Local Studio is intentionally separate from the public dotlineform.com site.
 
-- Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll preview/build work.
-- Raw `bundle exec jekyll serve` / `bundle exec jekyll build` is also supported for public-site preview/build when no repo wrapper is needed.
+- Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public static preview/build work.
 
 The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
@@ -43,7 +42,7 @@ The app server owns:
 
 The app server does not own:
 
-- public Jekyll preview/build routes
+- public static preview/build routes
 - Docs Viewer management routes or Docs Viewer static/runtime assets
 - Local Analytics routes or `/analytics/api/...`
 - Local Admin routes or `/admin/api/...`
@@ -78,7 +77,7 @@ The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs
 Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
 
 Public-site preview and public builds have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
-`bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
+`bin/public-site-preview` builds and serves the static public artifact and does not start Studio services.
 
 ## Server Modules
 

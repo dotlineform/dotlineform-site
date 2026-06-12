@@ -152,7 +152,7 @@ def write_doc(
 def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
+    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
     write_json(root / "data-sharing/config/library-export-configs.json", config or BASE_CONFIG)
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")

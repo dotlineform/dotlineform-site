@@ -38,7 +38,7 @@ def write_text(path: Path, text: str) -> None:
 def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
+    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
     (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_current_source_docs(

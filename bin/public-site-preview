@@ -13,56 +13,77 @@ if [ -f "$SITE_ENV_PATH" ]; then
   set +a
 fi
 
-if [ -x "$HOME/.rbenv/shims/bundle" ]; then
-  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
-else
-  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
+if [ -z "${PUBLIC_SITE_PYTHON:-}" ]; then
+  if [ -x "$HOME/miniconda3/bin/python3" ]; then
+    PUBLIC_SITE_PYTHON="$HOME/miniconda3/bin/python3"
+  else
+    PUBLIC_SITE_PYTHON="python3"
+  fi
 fi
 
-PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
-PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
-PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"
-PUBLIC_SITE_LIVERELOAD="${PUBLIC_SITE_LIVERELOAD:-0}"
+PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-127.0.0.1}"
+PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-4000}"
+PUBLIC_SITE_DESTINATION="${PUBLIC_SITE_DESTINATION:-_public_site}"
+PUBLIC_SITE_AUDIT="${PUBLIC_SITE_AUDIT:-1}"
 
-LIVERELOAD_ENABLED=0
-case "$PUBLIC_SITE_LIVERELOAD" in
-  1|on|ON|On|true|TRUE|True|yes|YES|Yes)
-    LIVERELOAD_ENABLED=1
-    ;;
-esac
+EXTRA_BUILD_ARGS=()
 
-JEKYLL_ARGS=(
-  --config "$PUBLIC_SITE_CONFIG"
-  --host "$PUBLIC_SITE_HOST"
-  --port "$PUBLIC_SITE_PORT"
-)
-
-for arg in "$@"; do
-  case "$arg" in
-    --livereload)
-      LIVERELOAD_ENABLED=1
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --host)
+      PUBLIC_SITE_HOST="$2"
+      shift 2
       ;;
-    --no-livereload)
-      LIVERELOAD_ENABLED=0
+    --host=*)
+      PUBLIC_SITE_HOST="${1#*=}"
+      shift
+      ;;
+    --port)
+      PUBLIC_SITE_PORT="$2"
+      shift 2
+      ;;
+    --port=*)
+      PUBLIC_SITE_PORT="${1#*=}"
+      shift
+      ;;
+    --destination)
+      PUBLIC_SITE_DESTINATION="$2"
+      shift 2
+      ;;
+    --destination=*)
+      PUBLIC_SITE_DESTINATION="${1#*=}"
+      shift
+      ;;
+    --no-audit)
+      PUBLIC_SITE_AUDIT=0
+      shift
       ;;
     *)
-      JEKYLL_ARGS+=("$arg")
+      EXTRA_BUILD_ARGS+=("$1")
+      shift
       ;;
   esac
 done
 
-if [ "$LIVERELOAD_ENABLED" -eq 1 ]; then
-  JEKYLL_ARGS+=(--livereload)
+BUILD_ARGS=(--destination "$PUBLIC_SITE_DESTINATION")
+if [ "$PUBLIC_SITE_AUDIT" = "1" ]; then
+  BUILD_ARGS+=(--audit)
+fi
+if [ "${#EXTRA_BUILD_ARGS[@]}" -gt 0 ]; then
+  BUILD_ARGS+=("${EXTRA_BUILD_ARGS[@]}")
 fi
 
-echo "Starting public-site preview from $ROOT_DIR"
-echo "Public site: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
-echo "Jekyll config: $PUBLIC_SITE_CONFIG"
-if [ "$LIVERELOAD_ENABLED" -eq 1 ]; then
-  echo "LiveReload: enabled"
+"$PUBLIC_SITE_PYTHON" public-site/build/build_site.py "${BUILD_ARGS[@]}"
+
+if [[ "$PUBLIC_SITE_DESTINATION" = /* ]]; then
+  PREVIEW_DESTINATION_DISPLAY="$PUBLIC_SITE_DESTINATION"
 else
-  echo "LiveReload: disabled"
+  PREVIEW_DESTINATION_DISPLAY="$ROOT_DIR/$PUBLIC_SITE_DESTINATION"
 fi
+
+echo
+echo "Starting static public-site preview from $PREVIEW_DESTINATION_DISPLAY"
+echo "Public site: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
 echo
 
-"$BUNDLE_BIN" exec jekyll serve "${JEKYLL_ARGS[@]}"
+exec "$PUBLIC_SITE_PYTHON" -m http.server "$PUBLIC_SITE_PORT" --bind "$PUBLIC_SITE_HOST" --directory "$PUBLIC_SITE_DESTINATION"

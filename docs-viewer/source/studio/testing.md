@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-06-10
+last_updated: 2026-06-12
 parent_id: ""
 ---
 # Testing
@@ -59,14 +59,14 @@ Profile roles:
 | `quick` | whitespace, Python syntax, core pytest checks, projection contract, Studio ready-state audit, and key JSON parsing. |
 | `catalogue` | focused catalogue pytest checks plus a narrow field-aware build preview. |
 | `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
-| `docs-viewer-smoke` | temporary Jekyll build plus Docs Viewer public read-only and standalone manage-service smoke checks. |
+| `docs-viewer-smoke` | temporary static public-site build plus Docs Viewer public read-only and standalone manage-service smoke checks. |
 | `admin-smoke` | local Admin home and operations route smoke checks. |
 | `ui-catalogue-smoke` | Admin-hosted UI Catalogue tests, routes, and modal demo smoke checks. |
 | `analytics-smoke` | local Analytics tag API, tag route, modal, ready-state, and Data Sharing smoke checks. |
-| `studio-smoke` | temporary Jekyll build plus public-site and Studio-owned catalogue smoke checks. |
+| `studio-smoke` | temporary static public-site build plus public-site and Studio-owned catalogue smoke checks. |
 | `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke`, `analytics-smoke`, or `ui-catalogue-smoke`. |
 
-Smoke profiles that need a public build use `/tmp/dlf-jekyll-build` and clean it by default. Use `--keep-temp-build` only when inspecting a failed smoke run.
+Smoke profiles that need a public build use `/tmp/dlf-public-site-build` and clean it by default. Use `--keep-temp-build` only when inspecting a failed smoke run.
 
 ## App Ownership
 
@@ -78,7 +78,7 @@ Docs Viewer:
 - Browser smoke checks: `docs-viewer/tests/smoke/`
 - Fixtures: `docs-viewer/tests/fixtures/`
 - Typical profiles: `docs`, `docs-viewer-smoke`
-- Use `docs-viewer-smoke`, or at least `public_docs_viewer_readonly.py` against a fresh temporary Jekyll build, when a change touches the public runtime, route shell, public config, payload-loading contract, or management-only module boundary.
+- Use `docs-viewer-smoke`, or at least `public_docs_viewer_readonly.py` against a fresh temporary static public-site build, when a change touches the public runtime, route shell, public config, payload-loading contract, or management-only module boundary.
 
 Admin app and UI Catalogue:
 
@@ -110,7 +110,7 @@ Cross-app checks:
 
 Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, modal behavior, or ready/busy state.
 
-Do not use a raw `file://` URL for routes that depend on module imports, same-origin asset paths, or local APIs. Use a running local app, a temporary Jekyll build, or the route-specific setup expected by the smoke script.
+Do not use a raw `file://` URL for routes that depend on module imports, same-origin asset paths, or local APIs. Use a running local app, a temporary static public-site build, or the route-specific setup expected by the smoke script.
 
 See [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) for Playwright readiness, click, setup, and manual-check guidance.
 

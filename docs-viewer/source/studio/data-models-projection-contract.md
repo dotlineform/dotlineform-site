@@ -2,7 +2,7 @@
 doc_id: data-models-projection-contract
 title: Projection Contract
 added_date: 2026-05-23
-last_updated: 2026-06-06
+last_updated: 2026-06-12
 parent_id: architecture
 viewable: true
 ---
@@ -14,7 +14,7 @@ It complements [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-owner
 
 The executable source of truth is `admin-app/checks/projection_contract.json`.
 
-- Run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
+- Run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and public source-reference rules.
 - When a built public site is available, pass `--site-root <path>` to audit public output from the same manifest.
 
 `public` means intended for dotlineform.com runtime output. It does not mean repository privacy. Canonical source can remain in a public repo while generated public projections omit source-only fields.
@@ -25,7 +25,7 @@ The executable source of truth is `admin-app/checks/projection_contract.json`.
 - public projections are generated runtime artifacts for public routes and public read-only viewer scopes
 - Studio projections are local-app artifacts for authoring, review, lookup, diagnostics, and write workflows
 - Docs Viewer payloads are generated scope payloads; only Library and Analysis payloads are public by default
-- Jekyll public builds must consume public projections and must not publish Studio-only source or projections
+- Public static builds must consume public projections and must not publish Studio-only source or projections
 - source-only fields can exist in canonical source only when public builders copy fields through an explicit allowlist or documented transform
 - local generated and import/export artifacts under `var/` are working output, not canonical source
 
@@ -71,22 +71,22 @@ The public site may publish Library and Analysis Docs Viewer payloads and search
 
 Studio app data is local by default.
 Public builders can read a narrow subset only through documented adapters.
-The public Jekyll build should exclude Studio source paths rather than relying on individual route discipline to keep those files private from dotlineform.com output.
+The static public-site builder should copy only allowlisted public paths and audit that Studio source paths are absent from dotlineform.com output.
 
 ## Config And Build Outputs
 
 Public build configuration is part of the projection contract:
 
-- `_config.yml` is the public Jekyll build config
+- `public-site/config/public-site.json` is the public static build config
 - public Docs Viewer config exposes only public read-only scopes
 - `bin/local-studio` serves Studio routes, local runtime config, and Studio-owned APIs
 - `bin/local-admin` serves Admin routes, local Admin runtime config, Admin-owned APIs, and Admin-hosted UI Catalogue routes
 - `docs-viewer/bin/docs-viewer` serves Docs Viewer manage mode, generated reads, Docs management APIs, and document Data Sharing endpoints
-- `bin/public-site-preview` and `bin/public-site-build` run public Jekyll preview/build paths
+- `bin/public-site-preview` and `bin/public-site-build` run public static preview/build paths
 
 ## Public Build Surface
 
-The public Jekyll build should include:
+The public static build should include:
 
 - home, about, recent, and other public site pages
 - public catalogue pages for works, series, work details, and moments
@@ -104,7 +104,7 @@ The public Jekyll build should include:
 
 Palette inspection belongs to the Admin-hosted UI Catalogue at `/admin/ui-catalogue/palette/`, not to the public-site build surface.
 
-The public Jekyll build should not include:
+The public static build should not include:
 
 - `/studio/` routes
 - `/docs/` local management route
@@ -136,7 +136,7 @@ Existing enforcement is split across several checks and builders:
 - `admin-app/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
 - `admin-app/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, public template/script source references, and optional built public output
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
-- after a public build, run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build` to check the published surface directly
+- after a public build, run `$HOME/miniconda3/bin/python3 admin-app/checks/audit_public_build_surface.py --site-root /tmp/dlf-public-site-build` to check the published surface directly
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
 - docs builder emits viewable/manage-mode metadata according to each scope contract
 - search builders own scope-specific flattened search projections

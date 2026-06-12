@@ -3,7 +3,7 @@ doc_id: public-static-site-build-batch-05-verification-deploy
 title: Public Static Site Build Batch 5 Verification Gate and GitHub Pages Actions Deploy
 added_date: 2026-06-12
 last_updated: 2026-06-12
-ui_status: in-progress
+ui_status: done
 parent_id: public-static-site-build-implementation-plan
 ---
 # Public Static Site Build Batch 5 Verification Gate and GitHub Pages Actions Deploy
@@ -118,8 +118,8 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 | 5.4 | done | Run local dual-preview parity checks against the same public route list before production cutover. |
 | 5.5 | done | Wire the full verification gate into pull request and `main` workflow paths. |
 | 5.6 | done | Validate the Pages artifact contents with the named build-plus-audit command and deployment plumbing before production cutover. |
-| 5.7 | planned | Switch GitHub Pages source to Actions artifact deployment only after the verification gate passes. |
-| 5.8 | planned | Verify a live static artifact deploy from `main`, then record the cutover timestamp, workflow run, artifact path, and residual risks for Jekyll removal. |
+| 5.7 | done | Switch GitHub Pages source to Actions artifact deployment only after the verification gate passes. |
+| 5.8 | done | Verify a live static artifact deploy from `main`, then record the cutover timestamp, workflow run, artifact path, and residual risks for Jekyll removal. |
 
 ## completed verification
 
@@ -144,6 +144,10 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - Remote run `27434950394` built and audited `_public_site/`: 6899 copied public files, 11 rendered route pages, and 6912 checked files.
 - Remote run `27434950394` validated the artifact, uploaded Pages artifact `7599482687`, and skipped the `Deploy Pages artifact` job because `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` was empty.
 - Remote run `27434950394` no longer reported the Node.js 20 deprecation warning after the Pages action version update.
+- Remote run `27436272044` for workflow `Public site` completed successfully on `main` push at commit `d4874d961faf617370f2bc399a66d933a3de6e30`.
+- Remote run `27436272044` confirmed the deploy gate supports `push` and `workflow_dispatch` events on `refs/heads/main`.
+- Remote run `27436272044` built and audited `_public_site/`: 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+- Remote run `27436272044` validated the artifact, uploaded Pages artifact `7599997898`, and skipped the `Deploy Pages artifact` job because `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` was empty.
 - Local dual-preview parity passed against fresh temporary outputs:
   - Jekyll baseline: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`, served on `http://127.0.0.1:8181`.
   - Static artifact: `$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination /tmp/dlf-public-site-batch5-static --audit`, served on `http://127.0.0.1:8182`.
@@ -151,12 +155,24 @@ Batch 4 copied 44 public Docs Viewer runtime modules under `docs-viewer/runtime/
 - Local dual-preview smoke confirmed matching key route state: 80 work grid items, 56 moment grid items, 12 recent items, work `00008` title `nerve`, `nerve.pdf` download link to `https://media.dotlineform.com/works/files/nerve.pdf`, catalogue search ready text `Enter a search query.`, and public Docs Viewer `library` and `analysis` route IDs.
 - Local dual-preview smoke reported no browser console errors for the checked route list.
 - Temporary parity servers on ports `8181` and `8182` were stopped after verification.
+- Cutover setting `PUBLIC_SITE_PAGES_DEPLOY_ENABLED=true` was set at `2026-06-12T18:57:02Z`.
+- GitHub Pages source was switched to workflow publishing with `gh api --method PUT repos/dotlineform/dotlineform-site/pages -f build_type=workflow`.
+- `gh api repos/dotlineform/dotlineform-site/pages` confirmed `build_type: workflow`, custom domain `www.dotlineform.com`, custom 404 enabled, and HTTPS enforced.
+- Manual cutover deploy run `27436556962` for workflow `Public site` completed successfully via `workflow_dispatch` at commit `d4874d961faf617370f2bc399a66d933a3de6e30`.
+- Manual cutover deploy run `27436556962` built and audited `_public_site/`: 6899 copied public files, 11 rendered route pages, and 6912 checked files.
+- Manual cutover deploy run `27436556962` validated the artifact, uploaded Pages artifact `7600112973`, and deployed it to `https://www.dotlineform.com/`.
+- Manual cutover deploy run `27436556962` completed the `Deploy Pages artifact` job successfully at `2026-06-12T18:57:51Z`.
+- Live production smoke passed after cutover on `/series/`, `/series/?mode=moments`, `/recent/`, `/works/?work=00008&series=105`, `/catalogue/search/`, `/library/`, and `/analysis/`.
+- Live production smoke confirmed key route state: 80 work grid items, 56 moment grid items, 12 recent items, work `00008` title `nerve`, `nerve.pdf` download link to `https://media.dotlineform.com/works/files/nerve.pdf`, catalogue search ready text `Enter a search query.`, and public Docs Viewer `library` and `analysis` route IDs.
+- Live production smoke reported no browser console errors for the checked route list.
+- Residual deploy-log note: `actions/deploy-pages@v5` emitted a Node `punycode` deprecation warning, but the Pages deployment reported success.
 
 ## follow-on tasks
 
-- Update Batch 6 with exact files, docs, and commands to remove or rewrite after static deploy parity is proven, including any GitHub settings changed during cutover.
+- Batch 6 can start because live Actions artifact deployment is verified.
+- Batch 6 must remove or retarget Jekyll/Ruby public-build paths, retarget `bin/public-site-preview`, and add scoped workflow path filters after closeout verification.
 
 ## batch close
 
-- Add a handoff note to [Batch 6](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout).
-- Set this batch status and front matter `ui_status` to `done` after the verification gate and Actions deployment path are verified.
+- Handoff note added to [Batch 6](/docs/?scope=studio&doc=public-static-site-build-batch-06-jekyll-removal-closeout).
+- Batch 5 is complete.

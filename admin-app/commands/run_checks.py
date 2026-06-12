@@ -19,7 +19,7 @@ from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
-JEKYLL_DESTINATION = Path("/tmp/dlf-jekyll-build")
+PUBLIC_SITE_DESTINATION = Path("/tmp/dlf-public-site-build")
 SOURCE_MODULE_SITE_ROOT = Path(".")
 GENERATED_PUBLIC_PAYLOADS = (
     Path("assets/data/docs/scopes/analysis"),
@@ -36,10 +36,14 @@ class CheckCommand:
     description: str
 
 
-def bundle_argv() -> tuple[str, ...]:
-    local_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
-    bundle = str(local_bundle) if local_bundle.exists() else "bundle"
-    return (bundle, "exec", "jekyll", "build", "--quiet", "--destination", str(JEKYLL_DESTINATION))
+def public_site_build_argv() -> tuple[str, ...]:
+    return (
+        sys.executable,
+        "public-site/build/build_site.py",
+        "--destination",
+        str(PUBLIC_SITE_DESTINATION),
+        "--audit",
+    )
 
 
 def pytest_argv(*paths: str) -> tuple[str, ...]:
@@ -366,8 +370,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs-viewer-smoke": (
         CheckCommand(
-            "jekyll-temp-build",
-            bundle_argv(),
+            "public-site-temp-build",
+            public_site_build_argv(),
             "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
@@ -384,7 +388,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(PUBLIC_SITE_DESTINATION),
             ),
             "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
         ),
@@ -432,8 +436,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "studio-smoke": (
         CheckCommand(
-            "jekyll-temp-build",
-            bundle_argv(),
+            "public-site-temp-build",
+            public_site_build_argv(),
             "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
@@ -442,7 +446,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/public_site_theme_toggle.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(PUBLIC_SITE_DESTINATION),
             ),
             "Smoke-check the public /series/ header theme toggle.",
         ),
@@ -452,7 +456,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/public_route_simplification.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(PUBLIC_SITE_DESTINATION),
             ),
             "Smoke-check the simplified public route contract for series, works, details, moments, search, and 404 recovery.",
         ),
@@ -661,10 +665,10 @@ def command_text(argv: Iterable[str]) -> str:
     return " ".join(shlex.quote(str(part)) for part in argv)
 
 
-def clean_jekyll_destination() -> bool:
-    if not JEKYLL_DESTINATION.exists():
+def clean_public_site_destination() -> bool:
+    if not PUBLIC_SITE_DESTINATION.exists():
         return False
-    shutil.rmtree(JEKYLL_DESTINATION)
+    shutil.rmtree(PUBLIC_SITE_DESTINATION)
     return True
 
 
@@ -729,8 +733,8 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     ]
 
     try:
-        if command.name == "jekyll-temp-build" and clean_jekyll_destination():
-            setup_lines.append(f"Removed existing temporary Jekyll destination: {JEKYLL_DESTINATION}")
+        if command.name == "public-site-temp-build" and clean_public_site_destination():
+            setup_lines.append(f"Removed existing temporary public site destination: {PUBLIC_SITE_DESTINATION}")
         result = subprocess.run(
             command.argv,
             cwd=REPO_ROOT,
@@ -741,8 +745,8 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         )
         output = result.stdout or ""
         exit_code = result.returncode
-        if exit_code == 0 and command.name == "jekyll-temp-build":
-            copied = copy_generated_public_payloads(JEKYLL_DESTINATION)
+        if exit_code == 0 and command.name == "public-site-temp-build":
+            copied = copy_generated_public_payloads(PUBLIC_SITE_DESTINATION)
             payload_lines = ["", "Copied generated public payloads for smoke tests:"]
             payload_lines.extend(f"  - {path}" for path in copied)
             if not copied:
@@ -814,7 +818,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--keep-temp-build",
         action="store_true",
-        help=f"Keep the temporary Jekyll build at {JEKYLL_DESTINATION} after smoke profiles finish.",
+        help=f"Keep the temporary public site build at {PUBLIC_SITE_DESTINATION} after smoke profiles finish.",
     )
     return parser.parse_args()
 
@@ -845,12 +849,12 @@ def main() -> int:
         print(f"  {status}: {result['log']}")
 
     write_summaries(run_dir, profiles, results)
-    used_jekyll_temp_build = any(result["name"] == "jekyll-temp-build" for result in results)
-    if used_jekyll_temp_build and not args.keep_temp_build:
-        if clean_jekyll_destination():
-            print(f"removed temp build: {JEKYLL_DESTINATION}")
-    elif used_jekyll_temp_build:
-        print(f"kept temp build: {JEKYLL_DESTINATION}")
+    used_public_site_temp_build = any(result["name"] == "public-site-temp-build" for result in results)
+    if used_public_site_temp_build and not args.keep_temp_build:
+        if clean_public_site_destination():
+            print(f"removed temp build: {PUBLIC_SITE_DESTINATION}")
+    elif used_public_site_temp_build:
+        print(f"kept temp build: {PUBLIC_SITE_DESTINATION}")
     failed = [result for result in results if result["exit_code"] != 0]
     print(f"summary: {run_dir.relative_to(REPO_ROOT) / 'summary.md'}")
     return 1 if failed else 0

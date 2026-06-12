@@ -16,7 +16,7 @@ def resolve_repo_root(start: str | Path | None = None) -> Path:
     current = Path(start if start is not None else __file__).expanduser().resolve()
     candidates = [current] if current.is_dir() else [current.parent, *current.parents]
     for candidate in candidates:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
     raise ValueError("could not resolve repo root for local env")
 

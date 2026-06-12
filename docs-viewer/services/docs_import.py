@@ -108,18 +108,18 @@ KNOWN_RECORD_FIELDS = {
 def detect_repo_root(explicit_root: str | None = None) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
-        if not (repo_root / "_config.yml").exists():
+        if not (repo_root / "public-site" / "config" / "public-site.json").exists():
             raise ValueError(f"--repo-root does not look like repo root: {repo_root}")
         return repo_root
 
     current = Path.cwd().resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
 
     script_dir = Path(__file__).resolve().parent
     for candidate in [script_dir, *script_dir.parents]:
-        if (candidate / "_config.yml").exists():
+        if (candidate / "public-site" / "config" / "public-site.json").exists():
             return candidate
 
     raise ValueError("Could not detect repo root")
