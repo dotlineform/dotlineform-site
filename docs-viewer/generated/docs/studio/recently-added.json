@@ -67,21 +67,21 @@
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
     },
     {
+      "doc_id": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
+      "title": "Public Catalogue Runtime Prose Component Slice",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-prose-component-slice.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request"
+    },
+    {
       "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
       "title": "Public Catalogue Runtime Selected Work Route Slice",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-selected-work-slice.json",
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
-    },
-    {
-      "doc_id": "site-request-public-catalogue-runtime-module-architecture-work-detail-slice",
-      "title": "Public Catalogue Runtime Work Detail Route Slice",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-work-detail-slice.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
-      "parent_title": "Public Catalogue Runtime Module Architecture Request"
     }
   ],
-  "generated_at": "2026-06-13T17:17:40Z"
+  "generated_at": "2026-06-13T17:27:02Z"
 }

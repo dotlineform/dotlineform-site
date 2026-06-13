@@ -1640,38 +1640,8 @@ figure.diagram figcaption{
   outline-offset: 2px;
 }
 
-/* moment layout specific styles */
-
-.moment-body{
-  max-width: var(--moment-measure);
-  margin-left: auto;
-  margin-right: auto;
-  white-space: normal; /* IMPORTANT: avoid pre-line to prevent double-spacing artefacts */
-}
-
-/* Stanza spacing: paragraphs behave like stanzas */
-.moment-body p{
-  margin: 0;
-}
-.moment-body p + p{
-  margin-top: 1em; /* tune: 0.75em–1.25em */
-}
-
-/* Add an explicit margin for moment figures */
-.moment-body figure{ margin: 0; }               /* Reset browser default figure margins inside moments */
-.moment-body figure.moment-hero{
-  margin: var(--space-3) auto;               /* Then re-introduce deliberate spacing for moment images */
-}
-
 .moment__nav{
   margin-top: calc(var(--space-6) + var(--space-2));
-}
-
-/* Prose-only (new structural wrapper): keep links visibly underlined by default */
-.content a:link,
-.content a:visited{
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 /* Supplements: links should read like prose by default */
@@ -1679,16 +1649,6 @@ figure.diagram figcaption{
 .supplements a:visited{
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-/* bulletproof moment block, when wrapping markdown moment text in <pre class="moment-text">...</pre> */
-pre.moment-text{
-  font-family: inherit;
-  white-space: pre-wrap;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0 0 var(--space-4);
 }
 
 /* bulletproof text block, when wrapping markdown text e.g. <pre class="theme-text">...</pre> */
@@ -1927,13 +1887,6 @@ Use “structure-first” naming and scope section-specific differences via the 
 
 .page__byline{
   margin: 0 0 var(--space-1);
-}
-
-.content{
-  max-width: var(--content-measure);
-  margin-left: auto;
-  margin-right: auto;
-  white-space: normal;
 }
 
 /* Definition list meta (e.g., Work “Details”) */
@@ -2221,10 +2174,6 @@ note: works tags are not currently in use on the work pages themselves.
 
 .work .supplements__item + .supplements__item{
   margin-top: var(--space-3);
-}
-
-.work__prose{
-  margin-top: var(--space-6);
 }
 
 /* Works index (isolated compact list view) */

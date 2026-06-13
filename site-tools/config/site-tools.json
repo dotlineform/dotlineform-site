@@ -59,6 +59,7 @@
       "assets/js/catalogue/components/catalogue-caption.js",
       "assets/js/catalogue/components/catalogue-image.js",
       "assets/js/catalogue/components/primary-media.js",
+      "assets/js/catalogue/components/prose-content.js",
       "assets/js/catalogue/components/thumbnail-grid-list.js",
       "assets/js/catalogue/routes/moment-page.js",
       "assets/js/catalogue/routes/series-index.js",

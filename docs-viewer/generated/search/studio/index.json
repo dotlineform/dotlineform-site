@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c3a309f8dcc8e92bcefe7406460ea13d",
-    "generated_at_utc": "2026-06-13T17:17:40Z",
-    "count": 245
+    "version": "blake2b-ceef2a18dcf3661e7b534a0a231fd730",
+    "generated_at_utc": "2026-06-13T17:27:02Z",
+    "count": 246
   },
   "entries": [
     {
@@ -1560,6 +1560,36 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice site request public catalogue runtime module architecture primary media slice public catalogue runtime primary media component slice component public catalogue runtime module architecture request 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Prose Component Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "prose",
+        "component",
+        "slice",
+        "public catalogue runtime prose component slice",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice site request public catalogue runtime module architecture prose component slice public catalogue runtime prose component slice public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",

@@ -1,4 +1,5 @@
 import { renderPrimaryMedia } from '../components/primary-media.js';
+import { renderProseContent } from '../components/prose-content.js';
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
 import {
   buildPath,
@@ -300,9 +301,12 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
   function renderProse(payload) {
     var proseSection = document.getElementById('selectedWorkProseSection');
     var prose = document.getElementById('selectedWorkProseContent');
-    if (!prose || typeof payload.content_html !== 'string' || !payload.content_html.trim()) return;
-    prose.innerHTML = payload.content_html;
-    if (proseSection) proseSection.hidden = false;
+    renderProseContent({
+      rootElement: proseSection,
+      contentElement: prose,
+      html: payload && typeof payload.content_html === 'string' ? payload.content_html : '',
+      hideRootWhenEmpty: true
+    });
   }
 
   fetchJson(workPayloadUrl(workId, baseurl))

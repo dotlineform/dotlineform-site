@@ -365,6 +365,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
+              "title": "Public Catalogue Runtime Prose Component Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-prose-component-slice.json",
+              "ui_status": "done"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
               "title": "Public Catalogue Runtime Selected Work Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-selected-work-slice.json",
@@ -1338,5 +1344,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T17:22:32Z"
+  "generated_at": "2026-06-13T17:30:09Z"
 }

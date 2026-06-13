@@ -1,4 +1,5 @@
 import { renderPrimaryMedia } from '../components/primary-media.js';
+import { renderProseContent } from '../components/prose-content.js';
 import {
   catalogueIndexUrl,
   momentPayloadUrl,
@@ -187,9 +188,10 @@ function bootMomentRoute(rootNode) {
   }
 
   function applyContentHtml(html) {
-    var body = document.getElementById('momentBody');
-    if (!body) return;
-    body.innerHTML = String(html == null ? '' : html);
+    renderProseContent({
+      rootElement: document.getElementById('momentBody'),
+      html: typeof html === 'string' ? html : ''
+    });
   }
 
   function showLoadError() {
