@@ -75,24 +75,7 @@ Current mutable catalogue data surfaced through this API:
 - workbook import preview/apply flows
 - project-state report generation and local report opening
 
-Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass.
 Catalogue editors and Catalogue Drafts show their existing unavailable/load-failed states instead of reading stale static source JSON.
-
-## Retired Or Sibling APIs
-
-Analytics tag and Data Sharing APIs moved out of Local Studio.
-The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs are under `/analytics/api/data-sharing/...`.
-Retired Studio paths such as `/studio/api/analytics/...` and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
-
-Audit, risk, activity, testing, and UI Catalogue APIs moved out of Local Studio.
-The active Admin APIs are under `/admin/api/...`, and Admin-owned local output lives under `var/admin/...`.
-Retired Studio paths such as `/studio/api/audits/...` and `/studio/api/risk/...` intentionally have no aliases, proxies, or static shims.
-
-The Thumbnail Quality API is retired.
-`POST /studio/api/catalogue/thumbnail-quality-preview` intentionally has no alias, proxy, or static-serving shim.
-
-Docs Viewer management APIs are owned by the standalone Docs Viewer service.
-Local Studio routes may link to Docs Viewer, but they do not proxy Docs Viewer management writes.
 
 ## Checks
 

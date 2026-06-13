@@ -88,9 +88,6 @@ For public scopes only, `publish_output` and `publish_search_output` own the pub
 - writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 
-The builder does not invoke Ruby, Bundler, or Jekyll.
-Jekyll remains a separate public-site preview/build verification layer.
-
 ## Source Inclusion And Viewability
 
 - every root-level `.md` file in `docs-viewer/source/studio/` is included in generated docs payloads
@@ -272,7 +269,7 @@ Current fields:
 ## Operational Notes
 
 - The Python Docs Viewer v2 renderer helper is `studio/shared/python/markdown_renderer.py`; it starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule, allows raw HTML by default, performs no sanitization, and enables no external renderer plugins.
-- Renderer acceptance fixtures live in `studio/tests/python/test_markdown_renderer_acceptance.py` and cover headings, links, lists, fenced code, inline code, raw HTML, tables, generated plain text, and HTML semantics without comparing against Jekyll/Kramdown output.
+- Renderer acceptance fixtures live in `studio/tests/python/test_markdown_renderer_acceptance.py` and cover headings, links, lists, fenced code, inline code, raw HTML, tables, generated plain text, and HTML semantics.
 - Custom-token contract fixtures live in `docs-viewer/tests/fixtures/docs_viewer_v2_custom_tokens.json`, with validation coverage in `docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py`.
 - `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/**/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.py --scope <scope> --write`
@@ -290,16 +287,6 @@ Current fields:
 - targeted semantic-reference writes rebuild the selected docs' by-doc records and derive by-target buckets from the refreshed selected records plus existing unselected by-doc records, so stale target buckets are removed when a selected doc changes or drops references
 - targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.py --scope <scope> --write` first when initializing or repairing an output tree
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
-
-Jekyll verification builds:
-
-- if `jekyll serve` is already running, avoid building into the default `_site/` destination at the same time
-- concurrent writes to the same `_site/` tree can produce transient static-file copy failures even when the source asset is valid
-- for a one-off verification build while the dev server is active, use a separate destination:
-
-```bash
-bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
-```
 
 Local runtime values shared with media/generation scripts live in `var/local/site.env`:
 

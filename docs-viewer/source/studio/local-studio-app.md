@@ -28,7 +28,7 @@ The Python local Studio app server can be started directly:
 $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --port 8765
 ```
 
-`bin/local-studio` starts this app server without Jekyll.
+`bin/local-studio` starts this app server.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 HTTP access logging is quiet by default so normal browser use does not flood the terminal.
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
@@ -39,16 +39,6 @@ The app server owns:
 - `/studio/runtime-config.json`
 - Catalogue read/write APIs under `/studio/api/catalogue/...`
 - local report-opening adapters for Studio-owned workflows
-
-The app server does not own:
-
-- public static preview/build routes
-- Docs Viewer management routes or Docs Viewer static/runtime assets
-- Local Analytics routes or `/analytics/api/...`
-- Local Admin routes or `/admin/api/...`
-- UI Catalogue routes
-- retired audit, risk, activity, testing, Analytics/Data Sharing, or UI Catalogue Studio aliases
-- retired standalone catalogue write, tag write, audit-service, or thumbnail-quality route shims
 
 ## Runtime Config
 

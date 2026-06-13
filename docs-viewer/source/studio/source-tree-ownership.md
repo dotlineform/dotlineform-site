@@ -50,8 +50,6 @@ The current Studio-owned source homes are:
 Risk operations are Admin-owned.
 Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; checks report producers live under `admin-app/checks/reports/`; ignored local checks reports and snapshots should default to `var/admin/checks/`.
 
-Studio-owned source should not be reintroduced under old public paths such as `assets/studio/`, `_docs_catalogue/`, root `tests/`, root check folders, or Studio-only Jekyll route shells.
-
 ## Admin App
 
 Admin is the local app boundary for cross-repo operational review and verification.

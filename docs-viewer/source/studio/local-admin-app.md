@@ -38,15 +38,6 @@ The Admin app server owns:
 - Admin static assets under `/admin/app/...`
 - UI Catalogue demo assets under `/admin/ui-catalogue/...`
 
-The Admin app server does not own:
-
-- Studio catalogue routes or `/studio/api/catalogue/...`
-- Analytics routes or `/analytics/api/...`
-- Docs Viewer manage-mode routes or Docs Viewer management APIs
-- public Jekyll preview/build routes
-- retired Studio admin routes such as `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, or `/studio/ui-catalogue/...`
-- the retired standalone `ui-catalogue-app` server
-
 ## Source Layout
 
 Current Admin-owned source homes:

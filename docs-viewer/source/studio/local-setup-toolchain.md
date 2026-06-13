@@ -20,7 +20,6 @@ Current external tools used by media workflows:
 - `ffmpeg`
 - `heif-convert` from `libheif`
 
-The public site no longer uses a checked-in Ruby, Bundler, or Jekyll toolchain.
 Public preview/build runs through the Python static builder in `public-site/build/`.
 
 Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) as the dependency-role reference.

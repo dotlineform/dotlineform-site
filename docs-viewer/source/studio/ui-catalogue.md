@@ -45,8 +45,7 @@ The demo links target the default Admin app port.
 If `ADMIN_APP_PORT` is changed from `8768`, adjust the port in the browser URL.
 
 Retired Studio routes such as `/studio/ui-catalogue/demos/`, `/studio/ui-catalogue/button/`, and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the Admin-hosted demo route hierarchy.
-The retired public `/palette/` route should not be recreated; palette inspection belongs under `/admin/ui-catalogue/palette/`.
-The palette page currently reads checked-in YAML at `admin-app/ui-catalogue/source/palette/palette.yml`; future refresh work should convert that data to a UI Catalogue-owned JSON/JavaScript refresh path rather than restoring Jekyll data ownership.
+The palette page currently reads checked-in YAML at `admin-app/ui-catalogue/source/palette/palette.yml`; future refresh work should convert that data to a UI Catalogue-owned JSON/JavaScript refresh path.
 
 ## Demo Namespace
 
@@ -156,7 +155,7 @@ Use this structure for new catalogue work:
 - `admin-app/ui-catalogue/assets/docs/<primitive-or-pattern>/` for reference images
 
 Prefer one shared demo stylesheet until a pattern proves it needs its own scoped file.
-Keep route-local demo markup inside the route page. `_includes/` remains reserved for production, layout, or genuinely shared Jekyll partials.
+Keep route-local demo markup inside the route page.
 
 ## Visual Reference Assets
 

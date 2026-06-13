@@ -66,25 +66,6 @@ Use the start-all runner when the same terminal should supervise public-site Liv
 bin/local-all
 ```
 
-Current runner behavior:
-
-- starts the local Studio app server for the Studio shell and Catalogue APIs
-- does not start Local Admin, Local Analytics, public-site preview, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for the supervised sibling-service workflow
-- has no Studio audit HTTP service; browser audit APIs are hosted by the Local Admin app and direct automation uses `admin-app/app/server/admin_app/audit_runner.py`
-- starts the docs live rebuild watcher by default
-- keeps all long-running processes attached to the current terminal
-- stops all long-running processes on `Ctrl+C`
-- serves mutable catalogue source and lookup reads through the local Studio app rather than through Jekyll-served static JSON
-
-Current limits:
-
-- it does not enable `--livereload`
-- it does not serve `/docs/`; Docs Viewer manage mode belongs to the standalone Docs Viewer service
-- it does not serve `/admin/`, `/admin/api/...`, `/analytics/`, `/analytics/api/...`, `/ui-catalogue/...`, or Data Sharing APIs
-- it does not rebuild docs or docs-search artifacts on startup
-- it does not start Jekyll; use `bin/public-site-preview` for public-site preview
-- it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
-
 If you disable the watcher or need an explicit rebuild, rebuild docs payloads manually by scope:
 
 ```bash

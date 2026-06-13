@@ -29,7 +29,7 @@ Active Local Studio routes:
 - `/studio/catalogue-moment/`
 
 The local app owns `/studio/`.
-Studio home navigation is rendered by the JavaScript Studio app shell, not Python or Jekyll/Liquid page data.
+Studio home navigation is rendered by the JavaScript Studio app shell.
 The local home exposes Studio-owned catalogue links through `studio-home-shell.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home layout owns grouping, order, and route-specific query-string defaults.
 The shared Studio top navigation is separate from that home link list.
 Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
@@ -57,35 +57,6 @@ Current JavaScript-shell route families:
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at plain `/studio/.../` paths.
 The editor shell media attributes are projected in the browser from `app.runtime.media` and `app.runtime.pipeline`.
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
-
-## Retired Local Routes
-
-The former Catalogue dashboard page is retired.
-Its links now live on the `/studio/` home page, and metrics belong on the individual pages where they are relevant.
-
-The old Jekyll shells and Python-rendered bodies for these active local routes have been retired:
-
-- `/studio/project-state/`
-- `/studio/bulk-add-work/`
-- `/studio/catalogue-field-registry/`
-- `/studio/catalogue-status/`
-- `/studio/studio-works/`
-- `/studio/catalogue-series/`
-- `/studio/catalogue-work/`
-- `/studio/catalogue-work-detail/`
-- `/studio/catalogue-moment/`
-
-The Thumbnail Quality route shell is no longer an active Local Studio route.
-`/studio/thumbnail-quality/?mode=manage`, `POST /studio/api/catalogue/thumbnail-quality-preview`, and static thumbnail-quality preview data under `/studio/data/generated/thumbnail-quality/` are retired and intentionally have no Studio aliases, proxies, or static-serving shims.
-The retired implementation has been archived under `studio/retired/thumbnail-quality/` for reference outside public Jekyll output.
-
-Analytics tag and Data Sharing routes moved out of Local Studio.
-Active route shells are served by `bin/local-analytics` under `/analytics/...`.
-Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
-
-Audit, risk, activity, testing, and UI Catalogue routes moved out of Local Studio.
-Active route shells are served by `bin/local-admin` under `/admin/...`.
-Retired Studio paths such as `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, and `/studio/ui-catalogue/...` intentionally have no aliases, proxies, or static shims.
 
 ## Sibling Route Surfaces
 

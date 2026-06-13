@@ -19,9 +19,8 @@ For example:
 - Core checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick`.
 - Docs Viewer smoke checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke`.
 - Local Studio smoke checks that prove Studio links and integration still work.
-- Public Jekyll build check: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
 - Public scope checks for `/library/` and `/analysis/` when scope registration, generated payload locations, route shells, or public Docs Viewer runtime behavior changes.
-- Focused Python, Ruby, and JavaScript syntax/import checks for moved files.
+- Focused Python and JavaScript syntax/import checks for moved files.
 - Focused tests for Docs Viewer management write APIs, source/scope config, New Scope, generated-data builders, and local service launchers when those areas move.
 
 Codex sandbox note: local service, browser, and temporary localhost checks will need elevated permissions even when the product code is healthy.
@@ -68,7 +67,7 @@ The last tasks/batch should close out the implementation with the following name
     - quick profile,
     - Docs Viewer smoke profile,
     - focused Local Studio integration smokes,
-    - public Jekyll build, public scope checks,
+    - public build, public scope checks,
     - syntax/import checks,
     - any changed-doc link/path checks.
 

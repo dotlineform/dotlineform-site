@@ -36,11 +36,10 @@ assets/docs/interactive/<scope>/
 ## Operational Notes
 
 - `bin/local-studio` starts Docs Viewer services and renders configured links, but Local Studio does not host Docs Viewer management itself.
-- `docs-viewer/bin/docs-viewer` serves `/docs/`, Docs Viewer static/runtime/config files, generated-data reads, and management endpoints without starting Jekyll.
+- `docs-viewer/bin/docs-viewer` serves `/docs/`, Docs Viewer static/runtime/config files, generated-data reads, and management endpoints.
 - The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
 - If the local service is unavailable, normal Docs Viewer reads can fall back to static generated JSON; manage mode remains read-only and shows an unavailable message.
 - Successful source writes create short-lived suppression markers under `var/docs/watch-suppressions/` so the live watcher can skip duplicate same-scope rebuilds for files already rebuilt by management endpoints.
-- `var/` is excluded from Jekyll because logs, staged imports, local package artifacts, and watcher suppressions are local operational files.
 
 ## Verification
 

@@ -112,7 +112,6 @@ The page shells load:
 - `data-sharing/data_sharing/adapters/tags/`
 
 The dashboard, prepare, and review shells are hosted by the Local Analytics app server.
-The old Jekyll route files under `studio/data-sharing/` and the old Local Studio route/API surfaces are retired.
 The browser modules and CSS contracts are Analytics-owned assets under `analytics-app/`.
 The documents adapter implementation lives at `data-sharing/data_sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 Those helpers are split by responsibility under the `docs-viewer/services/docs_data_sharing/` package.

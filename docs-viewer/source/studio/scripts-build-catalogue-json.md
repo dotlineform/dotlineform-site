@@ -139,7 +139,6 @@ The helper:
 - then runs `build_search.py --scope catalogue`
 
 The JSON engine writes rendered `content_html` for work, series, and moment prose with `studio/shared/python/markdown_renderer.py`.
-Catalogue JSON builds and catalogue search builds do not invoke Ruby, Bundler, or Jekyll.
 
 The extracted build modules own selection and validation rules, media planning/execution, field-aware narrowing, command construction, and step-result shaping. The entrypoint owns CLI option binding, preview text, command sequencing, subprocess execution, and the response payload shape used by Studio.
 

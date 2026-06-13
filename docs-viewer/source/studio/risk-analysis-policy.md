@@ -87,7 +87,6 @@ Runtime tooling is used when the risk depends on route behavior, browser cost, l
 - Playwright for repeatable browser smoke checks and route interaction checks
 - Node for JavaScript syntax and local helper execution
 - Python test and smoke runners for local services, generated payload checks, and app contracts
-- Ruby/Jekyll build checks where the public-site preview/build layer is directly relevant
 - Lighthouse or equivalent browser performance tooling for public-facing pages when route payload, load, layout shift, accessibility, or best-practice evidence is needed
 
 ## Observable Risk Indicators
@@ -106,7 +105,6 @@ Useful indicators:
 
 Examples:
 
-- Jekyll/Ruby remains in a path mostly because it was once convenient, even if the current app now behaves more like generated static route stubs plus local JS tooling.
 - Analytics is likely to grow toward richer data visualisation and LLM-sharing workflows, so weak app architecture has higher future impact than it would in a stable public page.
 
 ### Structural Risk
@@ -194,7 +192,6 @@ Priority order:
 Rationale:
 
 - public payloads, media, responsiveness, and elegant UI matter directly
-- static hosting and Jekyll/Ruby fit are strategic architecture concerns
 - structure and taxonomy are complex but relatively stable
 - data volumes are low to moderate and new-record volume is modest
 

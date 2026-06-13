@@ -145,7 +145,7 @@ Generated artifacts are read by browser runtimes without a hosted search service
 ### Portable Docs
 
 Docs search is part of Docs Viewer portability.
-A downstream Jekyll repo should be able to install Docs Viewer with inline docs search without copying Catalogue search.
+A downstream repo should be able to install Docs Viewer with inline docs search without copying Catalogue search.
 
 ### Reviewable Policy
 

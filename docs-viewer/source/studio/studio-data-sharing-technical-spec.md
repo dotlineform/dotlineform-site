@@ -352,4 +352,4 @@ Use broader `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` prof
 
 The 2026-05 split records focused API tests and mock/block/route smokes against the Analytics-owned `/analytics/api/data-sharing/...` boundary.
 Codex did not run a manual Docs Viewer generated payload rebuild during SDSA-015; local docs-watcher output, when present, is normal follow-through from the edited source docs.
-The full prepare/review browser smoke entrypoints default to the Local Analytics app host because Data Sharing route shells are no longer static Jekyll route files and no longer belong to Local Studio.
+The full prepare/review browser smoke entrypoints default to the Local Analytics app host because Data Sharing route shells are no longer static  route files and no longer belong to Local Studio.

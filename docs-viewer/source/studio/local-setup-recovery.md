@@ -11,8 +11,7 @@ parent_id: local-setup
 
 Major macOS, Xcode, or Command Line Tools updates can disturb local shell startup behavior and tool resolution. The most common symptoms are:
 
-- `brew`, `conda`, `rbenv`, `ruby`, or `python3` suddenly not found
-- `bundle` starts using `/usr/bin/ruby` instead of the repo Ruby
+- `brew`, `conda`, `python3` suddenly not found
 - the shell stops loading exports from `.bashrc`, `.bash_profile`, or `.zshrc`
 - previously working `ffmpeg` or `heif-convert` commands disappear from `PATH`
 
@@ -31,9 +30,6 @@ ps -p $$ -o command=
 which brew
 which python3
 which conda
-which rbenv
-which ruby
-which bundle
 ```
 
 3. If Homebrew is missing from `PATH`, restore the standard shell init line and reload the shell:
@@ -60,35 +56,6 @@ Then open a new shell and reactivate the environment:
 
 ```bash
 conda activate dotlineform
-```
-
-5. If `rbenv` no longer initializes correctly, ensure your shell startup file contains:
-
-```bash
-eval "$(rbenv init - bash)"
-```
-
-For `zsh`, use:
-
-```bash
-eval "$(rbenv init - zsh)"
-```
-
-Then open a new shell and re-check:
-
-```bash
-rbenv version
-ruby -v
-bundle -v
-```
-
-6. If `bundle` is using the wrong Ruby after the update, reset to the repo version:
-
-```bash
-rbenv local 3.1.6
-hash -r
-ruby -v
-bundle exec jekyll -v
 ```
 
 7. If the update affected the Apple developer tools themselves, re-run:
@@ -136,9 +103,6 @@ After any Xcode/CLT update, this is a good minimal smoke test:
 which python3
 python3 -V
 python3 -c "import openpyxl; print(openpyxl.__version__)"
-which ruby
-ruby -v
-bundle -v
 ffmpeg -version | head -n 1
 heif-convert --version
 $HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict

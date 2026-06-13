@@ -140,7 +140,6 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 - when the localhost Docs Viewer service writes a source doc and rebuilds the same scope itself, it leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change
-- `var/` is excluded from Jekyll so transient watcher-suppression marker writes do not trigger Jekyll serve regenerations or file-watch stat races
 
 ## Related References
 

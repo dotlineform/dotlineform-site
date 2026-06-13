@@ -23,7 +23,6 @@ This document is the durable route contract for the public site.
 - avoid persistent generated URL fields unless a documented non-derivable exception is required
 - centralize public URL construction and route-state parsing in `assets/js/public-catalogue-runtime.js` or a successor route-helper module
 - route strings should not be assembled independently across page scripts, catalogue search rendering, generated payloads, Docs Viewer semantic references, or Studio public-link helpers
-- do not make the route model depend on Jekyll collections or generated route stubs as durable contracts
 
 ## Canonical Routes
 
@@ -92,12 +91,6 @@ Browser history is useful but should not be the primary mechanism for required n
 Moments use the same shell, query-state, and generated-payload model as works, series, and work details.
 Selected moments are rendered by the `/moments/` shell from generated moment JSON, with the selected record identified by the `moment` query parameter.
 
-`/moments/<moment_id>/` is a retired path-style route.
-Do not generate one static HTML page per moment solely to keep path URLs readable.
-
-The earlier public route migration converted work and series pages from Jekyll/Liquid collection pages to runtime JavaScript plus generated JSON, but moments were not converted in the same slice.
-Moment cleanup therefore requires moving the moment rendering path onto the runtime payload model, not just deleting `_moments` files.
-
 ## URL Ownership
 
 Public route construction and route-state parsing are owned by `assets/js/public-catalogue-runtime.js` unless implementation creates a smaller dedicated public route-helper module.
@@ -120,6 +113,3 @@ It should generate:
 - fixed public route shell HTML
 - `404.html`
 - public route assets and generated public data required by those shells
-
-It should not consume `_works/`, `_series/`, `_work_details/`, or `_moments` as route-input contracts.
-Those Jekyll collection outputs are retired; fixed shells and generated JSON are the route contract.

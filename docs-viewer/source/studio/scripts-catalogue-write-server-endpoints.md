@@ -57,7 +57,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `catalogue_lookup_series_base` with `record_id=<series_id>`
 - `activity_log`
 
-Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, and `var/` from its served source tree.
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data.
 
 `POST /catalogue/project-state-report` accepts:
 

@@ -68,8 +68,6 @@ The deploy job runs only when all of these are true:
 - The workflow ref is `refs/heads/main`.
 - The repository variable `PUBLIC_SITE_PAGES_DEPLOY_ENABLED` is set to `true`.
 
-The legacy branch/Jekyll Pages path is no longer the live publishing path.
-
 **Scoped workflow triggers**
 
 The workflow is scoped with `paths` filters on `pull_request` and `push` so unrelated commits to `main` do not rebuild or deploy the public site.
@@ -127,7 +125,7 @@ Build and audit failures normally reproduce locally. GitHub-only failures includ
 - The workflow file exists on GitHub and runs as `Public site`.
 - Manual runs use `workflow_dispatch`; GitHub supports running those from the Actions tab, GitHub CLI, or REST API.
 - Pages custom workflow deployment is enabled for the repo's Pages source.
-- The actual cutover was: GitHub Pages source changed from branch/Jekyll publishing to GitHub Actions artifact publishing.
+- The actual cutover was: GitHub Pages source changed from branch publishing to GitHub Actions artifact publishing.
 
 Officially, GitHub Pages custom workflows use Actions plus the Pages artifact/deploy actions, and the deploy job needs `pages: write` and `id-token: write` permissions with a Pages environment, typically `github-pages`: [GitHub custom workflows for Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 

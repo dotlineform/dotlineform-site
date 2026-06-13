@@ -184,7 +184,6 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 
 - default URL: `http://127.0.0.1:8765/studio/`
 
-- serves Local Studio views outside Jekyll
 - mounts `/studio/`, retained Studio catalogue route shells, `/health`, `/studio/runtime-config.json`, and local catalogue APIs
 - does not serve `/analytics/`, `/analytics/api/...`, `/docs/`, `/docs-viewer/...` assets, Docs Viewer generated reads, Docs Viewer management APIs, `/ui-catalogue/...`, or Data Sharing APIs
 - links to Docs Viewer manage mode through the configured Docs Viewer web service URL
@@ -321,6 +320,15 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py -
 - uses targeted docs-search updates for safe small source changes and full same-scope search rebuilds for threshold overflow or ambiguous source state
 - related doc: [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 
+If you disable the watcher or want an explicit manual rebuild, use:
+
+```bash
+./docs-viewer/build/build_docs.py --scope studio --write
+./docs-viewer/build/build_search.py --scope studio --write
+./docs-viewer/build/build_docs.py --scope library --write
+./docs-viewer/build/build_search.py --scope library --write
+```
+
 ## What It Also Prints
 
 At startup the runner prints quick links for:
@@ -348,29 +356,3 @@ When you press `Ctrl+C` in `bin/local-studio`, it:
 
 If any `bin/local-all` child process exits unexpectedly, the runner stops the remaining children and reports the child name and exit status.
 If either `bin/local-studio` child process exits unexpectedly, that runner stops monitoring and exits after waiting on the failed process.
-
-## What It Does Not Do
-
-`bin/local-studio` does not currently:
-
-- start Jekyll
-- start Local Admin
-- start Local Analytics
-- start the Docs Viewer web service
-- serve `/docs/` or Docs Viewer management APIs
-- serve `/admin/`, `/admin/ui-catalogue/...`, `/analytics/`, `/analytics/api/...`, or Data Sharing APIs
-- run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
-- rebuild any docs/docs-search scope on startup
-- rebuild catalogue lookup artifacts on startup
-- rebuild public search artifacts on startup
-- start a separate frontend asset server
-- replace Jekyll as the public preview host
-
-If you disable the watcher or want an explicit manual rebuild, use:
-
-```bash
-./docs-viewer/build/build_docs.py --scope studio --write
-./docs-viewer/build/build_search.py --scope studio --write
-./docs-viewer/build/build_docs.py --scope library --write
-./docs-viewer/build/build_search.py --scope library --write
-```

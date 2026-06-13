@@ -73,7 +73,6 @@ Legacy Studio classes:
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into the owning production namespace during page work.
 
-Jekyll-rendered image panel links should keep design-time asset selections in shared page data where possible.
 Asset width should be treated as an explicit page design variable.
 
 ## Lifecycle Notes

@@ -13,7 +13,7 @@ Route:
 - `/studio/project-state/`
 
 This page runs the project-state report and writes `var/studio/reports/project-state.md`.
-The route shell is served by the local Studio app, not by a Jekyll Studio page.
+The route shell is served by the local Studio app.
 The browser module uses Local Studio for both report generation and local report opening:
 
 - `GET /studio/api/catalogue/health`

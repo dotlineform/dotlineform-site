@@ -21,7 +21,7 @@ The goal is not to force every app into one CSS namespace or one component syste
 - Local Studio routes
 - Admin app routes, including UI Catalogue
 - catalogue, analytics, docs, and other JavaScript app surfaces
-- public Jekyll pages when they use shared site patterns
+- public pages when they use shared site patterns
 
 When a pattern is covered, use it. When a pattern is not covered, call out the gap instead of inventing a local convention silently.
 
@@ -44,7 +44,7 @@ Use app-owned namespaces for production UI:
 - `docsViewer*` for Docs Viewer runtime and management surfaces
 - Admin app route-owned namespaces for Admin tools and UI Catalogue demo pages
 - route-owned or app-owned namespaces for new Studio and analytics surfaces
-- public-site namespaces for public Jekyll page patterns
+- public-site namespaces for public page patterns
 
 Do not introduce new `tagStudio*` classes. That namespace is historical and confusing because tags now belong to Analytics. Existing `tagStudio*` classes may still appear in older Studio CSS and docs as current legacy implementation details, but new work should either use the owning app or route namespace, or first define a shared replacement namespace as part of a focused UI cleanup.
 

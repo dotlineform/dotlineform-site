@@ -169,8 +169,8 @@ Meaning:
 ## Local App Migration
 
 The page shell is mounted in the local Studio app server and reuses the existing `studio/app/frontend/js/studio-works.js` browser module.
-The old Jekyll route shell has been retired.
-Because Studio and the public Jekyll preview now have separate local hosts, the controller uses the local Studio public-site link resolver for work and series links.
+
+Because Studio and the public preview have separate local hosts, the controller uses the local Studio public-site link resolver for work and series links.
 
 Focused smoke coverage:
 

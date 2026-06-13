@@ -10,7 +10,7 @@ viewable: true
 
 This page has been retired from active Studio routing.
 `/studio/thumbnail-quality/?mode=manage` and `POST /studio/api/catalogue/thumbnail-quality-preview` intentionally no longer resolve through the Local Studio app.
-The page script, CSS, UI text, and preview builder were archived under `studio/retired/thumbnail-quality/` so the old comparison tooling remains available as reference code without being public Jekyll output or active local-app runtime.
+The page script, CSS, UI text, and preview builder were archived under `studio/retired/thumbnail-quality/` so the old comparison tooling remains available as reference code without being public output or active local-app runtime.
 
 ## Purpose
 

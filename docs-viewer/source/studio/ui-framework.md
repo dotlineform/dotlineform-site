@@ -64,7 +64,7 @@ The UI Catalogue proves the isolated pattern. It does not prove the live route. 
 
 ## JavaScript App Model
 
-Most local tools are JavaScript app surfaces, even when their shell is rendered by Jekyll or a static route. Treat them as apps when they have route state, async reads, service calls, generated data, management capability checks, or write workflows.
+Most local tools are JavaScript app surfaces. Treat them as apps when they have route state, async reads, service calls, generated data, management capability checks, or write workflows.
 
 JavaScript app surfaces should follow these rules:
 
@@ -119,7 +119,6 @@ Examples:
 - Docs Viewer management copy belongs in Docs Viewer UI text config.
 - Studio app copy belongs in Studio route UI text config.
 - Admin app copy belongs in Admin app route data or code-owned copy according to that route's contract.
-- static public page copy may stay in page source or Jekyll data.
 
 JS fallback strings are acceptable defensive defaults, but they should not become the real source of product copy for config-backed apps.
 
