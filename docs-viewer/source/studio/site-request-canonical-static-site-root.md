@@ -3,15 +3,14 @@ doc_id: site-request-canonical-static-site-root
 title: Canonical Static Site Root Request
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: change-requests
-viewable: true
 ---
 # Canonical Static Site Root Request
 
 Status:
 
-- planned
+- done
 
 ## Summary
 

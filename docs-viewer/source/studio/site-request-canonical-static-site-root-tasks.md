@@ -3,9 +3,8 @@ doc_id: site-request-canonical-static-site-root-tasks
 title: Canonical Static Site Root Migration Tasks
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: site-request-canonical-static-site-root
-viewable: true
 ---
 # Canonical Static Site Root Migration Tasks
 
