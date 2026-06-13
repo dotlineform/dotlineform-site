@@ -36,24 +36,24 @@ def write_minimal_config(repo_root: Path) -> None:
         "scopes": {
             "admin": {"label": "Admin", "include": ["admin-app/"], "exclude": []},
             "analytics": {"label": "Analytics", "include": ["analytics-app/"], "exclude": []},
-            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/"], "exclude": []},
+            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/", "site/docs-viewer/"], "exclude": []},
             "public-site": {"label": "Public Site", "include": ["works/"], "exclude": []},
             "studio": {"label": "Studio", "include": ["studio/"], "exclude": []},
             "all": {"label": "All", "include": ["admin-app/", "docs-viewer/", "works/"], "exclude": []},
         },
         "families": {
-            "runtime-js": {"label": "Runtime JavaScript", "include": ["docs-viewer/runtime/js/"]},
+            "runtime-js": {"label": "Runtime JavaScript", "include": ["site/docs-viewer/runtime/js/"]},
             "source-docs": {"label": "Source Docs", "include": ["docs-viewer/source/"]},
         },
         "areas": {
-            "search": {"label": "Search", "include": ["docs-viewer/runtime/js/*search*"], "shared": [], "routes": ["/library/"]}
+            "search": {"label": "Search", "include": ["site/docs-viewer/runtime/js/**/*search*"], "shared": [], "routes": ["/library/"]}
         },
         "routes": {
             "/library/": {
                 "label": "Library",
                 "path": "/library/",
                 "status": "mapped",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": [],
                 "areas": ["search"],
             }
@@ -117,7 +117,7 @@ def write_sample_run(repo_root: Path, run_id: str = "sample-run") -> Path:
 
 
 def write_source_file_for_files_report(repo_root: Path) -> None:
-    source_path = repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-search.js"
+    source_path = repo_root / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js"
     source_path.parent.mkdir(parents=True, exist_ok=True)
     source_path.write_text("const search = true;\n", encoding="utf-8")
 

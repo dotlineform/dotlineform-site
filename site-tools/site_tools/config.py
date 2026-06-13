@@ -12,7 +12,7 @@ SCHEMA_VERSION = "site_tools_config_v1"
 @dataclass(frozen=True)
 class DocsViewerRuntimeValidation:
     root: str
-    expected_module_count: int
+    manifest: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -57,7 +57,7 @@ def load_config(path: Path) -> SiteToolsConfig:
             required_directories=_str_tuple(validation, "required_directories"),
             docs_viewer_runtime=DocsViewerRuntimeValidation(
                 root=_str_value(docs_viewer_runtime, "root"),
-                expected_module_count=_int_value(docs_viewer_runtime, "expected_module_count"),
+                manifest=_str_tuple(docs_viewer_runtime, "manifest"),
             ),
         ),
     )
@@ -74,13 +74,6 @@ def _str_value(data: dict[str, Any], key: str) -> str:
     value = data.get(key)
     if not isinstance(value, str) or not value:
         raise RuntimeError(f"site-tools config field must be a non-empty string: {key}")
-    return value
-
-
-def _int_value(data: dict[str, Any], key: str) -> int:
-    value = data.get(key)
-    if not isinstance(value, int):
-        raise RuntimeError(f"site-tools config field must be an integer: {key}")
     return value
 
 

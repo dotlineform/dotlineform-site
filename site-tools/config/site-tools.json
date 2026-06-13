@@ -26,7 +26,7 @@
   },
   "docs_viewer": {
     "route_config_url": "/docs-viewer/config/routes/docs-viewer-public-routes.json",
-    "entrypoint": "/docs-viewer/runtime/js/docs-viewer-public.js",
+    "entrypoint": "/docs-viewer/runtime/js/public/docs-viewer-public.js",
     "stylesheet": "/docs-viewer/static/css/docs-viewer.css"
   },
   "validation": {
@@ -75,9 +75,9 @@
       "docs-viewer/config/routes/docs-viewer-public-routes.json",
       "docs-viewer/config/ui-text/public.json",
       "docs-viewer/static/css/docs-viewer.css",
-      "docs-viewer/runtime/js/docs-viewer-public.js",
-      "docs-viewer/runtime/js/docs-viewer-app-boot.js",
-      "docs-viewer/runtime/js/docs-viewer-metadata-info-view.js",
+      "docs-viewer/runtime/js/public/docs-viewer-public.js",
+      "docs-viewer/runtime/js/shared/docs-viewer-app-boot.js",
+      "docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js",
       "404.html"
     ],
     "required_directories": [
@@ -88,11 +88,57 @@
       "assets/work_details/img",
       "assets/works/img",
       "assets/works/index",
-      "docs-viewer/runtime/js"
+      "docs-viewer/runtime/js/public",
+      "docs-viewer/runtime/js/shared"
     ],
     "docs_viewer_runtime": {
       "root": "docs-viewer/runtime/js",
-      "expected_module_count": 44
+      "manifest": [
+        "public/docs-viewer-public.js",
+        "shared/docs-viewer-access.js",
+        "shared/docs-viewer-app-boot.js",
+        "shared/docs-viewer-app-composition.js",
+        "shared/docs-viewer-app-context.js",
+        "shared/docs-viewer-app-runtime.js",
+        "shared/docs-viewer-app-session.js",
+        "shared/docs-viewer-app-shell.js",
+        "shared/docs-viewer-asset-url.js",
+        "shared/docs-viewer-bookmarks.js",
+        "shared/docs-viewer-config-controller.js",
+        "shared/docs-viewer-config-service.js",
+        "shared/docs-viewer-data.js",
+        "shared/docs-viewer-document-controller.js",
+        "shared/docs-viewer-document-index-state.js",
+        "shared/docs-viewer-favourites.js",
+        "shared/docs-viewer-generated-data-runtime.js",
+        "shared/docs-viewer-hosted-view-capabilities.js",
+        "shared/docs-viewer-hosted-views.js",
+        "shared/docs-viewer-index-panel-renderer.js",
+        "shared/docs-viewer-index-panel.js",
+        "shared/docs-viewer-info-panel-controller.js",
+        "shared/docs-viewer-info-panel-host.js",
+        "shared/docs-viewer-info-panel-renderer.js",
+        "shared/docs-viewer-main-view-host.js",
+        "shared/docs-viewer-main-view-renderer.js",
+        "shared/docs-viewer-metadata-info-view.js",
+        "shared/docs-viewer-panel-layout.js",
+        "shared/docs-viewer-render.js",
+        "shared/docs-viewer-route-config.js",
+        "shared/docs-viewer-route-workflow.js",
+        "shared/docs-viewer-router.js",
+        "shared/docs-viewer-runtime-lazy-controller.js",
+        "shared/docs-viewer-scope-select-menu.js",
+        "shared/docs-viewer-search-controller.js",
+        "shared/docs-viewer-search.js",
+        "shared/docs-viewer-service-context.js",
+        "shared/docs-viewer-sidebar.js",
+        "shared/docs-viewer-top-bar-renderer.js",
+        "shared/docs-viewer-tree-payload-adapter.js",
+        "shared/docs-viewer-tree.js",
+        "shared/docs-viewer-view-context.js",
+        "shared/docs-viewer-view-state.js",
+        "shared/docs-viewer-viewer-toolbar-renderer.js"
+      ]
     }
   }
 }

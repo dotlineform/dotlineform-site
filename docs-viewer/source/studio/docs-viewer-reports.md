@@ -40,7 +40,7 @@ If a report is not available in the current context, the document pane shows a s
 
 ## Runtime Design
 
-The manage Docs Viewer entrypoint opts into report mounting through `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`.
+The manage Docs Viewer entrypoint opts into report mounting through `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`.
 The shared document controller renders the document payload and calls an optional document-extras hook; it does not import report runtime, report services, or report modules.
 Public entrypoints do not provide that hook, and public route config does not expose the report registry until a specific public report is promoted.
 
@@ -73,7 +73,7 @@ Public `/library/` and `/analysis/` route configs do not reference this registry
 
 Executable module loading remains allowlisted in:
 
-- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
 
 The JSON registry does not define arbitrary import paths.
 Adding a JSON entry without a matching allowlisted loader does not make a new report executable.
@@ -139,7 +139,7 @@ Poor report candidates are workflows with writes, long-running operations, broad
 
 - `site/assets/data/docs/reports.json`
 - `docs-viewer/config/reports/reports.json`
-- `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`
-- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`
+- `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/`
 - `docs-viewer/static/css/docs-viewer-reports.css`

@@ -72,36 +72,36 @@ It also provides the stable mount points that the app shell fills before the run
 
 The viewer behavior starts from route-specific entrypoints:
 
-- `docs-viewer/runtime/js/docs-viewer-public.js` for public read-only routes
-- `docs-viewer/runtime/js/docs-viewer-manage.js` for the local `/docs/` management shell
+- `site/docs-viewer/runtime/js/public/docs-viewer-public.js` for public read-only routes
+- `docs-viewer/runtime/js/management/docs-viewer-manage.js` for the local `/docs/` management shell
 
-The entry modules delegate boot to `docs-viewer/runtime/js/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
-The private app runtime coordinator delegates app composition and startup sequencing to `docs-viewer/runtime/js/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
+The entry modules delegate boot to `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
+The private app runtime coordinator delegates app composition and startup sequencing to `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
 Current helper modules:
 
-- `docs-viewer/runtime/js/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index, generated-data runtime, and config-service creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
-- `docs-viewer/runtime/js/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
-- `docs-viewer/runtime/js/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
-- `docs-viewer/runtime/js/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
-- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
-- `docs-viewer/runtime/js/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
-- `docs-viewer/runtime/js/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
-- `docs-viewer/runtime/js/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
-- `docs-viewer/runtime/js/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts
-- `docs-viewer/runtime/js/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including non-viewable/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
-- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
-- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
-- `docs-viewer/runtime/js/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
-- `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
-- `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
-- `docs-viewer/runtime/js/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, explicit route command consumption, and pane command requests from search/recent state-domain inputs
-- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` owns bookmark storage, bookmark row/toggle rendering, selected-document bookmark projection, explicit document-load route command consumption, and search-reset command consumption when opening a bookmark
-- `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, generated-data report reads, report-service handoff, and report mount context
-- `docs-viewer/runtime/js/docs-viewer-hosted-views.js` owns hosted-view registration, access/availability checks, panel-specific listing, and graceful missing/disabled/access-blocked states
-- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
-- `docs-viewer/runtime/js/docs-viewer-reports.js` owns report lookup and access checks
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index, generated-data runtime, and config-service creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
+- `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
+- `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
+- `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
+- `site/docs-viewer/runtime/js/shared/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
+- `site/docs-viewer/runtime/js/shared/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
+- `docs-viewer/runtime/js/reports/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including non-viewable/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
+- `site/docs-viewer/runtime/js/shared/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
+- `site/docs-viewer/runtime/js/shared/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
+- `site/docs-viewer/runtime/js/shared/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js` owns inline-search and recently-added controller behavior, including generated search-index loading, result/recent rendering, debounce and more-results behavior, explicit route command consumption, and pane command requests from search/recent state-domain inputs
+- `site/docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js` owns bookmark storage, bookmark row/toggle rendering, selected-document bookmark projection, explicit document-load route command consumption, and search-reset command consumption when opening a bookmark
+- `site/docs-viewer/runtime/js/shared/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, generated-data report reads, report-service handoff, and report mount context
+- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js` owns hosted-view registration, access/availability checks, panel-specific listing, and graceful missing/disabled/access-blocked states
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
+- `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns report lookup and access checks
 - `docs-viewer/runtime/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
 - Docs Import is a management-modal app: `docs-html-import.js` owns modal state and route-ready projection, `docs-html-import-workflow.js` owns preview/write orchestration, and import writes stay behind management endpoints through `docs-viewer-management-client.js`
 

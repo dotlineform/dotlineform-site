@@ -31,7 +31,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_drag_drop_helpers(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/docs-viewer/runtime/js/docs-viewer-drag-drop.js');
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-drag-drop.js');
             document.body.innerHTML = `
                 <nav id="nav" style="padding: 0 0 32px 0;">
                   <ul class="docsViewer__navList" style="display:block; padding:0; margin:0;">
@@ -104,7 +104,7 @@ def assert_drag_drop_helpers(page: Page) -> None:
 def assert_management_interaction_terminal_drop(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/docs-viewer/runtime/js/docs-viewer-management-interactions.js');
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-interactions.js');
             document.body.innerHTML = `
                 <nav id="nav" style="padding: 0 0 32px 0;">
                   <ul class="docsViewer__navList" style="display:block; padding:0; margin:0;">
@@ -179,7 +179,7 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
 def assert_management_interaction_first_child_drop(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/docs-viewer/runtime/js/docs-viewer-management-interactions.js');
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-interactions.js');
             document.body.innerHTML = `
                 <nav id="nav" style="padding: 0 0 32px 0;">
                   <ul class="docsViewer__navList" style="display:block; padding:0; margin:0;">

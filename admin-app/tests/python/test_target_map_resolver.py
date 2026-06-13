@@ -16,10 +16,10 @@ import target_map_resolver as resolver  # noqa: E402
 
 
 def test_path_matching_supports_prefixes_and_globs() -> None:
-    assert resolver.path_matches("docs-viewer/runtime/js/", "docs-viewer/runtime/js/docs-viewer-search.js")
-    assert resolver.path_matches("docs-viewer/runtime/js/docs-viewer-search*", "docs-viewer/runtime/js/docs-viewer-search.js")
+    assert resolver.path_matches("site/docs-viewer/runtime/js/", "site/docs-viewer/runtime/js/shared/docs-viewer-search.js")
+    assert resolver.path_matches("site/docs-viewer/runtime/js/shared/docs-viewer-search*", "site/docs-viewer/runtime/js/shared/docs-viewer-search.js")
     assert resolver.path_matches("**/*search*", "docs-viewer/build/build_search.py")
-    assert not resolver.path_matches("docs-viewer/services/", "docs-viewer/runtime/js/docs-viewer-search.js")
+    assert not resolver.path_matches("docs-viewer/services/", "site/docs-viewer/runtime/js/shared/docs-viewer-search.js")
 
 
 def test_source_file_discovery_excludes_markdown_documents(tmp_path: Path) -> None:
@@ -41,8 +41,8 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
         "docs-viewer/static/css/docs-viewer.css",
-        "docs-viewer/runtime/js/docs-viewer-search.js",
-        "docs-viewer/runtime/js/docs-viewer-public.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search.js",
+        "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
         "docs-viewer/services/docs_management_routes.py",
         "docs-viewer/generated/docs/studio/index.json",
     ]
@@ -52,9 +52,9 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
 
     assert "docs-viewer/generated/docs/studio/index.json" not in by_path
     assert by_path["docs-viewer/static/css/docs-viewer.css"]["families"] == ["runtime-assets"]
-    assert by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["families"] == ["runtime-js"]
-    assert "search" in by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["areas"]
-    assert "/library/" in by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["shared_routes"]
+    assert by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["families"] == ["runtime-js"]
+    assert "search" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["areas"]
+    assert "/library/" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["shared_routes"]
     assert "/docs/" in by_path["docs-viewer/services/docs_management_routes.py"]["shared_routes"]
     assert scope["totals"]["excluded_files"] == 1
 
@@ -62,9 +62,9 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
 def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependencies() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
-        "docs-viewer/runtime/js/docs-viewer-search.js",
-        "docs-viewer/runtime/js/docs-viewer-public.js",
-        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search.js",
+        "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
         "docs-viewer/services/docs_management_routes.py",
     ]
 
@@ -76,7 +76,7 @@ def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependen
         routes=["/library/"],
         source_files=source_files,
     )
-    assert [row["path"] for row in search_library] == ["docs-viewer/runtime/js/docs-viewer-search.js"]
+    assert [row["path"] for row in search_library] == ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]
 
     docs_route = resolver.resolve_run_files(
         config,
@@ -85,7 +85,7 @@ def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependen
         source_files=source_files,
     )
     assert {row["path"] for row in docs_route} == {
-        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
         "docs-viewer/services/docs_management_routes.py",
     }
 

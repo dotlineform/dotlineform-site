@@ -35,7 +35,7 @@ def route_url(base_url: str, path: str) -> str:
 def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
-            const router = await import('/docs-viewer/runtime/js/docs-viewer-router.js');
+            const router = await import('/docs-viewer/runtime/js/shared/docs-viewer-router.js');
             window.__docsViewerRouterModuleSmoke = { router };
         }"""
     )

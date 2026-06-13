@@ -42,72 +42,72 @@ The standalone service renders route context and app-shell mounts only when `DOC
 
 Copy the shared viewer runtime files:
 
-- `docs-viewer/runtime/js/docs-viewer-public.js`
-- `docs-viewer/runtime/js/docs-viewer-app-boot.js`
-- `docs-viewer/runtime/js/docs-viewer-app-composition.js`
-- `docs-viewer/runtime/js/docs-viewer-app-session.js`
-- `docs-viewer/runtime/js/docs-viewer-app-runtime.js`
-- `docs-viewer/runtime/js/docs-viewer-app-shell.js`
-- `docs-viewer/runtime/js/docs-viewer-app-context.js`
-- `docs-viewer/runtime/js/docs-viewer-asset-url.js`
-- `docs-viewer/runtime/js/docs-viewer-route-config.js`
-- `docs-viewer/runtime/js/docs-viewer-access.js`
-- `docs-viewer/runtime/js/docs-viewer-service-context.js`
-- `docs-viewer/runtime/js/docs-viewer-config-service.js`
-- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
-- `docs-viewer/runtime/js/docs-viewer-document-index-state.js`
-- `docs-viewer/runtime/js/docs-viewer-top-bar-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-viewer-toolbar-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
-- `docs-viewer/runtime/js/docs-viewer-view-state.js`
-- `docs-viewer/runtime/js/docs-viewer-view-context.js`
-- `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
-- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`
-- `docs-viewer/runtime/js/docs-viewer-info-panel-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`
-- `docs-viewer/runtime/js/docs-viewer-runtime-lazy-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-config-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-data.js`
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-tree.js`
-- `docs-viewer/runtime/js/docs-viewer-sidebar.js`
-- `docs-viewer/runtime/js/docs-viewer-index-panel.js`
-- `docs-viewer/runtime/js/docs-viewer-index-panel-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-search.js`
-- `docs-viewer/runtime/js/docs-viewer-search-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-bookmarks.js`
-- `docs-viewer/runtime/js/docs-viewer-favourites.js`
-- `docs-viewer/runtime/js/docs-viewer-render.js`
-- `docs-viewer/runtime/js/docs-viewer-report-service.js`
-- `docs-viewer/runtime/js/docs-viewer-reports.js`
-- `docs-viewer/runtime/js/docs-viewer-router.js`
+- `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-asset-url.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-access.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-runtime-lazy-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-data.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-tree.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-sidebar.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-index-panel.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-favourites.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-render.js`
+- `docs-viewer/runtime/js/reports/docs-viewer-report-service.js`
+- `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-router.js`
 - `docs-viewer/runtime/js/reports/`
 
 For management mode, also copy:
 
-- `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js`
-- `docs-viewer/runtime/js/docs-viewer-management.js`
-- `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`
-- `docs-viewer/runtime/js/docs-viewer-management-actions.js`
-- `docs-viewer/runtime/js/docs-viewer-management-capabilities.js`
-- `docs-viewer/runtime/js/docs-viewer-management-client.js`
-- `docs-viewer/runtime/js/docs-viewer-management-config.js`
-- `docs-viewer/runtime/js/docs-viewer-management-interactions.js`
-- `docs-viewer/runtime/js/docs-viewer-management-modal-shell.js`
-- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
-- `docs-viewer/runtime/js/docs-viewer-management-parent-picker.js`
-- `docs-viewer/runtime/js/docs-viewer-management-render.js`
-- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js`
-- `docs-viewer/runtime/js/docs-viewer-drag-drop.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-action-workflow.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-actions.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-client.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-config.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-interactions.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-parent-picker.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-render.js`
+- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js`
+- `docs-viewer/runtime/js/management/docs-viewer-drag-drop.js`
 
 For Docs Import inside the management modal, also copy:
 
-- `docs-viewer/runtime/js/docs-html-import.js`
-- `docs-viewer/runtime/js/docs-html-import-modals.js`
-- `docs-viewer/runtime/js/docs-html-import-render.js`
-- `docs-viewer/runtime/js/docs-html-import-workflow.js`
+- `docs-viewer/runtime/js/import/docs-html-import.js`
+- `docs-viewer/runtime/js/import/docs-html-import-modals.js`
+- `docs-viewer/runtime/js/import/docs-html-import-render.js`
+- `docs-viewer/runtime/js/import/docs-html-import-workflow.js`
 
 ### CSS
 
@@ -160,7 +160,7 @@ Settings-modal copy is also owned by `docs-viewer/config/ui-text/manage.json`.
 `site/assets/data/docs/reports.json` is the browser-visible report metadata projection.
 
 It lists report ids, titles, descriptions, access defaults, and presets.
-The executable report module allowlist remains in `docs-viewer/runtime/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
+The executable report module allowlist remains in `docs-viewer/runtime/js/reports/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
 
 ### Generated Data Outputs
 

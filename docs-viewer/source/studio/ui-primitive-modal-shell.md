@@ -157,7 +157,7 @@ Current implementation sources:
 
 - `site/assets/studio/js/studio-modal.js`
 - `site/assets/studio/css/studio.css`
-- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-modals.js`
 - `docs-viewer/static/css/docs-viewer-manage.css`
 - `_includes/docs_viewer_shell.html`
 

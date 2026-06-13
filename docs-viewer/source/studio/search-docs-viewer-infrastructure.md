@@ -124,10 +124,10 @@ Current exclusions:
 
 Current runtime modules:
 
-- `docs-viewer/runtime/js/docs-viewer-search-controller.js`
-- `docs-viewer/runtime/js/docs-viewer-search.js`
-- `docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js`
-- `docs-viewer/runtime/js/docs-viewer-render.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-search.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-render.js`
 
 The Docs Viewer app receives the current scope's `search_index_url` from normalized browser config.
 The search controller loads that index through the generated-data runtime, normalizes doc entries, evaluates matches, sorts results, and renders them into the active Docs Viewer route context.

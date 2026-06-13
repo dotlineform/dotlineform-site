@@ -98,7 +98,7 @@ Typical route startup:
 
 Route modules usually keep a small `routeStateDetail(state)` helper so `ready`, `busy`, mode, service availability, and loaded-record state stay synchronized.
 
-The Docs Import modal mirrors the same helper behavior inside `docs-viewer/runtime/js/docs-html-import.js` because that module is owned by the Docs Viewer bundle rather than the Studio route bundle.
+The Docs Import modal mirrors the same helper behavior inside `docs-viewer/runtime/js/import/docs-html-import.js` because that module is owned by the Docs Viewer bundle rather than the Studio route bundle.
 
 ## Static Routes
 

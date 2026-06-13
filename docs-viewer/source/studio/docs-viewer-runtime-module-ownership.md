@@ -74,7 +74,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Management render helpers | `docs-viewer-management-render.js` | Management-only markup helpers imported by management controller. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
-| Source editor | `docs-viewer/runtime/js/modules/source-editor/source-editor.js` | Manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
+| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
 | Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. |
 
 ## Public Index Slimming Ownership

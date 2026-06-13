@@ -35,8 +35,8 @@ def route_url(base_url: str, path: str) -> str:
 def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
-            const module = await import('/docs-viewer/runtime/js/docs-viewer-metadata-info-view.js');
-            const viewContext = await import('/docs-viewer/runtime/js/docs-viewer-view-context.js');
+            const module = await import('/docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js');
+            const viewContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-context.js');
             window.__docsViewerMetadataInfoViewSmoke = { module, viewContext };
         }"""
     )

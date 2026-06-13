@@ -35,7 +35,7 @@ def route_url(base_url: str, path: str) -> str:
 def assert_capability_error_projection(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/docs-viewer/runtime/js/docs-viewer-management-capabilities.js');
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
             const state = {
                 managementCapabilities: null,
                 managementCapabilityCheckId: 0,

@@ -105,7 +105,7 @@ def test_load_service_config_reads_static_site_env() -> None:
 
 
 def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     blocked = sorted(
         path.relative_to(REPO_ROOT).as_posix()
@@ -124,22 +124,22 @@ def test_public_readonly_route_page_uses_public_entrypoint_contract() -> None:
     assert "docs-viewer/static/css/docs-viewer.css" in html
     assert "docs-viewer/static/css/docs-viewer-management.css" not in html
     assert "docs-viewer/static/css/docs-viewer-reports.css" not in html
-    assert 'src="/docs-viewer/runtime/js/docs-viewer-public.js' in html
+    assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js' in html
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in graph
     }
 
-    assert "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js" not in graph_paths
-    assert "docs-viewer/runtime/js/docs-viewer-management-document-reports.js" not in graph_paths
-    assert "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js" not in graph_paths
-    assert "docs-viewer/runtime/js/docs-viewer-report-service.js" not in graph_paths
-    assert "docs-viewer/runtime/js/docs-viewer-reports.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js" not in graph_paths
+    assert "docs-viewer/runtime/js/reports/docs-viewer-report-service.js" not in graph_paths
+    assert "docs-viewer/runtime/js/reports/docs-viewer-reports.js" not in graph_paths
     assert not [
         path
         for path in graph_paths
@@ -148,19 +148,19 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifiers() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     blocked_fragments = [
-        "./docs-html-import.js",
-        "./docs-viewer-scope-lifecycle.js",
-        "./docs-viewer-management-actions-renderer.js",
-        "./docs-viewer-management-document-actions-renderer.js",
-        "./docs-viewer-management-document-reports.js",
-        "./docs-viewer-management-shell-composition.js",
-        "./docs-viewer-management-shell-renderer.js",
-        "./docs-viewer-report-service.js",
-        "./docs-viewer-reports.js",
-        "./modules/source-editor/source-editor.js",
+        "../import/docs-html-import.js",
+        "../management/docs-viewer-scope-lifecycle.js",
+        "../management/docs-viewer-management-actions-renderer.js",
+        "../management/docs-viewer-management-document-actions-renderer.js",
+        "../management/docs-viewer-management-document-reports.js",
+        "../management/docs-viewer-management-shell-composition.js",
+        "../management/docs-viewer-management-shell-renderer.js",
+        "../reports/docs-viewer-report-service.js",
+        "../reports/docs-viewer-reports.js",
+        "./source-editor/source-editor.js",
         "/assets/data/docs/reports.json",
         "docsHtmlImportRoot",
         "docsViewerSettingsModal",
@@ -183,26 +183,26 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifier
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-public.js"
+    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in graph
     }
     blocked_exact = {
-        "docs-viewer/runtime/js/docs-html-import.js",
-        "docs-viewer/runtime/js/docs-html-import-modals.js",
-        "docs-viewer/runtime/js/docs-html-import-render.js",
-        "docs-viewer/runtime/js/docs-html-import-workflow.js",
-        "docs-viewer/runtime/js/docs-viewer-manage.js",
-        "docs-viewer/runtime/js/docs-viewer-management-client.js",
-        "docs-viewer/runtime/js/docs-viewer-report-service.js",
-        "docs-viewer/runtime/js/docs-viewer-reports.js",
-        "docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js",
-        "docs-viewer/runtime/js/modules/source-editor/source-editor.js",
+        "docs-viewer/runtime/js/import/docs-html-import.js",
+        "docs-viewer/runtime/js/import/docs-html-import-modals.js",
+        "docs-viewer/runtime/js/import/docs-html-import-render.js",
+        "docs-viewer/runtime/js/import/docs-html-import-workflow.js",
+        "docs-viewer/runtime/js/management/docs-viewer-manage.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-client.js",
+        "docs-viewer/runtime/js/reports/docs-viewer-report-service.js",
+        "docs-viewer/runtime/js/reports/docs-viewer-reports.js",
+        "docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js",
+        "docs-viewer/runtime/js/management/source-editor/source-editor.js",
     }
     blocked_prefixes = (
-        "docs-viewer/runtime/js/docs-viewer-management-",
+        "docs-viewer/runtime/js/management/docs-viewer-management-",
         "docs-viewer/runtime/js/reports/",
     )
 
@@ -215,28 +215,28 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -
 
 
 def test_manage_docs_viewer_entry_static_graph_includes_manage_owned_modules() -> None:
-    entry = REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in graph
     }
     required_paths = {
-        "docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js",
-        "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js",
-        "docs-viewer/runtime/js/docs-viewer-management-document-reports.js",
-        "docs-viewer/runtime/js/docs-viewer-management-hosted-views.js",
-        "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js",
-        "docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js",
-        "docs-viewer/runtime/js/docs-viewer-report-service.js",
-        "docs-viewer/runtime/js/docs-viewer-reports.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js",
+        "docs-viewer/runtime/js/reports/docs-viewer-report-service.js",
+        "docs-viewer/runtime/js/reports/docs-viewer-reports.js",
     }
 
     assert sorted(required_paths - graph_paths) == []
 
 
 def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
-    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-app-shell.js").read_text(encoding="utf-8")
+    source = (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js").read_text(encoding="utf-8")
     blocked_fragments = [
         "./docs-viewer-management-actions-renderer.js",
         "./docs-viewer-management-document-actions-renderer.js",
@@ -254,9 +254,9 @@ def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
 
 def test_manage_shell_composition_owns_manage_shell_renderer_imports() -> None:
     source = (
-        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-shell-composition.js"
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js"
     ).read_text(encoding="utf-8")
-    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js").read_text(encoding="utf-8")
+    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js").read_text(encoding="utf-8")
 
     assert "./docs-viewer-management-actions-renderer.js" in source
     assert "./docs-viewer-management-document-actions-renderer.js" in source
@@ -266,17 +266,17 @@ def test_manage_shell_composition_owns_manage_shell_renderer_imports() -> None:
 
 def test_manage_hosted_views_module_owns_source_editor_view_import() -> None:
     source = (
-        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-hosted-views.js"
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js"
     ).read_text(encoding="utf-8")
-    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-manage.js").read_text(encoding="utf-8")
+    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js").read_text(encoding="utf-8")
 
-    assert "./modules/source-editor/source-editor.js" in source
+    assert "./source-editor/source-editor.js" in source
     assert "markdown-source" in source
     assert "createDocsViewerManagementHostedViews" in manage_entry
 
 
 def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
-    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-main-view-renderer.js").read_text(encoding="utf-8")
+    source = (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js").read_text(encoding="utf-8")
     blocked_fragments = [
         "createDocsViewerReportService",
         "docs-viewer-reports.js",
@@ -295,7 +295,7 @@ def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:
 
 def test_manage_document_reports_module_owns_report_runtime_imports() -> None:
     source = (
-        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-document-reports.js"
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js"
     ).read_text(encoding="utf-8")
 
     assert "createDocsViewerReportService" in source
@@ -305,7 +305,7 @@ def test_manage_document_reports_module_owns_report_runtime_imports() -> None:
 
 
 def test_report_runtime_has_no_fallback_registry() -> None:
-    source = (REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-reports.js").read_text(encoding="utf-8")
+    source = (REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-reports.js").read_text(encoding="utf-8")
 
     assert "FALLBACK_REPORT_REGISTRY" not in source
     assert '"/assets/data/docs/reports.json"' not in source
@@ -359,7 +359,7 @@ def test_manage_docs_viewer_css_owns_manage_selectors() -> None:
 
 def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:
     source = (
-        REPO_ROOT / "docs-viewer/runtime/js/docs-viewer-management-document-actions-renderer.js"
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js"
     ).read_text(encoding="utf-8")
 
     assert "docsViewerManageEditButton" in source
@@ -417,7 +417,7 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert manage_route["access"]["allow_scope_query"] is True
     assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
     assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
-    assert "/docs-viewer/runtime/js/docs-viewer-manage.js?v=test-version" in rendered
+    assert "/docs-viewer/runtime/js/management/docs-viewer-manage.js?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer.css?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-reports.css?v=test-version" in rendered
     assert "/docs-viewer/static/css/docs-viewer-manage.css?v=test-version" in rendered
@@ -541,8 +541,13 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:
         return docs_viewer_service.DocsViewerRequestHandler.is_allowed_static_path(object(), path)
 
-    assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is True
-    assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is True
+    assert allowed("/docs-viewer/runtime/js/public/docs-viewer-public.js") is True
+    assert allowed("/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js") is True
+    assert allowed("/docs-viewer/runtime/js/management/docs-viewer-manage.js") is True
+    assert allowed("/docs-viewer/runtime/js/import/docs-html-import.js") is True
+    assert allowed("/docs-viewer/runtime/js/reports/docs-viewer-reports.js") is True
+    assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is False
+    assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
@@ -555,6 +560,27 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/source/studio/docs-viewer.md") is False
+
+
+def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    ) == Path("site/docs-viewer/runtime/js/public/docs-viewer-public.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js"
+    ) == Path("site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/management/docs-viewer-manage.js"
+    ) == Path("docs-viewer/runtime/js/management/docs-viewer-manage.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/import/docs-html-import.js"
+    ) == Path("docs-viewer/runtime/js/import/docs-html-import.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/reports/docs-viewer-reports.js"
+    ) == Path("docs-viewer/runtime/js/reports/docs-viewer-reports.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/docs-viewer-public.js"
+    ) is None
 
 
 def test_public_browser_config_projects_public_readonly_scope_routes() -> None:

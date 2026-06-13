@@ -30,6 +30,7 @@
       "label": "Docs Viewer",
       "include": [
         "docs-viewer/",
+        "site/docs-viewer/",
         "site/assets/docs/"
       ],
       "exclude": [
@@ -50,11 +51,7 @@
         "site/assets/site/",
         "site/assets/work_details/",
         "site/assets/works/",
-        "docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "docs-viewer/config/routes/docs-viewer-public-routes.json",
-        "docs-viewer/config/ui-text/public.json",
-        "docs-viewer/runtime/js/",
-        "docs-viewer/static/css/docs-viewer.css",
+        "site/docs-viewer/",
         "site-tools/"
       ],
       "exclude": [
@@ -117,6 +114,7 @@
         "admin-app/ui-catalogue/assets/js/",
         "analytics-app/app/frontend/js/",
         "site/assets/js/",
+        "site/docs-viewer/runtime/js/",
         "docs-viewer/runtime/js/",
         "studio/app/frontend/js/"
       ]
@@ -210,13 +208,13 @@
       "include": [
         "**/*search*",
         "site/assets/js/search/",
-        "docs-viewer/runtime/js/docs-viewer-search*",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search*",
         "docs-viewer/build/*search*",
         "docs-viewer/tests/**/*search*",
         "studio/services/catalogue/search/"
       ],
       "shared": [
-        "docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"
+        "site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js"
       ],
       "routes": [
         "/library/",
@@ -233,8 +231,8 @@
         "docs-viewer/tests/smoke/docs_viewer_management*"
       ],
       "shared": [
-        "docs-viewer/runtime/js/docs-viewer-app-context.js",
-        "docs-viewer/runtime/js/docs-viewer-service-context.js"
+        "site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js"
       ],
       "routes": [
         "/docs/"
@@ -663,9 +661,9 @@
         "site/assets/js/search/"
       ],
       "shared": [
-        "docs-viewer/runtime/js/docs-viewer-public.js",
-        "docs-viewer/runtime/js/docs-viewer-route-config.js",
-        "docs-viewer/runtime/js/docs-viewer-search*"
+        "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search*"
       ],
       "areas": [
         "search",
@@ -682,9 +680,9 @@
         "site/assets/js/search/"
       ],
       "shared": [
-        "docs-viewer/runtime/js/docs-viewer-public.js",
-        "docs-viewer/runtime/js/docs-viewer-route-config.js",
-        "docs-viewer/runtime/js/docs-viewer-search*"
+        "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search*"
       ],
       "areas": [
         "search"
@@ -695,8 +693,8 @@
       "path": "/docs/",
       "status": "mapped",
       "include": [
-        "docs-viewer/runtime/js/docs-viewer-manage.js",
-        "docs-viewer/runtime/js/docs-viewer-management*",
+        "docs-viewer/runtime/js/management/docs-viewer-manage.js",
+        "docs-viewer/runtime/js/management/docs-viewer-management*",
         "docs-viewer/services/docs_management*",
         "docs-viewer/services/docs_publish_gate.py",
         "docs-viewer/services/docs_viewer_service.py",
@@ -707,8 +705,8 @@
         "docs-viewer/tests/smoke/docs_viewer_service_manage.py"
       ],
       "shared": [
-        "docs-viewer/runtime/js/docs-viewer-app-context.js",
-        "docs-viewer/runtime/js/docs-viewer-route-config.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
         "docs-viewer/services/docs_management_routes.py"
       ],
       "areas": [

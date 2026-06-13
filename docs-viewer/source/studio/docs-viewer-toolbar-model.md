@@ -88,10 +88,10 @@ Example controls:
 
 Implemented owner:
 
-- `docs-viewer/runtime/js/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, updated date, status pills, edit/source action pills, and bookmark toggle in that toolbar.
-- `docs-viewer/runtime/js/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
-- `docs-viewer/runtime/js/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
-- `docs-viewer/runtime/js/modules/source-editor/source-editor.js` projects the source-editor toolbar/body state and hosts `Rebuild doc` plus back-to-rendered controls in the source view.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, updated date, status pills, edit/source action pills, and bookmark toggle in that toolbar.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
+- `docs-viewer/runtime/js/management/source-editor/source-editor.js` projects the source-editor toolbar/body state and hosts `Rebuild doc` plus back-to-rendered controls in the source view.
 
 Current limitation:
 

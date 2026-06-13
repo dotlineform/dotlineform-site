@@ -169,7 +169,7 @@ Example:
 
 | lines | size | family | path |
 | ---: | ---: | --- | --- |
-| 997 | 36 KB | runtime-js | `docs-viewer/runtime/js/docs-viewer-management.js` |
+| 997 | 36 KB | runtime-js | `docs-viewer/runtime/js/management/docs-viewer-management.js` |
 ```
 
 ## CSV Shape

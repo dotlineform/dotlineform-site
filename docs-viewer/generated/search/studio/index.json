@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ae456959d5c21a11ca1c1b3c67e91021",
-    "generated_at_utc": "2026-06-13T06:41:01Z",
+    "version": "blake2b-34ca15eb218820f747d1654e85f591ad",
+    "generated_at_utc": "2026-06-13T09:34:28Z",
     "count": 236
   },
   "entries": [
@@ -849,10 +849,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-12 • Architecture",
+      "display_meta": "2026-06-13 • Architecture",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -861,12 +861,12 @@
         "shared patterns",
         "patterns",
         "architecture",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-12 2026 06 12"
+      "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-06-13 2026 06 13"
     },
     {
       "id": "site-shell-runtime",
@@ -896,10 +896,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-12 • Architecture",
+      "display_meta": "2026-06-13 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -907,12 +907,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-12 2026 06 12"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-13 2026 06 13"
     },
     {
       "id": "change-requests",
@@ -1723,10 +1723,10 @@
       "kind": "doc",
       "title": "GitHub Actions",
       "href": "/docs/?scope=studio&doc=github-actions",
-      "last_updated": "2026-06-12 20:15",
+      "last_updated": "2026-06-13",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 20:15 • Dev Home",
+      "display_meta": "2026-06-13 • Dev Home",
       "search_terms": [
         "github-actions",
         "github",
@@ -1735,24 +1735,22 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12 20:15",
+        "2026-06-13",
         "2026",
         "06",
-        "12",
-        "20",
-        "15"
+        "13"
       ],
-      "search_text": "github-actions github actions github actions dev home dev home 2026-06-12 20:15 2026 06 12 20 15"
+      "search_text": "github-actions github actions github actions dev home dev home 2026-06-13 2026 06 13"
     },
     {
       "id": "scripts-run-checks",
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 • Dev Home",
+      "display_meta": "2026-06-13 • Dev Home",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
@@ -1762,22 +1760,22 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks dev home dev home 2026-06-12 2026 06 12"
+      "search_text": "scripts-run-checks scripts run checks run checks dev home dev home 2026-06-13 2026 06 13"
     },
     {
       "id": "runtime-dependencies",
       "kind": "doc",
       "title": "Runtime Dependencies",
       "href": "/docs/?scope=studio&doc=runtime-dependencies",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 • Dev Home",
+      "display_meta": "2026-06-13 • Dev Home",
       "search_terms": [
         "runtime-dependencies",
         "runtime",
@@ -1786,12 +1784,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-06-12 2026 06 12"
+      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-06-13 2026 06 13"
     },
     {
       "id": "scripts",
@@ -3458,29 +3456,29 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-06-12",
-      "display_meta": "2026-06-12",
+      "last_updated": "2026-06-13",
+      "display_meta": "2026-06-13",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "local-setup local setup local setup 2026-06-12 2026 06 12"
+      "search_text": "local-setup local setup local setup 2026-06-13 2026 06 13"
     },
     {
       "id": "scripts-local-studio",
       "kind": "doc",
       "title": "Local Runners",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-12 • Local Setup",
+      "display_meta": "2026-06-13 • Local Setup",
       "search_terms": [
         "scripts-local-studio",
         "scripts",
@@ -3490,12 +3488,12 @@
         "runners",
         "local setup",
         "setup",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "scripts-local-studio scripts local studio local runners runners local setup setup 2026-06-12 2026 06 12"
+      "search_text": "scripts-local-studio scripts local studio local runners runners local setup setup 2026-06-13 2026 06 13"
     },
     {
       "id": "local-setup-environment",
@@ -3551,10 +3549,10 @@
       "kind": "doc",
       "title": "Local Setup Public Site Preview",
       "href": "/docs/?scope=studio&doc=local-setup-public-site-preview",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-12 • Local Setup",
+      "display_meta": "2026-06-13 • Local Setup",
       "search_terms": [
         "local-setup-public-site-preview",
         "local",
@@ -3564,12 +3562,12 @@
         "preview",
         "local setup public site preview",
         "local setup",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "local-setup-public-site-preview local setup public site preview local setup public site preview local setup 2026-06-12 2026 06 12"
+      "search_text": "local-setup-public-site-preview local setup public site preview local setup public site preview local setup 2026-06-13 2026 06 13"
     },
     {
       "id": "local-setup-recovery",
@@ -3599,10 +3597,10 @@
       "kind": "doc",
       "title": "Local Setup Toolchain",
       "href": "/docs/?scope=studio&doc=local-setup-toolchain",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-12 • Local Setup",
+      "display_meta": "2026-06-13 • Local Setup",
       "search_terms": [
         "local-setup-toolchain",
         "local",
@@ -3610,12 +3608,12 @@
         "toolchain",
         "local setup toolchain",
         "local setup",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "local-setup-toolchain local setup toolchain local setup toolchain local setup 2026-06-12 2026 06 12"
+      "search_text": "local-setup-toolchain local setup toolchain local setup toolchain local setup 2026-06-13 2026 06 13"
     },
     {
       "id": "search",
@@ -5226,38 +5224,38 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-06-12",
-      "display_meta": "2026-06-12",
+      "last_updated": "2026-06-13",
+      "display_meta": "2026-06-13",
       "search_terms": [
         "testing",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "testing 2026-06-12 2026 06 12"
+      "search_text": "testing 2026-06-13 2026 06 13"
     },
     {
       "id": "smoke-testing",
       "kind": "doc",
       "title": "Browser Smoke Testing",
       "href": "/docs/?scope=studio&doc=smoke-testing",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "testing",
       "parent_title": "Testing",
-      "display_meta": "2026-06-12 • Testing",
+      "display_meta": "2026-06-13 • Testing",
       "search_terms": [
         "smoke-testing",
         "smoke",
         "testing",
         "browser smoke testing",
         "browser",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "smoke-testing smoke testing browser smoke testing browser 2026-06-12 2026 06 12"
+      "search_text": "smoke-testing smoke testing browser smoke testing browser 2026-06-13 2026 06 13"
     },
     {
       "id": "testing-pytest",

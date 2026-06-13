@@ -6,6 +6,8 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+
+
 There is a second issue hidden in the old public-site/config/public-site.json: it was also being used as a repo-root marker and as a small source of site/media settings. I’m going to move those durable settings into site-tools/config/site-tools.json; validation code will only use the validation section, while existing app readers can still read the site/media settings from the new owner.
 
 The only active non-validation reader I found uses the old config for media URL prefixes. I’m keeping those durable settings in the new config

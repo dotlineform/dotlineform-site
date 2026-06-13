@@ -30,11 +30,11 @@ Current route config lives in:
 
 Runtime normalization currently flows through:
 
-- `docs-viewer/runtime/js/docs-viewer-route-config.js`
-- `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
-- `docs-viewer/runtime/js/docs-viewer-view-state.js`
-- `docs-viewer/runtime/js/docs-viewer-panel-layout.js`
-- `docs-viewer/runtime/js/docs-viewer-index-panel.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-index-panel.js`
 
 Built-in hosted-view defaults may still be defined in code, but they should use the same normalized record shape as config-provided hosted views.
 The renderer should consume projected controls and should not know why a capability is available.

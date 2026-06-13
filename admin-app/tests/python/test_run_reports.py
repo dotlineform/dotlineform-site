@@ -62,8 +62,9 @@ raise SystemExit({exit_code})
 
 def make_fake_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
-    (repo / "docs-viewer" / "runtime" / "js").mkdir(parents=True)
-    (repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-search.js").write_text("const search = true;\n", encoding="utf-8")
+    runtime_file = repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js"
+    runtime_file.parent.mkdir(parents=True)
+    runtime_file.write_text("const search = true;\n", encoding="utf-8")
     (repo / "docs-viewer" / "services").mkdir(parents=True)
     (repo / "docs-viewer" / "services" / "docs_management_routes.py").write_text("ROUTES = []\n", encoding="utf-8")
     write_fake_report(repo / "admin-app" / "checks" / "reports" / "success.py")
@@ -75,13 +76,13 @@ def make_fake_repo(tmp_path: Path) -> Path:
         "scopes": {
             "admin": {"label": "Admin", "include": ["admin-app/"], "exclude": []},
             "analytics": {"label": "Analytics", "include": ["analytics-app/"], "exclude": []},
-            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/"], "exclude": []},
+            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/", "site/docs-viewer/"], "exclude": []},
             "public-site": {"label": "Public Site", "include": ["works/"], "exclude": []},
             "studio": {"label": "Studio", "include": ["studio/"], "exclude": []},
             "all": {"label": "All", "include": ["admin-app/", "docs-viewer/", "works/"], "exclude": []},
         },
         "families": {
-            "runtime-js": {"label": "Runtime JavaScript", "include": ["docs-viewer/runtime/js/"]},
+            "runtime-js": {"label": "Runtime JavaScript", "include": ["site/docs-viewer/runtime/js/"]},
             "services": {"label": "Services", "include": ["docs-viewer/services/"]},
             "public-route": {"label": "Public Routes", "include": ["works/"]},
         },
@@ -98,7 +99,7 @@ def make_fake_repo(tmp_path: Path) -> Path:
                 "label": "Library",
                 "path": "/library/",
                 "status": "mapped",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": [],
                 "areas": ["search"],
             },

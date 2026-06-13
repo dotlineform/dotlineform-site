@@ -177,7 +177,7 @@ Do not make the demo call real write services.
 
 ## Docs Viewer Implementation Notes
 
-The Docs Viewer management `Actions` menu uses this pattern in `docs-viewer/runtime/js/docs-viewer-management-actions-renderer.js`.
+The Docs Viewer management `Actions` menu uses this pattern in `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`.
 Menu rows are design-time records owned by the renderer, with stable ids, labels, optional emoji, and visibility defaults.
 The management controller still owns capability projection and command binding.
 

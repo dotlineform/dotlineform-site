@@ -204,12 +204,12 @@ The checks source-file discovery includes code, config, and structured data such
         "**/*search*",
         "assets/js/search/",
         "catalogue/search/",
-        "docs-viewer/runtime/js/docs-viewer-search*",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search*",
         "docs-viewer/build/*search*",
         "docs-viewer/tests/**/*search*",
         "studio/services/catalogue/search/"
       ],
-      "shared": ["docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"],
+      "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js"],
       "routes": ["/library/", "/analysis/"]
     },
     etc...

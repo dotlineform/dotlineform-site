@@ -31,18 +31,18 @@ Core ownership:
 
 | area | owner |
 | --- | --- |
-| app-shell boot and shell rendering | `docs-viewer/runtime/js/docs-viewer-app-shell.js` |
-| route config resolution | `docs-viewer/runtime/js/docs-viewer-route-config.js` |
-| public/manage access projection | `docs-viewer/runtime/js/docs-viewer-access.js` |
-| current route/app context | `docs-viewer/runtime/js/docs-viewer-app-context.js` |
-| view-state skeleton | `docs-viewer/runtime/js/docs-viewer-view-state.js` |
-| current panel projection | `docs-viewer/runtime/js/docs-viewer-panel-layout.js` |
-| hosted-view records and access checks | `docs-viewer/runtime/js/docs-viewer-hosted-views.js` |
-| main-view host state and switch validation | `docs-viewer/runtime/js/docs-viewer-main-view-host.js` |
-| selected-document hosted-view context | `docs-viewer/runtime/js/docs-viewer-view-context.js` |
-| info-panel lifecycle | `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` |
-| info-panel chrome | `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` |
-| read-only metadata info view | `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` |
+| app-shell boot and shell rendering | `site/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js` |
+| route config resolution | `site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js` |
+| public/manage access projection | `site/docs-viewer/runtime/js/shared/docs-viewer-access.js` |
+| current route/app context | `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` |
+| view-state skeleton | `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js` |
+| current panel projection | `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js` |
+| hosted-view records and access checks | `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js` |
+| main-view host state and switch validation | `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` |
+| selected-document hosted-view context | `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js` |
+| info-panel lifecycle | `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` |
+| info-panel chrome | `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` |
+| read-only metadata info view | `site/docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js` |
 
 ## Implemented Ownership Areas
 
@@ -373,7 +373,7 @@ What this means:
 
 Current state:
 
-- `markdown-source` is implemented as a manage-only main-view hosted module under `docs-viewer/runtime/js/modules/source-editor/`
+- `markdown-source` is implemented as a manage-only main-view hosted module under `docs-viewer/runtime/js/management/source-editor/`
 - the editor reads and writes only the Markdown body, preserving existing front matter
 - source read/write/rebuild endpoints and revision checks are backend-owned and are not part of the panel host
 

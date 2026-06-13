@@ -212,7 +212,7 @@ Do not make the demo load real route data.
 
 ## Docs Viewer Implementation Notes
 
-The Docs Viewer scope picker uses the custom select-menu pattern in the header controls renderer, config controller, and `docs-viewer/runtime/js/docs-viewer-scope-select-menu.js`.
+The Docs Viewer scope picker uses the custom select-menu pattern in the header controls renderer, config controller, and `site/docs-viewer/runtime/js/shared/docs-viewer-scope-select-menu.js`.
 The rendered toolbar control is custom so it can align emoji, label, and `meta` consistently.
 A visually hidden native select remains as the value and `change` event bridge, so route changes stay owned by the config/route workflow.
 

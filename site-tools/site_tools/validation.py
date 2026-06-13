@@ -43,12 +43,19 @@ def validate_site(site_root: Path, config: SiteToolsConfig) -> ValidationResult:
         raise RuntimeError("site root is missing required directories: " + ", ".join(missing_directories))
 
     runtime_root = site_root / config.validation.docs_viewer_runtime.root
-    runtime_modules = sorted(runtime_root.glob("*.js"))
-    expected_count = config.validation.docs_viewer_runtime.expected_module_count
-    if len(runtime_modules) != expected_count:
+    runtime_modules = sorted(path.relative_to(runtime_root).as_posix() for path in runtime_root.rglob("*.js"))
+    manifest_modules = sorted(config.validation.docs_viewer_runtime.manifest)
+    missing_runtime_modules = sorted(set(manifest_modules) - set(runtime_modules))
+    extra_runtime_modules = sorted(set(runtime_modules) - set(manifest_modules))
+    if missing_runtime_modules:
         raise RuntimeError(
-            "unexpected public Docs Viewer runtime module count: "
-            f"expected {expected_count}, found {len(runtime_modules)}"
+            "public Docs Viewer runtime manifest is missing files: "
+            + ", ".join(missing_runtime_modules)
+        )
+    if extra_runtime_modules:
+        raise RuntimeError(
+            "public Docs Viewer runtime contains files outside manifest: "
+            + ", ".join(extra_runtime_modules)
         )
 
     return ValidationResult(

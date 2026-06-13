@@ -17,7 +17,7 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | Route owner | public page | public page | standalone Docs Viewer service |
 | Route file | `library/index.md` | `analysis/index.md` | `docs-viewer/shell/docs-viewer-shell.html` |
 | Shell include | `_includes/docs_viewer_readonly_route.html` through `_includes/docs_viewer_shell.html` | `_includes/docs_viewer_readonly_route.html` through `_includes/docs_viewer_shell.html` | service-rendered standalone shell |
-| Entrypoint | `docs-viewer/runtime/js/docs-viewer-public.js` | `docs-viewer/runtime/js/docs-viewer-public.js` | `docs-viewer/runtime/js/docs-viewer-manage.js` |
+| Entrypoint | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `docs-viewer/runtime/js/management/docs-viewer-manage.js` |
 | Route registry | `docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-routes.json` served with service-local URLs |
 | UI text | `docs-viewer/config/ui-text/public.json` | `docs-viewer/config/ui-text/public.json` | `docs-viewer/config/ui-text/manage.json` |
 | Management controls | absent | absent | present when management is enabled |

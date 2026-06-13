@@ -97,9 +97,9 @@ Current files:
 
 - Catalogue browser runtime: `site/assets/js/catalogue-search.js`
 - Catalogue runtime policy: `site/assets/data/search/policy.json`
-- Docs public browser runtime: `docs-viewer/runtime/js/docs-viewer-public.js`
-- Docs manage browser runtime: `docs-viewer/runtime/js/docs-viewer-manage.js`
-- Docs search helpers: `docs-viewer/runtime/js/docs-viewer-search.js`
+- Docs public browser runtime: `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
+- Docs manage browser runtime: `docs-viewer/runtime/js/management/docs-viewer-manage.js`
+- Docs search helpers: `site/docs-viewer/runtime/js/shared/docs-viewer-search.js`
 - Docs Viewer search build entrypoint: `docs-viewer/build/build_search.py`
 - Catalogue search build entrypoint: `studio/services/catalogue/search/build_search.py`
 - Catalogue search build implementation: `studio/services/catalogue/search/build_search.py`

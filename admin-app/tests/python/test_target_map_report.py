@@ -55,32 +55,35 @@ def fake_config() -> dict[str, object]:
         "scopes": {
             "admin": {"label": "Admin", "include": ["admin-app/"], "exclude": []},
             "analytics": {"label": "Analytics", "include": ["analytics-app/"], "exclude": []},
-            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/"], "exclude": ["docs-viewer/generated/"]},
+            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/", "site/docs-viewer/"], "exclude": ["docs-viewer/generated/"]},
             "public-site": {"label": "Public Site", "include": ["works/"], "exclude": []},
             "studio": {"label": "Studio", "include": ["studio/"], "exclude": []},
             "all": {"label": "All", "include": ["admin-app/", "docs-viewer/", "works/"], "exclude": []},
         },
         "families": {
-            "runtime-js": {"label": "Runtime JavaScript", "include": ["docs-viewer/runtime/js/", "docs-viewer/shared/"]},
+            "runtime-js": {
+                "label": "Runtime JavaScript",
+                "include": ["site/docs-viewer/runtime/js/", "docs-viewer/runtime/js/", "docs-viewer/shared/"],
+            },
             "services": {"label": "Services", "include": ["docs-viewer/services/", "docs-viewer/shared/"]},
             "config": {"label": "Config", "include": ["docs-viewer/config/"]},
         },
         "areas": {
             "search": {
                 "label": "Search",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
-                "shared": ["docs-viewer/runtime/js/shared.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "routes": ["/library/"],
             },
             "management": {
                 "label": "Management",
                 "include": [
-                    "docs-viewer/runtime/js/docs-viewer-management.js",
-                    "docs-viewer/runtime/js/docs-viewer-management-search.js",
+                    "docs-viewer/runtime/js/management/docs-viewer-management.js",
+                    "docs-viewer/runtime/js/management/docs-viewer-management-search.js",
                     "docs-viewer/services/docs_management_search.py",
                     "docs-viewer/services/orphan_docs_management.py",
                 ],
-                "shared": ["docs-viewer/runtime/js/shared.js"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "routes": ["/docs/"],
             },
             "docs-build": {
@@ -94,8 +97,8 @@ def fake_config() -> dict[str, object]:
                 "label": "Library",
                 "path": "/library/",
                 "status": "mapped",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
-                "shared": ["docs-viewer/runtime/js/shared.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "areas": ["search"],
             },
             "/docs/": {
@@ -103,11 +106,11 @@ def fake_config() -> dict[str, object]:
                 "path": "/docs/",
                 "status": "mapped",
                 "include": [
-                    "docs-viewer/runtime/js/docs-viewer-management.js",
-                    "docs-viewer/runtime/js/docs-viewer-management-search.js",
+                    "docs-viewer/runtime/js/management/docs-viewer-management.js",
+                    "docs-viewer/runtime/js/management/docs-viewer-management-search.js",
                     "docs-viewer/services/docs_management_search.py",
                 ],
-                "shared": ["docs-viewer/runtime/js/shared.js"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "areas": ["management"],
             },
         },
@@ -149,10 +152,10 @@ def fake_manifest(*, limit: int = 20, pattern_limit: int = 20, families: list[st
 
 def make_fake_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-search.js")
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-management.js")
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-search.js")
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "shared.js")
+    write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js")
+    write_file(repo / "docs-viewer" / "runtime" / "js" / "management" / "docs-viewer-management.js")
+    write_file(repo / "docs-viewer" / "runtime" / "js" / "management" / "docs-viewer-management-search.js")
+    write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-shared.js")
     write_file(repo / "docs-viewer" / "shared" / "bridge.js")
     write_file(repo / "docs-viewer" / "services" / "docs_management_search.py")
     write_file(repo / "docs-viewer" / "services" / "orphan_docs_management.py")
@@ -160,7 +163,7 @@ def make_fake_repo(tmp_path: Path) -> Path:
     write_file(repo / "docs-viewer" / "unmapped.txt")
     write_file(repo / "docs-viewer" / "generated" / "index.json", "{}\n")
     for index in range(100):
-        write_file(repo / "docs-viewer" / "runtime" / "js" / f"module-{index:03}.js")
+        write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / f"module-{index:03}.js")
     return repo
 
 
@@ -190,9 +193,9 @@ def test_target_map_report_metrics_boundary_flags_and_patterns(tmp_path: Path) -
     assert "cross-area" in by_path["docs-viewer/services/docs_management_search.py"]["boundary_flags"]
     assert "cross-route" in by_path["docs-viewer/services/docs_management_search.py"]["boundary_flags"]
     assert "route-service" in by_path["docs-viewer/services/docs_management_search.py"]["boundary_flags"]
-    assert "shared-dependency" in by_path["docs-viewer/runtime/js/shared.js"]["boundary_flags"]
+    assert "shared-dependency" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"]["boundary_flags"]
     assert "likely-unmapped-route" in by_path["docs-viewer/services/orphan_docs_management.py"]["boundary_flags"]
-    assert report["shared_dependencies"][0]["path"] == "docs-viewer/runtime/js/shared.js"
+    assert report["shared_dependencies"][0]["path"] == "site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"
     assert report["shared_dependencies"][0]["target_count"] == 4
     assert any(pattern["status"] == "stale" for pattern in report["patterns"])
     assert any(pattern["status"] == "broad" for pattern in report["patterns"])

@@ -45,8 +45,15 @@ STATIC_PREFIXES = (
     "/assets/docs/",
     "/docs-viewer/config/",
     "/docs-viewer/generated/",
-    "/docs-viewer/runtime/",
     "/docs-viewer/static/",
+)
+RUNTIME_STATIC_ROUTES = (
+    ("/docs-viewer/runtime/js/public/", Path("site/docs-viewer/runtime/js/public")),
+    ("/docs-viewer/runtime/js/shared/", Path("site/docs-viewer/runtime/js/shared")),
+    ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),
+    ("/docs-viewer/runtime/js/import/", Path("docs-viewer/runtime/js/import")),
+    ("/docs-viewer/runtime/js/reports/", Path("docs-viewer/runtime/js/reports")),
+    ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
 STATIC_FILES = {
     "/apple-touch-icon.png",
@@ -77,6 +84,17 @@ GENERATED_READ_PATHS = {
     routes.GENERATED_REFERENCE_TARGET_PATH,
     routes.GENERATED_REFERENCE_TARGET_ALT_PATH,
 }
+
+
+def runtime_static_relative_path(request_path: str) -> Path | None:
+    for prefix, root in RUNTIME_STATIC_ROUTES:
+        if not request_path.startswith(prefix):
+            continue
+        suffix = request_path.removeprefix(prefix)
+        if not suffix:
+            return None
+        return root / suffix
+    return None
 
 
 @dataclass(frozen=True)
@@ -179,29 +197,10 @@ def validate_service_config(config: DocsViewerServiceConfig) -> None:
 
 
 def asset_version(repo_root: Path) -> str:
+    runtime_candidates = list((repo_root / "site/docs-viewer/runtime/js").rglob("*.js"))
+    runtime_candidates.extend((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-public.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-manage.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-access.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-context.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-runtime.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-app-shell.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-hosted-views.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-main-view-host.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-actions-renderer.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-client.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-document-reports.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-document-actions-renderer.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-management-shell-composition.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "modules" / "source-editor" / "source-editor.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-route-config.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-top-bar-renderer.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-context.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-viewer-toolbar-renderer.js",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer-view-state.js",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
@@ -210,6 +209,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "public.json",
     ]
+    candidates.extend(runtime_candidates)
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"
 
@@ -411,7 +411,11 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def is_allowed_static_path(self, path: str) -> bool:
         if path in RETIRED_STATIC_PATHS:
             return False
-        return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+        return (
+            path in STATIC_FILES
+            or runtime_static_relative_path(path) is not None
+            or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+        )
 
     def origin_allowed_for_local_api(self) -> bool:
         origin = self.headers.get("Origin", "")
@@ -497,7 +501,10 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_static(self, request_path: str) -> None:
-        if request_path.startswith("/assets/"):
+        runtime_relative_path = runtime_static_relative_path(request_path)
+        if runtime_relative_path is not None:
+            relative_path = runtime_relative_path
+        elif request_path.startswith("/assets/"):
             relative_path = Path("site") / request_path.lstrip("/")
         else:
             relative_path = Path(request_path.lstrip("/"))

@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-runtime-js-ownership-split
 title: Docs Viewer Runtime JavaScript Ownership Split Request
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- planned, revised after the static `site/` migration
+- done
 
 ## Summary
 
@@ -38,31 +38,30 @@ The workflow now watches the deploy root and site toolchain:
 - `bin/site-validate`
 - `.github/workflows/public-site.yml`
 
-The underlying source-ownership issue still exists.
-`docs-viewer/runtime/js/` contains public read-only runtime modules, shared shell modules, local Studio/management modules, import workflow modules, and reporting modules.
-The canonical public deploy root contains the public runtime subset at `site/docs-viewer/runtime/js/`.
-Those public runtime modules are currently duplicated between `site/docs-viewer/runtime/js/` and `docs-viewer/runtime/js/`.
+Before this migration, `docs-viewer/runtime/js/` contained public read-only runtime modules, shared shell modules, local Studio/management modules, import workflow modules, and reporting modules.
+The canonical public deploy root contained the public runtime subset at `site/docs-viewer/runtime/js/`.
+Those public runtime modules were duplicated between `site/docs-viewer/runtime/js/` and `docs-viewer/runtime/js/`.
 
-The New Scope public-disable fix changed `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js`.
+The New Scope public-disable fix changed `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js`.
 That module is loaded from management code and is not part of the public runtime in `site/`, but the source tree layout still does not make that ownership obvious.
 
 Docs Viewer is not expected to be a standalone local-only product in this repository.
 It exists here to make the public `/library/` and `/analysis/` scopes possible.
 If Docs Viewer is ever packaged separately as a local-only product, that package can draw in the public runtimes from `site/` explicitly.
 
-## Problem
+## Original Problem
 
-The current folder boundary does not express runtime ownership.
+The pre-migration folder boundary did not express runtime ownership.
 
 As a result:
 
-- public runtime modules are duplicated between `site/docs-viewer/runtime/js/` and `docs-viewer/runtime/js/`
-- future runtime refactors can drift between the canonical public runtime and the local duplicate
-- reviewers must infer ownership from filenames, import tests, and the current duplicated files
-- static import boundaries are partly guarded by tests, but the source tree does not communicate those boundaries
-- management, import, and report modules remain adjacent to duplicated public modules in the source runtime directory
-- public-only and public/shared modules are not separated by folder in the public runtime tree
-- local management code does not currently make it obvious when it is reusing the public runtime
+- public runtime modules were duplicated between `site/docs-viewer/runtime/js/` and `docs-viewer/runtime/js/`
+- future runtime refactors could drift between the canonical public runtime and the local duplicate
+- reviewers had to infer ownership from filenames, import tests, and the duplicated files
+- static import boundaries were partly guarded by tests, but the source tree did not communicate those boundaries
+- management, import, and report modules were adjacent to duplicated public modules in the source runtime directory
+- public-only and public/shared modules were not separated by folder in the public runtime tree
+- local management code did not make it obvious when it was reusing the public runtime
 
 ## Goals
 
@@ -174,16 +173,60 @@ The repository should not intentionally pause in a mixed state where public/shar
 
 | Task | Status | Description |
 | --- | --- | --- |
-| 1 | planned | Record the current runtime inventory and import graph: public entrypoints, public static imports, public dynamic imports, management-only modules, import-workflow-only modules, report-only modules, duplicated public/shared files, and local-only files. |
-| 2 | planned | Produce the file placement map for `site/docs-viewer/runtime/js/public/`, `site/docs-viewer/runtime/js/shared/`, `docs-viewer/runtime/js/management/`, `docs-viewer/runtime/js/import/`, `docs-viewer/runtime/js/reports/`, and any needed `docs-viewer/runtime/js/local/` files. |
-| 3 | planned | Move site-owned runtime modules into `site/docs-viewer/runtime/js/public/` and `site/docs-viewer/runtime/js/shared/`, then update public route entrypoints and public runtime imports to the new ownership paths. |
-| 4 | planned | Move local-only management, import, and report modules into their Docs Viewer-owned folders, update static and dynamic imports, and make local management imports use site-owned shared/public modules through served URL paths. |
-| 5 | planned | Remove duplicated public/shared runtime files from `docs-viewer/runtime/js/` so `site/` is the only owner of those modules. |
-| 6 | planned | Update the local Docs Viewer service static route-prefix map so public/shared runtime URLs resolve from `site/` and local-only runtime URLs resolve from `docs-viewer/`. |
-| 7 | planned | Add the explicit public Docs Viewer runtime manifest and update `site-tools` validation to enforce it. |
-| 8 | planned | Update tests for public import graphs, management import graphs, service routing, duplicate-runtime absence, and public runtime manifest validation. |
-| 9 | planned | Update stable Docs Viewer/runtime documentation for the new ownership model and served URL prefixes. |
-| 10 | planned | Run verification: focused Python tests, `bin/site-validate`, public Docs Viewer browser smoke for `/library/` and `/analysis/`, local Studio Docs Viewer management smoke, and actionlint for `.github/workflows/public-site.yml`. |
+| 1 | done | Recorded the runtime inventory and import graph: public entrypoint, public/shared static graph, management-only modules, import-workflow-only modules, report-only modules, duplicated public/shared files, and local-only files. |
+| 2 | done | Produced and applied the file placement map for `site/docs-viewer/runtime/js/public/`, `site/docs-viewer/runtime/js/shared/`, `docs-viewer/runtime/js/management/`, `docs-viewer/runtime/js/import/`, and `docs-viewer/runtime/js/reports/`. No `docs-viewer/runtime/js/local/` files were needed. |
+| 3 | done | Moved site-owned runtime modules into `site/docs-viewer/runtime/js/public/` and `site/docs-viewer/runtime/js/shared/`, then updated public route entrypoints and public runtime imports to the new ownership paths. |
+| 4 | done | Moved local-only management, import, and report modules into their Docs Viewer-owned folders, updated static and dynamic imports, and made local management imports use site-owned shared/public modules through served URL paths. |
+| 5 | done | Removed duplicated public/shared runtime files from `docs-viewer/runtime/js/`; `site/` is now the only owner of those modules. |
+| 6 | done | Updated the local Docs Viewer service static route-prefix map so public/shared runtime URLs resolve from `site/` and local-only runtime URLs resolve from `docs-viewer/`. |
+| 7 | done | Added the explicit public Docs Viewer runtime manifest and updated `site-tools` validation to enforce it. |
+| 8 | done | Updated tests for public import graphs, management import graphs, service routing, duplicate-runtime absence, public runtime manifest validation, and Admin target-map ownership paths. |
+| 9 | done | Updated stable Docs Viewer/runtime documentation for the new ownership model and served URL prefixes. |
+| 10 | done | Ran verification: focused Python tests, `bin/site-validate`, public Docs Viewer browser smoke for `/library/` and `/analysis/`, local Docs Viewer management smoke, and actionlint for `.github/workflows/public-site.yml`. |
+
+## Implementation Result
+
+The runtime ownership split is implemented.
+
+Site-owned runtime:
+
+- `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
+- `site/docs-viewer/runtime/js/shared/*.js`
+
+Docs Viewer-owned local runtime:
+
+- `docs-viewer/runtime/js/management/*.js`
+- `docs-viewer/runtime/js/management/source-editor/source-editor.js`
+- `docs-viewer/runtime/js/import/*.js`
+- `docs-viewer/runtime/js/reports/*.js`
+
+No public/shared runtime files remain duplicated under `docs-viewer/runtime/js/`.
+No root-level `.js` files remain under `site/docs-viewer/runtime/js/` or `docs-viewer/runtime/js/`.
+
+The local Docs Viewer service route map is now explicit:
+
+- `/docs-viewer/runtime/js/public/...` resolves from `site/docs-viewer/runtime/js/public/...`
+- `/docs-viewer/runtime/js/shared/...` resolves from `site/docs-viewer/runtime/js/shared/...`
+- `/docs-viewer/runtime/js/management/...` resolves from `docs-viewer/runtime/js/management/...`
+- `/docs-viewer/runtime/js/import/...` resolves from `docs-viewer/runtime/js/import/...`
+- `/docs-viewer/runtime/js/reports/...` resolves from `docs-viewer/runtime/js/reports/...`
+
+`site-tools/config/site-tools.json` now declares the public Docs Viewer runtime manifest.
+`bin/site-validate` validates that `site/docs-viewer/runtime/js/` matches that manifest and rejects extra runtime files outside it.
+
+## Completed Verification
+
+- Route-aware JavaScript import check: all imports resolve through the new served URL prefixes.
+- Duplicate/root runtime check: no root-level runtime `.js` files remain under `site/docs-viewer/runtime/js/` or `docs-viewer/runtime/js/`, and no public/shared filenames are duplicated under `docs-viewer/runtime/js/`.
+- Focused tests: `$HOME/miniconda3/bin/python3 -m pytest -q docs-viewer/tests/python/test_docs_viewer_service.py site-tools/tests/test_site_validate.py admin-app/tests/python/test_target_map_resolver.py admin-app/tests/python/test_target_map_report.py admin-app/tests/python/test_files_report.py admin-app/tests/python/test_admin_checks_api.py admin-app/tests/python/test_run_reports.py`
+- Result: `55 passed`.
+- Site validation: `bin/site-validate`.
+- Result: `Site validation passed: 47 required files; 9 required directories; 44 Docs Viewer runtime modules`.
+- Browser smoke: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root site`.
+- Result: public Docs Viewer read-only OK for `/library/` and `/analysis/`.
+- Browser smoke: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`.
+- Result: Docs Viewer service manage shell OK for `/docs/?scope=studio&doc=docs-viewer&mode=manage`.
+- Syntax/workflow checks: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_viewer_service.py site-tools/site_tools/config.py site-tools/site_tools/validation.py site-tools/site_validate.py`; `actionlint .github/workflows/public-site.yml`.
 
 ## Verification Expectations
 

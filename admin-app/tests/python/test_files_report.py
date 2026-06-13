@@ -39,21 +39,21 @@ def fake_config() -> dict[str, object]:
         "scopes": {
             "admin": {"label": "Admin", "include": ["admin-app/"], "exclude": []},
             "analytics": {"label": "Analytics", "include": ["analytics-app/"], "exclude": []},
-            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/"], "exclude": ["docs-viewer/generated/"]},
+            "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/", "site/docs-viewer/"], "exclude": ["docs-viewer/generated/"]},
             "public-site": {"label": "Public Site", "include": ["works/"], "exclude": []},
             "studio": {"label": "Studio", "include": ["studio/"], "exclude": []},
             "all": {"label": "All", "include": ["admin-app/", "docs-viewer/", "works/"], "exclude": []},
         },
         "families": {
-            "runtime-js": {"label": "Runtime JavaScript", "include": ["docs-viewer/runtime/js/"]},
+            "runtime-js": {"label": "Runtime JavaScript", "include": ["site/docs-viewer/runtime/js/"]},
             "services": {"label": "Services", "include": ["docs-viewer/services/"]},
             "source-docs": {"label": "Source Docs", "include": ["docs-viewer/source/"]},
         },
         "areas": {
             "search": {
                 "label": "Search",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js"],
-                "shared": ["docs-viewer/runtime/js/docs-viewer-shared.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "routes": ["/library/"],
             }
         },
@@ -62,8 +62,8 @@ def fake_config() -> dict[str, object]:
                 "label": "Library",
                 "path": "/library/",
                 "status": "mapped",
-                "include": ["docs-viewer/runtime/js/docs-viewer-search.js"],
-                "shared": ["docs-viewer/runtime/js/docs-viewer-shared.js"],
+                "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
+                "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
                 "areas": ["search"],
             }
         },
@@ -105,9 +105,9 @@ def fake_manifest(*, limit: int = 20, sort: str = "lines_desc") -> dict[str, obj
 
 def make_fake_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-search.js", "alpha\nbeta\ngamma\n")
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-shared.js", "shared\n")
-    write_file(repo / "docs-viewer" / "runtime" / "js" / "docs-viewer-other.js", "ignored\nignored\nignored\nignored\n")
+    write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js", "alpha\nbeta\ngamma\n")
+    write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-shared.js", "shared\n")
+    write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-other.js", "ignored\nignored\nignored\nignored\n")
     write_file(repo / "docs-viewer" / "generated" / "index.json", "{}\n")
     return repo
 
@@ -127,9 +127,9 @@ def test_files_report_counts_lines_bytes_and_target_metadata(tmp_path: Path) -> 
     assert report["totals"]["lines"] == 4
     assert report["totals"]["bytes"] == len("alpha\nbeta\ngamma\n".encode("utf-8")) + len("shared\n".encode("utf-8"))
     by_path = {row["path"]: row for row in report["files"]}
-    assert by_path["docs-viewer/runtime/js/docs-viewer-search.js"]["target_match"] == "direct"
-    assert by_path["docs-viewer/runtime/js/docs-viewer-shared.js"]["target_match"] == "shared"
-    assert "docs-viewer/runtime/js/docs-viewer-other.js" not in by_path
+    assert by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["target_match"] == "direct"
+    assert by_path["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"]["target_match"] == "shared"
+    assert "site/docs-viewer/runtime/js/shared/docs-viewer-other.js" not in by_path
     assert "docs-viewer/generated/index.json" not in by_path
 
 
@@ -146,12 +146,12 @@ def test_files_report_sorts_and_limits_markdown(tmp_path: Path) -> None:
     markdown = report_module.render_markdown(report)
 
     assert [row["path"] for row in report["files"]] == [
-        "docs-viewer/runtime/js/docs-viewer-search.js",
-        "docs-viewer/runtime/js/docs-viewer-shared.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-search.js",
+        "site/docs-viewer/runtime/js/shared/docs-viewer-shared.js",
     ]
     assert "Showing 1 of 2 files" in markdown
-    assert "docs-viewer/runtime/js/docs-viewer-search.js" in markdown
-    assert "docs-viewer/runtime/js/docs-viewer-shared.js" not in markdown
+    assert "site/docs-viewer/runtime/js/shared/docs-viewer-search.js" in markdown
+    assert "site/docs-viewer/runtime/js/shared/docs-viewer-shared.js" not in markdown
     assert "| lines | size | family | path |" in markdown
     assert "target_match" not in markdown
     assert "direct" not in markdown
@@ -169,7 +169,7 @@ def test_files_report_bytes_sort(tmp_path: Path) -> None:
         repo_root=repo,
     )
 
-    assert report["files"][0]["path"] == "docs-viewer/runtime/js/docs-viewer-search.js"
+    assert report["files"][0]["path"] == "site/docs-viewer/runtime/js/shared/docs-viewer-search.js"
 
 
 def test_files_report_writes_required_artifacts(tmp_path: Path) -> None:

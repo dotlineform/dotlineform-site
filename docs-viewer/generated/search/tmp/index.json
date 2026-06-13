@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-2eea82d7ce80cf4df594af4e6048cfef",
-    "generated_at_utc": "2026-06-12T17:42:29Z",
+    "version": "blake2b-2a6c20fa6483afc9d62eb69e4362d225",
+    "generated_at_utc": "2026-06-13T09:44:20Z",
     "count": 15
   },
   "entries": [
@@ -112,22 +112,6 @@
         "21"
       ],
       "search_text": "index-space index space index workspace workspace 2026-05-21 2026 05 21"
-    },
-    {
-      "id": "jekyll",
-      "kind": "doc",
-      "title": "jekyll",
-      "href": "/docs/?scope=tmp&doc=jekyll",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
-      "search_terms": [
-        "jekyll",
-        "2026-05-30",
-        "2026",
-        "05",
-        "30"
-      ],
-      "search_text": "jekyll 2026-05-30 2026 05 30"
     },
     {
       "id": "json",
@@ -281,6 +265,22 @@
         "24"
       ],
       "search_text": "studio tmp studio tmp 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "jekyll",
+      "kind": "doc",
+      "title": "jekyll",
+      "href": "/docs/?scope=tmp&doc=jekyll",
+      "last_updated": "2026-05-30",
+      "display_meta": "2026-05-30",
+      "search_terms": [
+        "jekyll",
+        "2026-05-30",
+        "2026",
+        "05",
+        "30"
+      ],
+      "search_text": "jekyll 2026-05-30 2026 05 30"
     }
   ]
 }
