@@ -341,10 +341,16 @@
           "ui_status": "in-progress",
           "children": [
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
+              "title": "Public Catalogue Runtime Image And Caption Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-image-caption-slice.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-slices",
               "title": "Public Catalogue Runtime Module Architecture Slices",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-slices.json",
-              "ui_status": "planned"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1308,5 +1314,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T15:07:21Z"
+  "generated_at": "2026-06-13T16:15:05Z"
 }

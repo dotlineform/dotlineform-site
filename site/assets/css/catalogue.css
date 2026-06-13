@@ -1,0 +1,164 @@
+/* Public catalogue component CSS. Global shell and legacy route styles stay in main.css. */
+
+.catalogueGridList[hidden]{
+  display: none;
+}
+
+.catalogueGridList--list{
+  max-width: var(--content-measure);
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.catalogueGridList--grid{
+  --cell: 72px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--cell));
+  justify-content: start;
+  gap: 0.5rem;
+  margin: var(--space-4) auto var(--space-5);
+  max-width: var(--content-measure);
+}
+
+@media (min-width: 1200px){
+  .catalogueGridList--grid{
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+
+.catalogueGridList__item{
+  color: var(--link);
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+.catalogueGridList__item:visited{
+  color: var(--link-visited);
+  text-decoration: none !important;
+}
+
+.catalogueGridList__item:hover{
+  color: var(--link-hover);
+  text-decoration: none !important;
+}
+
+.catalogueGridList__item:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: none !important;
+}
+
+.catalogueGridList__item--list{
+  display: grid;
+  grid-template-columns: var(--list-thumb-size) 1fr;
+  align-items: center;
+  column-gap: var(--list-column-gap);
+  padding: var(--list-row-padding) 0;
+  justify-self: start;
+  width: fit-content;
+}
+
+.catalogueGridList__item--grid{
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.catalogueGridList__meta{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--list-thumb-size);
+}
+
+.catalogueGridList__image{
+  display: block;
+  object-fit: cover;
+  background: var(--panel-2);
+}
+
+.catalogueGridList__image--list{
+  width: var(--list-thumb-size);
+  height: var(--list-thumb-size);
+  flex: 0 0 auto;
+  border-radius: 6px;
+  align-self: center;
+}
+
+.catalogueGridList__image--grid{
+  width: 100%;
+  height: 100%;
+}
+
+.catalogueGridList__title{
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.catalogueGridList__caption{
+  font-size: var(--font-caption);
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.catalogueGridList__pager{
+  display: flex;
+  align-items: baseline;
+  gap: var(--nav-gap-grid);
+  justify-content: flex-end;
+  width: 100%;
+  max-width: var(--content-measure);
+  margin: var(--nav-grid-margin-top) auto 0;
+}
+
+.catalogueGridList__pager--list{
+  justify-content: flex-start;
+}
+
+.catalogueGridList__pagerButton{
+  appearance: none;
+  font: inherit;
+  line-height: 1.2;
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.catalogueGridList__pagerButton:hover{
+  color: var(--link-hover);
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.catalogueGridList__pagerButton:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.catalogueGridList__pagerButton[disabled]{
+  opacity: 0.5;
+  cursor: default;
+}
+
+.catalogueGridList__pagerStatus{
+  font-size: var(--font-small);
+  color: var(--muted);
+  margin-left: 0.45em;
+  margin-right: var(--nav-counter-gap);
+  font-weight: 400;
+}
+
+@media (max-width: 640px){
+  .catalogueGridList__meta{
+    min-height: 0;
+  }
+}

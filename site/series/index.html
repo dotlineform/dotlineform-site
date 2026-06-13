@@ -22,6 +22,7 @@
     })();
   </script>
   <link rel="stylesheet" href="/assets/css/main.css?v=static">
+  <link rel="stylesheet" href="/assets/css/catalogue.css?v=static">
 </head>
 <body class="series">
   <header class="site-header">
@@ -89,18 +90,17 @@
           <a class="theme-toggle seriesIndex__searchBtn" href="/catalogue/search/" aria-label="Search the catalogue"><svg class="seriesIndex__searchIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16L20 20"></path></svg><span class="sr-only">search</span></a>
         </div>
       </div>
-      <div class="index seriesIndex__list" id="seriesIndexList" aria-live="polite"></div>
-      <div class="seriesGrid seriesIndex__grid" id="seriesIndexThumbGrid" aria-live="polite" hidden></div>
-      <nav class="gridPager seriesIndex__pager" id="seriesIndexPager" aria-label="catalog index pagination" hidden>
-        <span class="gridPager__status" id="seriesIndexPagerStatus"></span>
-        <button class="gridPager__btn" type="button" id="seriesIndexPrev" aria-label="Previous page">&larr;</button>
-        <button class="gridPager__btn" type="button" id="seriesIndexNext" aria-label="Next page">&rarr;</button>
+      <div class="catalogueGridList catalogueGridList--list" id="seriesIndexList" aria-live="polite"></div>
+      <div class="catalogueGridList catalogueGridList--grid" id="seriesIndexThumbGrid" aria-live="polite" hidden></div>
+      <nav class="catalogueGridList__pager" id="seriesIndexPager" aria-label="catalog index pagination" hidden>
+        <span class="catalogueGridList__pagerStatus" id="seriesIndexPagerStatus"></span>
+        <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexPrev" aria-label="Previous page">&larr;</button>
+        <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexNext" aria-label="Next page">&rarr;</button>
       </nav>
     </div>
     <p id="seriesIndexEmpty" hidden>no works yet</p>
 
-    <script src="/assets/js/public-catalogue-runtime.js?v=static"></script>
-    <script src="/assets/js/series-index.js?v=static"></script>
+    <script type="module" src="/assets/js/catalogue/routes/series-index.js?v=static"></script>
   </main>
 
   <footer class="site-footer">

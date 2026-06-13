@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d7fe1608c4676bc1c153c05ca109a0a2",
-    "generated_at_utc": "2026-06-13T15:06:43Z",
-    "count": 240
+    "version": "blake2b-ea7b39df3eba7961182007ea630c42e5",
+    "generated_at_utc": "2026-06-13T16:15:05Z",
+    "count": 241
   },
   "entries": [
     {
@@ -1440,6 +1440,37 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture site request public catalogue runtime module architecture public catalogue runtime module architecture request change requests change requests 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Image And Caption Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "image",
+        "caption",
+        "slice",
+        "public catalogue runtime image and caption slice",
+        "and",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice site request public catalogue runtime module architecture image caption slice public catalogue runtime image and caption slice and public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-slices",

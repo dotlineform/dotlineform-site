@@ -27,6 +27,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
+      "title": "Public Catalogue Runtime Image And Caption Slice",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-image-caption-slice.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request"
+    },
+    {
       "doc_id": "site-request-public-catalogue-runtime-module-architecture",
       "title": "Public Catalogue Runtime Module Architecture Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-data-driven-public-docs-scope-routes",
-      "title": "Public Scope Lifecycle Site Retarget Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
-      "added_date": "2026-06-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-06-13T15:06:43Z"
+  "generated_at": "2026-06-13T16:15:05Z"
 }

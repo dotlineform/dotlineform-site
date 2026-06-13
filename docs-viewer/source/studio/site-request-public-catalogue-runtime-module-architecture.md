@@ -613,6 +613,7 @@ After the refactor is complete, restore the `main` push trigger for `site/**`, `
 ## Child Docs
 
 - [Public Catalogue Runtime Module Architecture Slices](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-slices)
+- [Public Catalogue Runtime Image And Caption Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-image-caption-slice)
 
 ## Decisions Needed
 
