@@ -198,7 +198,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "create_apply": true,
     "delete_preview": true,
     "delete_apply": true,
-    "publishing_modes": ["local_uncommitted", "local_committed"],
+    "publishing_modes": ["public_readonly", "local_uncommitted", "local_committed"],
     "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
   }
 }

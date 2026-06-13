@@ -1198,11 +1198,20 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     mode_options = page.locator('[data-role="scope-publishing-mode"] option').evaluate_all(
         "options => options.map(option => option.value)"
     )
-    if mode_options != ["local_uncommitted", "local_committed"]:
-        raise AssertionError(f"scope publishing modes should exclude public_readonly: {mode_options!r}")
+    if mode_options != ["local_uncommitted", "local_committed", "public_readonly"]:
+        raise AssertionError(f"scope publishing modes should include public_readonly after local defaults: {mode_options!r}")
     selected_mode = page.locator('[data-role="scope-publishing-mode"]').input_value()
     if selected_mode != "local_uncommitted":
         raise AssertionError(f"scope publishing mode did not default to the first local mode: {selected_mode!r}")
+    if not page.locator('[data-role="scope-route-field"]').evaluate("node => node.hidden"):
+        raise AssertionError("public route path field should be hidden for local scope modes")
+    page.locator('[data-role="scope-publishing-mode"]').select_option("public_readonly")
+    if page.locator('[data-role="scope-route-field"]').evaluate("node => node.hidden"):
+        raise AssertionError("public route path field should be visible for public_readonly mode")
+    auto_route = page.locator('[data-role="scope-public-route-path"]').input_value()
+    if auto_route != "/private-notes/":
+        raise AssertionError(f"scope route path did not auto-fill from scope id: {auto_route!r}")
+    page.locator('[data-role="scope-publishing-mode"]').select_option("local_uncommitted")
     page.locator('[data-role="scope-write-generated"]').uncheck()
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")

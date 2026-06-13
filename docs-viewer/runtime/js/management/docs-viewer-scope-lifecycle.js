@@ -26,7 +26,11 @@ var DEFAULT_PUBLISHING_MODES = [
   "local_uncommitted",
   "local_committed"
 ];
-var DISABLED_PUBLISHING_MODES = new Set(["public_readonly"]);
+var PUBLISHING_MODE_ORDER = [
+  "local_uncommitted",
+  "local_committed",
+  "public_readonly"
+];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -50,11 +54,10 @@ function publishingModes(capabilities) {
   var seen = new Set();
   var modes = rawModes.map(normalizeText).filter(function (mode) {
     if (!mode || seen.has(mode)) return false;
-    if (DISABLED_PUBLISHING_MODES.has(mode)) return false;
     seen.add(mode);
     return true;
   });
-  var ordered = DEFAULT_PUBLISHING_MODES.filter(function (mode) {
+  var ordered = PUBLISHING_MODE_ORDER.filter(function (mode) {
     return modes.includes(mode);
   });
   return ordered.length ? ordered : DEFAULT_PUBLISHING_MODES.slice();
