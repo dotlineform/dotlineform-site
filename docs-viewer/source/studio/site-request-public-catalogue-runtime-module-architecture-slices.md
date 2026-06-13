@@ -83,6 +83,7 @@ Required acceptance checks:
 - performance rules were respected, including no unnecessary loads or duplicate fetches introduced;
 - component normalization uses a stable component contract rather than route-local forks;
 - thumbnail grid/list remains one component family with grid/list modes;
+- component CSS is owned in `catalogue.css` with component-owned selectors;
 - search work, if touched, stays structural-only;
 - validation stayed within syntax checks and manual browser testing unless a separate decision changed that.
 
@@ -105,9 +106,13 @@ Scope:
 - create `site/assets/js/catalogue/components/`;
 - create `site/assets/js/catalogue/navigation/`;
 - create `site/assets/js/catalogue/search/`;
+- create `site/assets/css/catalogue.css`;
 - carefully inspect the existing thumbnail grid/list behavior in the relevant legacy route scripts;
+- carefully inspect the relevant legacy grid/list CSS in `site/assets/css/main.css`;
 - define the thumbnail grid/list component contract;
+- define component-owned thumbnail grid/list CSS selectors;
 - implement the first component modules under `components/` by porting or adapting existing working logic where it fits the contract;
+- copy or adapt only the needed grid/list CSS into `catalogue.css` under the new component selectors;
 - add only shared helpers required by the thumbnail grid/list component;
 - do not switch every route;
 - choose the first integration route only after the component contract is visible.
@@ -125,10 +130,11 @@ Out of scope:
 | ID | Status | Action | Next-session steer |
 | --- | --- | --- | --- |
 | 1.1 | planned | Create the `site/assets/js/catalogue/` folder structure with empty or minimal module files only where needed. | Record any naming concern before adding behavior. |
-| 1.2 | planned | Carefully inspect legacy thumbnail grid/list behavior in the relevant scripts that currently implement grid/list variants. | Capture behavior needed for the component contract without expanding into a broad public-site inventory. |
-| 1.3 | planned | Define the thumbnail grid/list component contract, including grid/list modes, paging, page persistence, item links, captions, and current/selected item state. | Stop for review if the contract needs route-specific flags. |
-| 1.4 | planned | Implement the first thumbnail grid/list component modules and required shared helpers by porting or adapting existing working logic. | Keep modules focused; avoid route integration until the component is coherent. |
-| 1.5 | planned | Select and integrate one first route after the component contract is visible. | Choose the route that proves the component with the least unrelated migration work. |
+| 1.2 | planned | Create `site/assets/css/catalogue.css` for public catalogue component CSS. | Keep `main.css` as the global stylesheet; do not split it broadly. |
+| 1.3 | planned | Carefully inspect legacy thumbnail grid/list behavior in the relevant scripts and CSS selectors currently implementing grid/list variants. | Capture behavior and selector responsibilities needed for the component contract without expanding into a broad public-site inventory. |
+| 1.4 | planned | Define the thumbnail grid/list component contract, including grid/list modes, paging, page persistence, item links, captions, current/selected item state, and component-owned CSS selectors. | Stop for review if the contract needs route-specific flags. |
+| 1.5 | planned | Implement the first thumbnail grid/list component modules, component-owned CSS, and required shared helpers by porting or adapting existing working logic. | Keep modules and selectors focused; avoid route integration until the component is coherent. |
+| 1.6 | planned | Select and integrate one first route after the component contract is visible. | Choose the route that proves the component with the least unrelated migration work. |
 
 ## Completed Verification
 
@@ -152,6 +158,7 @@ Acceptance checklist:
 | Performance rules respected | yes required |  |
 | Component normalization uses stable component contract | yes required |  |
 | Thumbnail grid/list remains one component family with grid/list modes | yes required |  |
+| Component CSS is owned in `catalogue.css` with component-owned selectors | yes required |  |
 | Search, if touched, stays structural-only | yes required |  |
 | Validation stayed within agreed policy | yes required |  |
 

@@ -153,6 +153,41 @@ However, if small page-to-page UI differences prevent a concise shared module fr
 Allowed UI changes are small normalization changes that support clearer module ownership.
 Material layout, route, or interaction changes need a separate decision.
 
+## CSS Ownership
+
+CSS is part of this component refactor.
+A component contract includes its DOM, JavaScript behavior, and CSS selectors.
+
+`site/assets/css/main.css` should remain the global site stylesheet for tokens, base typography, layout shell, header/footer, and truly shared site primitives.
+Create `site/assets/css/catalogue.css` for public catalogue route and component CSS.
+Catalogue routes should load `catalogue.css`; non-catalogue routes such as `/about/`, `/library/`, and `/analysis/` should not load catalogue component CSS unless they later use those components.
+
+Do not do a broad `main.css` split before the first component refactor.
+As each component is introduced:
+
+- copy or adapt the current relevant CSS from `main.css`;
+- rename selectors around the new component contract;
+- put the new selectors in `catalogue.css`;
+- leave legacy selectors in `main.css` until no public route uses them;
+- remove old selectors only after route integration proves they are unused.
+
+For thumbnail grid/list, current grid-related CSS can be copied or adapted into `catalogue.css`, but the selectors should be component-owned rather than copied with legacy names.
+
+Example component-owned selectors:
+
+- `.catalogueGridList`
+- `.catalogueGridList--grid`
+- `.catalogueGridList--list`
+- `.catalogueGridList__item`
+- `.catalogueGridList__media`
+- `.catalogueGridList__image`
+- `.catalogueGridList__caption`
+- `.catalogueGridList__meta`
+- `.catalogueGridList__pager`
+
+Legacy selectors such as `.seriesGrid`, `.seriesGrid__item`, `.seriesGrid__img`, `.gridPager`, `.workIndexItem`, `.seriesIndexItem`, and `.recentIndexItem` should remain in `main.css` until the routes using them are switched.
+The slice assessment must record which legacy selectors were copied or adapted, which new component selectors were introduced, and which legacy selectors remain.
+
 ## Target Module Map
 
 The target module map starts from this ownership model:
