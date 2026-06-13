@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-34ca15eb218820f747d1654e85f591ad",
-    "generated_at_utc": "2026-06-13T09:34:28Z",
+    "version": "blake2b-e9d6a0817eb35b88636879c23876b2aa",
+    "generated_at_utc": "2026-06-13T10:26:14Z",
     "count": 236
   },
   "entries": [
@@ -1413,40 +1413,6 @@
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
     },
     {
-      "id": "site-request-data-driven-public-docs-scope-routes",
-      "kind": "doc",
-      "title": "Portable Static Docs Viewer Install Request",
-      "href": "/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes",
-      "last_updated": "2026-06-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-13 • Change Requests",
-      "search_terms": [
-        "site-request-data-driven-public-docs-scope-routes",
-        "site",
-        "request",
-        "data",
-        "driven",
-        "public",
-        "docs",
-        "scope",
-        "routes",
-        "portable static docs viewer install request",
-        "portable",
-        "static",
-        "viewer",
-        "install",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-13",
-        "2026",
-        "06",
-        "13"
-      ],
-      "search_text": "site-request-data-driven-public-docs-scope-routes site request data driven public docs scope routes portable static docs viewer install request portable static viewer install change requests change requests 2026-06-13 2026 06 13"
-    },
-    {
       "id": "site-request-public-js-runtime-payload-review",
       "kind": "doc",
       "title": "Public JavaScript Runtime and Payload Review Request",
@@ -1476,6 +1442,38 @@
         "12"
       ],
       "search_text": "site-request-public-js-runtime-payload-review site request public js runtime payload review public javascript runtime and payload review request javascript and change requests change requests 2026-06-12 2026 06 12"
+    },
+    {
+      "id": "site-request-data-driven-public-docs-scope-routes",
+      "kind": "doc",
+      "title": "Public Scope Lifecycle Site Retarget Request",
+      "href": "/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes",
+      "last_updated": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
+      "search_terms": [
+        "site-request-data-driven-public-docs-scope-routes",
+        "site",
+        "request",
+        "data",
+        "driven",
+        "public",
+        "docs",
+        "scope",
+        "routes",
+        "public scope lifecycle site retarget request",
+        "lifecycle",
+        "retarget",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-data-driven-public-docs-scope-routes site request data driven public docs scope routes public scope lifecycle site retarget request lifecycle retarget change requests change requests 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-r2-media-upload-automation",

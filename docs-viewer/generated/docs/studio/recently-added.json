@@ -35,17 +35,17 @@
       "parent_title": "Dev Home"
     },
     {
-      "doc_id": "site-request-data-driven-public-docs-scope-routes",
-      "title": "Portable Static Docs Viewer Install Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
+      "doc_id": "site-request-public-js-runtime-payload-review",
+      "title": "Public JavaScript Runtime and Payload Review Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
       "added_date": "2026-06-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
     },
     {
-      "doc_id": "site-request-public-js-runtime-payload-review",
-      "title": "Public JavaScript Runtime and Payload Review Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
+      "doc_id": "site-request-data-driven-public-docs-scope-routes",
+      "title": "Public Scope Lifecycle Site Retarget Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
       "added_date": "2026-06-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
@@ -83,5 +83,5 @@
       "parent_title": "Admin Checks Operational Reports"
     }
   ],
-  "generated_at": "2026-06-13T06:41:01Z"
+  "generated_at": "2026-06-13T10:26:13Z"
 }

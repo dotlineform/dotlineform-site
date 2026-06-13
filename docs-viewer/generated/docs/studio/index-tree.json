@@ -335,15 +335,15 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-data-driven-public-docs-scope-routes",
-          "title": "Portable Static Docs Viewer Install Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
-          "ui_status": "planned"
-        },
-        {
           "doc_id": "site-request-public-js-runtime-payload-review",
           "title": "Public JavaScript Runtime and Payload Review Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
+          "ui_status": "planned"
+        },
+        {
+          "doc_id": "site-request-data-driven-public-docs-scope-routes",
+          "title": "Public Scope Lifecycle Site Retarget Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
           "ui_status": "planned"
         },
         {
@@ -1280,5 +1280,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T09:41:17Z"
+  "generated_at": "2026-06-13T10:26:13Z"
 }
