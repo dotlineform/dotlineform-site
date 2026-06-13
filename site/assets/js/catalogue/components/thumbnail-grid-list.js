@@ -1,6 +1,6 @@
+import { renderCatalogueCaption } from './catalogue-caption.js';
+import { renderCatalogueImage } from './catalogue-image.js';
 import { text, toPositiveInteger } from '../shared/text.js';
-
-var GRID_IMAGE_SIZES = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
 
 function normalizeMode(value) {
   return text(value).toLowerCase() === 'list' ? 'list' : 'grid';
@@ -12,48 +12,13 @@ function normalizePage(value) {
   return Math.floor(page);
 }
 
-function replaceWithPlaceholder(img, mode, title) {
-  if (!img.parentNode) return;
-  img.parentNode.replaceChild(renderPlaceholder(mode, title), img);
-}
-
-function renderPlaceholder(mode, title) {
-  var placeholder = document.createElement('span');
-  placeholder.className = [
-    'catalogueGridList__image',
-    'catalogueGridList__image--' + normalizeMode(mode),
-    'catalogueGridList__image--placeholder'
-  ].join(' ');
-  placeholder.setAttribute('aria-hidden', 'true');
-  if (title) placeholder.title = title;
-  return placeholder;
-}
-
 function renderImage(item, mode) {
   var thumb = item && item.thumbnail && typeof item.thumbnail === 'object' ? item.thumbnail : {};
   var title = text((item && item.title) || (thumb && thumb.alt));
-  var src = text(thumb.src);
-  if (!src) return renderPlaceholder(mode, title);
-
-  var img = document.createElement('img');
-  img.className = [
-    'catalogueGridList__image',
-    'catalogueGridList__image--' + normalizeMode(mode)
-  ].join(' ');
-  img.addEventListener('error', function () {
-    replaceWithPlaceholder(img, mode, title);
-  }, { once: true });
-  img.src = src;
-  if (thumb.srcset) img.srcset = text(thumb.srcset);
-  img.sizes = text(thumb.sizes) || GRID_IMAGE_SIZES;
-  var width = toPositiveInteger(thumb.width);
-  var height = toPositiveInteger(thumb.height);
-  if (width) img.width = width;
-  if (height) img.height = height;
-  img.alt = text(thumb.alt) || title;
-  img.loading = 'lazy';
-  img.decoding = 'async';
-  return img;
+  return renderCatalogueImage(thumb, {
+    title: title,
+    variant: mode
+  });
 }
 
 function renderItem(item, mode) {
@@ -87,12 +52,8 @@ function renderItem(item, mode) {
   meta.appendChild(titleEl);
 
   var caption = text(item && item.caption);
-  if (caption) {
-    var captionEl = document.createElement('div');
-    captionEl.className = 'catalogueGridList__caption';
-    captionEl.textContent = caption;
-    meta.appendChild(captionEl);
-  }
+  var captionEl = renderCatalogueCaption(caption);
+  if (captionEl) meta.appendChild(captionEl);
 
   link.appendChild(meta);
   return link;

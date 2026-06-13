@@ -12,10 +12,9 @@ import {
 import { fetchJson } from '../shared/fetch-json.js';
 import { readStoredItem, writeStoredItem } from '../shared/local-storage.js';
 import { lowerText, normalizePositiveSizes, text } from '../shared/text.js';
-import { thumbSrcset, thumbUrl } from '../shared/thumbnails.js';
+import { thumbnailImageData } from '../shared/thumbnails.js';
 
 var PAGE_SIZE = 80;
-var GRID_IMAGE_SIZES = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
 var MODE_STORAGE_KEY = 'dlf.catalogIndex.mode';
 
 var DEFAULT_SORT = {
@@ -258,17 +257,15 @@ function createThumbProjector(root) {
   }
 
   return function itemThumbnail(item) {
-    var thumbId = text(item && item.thumb_id);
-    var base = thumbBaseFor(item);
-    var primary = thumbUrl(base, thumbId, thumbSuffix, primaryThumbSize, assetFormat);
-    return {
-      src: primary,
-      srcset: primary ? thumbSrcset(base, thumbId, thumbSrcsetSizes, thumbSuffix, assetFormat) : '',
-      sizes: GRID_IMAGE_SIZES,
-      width: primaryThumbSize,
-      height: primaryThumbSize,
+    return thumbnailImageData({
+      base: thumbBaseFor(item),
+      id: item && item.thumb_id,
+      suffix: thumbSuffix,
+      size: primaryThumbSize,
+      srcsetSizes: thumbSrcsetSizes,
+      format: assetFormat,
       alt: text((item && item.title) || (item && item.id))
-    };
+    });
   };
 }
 

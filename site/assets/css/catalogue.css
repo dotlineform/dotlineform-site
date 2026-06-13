@@ -74,13 +74,13 @@
   min-height: var(--list-thumb-size);
 }
 
-.catalogueGridList__image{
+.catalogueImage{
   display: block;
   object-fit: cover;
   background: var(--panel-2);
 }
 
-.catalogueGridList__image--list{
+.catalogueImage--list{
   width: var(--list-thumb-size);
   height: var(--list-thumb-size);
   flex: 0 0 auto;
@@ -88,7 +88,7 @@
   align-self: center;
 }
 
-.catalogueGridList__image--grid{
+.catalogueImage--grid{
   width: 100%;
   height: 100%;
 }
@@ -98,7 +98,7 @@
   line-height: 1.2;
 }
 
-.catalogueGridList__caption{
+.catalogueCaption{
   font-size: var(--font-caption);
   color: var(--muted);
   line-height: 1.2;
