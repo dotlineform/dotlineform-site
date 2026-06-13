@@ -3,9 +3,8 @@ doc_id: site-request-public-catalogue-runtime-module-architecture-slices
 title: Public Catalogue Runtime Module Architecture Slices
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-public-catalogue-runtime-module-architecture
-viewable: true
 ---
 # Public Catalogue Runtime Module Architecture Slices
 
