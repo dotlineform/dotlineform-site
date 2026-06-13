@@ -365,6 +365,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-navigation-slice",
+              "title": "Public Catalogue Runtime Navigation Module Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-navigation-slice.json",
+              "ui_status": "done"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
               "title": "Public Catalogue Runtime Primary Media Component Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-primary-media-slice.json",
@@ -1350,5 +1356,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T17:43:50Z"
+  "generated_at": "2026-06-13T18:00:39Z"
 }

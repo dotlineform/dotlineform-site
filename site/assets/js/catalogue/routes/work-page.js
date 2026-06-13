@@ -2,6 +2,8 @@ import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
 import { renderProseContent } from '../components/prose-content.js';
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
+import { bindArrowNavigation } from '../navigation/keyboard-navigation.js';
+import { createSelectedWorkSeriesNavigation } from '../navigation/work-series-navigation.js';
 import {
   buildPath,
   catalogueIndexUrl,
@@ -95,6 +97,21 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
   var unavailableText = text(rootNode.getAttribute('data-unavailable-text')) || 'info not available';
   var renderWidths = normalizePositiveSizes(jsonAttribute(rootNode, 'data-primary-render-widths', []), [primaryDisplayWidth]);
   var detailThumbSizes = normalizePositiveSizes(jsonAttribute(rootNode, 'data-detail-thumb-sizes', []), [96, 192]);
+  var seriesNavigation = createSelectedWorkSeriesNavigation({
+    baseurl: baseurl,
+    routeState: routeState,
+    navElement: document.getElementById('seriesNav'),
+    prevLinkElement: document.getElementById('seriesNavPrev'),
+    nextLinkElement: document.getElementById('seriesNavNext'),
+    counterElement: document.getElementById('seriesNavCounter'),
+    seriesLinkWrapElement: document.getElementById('workSeriesLinkWrap'),
+    seriesLinkElement: document.getElementById('workSeriesLink'),
+    backLinkElement: document.getElementById('pageBackLink')
+  });
+  bindArrowNavigation({
+    prevIds: ['seriesNavPrev'],
+    nextIds: ['seriesNavNext']
+  });
 
   function workImageUrl(id, width) {
     return worksImgBase + encodeURIComponent(id) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat;
@@ -313,6 +330,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       nav.setAttribute('data-series', primarySeries);
       nav.setAttribute('data-series-ids', seriesIds.join(','));
     }
+    seriesNavigation.update({ workId: workId, seriesId: primarySeries });
     document.dispatchEvent(new CustomEvent('dlf:work-metadata-applied', {
       detail: { work_id: workId, series_id: primarySeries, series_ids: seriesIds }
     }));

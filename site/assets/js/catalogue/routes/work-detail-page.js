@@ -1,5 +1,6 @@
 import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
+import { bindArrowNavigation } from '../navigation/keyboard-navigation.js';
 import {
   catalogueIndexUrl,
   parseRouteState,
@@ -49,6 +50,10 @@ function bootWorkDetailRoute(rootNode) {
   var primarySuffix = text(rootNode.getAttribute('data-primary-suffix')) || 'primary';
   var assetFormat = text(rootNode.getAttribute('data-asset-format')) || 'webp';
   var renderWidths = normalizePositiveSizes(jsonAttribute(rootNode, 'data-primary-render-widths', []), [primaryDisplayWidth]);
+  bindArrowNavigation({
+    prevIds: ['detailNavPrev'],
+    nextIds: ['detailNavNext']
+  });
 
   var ctx = {
     detailUid: detailUid,
