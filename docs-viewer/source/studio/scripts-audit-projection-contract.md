@@ -8,6 +8,8 @@ viewable: true
 ---
 # Projection Contract Audit
 
+[this doc and the script needs reviewing]
+
 Script:
 
 ```bash
@@ -30,21 +32,20 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py
 Audit a built public site from the same manifest:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py --site-root /tmp/dlf-jekyll-build
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_projection_contract.py --site-root /tmp/dlf-...
 ```
 
 The legacy public-surface audit wrapper now uses the same manifest-backed public build audit:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_public_build_surface.py --site-root /tmp/dlf-...
 ```
 
 ## What It Checks
 
 - manifest schema version, family ids, classifications, owner docs, path lists, public-output policies, and duplicate path declarations
-- `_config.yml` exclusions for families marked `jekyll_exclude_required`
 - checked-in public JSON/search projections for fields listed in manifest `field_leak_rules`
-- public Jekyll templates and public browser assets for forbidden Studio-only source/projection references listed in manifest `public_source_reference_audit`
+- public templates and public browser assets for forbidden Studio-only source/projection references listed in manifest `public_source_reference_audit`
 - built public output for required and forbidden public-output families when `--site-root` is supplied
 - public Docs Viewer config scope ids when `--site-root` is supplied
 - forbidden public HTML links such as `/studio/` and local `/docs/` management links when `--site-root` is supplied
@@ -57,7 +58,6 @@ It does not replace domain-specific configs:
 - Docs Viewer scope build details stay in `docs-viewer/config/scopes/docs_scopes.json`
 - search source-family behavior stays in `scripts/search/build_config.json`
 - catalogue field-aware build scoping stays in `studio/data/config/catalogue/catalogue-field-registry.json`
-- `_config.yml` stays the public Jekyll build config
 
 The projection contract audit checks those systems at the public/local boundary.
 

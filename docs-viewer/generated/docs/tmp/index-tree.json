@@ -42,11 +42,6 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/index-space.json"
     },
     {
-      "doc_id": "jekyll",
-      "title": "jekyll",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/jekyll.json"
-    },
-    {
       "doc_id": "json",
       "title": "json",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/json.json"
@@ -94,5 +89,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-12T17:42:29Z"
+  "generated_at": "2026-06-13T00:06:54Z"
 }

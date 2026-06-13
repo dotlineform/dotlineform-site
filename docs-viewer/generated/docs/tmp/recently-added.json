@@ -43,12 +43,6 @@
       "added_date": "2026-05-30"
     },
     {
-      "doc_id": "jekyll",
-      "title": "jekyll",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/jekyll.json",
-      "added_date": "2026-05-30"
-    },
-    {
       "doc_id": "analytics",
       "title": "analytics",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/analytics.json",
@@ -65,7 +59,13 @@
       "title": "emoji",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
       "added_date": "2026-05-28"
+    },
+    {
+      "doc_id": "links",
+      "title": "links",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/links.json",
+      "added_date": "2026-05-28"
     }
   ],
-  "generated_at": "2026-06-12T17:42:29Z"
+  "generated_at": "2026-06-13T00:06:54Z"
 }

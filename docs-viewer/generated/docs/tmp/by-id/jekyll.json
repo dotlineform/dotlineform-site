@@ -1,9 +1,0 @@
-{
-  "doc_id": "jekyll",
-  "title": "jekyll",
-  "added_date": "2026-05-30",
-  "last_updated": "2026-05-30",
-  "source_path": "jekyll.md",
-  "viewer_url": "/docs/?scope=tmp&doc=jekyll",
-  "content_html": "<p>Ruby/Jekyll retirement is important, but I would not start by removing it. It is broader than the Studio shell: Jekyll currently owns public site build/preview, Docs Viewer Markdown rendering, docs rebuild/watch flows, import validation, and publish parity. Treat that as a separate inventory + target-contract request before implementation.</p>\n<p>Then write the Ruby/Jekyll retirement plan</p>\n<p>Inventory current Ruby/Jekyll responsibilities and decide replacement targets. Likely separate tracks:</p>\n<ul>\n<li>public site generator replacement or static build strategy</li>\n<li>Docs Markdown renderer replacement</li>\n<li>docs search/docs payload builder migration</li>\n<li>import validation replacement</li>\n<li>CI/local parity changes</li>\n</ul>\n<p>Only then implement Ruby/Jekyll retirement in slices</p>\n<p>Start with the least public-risk surface, probably Docs Viewer builder/rendering, before touching public site generation.</p>\n"
-}
