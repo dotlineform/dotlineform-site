@@ -97,6 +97,7 @@ Actions:
 - verifies the scope is manifest-recorded, user-created, and tool-created
 - reports planned deleted files and config changes
 - blocks system-owned scopes
+- blocks scopes referenced as `default_scope_id` by a management route
 - does not delete files
 
 Returned data includes `allowed`, `blockers`, manifest ownership metadata, planned deleted files, planned changed files, and `dry_run: true`.

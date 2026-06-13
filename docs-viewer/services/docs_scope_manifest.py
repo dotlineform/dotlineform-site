@@ -661,6 +661,21 @@ def remove_public_route_record(repo_root: Path, scope_id: str) -> None:
             write_route_registry(path, payload)
 
 
+def manage_default_route_ids_for_scope(repo_root: Path, scope_id: str) -> list[str]:
+    payload = load_route_registry(repo_root / ROUTE_CONFIG_REL_PATH, ROUTE_CONFIG_REL_PATH.as_posix())
+    route_ids: list[str] = []
+    for route in payload["routes"]:
+        if not isinstance(route, dict):
+            continue
+        if str(route.get("route_type") or "").strip() != "manage":
+            continue
+        if str(route.get("default_scope_id") or "").strip() != scope_id:
+            continue
+        route_id = str(route.get("route_id") or "").strip()
+        route_ids.append(route_id or "(unnamed manage route)")
+    return route_ids
+
+
 def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, Any]) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for item in [*preview.get("created_files", []), *preview.get("publish_files", []), *preview.get("changed_files", [])]:
@@ -1116,6 +1131,25 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             "scope_id": scope_id,
             "allowed": False,
             "blockers": ["scope is system-owned or was not created by the scope lifecycle tool"],
+            "delete_files": [],
+            "missing_files": [],
+            "changed_files": [],
+            "build_commands": [],
+        }
+
+    protected_manage_routes = manage_default_route_ids_for_scope(repo_root, scope_id)
+    if protected_manage_routes:
+        return {
+            "ok": True,
+            "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
+            "action": "delete_scope",
+            "operation": "preview",
+            "scope_id": scope_id,
+            "allowed": False,
+            "blockers": [
+                "scope is the default scope for management route(s): "
+                + ", ".join(protected_manage_routes)
+            ],
             "delete_files": [],
             "missing_files": [],
             "changed_files": [],

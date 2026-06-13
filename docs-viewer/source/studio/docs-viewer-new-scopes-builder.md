@@ -479,5 +479,6 @@ Implementation ownership:
 - Manage-mode scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
 - Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
+- Delete Scope must block any scope referenced as `default_scope_id` by a management route, even when that scope is user-created.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

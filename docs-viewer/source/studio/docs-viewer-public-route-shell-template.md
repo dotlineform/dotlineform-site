@@ -90,6 +90,8 @@ Delete Scope may remove a user-created public route shell only when the scope ma
 It also removes user-created public route records and scope-owned public docs/search payloads.
 
 Delete Scope must not remove shared public runtime files, shared CSS, UI text, route registry files themselves, or unrelated route shells.
+Delete Scope also must not remove a scope that is the `default_scope_id` for a management route.
+That guard protects portable installs where public scopes may all be user-created, while the original management entry scope remains route-owned.
 
 ## Maintenance
 

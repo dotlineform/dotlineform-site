@@ -876,6 +876,61 @@ def test_scope_delete_preview_allows_public_user_created_scopes() -> None:
     assert payload["blockers"] == []
 
 
+def test_scope_delete_preview_blocks_manage_route_default_scope() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json",
+            {
+                "schema_version": "docs_scope_manifest_v1",
+                "tool_id": "docs-viewer-scope-lifecycle",
+                "updated_at": "2026-06-13T00:00:00Z",
+                "scopes": [
+                    {
+                        "scope_id": "notes",
+                        "scope_type": "local",
+                        "owner": "user",
+                        "user_created": True,
+                        "created_by_tool": True,
+                        "tool_id": "docs-viewer-scope-lifecycle",
+                        "repo_status_at_creation": "tracked",
+                        "created_at": "2026-06-13T00:00:00Z",
+                        "updated_at": "2026-06-13T00:00:00Z",
+                        "files": [],
+                        "metadata": {"publishing_mode": "local_committed"},
+                    }
+                ],
+            },
+        )
+        write_json(
+            repo_root / "docs-viewer/config/routes/docs-viewer-routes.json",
+            {
+                "schema_version": "docs_viewer_route_config_registry_v1",
+                "routes": [
+                    {
+                        "schema_version": "docs_viewer_route_config_v1",
+                        "route_id": "docs-manage",
+                        "route_type": "manage",
+                        "default_scope_id": "notes",
+                    }
+                ],
+            },
+        )
+        payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
+            repo_root,
+            {
+                "scope_id": "notes",
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["allowed"] is False
+    assert payload["delete_files"] == []
+    assert payload["changed_files"] == []
+    assert "default scope for management route(s): docs-manage" in payload["blockers"][0]
+
+
 def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
     docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
