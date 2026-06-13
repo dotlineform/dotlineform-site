@@ -356,7 +356,7 @@
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
               "title": "Public Catalogue Runtime Selected Work Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-selected-work-slice.json",
-              "ui_status": "planned"
+              "ui_status": "completed"
             }
           ]
         },
@@ -1320,5 +1320,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T16:28:09Z"
+  "generated_at": "2026-06-13T16:38:07Z"
 }

@@ -3,7 +3,7 @@ doc_id: site-request-public-catalogue-runtime-module-architecture-selected-work-
 title: Public Catalogue Runtime Selected Work Route Slice
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: completed
 parent_id: site-request-public-catalogue-runtime-module-architecture
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- planned
+- completed
 
 ## Purpose
 
@@ -89,39 +89,78 @@ The exact filenames should follow the implementation, but ownership should stay 
 
 | ID | Status | Action | Next-session steer |
 | --- | --- | --- | --- |
-| 3.1 | planned | Inspect selected-work legacy behavior, loaded scripts, route shell markup, and relevant CSS. | Capture selected-work behavior only; do not fold in works-index migration. |
-| 3.2 | planned | Define the selected-work route module contract and the detail-grid integration contract. | Stop for review if detail-grid reuse needs route-specific component flags. |
-| 3.3 | planned | Implement `catalogue/routes/work-page.js` by porting/adapting legacy selected-work behavior. | Keep primary work media route-owned unless the image component fits cleanly. |
-| 3.4 | planned | Integrate `thumbnail-grid-list.js` and `catalogue-image.js` for additional detail grids. | Preserve current detail links and query parameters exactly. |
-| 3.5 | planned | Switch `/works/?work=...` to the new module while keeping `/works/` index behavior stable. | Ensure `works-index.js` still exits on selected-work URLs or otherwise avoids double rendering. |
-| 3.6 | planned | Remove obsolete `site/assets/js/work-page.js` after no route loads it and update validation config. | Do not preserve an old filename compatibility alias. |
-| 3.7 | planned | Record completed verification and a slice assessment with parent-design acceptance evidence. | Include concrete follow-up triggers for navigation and metadata cleanup. |
+| 3.1 | completed | Inspected selected-work legacy behavior, loaded scripts, route shell markup, and relevant CSS. | The relevant behavior is recorded below; works-index behavior was checked only for route-mode separation. |
+| 3.2 | completed | Defined the selected-work route module contract and the detail-grid integration contract. | Detail-grid reuse did not need route-specific component flags. |
+| 3.3 | completed | Implemented `catalogue/routes/work-page.js` by porting/adapting legacy selected-work behavior. | Primary work media remains route-owned. |
+| 3.4 | completed | Integrated `thumbnail-grid-list.js` and `catalogue-image.js` for additional detail grids. | Detail links continue to carry work, section, series, and page context. |
+| 3.5 | completed | Switched `/works/?work=...` to the new module while keeping `/works/` index behavior stable. | `works-index.js` still exits on selected-work URLs; the new module does no selected-work work on bare `/works/`. |
+| 3.6 | completed | Removed obsolete `site/assets/js/work-page.js` after no route loaded it and updated validation config. | No old filename compatibility alias was kept. |
+| 3.7 | completed | Recorded completed verification and a slice assessment with parent-design acceptance evidence. | Use the follow-on triggers below for navigation and metadata cleanup decisions. |
 
 ## Completed Verification
 
-- Not started.
+- JavaScript syntax checks passed:
+  - `node --check site/assets/js/catalogue/routes/work-page.js`
+  - `node --check site/assets/js/catalogue/shared/catalogue-urls.js`
+  - `node --check site/assets/js/catalogue/shared/text.js`
+- `bin/site-validate` passed: `56 required files; 9 required directories; 44 Docs Viewer runtime modules`.
+- Manual browser validation against `http://127.0.0.1:8173` covered:
+  - `/works/?work=00001&series=009` renders the selected work title, primary media state, back link, series link, and series navigation with no console errors;
+  - selected-work detail thumbnails render through `catalogueGridList` and `catalogueImage` classes;
+  - the selected-work route loads `/assets/js/catalogue/routes/work-page.js` and no longer loads `/assets/js/work-page.js`;
+  - `/works/` still renders the works index list, leaves `#selectedWorkRoot` hidden, and reports no console errors.
+- Automated browser smoke tests were not run, per the slice validation policy.
 
 ## Slice 3 Assessment
 
-- Not started.
+- Legacy behavior inspected:
+  - `site/assets/js/work-page.js` rendered selected-work payload data, primary media URLs and `srcset`, metadata rows, downloads, external links, prose HTML, detail-grid thumbnail links, back-link state, and the `dlf:work-metadata-applied` event.
+  - `site/assets/js/work.js` consumed `dlf:work-metadata-applied`, fetched `series_index.json`, projected the series link/back-link label, and owns current keyboard/series navigation.
+  - `site/assets/js/works-index.js` exits early when the `work` query parameter is present and continues to own bare `/works/` index list rendering.
+  - `site/works/index.html` loaded the selected-work shell, legacy `work-page.js`, `work.js`, and `works-index.js`.
+  - `main.css` still owns route layout, primary media, `.workDetails*`, and legacy `.seriesGrid*` selectors; `catalogue.css` owns the reused `.catalogueGridList*` and `.catalogueImage*` component selectors.
+- Behavior preserved:
+  - `/works/?work=...` still fetches the selected work payload from `/assets/works/index/<id>.json`.
+  - Selected-work title, catalogue id, year, medium, dimensions, downloads, external links, prose, primary media, document title, and fallback unavailable state remain route-owned and behavior-equivalent.
+  - Query-state behavior for `work`, `series`, `series_page`, `from`, `details_section`, and positive `details_page` is preserved for selected-work navigation and detail links.
+  - The route still dispatches `dlf:work-metadata-applied` so `work.js` can project series link, back-link label, series navigation, and keyboard navigation.
+  - `/works/` index list behavior remains owned by `works-index.js`.
+- Normalized into module/component contracts:
+  - `routes/work-page.js` now owns selected-work bootstrapping, route-state wiring, payload rendering, primary media, metadata/prose/back-link rendering, detail-grid item projection, and metadata event dispatch.
+  - `shared/catalogue-urls.js` gained route-independent selected-work payload and work-detail URL helpers.
+  - `shared/text.js` gained focused `toNumber` and `slug` primitives used by the route.
+  - `thumbnail-grid-list.js` and `catalogue-image.js` now render selected-work additional detail thumbnails in grid mode.
+- Intentionally not changed:
+  - `work.js` remains a legacy classic script for series navigation, series-link projection, back-link label projection, and keyboard navigation.
+  - Primary work media remains route-owned because fitting it into `catalogue-image.js` would require route-specific behavior around full-size links, aspect ratio, eager loading, and fetch priority.
+  - `/work-details/`, public search, generated catalogue schemas, and the works index list implementation were not migrated.
+  - Legacy `.seriesGrid*` selectors remain in `main.css` because other legacy routes still use them.
+- Improvement opportunities:
+  - Migrate `/work-details/` next if the goal is to reuse detail navigation or primary-detail media code.
+  - Extract `work.js` navigation/back-link projection when moving keyboard and series navigation into `navigation/`.
+  - Consider a focused metadata panel or primary-media component only after another route needs the same contract without route-specific flags.
+- Remaining issues:
+  - No remaining issue blocks deployment. The mixed runtime is still present at a clean boundary: selected-work rendering is modular, while navigation remains in `work.js`.
+- Continue decision:
+  - Slice 3 is complete and leaves the public site deployable. The selected-work route now follows the target ES module structure and proves detail-grid reuse without a global bridge.
 
 Acceptance checklist:
 
 | Parent design criterion | Required status | Evidence |
 | --- | --- | --- |
-| Module-level refactor, not greenfield rewrite | yes required |  |
-| Legacy selected-work behavior inspected before contract design | yes required |  |
-| Working behavior ported/adapted rather than redesigned line by line | yes required |  |
-| Public route/navigation/data contracts remain stable | yes required |  |
-| Completed slice leaves site functional and deployable | yes required |  |
-| ES module boundaries follow target folder structure | yes required |  |
-| No broad `utils.js`-style module introduced | yes required |  |
-| Performance rules respected | yes required |  |
-| Detail-grid reuse uses stable component contracts | yes required |  |
-| Primary media ownership is explicit and not flag-heavy | yes required |  |
-| Component CSS remains owned in `catalogue.css` where new selectors are introduced | yes required |  |
-| Search, if touched, stays structural-only | yes required |  |
-| Validation stayed within agreed policy | yes required |  |
+| Module-level refactor, not greenfield rewrite | yes required | yes - selected-work behavior moved to `routes/work-page.js` while keeping UI, URL, data, and navigation contracts stable. |
+| Legacy selected-work behavior inspected before contract design | yes required | yes - the assessment records inspected behavior from legacy `work-page.js`, `work.js`, `works-index.js`, route shell markup, and relevant CSS. |
+| Working behavior ported/adapted rather than redesigned line by line | yes required | yes - metadata, media, prose, downloads/links, back-link, event dispatch, and detail-grid behavior were ported/adapted behind new module boundaries. |
+| Public route/navigation/data contracts remain stable | yes required | yes - manual checks covered `/works/?work=00001&series=009` and `/works/`; generated payload schemas were not changed. |
+| Completed slice leaves site functional and deployable | yes required | yes - syntax checks, `bin/site-validate`, and manual browser validation passed. |
+| ES module boundaries follow target folder structure | yes required | yes - route code lives in `routes/`, route-independent helpers in `shared/`, and reusable thumbnail/image DOM remains in `components/`. |
+| No broad `utils.js`-style module introduced | yes required | yes - only focused URL/text helpers were added. |
+| Performance rules respected | yes required | yes - selected-work rendering fetches only the selected work payload; bare `/works/` loads the route module but it exits before fetching selected-work data. |
+| Detail-grid reuse uses stable component contracts | yes required | yes - detail-grid items use `thumbnail-grid-list.js` in grid mode and `catalogue-image.js` via normalized thumbnail image data. |
+| Primary media ownership is explicit and not flag-heavy | yes required | yes - primary work media stays route-owned rather than adding full-size-link/aspect-ratio/eager-loading flags to the image component. |
+| Component CSS remains owned in `catalogue.css` where new selectors are introduced | yes required | yes - selected-work detail grids reuse existing `.catalogueGridList*` and `.catalogueImage*` selectors in `catalogue.css`; no new component selectors were added to `main.css`. |
+| Search, if touched, stays structural-only | yes required | yes - search was not touched. |
+| Validation stayed within agreed policy | yes required | yes - validation used syntax checks, `bin/site-validate`, and manual browser checks; automated browser smoke tests were not run. |
 
 ## Follow-On
 

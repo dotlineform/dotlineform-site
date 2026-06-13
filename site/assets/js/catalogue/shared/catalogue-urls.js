@@ -47,6 +47,13 @@ export function workUrl(workId, baseurl, options) {
   return appendQuery(buildPath(baseurl, '/works/'), params);
 }
 
+export function workDetailUrl(detailUid, baseurl, options) {
+  var params = Object.assign({}, options || {});
+  var id = text(detailUid);
+  if (id) params.detail = id;
+  return appendQuery(buildPath(baseurl, '/work-details/'), params);
+}
+
 export function momentUrl(momentId, baseurl, options) {
   var params = Object.assign({}, options || {});
   var id = text(momentId);
@@ -64,7 +71,9 @@ export function parseRouteState(locationLike) {
     detail: text(params.get('detail')),
     moment: text(params.get('moment')),
     seriesPage: toPositiveInteger(params.get('series_page')),
-    from: lowerText(params.get('from'))
+    from: lowerText(params.get('from')),
+    detailsSection: lowerText(params.get('details_section')),
+    detailsPage: toPositiveInteger(params.get('details_page'))
   };
 }
 
@@ -78,4 +87,8 @@ export function momentsIndexUrl(baseurl) {
 
 export function worksIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/works_index.json');
+}
+
+export function workPayloadUrl(workId, baseurl) {
+  return buildPath(baseurl, '/assets/works/index/' + encodeURIComponent(text(workId)) + '.json');
 }
