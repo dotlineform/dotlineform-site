@@ -261,12 +261,15 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_static(self, request_path: str) -> None:
-        relative = request_path.lstrip("/")
-        if not relative or ".." in Path(relative).parts:
+        if request_path.startswith("/assets/"):
+            relative_path = Path("site") / request_path.lstrip("/")
+        else:
+            relative_path = Path(request_path.lstrip("/"))
+        if not relative_path.parts or ".." in relative_path.parts:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
 
-        path = (self.repo_root / relative).resolve()
+        path = (self.repo_root / relative_path).resolve()
         try:
             path.relative_to(self.repo_root)
         except ValueError:

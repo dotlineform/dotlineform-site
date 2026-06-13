@@ -24,7 +24,7 @@ def write_text(path: Path, text: str) -> None:
 def test_transaction_snapshots_capture_existing_unique_paths() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp) / "repo"
-        repo_target = root / "assets/data/works_index.json"
+        repo_target = root / "site/assets/data/works_index.json"
         external_target = Path(tmp) / "external-source.md"
         write_text(repo_target, "repo")
         write_text(external_target, "external")
@@ -174,8 +174,8 @@ def test_catalogue_cleanup_transaction_writes_deletes_and_reports_written_paths(
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source = root / "studio/data/canonical/catalogue/works.json"
-        artifact = root / "assets/works/index/00001.json"
-        search_index = root / "assets/data/search/catalogue/index.json"
+        artifact = root / "site/assets/works/index/00001.json"
+        search_index = root / "site/assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
         write_text(artifact, "generated")
         write_text(search_index, json.dumps({"search": []}) + "\n")
@@ -204,8 +204,8 @@ def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> No
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source = root / "studio/data/canonical/catalogue/works.json"
-        artifact = root / "assets/works/index/00001.json"
-        search_index = root / "assets/data/search/catalogue/index.json"
+        artifact = root / "site/assets/works/index/00001.json"
+        search_index = root / "site/assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
         write_text(artifact, "generated")
         write_text(search_index, json.dumps({"search": []}) + "\n")
@@ -232,7 +232,7 @@ def test_moment_cleanup_transaction_dry_run_reports_moment_keys() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         metadata = root / "studio/data/canonical/catalogue/moments.json"
-        moments_index = root / "assets/data/moments_index.json"
+        moments_index = root / "site/assets/data/moments_index.json"
         write_text(metadata, json.dumps({"moments": {"keys": {"title": "Keys"}}}) + "\n")
         write_text(moments_index, json.dumps({"moments": {"keys": {}}}) + "\n")
 

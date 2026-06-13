@@ -44,7 +44,7 @@ GLOBAL_EXCLUDE_RULES: tuple[tuple[str, str], ...] = (
     ("var/", "local-output"),
     ("logs/", "local-output"),
     ("docs-viewer/generated/", "generated-output"),
-    ("assets/data/", "generated-output"),
+    ("site/assets/data/", "generated-output"),
     ("studio/data/generated/", "generated-output"),
     ("studio/data/canonical/", "canonical-data"),
     ("studio/retired/", "retired-prior-art"),

@@ -40,31 +40,31 @@
         },
         {
           "kind": "generated_docs_root",
-          "path": "assets/data/docs/scopes/analysis",
+          "path": "site/assets/data/docs/scopes/analysis",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "assets/data/docs/scopes/analysis/index-tree.json",
+          "path": "site/assets/data/docs/scopes/analysis/index-tree.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recently_added",
-          "path": "assets/data/docs/scopes/analysis/recently-added.json",
+          "path": "site/assets/data/docs/scopes/analysis/recently-added.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "assets/data/docs/scopes/analysis/by-id",
+          "path": "site/assets/data/docs/scopes/analysis/by-id",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "assets/data/search/analysis/index.json",
+          "path": "site/assets/data/search/analysis/index.json",
           "action": "track",
           "exists": true
         }
@@ -112,31 +112,31 @@
         },
         {
           "kind": "generated_docs_root",
-          "path": "assets/data/docs/scopes/library",
+          "path": "site/assets/data/docs/scopes/library",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "assets/data/docs/scopes/library/index-tree.json",
+          "path": "site/assets/data/docs/scopes/library/index-tree.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recently_added",
-          "path": "assets/data/docs/scopes/library/recently-added.json",
+          "path": "site/assets/data/docs/scopes/library/recently-added.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "assets/data/docs/scopes/library/by-id",
+          "path": "site/assets/data/docs/scopes/library/by-id",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "assets/data/search/library/index.json",
+          "path": "site/assets/data/search/library/index.json",
           "action": "track",
           "exists": true
         }

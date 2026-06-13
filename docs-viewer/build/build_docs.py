@@ -192,6 +192,13 @@ def json_text(payload: Any) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
+def browser_path_for_repo_relative(path: Path) -> str:
+    rel = Path(path.as_posix().lstrip("/"))
+    if len(rel.parts) >= 2 and rel.parts[0] == "site":
+        rel = Path(*rel.parts[1:])
+    return f"/{rel.as_posix().lstrip('/')}"
+
+
 def read_text(path: Path) -> str | None:
     if not path.exists():
         return None
@@ -439,7 +446,7 @@ class DocsDataBuilder:
             relative = output_dir.resolve().relative_to(self.repo_root)
         except ValueError as exc:
             raise RuntimeError(f"Docs output path must be inside the repo root: {output_dir}") from exc
-        return f"/{relative.as_posix()}"
+        return browser_path_for_repo_relative(relative)
 
     def effective_parent_id(self, doc: DocRecord, docs: list[DocRecord]) -> str:
         if not doc.parent_id:
@@ -774,7 +781,7 @@ class DocsDataBuilder:
         return token
 
     def interactive_html_asset_relative_path(self, filename: str) -> Path:
-        return Path("assets/docs/interactive") / self.scope_id / filename
+        return Path("site/assets/docs/interactive") / self.scope_id / filename
 
     def resolve_semantic_ref_tokens(
         self,
@@ -1480,7 +1487,7 @@ def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.output
-    return f"/{output.as_posix().lstrip('/')}/index-tree.json"
+    return f"{browser_path_for_repo_relative(output)}/index-tree.json"
 
 
 def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
@@ -1488,7 +1495,7 @@ def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.output
-    return f"/{output.as_posix().lstrip('/')}/recently-added.json"
+    return f"{browser_path_for_repo_relative(output)}/recently-added.json"
 
 
 def browser_search_index_url(config: DocsScopeConfig) -> str:
@@ -1496,7 +1503,7 @@ def browser_search_index_url(config: DocsScopeConfig) -> str:
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.search_output
-    return f"/{output.as_posix().lstrip('/')}"
+    return browser_path_for_repo_relative(output)
 
 
 def browser_search_policy_payload(config: DocsScopeConfig) -> dict[str, Any]:

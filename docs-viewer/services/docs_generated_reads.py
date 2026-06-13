@@ -16,6 +16,14 @@ SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
+
+def browser_path_for_repo_relative(path: Path) -> str:
+    rel = Path(path.as_posix().lstrip("/"))
+    if len(rel.parts) >= 2 and rel.parts[0] == "site":
+        rel = Path(*rel.parts[1:])
+    return rel.as_posix().lstrip("/")
+
+
 def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
@@ -126,8 +134,8 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
 
     config = generated_scope_config(repo_root, scope)
     expected_paths = {
-        (config.output / "by-id" / f"{doc_id}.json").as_posix(),
-        (config.publish_output / "by-id" / f"{doc_id}.json").as_posix(),
+        browser_path_for_repo_relative(config.output / "by-id" / f"{doc_id}.json"),
+        browser_path_for_repo_relative(config.publish_output / "by-id" / f"{doc_id}.json"),
     }
     content_url = str(record.get("content_url") or "").strip()
     content_path = urlparse(content_url).path.lstrip("/") if content_url else ""

@@ -22,10 +22,10 @@ RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
 PUBLIC_SITE_DESTINATION = Path("/tmp/dlf-public-site-build")
 SOURCE_MODULE_SITE_ROOT = Path(".")
 GENERATED_PUBLIC_PAYLOADS = (
-    Path("assets/data/docs/scopes/analysis"),
-    Path("assets/data/docs/scopes/library"),
-    Path("assets/data/search/analysis"),
-    Path("assets/data/search/library"),
+    Path("site/assets/data/docs/scopes/analysis"),
+    Path("site/assets/data/docs/scopes/library"),
+    Path("site/assets/data/search/analysis"),
+    Path("site/assets/data/search/library"),
 )
 
 
@@ -76,6 +76,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/services/catalogue/catalogue_build_commands.py",
                 "studio/services/catalogue/catalogue_build_field_plan.py",
                 "studio/services/catalogue/catalogue_build_media.py",
+                "studio/services/catalogue/catalogue_public_paths.py",
                 "studio/services/catalogue/catalogue_build_scopes.py",
                 "studio/services/catalogue/generate_work_pages.py",
                 "studio/services/catalogue/catalogue_generation_common.py",

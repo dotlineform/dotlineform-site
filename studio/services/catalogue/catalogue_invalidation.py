@@ -17,7 +17,7 @@ LOOKUP_INVALIDATION_PRIORITY = {
 
 # Canonical build invalidation registry for moment-source fields.
 # Moments are part of the catalogue surface, but their current derived artifacts are
-# `assets/moments/index/<moment_id>.json`, `assets/data/moments_index.json`, and
+# `site/assets/moments/index/<moment_id>.json`, `site/assets/data/moments_index.json`, and
 # catalogue search entries built from `moments_index.json`, not Studio catalogue lookup payloads.
 MOMENT_BUILD_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "status": {

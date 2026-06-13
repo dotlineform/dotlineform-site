@@ -21,10 +21,10 @@
       "id": "catalogue_public_indexes",
       "classification": "public_projection",
       "repo_paths": [
-        "assets/data/works_index.json",
-        "assets/data/series_index.json",
-        "assets/data/moments_index.json",
-        "assets/data/recent_index.json"
+        "site/assets/data/works_index.json",
+        "site/assets/data/series_index.json",
+        "site/assets/data/moments_index.json",
+        "site/assets/data/recent_index.json"
       ],
       "public_output": {
         "policy": "required",
@@ -41,9 +41,9 @@
       "id": "catalogue_public_record_payloads",
       "classification": "public_projection",
       "repo_paths": [
-        "assets/works/index/*.json",
-        "assets/series/index/*.json",
-        "assets/moments/index/*.json"
+        "site/assets/works/index/*.json",
+        "site/assets/series/index/*.json",
+        "site/assets/moments/index/*.json"
       ],
       "public_output": {
         "policy": "required",
@@ -59,7 +59,7 @@
       "id": "catalogue_public_search",
       "classification": "public_projection",
       "repo_paths": [
-        "assets/data/search/catalogue/index.json"
+        "site/assets/data/search/catalogue/index.json"
       ],
       "public_output": {
         "policy": "required",
@@ -187,8 +187,8 @@
       "id": "library_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/docs/scopes/library/index.json",
-        "assets/data/docs/scopes/library/by-id/*.json"
+        "site/assets/data/docs/scopes/library/index.json",
+        "site/assets/data/docs/scopes/library/by-id/*.json"
       ],
       "public_output": {
         "policy": "required",
@@ -203,7 +203,7 @@
       "id": "library_docs_search",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/search/library/index.json"
+        "site/assets/data/search/library/index.json"
       ],
       "public_output": {
         "policy": "required",
@@ -231,9 +231,9 @@
       "id": "analysis_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/docs/scopes/analysis/index.json",
-        "assets/data/docs/scopes/analysis/by-id/*.json",
-        "assets/data/docs/scopes/analysis/references/**"
+        "site/assets/data/docs/scopes/analysis/index.json",
+        "site/assets/data/docs/scopes/analysis/by-id/*.json",
+        "site/assets/data/docs/scopes/analysis/references/**"
       ],
       "public_output": {
         "policy": "required",
@@ -248,7 +248,7 @@
       "id": "analysis_docs_search",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/search/analysis/index.json"
+        "site/assets/data/search/analysis/index.json"
       ],
       "public_output": {
         "policy": "required",
@@ -304,7 +304,7 @@
       "id": "public_search_policy",
       "classification": "public_projection",
       "repo_paths": [
-        "assets/data/search/policy.json"
+        "site/assets/data/search/policy.json"
       ],
       "public_output": {
         "policy": "required",
@@ -318,10 +318,10 @@
       "id": "public_media_and_thumbnails",
       "classification": "public_runtime_asset",
       "repo_paths": [
-        "assets/works/img/**",
-        "assets/work_details/img/**",
-        "assets/moments/img/**",
-        "assets/docs/**"
+        "site/assets/works/img/**",
+        "site/assets/work_details/img/**",
+        "site/assets/moments/img/**",
+        "site/assets/docs/**"
       ],
       "public_output": {
         "policy": "allowed",
@@ -415,14 +415,14 @@
         "notes"
       ],
       "public_paths": [
-        "assets/data/works_index.json",
-        "assets/data/series_index.json",
-        "assets/data/moments_index.json",
-        "assets/data/recent_index.json",
-        "assets/works/index/*.json",
-        "assets/series/index/*.json",
-        "assets/moments/index/*.json",
-        "assets/data/search/catalogue/index.json"
+        "site/assets/data/works_index.json",
+        "site/assets/data/series_index.json",
+        "site/assets/data/moments_index.json",
+        "site/assets/data/recent_index.json",
+        "site/assets/works/index/*.json",
+        "site/assets/series/index/*.json",
+        "site/assets/moments/index/*.json",
+        "site/assets/data/search/catalogue/index.json"
       ]
     }
   ],
@@ -440,21 +440,21 @@
   ],
   "public_source_reference_audit": {
     "scan_paths": [
-      "assets/js/**/*.js",
-      "assets/css/**/*.css",
+      "site/assets/js/**/*.js",
+      "site/assets/css/**/*.css",
       "public-site/build/**/*.py"
     ],
     "ignore_paths": [
       "public-site/build/validate_artifact.py"
     ],
-      "forbidden_substrings": [
-        "assets/studio/",
-        "/assets/studio/",
-        "docs-viewer/generated/docs/studio",
-        "/docs-viewer/generated/docs/studio",
-        "docs-viewer/generated/search/studio",
-        "/docs-viewer/generated/search/studio",
-        "href=\"/studio/",
+    "forbidden_substrings": [
+      "assets/studio/",
+      "/assets/studio/",
+      "docs-viewer/generated/docs/studio",
+      "/docs-viewer/generated/docs/studio",
+      "docs-viewer/generated/search/studio",
+      "/docs-viewer/generated/search/studio",
+      "href=\"/studio/",
       "href='/studio/",
       "baseurl + '/studio/",
       "baseurl + \"/studio/",

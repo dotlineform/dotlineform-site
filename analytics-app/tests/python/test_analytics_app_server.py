@@ -172,7 +172,7 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
         assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
-        series_index_path = repo_root / "assets" / "data" / "series_index.json"
+        series_index_path = repo_root / "site" / "assets" / "data" / "series_index.json"
         assignments_path.parent.mkdir(parents=True)
         series_index_path.parent.mkdir(parents=True)
         assignments_path.write_text(

@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Sequence
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
+from catalogue import catalogue_public_paths as public_paths
 from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     build_moment_metadata_entry,
@@ -151,11 +152,7 @@ def resolve_detail_media_source(
 
 
 def thumb_output_dir(repo_root: Path, kind: str) -> Path:
-    if kind == "work":
-        return repo_root / "assets" / "works" / "img"
-    if kind == "work_details":
-        return repo_root / "assets" / "work_details" / "img"
-    raise ValueError(f"unsupported local media kind: {kind}")
+    return repo_root / public_paths.thumb_output_dir(kind)
 
 
 def media_staging_kind_dir(kind: str) -> str:
@@ -228,7 +225,7 @@ def path_needs_refresh(path: Path, source_mtime: float) -> bool:
 
 def thumb_output_paths_for_kind(repo_root: Path, kind: str, item_id: str) -> list[Path]:
     if kind == "moment":
-        root = repo_root / "assets" / "moments" / "img"
+        root = repo_root / public_paths.thumb_output_dir(kind)
         return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
     return thumb_output_paths(repo_root, kind, item_id)
 

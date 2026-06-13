@@ -203,22 +203,24 @@ def load_current_assignments(repo_root: Path, adapter: AdapterResolution) -> Dic
 
 def load_series_index(repo_root: Path, adapter: AdapterResolution) -> Dict[str, Any]:
     sources = adapter.domain.get("sources") if isinstance(adapter.domain.get("sources"), dict) else {}
-    rel_path = sources.get("series") or tag_source_model.SERIES_INDEX_REL_PATH.as_posix()
+    rel_path = sources.get("series")
+    if not rel_path:
+        raise ValueError("tags adapter sources.series is required")
     path = (repo_root / safe_relative_path(rel_path, field="sources.series")).resolve()
-    if not path.exists() and rel_path == "studio/data/canonical/catalogue/series.json":
-        path = (repo_root / tag_source_model.SERIES_INDEX_REL_PATH).resolve()
     return tag_source_model.load_series_index(path)
 
 
-def load_source_json(repo_root: Path, adapter: AdapterResolution, source_key: str, fallback: Path) -> Dict[str, Any]:
+def load_source_json(repo_root: Path, adapter: AdapterResolution, source_key: str) -> Dict[str, Any]:
     sources = adapter.domain.get("sources") if isinstance(adapter.domain.get("sources"), dict) else {}
-    rel_path = sources.get(source_key) or fallback.as_posix()
+    rel_path = sources.get(source_key)
+    if not rel_path:
+        raise ValueError(f"tags adapter sources.{source_key} is required")
     path = (repo_root / safe_relative_path(rel_path, field=f"sources.{source_key}")).resolve()
     return read_json_file(path) if path.exists() else {}
 
 
 def load_works_index(repo_root: Path, adapter: AdapterResolution) -> Dict[str, Any]:
-    return load_source_json(repo_root, adapter, "works", Path("assets/data/works_index.json"))
+    return load_source_json(repo_root, adapter, "works")
 
 
 def issue(level: str, code: str, message: str, record_index: int | None = None) -> Dict[str, Any]:

@@ -16,6 +16,7 @@ if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
 
 from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_media import CATALOGUE_MEDIA_STAGING_REL_DIR
+from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
 from catalogue.series_ids import normalize_series_id
 from tag_services import tag_source_paths
@@ -201,13 +202,13 @@ def unique_existing_paths(paths: Iterable[Path]) -> list[Path]:
 def collect_moment_repo_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "assets" / "moments" / "index" / f"{moment_id}.json",
+            repo_root / public_paths.moment_record_path(moment_id),
         ]
     )
 
 
 def collect_moment_repo_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
-    return collect_matching_paths(repo_root / "assets" / "moments" / "img", [f"{moment_id}-thumb-*.*"])
+    return collect_matching_paths(repo_root / public_paths.thumb_output_dir("moment"), [f"{moment_id}-thumb-*.*"])
 
 
 def collect_moment_staged_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
@@ -235,13 +236,13 @@ def collect_moment_delete_cleanup(repo_root: Path, moment_id: str) -> Dict[str, 
 def collect_work_repo_artifacts(repo_root: Path, work_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "assets" / "works" / "index" / f"{work_id}.json",
+            repo_root / public_paths.work_record_path(work_id),
         ]
     )
 
 
 def collect_work_repo_media_artifacts(repo_root: Path, work_id: str) -> list[Path]:
-    return collect_matching_paths(repo_root / "assets" / "works" / "img", [f"{work_id}-thumb-*.*"])
+    return collect_matching_paths(repo_root / public_paths.thumb_output_dir("work"), [f"{work_id}-thumb-*.*"])
 
 
 def collect_work_staged_media_artifacts(repo_root: Path, work_id: str) -> list[Path]:
@@ -258,7 +259,7 @@ def collect_detail_repo_artifacts(repo_root: Path, detail_uid: str) -> list[Path
 
 
 def collect_detail_repo_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
-    return collect_matching_paths(repo_root / "assets" / "work_details" / "img", [f"{detail_uid}-thumb-*.*"])
+    return collect_matching_paths(repo_root / public_paths.thumb_output_dir("work_details"), [f"{detail_uid}-thumb-*.*"])
 
 
 def collect_detail_staged_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
@@ -273,7 +274,7 @@ def collect_detail_staged_media_artifacts(repo_root: Path, detail_uid: str) -> l
 def collect_series_repo_artifacts(repo_root: Path, series_id: str) -> list[Path]:
     return unique_existing_paths(
         [
-            repo_root / "assets" / "series" / "index" / f"{series_id}.json",
+            repo_root / public_paths.series_record_path(series_id),
         ]
     )
 
@@ -323,14 +324,14 @@ def collect_catalogue_delete_cleanup(
             existing_repo_paths(
                 repo_root,
                 [
-                    Path("assets/data/works_index.json"),
-                    Path("assets/data/series_index.json"),
-                    Path("assets/data/recent_index.json"),
+                    public_paths.WORKS_INDEX_JSON_PATH,
+                    public_paths.SERIES_INDEX_JSON_PATH,
+                    public_paths.RECENT_INDEX_JSON_PATH,
                 ],
             )
         )
         public_json_updates.extend(
-            existing_repo_paths(repo_root, [Path("assets/series/index") / f"{series_id}.json" for series_id in series_ids])
+            existing_repo_paths(repo_root, [public_paths.series_record_path(series_id) for series_id in series_ids])
         )
         studio_json_updates.extend(
             existing_repo_paths(
@@ -346,21 +347,21 @@ def collect_catalogue_delete_cleanup(
         repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, record_id))
         repo_media.extend(collect_detail_repo_media_artifacts(repo_root, record_id))
         staged_media.extend(collect_detail_staged_media_artifacts(repo_root, record_id))
-        public_json_updates.extend(existing_repo_paths(repo_root, [Path("assets/works/index") / f"{work_id}.json" for work_id in work_ids]))
+        public_json_updates.extend(existing_repo_paths(repo_root, [public_paths.work_record_path(work_id) for work_id in work_ids]))
     elif kind == "series":
         repo_artifacts.extend(collect_series_repo_artifacts(repo_root, record_id))
         public_json_updates.extend(
             existing_repo_paths(
                 repo_root,
                 [
-                    Path("assets/data/series_index.json"),
-                    Path("assets/data/works_index.json"),
-                    Path("assets/data/recent_index.json"),
+                    public_paths.SERIES_INDEX_JSON_PATH,
+                    public_paths.WORKS_INDEX_JSON_PATH,
+                    public_paths.RECENT_INDEX_JSON_PATH,
                 ],
             )
         )
         public_json_updates.extend(
-            existing_repo_paths(repo_root, [Path("assets/works/index") / f"{work_id}.json" for work_id in work_ids])
+            existing_repo_paths(repo_root, [public_paths.work_record_path(work_id) for work_id in work_ids])
         )
         studio_json_updates.extend(existing_repo_paths(repo_root, [tag_source_paths.TAG_ASSIGNMENTS_REL_PATH]))
         rebuild_search = True
@@ -380,8 +381,8 @@ def collect_catalogue_delete_cleanup(
 
 def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
     roots = [
-        repo_root / "assets" / "moments" / "index",
-        repo_root / "assets" / "moments" / "img",
+        repo_root / public_paths.MOMENTS_JSON_DIR,
+        repo_root / public_paths.thumb_output_dir("moment"),
         repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments",
     ]
     for raw_path in cleanup.get("delete_paths") or []:
@@ -392,22 +393,21 @@ def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, An
 
 def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
     delete_roots = [
-        repo_root / "assets" / "works" / "index",
-        repo_root / "assets" / "series" / "index",
-        repo_root / "assets" / "works" / "img",
-        repo_root / "assets" / "work_details" / "img",
+        repo_root / public_paths.WORKS_JSON_DIR,
+        repo_root / public_paths.SERIES_JSON_DIR,
+        repo_root / public_paths.thumb_output_dir("work"),
+        repo_root / public_paths.thumb_output_dir("work_details"),
         repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "works",
         repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "work_details",
     ]
     update_roots = [
-        repo_root / "assets" / "works" / "index",
-        repo_root / "assets" / "series" / "index",
+        repo_root / public_paths.WORKS_JSON_DIR,
+        repo_root / public_paths.SERIES_JSON_DIR,
     ]
     update_paths = {
-        (repo_root / "assets" / "data" / "works_index.json").resolve(),
-        (repo_root / "assets" / "data" / "series_index.json").resolve(),
-        (repo_root / "assets" / "data" / "recent_index.json").resolve(),
-        (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
+        (repo_root / public_paths.WORKS_INDEX_JSON_PATH).resolve(),
+        (repo_root / public_paths.SERIES_INDEX_JSON_PATH).resolve(),
+        (repo_root / public_paths.RECENT_INDEX_JSON_PATH).resolve(),
         (repo_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),
     }
     for raw_path in cleanup.get("delete_paths") or []:
@@ -437,7 +437,7 @@ def catalogue_delete_preview_cleanup(
         "public_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["public_json_updates"]],
         "studio_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["studio_json_updates"]],
         "delete_paths": [rel_path_for_preview(repo_root, path) for path in cleanup["delete_paths"]],
-        "catalogue_search": "assets/data/search/catalogue/index.json" if cleanup["catalogue_search"] else "",
+        "catalogue_search": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix() if cleanup["catalogue_search"] else "",
     }
 
 
@@ -601,7 +601,7 @@ def build_catalogue_delete_generated_payloads(
         return path, load_json_file(path)
 
     if kind == "work":
-        works_index = load_existing(Path("assets/data/works_index.json"))
+        works_index = load_existing(public_paths.WORKS_INDEX_JSON_PATH)
         if works_index is not None:
             path, payload = works_index
             works = payload.get("works")
@@ -618,7 +618,7 @@ def build_catalogue_delete_generated_payloads(
                 payloads[path] = finalize_work_storage_index_payload(payload)
 
         series_index_payload: Dict[str, Any] | None = None
-        series_index = load_existing(Path("assets/data/series_index.json"))
+        series_index = load_existing(public_paths.SERIES_INDEX_JSON_PATH)
         if series_index is not None:
             path, payload = series_index
             series_map = payload.get("series")
@@ -637,14 +637,14 @@ def build_catalogue_delete_generated_payloads(
             series_index_payload = payload
 
         for series_id in affected.get("series") or []:
-            series_payload = load_existing(Path("assets/series/index") / f"{series_id}.json")
+            series_payload = load_existing(public_paths.series_record_path(str(series_id)))
             if series_payload is None:
                 continue
             path, payload = series_payload
             if remove_work_from_series_record_payload(payload, str(series_id), record_id):
                 payloads[path] = finalize_series_record_payload(payload, str(series_id))
 
-        recent_index = load_existing(Path("assets/data/recent_index.json"))
+        recent_index = load_existing(public_paths.RECENT_INDEX_JSON_PATH)
         if recent_index is not None:
             path, payload = recent_index
             if update_recent_entries_for_work_delete(payload, record_id, series_index_payload or {}):
@@ -658,7 +658,7 @@ def build_catalogue_delete_generated_payloads(
 
     elif kind == "work_detail":
         for work_id in affected.get("works") or []:
-            work_payload = load_existing(Path("assets/works/index") / f"{work_id}.json")
+            work_payload = load_existing(public_paths.work_record_path(str(work_id)))
             if work_payload is None:
                 continue
             path, payload = work_payload
@@ -666,7 +666,7 @@ def build_catalogue_delete_generated_payloads(
                 payloads[path] = finalize_work_record_payload(payload, str(work_id))
 
     elif kind == "series":
-        series_index = load_existing(Path("assets/data/series_index.json"))
+        series_index = load_existing(public_paths.SERIES_INDEX_JSON_PATH)
         if series_index is not None:
             path, payload = series_index
             series_map = payload.get("series")
@@ -674,7 +674,7 @@ def build_catalogue_delete_generated_payloads(
                 del series_map[record_id]
                 payloads[path] = finalize_series_index_payload(payload)
 
-        works_index = load_existing(Path("assets/data/works_index.json"))
+        works_index = load_existing(public_paths.WORKS_INDEX_JSON_PATH)
         if works_index is not None:
             path, payload = works_index
             works = payload.get("works")
@@ -692,14 +692,14 @@ def build_catalogue_delete_generated_payloads(
                 payloads[path] = finalize_works_index_payload(payload)
 
         for work_id in affected.get("works") or []:
-            work_payload = load_existing(Path("assets/works/index") / f"{work_id}.json")
+            work_payload = load_existing(public_paths.work_record_path(str(work_id)))
             if work_payload is None:
                 continue
             path, payload = work_payload
             if remove_series_from_work_record_payload(payload, str(work_id), record_id):
                 payloads[path] = finalize_work_record_payload(payload, str(work_id))
 
-        recent_index = load_existing(Path("assets/data/recent_index.json"))
+        recent_index = load_existing(public_paths.RECENT_INDEX_JSON_PATH)
         if recent_index is not None:
             path, payload = recent_index
             if update_recent_entries_for_series_delete(payload, record_id):
@@ -716,7 +716,7 @@ def build_catalogue_delete_generated_payloads(
 
 def build_moment_delete_generated_payloads(repo_root: Path, moment_id: str) -> Dict[Path, Dict[str, Any]]:
     payloads: Dict[Path, Dict[str, Any]] = {}
-    moments_index_path = (repo_root / "assets" / "data" / "moments_index.json").resolve()
+    moments_index_path = (repo_root / public_paths.MOMENTS_INDEX_JSON_PATH).resolve()
     if not moments_index_path.exists():
         return payloads
 
@@ -736,8 +736,8 @@ def moment_delete_preview_cleanup(repo_root: Path, moment_id: str) -> Dict[str, 
         "repo_media": len(cleanup["repo_media"]),
         "staged_media": len(cleanup["staged_media"]),
         "delete_paths": [str(path.relative_to(repo_root)) if path_is_under(path, repo_root) else path.name for path in cleanup["delete_paths"]],
-        "moments_index": "assets/data/moments_index.json",
-        "catalogue_search": "assets/data/search/catalogue/index.json",
+        "moments_index": public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
+        "catalogue_search": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
     }
 
 

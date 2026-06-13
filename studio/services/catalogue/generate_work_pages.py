@@ -5,13 +5,13 @@ Generate public catalogue JSON artifacts.
 This repo stores public catalogue runtime metadata in generated JSON artifacts.
 Legacy Jekyll collection route stubs are retired and are not written by this generator.
 
-Series index JSON is written to assets/data/series_index.json.
-Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
-Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
-Recent publications JSON is written to assets/data/recent_index.json.
+Series index JSON is written to site/assets/data/series_index.json.
+Work-details JSON index files are written to site/assets/works/index/<work_id>.json (work-driven; one per selected work).
+Lightweight works index JSON is written to site/assets/data/works_index.json (object keyed by work_id).
+Recent publications JSON is written to site/assets/data/recent_index.json.
 Studio-only work storage index JSON is written to studio/data/generated/activity/work-storage-index.json (object keyed by work_id).
-Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
-Lightweight moments index JSON is written to assets/data/moments_index.json (object keyed by moment_id).
+Moment JSON index files are written to site/assets/moments/index/<moment_id>.json (one per selected moment).
+Lightweight moments index JSON is written to site/assets/data/moments_index.json (object keyed by moment_id).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -152,6 +152,11 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         source_works_root_subdir,
     )
 
+
+try:
+    from catalogue import catalogue_public_paths as public_paths
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    import catalogue_public_paths as public_paths
 
 try:
     from catalogue.catalogue_source import (
@@ -406,16 +411,16 @@ def main() -> None:
     # Output
     ap.add_argument("--output-dir", default="_works", help="Retired compatibility option; work route stubs are no longer written")
     ap.add_argument("--series-output-dir", default="_series", help="Retired compatibility option; series route stubs are no longer written")
-    ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON files")
-    ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
+    ap.add_argument("--series-json-dir", default=public_paths.SERIES_JSON_DIR.as_posix(), help="Output folder for generated per-series JSON files")
+    ap.add_argument("--series-index-json-path", default=public_paths.SERIES_INDEX_JSON_PATH.as_posix(), help="Output path for generated series index JSON")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Retired compatibility option; work detail route stubs are no longer written")
-    ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
-    ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
-    ap.add_argument("--recent-index-json-path", default="assets/data/recent_index.json", help="Output path for generated recent publications index JSON")
+    ap.add_argument("--works-json-dir", default=public_paths.WORKS_JSON_DIR.as_posix(), help="Output folder for generated per-work detail JSON index files")
+    ap.add_argument("--works-index-json-path", default=public_paths.WORKS_INDEX_JSON_PATH.as_posix(), help="Output path for generated lightweight works index JSON")
+    ap.add_argument("--recent-index-json-path", default=public_paths.RECENT_INDEX_JSON_PATH.as_posix(), help="Output path for generated recent publications index JSON")
     ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Retired compatibility option; moment route stubs are no longer written")
-    ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
-    ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
+    ap.add_argument("--moments-json-dir", default=public_paths.MOMENTS_JSON_DIR.as_posix(), help="Output folder for generated per-moment JSON index files")
+    ap.add_argument("--moments-index-json-path", default=public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(), help="Output path for generated lightweight moments index JSON")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),

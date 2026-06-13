@@ -9,32 +9,47 @@
   "scopes": {
     "admin": {
       "label": "Admin",
-      "include": ["admin-app/"],
-      "exclude": ["admin-app/**/__pycache__/**"]
+      "include": [
+        "admin-app/"
+      ],
+      "exclude": [
+        "admin-app/**/__pycache__/**"
+      ]
     },
     "analytics": {
       "label": "Analytics",
-      "include": ["analytics-app/"],
-      "exclude": ["analytics-app/**/__pycache__/**", "analytics-app/data/canonical/"]
+      "include": [
+        "analytics-app/"
+      ],
+      "exclude": [
+        "analytics-app/**/__pycache__/**",
+        "analytics-app/data/canonical/"
+      ]
     },
     "docs-viewer": {
       "label": "Docs Viewer",
-      "include": ["docs-viewer/", "assets/docs/"],
-      "exclude": ["docs-viewer/**/__pycache__/**", "docs-viewer/generated/"]
+      "include": [
+        "docs-viewer/",
+        "site/assets/docs/"
+      ],
+      "exclude": [
+        "docs-viewer/**/__pycache__/**",
+        "docs-viewer/generated/"
+      ]
     },
     "public-site": {
       "label": "Public Site",
       "include": [
         "_data/",
-        "assets/css/",
-        "assets/data/",
-        "assets/docs/interactive/library/",
-        "assets/js/",
-        "assets/moments/",
-        "assets/series/",
-        "assets/site/",
-        "assets/work_details/",
-        "assets/works/",
+        "site/assets/css/",
+        "site/assets/data/",
+        "site/assets/docs/interactive/library/",
+        "site/assets/js/",
+        "site/assets/moments/",
+        "site/assets/series/",
+        "site/assets/site/",
+        "site/assets/work_details/",
+        "site/assets/works/",
         "docs-viewer/config/defaults/docs-viewer-public-config.json",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "docs-viewer/config/ui-text/public.json",
@@ -42,12 +57,23 @@
         "docs-viewer/static/css/docs-viewer.css",
         "public-site/"
       ],
-      "exclude": ["_public_site/", "_site/"]
+      "exclude": [
+        "_public_site/",
+        "_site/"
+      ]
     },
     "studio": {
       "label": "Studio",
-      "include": ["studio/", "data-sharing/"],
-      "exclude": ["studio/**/__pycache__/**", "studio/data/generated/", "studio/data/canonical/", "studio/retired/"]
+      "include": [
+        "studio/",
+        "data-sharing/"
+      ],
+      "exclude": [
+        "studio/**/__pycache__/**",
+        "studio/data/generated/",
+        "studio/data/canonical/",
+        "studio/retired/"
+      ]
     },
     "all": {
       "label": "All",
@@ -55,15 +81,15 @@
         "_data/",
         "admin-app/",
         "analytics-app/",
-        "assets/css/",
-        "assets/data/",
-        "assets/docs/",
-        "assets/js/",
-        "assets/moments/",
-        "assets/series/",
-        "assets/site/",
-        "assets/work_details/",
-        "assets/works/",
+        "site/assets/css/",
+        "site/assets/data/",
+        "site/assets/docs/",
+        "site/assets/js/",
+        "site/assets/moments/",
+        "site/assets/series/",
+        "site/assets/site/",
+        "site/assets/work_details/",
+        "site/assets/works/",
         "data-sharing/",
         "docs-viewer/",
         "public-site/",
@@ -74,7 +100,7 @@
         "admin-app/**/__pycache__/**",
         "analytics-app/**/__pycache__/**",
         "analytics-app/data/canonical/",
-        "assets/data/",
+        "site/assets/data/",
         "docs-viewer/**/__pycache__/**",
         "docs-viewer/generated/",
         "studio/**/__pycache__/**",
@@ -91,7 +117,7 @@
         "admin-app/app/frontend/js/",
         "admin-app/ui-catalogue/assets/js/",
         "analytics-app/app/frontend/js/",
-        "assets/js/",
+        "site/assets/js/",
         "docs-viewer/runtime/js/",
         "studio/app/frontend/js/"
       ]
@@ -102,8 +128,8 @@
         "admin-app/app/assets/",
         "admin-app/ui-catalogue/assets/css/",
         "analytics-app/app/assets/",
-        "assets/docs/",
-        "assets/css/",
+        "site/assets/docs/",
+        "site/assets/css/",
         "docs-viewer/shell/",
         "docs-viewer/static/",
         "studio/app/assets/"
@@ -170,8 +196,8 @@
     "public-route": {
       "label": "Public routes",
       "include": [
-        "assets/css/",
-        "assets/js/",
+        "site/assets/css/",
+        "site/assets/js/",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json",
         "public-site/build/",
@@ -184,14 +210,19 @@
       "label": "Search",
       "include": [
         "**/*search*",
-        "assets/js/search/",
+        "site/assets/js/search/",
         "docs-viewer/runtime/js/docs-viewer-search*",
         "docs-viewer/build/*search*",
         "docs-viewer/tests/**/*search*",
         "studio/services/catalogue/search/"
       ],
-      "shared": ["docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"],
-      "routes": ["/library/", "/analysis/"]
+      "shared": [
+        "docs-viewer/runtime/js/docs-viewer-generated-data-runtime.js"
+      ],
+      "routes": [
+        "/library/",
+        "/analysis/"
+      ]
     },
     "management": {
       "label": "Management",
@@ -206,7 +237,9 @@
         "docs-viewer/runtime/js/docs-viewer-app-context.js",
         "docs-viewer/runtime/js/docs-viewer-service-context.js"
       ],
-      "routes": ["/docs/"]
+      "routes": [
+        "/docs/"
+      ]
     },
     "import-export": {
       "label": "Import/export",
@@ -217,11 +250,17 @@
         "docs-viewer/services/docs_data_sharing/",
         "docs-viewer/services/documents_data_sharing_adapter.py"
       ],
-      "shared": ["docs-viewer/services/docs_management_data_sharing_service.py"]
+      "shared": [
+        "docs-viewer/services/docs_management_data_sharing_service.py"
+      ]
     },
     "config": {
       "label": "Config",
-      "include": ["**/config/", "**/*config*", "studio/data/config/"]
+      "include": [
+        "**/config/",
+        "**/*config*",
+        "studio/data/config/"
+      ]
     },
     "activity": {
       "label": "Activity",
@@ -240,7 +279,9 @@
         "studio/services/catalogue/",
         "studio/data/config/catalogue/"
       ],
-      "shared": ["assets/js/search/"]
+      "shared": [
+        "site/assets/js/search/"
+      ]
     },
     "docs-build": {
       "label": "Docs build",
@@ -254,7 +295,9 @@
         "docs-viewer/tests/python/test_build_search_python.py",
         "docs-viewer/tests/python/test_docs_publish_gate.py"
       ],
-      "shared": ["docs-viewer/config/scopes/"]
+      "shared": [
+        "docs-viewer/config/scopes/"
+      ]
     }
   },
   "routes": {
@@ -271,8 +314,12 @@
         "admin-app/app/frontend/config/ui-text/admin-checks.json",
         "admin-app/app/server/admin_app/admin_checks_api.py"
       ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
-      "areas": ["config"]
+      "shared": [
+        "admin-app/app/server/admin_app/admin_app_server.py"
+      ],
+      "areas": [
+        "config"
+      ]
     },
     "/admin/": {
       "label": "Admin Home",
@@ -295,7 +342,9 @@
         "admin-app/app/server/admin_app/admin_audit_api.py",
         "admin-app/app/server/admin_app/audit_runner.py"
       ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "shared": [
+        "admin-app/app/server/admin_app/admin_app_server.py"
+      ],
       "areas": []
     },
     "/admin/activity/": {
@@ -307,8 +356,12 @@
         "admin-app/app/frontend/config/ui-text/admin-activity.json",
         "admin-app/app/server/admin_app/admin_activity_api.py"
       ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
-      "areas": ["activity"]
+      "shared": [
+        "admin-app/app/server/admin_app/admin_app_server.py"
+      ],
+      "areas": [
+        "activity"
+      ]
     },
     "/admin/testing/": {
       "label": "Admin Testing",
@@ -318,7 +371,9 @@
         "admin-app/app/frontend/js/admin-testing.js",
         "admin-app/app/server/admin_app/admin_testing_api.py"
       ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "shared": [
+        "admin-app/app/server/admin_app/admin_app_server.py"
+      ],
       "areas": []
     },
     "/admin/ui-catalogue/": {
@@ -330,15 +385,21 @@
         "admin-app/app/server/admin_app/ui_catalogue_config.py",
         "admin-app/app/server/admin_app/ui_catalogue_views.py"
       ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
+      "shared": [
+        "admin-app/app/server/admin_app/admin_app_server.py"
+      ],
       "areas": []
     },
     "/analytics/": {
       "label": "Analytics Home",
       "path": "/analytics/",
       "status": "inventory-only",
-      "include": ["analytics-app/app/frontend/config/analytics-config.json"],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_server.py"],
+      "include": [
+        "analytics-app/app/frontend/config/analytics-config.json"
+      ],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_server.py"
+      ],
       "areas": []
     },
     "/analytics/tag-groups/": {
@@ -349,7 +410,9 @@
         "analytics-app/app/frontend/js/tag-groups.js",
         "analytics-app/app/frontend/config/ui-text/tag-groups.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
       "areas": []
     },
     "/analytics/tag-registry/": {
@@ -360,7 +423,9 @@
         "analytics-app/app/frontend/js/tag-registry.js",
         "analytics-app/app/frontend/config/ui-text/tag-registry.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
       "areas": []
     },
     "/analytics/tag-aliases/": {
@@ -371,7 +436,9 @@
         "analytics-app/app/frontend/js/tag-aliases.js",
         "analytics-app/app/frontend/config/ui-text/tag-aliases.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
       "areas": []
     },
     "/analytics/series-tags/": {
@@ -382,7 +449,9 @@
         "analytics-app/app/frontend/js/series-tags.js",
         "analytics-app/app/frontend/config/ui-text/series-tags.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
       "areas": []
     },
     "/analytics/series-tag-editor/": {
@@ -393,7 +462,9 @@
         "analytics-app/app/frontend/js/series-tag-editor-page.js",
         "analytics-app/app/frontend/config/ui-text/series-tag-editor.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
       "areas": []
     },
     "/analytics/data-sharing/prepare/": {
@@ -404,8 +475,12 @@
         "analytics-app/app/frontend/js/data-sharing-prepare*",
         "analytics-app/app/frontend/config/ui-text/data-sharing-prepare.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
-      "areas": ["import-export"]
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
+      "areas": [
+        "import-export"
+      ]
     },
     "/analytics/data-sharing/review/": {
       "label": "Analytics Data Sharing Review",
@@ -415,8 +490,12 @@
         "analytics-app/app/frontend/js/data-sharing-review*",
         "analytics-app/app/frontend/config/ui-text/data-sharing-review.json"
       ],
-      "shared": ["analytics-app/app/server/analytics_app/analytics_app_views.py"],
-      "areas": ["import-export"]
+      "shared": [
+        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+      ],
+      "areas": [
+        "import-export"
+      ]
     },
     "/studio/": {
       "label": "Studio Home",
@@ -426,7 +505,10 @@
         "studio/app/frontend/js/studio-home.js",
         "studio/app/frontend/config/studio-config.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py", "studio/app/server/studio/studio_app_views.py"],
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py",
+        "studio/app/server/studio/studio_app_views.py"
+      ],
       "areas": []
     },
     "/studio/project-state/": {
@@ -437,8 +519,12 @@
         "studio/app/frontend/js/project-state*",
         "studio/app/frontend/config/ui-text/project-state.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["activity"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "activity"
+      ]
     },
     "/studio/bulk-add-work/": {
       "label": "Studio Bulk Add Work",
@@ -448,8 +534,13 @@
         "studio/app/frontend/js/bulk-add-work*",
         "studio/app/frontend/config/ui-text/bulk-add-work.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue", "import-export"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue",
+        "import-export"
+      ]
     },
     "/studio/catalogue-field-registry/": {
       "label": "Studio Catalogue Field Registry",
@@ -460,8 +551,13 @@
         "studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "studio/data/config/catalogue/catalogue-field-registry.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue", "config"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue",
+        "config"
+      ]
     },
     "/studio/catalogue-status/": {
       "label": "Studio Catalogue Drafts",
@@ -471,8 +567,12 @@
         "studio/app/frontend/js/catalogue-status*",
         "studio/app/frontend/config/ui-text/catalogue-status.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/studio-works/": {
       "label": "Studio Works",
@@ -482,8 +582,12 @@
         "studio/app/frontend/js/studio-works*",
         "studio/app/frontend/config/ui-text/studio-works.json"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/catalogue-series/": {
       "label": "Studio Catalogue Series Editor",
@@ -494,8 +598,12 @@
         "studio/app/frontend/config/ui-text/catalogue-series-editor.json",
         "studio/services/catalogue/catalogue_series_service.py"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/catalogue-work/": {
       "label": "Studio Catalogue Work Editor",
@@ -507,8 +615,12 @@
         "studio/app/frontend/config/ui-text/catalogue-work-editor.json",
         "studio/services/catalogue/catalogue_work_service.py"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/catalogue-work-detail/": {
       "label": "Studio Catalogue Work Detail Editor",
@@ -519,8 +631,12 @@
         "studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json",
         "studio/services/catalogue/catalogue_work_detail_service.py"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/catalogue-moment/": {
       "label": "Studio Catalogue Moment Editor",
@@ -531,8 +647,12 @@
         "studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
         "studio/services/catalogue/catalogue_moment_service.py"
       ],
-      "shared": ["studio/app/server/studio/studio_app_server.py"],
-      "areas": ["catalogue"]
+      "shared": [
+        "studio/app/server/studio/studio_app_server.py"
+      ],
+      "areas": [
+        "catalogue"
+      ]
     },
     "/library/": {
       "label": "Library",
@@ -541,14 +661,17 @@
       "include": [
         "docs-viewer/config/scopes/docs_scopes.json",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
-        "assets/js/search/"
+        "site/assets/js/search/"
       ],
       "shared": [
         "docs-viewer/runtime/js/docs-viewer-public.js",
         "docs-viewer/runtime/js/docs-viewer-route-config.js",
         "docs-viewer/runtime/js/docs-viewer-search*"
       ],
-      "areas": ["search", "catalogue"]
+      "areas": [
+        "search",
+        "catalogue"
+      ]
     },
     "/analysis/": {
       "label": "Analysis",
@@ -557,14 +680,16 @@
       "include": [
         "docs-viewer/config/scopes/docs_scopes.json",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
-        "assets/js/search/"
+        "site/assets/js/search/"
       ],
       "shared": [
         "docs-viewer/runtime/js/docs-viewer-public.js",
         "docs-viewer/runtime/js/docs-viewer-route-config.js",
         "docs-viewer/runtime/js/docs-viewer-search*"
       ],
-      "areas": ["search"]
+      "areas": [
+        "search"
+      ]
     },
     "/docs/": {
       "label": "Docs Viewer Management",
@@ -587,7 +712,11 @@
         "docs-viewer/runtime/js/docs-viewer-route-config.js",
         "docs-viewer/services/docs_management_routes.py"
       ],
-      "areas": ["management", "import-export", "docs-build"]
+      "areas": [
+        "management",
+        "import-export",
+        "docs-build"
+      ]
     }
   }
 }

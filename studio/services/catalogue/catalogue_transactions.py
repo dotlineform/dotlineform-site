@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Mapping
 
 from catalogue import catalogue_cleanup
+from catalogue import catalogue_public_paths as public_paths
 
 
 @dataclass(frozen=True)
@@ -147,14 +148,13 @@ def ensure_catalogue_delete_payload_scope(
     payloads: Mapping[Path, Dict[str, Any]],
 ) -> None:
     generated_roots = [
-        repo_root / "assets" / "works" / "index",
-        repo_root / "assets" / "series" / "index",
+        repo_root / public_paths.WORKS_JSON_DIR,
+        repo_root / public_paths.SERIES_JSON_DIR,
     ]
     generated_paths = {
-        (repo_root / "assets" / "data" / "works_index.json").resolve(),
-        (repo_root / "assets" / "data" / "series_index.json").resolve(),
-        (repo_root / "assets" / "data" / "recent_index.json").resolve(),
-        (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
+        (repo_root / public_paths.WORKS_INDEX_JSON_PATH).resolve(),
+        (repo_root / public_paths.SERIES_INDEX_JSON_PATH).resolve(),
+        (repo_root / public_paths.RECENT_INDEX_JSON_PATH).resolve(),
         (repo_root / catalogue_cleanup.tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),
     }
     allowed = {path.resolve() for path in allowed_write_paths}
@@ -181,7 +181,7 @@ def execute_catalogue_cleanup_transaction(
 ) -> CleanupTransactionResult:
     catalogue_cleanup.ensure_catalogue_delete_cleanup_scope(repo_root, cleanup)
     ensure_catalogue_delete_payload_scope(repo_root, allowed_write_paths, payloads)
-    search_index_path = (repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+    search_index_path = (repo_root / public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH).resolve()
     rebuild_search = bool(cleanup.get("catalogue_search"))
     deleted_file_count = 0
     search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
@@ -234,8 +234,8 @@ def execute_moment_cleanup_transaction(
 ) -> CleanupTransactionResult:
     catalogue_cleanup.ensure_moment_delete_cleanup_scope(repo_root, cleanup)
     metadata_path = metadata_path.resolve()
-    moments_index_path = (repo_root / "assets" / "data" / "moments_index.json").resolve()
-    search_index_path = (repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+    moments_index_path = (repo_root / public_paths.MOMENTS_INDEX_JSON_PATH).resolve()
+    search_index_path = (repo_root / public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH).resolve()
     allowed = {path.resolve() for path in allowed_write_paths}
     if metadata_path not in allowed:
         raise ValueError("write target not allowlisted")

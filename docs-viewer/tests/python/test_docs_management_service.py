@@ -125,7 +125,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "documents": "docs-viewer/source/library",
                             },
                             "sources": {
-                                "docs_payload_root": "assets/data/docs/scopes/library/by-id",
+                                "docs_payload_root": "site/assets/data/docs/scopes/library/by-id",
                                 "source_root": "docs-viewer/source/library",
                             },
                             "config": {
@@ -220,7 +220,7 @@ def write_docs_scope_config(root: Path) -> None:
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
-                        "repo_assets_path_prefix": "assets/docs/studio",
+                        "repo_assets_path_prefix": "site/assets/docs/studio",
                         "repo_assets_public_path_prefix": "/assets/docs/studio",
                     },
                 }
@@ -427,8 +427,8 @@ def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:
     assert any(file["path"] == "docs-viewer/generated/docs/notes/index-tree.json" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/docs/notes/recently-added.json" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
-    assert not any(file["path"].startswith("assets/data/docs/scopes/notes") for file in payload["created_files"])
-    assert not any(file["path"].startswith("assets/data/search/notes") for file in payload["created_files"])
+    assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
+    assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
 
 
 def test_docs_scope_config_requires_search_output() -> None:
@@ -471,8 +471,8 @@ def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
                         "scope_id": "studio",
                         "source": "docs-viewer/source/studio",
                         "media_path_prefix": "docs/studio",
-                        "output": "assets/data/docs/scopes/studio",
-                        "search_output": "assets/data/search/studio/index.json",
+                        "output": "site/assets/data/docs/scopes/studio",
+                        "search_output": "site/assets/data/search/studio/index.json",
                         "viewer_base_url": "/docs/",
                         "include_scope_param": True,
                         "default_doc_id": "child",
@@ -484,7 +484,7 @@ def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
             assert "manage-mode scope 'studio'" in str(exc)
-            assert "assets/data/docs/scopes" in str(exc)
+            assert "site/assets/data/docs/scopes" in str(exc)
         else:
             raise AssertionError("Expected manage-mode scope config to reject public generated asset roots")
 
@@ -503,8 +503,8 @@ def test_docs_scope_config_requires_public_readonly_publish_outputs() -> None:
                         "media_path_prefix": "docs/research",
                         "output": "docs-viewer/generated/docs/research",
                         "search_output": "docs-viewer/generated/search/research/index.json",
-                        "publish_output": "assets/data/docs/scopes/research",
-                        "publish_search_output": "assets/data/search/research/index.json",
+                        "publish_output": "site/assets/data/docs/scopes/research",
+                        "publish_search_output": "site/assets/data/search/research/index.json",
                         "viewer_base_url": "/research/",
                         "include_scope_param": False,
                         "default_doc_id": "research",
@@ -516,16 +516,16 @@ def test_docs_scope_config_requires_public_readonly_publish_outputs() -> None:
 
     assert configs["research"].output.as_posix() == "docs-viewer/generated/docs/research"
     assert configs["research"].search_output.as_posix() == "docs-viewer/generated/search/research/index.json"
-    assert configs["research"].publish_output.as_posix() == "assets/data/docs/scopes/research"
-    assert configs["research"].publish_search_output.as_posix() == "assets/data/search/research/index.json"
+    assert configs["research"].publish_output.as_posix() == "site/assets/data/docs/scopes/research"
+    assert configs["research"].publish_search_output.as_posix() == "site/assets/data/search/research/index.json"
 
 
 def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -> None:
     original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
     original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
-    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("assets/data/docs/scopes") / scope_id
+    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("site/assets/data/docs/scopes") / scope_id
     docs_management_service.docs_scope_manifest.planned_search_output = (
-        lambda scope_id, _mode: Path("assets/data/search") / scope_id / "index.json"
+        lambda scope_id, _mode: Path("site/assets/data/search") / scope_id / "index.json"
     )
     try:
         with make_repo() as temp_path:
@@ -543,7 +543,7 @@ def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -
                     },
                 )
             except ValueError as exc:
-                assert "must not write generated docs under assets/data/docs/scopes" in str(exc)
+                assert "must not write generated docs under site/assets/data/docs/scopes" in str(exc)
             else:
                 raise AssertionError("Expected committed manage-mode preview to reject assets output roots")
     finally:
@@ -554,9 +554,9 @@ def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -
 def test_scope_create_apply_blocks_committed_manage_mode_assets_regression() -> None:
     original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
     original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
-    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("assets/data/docs/scopes") / scope_id
+    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("site/assets/data/docs/scopes") / scope_id
     docs_management_service.docs_scope_manifest.planned_search_output = (
-        lambda scope_id, _mode: Path("assets/data/search") / scope_id / "index.json"
+        lambda scope_id, _mode: Path("site/assets/data/search") / scope_id / "index.json"
     )
     try:
         with make_repo() as temp_path:
@@ -576,7 +576,7 @@ def test_scope_create_apply_blocks_committed_manage_mode_assets_regression() -> 
                     dry_run=True,
                 )
             except ValueError as exc:
-                assert "must not write generated docs under assets/data/docs/scopes" in str(exc)
+                assert "must not write generated docs under site/assets/data/docs/scopes" in str(exc)
             else:
                 raise AssertionError("Expected committed manage-mode apply to reject assets output roots")
     finally:

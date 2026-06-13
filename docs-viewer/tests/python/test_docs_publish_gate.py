@@ -51,8 +51,8 @@ def write_scope_config(root: Path) -> None:
                     "media_path_prefix": "docs/library",
                     "output": "docs-viewer/generated/docs/library",
                     "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "assets/data/docs/scopes/library",
-                    "publish_search_output": "assets/data/search/library/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/library",
+                    "publish_search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -141,10 +141,10 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(root / "docs-viewer/generated/search/library/index.json", {"entries": [{"id": "library"}]})
-    write_json(root / "assets/data/docs/scopes/library/index-tree.json", {"docs": []})
-    write_json(root / "assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
-    write_json(root / "assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
-    write_json(root / "assets/data/search/library/index.json", {"entries": []})
+    write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
+    write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
+    write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
+    write_json(root / "site/assets/data/search/library/index.json", {"entries": []})
 
 
 def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
@@ -157,25 +157,25 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
 
         assert preview["operation"] == "confirm"
         assert preview["changed_count"] >= 3
-        assert "assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
-        assert "assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
+        assert "site/assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
+        assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
         assert applied["operation"] == "apply"
-        public_tree = json.loads((repo_root / "assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
-        recent = json.loads((repo_root / "assets/data/docs/scopes/library/recently-added.json").read_text(encoding="utf-8"))
-        references = json.loads((repo_root / "assets/data/docs/scopes/library/references/index.json").read_text(encoding="utf-8"))
+        public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
+        recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recently-added.json").read_text(encoding="utf-8"))
+        references = json.loads((repo_root / "site/assets/data/docs/scopes/library/references/index.json").read_text(encoding="utf-8"))
 
         assert public_tree["docs"][0]["doc_id"] == "library"
         assert "children" not in public_tree["docs"][0]
         assert recent["docs"][0]["doc_id"] == "library"
         assert references["header"]["count"] == 0
-        assert (repo_root / "assets/data/docs/scopes/library/by-id/library.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/by-id/hidden.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/by-id/manage-root.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/references/by-doc/hidden.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
-        assert not (repo_root / "assets/data/docs/scopes/library/by-id/stale.json").exists()
-        assert json.loads((repo_root / "assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
+        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/library.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-doc/hidden.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
+        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
 
 
 def test_publish_apply_requires_confirmation() -> None:

@@ -19,7 +19,7 @@
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "assets/docs/studio",
+        "repo_assets_path_prefix": "site/assets/docs/studio",
         "repo_assets_public_path_prefix": "/assets/docs/studio"
       }
     },
@@ -31,8 +31,8 @@
       "media_path_prefix": "docs/library",
       "output": "docs-viewer/generated/docs/library",
       "search_output": "docs-viewer/generated/search/library/index.json",
-      "publish_output": "assets/data/docs/scopes/library",
-      "publish_search_output": "assets/data/search/library/index.json",
+      "publish_output": "site/assets/data/docs/scopes/library",
+      "publish_search_output": "site/assets/data/search/library/index.json",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library",
@@ -43,7 +43,7 @@
       "allow_unresolved_parent_ids": true,
       "import_media_storage": {
         "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "assets/docs/library",
+        "repo_assets_path_prefix": "site/assets/docs/library",
         "repo_assets_public_path_prefix": "/assets/docs/library"
       }
     },
@@ -55,8 +55,8 @@
       "media_path_prefix": "docs/analysis",
       "output": "docs-viewer/generated/docs/analysis",
       "search_output": "docs-viewer/generated/search/analysis/index.json",
-      "publish_output": "assets/data/docs/scopes/analysis",
-      "publish_search_output": "assets/data/search/analysis/index.json",
+      "publish_output": "site/assets/data/docs/scopes/analysis",
+      "publish_search_output": "site/assets/data/search/analysis/index.json",
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "analysis",
@@ -67,7 +67,7 @@
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "assets/docs/analysis",
+        "repo_assets_path_prefix": "site/assets/docs/analysis",
         "repo_assets_public_path_prefix": "/assets/docs/analysis"
       }
     },
@@ -89,7 +89,7 @@
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "assets/docs/tmp",
+        "repo_assets_path_prefix": "site/assets/docs/tmp",
         "repo_assets_public_path_prefix": "/assets/docs/tmp"
       }
     }

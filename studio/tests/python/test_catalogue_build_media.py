@@ -229,7 +229,7 @@ def test_execute_local_media_plan_dry_run_suppresses_writes() -> None:
         source = root / "source.jpg"
         staged_source = root / "var/catalogue/media/works/make_srcset_images/00001.jpg"
         staged_thumb = root / "var/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
-        asset_thumb = root / "assets/works/img/00001-thumb-96.webp"
+        asset_thumb = root / "site/assets/works/img/00001-thumb-96.webp"
         source.write_bytes(b"source")
         plan = {
             "tasks": [
@@ -282,8 +282,8 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
     assert plan["tasks"][0]["pending_outputs"] == [
         {
             "size": 96,
-            "path": "assets/works/img/00001-thumb-96.webp",
-            "absolute_path": str((repo_root / "assets/works/img/00001-thumb-96.webp").resolve()),
+            "path": "site/assets/works/img/00001-thumb-96.webp",
+            "absolute_path": str((repo_root / "site/assets/works/img/00001-thumb-96.webp").resolve()),
         }
     ]
     assert plan["tasks"][1]["status"] == "skipped"
@@ -296,8 +296,8 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
     assert plan["tasks"][3]["pending_outputs"] == [
         {
             "size": 96,
-            "path": "assets/moments/img/keys-thumb-96.webp",
-            "absolute_path": str((repo_root / "assets/moments/img/keys-thumb-96.webp").resolve()),
+            "path": "site/assets/moments/img/keys-thumb-96.webp",
+            "absolute_path": str((repo_root / "site/assets/moments/img/keys-thumb-96.webp").resolve()),
         }
     ]
     assert plan["tasks"][4]["status"] == "skipped"
@@ -331,8 +331,8 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
             force=True,
             thumb_runner=fake_thumb,
         )
-        asset_thumb = repo_root / "assets/works/img/00001-thumb-96.webp"
-        moment_thumb = repo_root / "assets/moments/img/keys-thumb-96.webp"
+        asset_thumb = repo_root / "site/assets/works/img/00001-thumb-96.webp"
+        moment_thumb = repo_root / "site/assets/moments/img/keys-thumb-96.webp"
         staged_root = repo_root / "var/catalogue/media"
         asset_thumb_bytes = asset_thumb.read_bytes()
         moment_thumb_bytes = moment_thumb.read_bytes()

@@ -282,16 +282,18 @@ class AnalyticsAppRequestHandler(BaseHTTPRequestHandler):
 
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/analytics/app/"):
-            relative = f"analytics-app/app/{request_path.removeprefix('/analytics/app/')}"
+            relative_path = Path("analytics-app/app") / request_path.removeprefix("/analytics/app/")
         elif request_path.startswith("/analytics/data/"):
-            relative = f"analytics-app/data/{request_path.removeprefix('/analytics/data/')}"
+            relative_path = Path("analytics-app/data") / request_path.removeprefix("/analytics/data/")
+        elif request_path.startswith("/assets/"):
+            relative_path = Path("site") / request_path.lstrip("/")
         else:
-            relative = request_path.lstrip("/")
-        if not relative or ".." in Path(relative).parts:
+            relative_path = Path(request_path.lstrip("/"))
+        if not relative_path.parts or ".." in relative_path.parts:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
 
-        path = (self.repo_root / relative).resolve()
+        path = (self.repo_root / relative_path).resolve()
         try:
             path.relative_to(self.repo_root)
         except ValueError:

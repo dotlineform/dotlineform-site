@@ -13,6 +13,25 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_build_commands as commands  # noqa: E402
+from catalogue import catalogue_public_paths as public_paths  # noqa: E402
+
+
+GENERATE_OUTPUT_ARGS = [
+    "--series-json-dir",
+    public_paths.SERIES_JSON_DIR.as_posix(),
+    "--series-index-json-path",
+    public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+    "--works-json-dir",
+    public_paths.WORKS_JSON_DIR.as_posix(),
+    "--works-index-json-path",
+    public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+    "--recent-index-json-path",
+    public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
+    "--moments-json-dir",
+    public_paths.MOMENTS_JSON_DIR.as_posix(),
+    "--moments-index-json-path",
+    public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
+]
 
 
 def test_generate_work_command_preserves_scope_and_flags() -> None:
@@ -41,6 +60,7 @@ def test_generate_work_command_preserves_scope_and_flags() -> None:
         "/repo/studio/data/canonical/catalogue",
         "--work-ids",
         "00001,00002",
+        *GENERATE_OUTPUT_ARGS,
         "--series-ids",
         "009",
         "--only",
@@ -74,6 +94,7 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
         "moments",
         "--moment-ids",
         "leaves",
+        *GENERATE_OUTPUT_ARGS,
         "--refresh-published",
         "--force",
     ]
@@ -92,6 +113,14 @@ def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
         "/repo/studio/services/catalogue/search/build_search.py",
         "--scope",
         "catalogue",
+        "--output",
+        public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
+        "--series-index",
+        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+        "--works-index",
+        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--moments-index",
+        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
         "--write",
         "--force",
     ]

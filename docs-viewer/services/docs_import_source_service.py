@@ -38,7 +38,7 @@ from docs_source_model import (
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 
-INTERACTIVE_HTML_ASSET_REL_ROOT = Path("assets/docs/interactive")
+INTERACTIVE_HTML_ASSET_REL_ROOT = Path("site/assets/docs/interactive")
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
 

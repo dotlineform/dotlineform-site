@@ -68,8 +68,8 @@ def make_registry_payload() -> dict[str, object]:
                             "tag_registry": "analytics-app/data/canonical/tag-registry.json",
                             "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
                             "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
-                            "series": "assets/data/series_index.json",
-                            "works": "assets/data/works_index.json",
+                            "series": "site/assets/data/series_index.json",
+                            "works": "site/assets/data/works_index.json",
                         },
                         "config": {},
                     }
@@ -257,7 +257,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(
-        root / "assets/data/series_index.json",
+        root / "site/assets/data/series_index.json",
         {
             "series": {
                 "series-a": {"works": ["00001"]},

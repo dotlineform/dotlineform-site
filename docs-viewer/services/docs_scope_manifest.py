@@ -11,7 +11,14 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, safe_relative_path
+from docs_scope_config import (
+    CONFIG_REL_PATH,
+    PUBLIC_DOCS_OUTPUT_ROOT,
+    PUBLIC_SEARCH_OUTPUT_ROOT,
+    DocsScopeConfig,
+    load_docs_scope_configs,
+    safe_relative_path,
+)
 
 
 MANIFEST_REL_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
@@ -302,13 +309,13 @@ def planned_search_output(scope_id: str, publishing_mode: str) -> Path:
 
 def planned_publish_output(scope_id: str, publishing_mode: str) -> Path:
     if publishing_mode == PUBLIC_MODE:
-        return Path("assets/data/docs/scopes") / scope_id
+        return PUBLIC_DOCS_OUTPUT_ROOT / scope_id
     return planned_docs_output(scope_id, publishing_mode)
 
 
 def planned_publish_search_output(scope_id: str, publishing_mode: str) -> Path:
     if publishing_mode == PUBLIC_MODE:
-        return Path("assets/data/search") / scope_id / "index.json"
+        return PUBLIC_SEARCH_OUTPUT_ROOT / scope_id / "index.json"
     return planned_search_output(scope_id, publishing_mode)
 
 
@@ -345,30 +352,30 @@ def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: 
             config.get("publish_search_output"),
             field="planned_scope_config.publish_search_output",
         )
-        if path_is_relative_to(docs_output, Path("assets/data/docs/scopes")):
+        if path_is_relative_to(docs_output, PUBLIC_DOCS_OUTPUT_ROOT):
             raise ValueError(
                 f"public scope {scope_id!r} must write working generated docs under docs-viewer/generated/docs"
             )
-        if path_is_relative_to(search_output, Path("assets/data/search")):
+        if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
             raise ValueError(
                 f"public scope {scope_id!r} must write working generated search under docs-viewer/generated/search"
             )
-        if not path_is_relative_to(publish_output, Path("assets/data/docs/scopes")):
+        if not path_is_relative_to(publish_output, PUBLIC_DOCS_OUTPUT_ROOT):
             raise ValueError(
-                f"public scope {scope_id!r} must publish docs under assets/data/docs/scopes"
+                f"public scope {scope_id!r} must publish docs under site/assets/data/docs/scopes"
             )
-        if not path_is_relative_to(publish_search_output, Path("assets/data/search")):
+        if not path_is_relative_to(publish_search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
             raise ValueError(
-                f"public scope {scope_id!r} must publish search under assets/data/search"
+                f"public scope {scope_id!r} must publish search under site/assets/data/search"
             )
         return
-    if path_is_relative_to(docs_output, Path("assets/data/docs/scopes")):
+    if path_is_relative_to(docs_output, PUBLIC_DOCS_OUTPUT_ROOT):
         raise ValueError(
-            f"committed manage-mode scope {scope_id!r} must not write generated docs under assets/data/docs/scopes"
+            f"committed manage-mode scope {scope_id!r} must not write generated docs under site/assets/data/docs/scopes"
         )
-    if path_is_relative_to(search_output, Path("assets/data/search")):
+    if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
         raise ValueError(
-            f"committed manage-mode scope {scope_id!r} must not write generated search under assets/data/search"
+            f"committed manage-mode scope {scope_id!r} must not write generated search under site/assets/data/search"
         )
 
 
@@ -400,7 +407,7 @@ def planned_scope_config_record(
         "allow_unresolved_parent_ids": False,
         "import_media_storage": {
             "storage_mode": "staging_manual",
-            "repo_assets_path_prefix": f"assets/docs/{scope_id}",
+            "repo_assets_path_prefix": f"site/assets/docs/{scope_id}",
             "repo_assets_public_path_prefix": f"/assets/docs/{scope_id}",
         },
     }

@@ -99,8 +99,8 @@ def write_public_scope_config(root: Path) -> None:
                     "media_path_prefix": "docs/library",
                     "output": "docs-viewer/generated/docs/library",
                     "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "assets/data/docs/scopes/library",
-                    "publish_search_output": "assets/data/search/library/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/library",
+                    "publish_search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "parent",
@@ -219,7 +219,7 @@ def prepare_repo(root: Path) -> None:
     write_public_site_config(root)
     write_scope_config(root)
     write_catalogue_records(root)
-    write_text(root / "assets/docs/interactive/studio/chart.html", "<!doctype html><title>Chart</title>")
+    write_text(root / "site/assets/docs/interactive/studio/chart.html", "<!doctype html><title>Chart</title>")
     write_source_docs(root)
 
 

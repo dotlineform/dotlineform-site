@@ -10,7 +10,7 @@ TAG_ASSIGNMENTS_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-assignments.json"
 TAG_REGISTRY_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-registry.json"
 TAG_ALIASES_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-aliases.json"
 TAG_GROUPS_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-groups.json"
-SERIES_INDEX_REL_PATH = Path("assets/data/series_index.json")
+SERIES_INDEX_REL_PATH = Path("site/assets/data/series_index.json")
 
 
 def resolve_repo_path(repo_root: Path, rel_path: Path) -> Path:

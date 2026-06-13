@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Sequence
 
 from catalogue import catalogue_build_media as build_media
+from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
@@ -318,8 +319,8 @@ def preview_moment_source(
         "staging_path": str(build_media.MOMENT_PROSE_STAGING_REL_DIR / filename),
         "target_path": str(CATALOGUE_MOMENT_PROSE_REL_DIR / filename),
         "metadata_path": str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME),
-        "generated_json_path": str(Path("assets/moments/index") / f"{moment_id}.json"),
-        "moments_index_path": "assets/data/moments_index.json",
+        "generated_json_path": str(public_paths.moment_record_path(moment_id)),
+        "moments_index_path": public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
         "search_scope": "catalogue",
         "source_exists": source_path.exists(),
         "target_exists": target_path.exists(),
@@ -343,10 +344,10 @@ def preview_moment_source(
     source_image_path = (projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG) / source_image_file) if projects_base_dir else None
     preview["source_image_path"] = str(Path("moments") / "images" / Path(source_image_file).name)
     preview["source_image_exists"] = bool(source_image_path and source_image_path.exists())
-    preview["generated_json_exists"] = (repo_root / "assets/moments/index" / f"{moment_id}.json").exists()
+    preview["generated_json_exists"] = (repo_root / public_paths.moment_record_path(moment_id)).exists()
     preview["in_moments_index"] = False
 
-    moments_index_path = repo_root / "assets/data/moments_index.json"
+    moments_index_path = repo_root / public_paths.MOMENTS_INDEX_JSON_PATH
     if moments_index_path.exists():
         try:
             moments_index_text = moments_index_path.read_text(encoding="utf-8")

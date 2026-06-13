@@ -6,6 +6,8 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, Mapping, Sequence
 
+from catalogue import catalogue_public_paths as public_paths
+
 
 def build_generate_command(
     repo_root: Path,
@@ -24,6 +26,20 @@ def build_generate_command(
         str(source_dir),
         "--work-ids",
         ",".join(str(work_id) for work_id in scope["work_ids"]),
+        "--series-json-dir",
+        public_paths.SERIES_JSON_DIR.as_posix(),
+        "--series-index-json-path",
+        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+        "--works-json-dir",
+        public_paths.WORKS_JSON_DIR.as_posix(),
+        "--works-index-json-path",
+        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--recent-index-json-path",
+        public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
+        "--moments-json-dir",
+        public_paths.MOMENTS_JSON_DIR.as_posix(),
+        "--moments-index-json-path",
+        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
     ]
     series_ids = [str(series_id) for series_id in scope.get("series_ids", [])]
     if series_ids:
@@ -58,6 +74,20 @@ def build_generate_moment_command(
         "moments",
         "--moment-ids",
         ",".join(str(moment_id) for moment_id in scope["moment_ids"]),
+        "--series-json-dir",
+        public_paths.SERIES_JSON_DIR.as_posix(),
+        "--series-index-json-path",
+        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+        "--works-json-dir",
+        public_paths.WORKS_JSON_DIR.as_posix(),
+        "--works-index-json-path",
+        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--recent-index-json-path",
+        public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
+        "--moments-json-dir",
+        public_paths.MOMENTS_JSON_DIR.as_posix(),
+        "--moments-index-json-path",
+        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
     ]
     if write:
         cmd.append("--write")
@@ -75,6 +105,14 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapp
         str(repo_root / "studio" / "services" / "catalogue" / "search" / "build_search.py"),
         "--scope",
         "catalogue",
+        "--output",
+        public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
+        "--series-index",
+        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+        "--works-index",
+        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--moments-index",
+        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
     ]
     if write:
         cmd.append("--write")

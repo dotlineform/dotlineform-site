@@ -133,11 +133,11 @@ def moments_index_payload(*, extra_moment: bool = False, first_title: str = "4 s
 
 def prepare_repo(root: Path, *, extra_moment: bool = False, first_moment_title: str = "4 stories") -> None:
     write_json(root / "studio/services/catalogue/search/build_config.json", search_build_config())
-    write_json(root / "assets/data/series_index.json", series_index_payload())
-    write_json(root / "assets/data/works_index.json", works_index_payload())
-    write_json(root / "assets/data/moments_index.json", moments_index_payload(extra_moment=extra_moment, first_title=first_moment_title))
+    write_json(root / "site/assets/data/series_index.json", series_index_payload())
+    write_json(root / "site/assets/data/works_index.json", works_index_payload())
+    write_json(root / "site/assets/data/moments_index.json", moments_index_payload(extra_moment=extra_moment, first_title=first_moment_title))
     write_json(
-        root / "assets/works/index/00001.json",
+        root / "site/assets/works/index/00001.json",
         {
             "work": {
                 "medium_type": "drawing",
@@ -167,11 +167,11 @@ def test_python_catalogue_search_builder_writes_current_schema_and_hash() -> Non
         root = Path(temp_path)
         prepare_repo(root)
         exit_code, stdout, stderr = run_cli(root, ["--scope", "catalogue", "--write"])
-        payload = read_json(root / "assets/data/search/catalogue/index.json")
+        payload = read_json(root / "site/assets/data/search/catalogue/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote assets/data/search/catalogue/index.json with 3 catalogue search entries" in stdout
+    assert "Wrote site/assets/data/search/catalogue/index.json with 3 catalogue search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
     assert header["schema"] == "search_index_v1"
@@ -220,8 +220,8 @@ def test_python_catalogue_search_builder_dry_run_does_not_write() -> None:
         assert exit_code == 0
         assert stderr == ""
         assert "Dry run: 3 catalogue search entries" in stdout
-        assert "Would write: assets/data/search/catalogue/index.json" in stdout
-        assert not (root / "assets/data/search/catalogue/index.json").exists()
+        assert "Would write: site/assets/data/search/catalogue/index.json" in stdout
+        assert not (root / "site/assets/data/search/catalogue/index.json").exists()
 
 
 def test_python_catalogue_search_builder_skips_unchanged_second_write_and_force_rewrites() -> None:
@@ -229,17 +229,17 @@ def test_python_catalogue_search_builder_skips_unchanged_second_write_and_force_
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "catalogue", "--write"])
-        first_payload = read_json(root / "assets/data/search/catalogue/index.json")
+        first_payload = read_json(root / "site/assets/data/search/catalogue/index.json")
         second_exit, second_stdout, second_stderr = run_cli(root, ["--scope", "catalogue", "--write"])
         force_exit, force_stdout, force_stderr = run_cli(root, ["--scope", "catalogue", "--write", "--force"])
-        force_payload = read_json(root / "assets/data/search/catalogue/index.json")
+        force_payload = read_json(root / "site/assets/data/search/catalogue/index.json")
 
     assert second_exit == 0
     assert second_stderr == ""
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote assets/data/search/catalogue/index.json with 3 catalogue search entries" in force_stdout
+    assert "Wrote site/assets/data/search/catalogue/index.json with 3 catalogue search entries" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
 
 
@@ -251,7 +251,7 @@ def test_python_catalogue_search_builder_targeted_additive_insert() -> None:
         prepare_repo(root, extra_moment=True)
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "catalogue", "--write", "--only-records", "moment:blue-sky"])
-        payload = read_json(root / "assets/data/search/catalogue/index.json")
+        payload = read_json(root / "site/assets/data/search/catalogue/index.json")
 
     assert exit_code == 0
     assert stderr == ""

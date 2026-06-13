@@ -12,8 +12,8 @@ from typing import Any
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCHEMA_VERSION = "docs_scopes_v1"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
-PUBLIC_DOCS_OUTPUT_ROOT = Path("assets/data/docs/scopes")
-PUBLIC_SEARCH_OUTPUT_ROOT = Path("assets/data/search")
+PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
+PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
 WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
 
@@ -119,12 +119,12 @@ def validate_generated_output_contract(
     if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
         raise ValueError(
             f"docs scope config {field_prefix}.output for manage-mode scope {scope_id!r} "
-            "must not be under assets/data/docs/scopes"
+            "must not be under site/assets/data/docs/scopes"
         )
     if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
         raise ValueError(
             f"docs scope config {field_prefix}.search_output for manage-mode scope {scope_id!r} "
-            "must not be under assets/data/search"
+            "must not be under site/assets/data/search"
         )
 
 
@@ -142,6 +142,13 @@ def normalize_public_path_prefix(value: Any, *, fallback: str, field: str) -> st
     if ".." in Path(text.lstrip("/")).parts:
         raise ValueError(f"docs scope config field {field} must not contain parent path segments")
     return text.rstrip("/")
+
+
+def public_url_fallback_for_repo_assets_path(path: Path) -> str:
+    parts = path.parts
+    if len(parts) >= 2 and parts[0] == "site" and parts[1] == "assets":
+        return "/" + Path(*parts[1:]).as_posix()
+    return f"/{path.as_posix().strip('/')}"
 
 
 def normalize_import_media_storage(
@@ -165,12 +172,12 @@ def normalize_import_media_storage(
             f"must be one of: {supported}"
         )
     repo_assets_path_prefix = safe_relative_path(
-        raw.get("repo_assets_path_prefix") or f"assets/docs/{scope_id}",
+        raw.get("repo_assets_path_prefix") or f"site/assets/docs/{scope_id}",
         field=f"scopes[{index}].import_media_storage.repo_assets_path_prefix",
     )
     public_path_prefix = normalize_public_path_prefix(
         raw.get("repo_assets_public_path_prefix"),
-        fallback=f"/{repo_assets_path_prefix.as_posix().strip('/')}",
+        fallback=public_url_fallback_for_repo_assets_path(repo_assets_path_prefix),
         field=f"scopes[{index}].import_media_storage.repo_assets_public_path_prefix",
     )
     return DocsImportMediaConfig(
@@ -202,7 +209,7 @@ def publish_output_paths_for(
         if not path_is_relative_to(publish_output, expected_docs_parent):
             raise ValueError(
                 f"docs scope config scopes[{index}].publish_output for public scope {scope_id!r} "
-                "must be under assets/data/docs/scopes"
+                "must be under site/assets/data/docs/scopes"
             )
         if not path_is_relative_to(publish_search_output, expected_search_parent):
             raise ValueError(

@@ -9,7 +9,7 @@ from pathlib import Path
 
 DEFAULT_BUDGETS = {
     "studio/app/frontend/config/studio-config.json": 12_000,
-    "assets/data/search/policy.json": 8_000,
+    "site/assets/data/search/policy.json": 8_000,
 }
 UI_TEXT_GLOB = "studio/app/frontend/config/ui-text/*.json"
 DEFAULT_UI_TEXT_BUDGET = 16_000
@@ -19,7 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path)
     parser.add_argument("--studio-config-max-bytes", default=DEFAULT_BUDGETS["studio/app/frontend/config/studio-config.json"], type=int)
-    parser.add_argument("--search-policy-max-bytes", default=DEFAULT_BUDGETS["assets/data/search/policy.json"], type=int)
+    parser.add_argument("--search-policy-max-bytes", default=DEFAULT_BUDGETS["site/assets/data/search/policy.json"], type=int)
     parser.add_argument("--ui-text-max-bytes", default=DEFAULT_UI_TEXT_BUDGET, type=int)
     return parser.parse_args()
 
@@ -39,7 +39,7 @@ def main() -> int:
     failures: list[str] = []
     budgets = {
         "studio/app/frontend/config/studio-config.json": args.studio_config_max_bytes,
-        "assets/data/search/policy.json": args.search_policy_max_bytes,
+        "site/assets/data/search/policy.json": args.search_policy_max_bytes,
     }
     for rel_path, max_bytes in budgets.items():
         check_file(repo_root, rel_path, max_bytes, failures)

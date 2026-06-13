@@ -13,6 +13,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+CATALOGUE_SERVICES_DIR = Path(__file__).resolve().parents[1]
+if str(CATALOGUE_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(CATALOGUE_SERVICES_DIR))
+
+try:
+    from catalogue import catalogue_public_paths as public_paths
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    import catalogue_public_paths as public_paths
+
 
 DEFAULT_SCOPE = "catalogue"
 SEARCH_BUILD_CONFIG_PATH = "studio/services/catalogue/search/build_config.json"
@@ -24,10 +33,10 @@ SEARCH_BUILD_TARGETED_POLICY_OPERATIONS = {
 CATALOGUE_TARGET_KINDS = {"moment", "series", "work"}
 CATALOGUE_DEFAULTS = {
     "schema": "search_index_v1",
-    "output_path": "assets/data/search/catalogue/index.json",
-    "series_index_path": "assets/data/series_index.json",
-    "works_index_path": "assets/data/works_index.json",
-    "moments_index_path": "assets/data/moments_index.json",
+    "output_path": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
+    "series_index_path": public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
+    "works_index_path": public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+    "moments_index_path": public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
 }
 
 
@@ -147,7 +156,7 @@ class CatalogueSearchDataBuilder:
         self.series_index_path = self.resolve_path(series_index_path or CATALOGUE_DEFAULTS["series_index_path"])
         self.works_index_path = self.resolve_path(works_index_path or CATALOGUE_DEFAULTS["works_index_path"])
         self.moments_index_path = self.resolve_path(moments_index_path or CATALOGUE_DEFAULTS["moments_index_path"])
-        self.works_json_dir = self.resolve_path("assets/works/index")
+        self.works_json_dir = self.resolve_path(public_paths.WORKS_JSON_DIR)
         self.work_search_metadata_by_id: dict[str, dict[str, str]] = {}
         self.search_build_config: dict[str, Any] = {}
 

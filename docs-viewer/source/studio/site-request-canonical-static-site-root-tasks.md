@@ -58,24 +58,75 @@ Purpose: migrate the public site to tracked `site/` source and move public-site 
 
 | ID | status | action |
 | --- | --- | --- |
-| 1.1 | planned | Audit root-level `assets/` path ownership: identify config-driven reads/writes, hardcoded defaults, and path configs that must retarget public outputs to `site/assets/...`. |
+| 1.1 | done | Audit root-level `assets/` path ownership: identify config-driven reads/writes, hardcoded defaults, and path configs that must retarget public outputs to `site/assets/...`. |
+| 1.1a | done | Create a Studio catalogue public-output path contract and retarget catalogue generated JSON, catalogue search, thumbnail outputs, cleanup, and preview code to it. |
+| 1.1b | done | Retarget Docs Viewer public publish paths, public output-root validation, and interactive asset filesystem paths to `site/assets/...` while preserving public `/assets/...` URLs. |
+| 1.1c | done | Retarget Analytics and Data Sharing public catalogue input paths to explicit configured `site/assets/data/...` sources, removing defensive defaults and old compatibility fallbacks. |
+| 1.1d | done | Retarget local same-origin static serving so Studio and Docs Viewer serve `/assets/...` from `site/assets/...` during local app workflows. |
+| 1.1e | done | Retarget Admin check, projection-contract, and site-audit path contracts from root `assets/...` to `site/assets/...` where they refer to filesystem paths. |
 | 1.2 | planned | Move `_public_site/` to `site/` as tracked canonical source and delete `_public_site/.public-site-artifact` rather than replacing it. |
 | 1.3 | planned | Move public-site tooling from `public-site/` to `site-tools/`, simplifying it to validation/audit responsibilities only. |
 | 1.4 | planned | Replace `bin/public-site-build` with `bin/site-validate`, with no command alias or compatibility shim. |
 | 1.5 | planned | Update preview tooling so it serves `site/` directly and does not rebuild or copy the public tree. |
-| 1.6 | planned | Retarget Studio catalogue generators and cleanup paths from root `assets/...` to `site/assets/...`. |
-| 1.7 | planned | Retarget catalogue search generation and policy paths to `site/assets/data/search/...`. |
-| 1.8 | planned | Retarget Docs Viewer public publish paths from root `assets/...` to `site/assets/...`. |
-| 1.9 | planned | Retarget Docs Viewer public route config, browser config, and interactive asset paths for the `site/` root. |
-| 1.10 | planned | Retarget Analytics and Data Sharing reads that currently use public catalogue indexes under root `assets/data/...`. |
-| 1.11 | planned | Update Admin projection contract and public-surface audits for `site/`. |
-| 1.12 | planned | Remove or rename root-level `assets/` once no active consumer remains. |
-| 1.13 | planned | Update GitHub Actions to validate and upload `site/`, with no retired build/copy command. |
-| 1.14 | planned | Update stable docs that still describe `_public_site/`, `public-site/build/`, or root `assets/` as the public deploy surface. |
+| 1.6 | planned | Remove or rename root-level `assets/` once no active consumer remains. |
+| 1.7 | planned | Update GitHub Actions to validate and upload `site/`, with no retired build/copy command. |
+| 1.8 | planned | Update stable docs that still describe `_public_site/`, `public-site/build/`, or root `assets/` as the public deploy surface. |
 
 ## Completed Verification
 
-- Not started.
+- Task 1.1 audit completed by source/config search and targeted file reads. No tests were run because no runtime code was changed.
+- Tasks 1.1a-1.1e implementation completed with syntax checks, JSON parsing checks, and focused path-contract tests. Docs Viewer payloads were not rebuilt.
+- Studio/Analytics verification: `$HOME/miniconda3/bin/python3 -m pytest -q studio/tests/python/test_catalogue_build_commands.py studio/tests/python/test_catalogue_build_media.py studio/tests/python/test_catalogue_cleanup.py studio/tests/python/test_catalogue_transactions.py studio/tests/python/test_catalogue_search_builder_python.py analytics-app/tests/python/test_tags_data_sharing_adapter.py analytics-app/tests/python/test_analytics_app_server.py`
+- Docs Viewer verification: `$HOME/miniconda3/bin/python3 -m pytest -q docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_import_service.py::test_html_import_copies_role_marked_interactive_assets docs-viewer/tests/python/test_docs_import_service.py::test_html_import_reports_role_marked_interactive_assets_in_preview_only docs-viewer/tests/python/test_docs_import_service.py::test_html_import_confirms_existing_role_marked_interactive_asset_target docs-viewer/tests/python/test_docs_management_service.py::test_docs_scope_config_requires_public_readonly_publish_outputs docs-viewer/tests/python/test_docs_management_service.py::test_docs_scope_config_rejects_manage_mode_assets_outputs docs-viewer/tests/python/test_docs_management_service.py::test_scope_create_preview_blocks_committed_manage_mode_assets_regression docs-viewer/tests/python/test_docs_management_service.py::test_scope_create_apply_blocks_committed_manage_mode_assets_regression docs-viewer/tests/python/test_docs_generated_reads.py docs-viewer/tests/python/test_docs_publish_gate.py`
+
+## Task 1.1 Findings
+
+Summary: the migration is only partly a config retarget.
+Docs Viewer public publish paths are mostly config-owned, but Studio catalogue public outputs and local public-asset serving still have several hardcoded root `assets/` filesystem defaults.
+
+### Config-Owned Or Mostly Config-Owned Paths
+
+| Area | current owner | finding |
+| --- | --- | --- |
+| Public-site assembly | `public-site/config/public-site.json` | This is build/copy configuration, not a durable path owner for the new model. It should be retired or reduced into `site-tools/` validation config. |
+| Docs Viewer public scopes | `docs-viewer/config/scopes/docs_scopes.json` | `publish_output`, `publish_search_output`, and `repo_assets_path_prefix` are explicit config fields. These are good candidates for direct retargeting to `site/assets/...`. |
+| Docs Viewer public route URLs | `docs-viewer/config/routes/*.json`, generated defaults | Browser URLs such as `/assets/data/docs/scopes/...` should remain `/assets/...` because `site/` is the document root. These are URL config values, not filesystem paths. |
+| Analytics browser reads | `analytics-app/app/frontend/config/analytics-config.json` | Browser read URLs are config-owned and can remain `/assets/...`; local server/static mapping must serve them from `site/assets/...`. |
+| Data Sharing tag source reads | `data-sharing/config/adapters.json` | `sources.series` and `sources.works` are config-owned and should retarget to `site/assets/data/...`. |
+| Search runtime policy URL | `assets/data/search/policy.json` and `assets/js/search/search-policy.js` fallback | The browser URL can remain `/assets/data/search/catalogue/index.json`. The filesystem location should move with the public site file to `site/assets/data/search/policy.json`. |
+
+### Hardcoded Filesystem Defaults To Retarget Or Move Into Config
+
+| Area | active files | finding |
+| --- | --- | --- |
+| Catalogue generated JSON | `studio/services/catalogue/generate_work_pages.py`, `studio/services/catalogue/catalogue_build_commands.py` | The generator exposes output path flags, but the scoped build command does not pass them and the CLI defaults point at root `assets/...`. Add a small catalogue public-output path contract or config, then have the command builder pass those paths. |
+| Catalogue search build | `studio/services/catalogue/search/build_search.py` | `CATALOGUE_DEFAULTS` and `works_json_dir` are hardcoded to root `assets/...`. `build_config.json` owns field/source policy, not paths. Move path ownership into a small config or shared catalogue public-output path contract. |
+| Catalogue local thumbnail outputs | `studio/services/catalogue/catalogue_build_media.py` | Thumbnail output dirs are direct `repo_root / "assets" / ...` joins. They need to resolve through the same public-output path contract. |
+| Catalogue cleanup and preview | `studio/services/catalogue/catalogue_cleanup.py`, `studio/services/catalogue/catalogue_build_scopes.py` | Cleanup/update previews and existence checks hardcode root `assets/...`. These should read from the shared output path contract rather than duplicating strings. |
+| Docs Viewer public output roots | `docs-viewer/services/docs_scope_config.py`, `docs-viewer/services/docs_scope_manifest.py` | Scope config owns concrete paths, but validation/planning constants still hardcode root `assets/data/...`. Retarget constants to the configured site filesystem root or teach them the public output root. |
+| Docs Viewer interactive assets | `docs-viewer/build/build_docs.py`, `docs-viewer/services/docs_import_source_service.py` | Interactive docs asset paths hardcode `assets/docs/interactive/...`. Retarget through Docs Viewer scope/import media config or a dedicated Docs Viewer public asset root constant. |
+| Data Sharing fallback paths | `data-sharing/data_sharing/adapters/tags/adapter.py`, `analytics-app/app/server/analytics_app/tag_services/tag_source_paths.py` | Adapter config owns these paths. Remove the defensive defaults for missing adapter `sources.*` values and remove the explicit compatibility branch from old `studio/data/canonical/catalogue/series.json` to `assets/data/series_index.json`; require explicit configured sources instead. |
+| Local Studio static serving | `studio/app/server/studio/studio_app_server.py` | `/assets/...` static prefixes currently resolve from repo root. After the move, local Studio should serve same-origin `/assets/...` reads from `site/assets/...`. The public-site preview base remains for opening or inspecting public pages, not for Studio runtime data fetches. |
+| Docs Viewer local static serving | `docs-viewer/services/docs_viewer_service.py` | Public-safe `/assets/data/` and `/assets/docs/` local reads assume root `assets/...`. They need retargeting to `site/assets/...` for local service/static reads. |
+| Admin checks and audits | `admin-app/checks/*.py`, `admin-app/checks/*.json`, `admin-app/commands/run_checks.py` | These are audit/test/report path contracts. They should be updated as design-time checks for `site/`, but they are not deploy-validation inputs. |
+
+### URL Paths That Should Not Change
+
+- Public browser URLs under `/assets/...` remain correct when `site/` is the document root.
+- Public JS fallback URLs such as `/assets/data/search/catalogue/index.json` remain URL contracts, not filesystem root `assets/` dependencies.
+- Studio and Analytics browser configs that expose `/assets/...` URLs do not need public URL changes; their local servers or preview targets need to serve those URLs from `site/assets/...`.
+
+### Recommended Implementation Shape
+
+Do not retarget these paths with scattered string replacements.
+Create or identify small owner-level path contracts:
+
+- Studio catalogue public output paths for indexes, per-record JSON, search index, and thumbnails.
+- Docs Viewer public output root paths for docs/search and public interactive assets.
+- Analytics/Data Sharing public catalogue index input paths.
+- Site-tools validation paths for deploy-root-only files such as `CNAME`, `.nojekyll`, icons, and required route HTML.
+
+Then update call sites to use those contracts and retarget the contracts to `site/assets/...`.
 
 ## Follow-On Tasks
 
@@ -85,4 +136,3 @@ Purpose: migrate the public site to tracked `site/` source and move public-site 
 
 - When complete, update this task tracker with verification results, remaining risks, and any follow-on tasks discovered during implementation.
 - Mark `ui_status` and task statuses only after the corresponding implementation and verification are complete.
-
