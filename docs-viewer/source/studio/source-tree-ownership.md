@@ -146,8 +146,9 @@ Public static-site source and runtime remain outside `studio/`:
 Public route adapters for Docs Viewer should stay minimal.
 Docs Viewer shell source, management shell source, config, CSS, reports, and services belong under `docs-viewer/`.
 
-Public catalogue route construction and route-state parsing are owned by `site/assets/js/public-catalogue-runtime.js`.
-First-party public pages, catalogue search rendering, Docs Viewer semantic references, and Studio public-link helpers should derive work, series, detail, and moment URLs through that contract or its Studio equivalent rather than serializing derivable URL fields in generated catalogue payloads.
+Public catalogue route construction and route-state parsing are owned by focused ES modules under `site/assets/js/catalogue/`.
+Shared route URL helpers live in `site/assets/js/catalogue/shared/catalogue-urls.js`; public route entrypoints live under `site/assets/js/catalogue/routes/`.
+First-party public pages, catalogue search rendering, Docs Viewer semantic references, and Studio public-link helpers should derive work, series, detail, and moment URLs through that shared URL contract or its Studio equivalent rather than serializing derivable URL fields in generated catalogue payloads.
 
 ## Generated Output Rule
 

@@ -82,7 +82,7 @@ Scope:
   - `fetchJson`;
   - text and numeric normalization helpers;
   - thumbnail URL helper;
-- add a shared `recentIndexUrl` helper beside the other catalogue data URL helpers;
+- use existing shared path construction for `recent_index.json` rather than adding a new shared export;
 - port recent-index-specific date formatting, entry sorting, and render helpers locally;
 - update `site/recent/index.html` to load the module route and remove the legacy classic script;
 - remove `public-catalogue-runtime.js` from `site/recent/index.html` after no remaining `/recent/` script needs it;
@@ -113,7 +113,7 @@ Out of scope:
 | --- | --- | --- | --- |
 | 12.1 | completed | Inspect `recent-index.js`, `/recent/` shell script order, public-runtime helper usage, shared helper equivalents, and recent-list CSS contracts. | Confirmed the legacy script owned recent list rendering and only used public-runtime URL/base helpers. |
 | 12.2 | completed | Define the recent-index route module contract. | Kept route-specific date/sort/render helpers local; no global compatibility alias. |
-| 12.3 | completed | Implement `catalogue/routes/recent-index.js` and shared `recentIndexUrl`. | Ported behavior with shared URL, fetch, text, size, and thumbnail helpers. |
+| 12.3 | completed | Implement `catalogue/routes/recent-index.js`. | Ported behavior with shared URL, fetch, text, size, and thumbnail helpers. |
 | 12.4 | completed | Update `/recent/` shell script tags. | `/recent/` now loads only the recent-index route module for catalogue behavior. |
 | 12.5 | completed | Retire legacy `recent-index.js`, audit public-runtime callers, and update validation config. | Deleted `site/assets/js/recent-index.js` and `site/assets/js/public-catalogue-runtime.js`; no deploy-root callers remain. |
 | 12.6 | completed | Verify `/recent/` state and record evidence. | See Completed Verification. |

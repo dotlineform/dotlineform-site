@@ -3,7 +3,7 @@ doc_id: site-request-public-catalogue-runtime-module-architecture
 title: Public Catalogue Runtime Module Architecture Request
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 ---
 # Public Catalogue Runtime Module Architecture Request
@@ -11,6 +11,8 @@ parent_id: change-requests
 ## Summary
 
 Design and migrate to a new public catalogue runtime module structure for the static site.
+
+Status: completed.
 
 This request is a module-level refactor, not a cleanup pass over the current extracted route scripts and not a greenfield rewrite.
 The current scripts contain older inline route behavior that accumulated over time while newer modules were added around it.
@@ -609,6 +611,37 @@ The workflow should keep:
 
 This is an intentional temporary change for the catalogue runtime migration.
 After the refactor is complete, restore the `main` push trigger for `site/**`, `site-tools/**`, `bin/site-validate`, and `.github/workflows/public-site.yml`.
+
+## Closeout Assessment
+
+The public catalogue runtime module migration is complete.
+
+Completed route coverage:
+
+- `/series/` and `/series/?mode=moments` load `site/assets/js/catalogue/routes/series-index.js`.
+- `/works/` loads `site/assets/js/catalogue/routes/works-index.js`.
+- `/works/?work=...` loads `site/assets/js/catalogue/routes/work-page.js`.
+- `/work-details/?detail=...` loads `site/assets/js/catalogue/routes/work-detail-page.js`.
+- `/moments/?moment=...` loads `site/assets/js/catalogue/routes/moment-page.js`.
+- `/recent/` loads `site/assets/js/catalogue/routes/recent-index.js`.
+
+Retired legacy public catalogue scripts:
+
+- `site/assets/js/series-index.js`
+- `site/assets/js/recent-index.js`
+- `site/assets/js/works-index.js`
+- `site/assets/js/work-page.js`
+- `site/assets/js/work-detail-page.js`
+- `site/assets/js/work.js`
+- `site/assets/js/moment.js`
+- `site/assets/js/swipe-nav.js`
+- `site/assets/js/public-catalogue-runtime.js`
+
+The active route URL contract is now `site/assets/js/catalogue/shared/catalogue-urls.js`.
+The active shared runtime primitives live under `site/assets/js/catalogue/shared/`; reusable DOM components live under `site/assets/js/catalogue/components/`; route entrypoints live under `site/assets/js/catalogue/routes/`; and navigation behavior lives under `site/assets/js/catalogue/navigation/`.
+
+Final cleanup updated active architecture/reference docs that still described `site/assets/js/public-catalogue-runtime.js` as the current route helper.
+Historical slice and audit documents remain as implementation records.
 
 ## Child Docs
 

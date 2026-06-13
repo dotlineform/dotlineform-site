@@ -15,7 +15,7 @@ Current scope:
 - `docs-viewer/templates/public-route/index.html`
 - `site/assets/js/theme-toggle.js`
 - `site/assets/js/site-nav.js`
-- `site/assets/js/public-catalogue-runtime.js`
+- `site/assets/js/catalogue/`
 - `site/library/index.html`
 - `site/analysis/index.html`
 
@@ -52,8 +52,8 @@ The active public shell runtime lives in shared asset files:
 
 - `site/assets/js/theme-toggle.js`
   - handles the footer theme toggle control
-- `site/assets/js/public-catalogue-runtime.js`
-  - provides shared public catalogue fetch, generated-data URL, normalization, and thumbnail helpers for work, work-detail, and series routes
+- `site/assets/js/site-nav.js`
+  - applies shared public navigation behavior
 
 Reason:
 
@@ -63,10 +63,10 @@ Reason:
 Notes:
 
 - the current public header does not render a `nav-more` control
-- `site/assets/js/site-nav.js` is loaded by current public route shells for shared navigation behavior
+- public catalogue behavior is now route-loaded through ES module entrypoints under `site/assets/js/catalogue/routes/`
 
-`site/assets/js/public-catalogue-runtime.js` is route-loaded by the public catalogue layouts rather than by `_layouts/default.html`.
-The default shell remains responsible for page chrome; public catalogue routes opt into the helper where their inline bootstraps need generated-data fetches and URL/media helpers.
+Public catalogue route modules import narrow shared helpers from `site/assets/js/catalogue/shared/` for URL construction, JSON fetches, text normalization, local storage, and thumbnail URL projection.
+The default shell remains responsible for page chrome; catalogue routes opt into only the module entrypoint they need.
 
 ## Shared Asset Versioning
 
@@ -77,7 +77,7 @@ Current versioned shell assets:
 - `site/assets/css/main.css`
 - `site/assets/js/theme-toggle.js`
 - `site/assets/js/site-nav.js`
-- `site/assets/js/public-catalogue-runtime.js` when loaded by public catalogue layouts
+- public catalogue route module entrypoints under `site/assets/js/catalogue/routes/` when loaded by catalogue route shells
 
 Reason:
 

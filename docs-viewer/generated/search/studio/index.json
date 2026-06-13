@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0afb8dbe262008c86471bda7ec4a98be",
-    "generated_at_utc": "2026-06-13T18:25:04Z",
+    "version": "blake2b-191eea7e0564d5e210c27320e557cc24",
+    "generated_at_utc": "2026-06-13T18:36:55Z",
     "count": 251
   },
   "entries": [
@@ -826,10 +826,10 @@
       "kind": "doc",
       "title": "Public Route Model",
       "href": "/docs/?scope=studio&doc=public-route-model",
-      "last_updated": "2026-06-11",
+      "last_updated": "2026-06-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-11 • Architecture",
+      "display_meta": "2026-06-13 • Architecture",
       "search_terms": [
         "public-route-model",
         "public",
@@ -837,12 +837,12 @@
         "model",
         "public route model",
         "architecture",
-        "2026-06-11",
+        "2026-06-13",
         "2026",
         "06",
-        "11"
+        "13"
       ],
-      "search_text": "public-route-model public route model public route model architecture 2026-06-11 2026 06 11"
+      "search_text": "public-route-model public route model public route model architecture 2026-06-13 2026 06 13"
     },
     {
       "id": "data-models-shared",
