@@ -6,6 +6,10 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+we are working on [Public Catalogue Runtime Module Architecture Request](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture),
+please proceed with slice 1 defined in the child doc [Public Catalogue Runtime Module Architecture Slices](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-slices).
+
+
 the key is also in the request doc: During the earlier static-site migration, large inline scripts were moved from public route HTML into public JS files:
 
 - `site/assets/js/series-index.js`

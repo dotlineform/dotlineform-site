@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9f70b97f773195581389e00fc340f21b",
-    "generated_at_utc": "2026-06-13T11:58:38Z",
-    "count": 239
+    "version": "blake2b-d7fe1608c4676bc1c153c05ca109a0a2",
+    "generated_at_utc": "2026-06-13T15:06:43Z",
+    "count": 240
   },
   "entries": [
     {
@@ -1440,6 +1440,34 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture site request public catalogue runtime module architecture public catalogue runtime module architecture request change requests change requests 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-slices",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Module Architecture Slices",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-slices",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-slices",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "slices",
+        "public catalogue runtime module architecture slices",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-slices site request public catalogue runtime module architecture slices public catalogue runtime module architecture slices public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-js-runtime-payload-review",

@@ -3,14 +3,11 @@ doc_id: site-request-public-js-runtime-payload-review
 title: Public JavaScript Runtime and Payload Review Request
 added_date: 2026-06-12
 last_updated: 2026-06-13
-ui_status: planned
 parent_id: change-requests
 ---
-# Public JavaScript Runtime and Payload Review Request
+# Runtime Review - superceded
 
-Status:
-
-- planned
+Status: replaced by [Public Catalogue Runtime Module Architecture Request](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture).
 
 ## Summary
 

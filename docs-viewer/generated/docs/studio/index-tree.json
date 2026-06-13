@@ -338,13 +338,20 @@
           "doc_id": "site-request-public-catalogue-runtime-module-architecture",
           "title": "Public Catalogue Runtime Module Architecture Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture.json",
-          "ui_status": "planned"
+          "ui_status": "in-progress",
+          "children": [
+            {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-slices",
+              "title": "Public Catalogue Runtime Module Architecture Slices",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-slices.json",
+              "ui_status": "planned"
+            }
+          ]
         },
         {
           "doc_id": "site-request-public-js-runtime-payload-review",
           "title": "Public JavaScript Runtime and Payload Review Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
-          "ui_status": "planned",
           "children": [
             {
               "doc_id": "site-request-public-js-runtime-payload-review-audit",
@@ -1301,5 +1308,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T11:58:37Z"
+  "generated_at": "2026-06-13T15:07:21Z"
 }
