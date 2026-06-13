@@ -3,7 +3,6 @@
 Generate public catalogue JSON artifacts.
 
 This repo stores public catalogue runtime metadata in generated JSON artifacts.
-Legacy Jekyll collection route stubs are retired and are not written by this generator.
 
 Series index JSON is written to site/assets/data/series_index.json.
 Work-details JSON index files are written to site/assets/works/index/<work_id>.json (work-driven; one per selected work).

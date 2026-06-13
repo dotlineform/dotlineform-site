@@ -10,13 +10,13 @@ viewable: true
 
 This document answers two practical questions from the current implementation state:
 
-- what must be copied into an existing Jekyll project to use the Docs Viewer
+- what must be copied into an existing project to use the Docs Viewer
 - how to set up a new Library-style docs scope with one local management view and one read-only public view
 
 ## Current Shape
 
 The Docs Viewer is not a separately packaged plugin yet.
-It is a tracked `docs-viewer/` source boundary plus host-owned Jekyll route adapters, generated JSON outputs, and wrapper build commands.
+It is a tracked `docs-viewer/` source boundary plus generated JSON outputs, and wrapper build commands.
 The standalone Docs Viewer service owns local `/docs/` manage mode.
 
 Current live scopes:
@@ -30,6 +30,7 @@ They should not expose `?mode=manage`, management CSS, management JS, localhost 
 
 The `/docs/` route is the local management page served by `docs-viewer/bin/docs-viewer`.
 It can switch the active scope with the `scope` query parameter.
+
 ## Child References
 
 - [File Manifest](/docs/?scope=studio&doc=docs-viewer-portable-files) lists the current include, runtime, CSS, config, generated-output, script, dependency, and management-server copy set.
