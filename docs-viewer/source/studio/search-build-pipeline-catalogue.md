@@ -17,15 +17,15 @@ viewable: true
 
 ### Current Output
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 ### Current Source Inputs
 
 Canonical catalogue source artifacts:
 
-- `assets/data/series_index.json`
-- `assets/data/works_index.json`
-- `assets/data/moments_index.json`
+- `site/assets/data/series_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/data/moments_index.json`
 
 Important boundary:
 
@@ -43,7 +43,7 @@ The current catalogue build path is:
 4. derive `moment` entries
 5. sort the flat entry list by kind, title, and id
 6. compute header metadata and version hash
-7. write `assets/data/search/catalogue/index.json` if changed or forced
+7. write `site/assets/data/search/catalogue/index.json` if changed or forced
 
 Current integration facts:
 

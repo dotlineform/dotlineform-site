@@ -15,18 +15,18 @@ The original long reference has been split by responsibility so source records, 
 
 Current checked-in catalogue model families include:
 
-- canonical source records under `assets/studio/data/catalogue/`
+- canonical source records under `site/assets/studio/data/catalogue/`
 - canonical prose sources under `_docs_catalogue/`
 - fixed public route shells under `/works/`, `/series/`, `/work-details/`, and `/moments/`
-- shared indexes under `assets/data/`
-- per-record payloads under `assets/series/index/`, `assets/works/index/`, and `assets/moments/index/`
-- catalogue search under `assets/data/search/catalogue/index.json`
+- shared indexes under `site/assets/data/`
+- per-record payloads under `site/assets/series/index/`, `site/assets/works/index/`, and `site/assets/moments/index/`
+- catalogue search under `site/assets/data/search/catalogue/index.json`
 - Studio planning/support data in `studio/data/config/catalogue/catalogue-field-registry.json`
 
 Primary writers:
 
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) refreshes shared indexes and per-record catalogue payloads.
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) writes `assets/data/search/catalogue/index.json`.
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) writes `site/assets/data/search/catalogue/index.json`.
 
 Primary validator:
 

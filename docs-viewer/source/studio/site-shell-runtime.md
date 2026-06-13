@@ -13,8 +13,8 @@ Current scope:
 
 - `_layouts/default.html`
 - `_includes/nav_item.html`
-- `assets/js/theme-toggle.js`
-- `assets/js/public-catalogue-runtime.js`
+- `site/assets/js/theme-toggle.js`
+- `site/assets/js/public-catalogue-runtime.js`
 - `library/index.md`
 - `analysis/index.md`
 - `_includes/docs_viewer_shell.html`
@@ -50,9 +50,9 @@ This is intentionally different from the rest of the shell JS and should not be 
 
 The active default-layout runtime lives in shared asset files:
 
-- `assets/js/theme-toggle.js`
+- `site/assets/js/theme-toggle.js`
   - handles the footer theme toggle control
-- `assets/js/public-catalogue-runtime.js`
+- `site/assets/js/public-catalogue-runtime.js`
   - provides shared public catalogue fetch, generated-data URL, normalization, and thumbnail helpers for work, work-detail, and series routes
 
 Reason:
@@ -63,9 +63,9 @@ Reason:
 Notes:
 
 - the current public header does not render a `nav-more` control
-- `assets/js/site-nav.js` still exists in the repo, but the current default shell does not depend on it for active navigation behavior
+- `site/assets/js/site-nav.js` still exists in the repo, but the current default shell does not depend on it for active navigation behavior
 
-`assets/js/public-catalogue-runtime.js` is route-loaded by the public catalogue layouts rather than by `_layouts/default.html`.
+`site/assets/js/public-catalogue-runtime.js` is route-loaded by the public catalogue layouts rather than by `_layouts/default.html`.
 The default shell remains responsible for page chrome; public catalogue routes opt into the helper where their inline bootstraps need generated-data fetches and URL/media helpers.
 
 ## Shared Asset Versioning
@@ -74,10 +74,10 @@ The shared default-layout CSS and JS append a lightweight build-version query to
 
 Current versioned shell assets:
 
-- `assets/css/main.css`
-- `assets/js/theme-toggle.js`
-- `assets/js/site-nav.js`
-- `assets/js/public-catalogue-runtime.js` when loaded by public catalogue layouts
+- `site/assets/css/main.css`
+- `site/assets/js/theme-toggle.js`
+- `site/assets/js/site-nav.js`
+- `site/assets/js/public-catalogue-runtime.js` when loaded by public catalogue layouts
 
 Reason:
 
@@ -126,12 +126,12 @@ Current route shells:
   - enables inline Studio docs search with `docs-viewer/generated/search/studio/index.json`
 - `/analysis/`
   - analysis docs
-  - loads `assets/data/docs/scopes/analysis/index.json`
-  - enables inline analysis docs search with `assets/data/search/analysis/index.json`
+  - loads `site/assets/data/docs/scopes/analysis/index.json`
+  - enables inline analysis docs search with `site/assets/data/search/analysis/index.json`
 - `/library/`
   - library docs
-  - loads `assets/data/docs/scopes/library/index.json`
-  - enables inline library docs search with `assets/data/search/library/index.json`
+  - loads `site/assets/data/docs/scopes/library/index.json`
+  - enables inline library docs search with `site/assets/data/search/library/index.json`
 
 Current shared docs-viewer layer:
 

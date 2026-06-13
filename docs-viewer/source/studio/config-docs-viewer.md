@@ -59,8 +59,8 @@ Each scope entry owns:
 `repo_assets` is the default recommendation for new portable installs that do not have remote media infrastructure.
 Use these folder conventions unless the host site has a stronger reason to choose different paths:
 
-- `assets/docs/<scope>/img/<filename>`
-- `assets/docs/<scope>/files/<filename>`
+- `site/assets/docs/<scope>/img/<filename>`
+- `site/assets/docs/<scope>/files/<filename>`
 
 For `repo_assets`, configure:
 
@@ -68,7 +68,7 @@ For `repo_assets`, configure:
 {
   "import_media_storage": {
     "storage_mode": "repo_assets",
-    "repo_assets_path_prefix": "assets/docs/library",
+    "repo_assets_path_prefix": "site/assets/docs/library",
     "repo_assets_public_path_prefix": "/assets/docs/library"
   }
 }
@@ -88,7 +88,7 @@ For `staging_manual`, configure:
   "media_path_prefix": "docs/library",
   "import_media_storage": {
     "storage_mode": "staging_manual",
-    "repo_assets_path_prefix": "assets/docs/library",
+    "repo_assets_path_prefix": "site/assets/docs/library",
     "repo_assets_public_path_prefix": "/assets/docs/library"
   }
 }

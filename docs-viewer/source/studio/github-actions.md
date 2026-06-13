@@ -2,7 +2,7 @@
 doc_id: github-actions
 title: GitHub Actions
 added_date: "2026-06-12 15:35"
-last_updated: "2026-06-12 20:15"
+last_updated: "2026-06-13"
 parent_id: dev-home
 ---
 # GitHub Actions
@@ -10,8 +10,8 @@ parent_id: dev-home
 **What can be done locally / in VS Code**
 
 - Create `.github/workflows/public-site.yml`.
-- Add the builder commands the workflow will run.
-- Run the same build/audit/smoke commands locally.
+- Add the validation command the workflow will run.
+- Run the same validation/smoke commands locally.
 - Commit and push the workflow like any other file.
 - Add `workflow_dispatch` so the workflow can be run manually from GitHub later.
 
@@ -29,20 +29,20 @@ Current local and remote state:
 
 So from this session Codex can create and inspect workflow files locally, use `gh` to inspect repo/Pages/Actions state, trigger workflow runs, and inspect workflow logs. Production deployment now runs through the repo-owned `Public site` workflow.
 
-**How `_public_site/` is uploaded**
+**How `site/` is uploaded**
 
-The static artifact directory is build output, not committed source. In Batch 5, GitHub Actions will create `_public_site/` on the Actions runner, upload that directory as the Pages artifact, then deploy that artifact through GitHub Pages.
+The static site directory is committed source. GitHub Actions validates `site/`, uploads that directory as the Pages artifact, then deploys that artifact through GitHub Pages.
 
 The workflow shape is:
 
 ```yaml
-- name: Build static public site
-  run: python public-site/build/build_site.py --destination _public_site --audit
+- name: Validate static site
+  run: python site-tools/site_validate.py
 
 - name: Upload Pages artifact
   uses: actions/upload-pages-artifact@v5
   with:
-    path: _public_site
+    path: site
 
 - name: Deploy to GitHub Pages
   uses: actions/deploy-pages@v5
@@ -51,16 +51,15 @@ The workflow shape is:
 The runner sequence is:
 
 - Check out the repository.
-- Run the static public-site builder.
-- Create a fresh `_public_site/` directory on the runner.
-- Package exactly `_public_site/` with `actions/upload-pages-artifact`.
+- Run static-site validation.
+- Package exactly `site/` with `actions/upload-pages-artifact`.
 - Publish that artifact with `actions/deploy-pages`.
 
-The local `_public_site/` directory is only preview/test output. The deployed `_public_site/` is created fresh by the workflow run.
+The local `site/` directory is the same tracked deploy root uploaded by the workflow.
 
 **Deployment gate**
 
-The repo-owned workflow builds, audits, validates, configures Pages, uploads the Pages artifact, and deploys when the deployment gate passes.
+The repo-owned workflow validates `site/`, configures Pages, uploads the Pages artifact, and deploys when the deployment gate passes.
 
 The deploy job runs only when all of these are true:
 
@@ -72,7 +71,7 @@ The deploy job runs only when all of these are true:
 
 The workflow is scoped with `paths` filters on `pull_request` and `push` so unrelated commits to `main` do not rebuild or deploy the public site.
 
-The filter includes the static builder, workflow file, public-site config, root pipeline data, public CSS/JS/assets, generated public payloads, public catalogue/media asset trees, and public Docs Viewer runtime/config/style owners.
+The filter includes the workflow file, `site/`, and `site-tools/`.
 
 `workflow_dispatch` remains unfiltered so a manual run can still rebuild and deploy the public artifact when needed.
 
@@ -102,23 +101,23 @@ Absent, empty, or any value other than exactly `true` keeps the deploy job skipp
 
 **How workflow failures are debugged**
 
-The public-site Python builder runs on GitHub's Actions runner during Batch 5 deployment validation. Build and deployment failures are inspected in the GitHub Actions run logs first, then reproduced locally with the same build-plus-audit command.
+The site validator runs on GitHub's Actions runner during deployment validation. Validation and deployment failures are inspected in the GitHub Actions run logs first, then reproduced locally with the same validation command.
 
-Use this local reproduction command for builder and artifact-audit failures:
+Use this local reproduction command for validation failures:
 
 ```bash
-$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit
+bin/site-validate
 ```
 
 Debugging sequence:
 
 - Inspect the GitHub Actions run log to identify the failing step.
-- Classify the failure as build, audit, artifact upload, permissions, or Pages deployment.
-- Reproduce build and audit failures locally with the same command.
-- Fix repo-owned builder, config, or content issues locally.
+- Classify the failure as validation, artifact upload, permissions, or Pages deployment.
+- Reproduce validation failures locally with the same command.
+- Fix repo-owned site files, validation config, or content issues locally.
 - Push the fix and rerun the GitHub workflow.
 
-Build and audit failures normally reproduce locally. GitHub-only failures include Pages permissions, Pages environment settings, artifact deployment plumbing, and runner-specific filesystem assumptions such as filename case sensitivity.
+Validation failures normally reproduce locally. GitHub-only failures include Pages permissions, Pages environment settings, artifact deployment plumbing, and runner-specific filesystem assumptions such as filename case sensitivity.
 
 **What happened on GitHub**
 
@@ -151,11 +150,10 @@ Manual runs are via `workflow_dispatch`: [manually run a workflow](https://docs.
 - Confirm before any command changes the live Pages source.
 - Confirm any GitHub environment protection rules.
 - Complete any GitHub browser approval prompt for first remote workflow runs.
-- Handle custom domain/DNS changes. No DNS change is planned for the static-builder migration.
+- Handle custom domain/DNS changes. No DNS change is planned for the static-site workflow migration.
 
 The current production path is:
 
-- build `_public_site/` in GitHub Actions,
-- validate the artifact,
+- validate `site/` in GitHub Actions,
 - upload the Pages artifact,
 - deploy through `actions/deploy-pages`.

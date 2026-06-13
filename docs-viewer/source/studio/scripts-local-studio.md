@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Runners
 added_date: 2026-04-22
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: local-setup
 viewable: true
 ---
@@ -15,8 +15,8 @@ bin/local-all
 bin/local-admin
 bin/local-studio
 bin/local-analytics
-bin/public-site-preview
-bin/public-site-build
+bin/site-preview
+bin/site-validate
 docs-viewer/bin/docs-viewer
 ```
 
@@ -40,15 +40,15 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 `docs-viewer/bin/docs-viewer`
 - starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
 
-`bin/public-site-preview` and `bin/public-site-build`
-- public static-site commands that use `public-site/config/public-site.json`.
-- `bin/public-site-build` passes builder arguments through, so an isolated verification build can use:
-  - `bin/public-site-build --destination /tmp/dlf-public-site-build --audit`
+`bin/site-preview` and `bin/site-validate`
+- public static-site commands that use `site/` and `site-tools/config/site-tools.json`.
+- `bin/site-preview` serves the checked-in static deploy root directly.
+- `bin/site-validate` checks deploy-root requirements without generating or copying files.
 
 `bin/local-all`
 - orchestration runner
 
-Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal when Studio links need a live public-site preview host.
+Run `bin/local-studio` for Studio and run `bin/site-preview` in a separate terminal when Studio links need a live public-site preview host.
 Run `bin/local-admin` when working only on Admin or UI Catalogue routes.
 Run `bin/local-analytics` when working only on Analytics or Data Sharing.
 Run `bin/local-all` when a local session needs the sibling services supervised together.
@@ -62,7 +62,7 @@ Each command:
 
 ## Local Configuration
 
-These runner scripts do not currently take general CLI flags, except for public-site preview/build pass-through behavior documented below.
+These runner scripts do not currently take general CLI flags, except for public-site preview behavior documented below.
 
 For local runs, configure repo-specific defaults in `var/local/site.env`.
 
@@ -109,18 +109,15 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD`
   default: `5`
   controls the maximum changed file count for watcher-targeted docs-search updates; use `-1` to target whenever affected ids are safe
-- `PUBLIC_SITE_ENABLED`
+- `SITE_ENABLED`
   default: `1`
   used by `bin/local-all`; set to `0` to skip the public-site preview child process
-- `PUBLIC_SITE_HOST`
+- `SITE_HOST`
   default: `127.0.0.1`
-  used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
-- `PUBLIC_SITE_PORT`
+  used by `bin/site-preview` and preflighted by `bin/local-all` when `SITE_ENABLED` is not `0`
+- `SITE_PORT`
   default: `4000`
-  used by `bin/public-site-preview` and preflighted by `bin/local-all` when `PUBLIC_SITE_ENABLED` is not `0`
-- `PUBLIC_SITE_DESTINATION`
-  default: `_public_site`
-  used by `bin/public-site-preview`
+  used by `bin/site-preview` and preflighted by `bin/local-all` when `SITE_ENABLED` is not `0`
 - `DOCS_VIEWER_HOST`
   default: `127.0.0.1`
   used by the Docs Viewer web service and preflighted by `bin/local-all`
@@ -153,7 +150,7 @@ If a configured port is unavailable or two services are configured for the same 
 
 After preflight, `bin/local-all` starts:
 
-1. `bin/public-site-preview` when `PUBLIC_SITE_ENABLED` is not `0`
+1. `bin/site-preview` when `SITE_ENABLED` is not `0`
 2. `bin/local-studio`
 3. `bin/local-admin` when `ADMIN_APP_ENABLED` is not `0`
 4. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
@@ -198,24 +195,24 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 Explicit public-site preview command:
 
 ```bash
-bin/public-site-preview
+bin/site-preview
 ```
 
-It runs the Python static builder, then serves the generated artifact with Python's HTTP server.
+It validates `site/`, then serves that checked-in static root with Python's HTTP server.
 
-Explicit public-site build command:
+Explicit public-site validation command:
 
 ```bash
-bin/public-site-build
+bin/site-validate
 ```
 
 It runs:
 
 ```bash
-$HOME/miniconda3/bin/python3 public-site/build/build_site.py
+$HOME/miniconda3/bin/python3 site-tools/site_validate.py
 ```
 
-Both public-site commands use `public-site/config/public-site.json` by default and do not start local Studio services.
+Both public-site commands use `site-tools/config/site-tools.json` by default and do not start local Studio services.
 
 ### Local Analytics App
 

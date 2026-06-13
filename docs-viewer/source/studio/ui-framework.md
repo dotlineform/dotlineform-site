@@ -193,6 +193,6 @@ UI Catalogue demos use `uiCatalogueDemo*` classes to document primitives and pat
 
 ### Local Studio And Legacy CSS
 
-Older Studio routes still use shared CSS in `assets/studio/css/studio.css` and legacy `tagStudio*` classes.
+Older Studio routes still use shared CSS in `site/assets/studio/css/studio.css` and legacy `tagStudio*` classes.
 
 Those classes are current implementation details, not the target naming model. New work should avoid expanding `tagStudio*` unless the task is explicitly maintaining an existing legacy route and no scoped migration is in scope.

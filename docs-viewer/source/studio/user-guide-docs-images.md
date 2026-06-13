@@ -22,12 +22,12 @@ Use this for:
 
 Save the file under:
 
-- `assets/docs/<topic>/...`
+- `site/assets/docs/<topic>/...`
 
 Examples:
 
-- `assets/docs/docs-viewer/example-doc.png`
-- `assets/docs/ui-audits/example-state.png`
+- `site/assets/docs/docs-viewer/example-doc.png`
+- `site/assets/docs/ui-audits/example-state.png`
 
 Use it in Markdown:
 
@@ -44,7 +44,7 @@ Use it in raw HTML:
 Recommended rule:
 
 - keep docs-facing images small and optimized
-- group them by topic under `assets/docs/`
+- group them by topic under `site/assets/docs/`
 - use clear names such as `default.png`, `example-docs-viewer.png`, or `state-disabled.png`
 
 Do not save docs images under `docs-viewer/source/studio/`. The docs source root is for Markdown source docs, not published image assets.

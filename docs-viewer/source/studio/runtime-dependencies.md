@@ -2,7 +2,7 @@
 doc_id: runtime-dependencies
 title: Runtime Dependencies
 added_date: 2026-04-23
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: dev-home
 ---
 # Runtime Dependencies
@@ -35,7 +35,7 @@ The repo currently has four practical dependency layers:
 
 1. Python packages from `requirements.txt`
 2. external command-line tools used by media/generation workflows
-3. local app/service runners and public-site preview/build runners that consume Python
+3. local app/service runners and public-site preview/validation runners that consume Python
 4. local or cloud runtime bootstrap scripts that install or verify the above
 
 ## Python Packages
@@ -82,14 +82,14 @@ Current interpretation:
 ### Always important for parity
 
 - `requirements.txt`
-- `public-site/config/public-site.json`
+- `site-tools/config/site-tools.json`
 
 These are the main checked-in contracts that keep local and cloud runs aligned.
 
 ### Usually needed in both local and cloud
 
 - `openpyxl`
-- the Python static builder when public-site rendering matters
+- the Python static validator when public-site deploy readiness matters
 
 ### Feature-specific but now part of the repo baseline install
 
@@ -120,7 +120,7 @@ Current local app boundaries:
 
 | Local app | Runner | Default URL | Dependency role |
 | --- | --- | --- | --- |
-| Public site preview | `bin/public-site-preview` | `http://127.0.0.1:4000/` | Python runtime plus `public-site/build/`, public assets, and generated public payloads. |
+| Public site preview | `bin/site-preview` | `http://127.0.0.1:4000/` | Python runtime plus checked-in `site/` files and `site-tools/` validation. |
 | Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, docs watcher, and startup maintenance tasks. |
 | Local Admin | `bin/local-admin` | `http://127.0.0.1:8768/admin/` | Python runtime plus Admin source for operational pages and Admin-hosted UI Catalogue routes. |
 | Local Analytics | `bin/local-analytics` | `http://127.0.0.1:8766/analytics/` | Python runtime plus Analytics app source, Analytics tag helpers, and Data Sharing workflow/adapters. |
@@ -128,7 +128,7 @@ Current local app boundaries:
 
 `bin/local-all` supervises these sibling services when a local session needs the full stack.
 The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue routes do not depend on Studio route config.
-Docs Viewer docs/search generation, catalogue search generation, catalogue prose rendering, and public-site preview/build are Python app-generation paths.
+Docs Viewer docs/search generation, catalogue search generation, catalogue prose rendering, and public-site preview/validation are Python-backed local tooling paths.
 
 ## Codespaces And Codex Cloud Expectations
 
@@ -167,7 +167,7 @@ For external command-line tools:
 
 ## Benefits
 
-- makes `requirements.txt` and the public-site builder stack easier to reason about
+- makes `requirements.txt` and the static-site validation stack easier to reason about
 - clarifies which dependencies are baseline versus workflow-specific
 - reduces ambiguity when cloud sessions install the same dependency set as local work
 

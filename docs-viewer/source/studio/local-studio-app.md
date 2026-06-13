@@ -16,7 +16,7 @@ This document defines the operational boundary for the Local Studio app server.
 
 Local Studio is intentionally separate from the public dotlineform.com site.
 
-- Use `bin/local-studio` for Studio authoring and `bin/public-site-preview` or `bin/public-site-build` for public static preview/build work.
+- Use `bin/local-studio` for Studio authoring and `bin/site-preview` or `bin/site-validate` for public static preview/validation work.
 
 The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
@@ -66,8 +66,8 @@ The active route shells are served by `bin/local-analytics` under `/analytics/..
 The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs are under `/analytics/api/data-sharing/...`.
 Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
 
-Public-site preview and public builds have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
-`bin/public-site-preview` builds and serves the static public artifact and does not start Studio services.
+Public-site preview and validation have explicit commands: `bin/site-preview` and `bin/site-validate`.
+`bin/site-preview` serves the checked-in `site/` root and does not start Studio services.
 
 ## Server Modules
 

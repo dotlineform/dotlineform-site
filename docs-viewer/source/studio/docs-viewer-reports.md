@@ -65,7 +65,7 @@ Report metadata lives in:
 
 The browser-visible projection used by the manage route is:
 
-- `assets/data/docs/reports.json`
+- `site/assets/data/docs/reports.json`
 
 The source registry describes report ids, titles, descriptions, default access policy, loader ids, and presets.
 The generated browser JSON is browser-visible when the manage route loads it and can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
@@ -137,7 +137,7 @@ Poor report candidates are workflows with writes, long-running operations, broad
 
 ## Files
 
-- `assets/data/docs/reports.json`
+- `site/assets/data/docs/reports.json`
 - `docs-viewer/config/reports/reports.json`
 - `docs-viewer/runtime/js/docs-viewer-management-document-reports.js`
 - `docs-viewer/runtime/js/docs-viewer-reports.js`

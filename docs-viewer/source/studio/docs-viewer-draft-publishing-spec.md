@@ -82,9 +82,9 @@ The preferred public-route design is compact generated docs payloads per scope.
 
 Direction:
 
-- keep `assets/data/docs/scopes/<scope>/index-tree.json` as the public navigation payload
-- keep `assets/data/docs/scopes/<scope>/recently-added.json` as the public recently-added payload
-- keep `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` as selected-document payloads
+- keep `site/assets/data/docs/scopes/<scope>/index-tree.json` as the public navigation payload
+- keep `site/assets/data/docs/scopes/<scope>/recently-added.json` as the public recently-added payload
+- keep `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` as selected-document payloads
 - omit `viewable` on viewable index rows and include `viewable: false` only for non-viewable rows
 - do not create a separate manage-only non-viewable-doc index
 - let the Docs Viewer filter rows based on route/mode state
@@ -108,7 +108,7 @@ Non-viewable docs should have generated per-doc payloads if manage mode can open
 
 Direction:
 
-- generate `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` for every source doc
+- generate `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` for every source doc
 - keep non-viewable payloads reachable only through manage-mode viewer behavior
 - do not expose non-viewable docs through public/default search initially
 

@@ -15,7 +15,7 @@ This document defines the current search-record shape for the docs-domain search
 It covers the current generated outputs for:
 
 - `docs-viewer/generated/search/studio/index.json` for local Studio scope
-- `assets/data/search/<scope>/index.json` for public library and analysis scopes
+- `site/assets/data/search/<scope>/index.json` for public library and analysis scopes
 
 ## Upstream Sources
 
@@ -117,7 +117,7 @@ Current builder entrypoint:
 
 These docs-domain search artifacts are separate from:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 The dedicated `/catalogue/search/` page currently uses only `catalogue`.
 The local and public artifacts are currently consumed by the shared Docs Viewer runtime for inline search.

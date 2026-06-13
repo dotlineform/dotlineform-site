@@ -14,7 +14,7 @@ It sits underneath the existing lightweight check framework rather than replacin
 
 The current test framework requires pytest for grouped Python profile checks.
 Python checks live under the owning app test directories, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
-`$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` remains the top-level runner because it also coordinates static public-site builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/admin/test-runs/`.
+`$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` remains the top-level runner because it also coordinates static-site validation, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/admin/test-runs/`.
 
 That structure should remain the source of truth for Codex close-out unless a future change explicitly replaces it.
 

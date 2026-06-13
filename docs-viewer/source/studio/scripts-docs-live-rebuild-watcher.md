@@ -34,8 +34,8 @@ It watches source roots only. It does not watch generated outputs under:
 
 - `docs-viewer/generated/docs/`
 - `docs-viewer/generated/search/`
-- `assets/data/docs/scopes/`
-- `assets/data/search/`
+- `site/assets/data/docs/scopes/`
+- `site/assets/data/search/`
 
 ## Default Command
 
@@ -103,7 +103,7 @@ That means a source change under one docs root keeps both:
 - the current scope docs-search artifact
 
 in sync without touching the other docs scopes.
-For public scopes, these are the working generated artifacts under `docs-viewer/generated/`; the watcher does not publish to `assets/data/`.
+For public scopes, these are the working generated artifacts under `docs-viewer/generated/`; the watcher does not publish to `site/assets/data/`.
 
 ## Change Types
 

@@ -30,11 +30,11 @@ Source and generated artifacts:
 - working docs search:
   - `docs-viewer/generated/search/<scope>/index.json`
 - published docs data:
-  - `assets/data/docs/scopes/<scope>/index-tree.json`
-  - `assets/data/docs/scopes/<scope>/recently-added.json`
-  - `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+  - `site/assets/data/docs/scopes/<scope>/index-tree.json`
+  - `site/assets/data/docs/scopes/<scope>/recently-added.json`
+  - `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
 - published docs search:
-  - `assets/data/search/<scope>/index.json`
+  - `site/assets/data/search/<scope>/index.json`
 - export configs:
   - `data-sharing/config/<scope>-export-configs.json`
   - `data-sharing/config/<scope>-export-configs.schema.json`
@@ -72,7 +72,7 @@ Design:
 ### Working And Published Roots
 
 Public scope source edits, live watcher rebuilds, and docs-management write follow-through rebuild working generated output under `docs-viewer/generated/`.
-Public routes read only the published snapshots under `assets/data/`.
+Public routes read only the published snapshots under `site/assets/data/`.
 
 Publishing is a local management action:
 
@@ -83,7 +83,7 @@ Publishing is a local management action:
 The v1 publish gate is local and file-based.
 It does not add persistent confirmation ids, rollback, unpublish, publish manifests, or durable publish summary artifacts.
 
-### `assets/data/docs/scopes/<scope>/index-tree.json`
+### `site/assets/data/docs/scopes/<scope>/index-tree.json`
 
 Purpose: compact navigation tree payload for the docs corpus
 
@@ -98,7 +98,7 @@ Current site mapping:
 - the nav/tree layer on `/<scope>/`
 - public/default `/<scope>/` hides docs with `viewable: false`; `/docs/?scope=<scope>&mode=manage` can show those generated docs for local management
 
-### `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+### `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
 
 Purpose: per-doc rendered payload for one Library doc
 
@@ -113,7 +113,7 @@ Current site mapping:
 
 Public by-id payloads do not expose management fields such as `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
 
-### `assets/data/docs/scopes/<scope>/recently-added.json`
+### `site/assets/data/docs/scopes/<scope>/recently-added.json`
 
 Purpose: small 'recently-added' payload for the public route.
 
@@ -129,7 +129,7 @@ Current site mapping:
 
 ## Search Data
 
-### `assets/data/search/<scope>/index.json`
+### `site/assets/data/search/<scope>/index.json`
 
 Purpose:
 

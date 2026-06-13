@@ -11,7 +11,7 @@ viewable: true
 This inventory is the starting point for config contract reviews.
 It lists source-controlled config files by app or domain and points to focused contract docs.
 
-Generated payloads such as `assets/data/docs/scopes/...`, `assets/data/search/.../index.json`, `assets/works/index/...`, `studio/data/generated/...`, and `_site/...` are not source config.
+Generated payloads such as `site/assets/data/docs/scopes/...`, `site/assets/data/search/.../index.json`, `site/assets/works/index/...`, `studio/data/generated/...`, and `_site/...` are not source config.
 They may be read at runtime, but they are builder outputs and belong in data-model or generated-payload docs.
 
 ## Review Contract
@@ -69,9 +69,9 @@ Every config contract review should answer:
 
 | file | role | edit class | contract doc |
 | --- | --- | --- | --- |
-| `public-site/config/public-site.json` | public static-site assembly config | maintainer-editable build config | - |
+| `site-tools/config/site-tools.json` | public static-site validation and site-level settings config | maintainer-editable validation/config file | - |
 | `_data/pipeline.json` | shared catalogue/media pipeline defaults | maintainer-editable build config | [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json) |
-| `assets/data/search/policy.json` | public catalogue search runtime policy | maintainer-editable runtime config | [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json) |
+| `site/assets/data/search/policy.json` | public catalogue search runtime policy | maintainer-editable runtime config | [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json) |
 | `studio/services/catalogue/search/build_config.json` | catalogue search build policy | maintainer-editable build config | [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json) |
 | `admin-app/checks/projection_contract.json` | projection contract audit rules | code infrastructure | [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
 | `admin-app/ui-catalogue/source/palette/palette.yml` | UI Catalogue palette source | maintainer-editable design config | [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) |

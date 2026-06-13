@@ -17,10 +17,10 @@ The current search build uses explicit domain-owned entrypoints:
 
 Current live search outputs:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 - `docs-viewer/generated/search/studio/index.json`
-- `assets/data/search/analysis/index.json`
-- `assets/data/search/library/index.json`
+- `site/assets/data/search/analysis/index.json`
+- `site/assets/data/search/library/index.json`
 
 Current build principles:
 
@@ -47,7 +47,7 @@ All current search artifacts use the same high-level top-level structure:
 
 Current shared build conventions:
 
-- outputs are written under `assets/data/search/<scope>/`
+- outputs are written under `site/assets/data/search/<scope>/`
 - records are generated at build time, not assembled in the browser
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing

@@ -59,7 +59,7 @@ Page-specific classes still own column templates, row actions, chips, and respon
 
 Current legacy Studio implementation lives in:
 
-- `assets/studio/css/studio.css`
+- `site/assets/studio/css/studio.css`
 
 Current demo implementation lives in:
 

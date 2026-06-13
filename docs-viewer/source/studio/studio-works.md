@@ -42,8 +42,8 @@ Supporting modules:
 
 Current data sources:
 
-- `assets/data/works_index.json`
-- `assets/data/series_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/data/series_index.json`
 - `studio/data/generated/activity/work-storage-index.json`
 
 Top-level structure:
@@ -128,8 +128,8 @@ Meaning:
 
 Primary CSS:
 
-- `assets/css/main.css`
-- `assets/studio/css/studio.css`
+- `site/assets/css/main.css`
+- `site/assets/studio/css/studio.css`
 
 Shared primitives used:
 

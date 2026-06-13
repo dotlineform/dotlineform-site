@@ -54,12 +54,21 @@ def scope_config(
         "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
     }
     if not include_scope_param:
-        config["publish_output"] = f"assets/data/docs/scopes/{scope_id}"
-        config["publish_search_output"] = f"assets/data/search/{scope_id}/index.json"
+        config["publish_output"] = f"site/assets/data/docs/scopes/{scope_id}"
+        config["publish_search_output"] = f"site/assets/data/search/{scope_id}/index.json"
     return config
 
 
 def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:
+    write_json(
+        root / "site-tools/config/site-tools.json",
+        {
+            "schema_version": "site_tools_config_v1",
+            "media": {
+                "base": "https://media.example.test",
+            },
+        },
+    )
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {

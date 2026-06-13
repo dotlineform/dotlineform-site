@@ -2,7 +2,7 @@
 doc_id: local-setup-toolchain
 title: Local Setup Toolchain
 added_date: 2026-05-19
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: local-setup
 ---
 # Local Setup Toolchain
@@ -20,7 +20,7 @@ Current external tools used by media workflows:
 - `ffmpeg`
 - `heif-convert` from `libheif`
 
-Public preview/build runs through the Python static builder in `public-site/build/`.
+Public preview serves the tracked `site/` root, and deploy validation runs through `site-tools/`.
 
 Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) as the dependency-role reference.
 
@@ -88,10 +88,10 @@ heif-convert --version
 sips --help | head -n 1
 ```
 
-Check the public static builder:
+Check the public static site validator:
 
 ```bash
-bin/public-site-build --destination /tmp/dlf-public-site-build --audit
+bin/site-validate
 ```
 
 ## Switching to the correct Python

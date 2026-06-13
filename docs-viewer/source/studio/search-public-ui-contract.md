@@ -37,7 +37,7 @@ Catalogue search:
 
 - owns the dedicated `/catalogue/search/` page
 - searches works, series, and moments
-- reads `assets/data/search/catalogue/index.json`
+- reads `site/assets/data/search/catalogue/index.json`
 - is entered from the Catalogue browse surface, currently `/series/`
 
 Docs search:

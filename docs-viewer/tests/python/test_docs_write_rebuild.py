@@ -499,8 +499,8 @@ def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
       "scope_id": "studio",
       "source": "docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
-      "output": "assets/data/docs/scopes/studio",
-      "search_output": "assets/data/search/studio/index.json",
+      "output": "site/assets/data/docs/scopes/studio",
+      "search_output": "site/assets/data/search/studio/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "dev-home"
@@ -514,7 +514,7 @@ def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
                 write_rebuild.rebuild_all_docs_outputs(repo_root)
             except ValueError as exc:
                 assert "manage-mode scope 'studio'" in str(exc)
-                assert "assets/data/docs/scopes" in str(exc)
+                assert "site/assets/data/docs/scopes" in str(exc)
             else:
                 raise AssertionError("Expected docs rebuild to reject manage-mode public generated roots")
     finally:

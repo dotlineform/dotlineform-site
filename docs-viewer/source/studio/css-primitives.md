@@ -14,9 +14,9 @@ The goal is not to freeze all visual design. The goal is to make repeated patter
 ## Rules
 
 - Fit UI to the relevant token set before adding route-local values.
-- Keep `assets/css/main.css` focused on public-site CSS and genuinely shared primitives.
-- Keep Studio route, editor, and shell classes out of `assets/css/main.css` unless the same selector is intentionally used by public pages too.
-- Do not add raw `font-size` or color literals to `assets/css/main.css` or Studio-owned CSS.
+- Keep `site/assets/css/main.css` focused on public-site CSS and genuinely shared primitives.
+- Keep Studio route, editor, and shell classes out of `site/assets/css/main.css` unless the same selector is intentionally used by public pages too.
+- Do not add raw `font-size` or color literals to `site/assets/css/main.css` or Studio-owned CSS.
 - Prefer extending an existing primitive before creating a new page-specific pattern.
 - If a new token is required, add it in the relevant public or Studio token layer, not inside a page block.
 - If two pages need the same visual shell, promote it to a shared primitive.
@@ -25,7 +25,7 @@ The goal is not to freeze all visual design. The goal is to make repeated patter
 
 ### Site tokens
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - typography:
   - `--text-xs`
@@ -58,13 +58,13 @@ Defined in `assets/css/main.css`:
   - `--container`
   - `--content-measure`
 
-Local Studio currently depends on these public-site tokens because Local Studio shells still load `assets/css/main.css` before `assets/studio/css/studio.css`.
+Local Studio currently depends on these public-site tokens because Local Studio shells still load `site/assets/css/main.css` before `site/assets/studio/css/studio.css`.
 The source-tree reorganization should replace that dependency with a Studio-owned base stylesheet that contains the font, size, spacing, layout, and truly shared primitive tokens Studio needs.
-After that split, `assets/css/main.css` should not retain Studio-only classes or tokens.
+After that split, `site/assets/css/main.css` should not retain Studio-only classes or tokens.
 
 ### Shared list tokens
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - `--list-thumb-size`
 - `--list-column-gap`
@@ -76,7 +76,7 @@ Defined in `assets/css/main.css`:
 
 ### Studio shell tokens
 
-Defined in `assets/studio/css/studio.css`:
+Defined in `site/assets/studio/css/studio.css`:
 
 - `--studio-radius-sm`
 - `--studio-radius-md`
@@ -94,7 +94,7 @@ Studio also defines its own palette/state tokens there for tag colors, surfaces,
 
 ### Site content shells
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - `.box`
   shared bordered content box
@@ -105,7 +105,7 @@ Defined in `assets/css/main.css`:
 
 ### Site metadata pattern
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - `.page__caption.page__metaList`
   unboxed metadata list used for work/work-detail style metadata blocks
@@ -120,7 +120,7 @@ This is the approved metadata baseline when listing work or series metadata:
 
 ### Site list patterns
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - `.index__*`
   generic index list shell
@@ -141,7 +141,7 @@ Do not create another list shell unless the existing three cannot express the la
 
 ### Shared site link behavior
 
-Defined in `assets/css/main.css`:
+Defined in `site/assets/css/main.css`:
 
 - `.index__link`
 - `.workIndexItem`
@@ -160,7 +160,7 @@ New list-link patterns should match this behavior.
 
 ### Studio surfaces and controls
 
-Defined in `assets/studio/css/studio.css`:
+Defined in `site/assets/studio/css/studio.css`:
 
 - `.tagStudio__panel`
 - `.tagStudio__input`
@@ -174,7 +174,7 @@ These are the approved shared Studio surface/control shells.
 
 ### Studio list and form patterns
 
-Defined in `assets/studio/css/studio.css`:
+Defined in `site/assets/studio/css/studio.css`:
 
 - `.tagStudioFilters__*`
 - `.tagStudioToolbar__*`
@@ -199,7 +199,7 @@ Page-specific list classes should usually only define column grids and cell inte
 
 ### Studio plain-button/reset controls
 
-Defined in `assets/studio/css/studio.css`:
+Defined in `site/assets/studio/css/studio.css`:
 
 - `.tagStudio__chipRemove`
 - `.tagStudio__selectedWorkBtn`

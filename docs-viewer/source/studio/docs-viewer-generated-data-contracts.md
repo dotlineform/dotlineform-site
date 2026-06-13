@@ -24,11 +24,11 @@ It separates public read-only route data from local/manage route data so payload
 | Scope kind | Docs root | Search root |
 | --- | --- | --- |
 | Public read-only working generated | `docs-viewer/generated/docs/<scope>/` | `docs-viewer/generated/search/<scope>/index.json` |
-| Public read-only published snapshot | `assets/data/docs/scopes/<scope>/` | `assets/data/search/<scope>/index.json` |
+| Public read-only published snapshot | `site/assets/data/docs/scopes/<scope>/` | `site/assets/data/search/<scope>/index.json` |
 | Manage/local | `docs-viewer/generated/docs/<scope>/` | `docs-viewer/generated/search/<scope>/index.json` |
 
 Public-scope builders and docs-management rebuild follow-through write only the working generated roots.
-The public route contract reads only the published snapshot roots under `assets/data/`.
+The public route contract reads only the published snapshot roots under `site/assets/data/`.
 Publishing is an explicit local management action that syncs the working docs/search payloads to the published snapshot roots after confirmation.
 
 ## Route Payload Contract
@@ -89,7 +89,7 @@ Manage mode can keep a richer metadata surface, but it should hydrate selected-d
 
 Search runtime reads the separate search payload through `search_index_url`, such as:
 
-- `assets/data/search/<scope>/index.json`
+- `site/assets/data/search/<scope>/index.json`
 - `docs-viewer/generated/search/<scope>/index.json`
 
 Search build inputs should not depend on retired public docs `index.json`.
@@ -102,7 +102,7 @@ Do not add `added_date` or `last_updated` to `index-tree.json` only to support t
 
 ## Public Flat `index.json` Retirement
 
-Public flat `assets/data/docs/scopes/<scope>/index.json` is retired from the Docs Viewer route contract.
+Public flat `site/assets/data/docs/scopes/<scope>/index.json` is retired from the Docs Viewer route contract.
 Public Docs Viewer routes do not publish or load it.
 The route contract is covered by:
 
@@ -126,5 +126,5 @@ Current verification covers:
 - generated-output fixtures for public tree, recently-added, and public by-id payload shape
 - builder projection tests for public tree/recent/by-id metadata omission and public flat-index removal
 - public `/library/` and `/analysis/` route smokes for `index-tree.json`, `recently-added.json`, selected by-id, and search requests
-- negative public smoke assertions that public routes do not request `assets/data/docs/scopes/<scope>/index.json`
+- negative public smoke assertions that public routes do not request `site/assets/data/docs/scopes/<scope>/index.json`
 - manage-route smoke assertions that generated reads use `index-tree`, selected payload, recently-added, and search endpoints without falling back to `/docs/generated/index`

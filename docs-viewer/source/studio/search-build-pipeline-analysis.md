@@ -16,14 +16,14 @@ viewable: true
 
 ### Current Output
 
-- `assets/data/search/analysis/index.json`
+- `site/assets/data/search/analysis/index.json`
 
 ### Current Source Input
 
 - `docs-viewer/source/analysis/**/*.md`
 
 The current Analysis search artifact is derived from source front matter through the configured scope source root.
-It no longer reads `assets/data/docs/scopes/analysis/index.json` or accepts `--source-index`.
+It no longer reads `site/assets/data/docs/scopes/analysis/index.json` or accepts `--source-index`.
 Rows with `viewable: false` are skipped so draft Analysis docs can be generated for manage-mode review without appearing in public/default search.
 
 ### Current Commands
@@ -72,4 +72,4 @@ Current builder behaviour for Analysis:
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Analysis docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
-- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/analysis/**/*.md` changes aligned with `assets/data/search/analysis/index.json`
+- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/analysis/**/*.md` changes aligned with `site/assets/data/search/analysis/index.json`

@@ -16,7 +16,7 @@ Route:
 
 The route shell is hosted by the local Studio app server.
 
-This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json` through the local catalogue service.
+This page edits one existing canonical moment metadata record from `site/assets/studio/data/catalogue/moments.json` through the local catalogue service.
 It also imports new draft moments from staged body-only Markdown, so moment creation, review, save, publish, and unpublish now live on one Studio page.
 
 ## Use This Page For
@@ -67,12 +67,12 @@ The page root `#catalogueMomentRoot` implements the shared Studio ready-state co
 - `POST /studio/api/catalogue/publication-preview`
 - `POST /studio/api/catalogue/publication-apply`
 
-`Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment JSON/search output, and updates `assets/data/moments_index.json`.
+`Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment JSON/search output, and updates `site/assets/data/moments_index.json`.
 
 The internal scoped public update rebuilds:
 
-- `assets/moments/index/<moment_id>.json`
-- `assets/data/moments_index.json`
+- `site/assets/moments/index/<moment_id>.json`
+- `site/assets/data/moments_index.json`
 - catalogue search
 - local moment media derivatives when the configured source image is available
 
@@ -93,13 +93,13 @@ The import flow:
 
 Runtime ownership:
 
-- `assets/studio/js/catalogue-moment-editor.js` owns route bootstrap, generated moment lookup reads, service availability, normal edit state construction, post-import opening, dirty-state orchestration, display/action/import/selection context wiring, and route-ready state.
-- `assets/studio/js/catalogue-moment-selection.js` owns Moment search matching, popup rendering, Open button resolution, popup click handling, and initial empty/focused/import route selection.
-- `assets/studio/js/catalogue-moment-actions.js` owns normal edit action workflow sequencing for save, build preview refresh, publication, delete, staged prose import, media refresh, activity context shaping, confirmation formatting, and public-update outcome handling.
-- `assets/studio/js/catalogue-moment-form.js` owns editable field rendering, readonly field rendering, field value reads/writes, readonly value clearing, and field validation message rendering.
-- `assets/studio/js/catalogue-moment-sections.js` owns normal edit summary rendering, readiness rendering, and build-impact text rendering.
-- `assets/studio/js/catalogue-moment-import.js` owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply transport sequencing, import summary/detail rendering, stale preview clearing, import control availability, and import activity context.
-- `assets/studio/js/catalogue-moment-fields.js` owns field definitions, id/filename normalization, draft reads, source-record shaping, and validation.
+- `site/assets/studio/js/catalogue-moment-editor.js` owns route bootstrap, generated moment lookup reads, service availability, normal edit state construction, post-import opening, dirty-state orchestration, display/action/import/selection context wiring, and route-ready state.
+- `site/assets/studio/js/catalogue-moment-selection.js` owns Moment search matching, popup rendering, Open button resolution, popup click handling, and initial empty/focused/import route selection.
+- `site/assets/studio/js/catalogue-moment-actions.js` owns normal edit action workflow sequencing for save, build preview refresh, publication, delete, staged prose import, media refresh, activity context shaping, confirmation formatting, and public-update outcome handling.
+- `site/assets/studio/js/catalogue-moment-form.js` owns editable field rendering, readonly field rendering, field value reads/writes, readonly value clearing, and field validation message rendering.
+- `site/assets/studio/js/catalogue-moment-sections.js` owns normal edit summary rendering, readiness rendering, and build-impact text rendering.
+- `site/assets/studio/js/catalogue-moment-import.js` owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply transport sequencing, import summary/detail rendering, stale preview clearing, import control availability, and import activity context.
+- `site/assets/studio/js/catalogue-moment-fields.js` owns field definitions, id/filename normalization, draft reads, source-record shaping, and validation.
 
 Local app migration:
 
@@ -110,7 +110,7 @@ Local app migration:
 Apply writes:
 
 - body-only prose to `_docs_catalogue/moments/<moment_id>.md`
-- draft moment metadata to `assets/studio/data/catalogue/moments.json`
+- draft moment metadata to `site/assets/studio/data/catalogue/moments.json`
 
 Import always forces source status to `draft`. It does not publish the moment and does not run the scoped public update. Use `Publish` on the opened draft record when the moment is ready.
 Successful apply also appends a unified Studio activity row for the `import moment` action with script purpose `import source data`.
@@ -125,10 +125,10 @@ If the preview has no blockers or validation errors, the page asks for confirmat
 The Studio delete removes:
 
 - the canonical moment metadata record through `GET /studio/api/catalogue/read?key=catalogue_moments`
-- `assets/moments/index/<moment_id>.json`
-- matching published moment thumbnails under `assets/moments/img/`
+- `site/assets/moments/index/<moment_id>.json`
+- matching published moment thumbnails under `site/assets/moments/img/`
 - matching repo-local staged media under `var/catalogue/media/moments/`
-- the moment entry from `assets/data/moments_index.json`
+- the moment entry from `site/assets/data/moments_index.json`
 - the catalogue search record, by rebuilding catalogue search after the delete
 
 It does not delete canonical prose under `_docs_catalogue/moments/`, canonical source images under `DOTLINEFORM_PROJECTS_BASE_DIR`, or remote media already uploaded outside the repo.

@@ -16,7 +16,7 @@ Route:
 
 The route shell is hosted by the local Studio app server.
 
-This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
+This page edits canonical work detail source records from `site/assets/studio/data/catalogue/work_details.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
 
 ## Current Scope
 
@@ -48,10 +48,10 @@ The public update remains work-scoped. Saving a published detail updates the par
 
 Implementation notes:
 
-- `assets/studio/js/catalogue-work-detail-editor.js` owns route bootstrap, state assembly, form and summary rendering, and save/build/publication/delete workflow coordination.
-- `assets/studio/js/catalogue-work-detail-form.js` owns form field rendering, readonly field rendering, label refresh, field value synchronization, enabled/disabled state, and field validation message rendering.
-- `assets/studio/js/catalogue-work-detail-selection.js` owns detail query parsing, search suggestions, single/bulk open flows, and initial `?detail=` / `?mode=new` route selection.
-- the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
+- `site/assets/studio/js/catalogue-work-detail-editor.js` owns route bootstrap, state assembly, form and summary rendering, and save/build/publication/delete workflow coordination.
+- `site/assets/studio/js/catalogue-work-detail-form.js` owns form field rendering, readonly field rendering, label refresh, field value synchronization, enabled/disabled state, and field validation message rendering.
+- `site/assets/studio/js/catalogue-work-detail-selection.js` owns detail query parsing, search suggestions, single/bulk open flows, and initial `?detail=` / `?mode=new` route selection.
+- the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `site/assets/studio/js/catalogue-work-detail-fields.js`.
 
 Local app migration:
 

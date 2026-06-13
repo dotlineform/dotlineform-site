@@ -156,11 +156,11 @@ Request behavior:
 - for work-detail deletes, removes generated detail artifacts, published thumbnails, repo-local staged media, and the deleted detail from the parent work runtime JSON
 - for series deletes, removes generated series artifacts, removes the series from affected work runtime/index records, removes the series tag-assignment row, updates recent/public indexes, and rebuilds catalogue search
 - for moment deletes, removes generated moment page/json artifacts, published thumbnails, and repo-local staged media
-- for moment deletes, removes the moment from `assets/data/moments_index.json` and rebuilds catalogue search so the search record disappears
+- for moment deletes, removes the moment from `site/assets/data/moments_index.json` and rebuilds catalogue search so the search record disappears
 - refreshes derived lookup payloads after non-dry-run writes
 - records one aggregated Studio Activity entry for the delete operation
 
-After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
+After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `site/assets/studio/data/catalogue_lookup/`.
 
 `POST /catalogue/publication-preview` expects:
 
@@ -197,7 +197,7 @@ Preview behavior:
 - runs deterministic generated-artifact cleanup for `unpublish`
 - returns `status: "public_update_failed"` when a source write succeeds but the internal public update fails
 - records Studio Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
-- moment `unpublish` also removes generated moment page/json artifacts, published thumbnails, repo-local staged media, the `assets/data/moments_index.json` entry, and the catalogue search record
+- moment `unpublish` also removes generated moment page/json artifacts, published thumbnails, repo-local staged media, the `site/assets/data/moments_index.json` entry, and the catalogue search record
 
 Standalone work publish remains stricter than series bootstrap publish: `work.publish` is blocked unless the work already belongs to at least one published series. Publishing a series is the bootstrap path for a new draft series with draft member works.
 

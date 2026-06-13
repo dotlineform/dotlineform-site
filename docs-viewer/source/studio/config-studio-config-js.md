@@ -64,7 +64,7 @@ What does not stay here:
 - Analytics tag metric and RAG scoring
   that lives in the Analytics app, not in Studio
 - dedicated `/catalogue/search/` policy parsing
-  that lives in `assets/js/search/search-policy.js`
+  that lives in `site/assets/js/search/search-policy.js`
 - local write transport
   that lives in `studio/app/frontend/js/studio-transport.js`
 - page-specific DOM/event logic

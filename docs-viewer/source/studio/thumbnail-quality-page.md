@@ -95,8 +95,8 @@ Write only missing preview images while refreshing the JSON:
 
 The page does not change:
 
-- `assets/works/img/`
-- `assets/work_details/img/`
+- `site/assets/works/img/`
+- `site/assets/work_details/img/`
 - production thumbnail configuration
 - catalogue source JSON
 - remote media storage

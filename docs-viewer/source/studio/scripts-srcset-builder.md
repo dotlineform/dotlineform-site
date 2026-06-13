@@ -16,7 +16,7 @@ bash scripts/make_srcset_images.sh
 
 The shell entrypoint remains stable, but it delegates to the shared config-driven Python implementation at `scripts/media/make_srcset_images.py`.
 
-The current Studio scoped build path for work and work-detail images no longer requires this standalone entrypoint. It stages source images under `var/catalogue/media/`, generates primary and thumbnail derivatives there, and copies thumbnails into `assets/` automatically. This script remains available for explicit/manual srcset runs and deprecated pipeline compatibility.
+The current Studio scoped build path for work and work-detail images no longer requires this standalone entrypoint. It stages source images under `var/catalogue/media/`, generates primary and thumbnail derivatives there, and copies thumbnails into `site/assets/` automatically. This script remains available for explicit/manual srcset runs and deprecated pipeline compatibility.
 
 Works example:
 

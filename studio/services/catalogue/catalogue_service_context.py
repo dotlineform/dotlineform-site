@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue import catalogue_activity as activity
+from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
 from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue import catalogue_prose_import as prose_import
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
@@ -44,7 +45,7 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
     return CatalogueWriteContext(
         repo_root=resolved_root,
         source_dir=source_dir,
-        lookup_dir=(resolved_root / "assets" / "studio" / "data" / "catalogue_lookup").resolve(),
+        lookup_dir=(resolved_root / DEFAULT_LOOKUP_DIR).resolve(),
         works_path=(source_dir / SOURCE_FILES["works"]).resolve(),
         work_details_path=(source_dir / SOURCE_FILES["work_details"]).resolve(),
         series_path=(source_dir / SOURCE_FILES["series"]).resolve(),

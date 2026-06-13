@@ -31,12 +31,12 @@ The main live rebuild path for these artifacts is the scoped JSON build flow des
 
 Current generated JSON files involved in this flow:
 
-- `assets/data/series_index.json`
-- `assets/data/moments_index.json`
-- `assets/data/works_index.json`
-- `assets/series/index/<series_id>.json`
-- `assets/works/index/<work_id>.json`
-- `assets/moments/index/<moment_id>.json`
+- `site/assets/data/series_index.json`
+- `site/assets/data/moments_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/series/index/<series_id>.json`
+- `site/assets/works/index/<work_id>.json`
+- `site/assets/moments/index/<moment_id>.json`
 
 ## 1. Catalogue Index
 
@@ -48,8 +48,8 @@ User-facing step:
 
 Current JSON used:
 
-- `assets/data/series_index.json`
-- `assets/data/moments_index.json`
+- `site/assets/data/series_index.json`
+- `site/assets/data/moments_index.json`
 
 Template:
 
@@ -59,7 +59,7 @@ How the page uses them:
 
 - `works` mode is built from `series_index.json`
 - `moments` mode is built from `moments_index.json`
-- selected-series state is restored from `?series=<series_id>` and uses `assets/data/works_index.json` for lightweight work-card metadata
+- selected-series state is restored from `?series=<series_id>` and uses `site/assets/data/works_index.json` for lightweight work-card metadata
 - moment card URLs are built with the shared public route helper as `/moments/?moment=<moment_id>`
 
 This route does not read per-series, per-work, or per-moment JSON records.
@@ -74,9 +74,9 @@ User-facing step:
 
 Current JSON used:
 
-- `assets/data/series_index.json`
-- `assets/data/works_index.json`
-- `assets/series/index/<series_id>.json`
+- `site/assets/data/series_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/series/index/<series_id>.json`
 
 Template:
 
@@ -86,7 +86,7 @@ How the page uses them:
 
 - `series_index.json` answers membership and ordering
 - `works_index.json` answers lightweight work-card metadata without fetching one JSON file per work
-- `assets/series/index/<series_id>.json` supplies prose content for the lower content block
+- `site/assets/series/index/<series_id>.json` supplies prose content for the lower content block
 - the page does not fetch per-work JSON for the series grid
 
 ## 3. Work Shell
@@ -100,8 +100,8 @@ User-facing step:
 
 Current JSON used:
 
-- `assets/works/index/<work_id>.json`
-- `assets/data/series_index.json`
+- `site/assets/works/index/<work_id>.json`
+- `site/assets/data/series_index.json`
 
 Template:
 
@@ -125,7 +125,7 @@ User-facing step:
 
 Current JSON used:
 
-- `assets/works/index/<work_id>.json`
+- `site/assets/works/index/<work_id>.json`
 
 Template:
 
@@ -134,7 +134,7 @@ Template:
 How the page works:
 
 - it derives `work_id` from the `detail_uid` query value or explicit `from_work` context
-- it fetches `assets/works/index/<work_id>.json`
+- it fetches `site/assets/works/index/<work_id>.json`
 - it finds the matching `detail_uid` in that work payload
 
 This route does not use a global detail index.
@@ -148,12 +148,12 @@ User-facing step:
 
 Current JSON used:
 
-- `assets/moments/index/<moment_id>.json`
+- `site/assets/moments/index/<moment_id>.json`
 
 Template and runtime:
 
 - `moments/index.md`
-- `assets/js/moment.js`
+- `site/assets/js/moment.js`
 
 The selected moment view is moment-local after route parsing. `/moments/` without a selected moment reads `moments_index.json` and renders a browse list.
 
@@ -165,7 +165,7 @@ Catalogue search is a separate surface:
 
 It reads:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 Search behavior, ranking, and index structure are documented in the [Search](/docs/?scope=studio&doc=search) section rather than repeated here.
 
@@ -176,29 +176,29 @@ The catalogue artifact families themselves are documented in [Catalogue Scope](/
 The implemented data flow is now:
 
 1. `/series/`
-   - uses `assets/data/series_index.json`
-   - uses `assets/data/moments_index.json`
-   - uses `assets/data/works_index.json` only for selected-series state
+   - uses `site/assets/data/series_index.json`
+   - uses `site/assets/data/moments_index.json`
+   - uses `site/assets/data/works_index.json` only for selected-series state
 
 2. `/series/?series=<series_id>`
-   - uses `assets/data/series_index.json`
-   - uses `assets/data/works_index.json`
+   - uses `site/assets/data/series_index.json`
+   - uses `site/assets/data/works_index.json`
 
 3. `/works/?work=<work_id>`
-   - uses `assets/works/index/<work_id>.json`
-   - uses `assets/data/series_index.json` for series context
+   - uses `site/assets/works/index/<work_id>.json`
+   - uses `site/assets/data/series_index.json` for series context
 
 4. `/work-details/?detail=<detail_uid>`
    - derives `work_id` from the `detail_uid` query value or explicit `from_work` context
-   - uses `assets/works/index/<work_id>.json`
+   - uses `site/assets/works/index/<work_id>.json`
 
 5. `/moments/`
-   - uses `assets/data/moments_index.json`
+   - uses `site/assets/data/moments_index.json`
    - renders the moments browse list
 
 6. `/moments/?moment=<moment_id>`
-   - uses `assets/moments/index/<moment_id>.json`
+   - uses `site/assets/moments/index/<moment_id>.json`
 
 7. `/catalogue/search/`
-   - uses `assets/data/search/catalogue/index.json`
+   - uses `site/assets/data/search/catalogue/index.json`
    - derives public catalogue result URLs in the browser from `kind` and `id`

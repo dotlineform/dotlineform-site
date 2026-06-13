@@ -29,7 +29,7 @@ Current catalogue search behavior:
 - `--only-doc-ids` is refused for `catalogue`
 - `--only-records` supports additive catalogue inserts for `work`, `series`, and `moment`
 - `scripts/search/build_config.json` marks the catalogue scope with `targeted_policy: "additive_only"` and `targeted_operations: ["create"]`
-- generated catalogue search remains one combined artifact at `assets/data/search/catalogue/index.json`
+- generated catalogue search remains one combined artifact at `site/assets/data/search/catalogue/index.json`
 
 A full rebuild remains the operational escape hatch for edits, removals, work-detail changes, and ambiguous dependency states.
 

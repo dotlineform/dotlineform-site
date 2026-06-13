@@ -70,7 +70,7 @@ def copy_scripts_fixture(target_root: Path) -> None:
         REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
         target_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
     )
-    reports_path = REPO_ROOT / "assets" / "data" / "docs" / "reports.json"
+    reports_path = REPO_ROOT / "site" / "assets" / "data" / "docs" / "reports.json"
     if reports_path.exists():
         (target_root / "assets" / "data" / "docs").mkdir(parents=True, exist_ok=True)
         shutil.copy2(reports_path, target_root / "assets" / "data" / "docs" / "reports.json")
@@ -100,7 +100,7 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
-                        "repo_assets_path_prefix": "assets/docs/studio",
+                        "repo_assets_path_prefix": "site/assets/docs/studio",
                         "repo_assets_public_path_prefix": "/assets/docs/studio",
                     },
                 },
@@ -110,8 +110,8 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "meta": "public scope",
                     "source": "docs-viewer/source/library",
                     "media_path_prefix": "docs/library",
-                    "output": "assets/data/docs/scopes/library",
-                    "search_output": "assets/data/search/library/index.json",
+                    "output": "site/assets/data/docs/scopes/library",
+                    "search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -122,7 +122,7 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
-                        "repo_assets_path_prefix": "assets/docs/library",
+                        "repo_assets_path_prefix": "site/assets/docs/library",
                         "repo_assets_public_path_prefix": "/assets/docs/library",
                     },
                 },
@@ -132,8 +132,8 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "meta": "public scope",
                     "source": "docs-viewer/source/analysis",
                     "media_path_prefix": "docs/analysis",
-                    "output": "assets/data/docs/scopes/analysis",
-                    "search_output": "assets/data/search/analysis/index.json",
+                    "output": "site/assets/data/docs/scopes/analysis",
+                    "search_output": "site/assets/data/search/analysis/index.json",
                     "viewer_base_url": "/analysis/",
                     "include_scope_param": False,
                     "default_doc_id": "analysis",
@@ -144,7 +144,7 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
-                        "repo_assets_path_prefix": "assets/docs/analysis",
+                        "repo_assets_path_prefix": "site/assets/docs/analysis",
                         "repo_assets_public_path_prefix": "/assets/docs/analysis",
                     },
                 },
@@ -341,7 +341,7 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
         },
     )
     write_json(output_root / "references" / "index.json", {"targets": []})
-    write_json(repo_root / "assets" / "data" / "search" / scope / "index.json", {"entries": []})
+    write_json(repo_root / "site" / "assets" / "data" / "search" / scope / "index.json", {"entries": []})
 
 
 def patch_rebuilds(repo_root: Path) -> None:

@@ -10,7 +10,7 @@ viewable: true
 
 ## Shared Catalogue Indexes
 
-### `assets/data/series_index.json`
+### `site/assets/data/series_index.json`
 
 Purpose:
 
@@ -36,7 +36,7 @@ Why it exists separately:
 - series list and membership data is needed in multiple places
 - pages should not fetch every per-series record just to build a grid or navigation context
 
-### `assets/data/works_index.json`
+### `site/assets/data/works_index.json`
 
 Purpose:
 
@@ -58,7 +58,7 @@ Why it stays lightweight:
 - the work page’s full detail/prose payload is much larger
 - series grids need fast bulk access to many works at once
 
-### `assets/data/recent_index.json`
+### `site/assets/data/recent_index.json`
 
 Purpose:
 
@@ -83,7 +83,7 @@ Why it is a separate derived artifact:
 - snapshot titles and captions intentionally do not track later title edits or work-to-series moves
 - deleted or unpublished targets can be pruned centrally by the generator when the catalogue rebuilds
 
-### `assets/data/moments_index.json`
+### `site/assets/data/moments_index.json`
 
 Purpose:
 
@@ -106,7 +106,7 @@ Why it is separate from the per-moment record:
 
 ## Per-Record Catalogue Payloads
 
-### `assets/series/index/<series_id>.json`
+### `site/assets/series/index/<series_id>.json`
 
 Purpose:
 
@@ -118,7 +118,7 @@ Current content families:
 - rendered prose as `content_html`
 
 Membership and thumbnail selection do not live in this payload. Public list and
-grid contexts should read `assets/data/series_index.json` instead.
+grid contexts should read `site/assets/data/series_index.json` instead.
 
 Current site mapping:
 
@@ -129,7 +129,7 @@ Why it exists:
 - the page needs prose and enough series metadata to update the local header
 - shared membership and card context belong in the aggregate index so consumers do not fetch every per-series record
 
-### `assets/works/index/<work_id>.json`
+### `site/assets/works/index/<work_id>.json`
 
 Purpose:
 
@@ -154,7 +154,7 @@ Why it is the most important catalogue record:
 - avoiding a separate global detail index reduces duplication and keeps detail ordering local to the work that owns it
 - work prose is optional, so the record still exists even when `_docs_catalogue/works/<work_id>.md` is missing
 
-### `assets/moments/index/<moment_id>.json`
+### `site/assets/moments/index/<moment_id>.json`
 
 Purpose:
 
@@ -176,7 +176,7 @@ Why it exists:
 
 ## Catalogue Search Model
 
-### `assets/data/search/catalogue/index.json`
+### `site/assets/data/search/catalogue/index.json`
 
 Purpose:
 

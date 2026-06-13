@@ -10,7 +10,7 @@ viewable: true
 
 Config file:
 
-- `assets/data/search/policy.json`
+- `site/assets/data/search/policy.json`
 
 ## Scope
 
@@ -31,11 +31,11 @@ Current responsibilities include:
 
 Current runtime path:
 
-1. `assets/js/catalogue-search.js` imports `assets/js/search/search-policy.js`
-2. `assets/js/catalogue-search.js` loads `/assets/data/search/policy.json` directly
-3. `assets/js/catalogue-search.js` uses the Catalogue policy entry to resolve labels, back links, messages, and the static search index path
+1. `site/assets/js/catalogue-search.js` imports `site/assets/js/search/search-policy.js`
+2. `site/assets/js/catalogue-search.js` loads `/assets/data/search/policy.json` directly
+3. `site/assets/js/catalogue-search.js` uses the Catalogue policy entry to resolve labels, back links, messages, and the static search index path
 
-The policy helpers in `assets/js/search/search-policy.js` then expose:
+The policy helpers in `site/assets/js/search/search-policy.js` then expose:
 
 - runtime behavior values
 - per-scope UI policy

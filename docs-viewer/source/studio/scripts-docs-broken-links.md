@@ -55,8 +55,8 @@ Inputs:
 
 - `docs-viewer/generated/docs/studio/index-tree.json`
 - `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
-- `assets/data/docs/scopes/library/index-tree.json`
-- `assets/data/docs/scopes/library/by-id/<doc_id>.json`
+- `site/assets/data/docs/scopes/library/index-tree.json`
+- `site/assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
 Model:
 

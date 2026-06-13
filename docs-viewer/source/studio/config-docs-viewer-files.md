@@ -62,5 +62,5 @@ The cleanup review should keep these boundaries strict:
 - keep management-only capabilities absent from public route config
 - keep source scope config separate from generated default browser config
 - update builder tests when a source scope config change should regenerate defaults
-- keep report source metadata in `docs-viewer/config/reports/reports.json`; `assets/data/docs/reports.json` is the browser-visible projection
+- keep report source metadata in `docs-viewer/config/reports/reports.json`; `site/assets/data/docs/reports.json` is the browser-visible projection
 - the 2026-06-03 cleanup review found no active owner docs that still describe Docs Viewer status, scope, or UI text config as living in Studio config; historical request docs remain historical context

@@ -30,10 +30,10 @@ def write_repo_marker(repo_root: Path) -> None:
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
-    original_env = {key: os.environ.get(key) for key in ("PUBLIC_SITE_HOST", "PUBLIC_SITE_PORT", "PUBLIC_SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
-    os.environ["PUBLIC_SITE_HOST"] = "127.0.0.1"
-    os.environ["PUBLIC_SITE_PORT"] = "4000"
-    os.environ.pop("PUBLIC_SITE_PREVIEW_BASE", None)
+    original_env = {key: os.environ.get(key) for key in ("SITE_HOST", "SITE_PORT", "SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
+    os.environ["SITE_HOST"] = "127.0.0.1"
+    os.environ["SITE_PORT"] = "4000"
+    os.environ.pop("SITE_PREVIEW_BASE", None)
     os.environ.pop("PRODUCTION_SITE_BASE", None)
     try:
         payload = runtime_config(REPO_ROOT, "test-version")
@@ -266,7 +266,7 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        public_css = repo_root / "assets" / "css" / "main.css"
+        public_css = repo_root / "site" / "assets" / "css" / "main.css"
         studio_css = repo_root / "studio" / "app" / "assets" / "css" / "studio.css"
         for path in (public_css, studio_css):
             path.parent.mkdir(parents=True, exist_ok=True)

@@ -63,7 +63,7 @@ Optional route detail attributes:
 
 The shared implementation lives in:
 
-- `assets/studio/js/studio-route-state.js`
+- `site/assets/studio/js/studio-route-state.js`
 
 It exports:
 
@@ -104,7 +104,7 @@ The Docs Import modal mirrors the same helper behavior inside `docs-viewer/runti
 
 Static landing and reference routes use:
 
-- `assets/studio/js/studio-static-route.js`
+- `site/assets/studio/js/studio-static-route.js`
 
 Their route roots declare:
 

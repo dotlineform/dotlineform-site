@@ -23,8 +23,8 @@ Current outputs:
 
 - `docs-viewer/generated/search/studio/index.json`
 - `docs-viewer/generated/search/tmp/index.json`
-- `assets/data/search/library/index.json`
-- `assets/data/search/analysis/index.json`
+- `site/assets/data/search/library/index.json`
+- `site/assets/data/search/analysis/index.json`
 
 Docs Viewer search is separate from Catalogue search.
 It does not index works, series, moments, or public catalogue route state.

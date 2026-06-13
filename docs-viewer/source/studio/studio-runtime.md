@@ -109,7 +109,7 @@ Analytics and Data Sharing route controllers now live under `analytics-app/app/f
 Retired catalogue create routes:
 
 - `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are no longer published Studio pages.
-- The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
+- The old standalone controllers `site/assets/studio/js/catalogue-new-work-editor.js`, `site/assets/studio/js/catalogue-new-work-detail-editor.js`, and `site/assets/studio/js/catalogue-new-series-editor.js` have been removed.
 - Active create behavior now lives in `studio/app/frontend/js/catalogue-work-editor.js`, `studio/app/frontend/js/catalogue-work-detail-editor.js`, and `studio/app/frontend/js/catalogue-series-editor.js`.
 
 Studio controller splits that are already live:

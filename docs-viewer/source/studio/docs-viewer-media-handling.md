@@ -62,7 +62,7 @@ Docs Import currently recognizes three storage modes:
 | `r2_upload` | Reserved in config, but not operational. |
 
 The current site scopes use `staging_manual`.
-Portable installs without a remote media workflow can choose `repo_assets` when they want imported media to land inside the repo under `assets/docs/<scope>/`.
+Portable installs without a remote media workflow can choose `repo_assets` when they want imported media to land inside the repo under `site/assets/docs/<scope>/`.
 
 ## Media Tokens
 

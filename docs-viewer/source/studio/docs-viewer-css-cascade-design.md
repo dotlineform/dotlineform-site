@@ -21,7 +21,7 @@ viewable: true
 
 The intended cascade for public routes is:
 
-1. host layout stylesheet, currently `assets/css/main.css`
+1. host layout stylesheet, currently `site/assets/css/main.css`
 2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
 
 The intended cascade for local or standalone management routes is:
@@ -71,7 +71,7 @@ The `content` class is intentional. It lets generated markdown output inherit th
 - rendered Markdown code blocks should preserve code whitespace and use horizontal overflow when needed
 - tables may still scroll horizontally when needed
 
-It should not restyle public host page chrome, override public `assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report, import, source-editor, scope-lifecycle, settings, management-shell, or status mutation/menu selectors.
+It should not restyle public host page chrome, override public `site/assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report, import, source-editor, scope-lifecycle, settings, management-shell, or status mutation/menu selectors.
 
 ## Rendered Table Defaults
 
@@ -152,7 +152,7 @@ This keeps three override levels:
 ## Applied Extraction State
 
 The reusable Docs Viewer browser CSS now lives under `docs-viewer/static/css/`.
-The public stylesheet extraction moved out of `assets/css/main.css`:
+The public stylesheet extraction moved out of `site/assets/css/main.css`:
 
 - all `.docsViewer*` shell and component rules that are part of the viewer
 - viewer-specific search, bookmark, status, and result styles

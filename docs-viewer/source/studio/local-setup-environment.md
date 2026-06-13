@@ -43,9 +43,9 @@ Common local app runner variables:
 - `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, `ADMIN_APP_ACCESS_LOG`
 - `ANALYTICS_APP_HOST`, `ANALYTICS_APP_PORT`, `ANALYTICS_APP_ACCESS_LOG`
 - `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`
-- `PUBLIC_SITE_ENABLED`, `PUBLIC_SITE_HOST`, `PUBLIC_SITE_PORT`, `PUBLIC_SITE_CONFIG`, `PUBLIC_SITE_LIVERELOAD`
+- `SITE_ENABLED`, `SITE_HOST`, `SITE_PORT`, `SITE_ROOT`, `SITE_PREVIEW_BASE`
 
-`bin/local-all` also reads `PUBLIC_SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ADMIN_APP_ENABLED`, and `ANALYTICS_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
+`bin/local-all` also reads `SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ADMIN_APP_ENABLED`, and `ANALYTICS_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
 
 Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 

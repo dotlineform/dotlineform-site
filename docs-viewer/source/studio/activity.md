@@ -18,7 +18,7 @@ The Activity page `/admin/activity/` is the unified activity report for local au
 - Studio: catalogue editor: save/create/delete/publication actions, workbook import apply, moment import apply, project-state report generation.
 - Docs Viewer: docs source import, broken-links audit.
 - Analytics: series tag saves/imports, tag registry writes, and tag alias writes, Data Sharing package/apply actions.
-Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `assets/studio/data/activity_contract.json`.
+Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `site/assets/studio/data/activity_contract.json`.
 The retired split source-side and build-side report pages have been removed; this is the only active unified activity report.
 
 ## Route Ready State

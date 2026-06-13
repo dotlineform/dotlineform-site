@@ -29,9 +29,9 @@ Lookup payloads do not include full-source `record_hash` values. Studio save end
 
 Canonical write ownership remains with:
 
-- `assets/studio/data/catalogue/works.json`
-- `assets/studio/data/catalogue/work_details.json`
-- `assets/studio/data/catalogue/series.json`
+- `site/assets/studio/data/catalogue/works.json`
+- `site/assets/studio/data/catalogue/work_details.json`
+- `site/assets/studio/data/catalogue/series.json`
 
 ## Optional Flags
 
@@ -45,16 +45,16 @@ Without `--write`, the script prints the export plan only.
 
 Root lookup files:
 
-- `assets/studio/data/catalogue_lookup/meta.json`
-- `assets/studio/data/catalogue_lookup/work_search.json`
-- `assets/studio/data/catalogue_lookup/series_search.json`
-- `assets/studio/data/catalogue_lookup/work_detail_search.json`
+- `site/assets/studio/data/catalogue_lookup/meta.json`
+- `site/assets/studio/data/catalogue_lookup/work_search.json`
+- `site/assets/studio/data/catalogue_lookup/series_search.json`
+- `site/assets/studio/data/catalogue_lookup/work_detail_search.json`
 
 Focused record lookup files:
 
-- `assets/studio/data/catalogue_lookup/works/<work_id>.json`
-- `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
-- `assets/studio/data/catalogue_lookup/series/<series_id>.json`
+- `site/assets/studio/data/catalogue_lookup/works/<work_id>.json`
+- `site/assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
+- `site/assets/studio/data/catalogue_lookup/series/<series_id>.json`
 
 Work lookup `detail_sections` group details by `section_id`, display `section_title`, and preserve section `sort_order`. Detail summaries include `details_subfolder` and `project_filename` so Studio can reconstruct source-image edit paths without treating public section labels as media paths.
 

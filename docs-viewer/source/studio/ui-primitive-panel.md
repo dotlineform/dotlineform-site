@@ -48,7 +48,7 @@ The panel primitive should:
 
 Current legacy Studio implementation lives in:
 
-- `assets/studio/css/studio.css`
+- `site/assets/studio/css/studio.css`
 
 Current demo implementation lives in:
 

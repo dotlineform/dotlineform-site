@@ -121,8 +121,8 @@ Important builder consequence:
 The docs builder writes scope-owned viewer data under:
 
 - `docs-viewer/generated/docs/studio/`
-- `assets/data/docs/scopes/analysis/`
-- `assets/data/docs/scopes/library/`
+- `site/assets/data/docs/scopes/analysis/`
+- `site/assets/data/docs/scopes/library/`
 
 At a high level, each scope currently has:
 

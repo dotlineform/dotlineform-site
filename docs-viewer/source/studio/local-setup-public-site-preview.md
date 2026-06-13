@@ -2,7 +2,7 @@
 doc_id: local-setup-public-site-preview
 title: Local Setup Public Site Preview
 added_date: 2026-05-23
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: local-setup
 ---
 # Local Setup Public Site Preview
@@ -10,67 +10,64 @@ parent_id: local-setup
 The public site and Local Studio use separate commands.
 
 Use `bin/local-studio` for Studio services.
-Use `bin/public-site-preview` or `bin/public-site-build` for public-site static work.
+Use `bin/site-preview` for public-site static preview work and `bin/site-validate` for deploy-root validation.
 
-## Preview versus build
+## Preview versus validation
 
-`bin/public-site-preview` builds the static artifact and serves it with Python's HTTP server.
-It is the normal command when you want to open the public site in a browser while editing public route renderers, CSS, JavaScript, public assets, generated public payloads, or public Docs Viewer runtime/config files.
+`bin/site-preview` validates the checked-in static site root and serves `site/` with Python's HTTP server.
+It is the normal command when you want to open the public site in a browser while editing public route HTML, CSS, JavaScript, public assets, generated public payloads, or public Docs Viewer runtime/config files.
 
 ```bash
-bin/public-site-preview
+bin/site-preview
 ```
 
-The preview command runs the static builder first:
+The preview command runs validation first:
 
 ```bash
-$HOME/miniconda3/bin/python3 public-site/build/build_site.py --destination _public_site --audit
+bin/site-validate --site-root site
 ```
 
-Then it serves `_public_site/` at `http://127.0.0.1:4000/`.
+Then it serves `site/` at `http://127.0.0.1:4000/`.
 
-`bin/public-site-build` runs the same builder and exits.
-Use it when you want to produce or verify the built site output without keeping a local preview server running.
+`bin/site-validate` runs the same deploy-root validation and exits.
+Use it when you want to verify the checked-in static site without keeping a local preview server running.
 
 ```bash
-bin/public-site-build --destination /tmp/dlf-public-site-build --audit
+bin/site-validate
 ```
 
 ## CSS and runtime changes
 
-The static preview command rebuilds once at startup.
-After changing public CSS, JavaScript, route renderer code, public config, or generated public payloads, restart `bin/public-site-preview` or rerun `bin/public-site-build`.
+The static preview command serves files directly from `site/`.
+After changing public CSS, JavaScript, route HTML, site-tools config, or generated public payloads, refresh the browser and rerun `bin/site-validate` when deploy readiness matters.
 
 Browser cache can hide a CSS or JavaScript update; hard refresh if the page still shows the old assets.
 
-## Artifact boundary
+## Site root boundary
 
-Only files copied or rendered into the configured destination are part of the public artifact.
-`public-site/config/public-site.json` owns the public file/tree allowlists, required artifact checks, denied source paths, and public runtime config values.
+`site/` is the tracked static deploy root.
+Public browser URLs such as `/assets/...` resolve inside that root, so their filesystem paths live under `site/assets/...`.
 
-Generated local output stays untracked:
-
-- `_public_site/` for local preview output
-- `/tmp/dlf-public-site-build` or another temporary destination for isolated checks
+`site-tools/config/site-tools.json` owns deploy-root validation requirements and durable site-level settings used by local Python tooling.
 
 ## Wrapper defaults
 
-The wrapper:
+The preview wrapper:
 
 - changes into the repo root
 - loads `var/local/site.env` when present
-- uses `PUBLIC_SITE_PYTHON`, defaulting to `$HOME/miniconda3/bin/python3` when available
-- uses `PUBLIC_SITE_HOST`, defaulting to `127.0.0.1`
-- uses `PUBLIC_SITE_PORT`, defaulting to `4000`
-- uses `PUBLIC_SITE_DESTINATION`, defaulting to `_public_site`
-- runs the artifact audit unless `--no-audit` is passed
+- uses `SITE_PYTHON`, defaulting to `$HOME/miniconda3/bin/python3` when available
+- uses `SITE_HOST`, defaulting to `127.0.0.1`
+- uses `SITE_PORT`, defaulting to `4000`
+- uses `SITE_ROOT`, defaulting to `site`
+- runs validation unless `--no-validate` is passed
 
 Examples:
 
 ```bash
-bin/public-site-preview --port 4010
-bin/public-site-preview --destination /tmp/dlf-public-site-preview
-bin/public-site-preview --no-audit
+bin/site-preview --port 4010
+bin/site-preview --site-root site
+bin/site-preview --no-validate
 ```
 
 The preview server is a static HTTP server. It does not watch files, run LiveReload, or start Local Studio services.

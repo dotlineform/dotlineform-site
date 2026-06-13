@@ -61,7 +61,7 @@ The links should remain visible and usable while metrics load.
 
 Current implementation lives in:
 
-- `assets/css/main.css`
+- `site/assets/css/main.css`
 
 Current demo implementation lives in:
 

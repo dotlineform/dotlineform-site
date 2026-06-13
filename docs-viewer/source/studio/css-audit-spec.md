@@ -25,7 +25,7 @@ Static and heuristic checks only (no browser required).
 
 Included:
 
-- selector inventory from `assets/css/**/*.css`
+- selector inventory from `site/assets/css/**/*.css`
 - usage inventory across templates/pages (`_layouts`, `_includes`, `*.md`, `*.html`)
 - unused selector detection (confidence-tagged)
 - undefined class usage in templates
@@ -43,14 +43,14 @@ Excluded (future phase):
 
 ## Inputs
 
-- CSS: `assets/css/**/*.css`
+- CSS: `site/assets/css/**/*.css`
 - templates/content:
   - `_layouts/**/*`
   - `_includes/**/*`
   - root `*.md`, `*.html`
   - section index pages (e.g. `works/index.md`, `work_details/index.md`)
 - optional JS hints:
-  - `assets/js/**/*.js`
+  - `site/assets/js/**/*.js`
   - inline scripts for `classList.add/remove/toggle`
 
 ## Confidence Model

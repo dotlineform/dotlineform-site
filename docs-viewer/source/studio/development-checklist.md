@@ -108,8 +108,8 @@ Toolchain basics:
 
 - run project commands from `dotlineform-site/`
 - use the configured Python interpreter for Python entrypoints and checks
-- use `bin/public-site-build --destination <path> --audit` for public static-site verification
-- if `bin/public-site-preview` is already running, verify one-off builds against a separate temporary destination rather than the default `_public_site/`
+- use `bin/site-validate` for public static-site deploy-root verification
+- if `bin/site-preview` is already running, refresh the browser after editing checked-in `site/` files
 
 When sweeping for stale references:
 

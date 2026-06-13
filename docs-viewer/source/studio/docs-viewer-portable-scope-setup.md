@@ -13,7 +13,7 @@ viewable: true
 Use this when adding a scope that behaves like the current `library` scope:
 a public read-only route plus local management through `/docs/`.
 
-For a repo-tracked manage-mode-only scope, do not use the public `assets/data/` generated roots.
+For a repo-tracked manage-mode-only scope, do not use the public `site/assets/data/` generated roots.
 Use the committed manage-mode procedure below instead.
 
 ### 1. Choose Scope Values
@@ -26,8 +26,8 @@ Decide:
 - import media storage: usually `repo_assets` for a new portable install without remote media
 - working generated docs output: `docs-viewer/generated/docs/research`
 - working generated search output: `docs-viewer/generated/search/research/index.json`
-- published docs output: `assets/data/docs/scopes/research`
-- published search output: `assets/data/search/research/index.json`
+- published docs output: `site/assets/data/docs/scopes/research`
+- published search output: `site/assets/data/search/research/index.json`
 - read-only route: for example `/research/`
 - root doc id: for example `research`
 
@@ -54,8 +54,8 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "media_path_prefix": "docs/research",
   "output": "docs-viewer/generated/docs/research",
   "search_output": "docs-viewer/generated/search/research/index.json",
-  "publish_output": "assets/data/docs/scopes/research",
-  "publish_search_output": "assets/data/search/research/index.json",
+  "publish_output": "site/assets/data/docs/scopes/research",
+  "publish_search_output": "site/assets/data/search/research/index.json",
   "viewer_base_url": "/research/",
   "include_scope_param": false,
   "default_doc_id": "research",
@@ -66,7 +66,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "allow_unresolved_parent_ids": true,
   "import_media_storage": {
     "storage_mode": "repo_assets",
-    "repo_assets_path_prefix": "assets/docs/research",
+    "repo_assets_path_prefix": "site/assets/docs/research",
     "repo_assets_public_path_prefix": "/assets/docs/research"
   }
 }
@@ -74,12 +74,12 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
-Public read-only scopes use `docs-viewer/generated/` as their working output roots and separate `assets/data/` publish roots.
-Manage-mode scopes use only `docs-viewer/generated/` roots, and the builders reject manage-mode configs that point generated docs/search output at public `assets/data/` roots.
+Public read-only scopes use `docs-viewer/generated/` as their working output roots and separate `site/assets/data/` publish roots.
+Manage-mode scopes use only `docs-viewer/generated/` roots, and the builders reject manage-mode configs that point generated docs/search output at public `site/assets/data/` roots.
 
 Running `./docs-viewer/build/build_docs.py --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to public route config after the docs build refreshes the config and generated docs payloads.
-`repo_assets` makes Docs Import copy imported images and files below `assets/docs/research/` and write literal `/assets/docs/research/...` links.
+`repo_assets` makes Docs Import copy imported images and files below `site/assets/docs/research/` and write literal `/assets/docs/research/...` links.
 Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
 
 ### New Scope Action Status
@@ -91,7 +91,7 @@ The stale path still plans a legacy Markdown route stub; the current public site
 ### 4. Add The Public Static Route
 
 Add a public Docs Viewer route shell to the Python static-site builder rather than creating a Markdown route file.
-Current public Docs Viewer route shells are rendered by `public-site/build/public_site_builder/routes.py` through `render_docs_route()`.
+Current public Docs Viewer route shells are checked-in static HTML under `site/`.
 
 The route must also be represented in browser-safe route config:
 
@@ -118,7 +118,7 @@ The route config record sets:
 - `config_urls.docs_viewer`: `/docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `config_urls.ui_text`: `/docs-viewer/config/ui-text/public.json`
 
-Public-site config also needs to include the new public docs/search assets and the route artifact in the appropriate `public_files`, `public_trees`, and audit lists in `public-site/config/public-site.json`.
+Site validation config also needs to include required public docs/search assets and route files in `site-tools/config/site-tools.json` when they are deploy-critical.
 
 Read-only canonical URL behavior:
 
@@ -172,7 +172,7 @@ The Docs Viewer search builder derives its input and output paths from that scop
 
 - input docs tree: `docs-viewer/generated/docs/<scope>/index-tree.json`
 - working search output: `docs-viewer/generated/search/<scope>/index.json`
-- published search output: `assets/data/search/<scope>/index.json`
+- published search output: `site/assets/data/search/<scope>/index.json`
 
 Then build search with:
 
@@ -206,8 +206,8 @@ After publishing, the public route should be able to fetch:
 
 Run the Docs Viewer service for management.
 Docs management is served through `DOCS_VIEWER_BASE_URL`; Local Studio only links to that peer service.
-The project needs configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, public-site builder config under `public-site/config/`, and the Python dependencies used by those scripts.
-Public-site preview/build parity uses the Python static builder through `bin/public-site-build` and `bin/public-site-preview`.
+The project needs configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, `site-tools/config/site-tools.json`, and the Python dependencies used by those scripts.
+Public-site preview/validation parity uses `bin/site-validate` and `bin/site-preview`.
 
 Then open:
 
@@ -269,7 +269,7 @@ Scope config example:
   "allow_unresolved_parent_ids": false,
   "import_media_storage": {
     "storage_mode": "staging_manual",
-    "repo_assets_path_prefix": "assets/docs/notes",
+    "repo_assets_path_prefix": "site/assets/docs/notes",
     "repo_assets_public_path_prefix": "/assets/docs/notes"
   }
 }
@@ -293,7 +293,7 @@ After this, the local Docs Viewer service should be able to fetch:
 - `/docs-viewer/generated/search/notes/index.json`
 
 Keep the generated JSON under `docs-viewer/generated/` tracked when the scope is committed.
-Do not place committed manage-mode generated runtime payloads under `assets/data/docs/scopes/` or `assets/data/search/`; those are public static payload roots.
+Do not place committed manage-mode generated runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`; those are public static payload roots.
 
 Open:
 

@@ -45,16 +45,16 @@ Existing public read-only scopes use working generated outputs under:
 
 and published snapshot outputs under:
 
-- `assets/data/docs/scopes/<scope>/`
-- `assets/data/search/<scope>/index.json`
+- `site/assets/data/docs/scopes/<scope>/`
+- `site/assets/data/search/<scope>/index.json`
 
 Committed manage-mode scopes use generated outputs under:
 
 - `docs-viewer/generated/docs/<scope>/`
 - `docs-viewer/generated/search/<scope>/index.json`
 
-Manage-mode scopes must not write generated docs/search runtime payloads under `assets/data/docs/scopes/` or `assets/data/search/`.
-Those `assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
+Manage-mode scopes must not write generated docs/search runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`.
+Those `site/assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
 
 The localhost Docs Viewer service may create or update those files.
 The public browser runtime must not.
@@ -70,7 +70,7 @@ Public read-only routes should not expose create-scope controls, management endp
 
 ## Route Adapter Choices
 
-The public-site builder renders existing public read-only route shells through `public-site/build/public_site_builder/`.
+Public read-only route shells are checked-in static HTML under `site/`.
 New public scopes must not create Markdown route files or generated Python source.
 The future public-scope lifecycle path should add or update data/config route records and let the static builder render route shells from those records.
 
@@ -104,7 +104,7 @@ Create and commit:
 
 Do not create a public read-only route page.
 The scope remains available through `/docs/?scope=<scope>&mode=manage` when the local server is running.
-The generated JSON is tracked runtime data, but it is not a public static asset because it lives under the Docs Viewer-owned `docs-viewer/` boundary rather than under `assets/`.
+The generated JSON is tracked runtime data, but it is not a public static asset because it lives under the Docs Viewer-owned `docs-viewer/` boundary rather than under `site/assets/`.
 
 This is useful for private planning notes, local drafts, or internal review material that should move with the repo but not have a public URL.
 
@@ -252,8 +252,8 @@ Validation rules currently implemented:
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
 - `publishing_mode` must be `local_uncommitted` or `local_committed`
 - `public_readonly` is rejected until public Docs Viewer routes are data-driven
-- committed manage-mode generated docs output must not be under `assets/data/docs/scopes/`
-- committed manage-mode generated search output must not be under `assets/data/search/`
+- committed manage-mode generated docs output must not be under `site/assets/data/docs/scopes/`
+- committed manage-mode generated search output must not be under `site/assets/data/search/`
 - planned created paths must not already exist
 
 Preview response fields:
@@ -474,7 +474,7 @@ Implementation ownership:
 - Public routes must remain read-only even if `mode=manage` or `scope=<other-scope>` appears in the URL.
 - The write server should validate scope ids and route paths before writing.
 - The write server should refuse paths outside the configured repo allowlist.
-- Manage-mode scopes must keep generated docs/search payloads out of `assets/data/docs/scopes/` and `assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
+- Manage-mode scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
 - Public read-only scope creation and deletion stay disabled until the data-driven public route request is implemented.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.

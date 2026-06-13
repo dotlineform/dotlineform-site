@@ -13,11 +13,11 @@ viewable: true
 Current checked-in catalogue model families:
 
 - canonical source records:
-  - `assets/studio/data/catalogue/works.json`
-  - `assets/studio/data/catalogue/series.json`
-  - `assets/studio/data/catalogue/work_details.json`
-  - `assets/studio/data/catalogue/moments.json`
-  - `assets/studio/data/catalogue/meta.json`
+  - `site/assets/studio/data/catalogue/works.json`
+  - `site/assets/studio/data/catalogue/series.json`
+  - `site/assets/studio/data/catalogue/work_details.json`
+  - `site/assets/studio/data/catalogue/moments.json`
+  - `site/assets/studio/data/catalogue/meta.json`
 - canonical prose sources:
   - `_docs_catalogue/works/<work_id>.md`
   - `_docs_catalogue/series/<series_id>.md`
@@ -28,23 +28,23 @@ Current checked-in catalogue model families:
   - `work-details/index.md`
   - `moments/index.md`
 - shared indexes:
-  - `assets/data/series_index.json`
-  - `assets/data/works_index.json`
-  - `assets/data/recent_index.json`
-  - `assets/data/moments_index.json`
+  - `site/assets/data/series_index.json`
+  - `site/assets/data/works_index.json`
+  - `site/assets/data/recent_index.json`
+  - `site/assets/data/moments_index.json`
 - per-record payloads:
-  - `assets/series/index/<series_id>.json`
-  - `assets/works/index/<work_id>.json`
-  - `assets/moments/index/<moment_id>.json`
+  - `site/assets/series/index/<series_id>.json`
+  - `site/assets/works/index/<work_id>.json`
+  - `site/assets/moments/index/<moment_id>.json`
 - scope search:
-  - `assets/data/search/catalogue/index.json`
+  - `site/assets/data/search/catalogue/index.json`
 - Studio planning/support data:
   - `studio/data/config/catalogue/catalogue-field-registry.json`
 
 Primary writers:
 
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) for the live rebuild path that refreshes shared indexes and per-record catalogue payloads
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) for `assets/data/search/catalogue/index.json`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) for `site/assets/data/search/catalogue/index.json`
 
 Primary validator:
 
@@ -77,7 +77,7 @@ Source headers avoid volatile timestamps so ordinary source edits produce focuse
 
 ### Work Source Records
 
-Work records in `assets/studio/data/catalogue/works.json` own the primary work source-image path:
+Work records in `site/assets/studio/data/catalogue/works.json` own the primary work source-image path:
 
 - `project_folder`
 - optional `project_subfolder`
@@ -96,7 +96,7 @@ Other work source-model notes:
 
 ### Work Detail Source Records
 
-Work-detail records in `assets/studio/data/catalogue/work_details.json` use the migrated media-section schema:
+Work-detail records in `site/assets/studio/data/catalogue/work_details.json` use the migrated media-section schema:
 
 - `details_subfolder`: optional source-image folder under the parent work's `project_folder`
 - `section_id`: stable generated public-section key, such as `00001-1`
@@ -108,7 +108,7 @@ Detail records no longer use legacy `project_subfolder`. Empty `details_subfolde
 
 ### Series Source Records
 
-Series records in `assets/studio/data/catalogue/series.json` own series metadata and publication state.
+Series records in `site/assets/studio/data/catalogue/series.json` own series metadata and publication state.
 
 Current source-model notes:
 
@@ -119,7 +119,7 @@ Current source-model notes:
 
 ### Catalogue Source Metadata
 
-`assets/studio/data/catalogue/meta.json` records source-level metadata that does not belong to a record family.
+`site/assets/studio/data/catalogue/meta.json` records source-level metadata that does not belong to a record family.
 
 Current shape:
 
@@ -142,7 +142,7 @@ Mutable counters are intentionally avoided. Work IDs, detail IDs, and suggested 
 
 ### Per-Work Runtime JSON
 
-`assets/works/index/<work_id>.json` groups published detail records under `sections[]`.
+`site/assets/works/index/<work_id>.json` groups published detail records under `sections[]`.
 
 Each section owns:
 
@@ -196,7 +196,7 @@ Notes:
 
 ## Work-Owned Files And Links
 
-Files and links are now work-owned metadata in `assets/studio/data/catalogue/works.json`.
+Files and links are now work-owned metadata in `site/assets/studio/data/catalogue/works.json`.
 
 The current source fields are:
 
@@ -218,12 +218,12 @@ The public catalogue shells are:
 - `/work-details/`, with selected state in `?detail=<detail_uid>`
 - `/moments/`, with selected state in `?moment=<moment_id>`
 
-The canonical work, series, and moment runtime payloads live under `assets/works/index/`, `assets/series/index/`, and `assets/moments/index/`.
+The canonical work, series, and moment runtime payloads live under `site/assets/works/index/`, `site/assets/series/index/`, and `site/assets/moments/index/`.
 Work-detail pages resolve through the parent work payload so sibling ordering, section grouping, and detail metadata stay consistent with the owning work.
 
 ## Canonical Moment Source
 
-### `assets/studio/data/catalogue/moments.json`
+### `site/assets/studio/data/catalogue/moments.json`
 
 Purpose:
 
@@ -243,7 +243,7 @@ Current content families:
 Notes:
 
 - this file is the metadata source of truth for moments
-- generated runtime payloads under `assets/moments/index/` are not canonical source
+- generated runtime payloads under `site/assets/moments/index/` are not canonical source
 - source images remain a separate media concern
 
 ### `_docs_catalogue/moments/<moment_id>.md`

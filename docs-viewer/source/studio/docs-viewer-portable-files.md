@@ -123,7 +123,7 @@ The public viewer include loads Docs Viewer-owned CSS for the portable base cont
 
 The local manage shell loads the basic viewer stylesheet, report stylesheet, management stylesheet, and transitional Docs Import form/control primitives.
 
-Public read-only routes may intentionally inherit public host CSS; standalone/local Docs Viewer shells should not require public `assets/css/main.css`.
+Public read-only routes may intentionally inherit public host CSS; standalone/local Docs Viewer shells should not require public `site/assets/css/main.css`.
 
 ### Config And UI Text
 
@@ -136,7 +136,7 @@ Copy:
 - `docs-viewer/config/ui-text/public.json`
 - `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
-- `assets/data/docs/reports.json`
+- `site/assets/data/docs/reports.json`
 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
 Route shells should point at it with `data-route-config-url` and identify themselves with `data-route-id`.
@@ -157,7 +157,7 @@ Settings-modal copy is also owned by `docs-viewer/config/ui-text/manage.json`.
 
 `docs-viewer/config/reports/reports.json` is the source report metadata registry.
 
-`assets/data/docs/reports.json` is the browser-visible report metadata projection.
+`site/assets/data/docs/reports.json` is the browser-visible report metadata projection.
 
 It lists report ids, titles, descriptions, access defaults, and presets.
 The executable report module allowlist remains in `docs-viewer/runtime/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
@@ -166,12 +166,12 @@ The executable report module allowlist remains in `docs-viewer/runtime/js/docs-v
 
 Each docs scope needs generated viewer JSON:
 
-- `assets/data/docs/scopes/<scope>/index.json`
-- `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+- `site/assets/data/docs/scopes/<scope>/index.json`
+- `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
 
 If inline docs search is enabled, each scope also needs:
 
-- `assets/data/search/<scope>/index.json`
+- `site/assets/data/search/<scope>/index.json`
 
 These files are generated outputs. Copy them only if you are copying existing built content; otherwise generate them from source docs.
 

@@ -35,7 +35,7 @@ Public viewer routes are read-only:
 - `/docs/` is the local management shell served by the standalone Docs Viewer service and can load `studio`, `library`, or `analysis` through its `scope` query parameter
 
 The CSS base contract is explicit.
-Public `/library/` and `/analysis/` intentionally inherit `assets/css/main.css` from the public site layout so generated docs content keeps host prose and media styling.
+Public `/library/` and `/analysis/` intentionally inherit `site/assets/css/main.css` from the public site layout so generated docs content keeps host prose and media styling.
 The shared Docs Viewer include also loads `docs-viewer/static/css/docs-viewer.css`, which supplies Docs Viewer-owned tokens, small utilities, and public reader, index, main, info, search, and bookmark surfaces.
 Standalone/local Docs Viewer shells can opt into the base page layer with a Docs Viewer shell body class instead of depending on Studio CSS or dotlineform public `main.css`.
 

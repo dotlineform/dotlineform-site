@@ -21,7 +21,7 @@ This document is the durable route contract for the public site.
 - keep URL/state contracts as small as possible; use query parameters when they are the simplest way to restore the intended view
 - dynamically derive public URLs in runtime helpers from record id plus route state
 - avoid persistent generated URL fields unless a documented non-derivable exception is required
-- centralize public URL construction and route-state parsing in `assets/js/public-catalogue-runtime.js` or a successor route-helper module
+- centralize public URL construction and route-state parsing in `site/assets/js/public-catalogue-runtime.js` or a successor route-helper module
 - route strings should not be assembled independently across page scripts, catalogue search rendering, generated payloads, Docs Viewer semantic references, or Studio public-link helpers
 
 ## Canonical Routes
@@ -93,7 +93,7 @@ Selected moments are rendered by the `/moments/` shell from generated moment JSO
 
 ## URL Ownership
 
-Public route construction and route-state parsing are owned by `assets/js/public-catalogue-runtime.js` unless implementation creates a smaller dedicated public route-helper module.
+Public route construction and route-state parsing are owned by `site/assets/js/public-catalogue-runtime.js` unless implementation creates a smaller dedicated public route-helper module.
 
 Consumers should derive public routes through that contract or its Studio equivalent:
 

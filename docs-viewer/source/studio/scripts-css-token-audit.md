@@ -17,7 +17,7 @@ $HOME/miniconda3/bin/python3 admin-app/checks/css_token_audit.py
 ## Optional Flags
 
 - `--md-out var/studio/reports/css-audit-latest.md`: override Markdown output path
-- `assets/css/main.css assets/studio/css/studio.css`: optional file-list override
+- `site/assets/css/main.css assets/studio/css/studio.css`: optional file-list override
 
 ## Behavior
 
@@ -31,8 +31,8 @@ Source artifacts:
 
 - default CSS inputs are whatever file list the command receives
 - current common inputs are:
-  - `assets/css/main.css`
-  - `assets/studio/css/studio.css`
+  - `site/assets/css/main.css`
+  - `site/assets/studio/css/studio.css`
 
 Target artifact:
 

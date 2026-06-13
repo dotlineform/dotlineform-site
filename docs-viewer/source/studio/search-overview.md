@@ -48,7 +48,7 @@ Current route:
 
 Current generated artifact:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 ### Docs Search
 
@@ -71,8 +71,8 @@ Current routes:
 Current generated artifacts:
 
 - `docs-viewer/generated/search/studio/index.json`
-- `assets/data/search/library/index.json`
-- `assets/data/search/analysis/index.json`
+- `site/assets/data/search/library/index.json`
+- `site/assets/data/search/analysis/index.json`
 
 Current ownership:
 
@@ -95,8 +95,8 @@ The implementation now uses one stable command wrapper that dispatches to domain
 
 Current files:
 
-- Catalogue browser runtime: `assets/js/catalogue-search.js`
-- Catalogue runtime policy: `assets/data/search/policy.json`
+- Catalogue browser runtime: `site/assets/js/catalogue-search.js`
+- Catalogue runtime policy: `site/assets/data/search/policy.json`
 - Docs public browser runtime: `docs-viewer/runtime/js/docs-viewer-public.js`
 - Docs manage browser runtime: `docs-viewer/runtime/js/docs-viewer-manage.js`
 - Docs search helpers: `docs-viewer/runtime/js/docs-viewer-search.js`

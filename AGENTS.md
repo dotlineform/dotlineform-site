@@ -77,7 +77,7 @@
 - Required shared env vars for media/generation flows: `DOTLINEFORM_PROJECTS_BASE_DIR`
 - Optional shared env var: `MAKE_SRCSET_JOBS`
 - Keep remote media credentials out of tracked files; use platform secret stores.
-- Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime, public-site build, and preview work.
+- Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime, site validation, and preview work.
 - Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
 
 ## Git And Change Hygiene

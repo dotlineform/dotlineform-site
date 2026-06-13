@@ -65,7 +65,7 @@ The opener or route command owns service payload assembly, writes, rebuilds, del
 
 The older Studio canonical source currently builds from:
 
-- `assets/studio/js/studio-modal.js`
+- `site/assets/studio/js/studio-modal.js`
 - `renderStudioModalFrame()`
 - `renderStudioModalActions()`
 - route-owned or shared modal hosts created through `createStudioModalHost()`
@@ -155,8 +155,8 @@ They are listed here to keep the primitive tied to actual page work, not to crea
 
 Current implementation sources:
 
-- `assets/studio/js/studio-modal.js`
-- `assets/studio/css/studio.css`
+- `site/assets/studio/js/studio-modal.js`
+- `site/assets/studio/css/studio.css`
 - `docs-viewer/runtime/js/docs-viewer-management-modals.js`
 - `docs-viewer/static/css/docs-viewer-manage.css`
 - `_includes/docs_viewer_shell.html`

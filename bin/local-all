@@ -20,9 +20,9 @@ else
 fi
 
 RUNNER_NAME="bin/local-all"
-PUBLIC_SITE_ENABLED="${PUBLIC_SITE_ENABLED:-1}"
-PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-127.0.0.1}"
-PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-4000}"
+SITE_ENABLED="${SITE_ENABLED:-1}"
+SITE_HOST="${SITE_HOST:-127.0.0.1}"
+SITE_PORT="${SITE_PORT:-4000}"
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
@@ -212,10 +212,10 @@ trap handle_interrupt INT
 trap handle_term TERM
 
 echo "Starting local services from $ROOT_DIR"
-if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
-  echo "Public site preview: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
+if [ "$SITE_ENABLED" != "0" ]; then
+  echo "Public site preview: http://$SITE_HOST:$SITE_PORT"
 else
-  echo "Public site preview: disabled by PUBLIC_SITE_ENABLED=0"
+  echo "Public site preview: disabled by SITE_ENABLED=0"
 fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Local Studio app: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/"
@@ -235,8 +235,8 @@ fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 echo
 
-if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
-  remember_binding "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT"
+if [ "$SITE_ENABLED" != "0" ]; then
+  remember_binding "Public site preview" "$SITE_HOST" "$SITE_PORT"
 fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   remember_binding "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT"
@@ -249,8 +249,8 @@ if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
 fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
-if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
-  require_open_port "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT" "PUBLIC_SITE_PORT"
+if [ "$SITE_ENABLED" != "0" ]; then
+  require_open_port "Public site preview" "$SITE_HOST" "$SITE_PORT" "SITE_PORT"
 fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
@@ -266,7 +266,7 @@ require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VI
 echo "Press Ctrl+C to stop all processes."
 echo
 
-if [ "$PUBLIC_SITE_ENABLED" != "0" ]; then
+if [ "$SITE_ENABLED" != "0" ]; then
   start_child "Public site preview" "$ROOT_DIR/bin/site-preview"
 fi
 start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"

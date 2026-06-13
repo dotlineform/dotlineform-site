@@ -49,12 +49,12 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
 
 ## Current Checks
 
-- `cross_refs`: validates key references across route-anchor stubs, public indexes, `assets/works/index/*.json`, and Studio tag assignments, including duplicate route IDs
+- `cross_refs`: validates key references across route-anchor stubs, public indexes, `site/assets/works/index/*.json`, and Studio tag assignments, including duplicate route IDs
 - `schema`: validates route-anchor ID format, optional legacy front matter ID consistency, and generated JSON consistency checks
 - `json_schema`: validates generated JSON structure and count consistency for:
-  - `assets/data/series_index.json`
-  - `assets/data/works_index.json`
-  - `assets/works/index/*.json`
+  - `site/assets/data/series_index.json`
+  - `site/assets/data/works_index.json`
+  - `site/assets/works/index/*.json`
 - `links`: validates generated link targets and URL query-contract sanity across generated pages
 - `media`: validates expected local thumbs for published `_works` and `_work_details`
 - `orphans`: reports orphan pages and JSON, with optional orphan media via `--orphans-media`
@@ -89,11 +89,11 @@ Markdown report defaults to `var/studio/reports/audit-latest.md`.
 
 Source artifacts checked by the current audit include:
 
-- `assets/data/series_index.json`
-- `assets/data/works_index.json`
-- `assets/data/moments_index.json`
-- `assets/works/index/*.json`
-- `assets/moments/index/*.json`
+- `site/assets/data/series_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/data/moments_index.json`
+- `site/assets/works/index/*.json`
+- `site/assets/moments/index/*.json`
 - `analytics-app/data/canonical/tag-assignments.json`
 - generated URLs and media paths referenced by those artifacts
 

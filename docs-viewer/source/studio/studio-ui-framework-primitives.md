@@ -60,7 +60,7 @@ Rule of thumb: if two Analytics pages need the same visual treatment, the class 
 
 ### Base controls
 
-Defined in `assets/studio/css/studio.css`:
+Defined in `site/assets/studio/css/studio.css`:
 
 - `tagStudio__panel`
 - `tagStudio__panelLink`

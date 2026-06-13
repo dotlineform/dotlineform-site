@@ -144,7 +144,7 @@ Catalogue editor local save behavior:
 - the request includes `work_id`, a browser-computed record hash, a normalized work record patch, and optional `apply_build: true`
 - the server validates the full catalogue source set before writing
 - writes are constrained to allowlisted canonical catalogue source JSON
-- derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
+- derived lookup payloads under `site/assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - catalogue writes use atomic replacement and in-process rollback without writing backup bundles
 - activity is logged to `var/studio/catalogue/logs/catalogue_service_context.log` and summarized into `var/admin/activity/activity_log.json`
 - bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
@@ -182,7 +182,7 @@ Catalogue moment import behavior:
 - both endpoints resolve one explicit staged Markdown filename from `var/docs/catalogue/import-staging/moments/`
 - the page collects moment metadata and sends it with the filename
 - preview validates body-only staged prose, validates the required metadata, and reports current runtime/generated status
-- apply writes prose to `_docs_catalogue/moments/<moment_id>.md` and metadata to `assets/studio/data/catalogue/moments.json`
+- apply writes prose to `_docs_catalogue/moments/<moment_id>.md` and metadata to `site/assets/studio/data/catalogue/moments.json`
 - apply stages/generates local moment media when the source image exists, runs a targeted `generate_work_pages.py --only moments --moment-ids ... --write` flow, and then rebuilds catalogue search
 - missing source images block local media generation for the moment but do not block prose/metadata import
 - apply does not update moment source front matter
@@ -208,7 +208,7 @@ Catalogue scoped rebuild behavior:
 - the detail editor requests the same scoped preview for the parent work
 - the series editor requests a series-scoped preview from the same endpoint, including any removed member works that still need rebuild
 - `POST /studio/api/catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
-- the apply step then rebuilds `assets/data/search/catalogue/index.json`
+- the apply step then rebuilds `site/assets/data/search/catalogue/index.json`
 - unified Studio Activity records these JSON-source scoped rebuilds
 
 ## Operational Notes
@@ -216,7 +216,7 @@ Catalogue scoped rebuild behavior:
 Current operational constraints:
 
 - `bin/local-studio` does not run startup docs/docs-search rebuilds or startup catalogue lookup export; use manual builders or write-service rebuild paths when generated data needs refreshing
-- Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/public-site-preview` when local preview links are being checked
+- Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/site-preview` when local preview links are being checked
 - `admin-app/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 
 For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

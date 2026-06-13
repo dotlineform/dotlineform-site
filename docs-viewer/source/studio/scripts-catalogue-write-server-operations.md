@@ -79,7 +79,7 @@ Admin activity feed:
 
 Derived lookup target:
 
-- `assets/studio/data/catalogue_lookup/`
+- `site/assets/studio/data/catalogue_lookup/`
 
 Operational log target:
 

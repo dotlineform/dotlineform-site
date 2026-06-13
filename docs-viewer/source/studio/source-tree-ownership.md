@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: architecture
 viewable: true
 ---
@@ -16,8 +16,9 @@ Studio is the same-repo catalogue authoring and maintenance system for the site.
 It lives under `studio/`.
 Admin, Analytics, Docs Viewer, and Admin-hosted UI Catalogue are separate local app boundaries in the same repository.
 
-The public static site artifact is the publishing surface.
-Its builder and config live under `public-site/`; publishable runtime files, public assets, and generated public output remain outside `studio/`.
+The public static site root is the publishing surface.
+Its canonical files live under `site/`; validation and durable site-level settings live under `site-tools/`.
+Publishable runtime files, public assets, and generated public output remain outside `studio/`.
 
 The repo is intentionally one repository:
 
@@ -26,7 +27,8 @@ The repo is intentionally one repository:
 - Analytics owns tag maintenance, Data Sharing route/API workflows, semantic-reference maintenance, and future analysis/visualisation workflows.
 - Docs Viewer owns docs viewing, docs source management, Docs Viewer payloads, docs conversion helpers, and the `/docs/` manage-mode service.
 - UI Catalogue owns isolated UI demos and reference assets under Admin route ownership.
-- `public-site/` owns public route rendering, artifact assembly, and source-leak checks; public route JavaScript/CSS, public media, and generated public runtime payloads remain in their public asset/data paths.
+- `site/` owns public route HTML, public route JavaScript/CSS, public media, and generated public runtime payloads.
+- `site-tools/` owns deploy-root validation and durable site-level settings used by local Python tooling.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
 - Local working output, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
 
@@ -133,18 +135,18 @@ Public static-site source and runtime remain outside `studio/`:
 
 | Path family | Role |
 | --- | --- |
-| `public-site/build/` | Static builder, route renderers, artifact copier, and artifact audit. |
-| `public-site/config/public-site.json` | Public artifact assembly config, copy allowlists, denylist audit rules, and public runtime constants. |
-| `assets/js/` | Public browser runtime for published pages. |
-| `assets/css/main.css` | Public site CSS and genuinely shared public primitives. Studio-only selectors live under `studio/app/assets/css/`. |
-| `assets/data/docs/scopes/` | Generated Docs Viewer payloads consumed by public read-only installs. |
-| `assets/data/search/` | Generated public search payloads. |
-| `assets/data/*.json`, `assets/works/`, `assets/series/`, `assets/moments/`, `assets/work_details/`, `assets/home/`, `assets/site/` | Generated or published public catalogue/site data and media. |
+| `site/` | Canonical tracked static deploy root uploaded to GitHub Pages. |
+| `site/assets/js/` | Public browser runtime for published pages. |
+| `site/assets/css/main.css` | Public site CSS and genuinely shared public primitives. Studio-only selectors live under `studio/app/assets/css/`. |
+| `site/assets/data/docs/scopes/` | Generated Docs Viewer payloads consumed by public read-only installs. |
+| `site/assets/data/search/` | Generated public search payloads. |
+| `site/assets/data/*.json`, `site/assets/works/`, `site/assets/series/`, `site/assets/moments/`, `site/assets/work_details/`, `site/assets/site/` | Generated or published public catalogue/site data and media. |
+| `site-tools/` | Static site validation CLI, validation config, and durable site-level media/config settings. |
 
 Public route adapters for Docs Viewer should stay minimal.
 Docs Viewer shell source, management shell source, config, CSS, reports, and services belong under `docs-viewer/`.
 
-Public catalogue route construction and route-state parsing are owned by `assets/js/public-catalogue-runtime.js`.
+Public catalogue route construction and route-state parsing are owned by `site/assets/js/public-catalogue-runtime.js`.
 First-party public pages, catalogue search rendering, Docs Viewer semantic references, and Studio public-link helpers should derive work, series, detail, and moment URLs through that contract or its Studio equivalent rather than serializing derivable URL fields in generated catalogue payloads.
 
 ## Generated Output Rule
@@ -152,10 +154,10 @@ First-party public pages, catalogue search rendering, Docs Viewer semantic refer
 Generated output paths should make the flow obvious:
 
 ```text
-studio/ source and services -> generated public artifacts -> public-site builder -> GitHub Pages artifact
+studio/ and docs-viewer services -> generated public files in site/assets/ -> site validation -> GitHub Pages artifact
 ```
 
-Generated public artifacts remain outside `studio/` when public pages need them.
+Generated public files remain under `site/assets/` when public pages need them.
 Examples include public catalogue JSON, public search indexes, public Docs Viewer payloads for `/library/` and `/analysis/`, public thumbnails, and public route media.
 
 Generated Studio read models remain under `studio/data/generated/` when they are only for Local Studio authoring/review.
@@ -169,12 +171,13 @@ Do not preserve or reintroduce old Studio source paths through aliases, copied f
 
 Current active rules:
 
-- do not restore `assets/studio/` as a Studio source or local static source path
-- do not restore `assets/docs-viewer/` as Docs Viewer source; public copies are generated/runtime payloads only when explicitly needed
+- do not restore `site/assets/studio/` as a Studio source or local static source path
+- do not restore `site/assets/docs-viewer/` as Docs Viewer source; public copies are generated/runtime payloads only when explicitly needed
+- do not restore root `site/assets/` as a public deploy source; use `site/assets/`
 - do not restore `_docs_catalogue/` for catalogue Markdown source
 - do not restore root `tests/`, root check folders, or `scripts/docs/` as active source homes
 - keep `scripts/run_checks.py` deleted; use `admin-app/commands/run_checks.py`
-- keep public-site validation checks under Admin/Codex check ownership or the owning app test directory even when they inspect public generated output
+- keep static-site validation checks under Admin/Codex check ownership, `site-tools/`, or the owning app test directory even when they inspect public generated output
 
 Root wrappers may remain only as deliberate convenience entrypoints into the owning Studio or Docs Viewer implementation.
 They must not become compatibility layers for old source paths.

@@ -127,7 +127,7 @@ The helper:
   - work source media resolves through `project_folder`, optional `project_subfolder`, and `project_filename`
   - work-detail source media resolves through the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
 - generates local primary and thumbnail srcset derivatives under `var/catalogue/media/`
-- copies generated thumbnail derivatives into `assets/works/img/` or `assets/work_details/img/`
+- copies generated thumbnail derivatives into `site/assets/works/img/` or `site/assets/work_details/img/`
 - passes the generator's narrow `--refresh-published` mode so selected published records can be recomputed without forcing unchanged writes
 - runs the internal `generate_work_pages.py` JSON engine with a narrow `--only` selection:
   - `work-pages`
@@ -146,7 +146,7 @@ When `--changed-fields` is supplied, the `--only` selection, catalogue-search st
 
 Planner behavior is covered by `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`.
 
-For work scopes, `work-json` writes `assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Each section carries `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
+For work scopes, `work-json` writes `site/assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Each section carries `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
 
 For `--moment-file`, the helper:
 
@@ -155,7 +155,7 @@ For `--moment-file`, the helper:
 - validates the moment filename, metadata, and required prose source
 - stages the configured moment source image under `var/catalogue/media/moments/`
 - generates local moment primary and thumbnail srcset derivatives under `var/catalogue/media/moments/`
-- copies generated moment thumbnails into `assets/moments/img/`
+- copies generated moment thumbnails into `site/assets/moments/img/`
 - runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id> --refresh-published`
 - then runs `build_search.py --scope catalogue`
 
@@ -186,17 +186,17 @@ Work, work-detail, and moment image generation uses the source-image metadata in
 - primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`
 - thumbnail derivatives are generated temporarily under `var/catalogue/media/<kind>/srcset_images/thumb/`
 - thumbnail derivatives are copied into the repo-owned public asset folders and then removed from staging:
-  - `assets/works/img/`
-  - `assets/work_details/img/`
-  - `assets/moments/img/`
+  - `site/assets/works/img/`
+  - `site/assets/work_details/img/`
+  - `site/assets/moments/img/`
 
 ## Thumbnail-Only Regeneration
 
 `--thumbnail-only` is a focused migration/maintenance mode for the public catalogue grid thumbnails. It scans all work, work-detail, and moment source records from canonical JSON, resolves source image paths with the same `DOTLINEFORM_PROJECTS_BASE_DIR` rules as local media generation, and writes only the configured thumbnail variants directly into:
 
-- `assets/works/img/`
-- `assets/work_details/img/`
-- `assets/moments/img/`
+- `site/assets/works/img/`
+- `site/assets/work_details/img/`
+- `site/assets/moments/img/`
 
 This mode intentionally skips:
 

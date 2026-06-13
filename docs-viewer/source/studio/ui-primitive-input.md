@@ -45,7 +45,7 @@ Display-only values should use a readonly display treatment rather than a disabl
 
 Current legacy Studio implementation lives in:
 
-- `assets/studio/css/studio.css`
+- `site/assets/studio/css/studio.css`
 
 Current demo implementation lives in:
 

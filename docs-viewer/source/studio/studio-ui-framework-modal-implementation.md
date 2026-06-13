@@ -11,7 +11,7 @@ parent_id: ui-catalogue
 
 Studio modal behavior should be implemented through a shared controller module:
 
-- `assets/studio/js/studio-modal.js`
+- `site/assets/studio/js/studio-modal.js`
 
 The shared controller is responsible for:
 

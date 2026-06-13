@@ -135,8 +135,8 @@ The Analytics tag source model has important dependencies that are only partly e
 Key dependencies:
 
 - `tag-aliases.json` targets must refer to canonical tags in `tag-registry.json`
-- `tag-assignments.json` series keys must line up with `assets/data/series_index.json`
-- `tag-assignments.json` work override keys must line up with `assets/data/works_index.json` and with the owning series membership in `series_index.json`
+- `tag-assignments.json` series keys must line up with `site/assets/data/series_index.json`
+- `tag-assignments.json` work override keys must line up with `site/assets/data/works_index.json` and with the owning series membership in `series_index.json`
 - group logic in the UI depends on `tag-registry.json`, `tag-groups.json`, and the group order configured in Analytics route config
 
 Current enforcement:

@@ -41,7 +41,7 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 
 | CSS | Public routes | Manage route | Boundary rule |
 | --- | --- | --- | --- |
-| `assets/css/main.css` | inherited from the public site layout | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
+| `site/assets/css/main.css` | inherited from the public site layout | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
 | `docs-viewer/static/css/docs-viewer.css` | loaded | loaded | Basic/public viewer styling and portable Docs Viewer tokens. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | Report styling is manage-only until a report is promoted. |
 | `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | Management shell/modal styling only. |
@@ -68,7 +68,7 @@ Backend reachability and write availability are not browser-side route-config au
 | Scope kind | Docs output root | Search output root | Notes |
 | --- | --- | --- | --- |
 | Manage/local | `docs-viewer/generated/docs/<scope>/` | `docs-viewer/generated/search/<scope>/index.json` | Used by the standalone manage route and generated-read service. |
-| Public read-only | `assets/data/docs/scopes/<scope>/` | `assets/data/search/<scope>/index.json` | Published as static public data for route-owned scopes such as Library and Analysis. |
+| Public read-only | `site/assets/data/docs/scopes/<scope>/` | `site/assets/data/search/<scope>/index.json` | Published as static public data for route-owned scopes such as Library and Analysis. |
 
 Generated payload contracts live in [Docs Viewer Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts).
 
@@ -76,10 +76,10 @@ Generated payload contracts live in [Docs Viewer Generated Data Contracts](/docs
 
 Current Docs Viewer route payload ownership:
 
-- public `/library/` and `/analysis/` route configs point navigation at public nested-tree payloads in `assets/data/docs/scopes/<scope>/index-tree.json`
+- public `/library/` and `/analysis/` route configs point navigation at public nested-tree payloads in `site/assets/data/docs/scopes/<scope>/index-tree.json`
 - local/manage `/docs/` route config points navigation at the manage nested-tree payload in `docs-viewer/generated/docs/<scope>/index-tree.json`
 - public and manage routes point recently-added mode at the route-appropriate `recently-added.json`
-- search remains on the route-appropriate search payload such as `assets/data/search/<scope>/index.json` or `docs-viewer/generated/search/<scope>/index.json`
+- search remains on the route-appropriate search payload such as `site/assets/data/search/<scope>/index.json` or `docs-viewer/generated/search/<scope>/index.json`
 - selected-document rendering and info-panel metadata hydrate from selected by-id payloads
 - public route smoke assertions prove management JS/CSS, report runtime, scope lifecycle, import, settings, source-editor surfaces, and public docs `index.json` requests are absent
 - scope lifecycle create/delete behavior records only user-created route/generated outputs, not shared entrypoints, CSS, route registries, or shared runtime modules

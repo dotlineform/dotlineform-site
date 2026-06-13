@@ -12,7 +12,7 @@ viewable: true
 
 This document defines the current search-specific data contract for the generated catalogue search index.
 
-It describes the serialized shape of `assets/data/search/catalogue/index.json`, the meaning of its search-facing fields, and the difference between structured fields and derived search-support fields.
+It describes the serialized shape of `site/assets/data/search/catalogue/index.json`, the meaning of its search-facing fields, and the difference between structured fields and derived search-support fields.
 
 This is a schema document. It does not define ranking, UI behaviour, or detailed build flow.
 
@@ -20,7 +20,7 @@ This is a schema document. It does not define ranking, UI behaviour, or detailed
 
 This document applies to the current base search artifact:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 It covers:
 

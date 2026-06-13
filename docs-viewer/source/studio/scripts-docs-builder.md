@@ -48,14 +48,14 @@ Generated outputs:
 
 Published public snapshots:
 
-- `assets/data/docs/scopes/analysis/index-tree.json`
-- `assets/data/docs/scopes/analysis/recently-added.json`
-- `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
-- `assets/data/search/analysis/index.json`
-- `assets/data/docs/scopes/library/index-tree.json`
-- `assets/data/docs/scopes/library/recently-added.json`
-- `assets/data/docs/scopes/library/by-id/<doc_id>.json`
-- `assets/data/search/library/index.json`
+- `site/assets/data/docs/scopes/analysis/index-tree.json`
+- `site/assets/data/docs/scopes/analysis/recently-added.json`
+- `site/assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
+- `site/assets/data/search/analysis/index.json`
+- `site/assets/data/docs/scopes/library/index-tree.json`
+- `site/assets/data/docs/scopes/library/recently-added.json`
+- `site/assets/data/docs/scopes/library/by-id/<doc_id>.json`
+- `site/assets/data/search/library/index.json`
 
 The builder writes the working generated outputs only.
 For public scopes, `publish_output` and `publish_search_output` in `docs-viewer/config/scopes/docs_scopes.json` name the published snapshot roots that public routes read after an explicit `Publish docs` action.
@@ -68,7 +68,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 `./docs-viewer/build/build_docs.py`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
 The `output` field owns the working generated docs payload root.
 The `search_output` field owns the working generated docs-search index path.
-For public scopes only, `publish_output` and `publish_search_output` own the public snapshot roots under `assets/data/`.
+For public scopes only, `publish_output` and `publish_search_output` own the public snapshot roots under `site/assets/data/`.
 
 ## What The Builder Does
 
@@ -156,12 +156,12 @@ Interactive HTML tokens:
 - use the literal token <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> when a doc needs to embed a repo-local interactive HTML asset
 - add an optional pixel height as <code>&#91;&#91;interactive-html:filename.html height=546&#93;&#93;</code> when the default iframe height is too tall or too short for that asset
 - filenames are same-scope only; do not include a scope name, slash, nested path, absolute path, or `..`
-- the builder resolves the token to `assets/docs/interactive/<scope>/filename.html` and fails the build if that file is missing
+- the builder resolves the token to `site/assets/docs/interactive/<scope>/filename.html` and fails the build if that file is missing
 - the rendered doc receives a sandboxed iframe with `sandbox="allow-scripts"` so the embedded file's JavaScript runs inside the iframe, not in the main Docs Viewer page
-- start from `assets/docs/interactive/template.html`, save the finished file under the current scope folder, and test it directly in a browser before adding the token
+- start from `site/assets/docs/interactive/template.html`, save the finished file under the current scope folder, and test it directly in a browser before adding the token
 - Docs Import can copy staged HTML files marked with `<meta name="dlf:docs-import-role" content="interactive-html">` into the matching scope folder, but the source doc still needs a manual token where each iframe should appear
 - example for a Library doc:
-  - source asset: `assets/docs/interactive/library/coincidence-salience.html`
+  - source asset: `site/assets/docs/interactive/library/coincidence-salience.html`
   - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html height=546&#93;&#93;</code>
 
 Semantic reference tokens:

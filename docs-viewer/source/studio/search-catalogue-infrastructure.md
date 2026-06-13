@@ -19,7 +19,7 @@ Current live surface:
 
 Current output:
 
-- `assets/data/search/catalogue/index.json`
+- `site/assets/data/search/catalogue/index.json`
 
 Catalogue search is separate from Docs Viewer search.
 It does not index Studio docs, Library docs, Analysis docs, or Docs Viewer source Markdown.
@@ -43,7 +43,7 @@ The Python builder owns how records are derived, sorted, normalized, hashed, and
 
 Runtime UI policy lives separately in:
 
-- `assets/data/search/policy.json`
+- `site/assets/data/search/policy.json`
 
 That policy controls the public `/catalogue/search/` browser surface, including enabled scope, index path, input labels, batching, debounce, and messages.
 
@@ -67,10 +67,10 @@ Catalogue build orchestration constructs the same command through:
 
 Current source inputs:
 
-- `assets/data/series_index.json`
-- `assets/data/works_index.json`
-- `assets/data/moments_index.json`
-- `assets/works/index/<work_id>.json` for work-level enrichment
+- `site/assets/data/series_index.json`
+- `site/assets/data/works_index.json`
+- `site/assets/data/moments_index.json`
+- `site/assets/works/index/<work_id>.json` for work-level enrichment
 
 The search builder treats the generated catalogue JSON artifacts as canonical from the site point of view.
 Drift between those artifacts and upstream non-repo source systems is outside search ownership.
@@ -126,12 +126,12 @@ Current exclusions:
 
 Current runtime modules:
 
-- `assets/js/catalogue-search.js`
-- `assets/js/search/catalogue-search-runtime.js`
-- `assets/js/search/search-policy.js`
-- `assets/js/search/search-performance.js`
+- `site/assets/js/catalogue-search.js`
+- `site/assets/js/search/catalogue-search-runtime.js`
+- `site/assets/js/search/search-policy.js`
+- `site/assets/js/search/search-performance.js`
 
-The runtime loads `assets/data/search/policy.json`, fetches the configured Catalogue index, normalizes entries, evaluates matches, sorts results, and renders result HTML.
+The runtime loads `site/assets/data/search/policy.json`, fetches the configured Catalogue index, normalizes entries, evaluates matches, sorts results, and renders result HTML.
 
 Current ranking is Catalogue-specific.
 It weights exact id/title matches first, then phrase and prefix matches, then domain relationship matches such as series title, medium type, and series type, then broader `search_text` matches.

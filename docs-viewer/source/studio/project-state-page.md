@@ -25,7 +25,7 @@ The browser module uses Local Studio for both report generation and local report
 The report compares:
 
 - source project folders under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects`
-- primary work image references from `assets/studio/data/catalogue/works.json`
+- primary work image references from `site/assets/studio/data/catalogue/works.json`
 
 Work details are out of scope. The scanner skips known detail subfolders and folders named `details` so detail images are not treated as missing primary work imports.
 

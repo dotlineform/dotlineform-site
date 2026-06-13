@@ -54,7 +54,7 @@ The import modal:
 - imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
 - imports supported downloadable files as wrapper docs that point at the configured `<media_path_prefix>/files/<filename>` media path
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
-- hides role-marked interactive HTML files from the staged file picker and copies each one into `assets/docs/interactive/<scope>/` for manual iframe-token embedding
+- hides role-marked interactive HTML files from the staged file picker and copies each one into `site/assets/docs/interactive/<scope>/` for manual iframe-token embedding
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the shared Python Docs Viewer Markdown renderer before write success
 - writes a new doc immediately when the target is free
@@ -199,7 +199,7 @@ An import can carry one or more staged interactive HTML assets:
 
 - selected staged source: `coincidence-salience.html`
 - role-marked asset: `Coincidence Widget.html`
-- copied asset: `assets/docs/interactive/<scope>/coincidence-widget.html`
+- copied asset: `site/assets/docs/interactive/<scope>/coincidence-widget.html`
 - Markdown token to add manually: <code>&#91;&#91;interactive-html:coincidence-widget.html&#93;&#93;</code>
 
 The interactive file must be a complete standalone HTML document and must include this metadata:
@@ -219,7 +219,7 @@ When the default iframe height does not fit the asset, add a measured pixel heig
 If any target interactive asset already exists, the importer asks for overwrite confirmation before replacing it.
 Cancel leaves the existing asset unchanged.
 
-Template: `assets/docs/interactive/template.html`
+Template: `site/assets/docs/interactive/template.html`
 
 ## Recovery Behavior
 

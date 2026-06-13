@@ -16,7 +16,7 @@ For work, work-detail, and moment scopes, the build helper:
 - resolves the source image from canonical catalogue JSON and `DOTLINEFORM_PROJECTS_BASE_DIR`
 - copies the source image into `var/catalogue/media/<kind>/make_srcset_images/` using the public catalogue id as the filename stem
 - generates primary and thumbnail srcset derivatives into `var/catalogue/media/<kind>/srcset_images/`
-- copies generated thumbnail derivatives into `assets/works/img/`, `assets/work_details/img/`, or `assets/moments/img/`
+- copies generated thumbnail derivatives into `site/assets/works/img/`, `site/assets/work_details/img/`, or `site/assets/moments/img/`
 - removes staged thumbnail derivatives after the asset-folder copy succeeds
 - leaves generated primary derivatives staged under `var/catalogue/media/` for remote media publishing
 
@@ -26,7 +26,7 @@ The write server reports generated/current/blocked media ids in the nested build
 
 ## Moment Import
 
-`POST /catalogue/moment/save` saves existing moment metadata in `assets/studio/data/catalogue/moments.json`. Optional `apply_build: true` requests the same-scope public update only when the saved moment status is `published`; draft moment saves remain source-only and return a `build_skipped` reason if a public update was requested. Changed moment-save responses report `moment_build_invalidation` for moment runtime/search build planning; they do not use `lookup_refresh` because moments do not write Studio catalogue lookup payloads.
+`POST /catalogue/moment/save` saves existing moment metadata in `site/assets/studio/data/catalogue/moments.json`. Optional `apply_build: true` requests the same-scope public update only when the saved moment status is `published`; draft moment saves remain source-only and return a `build_skipped` reason if a public update was requested. Changed moment-save responses report `moment_build_invalidation` for moment runtime/search build planning; they do not use `lookup_refresh` because moments do not write Studio catalogue lookup payloads.
 
 `POST /catalogue/moment/import-preview` expects:
 
@@ -50,7 +50,7 @@ Request behavior:
 - `moment_file` must be a filename-only slug-safe Markdown filename
 - staged prose is resolved from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 - permanent prose target is `_docs_catalogue/moments/<moment_id>.md`
-- metadata is validated from the submitted metadata plus any existing `assets/studio/data/catalogue/moments.json` record
+- metadata is validated from the submitted metadata plus any existing `site/assets/studio/data/catalogue/moments.json` record
 - submitted import status is normalized to `draft`; publishing happens through `POST /catalogue/publication-apply` after import
 - staged prose is imported as Markdown body source
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
@@ -60,7 +60,7 @@ Request behavior:
 Apply behavior:
 
 - writes body-only prose to `_docs_catalogue/moments/<moment_id>.md`
-- writes canonical draft moment metadata to `assets/studio/data/catalogue/moments.json`
+- writes canonical draft moment metadata to `site/assets/studio/data/catalogue/moments.json`
 - uses the catalogue atomic JSON writer for the metadata write
 - does not run local media generation, the scoped moment generator, or the catalogue search rebuild
 - records Studio Activity when a non-dry-run import writes source
@@ -70,7 +70,7 @@ Apply behavior:
 
 Current behavior after successful canonical writes:
 
-- the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
+- the server refreshes the derived Studio lookup payloads under `site/assets/studio/data/catalogue_lookup/`
 - single work, work-detail, and series saves first use the catalogue field registry to decide whether `studio-lookup` is affected
 - `studio/services/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from current serializer dependencies in `studio/services/catalogue/catalogue_lookup.py`
 - when the changed fields affect only the focused lookup record, the server rewrites only that record file
@@ -91,9 +91,9 @@ Why the current refresh is broad:
   - series search
   - member-work summaries across related work records
 - moments are part of the wider catalogue surface too, but their derived artifacts are:
-  - `assets/moments/index/<moment_id>.json`
-  - `assets/data/moments_index.json`
-  - catalogue search entries built from `assets/data/moments_index.json`
+  - `site/assets/moments/index/<moment_id>.json`
+  - `site/assets/data/moments_index.json`
+  - catalogue search entries built from `site/assets/data/moments_index.json`
   - they currently have no cross-record dependency graph comparable to work/series membership
 
 Follow-on direction:

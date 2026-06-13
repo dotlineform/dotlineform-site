@@ -41,7 +41,7 @@ def write_fixture_assignments(repo_root: Path) -> Path:
 
 
 def write_fixture_series_index(repo_root: Path) -> Path:
-    series_index_path = repo_root / "assets" / "data" / "series_index.json"
+    series_index_path = repo_root / "site" / "assets" / "data" / "series_index.json"
     series_index_path.parent.mkdir(parents=True)
     series_index_path.write_text(
         """{
