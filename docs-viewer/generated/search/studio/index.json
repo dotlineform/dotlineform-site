@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e9d6a0817eb35b88636879c23876b2aa",
-    "generated_at_utc": "2026-06-13T10:26:14Z",
-    "count": 236
+    "version": "blake2b-d374eb487877eda7e49626dc44addf84",
+    "generated_at_utc": "2026-06-13T10:54:51Z",
+    "count": 237
   },
   "entries": [
     {
@@ -873,10 +873,10 @@
       "kind": "doc",
       "title": "Site Shell Runtime",
       "href": "/docs/?scope=studio&doc=site-shell-runtime",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-29 • Architecture",
+      "display_meta": "2026-06-13 • Architecture",
       "search_terms": [
         "site-shell-runtime",
         "site",
@@ -884,12 +884,12 @@
         "runtime",
         "site shell runtime",
         "architecture",
-        "2026-05-29",
+        "2026-06-13",
         "2026",
-        "05",
-        "29"
+        "06",
+        "13"
       ],
-      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-29 2026 05 29"
+      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-06-13 2026 06 13"
     },
     {
       "id": "source-tree-ownership",
@@ -2430,10 +2430,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-12 • Endpoint Overview",
+      "display_meta": "2026-06-13 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-scope-lifecycle",
         "scripts",
@@ -2446,12 +2446,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-12 2026 06 12"
+      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-13 2026 06 13"
     },
     {
       "id": "scripts-docs-management-endpoints-source-config",
@@ -2827,10 +2827,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-12 • Docs Viewer",
+      "display_meta": "2026-06-13 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -2840,34 +2840,34 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-12 2026 06 12"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-overview",
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-05 • Docs Viewer",
+      "display_meta": "2026-06-13 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-06-05",
+        "2026-06-13",
         "2026",
         "06",
-        "05"
+        "13"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-panel-hosts",
@@ -2922,10 +2922,10 @@
       "kind": "doc",
       "title": "Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-05-29 • Portable Setup",
+      "display_meta": "2026-06-13 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -2937,22 +2937,22 @@
         "manifest",
         "portable setup",
         "setup",
-        "2026-05-29",
+        "2026-06-13",
         "2026",
-        "05",
-        "29"
+        "06",
+        "13"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-05-29 2026 05 29"
+      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-portable-scope-setup",
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-12 • Portable Setup",
+      "display_meta": "2026-06-13 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -2962,12 +2962,12 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-12 2026 06 12"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -3000,10 +3000,10 @@
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=docs-viewer-public-scopes",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-10 • Docs Viewer",
+      "display_meta": "2026-06-13 • Docs Viewer",
       "search_terms": [
         "docs-viewer-public-scopes",
         "docs",
@@ -3012,12 +3012,39 @@
         "scopes",
         "public scopes",
         "docs viewer",
-        "2026-06-10",
+        "2026-06-13",
         "2026",
         "06",
-        "10"
+        "13"
       ],
-      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-10 2026 06 10"
+      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "docs-viewer-public-route-shell-template",
+      "kind": "doc",
+      "title": "Public Route Shell Template",
+      "href": "/docs/?scope=studio&doc=docs-viewer-public-route-shell-template",
+      "last_updated": "2026-06-13",
+      "parent_id": "docs-viewer-public-scopes",
+      "parent_title": "Public Scopes",
+      "display_meta": "2026-06-13 • Public Scopes",
+      "search_terms": [
+        "docs-viewer-public-route-shell-template",
+        "docs",
+        "viewer",
+        "public",
+        "route",
+        "shell",
+        "template",
+        "public route shell template",
+        "public scopes",
+        "scopes",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template public route shell template public scopes scopes 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-reports",
@@ -3141,10 +3168,10 @@
       "kind": "doc",
       "title": "Runtime Surfaces",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-13",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-05 • Runtime",
+      "display_meta": "2026-06-13 • Runtime",
       "search_terms": [
         "docs-viewer-runtime-surfaces",
         "docs",
@@ -3152,12 +3179,12 @@
         "runtime",
         "surfaces",
         "runtime surfaces",
-        "2026-06-05",
+        "2026-06-13",
         "2026",
         "06",
-        "05"
+        "13"
       ],
-      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-semantic-references",
@@ -5585,10 +5612,10 @@
       "kind": "doc",
       "title": "Modal Shell Primitive",
       "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-13",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-06-10 • UI Catalogue",
+      "display_meta": "2026-06-13 • UI Catalogue",
       "search_terms": [
         "ui-primitive-modal-shell",
         "ui",
@@ -5598,12 +5625,12 @@
         "modal shell primitive",
         "ui catalogue",
         "catalogue",
-        "2026-06-10",
+        "2026-06-13",
         "2026",
         "06",
-        "10"
+        "13"
       ],
-      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-06-10 2026 06 10"
+      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-06-13 2026 06 13"
     },
     {
       "id": "ui-primitive-panel",

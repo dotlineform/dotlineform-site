@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: docs-viewer
 viewable: true
 ---
@@ -26,9 +26,10 @@ It should:
 Current policy:
 
 - `New scope` defaults to a local-only uncommitted scope
-- public read-only scope creation is disabled until public Docs Viewer routes are data-driven
-- public scope deletion is disabled
-- the portable public install work is tracked in [Portable Static Docs Viewer Install Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
+- public read-only scope creation is available through the local management lifecycle action
+- user-created public scope deletion is available when the scope manifest records owned files
+- public route shells are rendered from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
+- the completed retargeting work is recorded in [Public Scope Lifecycle Site Retarget Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
 
 ## Scope Creation Boundary
 
@@ -72,7 +73,7 @@ Public read-only routes should not expose create-scope controls, management endp
 
 Public read-only route shells are checked-in static HTML under `site/`.
 New public scopes must not create Markdown route files or generated Python source.
-The future public-scope lifecycle path should add or update data/config route records and let the static builder render route shells from those records.
+The public-scope lifecycle path renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html` during the local write action and updates data/config route records.
 
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local management shell.
 In this repo, that route is `/docs/`.
@@ -85,10 +86,11 @@ Public read-only routes ignore and normalize away `scope` and `mode` so they can
 
 ### Public Read-Only Scope
 
-This option is temporarily disabled in the New Scope modal and server lifecycle endpoints.
+Use this option when the scope should publish a public read-only route under `site/`.
 
-Public scope creation should be re-enabled only after public Docs Viewer routes are data-driven.
-When that work is complete, public scope creation should update source/config records and route metadata, not write Markdown route stubs or Python source.
+Public scope creation updates source/config records, public route metadata, published public payload roots, and a tracked static route shell.
+It renders `site/<route>/index.html` from `docs-viewer/templates/public-route/index.html`.
+It does not write Markdown route stubs or Python source.
 
 Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>&mode=manage` and publish through the explicit `Publish docs` action.
 
@@ -250,8 +252,8 @@ Validation rules currently implemented:
 - `scope_id` must not already exist in the scope manifest
 - `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
-- `publishing_mode` must be `local_uncommitted` or `local_committed`
-- `public_readonly` is rejected until public Docs Viewer routes are data-driven
+- `publishing_mode` must be `public_readonly`, `local_uncommitted`, or `local_committed`
+- `public_readonly` requires a valid `public_route_path`
 - committed manage-mode generated docs output must not be under `site/assets/data/docs/scopes/`
 - committed manage-mode generated search output must not be under `site/assets/data/search/`
 - planned created paths must not already exist
@@ -446,7 +448,7 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 
 - collects scope id, title, source root, default doc id, publishing mode, generated-output choice, and inline-search choice
 - defaults publishing mode to `local_uncommitted`
-- excludes `public_readonly` from the publishing-mode dropdown
+- includes `public_readonly` when the local service advertises it as a supported publishing mode
 - previews the server-planned write set before enabling the save step
 - sends `confirm: true` only from the final save action
 - reports created files, changed files, build commands, and resulting URLs from the server response
@@ -476,6 +478,6 @@ Implementation ownership:
 - The write server should refuse paths outside the configured repo allowlist.
 - Manage-mode scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
-- Public read-only scope creation and deletion stay disabled until the data-driven public route request is implemented.
+- Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

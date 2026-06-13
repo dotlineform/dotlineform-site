@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-29
+last_updated: 2026-06-13
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -19,20 +19,20 @@ viewable: true
 Copy:
 
 - `docs-viewer/shell/docs-viewer-shell.html`
-- `_includes/docs_viewer_shell.html`
-- `_includes/docs_viewer_readonly_route.html`
+- `docs-viewer/templates/public-route/index.html`
 
 If management mode should include Docs Import, also copy:
 
-- the Docs Import modal markup embedded in `_includes/docs_viewer_shell.html`
+- `docs-viewer/runtime/js/import/`
+- the management UI text used by Docs Import
 
-The route adapter includes wrap `docs_viewer_shell.html` with the right public or management flags.
-Examples in this repo are:
+Current public route shell examples in this repo are:
 
-- `library/index.md`
-- `analysis/index.md`
+- `site/library/index.html`
+- `site/analysis/index.html`
 
-Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
+Use `docs-viewer/templates/public-route/index.html` to create new public corpus routes such as `/research/`.
+In this repo, New Scope renders that template into `site/<route>/index.html` during the local lifecycle write action.
 
 Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
 
@@ -138,8 +138,9 @@ Copy:
 - `docs-viewer/config/reports/reports.json`
 - `site/assets/data/docs/reports.json`
 
-`docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe route-config registry.
-Route shells should point at it with `data-route-config-url` and identify themselves with `data-route-id`.
+`docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe manage/local route-config registry.
+`docs-viewer/config/routes/docs-viewer-public-routes.json` is the browser-safe public route-config registry.
+Route shells should point at the appropriate registry with `data-route-config-url` and identify themselves with `data-route-id`.
 
 For standalone local manage mode, the Docs Viewer service serves this registry path with local loopback management/generated-read base URLs injected at request time.
 

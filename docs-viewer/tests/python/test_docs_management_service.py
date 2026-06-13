@@ -57,6 +57,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
     (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
+    write_docs_route_configs(repo_root)
     write_doc(
         repo_root,
         "non-viewable-doc.md",
@@ -154,6 +155,13 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
 def write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def write_docs_route_configs(root: Path) -> None:
+    registry = {"schema_version": "docs_viewer_route_config_registry_v1", "routes": []}
+    write_json(root / "docs-viewer/config/routes/docs-viewer-routes.json", registry)
+    write_json(root / "docs-viewer/config/routes/docs-viewer-public-routes.json", registry)
+    write_json(root / "site/docs-viewer/config/routes/docs-viewer-public-routes.json", registry)
 
 
 def write_generated_docs(root: Path) -> None:
@@ -354,7 +362,11 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is True
-    assert payload["capabilities"]["scope_lifecycle"]["publishing_modes"] == ["local_uncommitted", "local_committed"]
+    assert payload["capabilities"]["scope_lifecycle"]["publishing_modes"] == [
+        "public_readonly",
+        "local_uncommitted",
+        "local_committed",
+    ]
 
 
 def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
@@ -372,28 +384,38 @@ def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
     assert any(file["path"] == "docs-viewer/source/studio/child.md" for file in records["studio"]["files"])
 
 
-def test_scope_create_preview_blocks_public_readonly_until_routes_are_data_driven() -> None:
+def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
-        try:
-            docs_management_service.docs_scope_manifest.plan_create_scope_preview(
-                repo_root,
-                {
-                    "scope_id": "research",
-                    "title": "Research",
-                    "source_root": "docs-viewer/source/research",
-                    "default_doc_id": "research",
-                    "publishing_mode": "public_readonly",
-                    "public_route_path": "/research/",
-                    "build_inline_search": True,
-                    "write_generated_outputs": True,
-                },
-            )
-        except ValueError as exc:
-            assert "public_readonly scope creation is disabled" in str(exc)
-        else:
-            raise AssertionError("Expected public read-only scope creation to be blocked")
+        payload = docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+            repo_root,
+            {
+                "scope_id": "research",
+                "title": "Research",
+                "source_root": "docs-viewer/source/research",
+                "default_doc_id": "research",
+                "publishing_mode": "public_readonly",
+                "public_route_path": "/research/",
+                "build_inline_search": True,
+                "write_generated_outputs": True,
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
+    assert payload["planned_scope_config"]["include_scope_param"] is False
+    assert payload["planned_scope_config"]["publish_output"] == "site/assets/data/docs/scopes/research"
+    assert payload["planned_scope_config"]["publish_search_output"] == "site/assets/data/search/research/index.json"
+    assert payload["urls"]["public"] == "/research/"
+    assert any(file["path"] == "site/research/index.html" for file in payload["created_files"])
+    assert any(file["path"] == "site/assets/data/docs/scopes/research" for file in payload["publish_files"])
+    assert any(file["path"] == "site/assets/data/docs/scopes/research/by-id" for file in payload["publish_files"])
+    assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
+    changed_paths = {file["path"] for file in payload["changed_files"]}
+    assert "docs-viewer/config/routes/docs-viewer-routes.json" in changed_paths
+    assert "docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
+    assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
 
 
 def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:
@@ -680,6 +702,77 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "docs-viewer/config/routes/docs-viewer-public-routes.json" not in recorded_paths
 
 
+def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> None:
+    calls: list[tuple[Path, str, dict[str, object]]] = []
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+
+    def fake_rebuild(repo_root: Path, scope: str, **kwargs):
+        calls.append((repo_root, scope, kwargs))
+        docs_output = repo_root / "docs-viewer/generated/docs" / scope
+        (docs_output / "by-id").mkdir(parents=True)
+        (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
+        (docs_output / "recently-added.json").write_text("{}", encoding="utf-8")
+        (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
+        search_output = repo_root / "docs-viewer/generated/search" / scope
+        search_output.mkdir(parents=True)
+        (search_output / "index.json").write_text(json.dumps({"entries": []}), encoding="utf-8")
+        return {"ok": True}
+
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            payload = docs_management_service.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "docs-viewer/source/research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                    "build_inline_search": True,
+                    "write_generated_outputs": True,
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            route_html = (repo_root / "site/research/index.html").read_text(encoding="utf-8")
+            scope_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            public_routes = json.loads((repo_root / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8"))
+            all_routes = json.loads((repo_root / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            public_doc_exists = (repo_root / "site/assets/data/docs/scopes/research/by-id/research.json").exists()
+            public_search_exists = (repo_root / "site/assets/data/search/research/index.json").exists()
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["publishing_mode"] == "public_readonly"
+    assert calls == [(repo_root, "research", {"include_search": True})]
+    assert 'data-allow-management="false"' not in route_html
+    assert 'data-route-id="research"' in route_html
+    assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in route_html
+    assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js?v=static"' in route_html
+    assert "docs_viewer_readonly_route.html" not in route_html
+    assert scope_payload["scopes"][1]["scope_id"] == "research"
+    assert scope_payload["scopes"][1]["viewer_base_url"] == "/research/"
+    assert scope_payload["scopes"][1]["include_scope_param"] is False
+    assert public_routes["routes"][0]["route_id"] == "research"
+    assert public_routes["routes"][0]["route_path"] == "/research/"
+    assert public_routes["routes"][0]["docs_paths"]["index_tree_url"] == "/assets/data/docs/scopes/research/index-tree.json"
+    assert any(route["route_id"] == "research" for route in all_routes["routes"])
+    assert public_doc_exists is True
+    assert public_search_exists is True
+    records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
+    assert records["research"]["scope_type"] == "public"
+    recorded_paths = {file["path"] for file in records["research"]["files"]}
+    assert "site/research/index.html" in recorded_paths
+    assert "docs-viewer/config/routes/docs-viewer-public-routes.json" in recorded_paths
+    assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in recorded_paths
+
+
 def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
     docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
@@ -744,7 +837,7 @@ def test_scope_delete_preview_blocks_system_scopes() -> None:
     assert "system-owned" in payload["blockers"][0]
 
 
-def test_scope_delete_preview_blocks_public_user_created_scopes() -> None:
+def test_scope_delete_preview_allows_public_user_created_scopes() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -779,8 +872,8 @@ def test_scope_delete_preview_blocks_public_user_created_scopes() -> None:
         )
 
     assert payload["ok"] is True
-    assert payload["allowed"] is False
-    assert "public scope deletion is disabled" in payload["blockers"][0]
+    assert payload["allowed"] is True
+    assert payload["blockers"] == []
 
 
 def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
@@ -914,6 +1007,82 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert generated_docs_exists is False
     assert generated_search_exists is False
     assert any(file["path"] == "docs-viewer/source/research" for file in payload["deleted_files"])
+
+
+def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> None:
+    create_calls: list[tuple[Path, str, dict[str, object]]] = []
+    delete_calls: list[Path] = []
+    original_create_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    original_delete_rebuild = docs_management_service.write_rebuild.rebuild_all_docs_outputs
+
+    def fake_create_rebuild(repo_root: Path, scope: str, **kwargs):
+        create_calls.append((repo_root, scope, kwargs))
+        docs_output = repo_root / "docs-viewer/generated/docs" / scope
+        (docs_output / "by-id").mkdir(parents=True)
+        (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
+        (docs_output / "recently-added.json").write_text("{}", encoding="utf-8")
+        (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
+        search_output = repo_root / "docs-viewer/generated/search" / scope
+        search_output.mkdir(parents=True)
+        (search_output / "index.json").write_text(json.dumps({"entries": []}), encoding="utf-8")
+        return {"ok": True}
+
+    def fake_delete_rebuild(repo_root: Path):
+        delete_calls.append(repo_root)
+        return {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
+
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_create_rebuild
+    docs_management_service.write_rebuild.rebuild_all_docs_outputs = fake_delete_rebuild
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            docs_management_service.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "docs-viewer/source/research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            payload = docs_management_service.handle_scope_delete_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            public_routes = json.loads((repo_root / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8"))
+            all_routes = json.loads((repo_root / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8"))
+            route_exists = (repo_root / "site/research/index.html").exists()
+            public_docs_exists = (repo_root / "site/assets/data/docs/scopes/research").exists()
+            public_search_exists = (repo_root / "site/assets/data/search/research/index.json").exists()
+            source_root_exists = (repo_root / "docs-viewer/source/research").exists()
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
+        docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
+
+    assert payload["ok"] is True
+    assert delete_calls == [repo_root]
+    assert create_calls == [(repo_root, "research", {"include_search": True})]
+    assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]
+    assert public_routes["routes"] == []
+    assert all_routes["routes"] == []
+    assert route_exists is False
+    assert public_docs_exists is False
+    assert public_search_exists is False
+    assert source_root_exists is False
+    deleted_paths = {file["path"] for file in payload["deleted_files"]}
+    assert "site/research/index.html" in deleted_paths
+    assert "site/assets/data/docs/scopes/research" in deleted_paths
+    assert "site/assets/data/search/research/index.json" in deleted_paths
 
 
 def test_source_config_report_reads_known_config_files() -> None:

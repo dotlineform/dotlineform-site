@@ -58,6 +58,7 @@ Those boundaries are intentional:
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the route-shell, runtime, and URL/state model.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains source roots, parent/child structure, and generated ordering.
+- [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template) explains how new public route shells are rendered from the canonical template into tracked `site/` HTML.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records how shared runtime behavior, scope differences, and forks are handled.
 - [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) is the current implementation map for browser runtime ownership.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) covers build mechanics, generated payloads, and command usage.

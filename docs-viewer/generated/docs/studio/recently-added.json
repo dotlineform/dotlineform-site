@@ -27,6 +27,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "docs-viewer-public-route-shell-template",
+      "title": "Public Route Shell Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json",
+      "added_date": "2026-06-13",
+      "parent_id": "docs-viewer-public-scopes",
+      "parent_title": "Public Scopes"
+    },
+    {
       "doc_id": "github-actions",
       "title": "GitHub Actions",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/github-actions.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-10",
       "parent_id": "site-request-admin-checks-operational-reports",
       "parent_title": "Admin Checks Operational Reports"
-    },
-    {
-      "doc_id": "site-request-report-runtime-checks",
-      "title": "Runtime Checks Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-operational-reports",
-      "parent_title": "Admin Checks Operational Reports"
     }
   ],
-  "generated_at": "2026-06-13T10:26:13Z"
+  "generated_at": "2026-06-13T10:53:12Z"
 }

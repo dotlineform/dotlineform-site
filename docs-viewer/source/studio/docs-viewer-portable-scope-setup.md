@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -82,16 +82,19 @@ The public config is filtered to static read-only routes, so a new `public_reado
 `repo_assets` makes Docs Import copy imported images and files below `site/assets/docs/research/` and write literal `/assets/docs/research/...` links.
 Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
 
-### New Scope Action Status
+### New Scope Action
 
-The Docs Viewer New Scope action can still be used for manage-mode scope planning.
-Its public read-only path needs updating before it should be used to create a new public scope.
-The stale path still plans a legacy Markdown route stub; the current public site needs static-builder route records and renderer config instead.
+The Docs Viewer New Scope action is the preferred way to create a repo-local public read-only scope.
+For `publishing_mode: "public_readonly"`, it creates source/config records, working generated output, public payload snapshots, route registry records, and the tracked public route shell.
+It renders the shell from `docs-viewer/templates/public-route/index.html`.
+
+See [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
 
 ### 4. Add The Public Static Route
 
-Add a public Docs Viewer route shell to the Python static-site builder rather than creating a Markdown route file.
+When using New Scope, this step is performed by the lifecycle action.
 Current public Docs Viewer route shells are checked-in static HTML under `site/`.
+New Scope renders the route shell into `site/<route>/index.html`; there is no deploy-time static-site builder or Markdown route file.
 
 The route must also be represented in browser-safe route config:
 
@@ -100,7 +103,6 @@ The route must also be represented in browser-safe route config:
 
 The static route shell sets:
 
-- `data-allow-management="false"`
 - `data-route-id="<scope>"`
 - `data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"`
 

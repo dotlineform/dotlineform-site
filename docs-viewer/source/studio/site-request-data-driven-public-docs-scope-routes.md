@@ -3,7 +3,7 @@ doc_id: site-request-data-driven-public-docs-scope-routes
 title: Public Scope Lifecycle Site Retarget Request
 added_date: 2026-06-12
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 
 Status:
 
-- planned
+- done
 
 ## Summary
 
@@ -132,7 +132,6 @@ The public route shell has a small static contract:
 - a Docs Viewer root element
 - `data-route-id`
 - `data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"`
-- `data-allow-management="false"`
 - public Docs Viewer CSS
 - public Docs Viewer runtime entrypoint
 - header controls mount attributes:
@@ -199,7 +198,6 @@ The creation flow should inject only route-specific shell values:
 
 The route shell `data-*` contract should preserve what `/library/` and `/analysis/` already use:
 
-- `data-allow-management="false"`
 - `data-route-id="<route-id>"`
 - `data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"`
 - `data-docs-viewer-header-controls-mount`
@@ -223,26 +221,61 @@ It should not be the documented lifecycle contract because it creates independen
 If the public route shell contract changes later, maintenance tooling may update installed tracked route shells from the template as an explicit source edit.
 That is still not a deploy build step.
 
-## Remaining Decisions
+## Implementation Decisions
 
-Before implementation, decide only the details needed to retarget the existing lifecycle actions:
+The lifecycle retarget made these ownership decisions:
 
-- whether scope deletion should remove public route records and canonical `site/` route shells for user-created public scopes
-- whether route-specific search labels should stay in the static shell template inputs or move into route config/UI text
+- Scope deletion removes public route records and canonical `site/` route shells for user-created public scopes.
+- Scope deletion removes public docs/search payloads owned by the deleted scope.
+- Route-specific search labels remain template inputs for now, matching the current installed public route shell contract.
+- Public management access remains route-config behavior, not a static `data-allow-management="false"` shell attribute.
 
 ## Task Tracker
 
 | Task | Status | Description |
 | --- | --- | --- |
-| 1 | pending | Audit the existing New Scope and Delete Scope public-readonly paths and record the current file plan. |
-| 2 | pending | Verify that the current public route-shell `data-*` attributes are read by the public Docs Viewer runtime; remove any dead attributes from the current route shells and template contract. |
-| 3 | pending | Add a canonical public route shell template at `docs-viewer/templates/public-route/index.html`. |
-| 4 | pending | Retarget New Scope public-readonly preview/apply to render the template into `site/<route>/index.html` instead of creating a Markdown route stub. |
-| 5 | pending | Retarget New Scope public-readonly preview/apply to update public route config for the new route. |
-| 6 | pending | Keep the existing creation of source root, default source doc, working generated roots, public docs payload root, and public search payload when enabled, including `site/assets/data/docs/scopes/<scope>/` and default doc material. |
-| 7 | pending | Retarget Delete Scope to remove user-created public route config records, `site/<route>/index.html`, and public docs/search payloads owned by the scope. |
-| 8 | pending | Add optional maintenance tooling to refresh installed tracked route shells from the template when the shell contract changes. |
-| 9 | pending | Update stable docs and route lifecycle tests. |
+| 1 | done | Audited the existing New Scope and Delete Scope public-readonly paths and recorded the current file plan in this request. |
+| 2 | done | Verified current public route-shell `data-*` readers. `data-allow-management="false"` had no public runtime reader, so it was removed from current public route shells and the template contract. |
+| 3 | done | Added the canonical public route shell template at `docs-viewer/templates/public-route/index.html`. |
+| 4 | done | Retargeted New Scope public-readonly preview/apply to render the template into `site/<route>/index.html` instead of creating a Markdown route stub. |
+| 5 | done | Retargeted New Scope public-readonly preview/apply to update existing public route config registries for the new route. |
+| 6 | done | Preserved creation of source root, default source doc, working generated roots, public docs payload root, and public search payload when enabled, including `site/assets/data/docs/scopes/<scope>/` and default doc material. |
+| 7 | done | Retargeted Delete Scope to remove user-created public route config records, `site/<route>/index.html`, and public docs/search payloads owned by the scope. |
+| 8 | deferred | Optional bulk refresh tooling for existing tracked route shells was not needed for the lifecycle retarget. The template renderer is available for New Scope creation. |
+| 9 | done | Updated stable docs and route lifecycle tests. |
+
+## Implementation Result
+
+The existing New Scope and Delete Scope lifecycle actions now support public-readonly scopes against the `site/` static deploy root.
+
+New Scope public-readonly now:
+
+- accepts `publishing_mode: "public_readonly"`
+- writes a tracked static route shell at `site/<route>/index.html`
+- renders that shell from `docs-viewer/templates/public-route/index.html`
+- updates existing Docs Viewer route registries for the new public route
+- keeps source/default-doc/generated-output creation behavior
+- syncs the initial rebuilt docs/search payloads into the configured public `site/assets/data/...` publish roots
+
+Delete Scope now allows user-created public scopes and removes:
+
+- the user-created public route shell
+- the user-created public route records
+- source docs and generated outputs recorded in the scope manifest
+- public docs/search payloads owned by the scope
+
+The public route shell contract now relies on route config for management access.
+The dead public `data-allow-management="false"` attribute was removed from `site/library/index.html`, `site/analysis/index.html`, and the new template.
+
+## Completed Verification
+
+- Focused lifecycle and service tests: `$HOME/miniconda3/bin/python3 -m pytest -q docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/python/test_docs_viewer_service.py`.
+- Result: `62 passed`.
+- Syntax check: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_scope_manifest.py`.
+- Static site validation: `bin/site-validate`.
+- Result: `Site validation passed: 47 required files; 9 required directories; 44 Docs Viewer runtime modules`.
+- Public browser smoke: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root site`.
+- Result: public Docs Viewer read-only OK for `/library/` and `/analysis/`.
 
 ## Verification Expectations
 

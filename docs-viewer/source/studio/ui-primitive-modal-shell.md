@@ -2,7 +2,7 @@
 doc_id: ui-primitive-modal-shell
 title: Modal Shell Primitive
 added_date: 2026-05-15
-last_updated: 2026-06-10
+last_updated: 2026-06-13
 parent_id: ui-catalogue
 ---
 # Modal Shell Primitive
@@ -159,7 +159,8 @@ Current implementation sources:
 - `site/assets/studio/css/studio.css`
 - `docs-viewer/runtime/js/management/docs-viewer-management-modals.js`
 - `docs-viewer/static/css/docs-viewer-manage.css`
-- `_includes/docs_viewer_shell.html`
+- `docs-viewer/shell/docs-viewer-shell.html`
+- `docs-viewer/templates/public-route/index.html`
 
 Current demo implementation lives in:
 

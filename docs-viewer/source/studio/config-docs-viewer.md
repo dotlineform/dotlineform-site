@@ -146,7 +146,9 @@ It exposes browser-safe settings only:
 
 The full config includes every configured Docs Viewer scope for the local manage shell.
 The public config includes only static public read-only route scopes: entries whose source scope config has `include_scope_param: false` and a route base outside `/docs/`.
-Public route files such as `library/index.md` and `analysis/index.md` should use the read-only adapter; the generated public config lets those pages resolve their scope from `viewer_base_url`.
+Public route files such as `site/library/index.html` and `site/analysis/index.html` are tracked static shells.
+New public route shells render from `docs-viewer/templates/public-route/index.html`, identify themselves with `data-route-id`, and read the public route registry from `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
+The generated public config lets those pages resolve their scope from `viewer_base_url`.
 
 Do not hand-edit `docs-viewer-config.json` or `docs-viewer-public-config.json`, because they are generated files.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.

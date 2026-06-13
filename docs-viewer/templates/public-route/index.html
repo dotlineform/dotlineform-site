@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Library | dotlineform</title>
+  <title>__PAGE_TITLE__ | dotlineform</title>
   <meta name="dlf-asset-version" content="static">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="/assets/css/main.css?v=static">
   <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=static">
 </head>
-<body class="library">
+<body class="__BODY_CLASS__">
   <header class="site-header">
     <div class="container">
       <div class="site-title">
@@ -34,7 +34,7 @@
         <nav class="site-nav" aria-label="Primary">
           <a class="nav-item" href="/series/">works</a>
           <a class="nav-item" href="/analysis/">analysis</a>
-          <span class="nav-item is-active" aria-current="page">library</span>
+          <a class="nav-item" href="/library/">library</a>
         </nav>
         <button class="siteThemeToggle" type="button" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="siteThemeToggle__icon" data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
@@ -60,16 +60,16 @@
     <section
       class="docsViewer"
       id="docsViewerRoot"
-      data-route-id="library"
+      data-route-id="__ROUTE_ID__"
       data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"
     >
       <div class="docsViewer__controls">
         <div
           id="docsViewerHeaderControlsMount"
           data-docs-viewer-header-controls-mount
-          data-enable-search="true"
-          data-search-placeholder="search library"
-          data-search-aria-label="Search library"
+          data-enable-search="__ENABLE_SEARCH__"
+          data-search-placeholder="__SEARCH_PLACEHOLDER__"
+          data-search-aria-label="__SEARCH_ARIA_LABEL__"
         ></div>
         <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
         <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>

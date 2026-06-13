@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import html
 import json
 import re
 import shutil
@@ -16,6 +17,7 @@ from docs_scope_config import (
     PUBLIC_DOCS_OUTPUT_ROOT,
     PUBLIC_SEARCH_OUTPUT_ROOT,
     DocsScopeConfig,
+    default_repo_root,
     load_docs_scope_configs,
     safe_relative_path,
 )
@@ -32,8 +34,14 @@ SAFE_ROUTE_PART_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 PUBLIC_MODE = "public_readonly"
 LOCAL_COMMITTED_MODE = "local_committed"
 LOCAL_UNCOMMITTED_MODE = "local_uncommitted"
-PUBLISHING_MODES = (LOCAL_UNCOMMITTED_MODE, LOCAL_COMMITTED_MODE)
-SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest"}
+PUBLISHING_MODES = (PUBLIC_MODE, LOCAL_UNCOMMITTED_MODE, LOCAL_COMMITTED_MODE)
+SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest", "route_config", "public_route_config"}
+PUBLIC_ROUTE_TEMPLATE_REL_PATH = Path("docs-viewer/templates/public-route/index.html")
+ROUTE_CONFIG_REL_PATH = Path("docs-viewer/config/routes/docs-viewer-routes.json")
+PUBLIC_ROUTE_CONFIG_REL_PATHS = (
+    Path("docs-viewer/config/routes/docs-viewer-public-routes.json"),
+    Path("site/docs-viewer/config/routes/docs-viewer-public-routes.json"),
+)
 
 
 def utc_now() -> str:
@@ -89,6 +97,8 @@ def published_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[
 
 def route_file_for_config(repo_root: Path, config: DocsScopeConfig) -> Path:
     route_base = config.viewer_base_url.strip("/")
+    if config.scope_type == "public" or (not config.include_scope_param and route_base and config.viewer_base_url != "/docs/"):
+        return repo_root / "site" / route_base / "index.html"
     route_rel = Path(route_base) / "index.md" if route_base else Path("index.md")
     return repo_root / route_rel
 
@@ -97,9 +107,10 @@ def route_is_readonly(route_path: Path) -> bool:
     if not route_path.exists() or not route_path.is_file():
         return False
     try:
-        return "docs_viewer_readonly_route.html" in route_path.read_text(encoding="utf-8")
+        text = route_path.read_text(encoding="utf-8")
     except OSError:
         return False
+    return "docs_viewer_readonly_route.html" in text or 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in text
 
 
 def git_path_status(repo_root: Path, path: Path) -> str:
@@ -220,7 +231,6 @@ def scope_delete_eligible(record: dict[str, Any] | None) -> bool:
         record
         and record.get("user_created") is True
         and record.get("created_by_tool") is True
-        and str(record.get("scope_type") or "").strip() != "public"
     )
 
 
@@ -251,8 +261,6 @@ def normalize_title(value: Any) -> str:
 
 def normalize_publishing_mode(value: Any) -> str:
     mode = str(value or "").strip().lower()
-    if mode == PUBLIC_MODE:
-        raise ValueError("public_readonly scope creation is disabled until public Docs Viewer routes are data-driven")
     if mode not in PUBLISHING_MODES:
         raise ValueError(f"publishing_mode must be one of: {', '.join(PUBLISHING_MODES)}")
     return mode
@@ -283,8 +291,8 @@ def normalize_route_path(value: Any) -> str:
 
 
 def route_file_for_public_path(repo_root: Path, public_route_path: str) -> Path:
-    route_rel = Path(public_route_path.strip("/")) / "index.md"
-    return repo_root / route_rel
+    route_rel = Path(public_route_path.strip("/")) / "index.html"
+    return repo_root / "site" / route_rel
 
 
 def bool_value(payload: dict[str, Any], key: str, default: bool) -> bool:
@@ -472,25 +480,41 @@ def default_source_doc_text(title: str, default_doc_id: str) -> str:
     )
 
 
-def readonly_route_text(title: str, scope_id: str, public_route_path: str) -> str:
+def readonly_route_text(title: str, scope_id: str, public_route_path: str, *, enable_search: bool = True) -> str:
     route_section = public_route_path.strip("/").split("/", 1)[0] or scope_id
     search_label = f"search {title.lower()}"
-    return "\n".join(
-        [
-            "---",
-            "layout: default",
-            f"title: {json.dumps(title, ensure_ascii=False)}",
-            f"section: {route_section}",
-            f"permalink: {public_route_path}",
-            "---",
-            "",
-            "{% include docs_viewer_readonly_route.html",
-            f"  search_placeholder={json.dumps(search_label, ensure_ascii=False)}",
-            f"  search_aria_label={json.dumps('Search ' + title, ensure_ascii=False)}",
-            "%}",
-            "",
-        ]
+    return render_public_route_shell(
+        title=title,
+        body_class=route_section,
+        route_id=scope_id,
+        enable_search=enable_search,
+        search_placeholder=search_label,
+        search_aria_label=f"Search {title}",
     )
+
+
+def render_public_route_shell(
+    *,
+    title: str,
+    body_class: str,
+    route_id: str,
+    enable_search: bool,
+    search_placeholder: str,
+    search_aria_label: str,
+) -> str:
+    template = (default_repo_root() / PUBLIC_ROUTE_TEMPLATE_REL_PATH).read_text(encoding="utf-8")
+    values = {
+        "__PAGE_TITLE__": html.escape(title, quote=True),
+        "__BODY_CLASS__": html.escape(body_class, quote=True),
+        "__ROUTE_ID__": html.escape(route_id, quote=True),
+        "__ENABLE_SEARCH__": "true" if enable_search else "false",
+        "__SEARCH_PLACEHOLDER__": html.escape(search_placeholder, quote=True),
+        "__SEARCH_ARIA_LABEL__": html.escape(search_aria_label, quote=True),
+    }
+    rendered = template
+    for token, value in values.items():
+        rendered = rendered.replace(token, value)
+    return rendered
 
 
 def load_json_object(path: Path, label: str) -> dict[str, Any]:
@@ -540,6 +564,101 @@ def remove_scope_config(repo_root: Path, scope_id: str) -> None:
         if isinstance(statuses_by_scope, dict):
             statuses_by_scope.pop(scope_id, None)
     write_text_atomic(config_path, render_json(payload))
+
+
+def public_route_record(scope_id: str, public_route_path: str, default_doc_id: str, *, build_inline_search: bool) -> dict[str, Any]:
+    return {
+        "schema_version": "docs_viewer_route_config_v1",
+        "route_id": scope_id,
+        "route_path": public_route_path,
+        "route_type": "public",
+        "default_scope_id": scope_id,
+        "default_doc_id": default_doc_id,
+        "include_scope_param": False,
+        "allow_scope_query": False,
+        "viewer_base_url": public_route_path,
+        "generated_base_url": "",
+        "access": {
+            "allow_management": False,
+            "allow_scope_query": False,
+            "management_base_url": "",
+            "management_mode_value": "manage",
+        },
+        "docs_paths": {
+            "index_tree_url": f"/assets/data/docs/scopes/{scope_id}/index-tree.json",
+            "recently_added_url": f"/assets/data/docs/scopes/{scope_id}/recently-added.json",
+            "search_index_url": f"/assets/data/search/{scope_id}/index.json" if build_inline_search else "",
+        },
+        "config_urls": {
+            "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+            "ui_text": "/docs-viewer/config/ui-text/public.json",
+        },
+        "panels": {
+            "index": {"enabled": True, "default_state": "normal"},
+            "main": {"enabled": True, "default_view": "rendered-document"},
+            "info": {"enabled": True, "default_view": "metadata-info"},
+        },
+        "hosted_views": {
+            "records": [],
+        },
+    }
+
+
+def route_registry_path_records(repo_root: Path, *, action: str) -> list[dict[str, Any]]:
+    return [
+        path_record(repo_root, "route_config", repo_root / ROUTE_CONFIG_REL_PATH, action=action),
+        *[
+            path_record(repo_root, "public_route_config", repo_root / rel_path, action=action)
+            for rel_path in PUBLIC_ROUTE_CONFIG_REL_PATHS
+        ],
+    ]
+
+
+def load_route_registry(path: Path, label: str) -> dict[str, Any]:
+    payload = load_json_object(path, label)
+    if payload.get("schema_version") != "docs_viewer_route_config_registry_v1":
+        raise ValueError(f"{label} schema_version must be docs_viewer_route_config_registry_v1")
+    routes = payload.get("routes")
+    if not isinstance(routes, list):
+        raise ValueError(f"{label} routes must be an array")
+    return payload
+
+
+def write_route_registry(path: Path, payload: dict[str, Any]) -> None:
+    write_text_atomic(path, render_json(payload))
+
+
+def append_public_route_record(repo_root: Path, route_record: dict[str, Any]) -> None:
+    route_id = str(route_record.get("route_id") or "").strip()
+    for rel_path in (ROUTE_CONFIG_REL_PATH, *PUBLIC_ROUTE_CONFIG_REL_PATHS):
+        path = repo_root / rel_path
+        payload = load_route_registry(path, rel_path.as_posix())
+        routes = payload["routes"]
+        if any(isinstance(item, dict) and str(item.get("route_id") or "").strip() == route_id for item in routes):
+            raise ValueError(f"route_id {route_id!r} already exists in {rel_path.as_posix()}")
+        routes.append(route_record)
+        write_route_registry(path, payload)
+
+
+def remove_public_route_record(repo_root: Path, scope_id: str) -> None:
+    for rel_path in (ROUTE_CONFIG_REL_PATH, *PUBLIC_ROUTE_CONFIG_REL_PATHS):
+        path = repo_root / rel_path
+        payload = load_route_registry(path, rel_path.as_posix())
+        routes = payload["routes"]
+        retained = [
+            item
+            for item in routes
+            if not (
+                isinstance(item, dict)
+                and (
+                    str(item.get("route_id") or "").strip() == scope_id
+                    or str(item.get("default_scope_id") or "").strip() == scope_id
+                )
+            )
+        ]
+        if len(retained) != len(routes):
+            payload["routes"] = retained
+            write_route_registry(path, payload)
 
 
 def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, Any]) -> list[dict[str, Any]]:
@@ -629,6 +748,27 @@ def apply_build_commands(preview: dict[str, Any], *, dry_run: bool) -> list[dict
     ]
 
 
+def sync_public_publish_outputs(repo_root: Path, config: dict[str, Any], *, include_search: bool) -> None:
+    docs_source = repo_root / safe_relative_path(config.get("output"), field="planned_scope_config.output")
+    docs_target = repo_root / safe_relative_path(config.get("publish_output"), field="planned_scope_config.publish_output")
+    if docs_source.exists():
+        if docs_target.exists():
+            shutil.rmtree(docs_target)
+        shutil.copytree(docs_source, docs_target)
+    if include_search:
+        search_source = repo_root / safe_relative_path(
+            config.get("search_output"),
+            field="planned_scope_config.search_output",
+        )
+        search_target = repo_root / safe_relative_path(
+            config.get("publish_search_output"),
+            field="planned_scope_config.publish_search_output",
+        )
+        if search_source.exists():
+            search_target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(search_source, search_target)
+
+
 def apply_create_scope(
     repo_root: Path,
     body: dict[str, Any],
@@ -655,7 +795,21 @@ def apply_create_scope(
             route_path = route_file_for_public_path(repo_root, str(preview["urls"]["public"]))
             write_text_atomic(
                 route_path,
-                readonly_route_text(str(preview["title"]), scope_id, str(preview["urls"]["public"])),
+                readonly_route_text(
+                    str(preview["title"]),
+                    scope_id,
+                    str(preview["urls"]["public"]),
+                    enable_search=bool(preview["build_inline_search"]),
+                ),
+            )
+            append_public_route_record(
+                repo_root,
+                public_route_record(
+                    scope_id,
+                    str(preview["urls"]["public"]),
+                    str(preview["planned_scope_config"]["default_doc_id"]),
+                    build_inline_search=bool(preview["build_inline_search"]),
+                ),
             )
         append_scope_manifest_record(repo_root, preview, manifest)
         if preview["write_generated_outputs"]:
@@ -664,6 +818,12 @@ def apply_create_scope(
                 scope_id,
                 include_search=preview["build_inline_search"],
             )
+            if preview["publishing_mode"] == PUBLIC_MODE:
+                sync_public_publish_outputs(
+                    repo_root,
+                    preview["planned_scope_config"],
+                    include_search=bool(preview["build_inline_search"]),
+                )
 
     return {
         "ok": True,
@@ -770,6 +930,8 @@ def apply_delete_scope(
     if not dry_run:
         delete_manifest_paths(repo_root, preview["delete_files"])
         remove_scope_config(repo_root, scope_id)
+        if str(preview.get("scope_type") or "").strip() == "public":
+            remove_public_route_record(repo_root, scope_id)
         remove_scope_manifest_record(repo_root, scope_id, manifest)
         rebuild = rebuild_all_docs_outputs(repo_root)
 
@@ -834,6 +996,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     ]
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
+        changed_files.extend(route_registry_path_records(repo_root, action="change"))
     if write_generated_outputs:
         docs_output = repo_root / safe_relative_path(
             planned_scope_config["output"],
@@ -881,7 +1044,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
                 )
             )
 
-    conflicts = [record["path"] for record in created_files if record.get("exists")]
+    conflicts = [
+        record["path"]
+        for record in [*created_files, *publish_files]
+        if record.get("exists")
+    ]
     if conflicts:
         raise ValueError(f"scope creation would overwrite existing paths: {', '.join(conflicts)}")
 
@@ -940,20 +1107,6 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             "changed_files": [],
             "build_commands": [],
         }
-    if str(record.get("scope_type") or "").strip() == "public":
-        return {
-            "ok": True,
-            "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-            "action": "delete_scope",
-            "operation": "preview",
-            "scope_id": scope_id,
-            "allowed": False,
-            "blockers": ["public scope deletion is disabled until public Docs Viewer routes are data-driven"],
-            "delete_files": [],
-            "missing_files": [],
-            "changed_files": [],
-            "build_commands": [],
-        }
     if not scope_delete_eligible(record):
         return {
             "ok": True,
@@ -971,6 +1124,13 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
 
     delete_files, missing_files = manifest_delete_path_records(repo_root, record)
 
+    changed_files = [
+        path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
+        path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
+    ]
+    if str(record.get("scope_type") or "").strip() == "public":
+        changed_files.extend(route_registry_path_records(repo_root, action="change"))
+
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -981,10 +1141,8 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "blockers": [],
         "delete_files": delete_files,
         "missing_files": missing_files,
-        "changed_files": [
-            path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
-            path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
-        ],
+        "scope_type": str(record.get("scope_type") or "").strip(),
+        "changed_files": changed_files,
         "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=True),
         "summary_text": f"Previewed deletion for Docs Viewer scope {scope_id}.",
     }

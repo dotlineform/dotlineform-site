@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-06-05
+last_updated: 2026-06-13
 ui_status: urgent
 parent_id: docs-viewer
 ---
@@ -45,28 +45,28 @@ The registry defines scope-specific values such as:
 
 Current public route shells:
 
-- `library/index.html`
-- `analysis/index.html`
+- `site/library/index.html`
+- `site/analysis/index.html`
+
+New public route shells are created from:
+
+- `docs-viewer/templates/public-route/index.html`
 
 Current management service shell:
 
 - `docs-viewer/shell/docs-viewer-shell.html`
 
-### 2. Shared shell include
+### 2. Shared shell contract
 
-The route shells both render the same structural include:
-
-- `_includes/docs_viewer_shell.html`
-
-This include renders:
+Public route shells and the management service shell expose the stable mount points that the app shell fills before the runtime binds route behavior.
+The public route shell template renders:
 
 - the sidebar nav container
-- the desktop sidebar collapse control
 - the main content pane
 - the optional inline search input
 - status, path, and updated metadata areas
 
-It also provides the stable mount points that the app shell fills before the runtime binds route behavior.
+The management service shell renders the same app-owned mount contract plus management-only mounts and local-service context when enabled.
 
 ### 3. Public And Manage Entrypoints
 

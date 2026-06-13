@@ -344,7 +344,7 @@
           "doc_id": "site-request-data-driven-public-docs-scope-routes",
           "title": "Public Scope Lifecycle Site Retarget Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
-          "ui_status": "planned"
+          "ui_status": "done"
         },
         {
           "doc_id": "site-request-r2-media-upload-automation",
@@ -670,7 +670,14 @@
         {
           "doc_id": "docs-viewer-public-scopes",
           "title": "Public Scopes",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-scopes.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-scopes.json",
+          "children": [
+            {
+              "doc_id": "docs-viewer-public-route-shell-template",
+              "title": "Public Route Shell Template",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
+            }
+          ]
         },
         {
           "doc_id": "docs-viewer-reports",
@@ -1280,5 +1287,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T10:26:13Z"
+  "generated_at": "2026-06-13T10:53:12Z"
 }

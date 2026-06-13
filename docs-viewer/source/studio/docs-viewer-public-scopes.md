@@ -2,7 +2,7 @@
 doc_id: docs-viewer-public-scopes
 title: Public Scopes
 added_date: 2026-03-31
-last_updated: 2026-06-10
+last_updated: 2026-06-13
 parent_id: docs-viewer
 ---
 # Public Scopes
@@ -11,6 +11,9 @@ Current public routes:
 
 - `/library/`
 - `/analysis/`
+
+New public scopes can be created through the Docs Viewer New Scope lifecycle action with `publishing_mode: "public_readonly"`.
+The action renders the route shell from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public snapshot under `site/assets/data/`.
 
 ## Dependencies
 
@@ -21,6 +24,10 @@ Current public routes:
 
 Source and generated artifacts:
 
+- public route shell:
+  - `site/<route>/index.html`
+- public route registry:
+  - `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
 - source docs:
   - `docs-viewer/source/<scope>/*.md`
 - working generated docs data:
@@ -52,6 +59,31 @@ Source and generated artifacts:
 
 ## Source Model
 
+### `site/<route>/index.html`
+
+Purpose: canonical public route shell for one read-only Docs Viewer scope.
+
+Design:
+
+- tracked static HTML under `site/`
+- created from `docs-viewer/templates/public-route/index.html` for new public scopes
+- not regenerated during deploy
+- loads public Docs Viewer CSS and the public runtime entrypoint
+- identifies the route with `data-route-id`
+- reads public route config from `/docs-viewer/config/routes/docs-viewer-public-routes.json`
+- excludes management, import, report, source-editing, and localhost service surfaces
+
+### `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
+
+Purpose: browser-safe route registry for public read-only Docs Viewer routes.
+
+Design:
+
+- maps the public route id to its fixed scope, default doc, viewer base URL, public generated payload URLs, UI text config, and panel settings
+- does not grant write authority or local management access
+- is updated by New Scope for user-created public-readonly scopes
+- has user-created route records removed by Delete Scope when the manifest records ownership
+
 ### `docs-viewer/source/<scope>/*.md`
 
 Purpose: canonical authored content for the Library docs scope
@@ -73,6 +105,8 @@ Design:
 
 Public scope source edits, live watcher rebuilds, and docs-management write follow-through rebuild working generated output under `docs-viewer/generated/`.
 Public routes read only the published snapshots under `site/assets/data/`.
+New Scope public-readonly creation writes the initial working generated output and syncs that initial output to the public snapshot roots so the new route can load.
+After the scope exists, normal source edits rebuild the working output first.
 
 Publishing is a local management action:
 
@@ -82,6 +116,14 @@ Publishing is a local management action:
 
 The v1 publish gate is local and file-based.
 It does not add persistent confirmation ids, rollback, unpublish, publish manifests, or durable publish summary artifacts.
+
+## Lifecycle Ownership
+
+New Scope public-readonly creation records user-created files in `docs-viewer/config/scopes/docs_scope_manifest.json`.
+Delete Scope may remove a public scope only when that manifest records it as user-created and tool-created.
+
+Deletion removes the user-created route shell, user-created public route records, source docs, generated working outputs, and public docs/search payloads owned by the scope.
+It must not remove shared public runtime files, shared CSS, UI text, route registry files themselves, or unrelated public route shells.
 
 ### `site/assets/data/docs/scopes/<scope>/index-tree.json`
 

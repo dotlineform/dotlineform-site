@@ -120,11 +120,29 @@ def test_public_readonly_route_page_uses_public_entrypoint_contract() -> None:
     html = (REPO_ROOT / "site/library/index.html").read_text(encoding="utf-8")
 
     assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in html
-    assert 'data-allow-management="false"' in html
+    assert 'data-route-id="library"' in html
+    assert "data-docs-viewer-header-controls-mount" in html
+    assert 'data-enable-search="true"' in html
+    assert 'data-search-placeholder="search library"' in html
+    assert 'data-search-aria-label="Search library"' in html
+    assert 'data-allow-management="false"' not in html
     assert "docs-viewer/static/css/docs-viewer.css" in html
     assert "docs-viewer/static/css/docs-viewer-management.css" not in html
     assert "docs-viewer/static/css/docs-viewer-reports.css" not in html
     assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js' in html
+
+
+def test_public_route_shell_attributes_have_runtime_readers() -> None:
+    route_config = (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js").read_text(encoding="utf-8")
+    app_shell = (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js").read_text(encoding="utf-8")
+    toolbar = (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js").read_text(encoding="utf-8")
+
+    assert "dataset.routeConfigUrl" in route_config
+    assert "dataset.routeId" in route_config
+    assert "[data-docs-viewer-header-controls-mount]" in app_shell
+    assert "dataset.enableSearch" in toolbar
+    assert "dataset.searchPlaceholder" in toolbar
+    assert "dataset.searchAriaLabel" in toolbar
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:

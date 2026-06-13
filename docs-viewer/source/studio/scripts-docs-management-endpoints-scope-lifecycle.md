@@ -2,20 +2,22 @@
 doc_id: scripts-docs-management-endpoints-scope-lifecycle
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Scope Lifecycle Endpoints
 
-Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes and public scopes are blocked from lifecycle deletion.
+Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle deletion.
 
-Current create support is limited to local scope modes:
+Current create support includes:
 
+- `public_readonly`
 - `local_uncommitted`
 - `local_committed`
 
-`public_readonly` creation is rejected until public Docs Viewer routes are data-driven.
-Public scope deletion is also rejected.
+For public-readonly scopes, the lifecycle action renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html`.
+See [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
+User-created public scopes may be deleted when the manifest records the route shell, route records, and public payloads as owned by the lifecycle action.
 
 ## `POST /docs/scopes/create-preview`
 
@@ -28,6 +30,7 @@ Expected data:
   "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
+  "public_route_path": "/notes/",
   "build_inline_search": true,
   "write_generated_outputs": true
 }
@@ -36,6 +39,7 @@ Expected data:
 Actions:
 
 - validates the new scope id, title, default doc id, publishing mode, source root, and generated output paths
+- validates the public route path for `public_readonly`
 - checks for collisions with existing scopes and files
 - reports planned created files, changed files, build commands, and management URL
 - does not write files
@@ -53,6 +57,7 @@ Expected data:
   "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
+  "public_route_path": "/notes/",
   "build_inline_search": true,
   "write_generated_outputs": true,
   "confirm": true
@@ -66,6 +71,8 @@ Actions:
 - creates the allowlisted source root
 - writes the default welcome source doc
 - updates `docs-viewer/config/scopes/docs_scopes.json`
+- for public-readonly scopes, writes `site/<route>/index.html` from the route shell template
+- for public-readonly scopes, updates public route registries and syncs public docs/search payloads under `site/assets/data/`
 - writes or updates `docs-viewer/config/scopes/docs_scope_manifest.json`
 - rebuilds generated docs/search output for the new scope
 - logs a `docs_scope_create_apply` event
@@ -90,7 +97,6 @@ Actions:
 - verifies the scope is manifest-recorded, user-created, and tool-created
 - reports planned deleted files and config changes
 - blocks system-owned scopes
-- blocks public scopes
 - does not delete files
 
 Returned data includes `allowed`, `blockers`, manifest ownership metadata, planned deleted files, planned changed files, and `dry_run: true`.
@@ -112,6 +118,7 @@ Actions:
 - re-runs delete-preview validation
 - deletes only files owned by the manifest record
 - removes the scope config entry
+- removes user-created public route records when deleting a public-readonly scope
 - removes the manifest record
 - refreshes docs output for remaining scopes
 - logs a `docs_scope_delete_apply` event
