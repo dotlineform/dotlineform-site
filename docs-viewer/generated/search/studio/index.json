@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5cf0a9774936e8302b25adc1a1a45d5e",
-    "generated_at_utc": "2026-06-13T17:54:52Z",
-    "count": 248
+    "version": "blake2b-bb8264edf924107b0bcc3fcf132ee4ea",
+    "generated_at_utc": "2026-06-13T18:04:39Z",
+    "count": 249
   },
   "entries": [
     {
@@ -1681,6 +1681,36 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice site request public catalogue runtime module architecture selected work slice public catalogue runtime selected work route slice route public catalogue runtime module architecture request 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Swipe Navigation Module Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "swipe",
+        "navigation",
+        "slice",
+        "public catalogue runtime swipe navigation module slice",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice site request public catalogue runtime module architecture swipe navigation slice public catalogue runtime swipe navigation module slice public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-work-detail-slice",

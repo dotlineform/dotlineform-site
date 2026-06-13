@@ -1,6 +1,7 @@
 import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
 import { bindArrowNavigation } from '../navigation/keyboard-navigation.js';
+import { bindLinkSwipeZone } from '../navigation/swipe-navigation.js';
 import {
   catalogueIndexUrl,
   parseRouteState,
@@ -229,11 +230,9 @@ function bootWorkDetailRoute(rootNode) {
   }
 
   function bindSwipeNavigation() {
-    var swipe = window.__dlfSwipeNav;
-    if (!swipe || typeof swipe.bindLinkZone !== 'function') return;
     var zone = document.querySelector('[data-swipe-nav-zone="detail-media"]');
     if (!zone) return;
-    swipe.bindLinkZone(zone, {
+    bindLinkSwipeZone(zone, {
       getPrev: function () { return document.getElementById('detailNavPrev'); },
       getNext: function () { return document.getElementById('detailNavNext'); }
     });

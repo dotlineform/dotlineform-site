@@ -63,6 +63,7 @@
       "assets/js/catalogue/components/prose-content.js",
       "assets/js/catalogue/components/thumbnail-grid-list.js",
       "assets/js/catalogue/navigation/keyboard-navigation.js",
+      "assets/js/catalogue/navigation/swipe-navigation.js",
       "assets/js/catalogue/navigation/work-series-navigation.js",
       "assets/js/catalogue/routes/moment-page.js",
       "assets/js/catalogue/routes/series-index.js",

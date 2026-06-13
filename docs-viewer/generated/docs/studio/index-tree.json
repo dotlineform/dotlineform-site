@@ -389,6 +389,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice",
+              "title": "Public Catalogue Runtime Swipe Navigation Module Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice.json",
+              "ui_status": "done"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-work-detail-slice",
               "title": "Public Catalogue Runtime Work Detail Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-work-detail-slice.json",
@@ -1356,5 +1362,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T18:00:39Z"
+  "generated_at": "2026-06-13T18:08:31Z"
 }
