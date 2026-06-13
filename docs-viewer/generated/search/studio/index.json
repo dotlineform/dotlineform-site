@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7f6ba60ddda15e52267e60b0e29279bb",
-    "generated_at_utc": "2026-06-13T11:26:02Z",
-    "count": 238
+    "version": "blake2b-9f70b97f773195581389e00fc340f21b",
+    "generated_at_utc": "2026-06-13T11:58:38Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1411,6 +1411,35 @@
         "26"
       ],
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Module Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture",
+      "last_updated": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "public catalogue runtime module architecture request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture site request public catalogue runtime module architecture public catalogue runtime module architecture request change requests change requests 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-js-runtime-payload-review",

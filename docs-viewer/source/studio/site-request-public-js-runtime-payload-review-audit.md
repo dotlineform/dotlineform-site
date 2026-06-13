@@ -21,6 +21,33 @@ It reviews tracked `site/` route HTML, public JavaScript assets, and public JSON
 It does not include a browser-observed waterfall, console run, or route interaction smoke.
 Those heavier checks should happen after review of this structural pass.
 
+## Provenance
+
+The main extraction targets in this audit are not long-established public runtime boundaries.
+They are new files around older route code.
+Git history confirms the files were introduced together in commit `a35816595` on 2026-06-12, `batch 3a - move inline js into modules`.
+
+That commit added:
+
+- `assets/js/series-index.js`
+- `assets/js/recent-index.js`
+- `assets/js/work-page.js`
+- `assets/js/works-index.js`
+- `assets/js/work-detail-page.js`
+
+The commit copied most of the first three files directly from route Markdown:
+
+- `series/index.md` to `assets/js/series-index.js`
+- `recent/index.md` to `assets/js/recent-index.js`
+- `work-details/index.md` to `assets/js/work-detail-page.js`
+
+The historical Batch 3a delivery doc described the purpose as moving large public route inline scripts into owned public JavaScript files before Python rendered those routes.
+Its guidance was to preserve behavior, keep route initialization side-effect based, avoid redesigning route state, URL contracts, visual layout, generated payload schemas, or catalogue runtime ownership, and extract shared helpers only where the owner was already clear.
+
+Since the Python builder has now been removed and `site/` is canonical, these files should be read as recent extraction artifacts.
+The behavior inside them should be read as legacy inline route behavior that had been added to over time while newer modules were added around it.
+The purpose of this audit is to review the file and responsibility boundaries that were intentionally not questioned during extraction.
+
 ## Route Script Inventory
 
 All public HTML routes currently keep one inline script in `<head>` for pre-paint theme selection.
@@ -131,6 +158,7 @@ For `/works/`, `work-page.js` exits early, but `work.js` still fetches `series_i
 `works-index.js` also fetches `series_index.json`, so the index path has duplicated series-index fetch intent.
 
 This is the strongest obvious route-boundary issue in the catalogue runtime.
+It also matches the extraction history: the selected-work and works-list inline blocks were moved into separate files while preserving the older dual-purpose shell.
 
 ### 3. `work.js` Has Mixed Responsibilities
 
@@ -160,6 +188,8 @@ Several route scripts define local helper variants even though `public-catalogue
 
 Not all of this deserves abstraction.
 The useful boundary question is whether `public-catalogue-runtime.js` should become the single owner of public route/path/payload helpers and small dataset parsers, or whether route scripts should stay self-contained.
+Given the extraction constraints, duplication should be interpreted as preserved inline-route code until a focused ownership decision says otherwise.
+That makes this a legacy-code ownership question, not evidence that the newly extracted files were intentionally designed as final module boundaries.
 
 ### 6. `series-index.js` Is The Largest Route Script And Owns Several Behaviors
 
@@ -168,6 +198,8 @@ That explains its size, but it also makes it the main maintainability candidate 
 
 The first refactor should not automatically split it.
 The clearer next step is to decide which of those behaviors are route-specific and which belong in a shared public catalogue helper.
+Because this file was copied from `series/index.md`, its current boundary should not be treated as a deliberate final module design.
+It is better understood as an old route script that now has a visible file boundary.
 
 ### 7. Catalogue Search Payload Is The Dominant Payload Issue
 

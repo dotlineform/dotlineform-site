@@ -6,7 +6,15 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+the key is also in the request doc: During the earlier static-site migration, large inline scripts were moved from public route HTML into public JS files:
 
+- `site/assets/js/series-index.js`
+- `site/assets/js/recent-index.js`
+- `site/assets/js/work-page.js`
+- `site/assets/js/works-index.js`
+- `site/assets/js/work-detail-page.js`
+
+these did not exist until a few days ago.
 
 There is a second issue hidden in the old public-site/config/public-site.json: it was also being used as a repo-root marker and as a small source of site/media settings. I’m going to move those durable settings into site-tools/config/site-tools.json; validation code will only use the validation section, while existing app readers can still read the site/media settings from the new owner.
 

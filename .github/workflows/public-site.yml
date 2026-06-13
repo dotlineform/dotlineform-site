@@ -7,14 +7,6 @@ on:
       - "bin/site-validate"
       - "site/**"
       - "site-tools/**"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/public-site.yml"
-      - "bin/site-validate"
-      - "site/**"
-      - "site-tools/**"
   workflow_dispatch:
 
 permissions:
