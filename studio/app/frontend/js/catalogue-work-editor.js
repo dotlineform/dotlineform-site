@@ -29,6 +29,10 @@ import {
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
+  readProjectMediaFiles,
+  readProjectMediaFolders
+} from "./catalogue-editor-service-client.js";
+import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
   updateWorkDetailSections,
@@ -446,7 +450,9 @@ function workFormOptions(state) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
     onStateChange: () => updateEditorState(state),
-    draftHasChanges: () => draftHasChanges(state)
+    draftHasChanges: () => draftHasChanges(state),
+    loadProjectFolders: (query) => readProjectMediaFolders(query),
+    loadProjectFiles: (request) => readProjectMediaFiles(request)
   };
 }
 

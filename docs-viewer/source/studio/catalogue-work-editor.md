@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: 2026-05-22
+last_updated: 2026-06-13
 parent_id: studio
 viewable: true
 ---
@@ -25,6 +25,7 @@ viewable: true
 | helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail. |
 | helper | `catalogue-work-actions.js` | save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
 | helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
+| helper | `catalogue-project-media-picker.js` | project-folder search, source-image file modal rendering, subfolder/file selection state, and derived project media field application. |
 
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
 It does not call write services directly.
@@ -50,6 +51,7 @@ The first implementation covers:
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
 - edit optional `project_subfolder` source-image path metadata for work media
+- choose source images through a Local Studio project-media picker that fills `project_folder`, `project_subfolder`, and `project_filename`
 - show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - edit ordered work series through a title-search series picker
 - bulk-edit core scalar metadata across the selected works
@@ -204,6 +206,23 @@ changed image from object-fit: cover to contained natural sizing, with a 70vh / 
 13. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
 14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
 15. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
+
+## Project Media Picker
+
+`project_folder` is a searchable Local Studio field backed by `GET /studio/api/catalogue/project-media?mode=folders`.
+It lists direct folders under `DOTLINEFORM_PROJECTS_BASE_DIR/projects`.
+
+Selecting a project folder in single-work or new-work mode opens the image picker modal immediately.
+The modal calls `GET /studio/api/catalogue/project-media?mode=files&project_folder=<folder>&project_subfolder=<subfolder>`.
+It supports one optional direct subfolder, filters image filenames, and writes the derived fields together:
+
+- `project_folder`: selected direct project folder
+- `project_subfolder`: selected direct subfolder, or blank
+- `project_filename`: selected image filename
+
+The endpoint rejects absolute paths, `..`, hidden names, and nested subfolder paths.
+The browser never receives or stores absolute local filesystem paths.
+Bulk mode keeps manual media fields available but disables the image picker button.
 
 ## Refresh media
 

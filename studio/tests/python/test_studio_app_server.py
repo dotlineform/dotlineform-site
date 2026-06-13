@@ -323,6 +323,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         )
 
         assert health_payload["ok"] is True
+        assert "project-media" in health_payload["routes"]
         assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["dry_run"] is True
@@ -383,6 +384,54 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
         assert works_payload["works"]["00001"]["title"] == "One"
         with pytest.raises(ValueError, match="unsupported catalogue read key"):
             catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
+
+
+def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch) -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        projects_base = Path(tmp_dir) / "source"
+        projects_root = projects_base / "projects"
+        alpha = projects_root / "natural"
+        nerve = projects_root / "nerve"
+        unnatural = projects_root / "unnatural"
+        alpha_subfolder = alpha / "install"
+        alpha_subfolder.mkdir(parents=True)
+        nerve.mkdir(parents=True)
+        unnatural.mkdir(parents=True)
+        write_repo_marker(repo_root)
+        (alpha / "cover.jpg").write_bytes(b"")
+        (alpha / "notes.txt").write_text("not image", encoding="utf-8")
+        (alpha / ".hidden.jpg").write_bytes(b"")
+        (alpha_subfolder / "detail.png").write_bytes(b"")
+        (alpha_subfolder / "deep").mkdir()
+        (alpha_subfolder / "deep" / "ignored.jpg").write_bytes(b"")
+        (nerve / "nerve.webp").write_bytes(b"")
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+
+        folders_payload = catalogue_get_payload(repo_root, "/project-media", {"mode": ["folders"], "q": ["nat"]})
+        files_payload = catalogue_get_payload(
+            repo_root,
+            "/project-media",
+            {"mode": ["files"], "project_folder": ["natural"]},
+        )
+        subfolder_payload = catalogue_get_payload(
+            repo_root,
+            "/project-media",
+            {"mode": ["files"], "project_folder": ["natural"], "project_subfolder": ["install"]},
+        )
+
+        assert folders_payload["ok"] is True
+        assert [item["project_folder"] for item in folders_payload["project_folders"]] == ["natural"]
+        assert [item["project_subfolder"] for item in files_payload["subfolders"]] == ["install"]
+        assert [item["filename"] for item in files_payload["files"]] == ["cover.jpg"]
+        assert [item["filename"] for item in subfolder_payload["files"]] == ["detail.png"]
+
+        with pytest.raises(ValueError, match="project_subfolder must be a single path segment"):
+            catalogue_get_payload(
+                repo_root,
+                "/project-media",
+                {"mode": ["files"], "project_folder": ["natural"], "project_subfolder": ["install/deep"]},
+            )
 
 
 def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> None:

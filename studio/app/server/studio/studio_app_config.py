@@ -241,6 +241,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-detail-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-editor.js",

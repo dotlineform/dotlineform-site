@@ -1,5 +1,6 @@
 import {
   CATALOGUE_WRITE_ENDPOINTS,
+  getJson,
   postJson
 } from "./studio-transport.js";
 
@@ -77,4 +78,28 @@ export function previewCatalogueMoment(payload) {
 
 export function saveCatalogueMoment(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.saveMoment, payload);
+}
+
+function queryString(params = {}) {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    const text = String(value == null ? "" : value).trim();
+    if (text) search.set(key, text);
+  });
+  return search.toString();
+}
+
+export function readProjectMediaFolders(query = "") {
+  const qs = queryString({ mode: "folders", q: query });
+  return getJson(`${CATALOGUE_WRITE_ENDPOINTS.projectMedia}?${qs}`);
+}
+
+export function readProjectMediaFiles(options = {}) {
+  const qs = queryString({
+    mode: "files",
+    project_folder: options.projectFolder,
+    project_subfolder: options.projectSubfolder,
+    q: options.query
+  });
+  return getJson(`${CATALOGUE_WRITE_ENDPOINTS.projectMedia}?${qs}`);
 }

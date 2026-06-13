@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-191eea7e0564d5e210c27320e557cc24",
-    "generated_at_utc": "2026-06-13T18:36:55Z",
+    "version": "blake2b-2f6e882c4d8bdb4d73f4dc3af17e2088",
+    "generated_at_utc": "2026-06-13T20:17:48Z",
     "count": 251
   },
   "entries": [
@@ -4942,10 +4942,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "display_meta": "2026-06-13 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -4953,12 +4953,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-05-22",
+        "2026-06-13",
         "2026",
-        "05",
-        "22"
+        "06",
+        "13"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-05-22 2026 05 22"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-13 2026 06 13"
     },
     {
       "id": "studio-works",
@@ -5038,10 +5038,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-13",
       "parent_id": "scripts-catalogue-write-server",
       "parent_title": "Catalogue Write Services",
-      "display_meta": "2026-05-19 • Catalogue Write Services",
+      "display_meta": "2026-06-13 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-endpoints",
         "scripts",
@@ -5052,12 +5052,12 @@
         "catalogue write server endpoints",
         "catalogue write services",
         "services",
-        "2026-05-19",
+        "2026-06-13",
         "2026",
-        "05",
-        "19"
+        "06",
+        "13"
       ],
-      "search_text": "scripts-catalogue-write-server-endpoints scripts catalogue write server endpoints catalogue write server endpoints catalogue write services services 2026-05-19 2026 05 19"
+      "search_text": "scripts-catalogue-write-server-endpoints scripts catalogue write server endpoints catalogue write server endpoints catalogue write services services 2026-06-13 2026 06 13"
     },
     {
       "id": "scripts-catalogue-write-service-extraction",

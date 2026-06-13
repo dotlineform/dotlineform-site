@@ -14,6 +14,10 @@ import {
   parseSeriesIds,
   seriesIdsToText
 } from "./catalogue-work-fields.js";
+import {
+  bindProjectFolderSearch,
+  openProjectMediaPickerForCurrentDraft
+} from "./catalogue-project-media-picker.js";
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -189,6 +193,14 @@ function renderField(field, fieldsNode, state, options) {
     renderSeriesField(field, fieldsNode, state, options);
     return;
   }
+  if (field.key === "project_folder") {
+    renderProjectFolderField(field, fieldsNode, state, options);
+    return;
+  }
+  if (field.key === "project_filename") {
+    renderProjectFilenameField(field, fieldsNode, state, options);
+    return;
+  }
 
   const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
@@ -253,6 +265,98 @@ function renderField(field, fieldsNode, state, options) {
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
+}
+
+function renderProjectFolderField(field, fieldsNode, state, options) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__folderField";
+
+  const label = document.createElement("label");
+  label.className = "tagStudioForm__label";
+  label.htmlFor = `catalogueWorkField-${field.key}`;
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  const control = document.createElement("div");
+  control.className = "catalogueProjectMediaPicker__folderControl";
+
+  const input = document.createElement("input");
+  input.className = "tagStudio__input";
+  input.id = `catalogueWorkField-${field.key}`;
+  input.dataset.field = field.key;
+  input.type = "text";
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.placeholder = formText(options, "project_folder_picker_placeholder", "find project folder");
+  control.appendChild(input);
+
+  const popupNode = document.createElement("div");
+  popupNode.className = "tagStudio__popupInner catalogueProjectMediaPicker__folderPopup";
+  popupNode.hidden = true;
+  control.appendChild(popupNode);
+  wrapper.appendChild(control);
+
+  const message = document.createElement("span");
+  message.className = "catalogueWorkForm__fieldStatus";
+  message.dataset.fieldStatus = field.key;
+  wrapper.appendChild(message);
+
+  bindProjectFolderSearch(state, input, popupNode, {
+    ...options,
+    autoOpenFileModal: true
+  });
+
+  fieldsNode.appendChild(wrapper);
+  state.fieldNodes.set(field.key, input);
+  state.fieldStatusNodes.set(field.key, message);
+}
+
+function renderProjectFilenameField(field, fieldsNode, state, options) {
+  const wrapper = document.createElement("label");
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__filenameField";
+  wrapper.htmlFor = `catalogueWorkField-${field.key}`;
+
+  const label = document.createElement("span");
+  label.className = "tagStudioForm__label";
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  const control = document.createElement("div");
+  control.className = "catalogueProjectMediaPicker__filenameControl";
+
+  const input = document.createElement("input");
+  input.className = "tagStudio__input";
+  input.id = `catalogueWorkField-${field.key}`;
+  input.dataset.field = field.key;
+  input.type = "text";
+  input.autocomplete = "off";
+  control.appendChild(input);
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "tagStudio__button tagStudio__button--defaultWidth";
+  button.dataset.projectMediaChoose = "work";
+  button.textContent = formText(options, "project_media_choose_button", "Choose image...");
+  control.appendChild(button);
+  wrapper.appendChild(control);
+
+  const message = document.createElement("span");
+  message.className = "catalogueWorkForm__fieldStatus";
+  message.dataset.fieldStatus = field.key;
+  wrapper.appendChild(message);
+
+  input.addEventListener("input", () => notifyFieldInput(options, field.key));
+  input.addEventListener("change", () => notifyFieldInput(options, field.key));
+  button.addEventListener("click", () => {
+    openProjectMediaPickerForCurrentDraft(state, options).catch((error) => {
+      console.warn("catalogue_work_form: failed to open project image picker", error);
+    });
+  });
+
+  fieldsNode.appendChild(wrapper);
+  state.fieldNodes.set(field.key, input);
+  state.fieldStatusNodes.set(field.key, message);
+  state.projectMediaChooseButton = button;
 }
 
 function renderStagedProseField(fieldsNode, state, options) {
@@ -406,11 +510,15 @@ export function renderWorkEditorFields(state, elements, options = {}) {
 }
 
 export function applyWorkFormText(state, options = {}) {
-  if (!state.seriesPicker) return;
-  state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
-  state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+  if (state.seriesPicker) {
+    state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
+    state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+  }
   if (state.stagedProseButton) {
     state.stagedProseButton.textContent = formText(options, "prose_import_button", "Import");
+  }
+  if (state.projectMediaChooseButton) {
+    state.projectMediaChooseButton.textContent = formText(options, "project_media_choose_button", "Choose image...");
   }
 }
 
@@ -489,6 +597,9 @@ export function setModeFieldAvailability(state) {
     if (isBulk) {
       state.seriesPicker.popupNode.hidden = true;
     }
+  }
+  if (state.projectMediaChooseButton) {
+    state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
   }
 }
 

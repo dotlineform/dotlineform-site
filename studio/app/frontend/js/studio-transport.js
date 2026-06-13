@@ -22,6 +22,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveMoment: "/studio/api/catalogue/moment/save",
   projectStateReport: "/studio/api/catalogue/project-state-report",
   projectStateOpenReport: "/studio/api/catalogue/project-state-open-report",
+  projectMedia: "/studio/api/catalogue/project-media",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
 });

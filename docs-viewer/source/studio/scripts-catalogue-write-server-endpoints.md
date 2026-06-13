@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-endpoints
 title: Catalogue Write Server Endpoints
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-13
 parent_id: scripts-catalogue-write-server
 ---
 # Catalogue Write Server Endpoints
@@ -13,6 +13,7 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /catalogue/read?key=<studio_config_data_key>[&record_id=<id>]`
+- `GET /studio/api/catalogue/project-media`
 - `POST /catalogue/bulk-save`
 - `POST /catalogue/delete-preview`
 - `POST /catalogue/delete-apply`
@@ -42,7 +43,7 @@ Exposed endpoints:
 - `POST /catalogue/moment/import-apply`
 - `POST /catalogue/project-state-report`
 
-The current implementation can serve allowlisted catalogue source and lookup payloads for Studio, can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
+The current implementation can serve allowlisted catalogue source and lookup payloads for Studio, can list project media candidates from the configured local projects root, can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
 `GET /catalogue/read` is the server-backed read path for mutable catalogue editor data. It accepts the same logical keys used by `studio_config.json`, including:
 
 - `catalogue_works`
@@ -58,6 +59,18 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `activity_log`
 
 Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data.
+
+`GET /studio/api/catalogue/project-media` accepts:
+
+- `mode`: `folders` or `files`
+- `q`: optional case-insensitive filter
+- `project_folder`: required for `mode=files`
+- `project_subfolder`: optional one-segment direct subfolder for `mode=files`
+
+`mode=folders` returns direct project folders under `DOTLINEFORM_PROJECTS_BASE_DIR/projects`.
+`mode=files` returns direct subfolders for the selected project folder and direct image files for the selected folder/subfolder.
+The route rejects absolute paths, `..`, hidden names, and nested subfolder paths.
+It returns relative catalogue field values only; it does not expose or persist absolute local filesystem paths.
 
 `POST /catalogue/project-state-report` accepts:
 

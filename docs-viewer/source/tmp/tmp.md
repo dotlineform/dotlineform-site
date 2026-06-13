@@ -6,6 +6,15 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+> we are definitely turning this into a reusable component. will have to look at the modal in next session.
+
+Agreed. This control has enough state now that a reusable component is the right next step: transient query state, committed value, popup lifecycle, keyboard active row, pointer-vs-keyboard mode, scroll visibility, and Escape reset are all generic concerns.
+
+For next session, the clean split is probably:
+- Extract a lightweight combobox/search-list component from the project-folder picker.
+- Keep project-folder-specific behavior as adapters: `loadOptions`, `matchOptions`, `formatOption`, `onCommit`.
+- Then look at the file modal separately, since that has a different shape: filter + optional subfolder + file list + confirmation.
+
 ~
 
 ## Temporary Workflow Change

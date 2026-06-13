@@ -41,6 +41,7 @@ from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
     load_json_file,
+    normalize_text,
     normalize_detail_uid_value,
     payload_for_map,
     records_from_json_source,
@@ -58,11 +59,14 @@ from catalogue.catalogue_workbook_import import (  # noqa: E402
 from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME  # noqa: E402
 from catalogue.project_state_report import (  # noqa: E402
     DEFAULT_OUTPUT_REL_PATH,
+    IMAGE_EXTENSIONS,
+    PIPELINE_CONFIG,
     PROJECTS_BASE_DIR_ENV_NAME,
     build_project_state_report,
     open_project_state_report,
     resolve_projects_base_dir,
 )
+from pipeline_config import source_works_root_subdir  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
@@ -114,8 +118,11 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "import-apply",
                 "project-state-report",
                 "project-state-open-report",
+                "project-media",
             ],
         }
+    if api_path == "/project-media":
+        return project_media_payload(repo_root, query or {})
     if api_path == "/read":
         return catalogue_read_payload(repo_root, query or {})
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
@@ -180,6 +187,112 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
             raise ValueError("record_id is required for series lookup reads")
         return build_series_lookup_payload(source_records, series_id)
     raise ValueError(f"unsupported catalogue read key: {key}")
+
+
+def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> dict[str, Any]:
+    mode = str((query.get("mode") or ["folders"])[0] or "folders").strip().lower()
+    projects_base_dir = resolve_projects_base_dir(env=runtime_env(repo_root=repo_root))
+    projects_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)).resolve()
+    if not projects_root.exists():
+        raise ValueError(f"Projects source root does not exist: {projects_root}")
+    if mode == "folders":
+        return {
+            "ok": True,
+            "mode": mode,
+            "project_folders": project_media_folder_records(projects_root, query_text(query)),
+        }
+    if mode == "files":
+        project_folder = normalize_project_media_segment(
+            str((query.get("project_folder") or [""])[0] or ""),
+            field="project_folder",
+            required=True,
+        )
+        project_subfolder = normalize_project_media_segment(
+            str((query.get("project_subfolder") or [""])[0] or ""),
+            field="project_subfolder",
+            required=False,
+        )
+        folder_path = resolve_project_media_folder(projects_root, project_folder, project_subfolder)
+        return {
+            "ok": True,
+            "mode": mode,
+            "project_folder": project_folder,
+            "project_subfolder": project_subfolder,
+            "subfolders": project_media_subfolder_records(projects_root / project_folder),
+            "files": project_media_file_records(folder_path, query_text(query)),
+        }
+    raise ValueError("project-media mode must be folders or files")
+
+
+def query_text(query: Mapping[str, list[str]]) -> str:
+    return str((query.get("q") or [""])[0] or "").strip().lower()
+
+
+def normalize_project_media_segment(value: str, *, field: str, required: bool) -> str:
+    text = normalize_text(value)
+    if not text:
+        if required:
+            raise ValueError(f"{field} is required")
+        return ""
+    path = Path(text)
+    if path.is_absolute() or len(path.parts) != 1:
+        raise ValueError(f"{field} must be a single path segment")
+    part = path.parts[0]
+    if part in {"", ".", ".."} or part.startswith("."):
+        raise ValueError(f"{field} must be a visible folder name")
+    return part
+
+
+def resolve_project_media_folder(projects_root: Path, project_folder: str, project_subfolder: str = "") -> Path:
+    root = projects_root.resolve()
+    folder = (root / project_folder / project_subfolder).resolve() if project_subfolder else (root / project_folder).resolve()
+    try:
+        folder.relative_to(root)
+    except ValueError as error:
+        raise ValueError("project media path must stay inside the projects root") from error
+    if not folder.is_dir():
+        raise ValueError("project media folder does not exist")
+    return folder
+
+
+def visible_dir(path: Path) -> bool:
+    return path.is_dir() and not path.name.startswith(".")
+
+
+def visible_image_file(path: Path) -> bool:
+    return path.is_file() and not path.name.startswith(".") and path.suffix.lower() in IMAGE_EXTENSIONS
+
+
+def project_media_folder_records(projects_root: Path, query: str) -> list[dict[str, Any]]:
+    records = []
+    for child in sorted(projects_root.iterdir(), key=lambda item: item.name.lower()):
+        if not visible_dir(child):
+            continue
+        if query and not child.name.lower().startswith(query):
+            continue
+        records.append({"project_folder": child.name})
+    return records
+
+
+def project_media_subfolder_records(project_folder_path: Path) -> list[dict[str, Any]]:
+    if not project_folder_path.is_dir():
+        raise ValueError("project_folder does not exist")
+    return [
+        {"project_subfolder": child.name}
+        for child in sorted(project_folder_path.iterdir(), key=lambda item: item.name.lower())
+        if visible_dir(child)
+    ]
+
+
+def project_media_file_records(folder_path: Path, query: str) -> list[dict[str, Any]]:
+    records = []
+    for child in sorted(folder_path.iterdir(), key=lambda item: item.name.lower()):
+        if not visible_image_file(child):
+            continue
+        if query and query not in child.name.lower():
+            continue
+        records.append({"filename": child.name})
+    return records
 
 
 def import_preview_payload(repo_root: Path, body: Mapping[str, Any]) -> dict[str, Any]:

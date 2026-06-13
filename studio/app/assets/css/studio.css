@@ -3260,6 +3260,8 @@ button.tagStudioList__cellLink {
 .catalogueWorkForm__field > .tagStudio__input,
 .catalogueWorkForm__field > .tagStudioForm__readonly,
 .catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
+.catalogueWorkForm__field > .catalogueProjectMediaPicker__folderControl,
+.catalogueWorkForm__field > .catalogueProjectMediaPicker__filenameControl,
 .catalogueWorkForm__field > .catalogueWorkStagedProse__control,
 .catalogueWorkForm__field > .tagStudioForm__meta,
 .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
@@ -3312,6 +3314,70 @@ button.tagStudioList__cellLink {
 
 .catalogueWorkSeriesPicker__option {
   width: 100%;
+}
+
+.catalogueProjectMediaPicker__folderControl,
+.catalogueProjectMediaPicker__filenameControl {
+  position: relative;
+}
+
+.catalogueProjectMediaPicker__filenameControl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.catalogueProjectMediaPicker__folderPopup {
+  top: calc(100% + 0.25rem);
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.35rem;
+  width: min(30rem, 100%);
+  padding-bottom: 0.7rem;
+  scroll-padding-block: 0.45rem 0.7rem;
+}
+
+.catalogueProjectMediaPicker {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.catalogueProjectMediaPicker__filterField,
+.catalogueProjectMediaPicker__subfolderField {
+  grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr);
+  align-items: center;
+}
+
+.catalogueProjectMediaPicker__files {
+  display: grid;
+  gap: 0.35rem;
+  max-height: min(26rem, 52vh);
+  overflow: auto;
+  padding-right: 0.15rem;
+}
+
+.catalogueProjectMediaPicker__folderOption,
+.catalogueProjectMediaPicker__fileOption {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.catalogueProjectMediaPicker__folderOption {
+  border: 0;
+  border-radius: var(--studio-radius-sm);
+  background: transparent;
+}
+
+.catalogueProjectMediaPicker__folderPopup[data-navigation="pointer"] .catalogueProjectMediaPicker__folderOption:hover,
+.catalogueProjectMediaPicker__folderOption[aria-selected="true"] {
+  background: var(--studio-focus-ring);
+}
+
+.catalogueProjectMediaPicker__fileOption[aria-pressed="true"] {
+  border-color: var(--studio-focus);
+  background: var(--studio-focus-ring);
 }
 
 .catalogueWorkForm__fieldMeta {
@@ -3942,6 +4008,8 @@ button.tagStudioList__cellLink {
   .catalogueWorkForm__field > .tagStudioForm__label,
   .catalogueWorkForm__field > .tagStudio__input,
   .catalogueWorkForm__field > .tagStudioForm__readonly,
+  .catalogueWorkForm__field > .catalogueProjectMediaPicker__folderControl,
+  .catalogueWorkForm__field > .catalogueProjectMediaPicker__filenameControl,
   .catalogueWorkForm__field > .catalogueWorkStagedProse__control,
   .catalogueWorkForm__field > .tagStudioForm__meta,
   .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
