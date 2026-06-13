@@ -85,6 +85,10 @@ export function momentsIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/moments_index.json');
 }
 
+export function recentIndexUrl(baseurl) {
+  return buildPath(baseurl, '/assets/data/recent_index.json');
+}
+
 export function worksIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/works_index.json');
 }

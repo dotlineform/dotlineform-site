@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-172209f11c6272e669957266e4bee7c0",
-    "generated_at_utc": "2026-06-13T18:13:08Z",
-    "count": 250
+    "version": "blake2b-0afb8dbe262008c86471bda7ec4a98be",
+    "generated_at_utc": "2026-06-13T18:25:04Z",
+    "count": 251
   },
   "entries": [
     {
@@ -1650,6 +1650,37 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice site request public catalogue runtime module architecture prose component slice public catalogue runtime prose component slice public catalogue runtime module architecture request 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-recent-index-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Recent Index Route Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-recent-index-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-recent-index-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "recent",
+        "index",
+        "slice",
+        "public catalogue runtime recent index route slice",
+        "route",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-recent-index-slice site request public catalogue runtime module architecture recent index slice public catalogue runtime recent index route slice route public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
