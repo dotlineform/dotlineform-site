@@ -7,7 +7,7 @@ ui_status: draft
 ---
 
 we are working on [Public Catalogue Runtime Module Architecture Request](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture),
-please proceed with slice 3 defined in the child doc [Public Catalogue Runtime Selected Work Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-selected-work-slice).
+please proceed with slice 11 defined in the child doc [Public Catalogue Runtime Works Index Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-works-index-slice).
 
 
 the key is also in the request doc: During the earlier static-site migration, large inline scripts were moved from public route HTML into public JS files:

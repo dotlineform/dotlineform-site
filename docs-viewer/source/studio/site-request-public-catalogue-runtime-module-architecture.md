@@ -622,6 +622,7 @@ After the refactor is complete, restore the `main` push trigger for `site/**`, `
 - [Public Catalogue Runtime Metadata Panel Component Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice)
 - [Public Catalogue Runtime Navigation Module Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-navigation-slice)
 - [Public Catalogue Runtime Swipe Navigation Module Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice)
+- [Public Catalogue Runtime Works Index Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-works-index-slice)
 
 ## Decisions Needed
 
