@@ -404,7 +404,7 @@
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-works-index-slice",
               "title": "Public Catalogue Runtime Works Index Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-works-index-slice.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             }
           ]
         },
@@ -1368,5 +1368,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T18:13:08Z"
+  "generated_at": "2026-06-13T18:19:07Z"
 }

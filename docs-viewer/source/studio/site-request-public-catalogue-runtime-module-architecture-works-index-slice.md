@@ -3,14 +3,14 @@ doc_id: site-request-public-catalogue-runtime-module-architecture-works-index-sl
 title: Public Catalogue Runtime Works Index Route Slice
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: site-request-public-catalogue-runtime-module-architecture
 ---
 # Public Catalogue Runtime Works Index Route Slice
 
 Status:
 
-- planned
+- completed
 
 ## Purpose
 
@@ -159,42 +159,71 @@ Implementation steer for the next session:
 
 | ID | Status | Action | Next-session steer |
 | --- | --- | --- | --- |
-| 11.1 | planned | Inspect `works-index.js`, `/works/` shell script order, selected-work coexistence, shared helper equivalents, and works-list CSS contracts. | Preserve route coexistence and DOM contracts. |
-| 11.2 | planned | Define the works-index route module contract. | Keep route-specific sort/render helpers local; no global compatibility alias. |
-| 11.3 | planned | Implement `catalogue/routes/works-index.js`. | Port behavior with shared helper substitutions only where exact enough. |
-| 11.4 | planned | Update `/works/` shell script tags. | Load the new module and remove `public-catalogue-runtime.js` only when the route no longer needs it. |
-| 11.5 | planned | Retire legacy `works-index.js` and update validation config. | Delete only after the shell stops loading it. |
-| 11.6 | planned | Verify list, series-filtered, sorted, and selected-work `/works/` states. | Include exact routes and only checks actually performed. |
+| 11.1 | completed | Inspect `works-index.js`, `/works/` shell script order, selected-work coexistence, shared helper equivalents, and works-list CSS contracts. | Confirmed the legacy script owned list rendering and skipped `?work=...` selected-work state. |
+| 11.2 | completed | Define the works-index route module contract. | Kept route-specific sort/render helpers local; no global compatibility alias. |
+| 11.3 | completed | Implement `catalogue/routes/works-index.js`. | Ported behavior with shared URL, fetch, route-state, and text helpers. |
+| 11.4 | completed | Update `/works/` shell script tags. | `/works/` now loads the selected-work route module and the works-index route module only. |
+| 11.5 | completed | Retire legacy `works-index.js` and update validation config. | Deleted `site/assets/js/works-index.js` after removing the shell script tag and registered the new module. |
+| 11.6 | completed | Verify list, series-filtered, sorted, and selected-work `/works/` states. | See Completed Verification. |
 
 ## Completed Verification
 
-- Not started.
+- `node --check site/assets/js/catalogue/routes/works-index.js`
+- `node --check site/assets/js/catalogue/routes/work-page.js`
+- `$HOME/miniconda3/bin/python3 -m json.tool site-tools/config/site-tools.json`
+- `bin/site-validate`
+- Browser check at `http://127.0.0.1:8174/works/`:
+  - route rendered `1940 works in 141 series`;
+  - list rendered 1940 rows;
+  - active sort was `cat` ascending;
+  - work title links included `from=works_index`, `return_sort=cat`, and `return_dir=asc`;
+  - script list included `work-page.js`, `works-index.js`, `site-nav.js`, and `theme-toggle.js`, but not `public-catalogue-runtime.js` or legacy `assets/js/works-index.js`;
+  - browser console error check returned no errors.
+- Browser check at `http://127.0.0.1:8174/works/?series=009`:
+  - route rendered `4 works in a poem divided into 4 parts`;
+  - list rendered 4 rows with `worksList--singleSeries`;
+  - back link targeted `/series/?series=009`;
+  - work title links included `from=works_index`, `return_sort=seriessort`, `return_dir=asc`, and `return_series=009`;
+  - browser console error check returned no errors.
+- Browser check at `http://127.0.0.1:8174/works/?sort=year&dir=desc`:
+  - route rendered `1940 works in 141 series`;
+  - active sort was `year` descending;
+  - work title links included `from=works_index`, `return_sort=year`, and `return_dir=desc`;
+  - browser console error check returned no errors.
+- Browser check at `http://127.0.0.1:8174/works/?work=00001&series=009`:
+  - selected-work route rendered title `a poem divided into 4 parts ("our dreams are real")`;
+  - `#selectedWorkRoot` was visible;
+  - `#worksIndexRoot` stayed hidden and the list rendered 0 rows;
+  - script list included `work-page.js`, `works-index.js`, `site-nav.js`, and `theme-toggle.js`, but not `public-catalogue-runtime.js` or legacy `assets/js/works-index.js`;
+  - browser console error check returned no errors.
 
 ## Slice 11 Assessment
 
-- Not started.
+- Completed. Works index behavior now lives in `site/assets/js/catalogue/routes/works-index.js`.
+- `site/assets/js/works-index.js` is retired and `/works/` no longer loads `site/assets/js/public-catalogue-runtime.js`.
+- The new module keeps route-owned sorting/rendering local while reusing shared URL, fetch, route-state, and text helpers.
 
 Acceptance checklist:
 
 | Parent design criterion | Required status | Evidence |
 | --- | --- | --- |
-| Module-level refactor, not greenfield rewrite | yes required |  |
-| Current `works-index.js` behavior inspected before module contract design | yes required |  |
-| Works index behavior ported without changing visible list contracts | yes required |  |
-| Selected-work `/works/?work=...` route remains stable | yes required |  |
-| Series-filtered works list remains stable | yes required |  |
-| Sort query and history semantics remain stable | yes required |  |
-| Work-link return params remain stable | yes required |  |
-| Existing works-list IDs/classes remain stable | yes required |  |
-| `works-index.js` retired only after route shell stops loading it | yes required |  |
-| `/works/` no longer loads `public-catalogue-runtime.js` after migration | yes required |  |
-| Completed slice leaves site functional and deployable | yes required |  |
-| Route module boundary follows target folder structure | yes required |  |
-| No global compatibility alias introduced | yes required |  |
-| No broad utility bucket introduced | yes required |  |
-| Performance rules respected | yes required |  |
-| Search, if touched, stays structural-only | yes required |  |
-| Validation stayed within agreed policy | yes required |  |
+| Module-level refactor, not greenfield rewrite | met | Moved the existing route behavior into a focused ES module and reused established shared helpers. |
+| Current `works-index.js` behavior inspected before module contract design | met | Legacy rendering, sort, query, return-link, and selected-work skip behavior were inspected before implementation. |
+| Works index behavior ported without changing visible list contracts | met | Browser checks confirmed list counts, rows, active sort buttons, and existing DOM IDs/classes. |
+| Selected-work `/works/?work=...` route remains stable | met | Browser check confirmed selected-work renders while the works index remains hidden with 0 list rows. |
+| Series-filtered works list remains stable | met | Browser check confirmed `series=009` count, single-series class, back link, and 4 rendered rows. |
+| Sort query and history semantics remain stable | met | Browser checks confirmed default `sort=cat&dir=asc`, series default `sort=seriessort&dir=asc`, and explicit `sort=year&dir=desc`. |
+| Work-link return params remain stable | met | Browser checks confirmed `from=works_index`, `return_sort`, `return_dir`, and filtered `return_series` on title links. |
+| Existing works-list IDs/classes remain stable | met | The route continues to use `worksIndexRoot`, `worksEmpty`, `worksList`, `worksListCount`, `worksIndexBackNav`, `worksIndexBackLink`, and the existing `worksList__*` classes. |
+| `works-index.js` retired only after route shell stops loading it | met | Removed the shell script tag, added the module route, then deleted `site/assets/js/works-index.js`. |
+| `/works/` no longer loads `public-catalogue-runtime.js` after migration | met | Browser checks confirmed `/works/` script lists exclude `public-catalogue-runtime.js`. |
+| Completed slice leaves site functional and deployable | met | Syntax checks and `bin/site-validate` passed. |
+| Route module boundary follows target folder structure | met | Added `site/assets/js/catalogue/routes/works-index.js`. |
+| No global compatibility alias introduced | met | The route imports modules directly and does not write a window-level compatibility object. |
+| No broad utility bucket introduced | met | Works-list sorting and rendering helpers stayed local to the route. |
+| Performance rules respected | met | `/works/` no longer downloads `public-catalogue-runtime.js`; no new data fetches were introduced. |
+| Search, if touched, stays structural-only | not touched | Search runtime was not changed. |
+| Validation stayed within agreed policy | met | Used syntax checks, site validation, and manual browser checks; no automated browser smoke tests. |
 
 ## Follow-On
 

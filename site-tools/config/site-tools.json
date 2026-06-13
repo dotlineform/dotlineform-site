@@ -68,6 +68,7 @@
       "assets/js/catalogue/routes/moment-page.js",
       "assets/js/catalogue/routes/series-index.js",
       "assets/js/catalogue/routes/work-detail-page.js",
+      "assets/js/catalogue/routes/works-index.js",
       "assets/js/catalogue/routes/work-page.js",
       "assets/js/catalogue/shared/catalogue-urls.js",
       "assets/js/catalogue/shared/fetch-json.js",
