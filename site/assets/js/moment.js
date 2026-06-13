@@ -17,6 +17,10 @@
   var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
   var backNav = document.getElementById('momentBackNav');
   var backLink = document.getElementById('momentBackLink');
+  var primaryMediaComponentPromise = import('/assets/js/catalogue/components/primary-media.js')
+    .catch(function () {
+      return null;
+    });
 
   var renderWidths = [];
   try {
@@ -109,13 +113,19 @@
     };
   }
 
+  function renderMomentPrimaryMedia(options) {
+    var renderOptions = options || {};
+    primaryMediaComponentPromise.then(function (module) {
+      if (!module || typeof module.renderPrimaryMedia !== 'function') return;
+      module.renderPrimaryMedia(renderOptions);
+    });
+  }
+
   function applyMetadata(meta) {
     var normalized = normalizeMoment(meta);
     var titleEl = document.getElementById('momentTitleText');
     var dateEl = document.getElementById('momentDateText');
     var heroEl = document.getElementById('momentHero');
-    var heroImg = document.getElementById('momentHeroImg');
-    var heroCaption = document.getElementById('momentHeroCaption');
 
     if (titleEl) titleEl.textContent = normalized.title;
     if (normalized.title) document.title = normalized.title + ' | dotlineform';
@@ -131,47 +141,45 @@
       }
     }
 
-    if (!heroEl || !heroImg || !heroCaption) return;
+    if (!heroEl) return;
 
     var hero = normalized.images.length ? normalized.images[0] : null;
     if (!hero) {
-      heroEl.hidden = true;
-      heroImg.removeAttribute('src');
-      heroImg.removeAttribute('srcset');
-      heroImg.setAttribute('alt', normalized.title || 'Moment');
-      heroCaption.textContent = '';
-      heroCaption.hidden = true;
+      renderMomentPrimaryMedia({
+        rootElement: heroEl,
+        hidden: true
+      });
       return;
     }
 
     var sources = buildImageSources(normalized, hero);
     if (!sources) {
-      heroEl.hidden = true;
+      renderMomentPrimaryMedia({
+        rootElement: heroEl,
+        hidden: true
+      });
       return;
     }
 
-    heroEl.hidden = false;
-    heroImg.setAttribute('src', sources.src);
-    if (sources.external || !sources.srcset) {
-      heroImg.removeAttribute('srcset');
-      heroImg.removeAttribute('sizes');
-    } else {
-      heroImg.setAttribute('srcset', sources.srcset);
-      heroImg.setAttribute('sizes', '(max-width: 800px) 100vw, 72ch');
-    }
-    if (normalized.width_px && normalized.height_px) {
-      heroImg.setAttribute('width', String(normalized.width_px));
-      heroImg.setAttribute('height', String(normalized.height_px));
-    }
-    heroImg.setAttribute('alt', hero.alt || normalized.title || 'Moment');
-
-    if (hero.caption) {
-      heroCaption.textContent = hero.caption;
-      heroCaption.hidden = false;
-    } else {
-      heroCaption.textContent = '';
-      heroCaption.hidden = true;
-    }
+    renderMomentPrimaryMedia({
+      rootElement: heroEl,
+      image: {
+        id: 'momentHeroImg',
+        src: sources.src,
+        srcset: sources.external ? '' : sources.srcset,
+        sizes: sources.external ? '' : '(max-width: 800px) 100vw, 72ch',
+        width: normalized.width_px,
+        height: normalized.height_px,
+        alt: hero.alt || normalized.title || 'Moment',
+        loading: 'eager',
+        decoding: 'async',
+        fetchPriority: 'high'
+      },
+      caption: {
+        id: 'momentHeroCaption',
+        text: hero.caption
+      }
+    });
   }
 
   function applyContentHtml(html) {

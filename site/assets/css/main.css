@@ -1722,27 +1722,6 @@ pre.theme-text{
   margin-bottom: 6px;
 }
 
-/* Constrain the moment hero image to the same measure */
-.moment .moment-hero{
-  max-width: var(--moment-measure);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Responsive image within the constrained figure */
-.moment .moment-hero img{
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Moments don't have work aspect ratios; avoid forcing a box that centers the image. */
-.moment .page__mediaImg{
-  aspect-ratio: auto;
-  object-fit: initial;
-}
-
 @media (max-width: 640px){
   .index__item { grid-template-columns: 1fr; }
   .index__work_id, .index__date { text-align: left; }
@@ -1955,35 +1934,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   margin-left: auto;
   margin-right: auto;
   white-space: normal;
-}
-
-/* Primary/top media on a page */
-.page__media{
-  max-width: var(--content-measure);
-  margin: var(--space-3) auto;
-}
-
-.page__mediaLink{
-  display: block;
-}
-
-.page__mediaImg{
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: var(--work-ar, 4 / 3); /* fallback if not set */
-  object-fit: contain; /* or cover */
-}
-
-/* Debug: add `debug-media-boxes` to <body> to compare link vs image boxes */
-.debug-media-boxes .page__mediaLink{
-  outline: 2px solid var(--debug-outline-link);
-  outline-offset: 2px;
-}
-.debug-media-boxes .page__mediaImg{
-  outline: 2px solid var(--debug-outline-image);
-  outline-offset: 2px;
 }
 
 /* Definition list meta (e.g., Work “Details”) */

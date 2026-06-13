@@ -22,6 +22,7 @@
     })();
   </script>
   <link rel="stylesheet" href="/assets/css/main.css?v=static">
+  <link rel="stylesheet" href="/assets/css/catalogue.css?v=static">
 </head>
 <body class="works">
   <header class="site-header">
@@ -71,11 +72,7 @@
       hidden
     >
       <h1 class="visually-hidden" id="detailHiddenTitle">loading...</h1>
-      <figure class="page__media">
-        <a class="page__mediaLink" id="detailMediaLink" data-swipe-nav-zone="detail-media" target="_blank" rel="noopener" style="--work-ar: 4 / 3;">
-          <img class="page__mediaImg" id="detailPrimaryImg" sizes="(max-width: 800px) 100vw, 72ch" alt="" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:auto;display:block;">
-        </a>
-      </figure>
+      <figure class="page__media" id="detailPrimaryMedia"></figure>
       <section class="page__meta page__media">
         <h2 class="visually-hidden">work detail metadata</h2>
         <div class="page__caption page__metaList">

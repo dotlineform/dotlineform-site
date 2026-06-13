@@ -353,10 +353,16 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
+              "title": "Public Catalogue Runtime Moments Route Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
               "title": "Public Catalogue Runtime Primary Media Component Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-primary-media-slice.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
@@ -1332,5 +1338,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T17:00:56Z"
+  "generated_at": "2026-06-13T17:17:40Z"
 }

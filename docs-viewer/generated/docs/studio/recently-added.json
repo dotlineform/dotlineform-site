@@ -51,6 +51,14 @@
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
     },
     {
+      "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
+      "title": "Public Catalogue Runtime Moments Route Slice",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request"
+    },
+    {
       "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
       "title": "Public Catalogue Runtime Primary Media Component Slice",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-primary-media-slice.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
-    },
-    {
-      "doc_id": "site-request-public-js-runtime-payload-review-audit",
-      "title": "Public JS Runtime and Payload Static Audit",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-public-js-runtime-payload-review",
-      "parent_title": "Public JavaScript Runtime and Payload Review Request"
     }
   ],
-  "generated_at": "2026-06-13T17:00:20Z"
+  "generated_at": "2026-06-13T17:17:40Z"
 }

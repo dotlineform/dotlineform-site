@@ -1,3 +1,4 @@
+import { renderPrimaryMedia } from '../components/primary-media.js';
 import {
   catalogueIndexUrl,
   parseRouteState,
@@ -79,18 +80,34 @@ function bootWorkDetailRoute(rootNode) {
   }
 
   function updateMedia() {
-    var mediaLink = document.getElementById('detailMediaLink');
-    var img = document.getElementById('detailPrimaryImg');
-    if (!mediaLink || !img) return;
-    if (ctx.widthPx > 0 && ctx.heightPx > 0) {
-      mediaLink.style.setProperty('--work-ar', String(ctx.widthPx) + ' / ' + String(ctx.heightPx));
-    }
-    mediaLink.href = imageUrl(ctx.detailUid, primaryFullWidth);
-    img.src = imageUrl(ctx.detailUid, primaryDisplayWidth);
-    img.srcset = renderWidths.map(function (width) {
+    var media = document.getElementById('detailPrimaryMedia');
+    if (!media) return;
+    var srcset = renderWidths.map(function (width) {
       return imageUrl(ctx.detailUid, width) + ' ' + String(width) + 'w';
     }).join(', ');
-    img.alt = ctx.title || ctx.detailUid;
+    renderPrimaryMedia({
+      rootElement: media,
+      aspectRatio: ctx.widthPx > 0 && ctx.heightPx > 0 ? String(ctx.widthPx) + ' / ' + String(ctx.heightPx) : '',
+      link: {
+        id: 'detailMediaLink',
+        href: imageUrl(ctx.detailUid, primaryFullWidth),
+        target: '_blank',
+        rel: 'noopener',
+        attributes: {
+          'data-swipe-nav-zone': 'detail-media'
+        }
+      },
+      image: {
+        id: 'detailPrimaryImg',
+        src: imageUrl(ctx.detailUid, primaryDisplayWidth),
+        srcset: srcset,
+        sizes: '(max-width: 800px) 100vw, 72ch',
+        alt: ctx.title || ctx.detailUid,
+        loading: 'eager',
+        decoding: 'async',
+        fetchPriority: 'high'
+      }
+    });
   }
 
   function updateBackLink() {
@@ -215,6 +232,7 @@ function bootWorkDetailRoute(rootNode) {
       }
       updateTitle();
       updateMedia();
+      bindSwipeNavigation();
       updateBackLink();
       setNavigation(workPayload);
     })

@@ -1,3 +1,4 @@
+import { renderPrimaryMedia } from '../components/primary-media.js';
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
 import {
   buildPath,
@@ -174,9 +175,8 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
   }
 
   function renderMedia(work) {
-    var link = document.getElementById('selectedWorkMediaLink');
-    var img = document.getElementById('selectedWorkImg');
-    if (!link || !img) return;
+    var media = document.getElementById('selectedWorkMedia');
+    if (!media) return;
     var displaySrc = workImageUrl(workId, primaryDisplayWidth);
     var fullSrc = workImageUrl(workId, primaryFullWidth);
     var srcset = renderWidths.map(function (width) {
@@ -184,11 +184,26 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     }).join(', ');
     var widthPx = toNumber(work && work.width_px);
     var heightPx = toNumber(work && work.height_px);
-    if (widthPx && heightPx) link.style.setProperty('--work-ar', String(widthPx) + ' / ' + String(heightPx));
-    link.href = fullSrc;
-    img.src = displaySrc;
-    img.srcset = srcset;
-    img.alt = text(work && work.title) || workId;
+    renderPrimaryMedia({
+      rootElement: media,
+      aspectRatio: widthPx && heightPx ? String(widthPx) + ' / ' + String(heightPx) : '',
+      link: {
+        id: 'selectedWorkMediaLink',
+        href: fullSrc,
+        target: '_blank',
+        rel: 'noopener'
+      },
+      image: {
+        id: 'selectedWorkImg',
+        src: displaySrc,
+        srcset: srcset,
+        sizes: '(max-width: 800px) 100vw, 72ch',
+        alt: text(work && work.title) || workId,
+        loading: 'eager',
+        decoding: 'async',
+        fetchPriority: 'high'
+      }
+    });
   }
 
   function detailHref(uid, workTitle, sectionId) {

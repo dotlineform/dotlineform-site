@@ -617,6 +617,7 @@ After the refactor is complete, restore the `main` push trigger for `site/**`, `
 - [Public Catalogue Runtime Selected Work Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-selected-work-slice)
 - [Public Catalogue Runtime Work Detail Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-work-detail-slice)
 - [Public Catalogue Runtime Primary Media Component Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-primary-media-slice)
+- [Public Catalogue Runtime Moments Route Slice](/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-moments-route-slice)
 
 ## Decisions Needed
 
