@@ -2,7 +2,7 @@
 doc_id: site-request-public-js-runtime-payload-review
 title: Public JavaScript Runtime and Payload Review Request
 added_date: 2026-06-12
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 ui_status: planned
 parent_id: change-requests
 ---
@@ -20,38 +20,46 @@ The goal is to make public route JavaScript easier to maintain and better aligne
 
 ## Context
 
-During the static public-site builder migration, large inline scripts were moved from route templates into public JS files:
+The public site is now served directly from the tracked `site/` directory.
+There is no public-site Python builder, generated deploy folder, or deploy-time copy step.
+Public HTML, CSS, JavaScript, and browser-visible generated payloads under `site/` are canonical deploy input.
 
-- `assets/js/series-index.js`
-- `assets/js/recent-index.js`
-- `assets/js/work-page.js`
-- `assets/js/works-index.js`
-- `assets/js/work-detail-page.js`
+During the earlier static-site migration, large inline scripts were moved from public route HTML into public JS files:
 
-That extraction deliberately preserved behavior and avoided a larger runtime redesign. It was the right migration step because it kept long route runtime code out of Python renderers.
+- `site/assets/js/series-index.js`
+- `site/assets/js/recent-index.js`
+- `site/assets/js/work-page.js`
+- `site/assets/js/works-index.js`
+- `site/assets/js/work-detail-page.js`
 
-After the migration, the public site needs a separate review of:
+That extraction deliberately preserved behavior and avoided a larger runtime redesign.
+It was the right migration step because it moved long route runtime code out of page markup and into named public-site assets.
+
+After the `site/` canonical-root migration, the public site needs a separate review of:
 
 - what belongs inline, in classic scripts, or in ES modules;
 - which route scripts need to load on each page;
 - whether shared helpers should move out of route files;
 - whether generated payloads are sized and fetched appropriately for the public routes.
 
+The review should treat checked-in `site/` files as the source being improved.
+It should not assume a builder layer that can rewrite route shells, inject includes, bundle scripts, copy assets, or generate deploy artifacts.
+
 ## Goals
 
 - Inventory public route JavaScript by route, owner, size, dependencies, and load timing.
 - Decide which public runtime code belongs inline, which belongs in route-level files, and which belongs in shared modules.
 - Review the structure and ownership of:
-  - `assets/js/public-catalogue-runtime.js`
-  - `assets/js/series-index.js`
-  - `assets/js/recent-index.js`
-  - `assets/js/work-page.js`
-  - `assets/js/works-index.js`
-  - `assets/js/work-detail-page.js`
-  - `assets/js/work.js`
-  - `assets/js/moment.js`
-  - `assets/js/catalogue-search.js`
-  - `assets/js/search/*.js`
+  - `site/assets/js/public-catalogue-runtime.js`
+  - `site/assets/js/series-index.js`
+  - `site/assets/js/recent-index.js`
+  - `site/assets/js/work-page.js`
+  - `site/assets/js/works-index.js`
+  - `site/assets/js/work-detail-page.js`
+  - `site/assets/js/work.js`
+  - `site/assets/js/moment.js`
+  - `site/assets/js/catalogue-search.js`
+  - `site/assets/js/search/*.js`
   - global scripts such as `site-nav.js` and `theme-toggle.js`
 - Reduce duplicated helper logic where there is a clear shared owner.
 - Avoid loading route-specific behavior on routes that do not need it.
@@ -76,7 +84,7 @@ The first implementation batch must record:
 - current generated JSON payload sizes for catalogue index, works index, series index, moments index, recent index, per-record payloads, docs payloads, and search indexes;
 - current fetch waterfall for representative public routes;
 - duplicated helper functions and candidate shared-module owners;
-- current inline scripts that remain after the static builder migration;
+- current inline scripts that remain in tracked `site/` route HTML;
 - route-specific scripts loaded on routes where they are unused.
 
 Representative routes:
@@ -112,10 +120,14 @@ Before refactoring, decide and record:
 5. Payload size and fetch review.
 6. Performance budget and CI/reporting decision.
 
+## Child Docs
+
+- [Public JS Runtime and Payload Static Audit](/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review-audit)
+
 ## Verification Expectations
 
 - Browser smoke checks for all representative public routes.
 - Console-error checks for all representative public routes.
 - Payload/file-size report before and after refactors.
-- Generated artifact audit still passes after script changes.
+- `bin/site-validate` still passes after script changes.
 - Search, selected work, selected detail, moments, Library, and Analysis routes remain behavior-equivalent unless a recorded decision approves a change.

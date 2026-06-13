@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d374eb487877eda7e49626dc44addf84",
-    "generated_at_utc": "2026-06-13T10:54:51Z",
-    "count": 237
+    "version": "blake2b-7f6ba60ddda15e52267e60b0e29279bb",
+    "generated_at_utc": "2026-06-13T11:26:02Z",
+    "count": 238
   },
   "entries": [
     {
@@ -1417,10 +1417,10 @@
       "kind": "doc",
       "title": "Public JavaScript Runtime and Payload Review Request",
       "href": "/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-12 • Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
       "search_terms": [
         "site-request-public-js-runtime-payload-review",
         "site",
@@ -1436,12 +1436,43 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-12",
+        "2026-06-13",
         "2026",
         "06",
-        "12"
+        "13"
       ],
-      "search_text": "site-request-public-js-runtime-payload-review site request public js runtime payload review public javascript runtime and payload review request javascript and change requests change requests 2026-06-12 2026 06 12"
+      "search_text": "site-request-public-js-runtime-payload-review site request public js runtime payload review public javascript runtime and payload review request javascript and change requests change requests 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-js-runtime-payload-review-audit",
+      "kind": "doc",
+      "title": "Public JS Runtime and Payload Static Audit",
+      "href": "/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review-audit",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-js-runtime-payload-review",
+      "parent_title": "Public JavaScript Runtime and Payload Review Request",
+      "display_meta": "2026-06-13 • Public JavaScript Runtime and Payload Review Request",
+      "search_terms": [
+        "site-request-public-js-runtime-payload-review-audit",
+        "site",
+        "request",
+        "public",
+        "js",
+        "runtime",
+        "payload",
+        "review",
+        "audit",
+        "public js runtime and payload static audit",
+        "and",
+        "static",
+        "public javascript runtime and payload review request",
+        "javascript",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-js-runtime-payload-review-audit site request public js runtime payload review audit public js runtime and payload static audit and static public javascript runtime and payload review request javascript 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-data-driven-public-docs-scope-routes",

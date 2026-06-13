@@ -338,7 +338,15 @@
           "doc_id": "site-request-public-js-runtime-payload-review",
           "title": "Public JavaScript Runtime and Payload Review Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
-          "ui_status": "planned"
+          "ui_status": "planned",
+          "children": [
+            {
+              "doc_id": "site-request-public-js-runtime-payload-review-audit",
+              "title": "Public JS Runtime and Payload Static Audit",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
+              "ui_status": "done"
+            }
+          ]
         },
         {
           "doc_id": "site-request-data-driven-public-docs-scope-routes",
@@ -1287,5 +1295,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T10:53:12Z"
+  "generated_at": "2026-06-13T11:26:01Z"
 }

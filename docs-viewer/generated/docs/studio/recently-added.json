@@ -27,6 +27,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "site-request-public-js-runtime-payload-review-audit",
+      "title": "Public JS Runtime and Payload Static Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-js-runtime-payload-review",
+      "parent_title": "Public JavaScript Runtime and Payload Review Request"
+    },
+    {
       "doc_id": "docs-viewer-public-route-shell-template",
       "title": "Public Route Shell Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-10",
       "parent_id": "site-request-admin-checks-reports",
       "parent_title": "Admin Checks Reports"
-    },
-    {
-      "doc_id": "site-request-report-generated-payloads",
-      "title": "Generated Payloads Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-operational-reports",
-      "parent_title": "Admin Checks Operational Reports"
     }
   ],
-  "generated_at": "2026-06-13T10:53:12Z"
+  "generated_at": "2026-06-13T11:26:01Z"
 }
