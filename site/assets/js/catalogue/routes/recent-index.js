@@ -1,6 +1,6 @@
 import {
+  buildPath,
   catalogueIndexUrl,
-  recentIndexUrl,
   seriesIndexUrl,
   trimBaseurl,
   workUrl
@@ -127,7 +127,7 @@ function bootRecentIndexRoute(rootNode, listNode, emptyNode) {
   }
 
   Promise.all([
-    fetchJson(recentIndexUrl(baseurl)),
+    fetchJson(buildPath(baseurl, '/assets/data/recent_index.json')),
     fetchJson(seriesIndexUrl(baseurl)).catch(function () { return {}; })
   ])
     .then(function (responses) {

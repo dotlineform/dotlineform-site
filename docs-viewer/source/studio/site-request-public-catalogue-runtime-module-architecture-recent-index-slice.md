@@ -136,13 +136,20 @@ Out of scope:
   - script list included `recent-index.js`, `site-nav.js`, and `theme-toggle.js`, but not `public-catalogue-runtime.js` or legacy `assets/js/recent-index.js`;
   - `window.__dlfPublicCatalogueRuntime` was absent;
   - browser console error check returned no errors.
+- Follow-up browser check at `http://127.0.0.1:4000/recent/` after removing the route import of the newly added `recentIndexUrl` helper:
+  - route rendered 12 entries through the active `bin/local-all` public server;
+  - first entry linked to `/series/?series=143&from=recent`;
+  - script list included `recent-index.js`, `site-nav.js`, and `theme-toggle.js`;
+  - `window.__dlfPublicCatalogueRuntime` was absent;
+  - browser console error check returned no errors.
 
 ## Slice 12 Assessment
 
 - Completed. Recent index behavior now lives in `site/assets/js/catalogue/routes/recent-index.js`.
 - `site/assets/js/recent-index.js` is retired and `/recent/` no longer loads `site/assets/js/public-catalogue-runtime.js`.
 - `site/assets/js/public-catalogue-runtime.js` is retired after the deploy-root caller audit found no remaining active callers.
-- The new module keeps recent-specific date, sort, and render behavior local while reusing shared URL, fetch, text, size, and thumbnail helpers.
+- The new module keeps recent-specific date, sort, and render behavior local while reusing stable shared URL, fetch, text, size, and thumbnail helpers.
+- The route uses existing `buildPath(...)` rather than importing the new `recentIndexUrl` helper so browsers with a cached older `catalogue-urls.js` module do not fail before the recent data fetch starts.
 
 Acceptance checklist:
 
