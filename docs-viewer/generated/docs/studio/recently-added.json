@@ -3,6 +3,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-canonical-static-site-root-tasks",
+      "title": "Canonical Static Site Root Migration Tasks",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root-tasks.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-canonical-static-site-root",
+      "parent_title": "Canonical Static Site Root Request"
+    },
+    {
+      "doc_id": "site-request-canonical-static-site-root",
+      "title": "Canonical Static Site Root Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root.json",
+      "added_date": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-docs-viewer-runtime-js-ownership-split",
       "title": "Docs Viewer Runtime JavaScript Ownership Split Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-js-ownership-split.json",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-10",
       "parent_id": "site-request-admin-checks-operational-reports",
       "parent_title": "Admin Checks Operational Reports"
-    },
-    {
-      "doc_id": "site-request-report-static-searches",
-      "title": "Static Searches Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
-      "added_date": "2026-06-10",
-      "parent_id": "site-request-admin-checks-reports",
-      "parent_title": "Admin Checks Reports"
-    },
-    {
-      "doc_id": "admin-checks-report-target-map",
-      "title": "Target Map Report",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-target-map.json",
-      "added_date": "2026-06-10",
-      "parent_id": "admin-checks-reports",
-      "parent_title": "Reports"
     }
   ],
-  "generated_at": "2026-06-12T23:18:08Z"
+  "generated_at": "2026-06-13T06:41:01Z"
 }

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7f82503b3e7a2aa9d6012e06b4e218ba",
-    "generated_at_utc": "2026-06-12T23:18:08Z",
-    "count": 234
+    "version": "blake2b-ae456959d5c21a11ca1c1b3c67e91021",
+    "generated_at_utc": "2026-06-13T06:41:01Z",
+    "count": 236
   },
   "entries": [
     {
@@ -1209,6 +1209,60 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-canonical-static-site-root",
+      "kind": "doc",
+      "title": "Canonical Static Site Root Request",
+      "href": "/docs/?scope=studio&doc=site-request-canonical-static-site-root",
+      "last_updated": "2026-06-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-13 • Change Requests",
+      "search_terms": [
+        "site-request-canonical-static-site-root",
+        "site",
+        "request",
+        "canonical",
+        "static",
+        "root",
+        "canonical static site root request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-canonical-static-site-root site request canonical static root canonical static site root request change requests change requests 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-canonical-static-site-root-tasks",
+      "kind": "doc",
+      "title": "Canonical Static Site Root Migration Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-canonical-static-site-root-tasks",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-canonical-static-site-root",
+      "parent_title": "Canonical Static Site Root Request",
+      "display_meta": "2026-06-13 • Canonical Static Site Root Request",
+      "search_terms": [
+        "site-request-canonical-static-site-root-tasks",
+        "site",
+        "request",
+        "canonical",
+        "static",
+        "root",
+        "tasks",
+        "canonical static site root migration tasks",
+        "migration",
+        "canonical static site root request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-canonical-static-site-root-tasks site request canonical static root tasks canonical static site root migration tasks migration canonical static site root request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
@@ -3471,10 +3525,10 @@
       "kind": "doc",
       "title": "Local Setup GitHub And Codex Notes",
       "href": "/docs/?scope=studio&doc=local-setup-github-codex",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-12",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-05-19 • Local Setup",
+      "display_meta": "2026-06-12 • Local Setup",
       "search_terms": [
         "local-setup-github-codex",
         "local",
@@ -3485,12 +3539,12 @@
         "and",
         "notes",
         "local setup",
-        "2026-05-19",
+        "2026-06-12",
         "2026",
-        "05",
-        "19"
+        "06",
+        "12"
       ],
-      "search_text": "local-setup-github-codex local setup github codex local setup github and codex notes and notes local setup 2026-05-19 2026 05 19"
+      "search_text": "local-setup-github-codex local setup github codex local setup github and codex notes and notes local setup 2026-06-12 2026 06 12"
     },
     {
       "id": "local-setup-public-site-preview",

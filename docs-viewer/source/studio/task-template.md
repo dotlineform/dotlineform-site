@@ -52,7 +52,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 ## follow-on tasks
 
-[to be conmpleted during the task]
+[to be completed during the task]
 
 - list any follow-on tasks that need to be created
 - list any issues that were found during this task which need to be addressed

@@ -14,7 +14,7 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 
 | Surface | Public `/library/` | Public `/analysis/` | Local/manage `/docs/` |
 | --- | --- | --- | --- |
-| Route owner | public Jekyll page | public Jekyll page | standalone Docs Viewer service |
+| Route owner | public page | public page | standalone Docs Viewer service |
 | Route file | `library/index.md` | `analysis/index.md` | `docs-viewer/shell/docs-viewer-shell.html` |
 | Shell include | `_includes/docs_viewer_readonly_route.html` through `_includes/docs_viewer_shell.html` | `_includes/docs_viewer_readonly_route.html` through `_includes/docs_viewer_shell.html` | service-rendered standalone shell |
 | Entrypoint | `docs-viewer/runtime/js/docs-viewer-public.js` | `docs-viewer/runtime/js/docs-viewer-public.js` | `docs-viewer/runtime/js/docs-viewer-manage.js` |

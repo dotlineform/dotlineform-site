@@ -291,6 +291,20 @@
           ]
         },
         {
+          "doc_id": "site-request-canonical-static-site-root",
+          "title": "Canonical Static Site Root Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root.json",
+          "ui_status": "planned",
+          "children": [
+            {
+              "doc_id": "site-request-canonical-static-site-root-tasks",
+              "title": "Canonical Static Site Root Migration Tasks",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root-tasks.json",
+              "ui_status": "planned"
+            }
+          ]
+        },
+        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -1266,5 +1280,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-12T23:18:08Z"
+  "generated_at": "2026-06-13T06:41:01Z"
 }
