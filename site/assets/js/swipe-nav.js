@@ -1,6 +1,19 @@
 (function () {
   if (window.__dlfSwipeNav) return;
-  if (typeof window.PointerEvent !== 'function') return;
+
+  function unsupportedBind(zone) {
+    if (zone) zone.__dlfSwipeNavUnsupported = true;
+    return false;
+  }
+
+  if (typeof window.PointerEvent !== 'function') {
+    window.__dlfSwipeNav = {
+      supported: false,
+      bindLinkZone: unsupportedBind,
+      bindActionZone: unsupportedBind
+    };
+    return;
+  }
 
   var DEFAULTS = {
     minDistance: 72,
@@ -197,6 +210,7 @@
   }
 
   window.__dlfSwipeNav = {
+    supported: true,
     bindLinkZone: function (zone, options) {
       options = options || {};
       options.normalizePrev = usableLink;

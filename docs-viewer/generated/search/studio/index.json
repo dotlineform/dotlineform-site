@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cfe5b7804893289285936d66e20b03b5",
-    "generated_at_utc": "2026-06-13T16:44:40Z",
-    "count": 243
+    "version": "blake2b-ca111546a4a3301f1a907512285b58e7",
+    "generated_at_utc": "2026-06-13T17:00:20Z",
+    "count": 244
   },
   "entries": [
     {
@@ -1499,6 +1499,37 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture-slices site request public catalogue runtime module architecture slices public catalogue runtime module architecture slices public catalogue runtime module architecture request 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Primary Media Component Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "primary",
+        "media",
+        "slice",
+        "public catalogue runtime primary media component slice",
+        "component",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice site request public catalogue runtime module architecture primary media slice public catalogue runtime primary media component slice component public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",

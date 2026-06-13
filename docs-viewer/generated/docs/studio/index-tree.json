@@ -353,6 +353,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
+              "title": "Public Catalogue Runtime Primary Media Component Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-primary-media-slice.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
               "title": "Public Catalogue Runtime Selected Work Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-selected-work-slice.json",
@@ -362,7 +368,7 @@
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-work-detail-slice",
               "title": "Public Catalogue Runtime Work Detail Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-work-detail-slice.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             }
           ]
         },
@@ -1326,5 +1332,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T16:45:36Z"
+  "generated_at": "2026-06-13T17:00:56Z"
 }
