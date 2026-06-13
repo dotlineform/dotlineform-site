@@ -356,7 +356,7 @@
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
               "title": "Public Catalogue Runtime Moments Route Slice",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
@@ -1338,5 +1338,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T17:17:40Z"
+  "generated_at": "2026-06-13T17:22:32Z"
 }

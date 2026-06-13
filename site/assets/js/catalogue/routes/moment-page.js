@@ -1,100 +1,112 @@
-(function () {
-  var root = document.getElementById('momentPageRoot');
-  if (!root) return;
-  var runtime = window.__dlfPublicCatalogueRuntime;
-  if (!runtime) return;
+import { renderPrimaryMedia } from '../components/primary-media.js';
+import {
+  catalogueIndexUrl,
+  momentPayloadUrl,
+  momentUrl,
+  momentsIndexUrl,
+  parseRouteState,
+  trimBaseurl
+} from '../shared/catalogue-urls.js';
+import { fetchJson } from '../shared/fetch-json.js';
+import { normalizePositiveSizes, text, toNumber, toPositiveInteger } from '../shared/text.js';
+import { thumbSrcset, thumbUrl } from '../shared/thumbnails.js';
 
-  var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
-  var routeState = runtime.parseRouteState(window.location);
-  var momentId = runtime.text(root.getAttribute('data-moment-id')) || runtime.text(routeState.moment);
+var root = document.getElementById('momentPageRoot');
+if (root) bootMomentRoute(root);
 
-  var imgBase = String(root.getAttribute('data-img-base') || '');
-  var primarySuffix = runtime.text(root.getAttribute('data-primary-suffix')) || 'primary';
-  var assetFormat = runtime.text(root.getAttribute('data-asset-format')) || 'webp';
-  var displayWidth = runtime.toPositiveInteger(root.getAttribute('data-primary-display-width'));
-  if (!Number.isFinite(displayWidth) || displayWidth <= 0) displayWidth = 1600;
-  var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
-  var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
+function jsonAttribute(node, name, fallback) {
+  try {
+    return JSON.parse(node.getAttribute(name) || '[]');
+  } catch (err) {
+    return fallback;
+  }
+}
+
+function parseDateValue(raw) {
+  var dateText = text(raw);
+  if (!dateText) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
+    return new Date(dateText + 'T00:00:00Z');
+  }
+  var parsed = new Date(dateText);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function formatDate(meta) {
+  var display = text(meta && meta.date_display);
+  if (display) return display;
+  var parsed = parseDateValue(meta && meta.date);
+  if (!parsed) return '';
+  try {
+    return new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC'
+    }).format(parsed);
+  } catch (err) {
+    return text(meta && meta.date);
+  }
+}
+
+function normalizeImages(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.map(function (item) {
+    if (!item || typeof item !== 'object') return null;
+    var file = text(item.file);
+    if (!file) return null;
+    return {
+      file: file,
+      alt: text(item.alt),
+      caption: text(item.caption)
+    };
+  }).filter(Boolean);
+}
+
+function renderTextError(container, message) {
+  if (!container) return;
+  container.innerHTML = '';
+  var paragraph = document.createElement('p');
+  paragraph.textContent = message;
+  container.appendChild(paragraph);
+}
+
+function bootMomentRoute(rootNode) {
+  var baseurl = trimBaseurl(rootNode.getAttribute('data-baseurl'));
+  var routeState = parseRouteState(window.location);
+  var momentId = text(rootNode.getAttribute('data-moment-id')) || text(routeState.moment);
+  var imgBase = String(rootNode.getAttribute('data-img-base') || '');
+  var primarySuffix = text(rootNode.getAttribute('data-primary-suffix')) || 'primary';
+  var assetFormat = text(rootNode.getAttribute('data-asset-format')) || 'webp';
+  var displayWidth = toPositiveInteger(rootNode.getAttribute('data-primary-display-width')) || 1600;
+  var loadingText = String(rootNode.getAttribute('data-loading-text') || 'loading...');
+  var unavailableText = String(rootNode.getAttribute('data-unavailable-text') || 'info not available');
+  var renderWidths = normalizePositiveSizes(jsonAttribute(rootNode, 'data-primary-render-widths', []), [800, 1200, 1600]);
   var backNav = document.getElementById('momentBackNav');
   var backLink = document.getElementById('momentBackLink');
-  var primaryMediaComponentPromise = import('/assets/js/catalogue/components/primary-media.js')
-    .catch(function () {
-      return null;
-    });
-
-  var renderWidths = [];
-  try {
-    renderWidths = JSON.parse(root.getAttribute('data-primary-render-widths') || '[]');
-  } catch (e) {
-    renderWidths = [];
-  }
-  renderWidths = runtime.normalizePositiveSizes(renderWidths, [800, 1200, 1600]);
-
-  function parseDateValue(raw) {
-    var dateText = runtime.text(raw);
-    if (!dateText) return null;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
-      return new Date(dateText + 'T00:00:00Z');
-    }
-    var parsed = new Date(dateText);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
-  }
-
-  function formatDate(meta) {
-    var display = runtime.text(meta && meta.date_display);
-    if (display) return display;
-    var parsed = parseDateValue(meta && meta.date);
-    if (!parsed) return '';
-    try {
-      return new Intl.DateTimeFormat('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        timeZone: 'UTC'
-      }).format(parsed);
-    } catch (e) {
-      return runtime.text(meta && meta.date);
-    }
-  }
-
-  function normalizeImages(raw) {
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map(function (item) {
-        if (!item || typeof item !== 'object') return null;
-        var file = runtime.text(item.file);
-        if (!file) return null;
-        return {
-          file: file,
-          alt: runtime.text(item.alt),
-          caption: runtime.text(item.caption)
-        };
-      })
-      .filter(Boolean);
-  }
 
   function normalizeMoment(raw) {
     var source = raw && typeof raw === 'object' ? raw : {};
     var normalized = {};
-    normalized.moment_id = runtime.text(source.moment_id) || momentId;
-    normalized.title = runtime.text(source.title) || normalized.moment_id || 'Untitled';
-    normalized.date = runtime.text(source.date);
-    normalized.date_display = runtime.text(source.date_display);
+    normalized.moment_id = text(source.moment_id) || momentId;
+    normalized.title = text(source.title) || normalized.moment_id || 'Untitled';
+    normalized.date = text(source.date);
+    normalized.date_display = text(source.date_display);
     normalized.images = normalizeImages(source.images);
-    normalized.width_px = runtime.toNumber(source.width_px);
-    normalized.height_px = runtime.toNumber(source.height_px);
+    normalized.width_px = toNumber(source.width_px);
+    normalized.height_px = toNumber(source.height_px);
     if (!Number.isFinite(normalized.width_px) || normalized.width_px <= 0) normalized.width_px = null;
     if (!Number.isFinite(normalized.height_px) || normalized.height_px <= 0) normalized.height_px = null;
     return normalized;
   }
 
   function deriveStem(meta, hero) {
-    var fallbackStem = runtime.text(hero && hero.file).replace(/^\/+/, '').split('/').pop().split('.')[0];
-    return runtime.text(meta && meta.moment_id) || fallbackStem;
+    var fallbackStem = text(hero && hero.file).replace(/^\/+/, '').split('/').pop().split('.')[0];
+    return text(meta && meta.moment_id) || fallbackStem;
   }
 
   function buildImageSources(meta, hero) {
-    var file = runtime.text(hero && hero.file);
+    var file = text(hero && hero.file);
     if (!file) return null;
     if (file.indexOf('://') !== -1) {
       return {
@@ -107,18 +119,10 @@
     var stem = deriveStem(meta, hero);
     if (!stem) return null;
     return {
-      src: runtime.thumbUrl(imgBase, stem, primarySuffix, displayWidth, assetFormat),
-      srcset: runtime.thumbSrcset(imgBase, stem, renderWidths, primarySuffix, assetFormat),
+      src: thumbUrl(imgBase, stem, primarySuffix, displayWidth, assetFormat),
+      srcset: thumbSrcset(imgBase, stem, renderWidths, primarySuffix, assetFormat),
       external: false
     };
-  }
-
-  function renderMomentPrimaryMedia(options) {
-    var renderOptions = options || {};
-    primaryMediaComponentPromise.then(function (module) {
-      if (!module || typeof module.renderPrimaryMedia !== 'function') return;
-      module.renderPrimaryMedia(renderOptions);
-    });
   }
 
   function applyMetadata(meta) {
@@ -145,7 +149,7 @@
 
     var hero = normalized.images.length ? normalized.images[0] : null;
     if (!hero) {
-      renderMomentPrimaryMedia({
+      renderPrimaryMedia({
         rootElement: heroEl,
         hidden: true
       });
@@ -154,14 +158,14 @@
 
     var sources = buildImageSources(normalized, hero);
     if (!sources) {
-      renderMomentPrimaryMedia({
+      renderPrimaryMedia({
         rootElement: heroEl,
         hidden: true
       });
       return;
     }
 
-    renderMomentPrimaryMedia({
+    renderPrimaryMedia({
       rootElement: heroEl,
       image: {
         id: 'momentHeroImg',
@@ -189,12 +193,12 @@
   }
 
   function showLoadError() {
-    applyContentHtml('<p>' + unavailableText + '</p>');
+    renderTextError(document.getElementById('momentBody'), unavailableText);
   }
 
   function setBackLinkVisible(visible) {
     if (backLink) {
-      backLink.setAttribute('href', runtime.catalogueIndexUrl(baseurl, { mode: 'moments' }));
+      backLink.setAttribute('href', catalogueIndexUrl(baseurl, { mode: 'moments' }));
     }
     if (backNav) backNav.hidden = !visible;
   }
@@ -215,27 +219,32 @@
     if (titleEl) titleEl.textContent = 'moments';
     document.title = 'moments | dotlineform';
     if (dateEl) dateEl.hidden = true;
-    if (heroEl) heroEl.hidden = true;
+    if (heroEl) {
+      renderPrimaryMedia({
+        rootElement: heroEl,
+        hidden: true
+      });
+    }
     if (!body) return;
 
     var moments = payload && payload.moments && typeof payload.moments === 'object' ? payload.moments : {};
     var rows = Object.keys(moments).map(function (id) {
       var row = moments[id] && typeof moments[id] === 'object' ? moments[id] : {};
       return {
-        id: runtime.text(row.moment_id) || id,
-        title: runtime.text(row.title) || id,
-        date: runtime.text(row.date),
-        date_display: runtime.text(row.date_display)
+        id: text(row.moment_id) || id,
+        title: text(row.title) || id,
+        date: text(row.date),
+        date_display: text(row.date_display)
       };
     }).sort(function (a, b) {
-      var ad = runtime.text(a.date);
-      var bd = runtime.text(b.date);
+      var ad = text(a.date);
+      var bd = text(b.date);
       if (ad !== bd) return ad < bd ? 1 : -1;
       return a.title.localeCompare(b.title);
     });
 
     if (!rows.length) {
-      body.innerHTML = '<p>' + unavailableText + '</p>';
+      renderTextError(body, unavailableText);
       return;
     }
 
@@ -244,7 +253,7 @@
     rows.forEach(function (row) {
       var link = document.createElement('a');
       link.className = 'index__item';
-      link.href = runtime.momentUrl(row.id, baseurl);
+      link.href = momentUrl(row.id, baseurl);
 
       var title = document.createElement('span');
       title.className = 'index__title';
@@ -268,7 +277,7 @@
 
   if (!momentId) {
     applyMetadata({ title: loadingText });
-    runtime.fetchJson(runtime.momentsIndexUrl(baseurl))
+    fetchJson(momentsIndexUrl(baseurl))
       .then(renderBrowse)
       .catch(function () {
         applyMetadata({ title: unavailableText });
@@ -280,7 +289,7 @@
   applyMetadata({ moment_id: momentId, title: loadingText });
   setBackLinkVisible(true);
 
-  runtime.fetchJson(runtime.momentPayloadUrl(momentId, baseurl))
+  fetchJson(momentPayloadUrl(momentId, baseurl))
     .then(function (payload) {
       var moment = (payload && payload.moment && typeof payload.moment === 'object') ? payload.moment : null;
       var contentHtml = payload && typeof payload.content_html === 'string' ? payload.content_html : null;
@@ -293,4 +302,4 @@
       applyMetadata({ moment_id: momentId, title: unavailableText });
       showLoadError();
     });
-})();
+}

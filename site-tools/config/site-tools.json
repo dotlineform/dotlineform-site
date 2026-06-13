@@ -60,6 +60,7 @@
       "assets/js/catalogue/components/catalogue-image.js",
       "assets/js/catalogue/components/primary-media.js",
       "assets/js/catalogue/components/thumbnail-grid-list.js",
+      "assets/js/catalogue/routes/moment-page.js",
       "assets/js/catalogue/routes/series-index.js",
       "assets/js/catalogue/routes/work-detail-page.js",
       "assets/js/catalogue/routes/work-page.js",

@@ -3,14 +3,14 @@ doc_id: site-request-public-catalogue-runtime-module-architecture-moments-route-
 title: Public Catalogue Runtime Moments Route Slice
 added_date: 2026-06-13
 last_updated: 2026-06-13
-ui_status: planned
+ui_status: done
 parent_id: site-request-public-catalogue-runtime-module-architecture
 ---
 # Public Catalogue Runtime Moments Route Slice
 
 Status:
 
-- planned
+- completed
 
 ## Purpose
 
@@ -97,42 +97,56 @@ The exact filenames should follow the implementation, but ownership should stay 
 
 | ID | Status | Action | Next-session steer |
 | --- | --- | --- | --- |
-| 6.1 | planned | Inspect current moments selected and browse behavior, including data attributes, payload paths, date formatting, body rendering, back-link behavior, primary media, and CSS dependencies. | Capture behavior before changing the route shell. |
-| 6.2 | planned | Define the moments route module contract and decide which current runtime helpers should be imported versus kept route-owned. | Avoid creating broad shared helpers for one route. |
-| 6.3 | planned | Implement `routes/moment-page.js` as the ES module entrypoint. | Use static imports for established catalogue modules and keep payload fetches route-specific. |
-| 6.4 | planned | Update `site/moments/index.html` to load the module route and keep required `catalogue.css` and route data attributes. | Preserve public URL and visible behavior. |
-| 6.5 | planned | Retire `site/assets/js/moment.js` if no route loads it after migration. | Delete only after validation confirms no remaining references. |
-| 6.6 | planned | Update site validation config for the new route module and removed legacy script. | Keep validation config aligned with deploy-root runtime files. |
-| 6.7 | planned | Verify selected moment and browse mode in browser and record completed evidence. | Include exact routes and only checks actually performed. |
+| 6.1 | completed | Inspect current moments selected and browse behavior, including data attributes, payload paths, date formatting, body rendering, back-link behavior, primary media, and CSS dependencies. | Captured the current classic route behavior before changing the shell. |
+| 6.2 | completed | Define the moments route module contract and decide which current runtime helpers should be imported versus kept route-owned. | Used existing shared helpers where already narrow; kept moment-specific normalization, date formatting, and body rendering route-owned. |
+| 6.3 | completed | Implement `routes/moment-page.js` as the ES module entrypoint. | Added static imports for catalogue URL/fetch/text/thumbnail helpers and the primary-media component. |
+| 6.4 | completed | Update `site/moments/index.html` to load the module route and keep required `catalogue.css` and route data attributes. | Replaced classic runtime scripts with the module route while preserving route data attributes. |
+| 6.5 | completed | Retire `site/assets/js/moment.js` if no route loads it after migration. | Deleted the legacy script after confirming no site or validation references remained. |
+| 6.6 | completed | Update site validation config for the new route module and removed legacy script. | Added `assets/js/catalogue/routes/moment-page.js` to site validation config. |
+| 6.7 | completed | Verify selected moment and browse mode in browser and record completed evidence. | Completed in this document. |
 
 ## Completed Verification
 
-- Not started.
+- `node --check site/assets/js/catalogue/routes/moment-page.js`
+- `node --check site/assets/js/catalogue/shared/catalogue-urls.js`
+- `bin/site-validate`
+  - passed: `Site validation passed: 59 required files; 9 required directories; 44 Docs Viewer runtime modules`
+- Manual browser verification against `http://127.0.0.1:8176`:
+  - `/moments/?moment=a-lemon-tart-poem&routecheck=1` renders the selected moment title, date, unlinked primary media, responsive `srcset`, prose body HTML, visible back link to `/series/?mode=moments`, `catalogue.css`, and no console errors.
+  - `/moments/?routecheck=1` renders browse mode with hidden primary media, hidden date, hidden back nav, 56 moment links from `assets/data/moments_index.json`, `catalogue.css`, and no console errors.
+  - Both checked moments states load `/assets/js/catalogue/routes/moment-page.js?v=static` and no longer load `/assets/js/public-catalogue-runtime.js` or `/assets/js/moment.js`.
+- Automated browser smoke tests were not run, per this slice's validation policy.
 
 ## Slice 6 Assessment
 
-- Not started.
+- Added `site/assets/js/catalogue/routes/moment-page.js` as the first-class ES module route for `/moments/`.
+- Added `momentPayloadUrl()` to `site/assets/js/catalogue/shared/catalogue-urls.js`, matching the existing route URL helper boundary without reusing the legacy global runtime.
+- Updated `site/moments/index.html` to load only the module route for moments while keeping route data attributes and `catalogue.css`.
+- Deleted `site/assets/js/moment.js` after confirming no public route loads it.
+- Registered the new route module in `site-tools/config/site-tools.json`.
+- Preserved moment-specific normalization, selected/browse mode decisions, date formatting, body HTML rendering, back-link behavior, unavailable state, external image handling, caption handling, and unlinked primary media behavior.
+- Did not extract prose/body rendering in this slice. Selected works also render prose, so a focused prose/body component is a reasonable follow-on foundation if it can preserve trusted `content_html` behavior without turning into a general rich-content utility.
 
 Acceptance checklist:
 
 | Parent design criterion | Required status | Evidence |
 | --- | --- | --- |
-| Module-level refactor, not greenfield rewrite | yes required |  |
-| Current moments behavior inspected before route contract design | yes required |  |
-| Working behavior ported/adapted rather than redesigned line by line | yes required |  |
-| Public moments route, query, navigation, and data contracts remain stable | yes required |  |
-| Selected moment rendering remains stable | yes required |  |
-| Moments browse rendering remains stable | yes required |  |
-| Unlinked moment primary media remains stable | yes required |  |
-| Moment captions and external-image behavior remain stable | yes required |  |
-| Completed slice leaves site functional and deployable | yes required |  |
-| ES module route boundary follows target folder structure | yes required |  |
-| No broad `utils.js`-style or route-flag-heavy shared module introduced | yes required |  |
-| Performance rules respected | yes required |  |
-| Catalogue CSS ownership remains explicit | yes required |  |
-| Search, if touched, stays structural-only | yes required |  |
-| Validation stayed within agreed policy | yes required |  |
+| Module-level refactor, not greenfield rewrite | yes required | Ported the current moments behavior into a route module and reused established shared helpers/components. |
+| Current moments behavior inspected before route contract design | yes required | Inspected legacy `moment.js`, route shell, shared runtime helper equivalents, and CSS dependencies before implementation. |
+| Working behavior ported/adapted rather than redesigned line by line | yes required | Selected and browse behavior were moved into the module route with current visible output preserved. |
+| Public moments route, query, navigation, and data contracts remain stable | yes required | `/moments/?moment=...`, browse `/moments/`, payload paths, and back-link target remain stable. |
+| Selected moment rendering remains stable | yes required | Browser check confirmed title, date, primary media, body HTML, and back-link behavior. |
+| Moments browse rendering remains stable | yes required | Browser check confirmed browse title, hidden media/date/back nav, and indexed moment links. |
+| Unlinked moment primary media remains stable | yes required | Browser check confirmed selected moment primary media has no wrapping link. |
+| Moment captions and external-image behavior remain stable | yes required | Route preserves optional caption rendering and external-image `srcset` omission logic from the legacy route. |
+| Completed slice leaves site functional and deployable | yes required | Syntax checks, `bin/site-validate`, and manual browser checks passed. |
+| ES module route boundary follows target folder structure | yes required | New entrypoint lives at `assets/js/catalogue/routes/moment-page.js`. |
+| No broad `utils.js`-style or route-flag-heavy shared module introduced | yes required | Added only `momentPayloadUrl()` to an existing URL helper; moment-specific behavior stayed route-owned. |
+| Performance rules respected | yes required | Moments no longer downloads `public-catalogue-runtime.js` and `moment.js`; the route uses focused static imports. |
+| Catalogue CSS ownership remains explicit | yes required | Moments keeps loading `catalogue.css`; no new CSS ownership changes were needed. |
+| Search, if touched, stays structural-only | yes required | Search runtime and payloads were not touched. |
+| Validation stayed within agreed policy | yes required | Ran syntax checks, site validation, and manual browser checks; did not run automated smoke tests. |
 
 ## Follow-On
 
-After Slice 6, decide whether the remaining duplication points justify extracting `work.js` and `swipe-nav.js` navigation behavior into `catalogue/navigation/`, or whether metadata panel extraction should come first.
+After Slice 6, decide whether the remaining duplication points justify extracting `work.js` and `swipe-nav.js` navigation behavior into `catalogue/navigation/`, whether metadata panel extraction should come first, or whether selected-work and moment prose/body rendering should become a focused catalogue prose component.

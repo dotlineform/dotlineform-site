@@ -92,3 +92,7 @@ export function worksIndexUrl(baseurl) {
 export function workPayloadUrl(workId, baseurl) {
   return buildPath(baseurl, '/assets/works/index/' + encodeURIComponent(text(workId)) + '.json');
 }
+
+export function momentPayloadUrl(momentId, baseurl) {
+  return buildPath(baseurl, '/assets/moments/index/' + encodeURIComponent(text(momentId)) + '.json');
+}
