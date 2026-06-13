@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ceef2a18dcf3661e7b534a0a231fd730",
-    "generated_at_utc": "2026-06-13T17:27:02Z",
-    "count": 246
+    "version": "blake2b-2bcfeea373e33fe350d188cf9d4a195e",
+    "generated_at_utc": "2026-06-13T17:38:11Z",
+    "count": 247
   },
   "entries": [
     {
@@ -1471,6 +1471,37 @@
         "13"
       ],
       "search_text": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice site request public catalogue runtime module architecture image caption slice public catalogue runtime image and caption slice and public catalogue runtime module architecture request 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
+      "kind": "doc",
+      "title": "Public Catalogue Runtime Metadata Panel Component Slice",
+      "href": "/docs/?scope=studio&doc=site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
+      "last_updated": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request",
+      "display_meta": "2026-06-13 • Public Catalogue Runtime Module Architecture Request",
+      "search_terms": [
+        "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
+        "site",
+        "request",
+        "public",
+        "catalogue",
+        "runtime",
+        "module",
+        "architecture",
+        "metadata",
+        "panel",
+        "slice",
+        "public catalogue runtime metadata panel component slice",
+        "component",
+        "public catalogue runtime module architecture request",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice site request public catalogue runtime module architecture metadata panel slice public catalogue runtime metadata panel component slice component public catalogue runtime module architecture request 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-public-catalogue-runtime-module-architecture-slices",

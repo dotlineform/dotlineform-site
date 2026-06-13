@@ -1,3 +1,4 @@
+import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
 import { renderProseContent } from '../components/prose-content.js';
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
@@ -31,14 +32,6 @@ function jsonAttribute(node, name, fallback) {
 function setText(id, value) {
   var node = document.getElementById(id);
   if (node) node.textContent = value;
-}
-
-function setRow(rowId, textId, value) {
-  var row = document.getElementById(rowId);
-  if (!row) return;
-  var valueText = text(value);
-  setText(textId, valueText);
-  row.hidden = !valueText;
 }
 
 function isAbsoluteUrl(value) {
@@ -81,34 +74,12 @@ function dimensionsText(meta) {
   return '';
 }
 
-function appendSeparatedLink(parent, link, isFirst) {
-  if (!isFirst) parent.appendChild(document.createTextNode(', '));
-  parent.appendChild(link);
-}
-
-function renderMetaLinks(rowId, labelId, linksId, singular, plural, entries, hrefForEntry) {
-  var row = document.getElementById(rowId);
-  var label = document.getElementById(labelId);
-  var links = document.getElementById(linksId);
-  if (!row || !label || !links) return;
-
-  var validEntries = (Array.isArray(entries) ? entries : []).map(function (entry) {
+function metadataLinkEntries(entries, hrefForEntry) {
+  return (Array.isArray(entries) ? entries : []).map(function (entry) {
     var href = hrefForEntry(entry);
     var labelText = text(entry && entry.label) || text(entry && entry.filename) || text(entry && entry.url);
-    return href && labelText ? { href: href, label: labelText } : null;
+    return href && labelText ? { href: href, label: labelText, target: '_blank', rel: 'noopener' } : null;
   }).filter(Boolean);
-
-  label.textContent = validEntries.length === 1 ? singular : plural;
-  links.innerHTML = '';
-  validEntries.forEach(function (entry, index) {
-    var link = document.createElement('a');
-    link.href = entry.href;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.textContent = entry.label;
-    appendSeparatedLink(links, link, index === 0);
-  });
-  row.hidden = !validEntries.length;
 }
 
 function bootSelectedWorkRoute(rootNode, routeState, workId) {
@@ -137,25 +108,74 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     return worksFilesBase.replace(/\/$/, '') + '/' + encodedPath(name);
   }
 
-  function renderDownloadsAndLinks(payload, work) {
-    renderMetaLinks(
-      'selectedWorkDownloadsRow',
-      'selectedWorkDownloadsLabel',
-      'selectedWorkDownloadsLinks',
-      'download',
-      'downloads',
+  function renderMetadata(payload, work, title) {
+    var metadata = document.getElementById('selectedWorkMetadata');
+    var rows = document.getElementById('selectedWorkMetadataRows');
+    if (!metadata || !rows) return;
+
+    var nav = document.getElementById('seriesNav');
+    var seriesLinkWrap = document.getElementById('workSeriesLinkWrap');
+    var yearText = text(work && work.year_display) || text(work && work.year);
+    var mediumText = text(work && work.medium_caption);
+    var dimensions = dimensionsText(work);
+    var downloads = metadataLinkEntries(
       arrayFromPayload(payload, work, 'downloads'),
       function (entry) { return workFileUrl(entry && entry.filename); }
     );
-    renderMetaLinks(
-      'selectedWorkLinksRow',
-      'selectedWorkLinksLabel',
-      'selectedWorkLinksLinks',
-      'link',
-      'links',
+    var links = metadataLinkEntries(
       arrayFromPayload(payload, work, 'links'),
       function (entry) { return safeHref(entry && entry.url); }
     );
+
+    renderMetadataPanel({
+      rootElement: metadata,
+      rowsElement: rows,
+      rows: [
+        {
+          modifier: 'title',
+          segments: [
+            { text: title, id: 'selectedWorkTitleText', className: 'catalogueMetadata__titleMain' },
+            { node: nav }
+          ]
+        },
+        {
+          hidden: !yearText,
+          segments: [{ text: yearText, id: 'selectedWorkYearText' }]
+        },
+        {
+          hidden: !mediumText,
+          segments: [{ text: mediumText, id: 'selectedWorkMediumText' }]
+        },
+        {
+          hidden: !dimensions,
+          segments: [{ text: dimensions, id: 'selectedWorkDimensionsText' }]
+        },
+        {
+          segments: [
+            'cat. ',
+            { text: text(work && work.work_id) || workId, id: 'selectedWorkCatText' },
+            ' ',
+            { node: seriesLinkWrap }
+          ]
+        },
+        {
+          hidden: !downloads.length,
+          segments: [
+            { text: downloads.length === 1 ? 'download' : 'downloads', id: 'selectedWorkDownloadsLabel' },
+            ' ',
+            { links: downloads, id: 'selectedWorkDownloadsLinks' }
+          ]
+        },
+        {
+          hidden: !links.length,
+          segments: [
+            { text: links.length === 1 ? 'link' : 'links', id: 'selectedWorkLinksLabel' },
+            ' ',
+            { links: links, id: 'selectedWorkLinksLinks' }
+          ]
+        }
+      ]
+    });
   }
 
   function updateBackLink() {
@@ -315,12 +335,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       var title = text(work.title) || workId;
       rootNode.hidden = false;
       setText('selectedWorkTitleHidden', title);
-      setText('selectedWorkTitleText', title);
-      setText('selectedWorkCatText', text(work.work_id) || workId);
-      setRow('selectedWorkYearRow', 'selectedWorkYearText', text(work.year_display) || text(work.year));
-      setRow('selectedWorkMediumRow', 'selectedWorkMediumText', text(work.medium_caption));
-      setRow('selectedWorkDimensionsRow', 'selectedWorkDimensionsText', dimensionsText(work));
-      renderDownloadsAndLinks(payload, work);
+      renderMetadata(payload, work, title);
       document.title = title + ' | dotlineform';
       renderMedia(work);
       updateBackLink();
@@ -331,8 +346,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     .catch(function () {
       rootNode.hidden = false;
       setText('selectedWorkTitleHidden', unavailableText);
-      setText('selectedWorkTitleText', unavailableText);
-      setText('selectedWorkCatText', workId);
+      renderMetadata(null, { work_id: workId }, unavailableText);
       updateBackLink();
     });
 }

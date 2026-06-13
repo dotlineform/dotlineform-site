@@ -73,19 +73,14 @@
     >
       <h1 class="visually-hidden" id="detailHiddenTitle">loading...</h1>
       <figure class="page__media" id="detailPrimaryMedia"></figure>
-      <section class="page__meta page__media">
+      <section class="catalogueMetadata page__media" id="detailMetadata">
         <h2 class="visually-hidden">work detail metadata</h2>
-        <div class="page__caption page__metaList">
-          <div class="page__row work__titleRow">
-            <span class="work__titleMain"><span id="detailTitleText">loading...</span></span>
-            <nav class="seriesNav seriesNav--title" id="detailNav" aria-label="Detail navigation" data-detail-uid="" data-work-id="" data-work-title="" data-baseurl="" data-default-section="" hidden>
-              <span class="navCounter" id="detailTitleCounter" hidden></span>
-              <a class="seriesNav__prev" id="detailNavPrev" href="#">&larr;</a>
-              <a class="seriesNav__next" id="detailNavNext" href="#">&rarr;</a>
-            </nav>
-          </div>
-          <div class="page__row">cat. <span id="detailCatText"></span></div>
-        </div>
+        <div class="catalogueMetadata__rows" id="detailMetadataRows"></div>
+        <nav class="seriesNav seriesNav--title" id="detailNav" aria-label="Detail navigation" data-detail-uid="" data-work-id="" data-work-title="" data-baseurl="" data-default-section="" hidden>
+          <span class="navCounter" id="detailTitleCounter" hidden></span>
+          <a class="seriesNav__prev" id="detailNavPrev" href="#">&larr;</a>
+          <a class="seriesNav__next" id="detailNavNext" href="#">&rarr;</a>
+        </nav>
       </section>
       <nav class="page__nav"><a id="detailBackLink" class="page__back" href="/series/">&larr; work</a></nav>
     </article>

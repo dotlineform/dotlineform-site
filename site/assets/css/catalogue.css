@@ -150,6 +150,41 @@
   object-fit: initial;
 }
 
+.catalogueMetadata__rows{
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.catalogueMetadata__row{
+  display: block;
+  padding: 0;
+  border-top: 0;
+  margin: 0 0 calc(var(--space-1) * 0.67);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.catalogueMetadata__row > span{
+  overflow-wrap: anywhere;
+}
+
+.catalogueMetadata__row--title{
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.catalogueMetadata__titleMain{
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+  font-weight: 600;
+}
+
 .catalogueProse{
   max-width: var(--content-measure);
   margin-left: auto;

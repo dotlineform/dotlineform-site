@@ -1,3 +1,4 @@
+import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
 import {
   catalogueIndexUrl,
@@ -69,13 +70,35 @@ function bootWorkDetailRoute(rootNode) {
     return imgBase + encodeURIComponent(uid) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat;
   }
 
+  function renderMetadata() {
+    var metadata = document.getElementById('detailMetadata');
+    var rows = document.getElementById('detailMetadataRows');
+    if (!metadata || !rows) return;
+    renderMetadataPanel({
+      rootElement: metadata,
+      rowsElement: rows,
+      rows: [
+        {
+          modifier: 'title',
+          segments: [
+            { text: ctx.title || 'Untitled', id: 'detailTitleText', className: 'catalogueMetadata__titleMain' },
+            { node: document.getElementById('detailNav') }
+          ]
+        },
+        {
+          segments: [
+            'cat. ',
+            { text: ctx.detailUid, id: 'detailCatText' }
+          ]
+        }
+      ]
+    });
+  }
+
   function updateTitle() {
     var hiddenTitle = document.getElementById('detailHiddenTitle');
-    var titleText = document.getElementById('detailTitleText');
-    var catText = document.getElementById('detailCatText');
     if (hiddenTitle) hiddenTitle.textContent = ctx.title || 'Untitled';
-    if (titleText) titleText.textContent = ctx.title || 'Untitled';
-    if (catText) catText.textContent = ctx.detailUid;
+    renderMetadata();
     if (ctx.title) document.title = ctx.title + ' | dotlineform';
   }
 

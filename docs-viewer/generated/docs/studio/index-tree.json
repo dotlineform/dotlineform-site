@@ -347,6 +347,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
+              "title": "Public Catalogue Runtime Metadata Panel Component Slice",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice.json",
+              "ui_status": "done"
+            },
+            {
               "doc_id": "site-request-public-catalogue-runtime-module-architecture-slices",
               "title": "Public Catalogue Runtime Module Architecture Slices",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-slices.json",
@@ -1344,5 +1350,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-13T17:30:09Z"
+  "generated_at": "2026-06-13T17:43:50Z"
 }

@@ -58,6 +58,7 @@
       "assets/js/public-catalogue-runtime.js",
       "assets/js/catalogue/components/catalogue-caption.js",
       "assets/js/catalogue/components/catalogue-image.js",
+      "assets/js/catalogue/components/metadata-panel.js",
       "assets/js/catalogue/components/primary-media.js",
       "assets/js/catalogue/components/prose-content.js",
       "assets/js/catalogue/components/thumbnail-grid-list.js",

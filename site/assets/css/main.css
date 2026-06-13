@@ -1685,7 +1685,6 @@ pre.theme-text{
 @media (max-width: 640px){
   .index__item { grid-template-columns: 1fr; }
   .index__work_id, .index__date { text-align: left; }
-  .page__row{ grid-template-columns: 1fr; }
   .about-link-item{ grid-template-columns: 1fr; }
   .about-link-prefix{ justify-self: start; text-align: left; }
 }
@@ -1889,62 +1888,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   margin: 0 0 var(--space-1);
 }
 
-/* Definition list meta (e.g., Work “Details”) */
-.page__dl{
-  margin: 0;
-}
-
-/* default page rows include row borders and padding */
-.page__row{
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  align-items: baseline;
-  column-gap: 10px;
-  padding: 6px 0;
-  border-top: 1px solid var(--border);
-}
-
-.page__row:first-child{
-  border-top: 0;
-}
-
-/* Caption-style meta (single-column) used by Work “Details” */
-.page__caption{
-  margin: 0;
-}
-
-.page__metaList{
-  font-size: var(--font-small);
-  line-height: var(--line-snug);
-}
-
-.page__metaList .page__row{
-  font-size: inherit;
-  line-height: inherit;
-}
-
-.page__metaList .page__row > span{
-  overflow-wrap: anywhere;
-}
-
-.page__metaList .work__titleMain{
-  font-weight: 600;
-}
-
-/* .page__caption rules to override the generic .page__row grid/borders when rows are used as single-column caption lines in Work caption */
-.page__caption .page__row{
-  display: block;            /* override grid rows */
-  grid-template-columns: none;
-  column-gap: 0;
-  padding: 0;
-  border-top: 0;
-  margin: 0 0 calc(var(--space-1) * 0.67); /* reduced row height - better for single rows of text */
-}
-
-.page__caption .page__row:first-child{
-  margin-top: 0;
-}
-
 .page__tag{
   display: inline-block;
   margin-right: 6px;
@@ -2110,33 +2053,8 @@ Use “structure-first” naming and scope section-specific differences via the 
 
 /* Note: section index pages use the shared `.index` / `.index__*` component classes. */
 
-/* work page */
-/* Ensure work-page meta blocks inherit the page font size */
-.work .page__caption,
 .work .supplements{
   font-size: inherit;
-}
-
-.work .page__caption .page__row{
-  font-size: var(--font-small);
-  line-height: var(--line-snug);
-}
-
-/* Work title row in caption details */
-.work__titleRow{
-  font-size: inherit;
-  line-height: inherit;
-  font-weight: 600;
-  display: flex !important;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.work__titleMain{
-  display: inline-flex;
-  align-items: baseline;
-  min-width: 0;
 }
 
 .seriesNav--title{
@@ -2149,11 +2067,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   gap: var(--nav-gap-title);
   flex: 0 0 auto;
 }
-
-/* Works-only enhancements
-   If you want a more minimal aesthetic, comment out this entire block.
-   (The shared `.page__row` and `.page__tag` rules will still render cleanly.)
-*/
 
 /* Works tags as “pills”: to revert to minimal tags, comment out this rule.
 note: works tags are not currently in use on the work pages themselves.

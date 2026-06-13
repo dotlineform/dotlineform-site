@@ -77,24 +77,15 @@
     >
       <h1 class="visually-hidden" id="selectedWorkTitleHidden">loading...</h1>
       <figure class="page__media" id="selectedWorkMedia"></figure>
-      <section class="page__meta page__media">
+      <section class="catalogueMetadata page__media" id="selectedWorkMetadata">
         <h2 class="visually-hidden">work details</h2>
-        <div class="page__caption page__metaList">
-          <div class="page__row work__titleRow">
-            <span class="work__titleMain"><span id="selectedWorkTitleText">loading...</span></span>
-            <nav class="seriesNav seriesNav--title" id="seriesNav" aria-label="Series navigation" data-work-id="" data-series="" data-baseurl="" hidden>
-              <span class="navCounter" id="seriesNavCounter" hidden></span>
-              <a class="seriesNav__prev" id="seriesNavPrev" href="#">&larr;</a>
-              <a class="seriesNav__next" id="seriesNavNext" href="#">&rarr;</a>
-            </nav>
-          </div>
-          <div class="page__row" id="selectedWorkYearRow" hidden><span id="selectedWorkYearText"></span></div>
-          <div class="page__row" id="selectedWorkMediumRow" hidden><span id="selectedWorkMediumText"></span></div>
-          <div class="page__row" id="selectedWorkDimensionsRow" hidden><span id="selectedWorkDimensionsText"></span></div>
-          <div class="page__row" id="selectedWorkCatRow">cat. <span id="selectedWorkCatText"></span> <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="/series/"></a></span></div>
-          <div class="page__row" id="selectedWorkDownloadsRow" hidden><span id="selectedWorkDownloadsLabel"></span> <span id="selectedWorkDownloadsLinks"></span></div>
-          <div class="page__row" id="selectedWorkLinksRow" hidden><span id="selectedWorkLinksLabel"></span> <span id="selectedWorkLinksLinks"></span></div>
-        </div>
+        <div class="catalogueMetadata__rows" id="selectedWorkMetadataRows"></div>
+        <nav class="seriesNav seriesNav--title" id="seriesNav" aria-label="Series navigation" data-work-id="" data-series="" data-baseurl="" hidden>
+          <span class="navCounter" id="seriesNavCounter" hidden></span>
+          <a class="seriesNav__prev" id="seriesNavPrev" href="#">&larr;</a>
+          <a class="seriesNav__next" id="seriesNavNext" href="#">&rarr;</a>
+        </nav>
+        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="/series/"></a></span>
       </section>
       <section class="catalogueProse catalogueProse--work" id="selectedWorkProseSection" hidden><div id="selectedWorkProseContent"></div></section>
       <section class="workDetails" id="selectedWorkDetailsSection" hidden><h2 class="visually-hidden">Additional details</h2><div id="selectedWorkDetailsContent"></div></section>
