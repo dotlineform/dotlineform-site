@@ -1,5 +1,4 @@
 # output + caches
-_public_site/
 .sass-cache/
 
 # Python

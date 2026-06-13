@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-5935a4b15aef1a87dd6582a04746768f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00357",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00357",
+    "title": "untitled",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "036"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink and pencil on paper",
+    "height_cm": 42.0,
+    "width_cm": 29.7,
+    "width_px": 3508,
+    "height_px": 4960
+  },
+  "sections": []
+}

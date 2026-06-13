@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-d8c5677951333b1ed138ea6f20e27ab9",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00894",
+    "count": 4
+  },
+  "work": {
+    "work_id": "00894",
+    "title": "doll moiré reduced",
+    "year": 2008,
+    "year_display": "c. 2008",
+    "series_ids": [
+      "037"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00894-1",
+      "section_title": "versions (2022)",
+      "details": [
+        {
+          "work_id": "00894",
+          "detail_id": "001",
+          "detail_uid": "00894-001",
+          "title": "doll moiré reduced (version 1)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "00894",
+          "detail_id": "002",
+          "detail_uid": "00894-002",
+          "title": "doll moiré reduced (version 2)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "00894",
+          "detail_id": "003",
+          "detail_uid": "00894-003",
+          "title": "doll moiré reduced (version 3)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "00894",
+          "detail_id": "004",
+          "detail_uid": "00894-004",
+          "title": "doll moiré reduced (version 4)",
+          "width_px": 3543,
+          "height_px": 3543
+        }
+      ]
+    }
+  ]
+}

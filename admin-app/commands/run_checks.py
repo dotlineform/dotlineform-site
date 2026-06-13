@@ -7,7 +7,6 @@ import argparse
 import datetime as dt
 import json
 import re
-import shutil
 import shlex
 import subprocess
 import sys
@@ -19,14 +18,8 @@ from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
-PUBLIC_SITE_DESTINATION = Path("/tmp/dlf-public-site-build")
+PUBLIC_SITE_ROOT = REPO_ROOT / "site"
 SOURCE_MODULE_SITE_ROOT = Path(".")
-GENERATED_PUBLIC_PAYLOADS = (
-    Path("site/assets/data/docs/scopes/analysis"),
-    Path("site/assets/data/docs/scopes/library"),
-    Path("site/assets/data/search/analysis"),
-    Path("site/assets/data/search/library"),
-)
 
 
 @dataclass(frozen=True)
@@ -36,13 +29,10 @@ class CheckCommand:
     description: str
 
 
-def public_site_build_argv() -> tuple[str, ...]:
+def site_validate_argv() -> tuple[str, ...]:
     return (
         sys.executable,
-        "public-site/build/build_site.py",
-        "--destination",
-        str(PUBLIC_SITE_DESTINATION),
-        "--audit",
+        "site-tools/site_validate.py",
     )
 
 
@@ -371,9 +361,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs-viewer-smoke": (
         CheckCommand(
-            "public-site-temp-build",
-            public_site_build_argv(),
-            "Build the site to a temporary destination for browser smoke tests.",
+            "site-validate",
+            site_validate_argv(),
+            "Validate the checked-in static site root before browser smoke tests.",
         ),
         CheckCommand(
             "docs-viewer-service-manage-smoke",
@@ -389,7 +379,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "docs-viewer/tests/smoke/public_docs_viewer_readonly.py",
                 "--site-root",
-                str(PUBLIC_SITE_DESTINATION),
+                str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
         ),
@@ -437,9 +427,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "studio-smoke": (
         CheckCommand(
-            "public-site-temp-build",
-            public_site_build_argv(),
-            "Build the site to a temporary destination for browser smoke tests.",
+            "site-validate",
+            site_validate_argv(),
+            "Validate the checked-in static site root before browser smoke tests.",
         ),
         CheckCommand(
             "public-site-theme-toggle-smoke",
@@ -447,7 +437,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/public_site_theme_toggle.py",
                 "--site-root",
-                str(PUBLIC_SITE_DESTINATION),
+                str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check the public /series/ header theme toggle.",
         ),
@@ -457,7 +447,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/public_route_simplification.py",
                 "--site-root",
-                str(PUBLIC_SITE_DESTINATION),
+                str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check the simplified public route contract for series, works, details, moments, search, and 404 recovery.",
         ),
@@ -666,32 +656,6 @@ def command_text(argv: Iterable[str]) -> str:
     return " ".join(shlex.quote(str(part)) for part in argv)
 
 
-def clean_public_site_destination() -> bool:
-    if not PUBLIC_SITE_DESTINATION.exists():
-        return False
-    shutil.rmtree(PUBLIC_SITE_DESTINATION)
-    return True
-
-
-def copy_generated_public_payloads(destination: Path) -> list[str]:
-    copied: list[str] = []
-    for rel_path in GENERATED_PUBLIC_PAYLOADS:
-        source = REPO_ROOT / rel_path
-        if not source.exists():
-            continue
-        target = destination / rel_path
-        if source.is_dir():
-            if target.exists():
-                shutil.rmtree(target)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copytree(source, target)
-        else:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
-        copied.append(str(rel_path))
-    return copied
-
-
 def create_run_dir(run_id: str | None) -> Path:
     if run_id:
         safe_id = slugify(run_id)
@@ -723,7 +687,6 @@ def expand_profiles(profile_names: Iterable[str]) -> list[CheckCommand]:
 def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     started = time.monotonic()
     started_at = dt.datetime.now(dt.timezone.utc).isoformat()
-    setup_lines: list[str] = []
     header = [
         f"name: {command.name}",
         f"description: {command.description}",
@@ -734,8 +697,6 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     ]
 
     try:
-        if command.name == "public-site-temp-build" and clean_public_site_destination():
-            setup_lines.append(f"Removed existing temporary public site destination: {PUBLIC_SITE_DESTINATION}")
         result = subprocess.run(
             command.argv,
             cwd=REPO_ROOT,
@@ -746,13 +707,6 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         )
         output = result.stdout or ""
         exit_code = result.returncode
-        if exit_code == 0 and command.name == "public-site-temp-build":
-            copied = copy_generated_public_payloads(PUBLIC_SITE_DESTINATION)
-            payload_lines = ["", "Copied generated public payloads for smoke tests:"]
-            payload_lines.extend(f"  - {path}" for path in copied)
-            if not copied:
-                payload_lines.append("  - none")
-            output = f"{output.rstrip()}\n" + "\n".join(payload_lines) + "\n"
     except FileNotFoundError as error:
         output = f"{error}\n"
         exit_code = 127
@@ -763,10 +717,7 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         f"exit_code: {exit_code}",
         f"duration_seconds: {duration:.2f}",
     ]
-    setup_output = "\n".join(setup_lines)
-    if setup_output:
-        setup_output = f"{setup_output}\n"
-    log_path.write_text("\n".join(header) + setup_output + output + "\n".join(footer) + "\n", encoding="utf-8")
+    log_path.write_text("\n".join(header) + output + "\n".join(footer) + "\n", encoding="utf-8")
 
     return {
         "name": command.name,
@@ -816,11 +767,6 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--run-id", help="Optional local run id for var/admin/test-runs/.")
     parser.add_argument("--list", action="store_true", help="List available profiles and exit.")
-    parser.add_argument(
-        "--keep-temp-build",
-        action="store_true",
-        help=f"Keep the temporary public site build at {PUBLIC_SITE_DESTINATION} after smoke profiles finish.",
-    )
     return parser.parse_args()
 
 
@@ -850,12 +796,6 @@ def main() -> int:
         print(f"  {status}: {result['log']}")
 
     write_summaries(run_dir, profiles, results)
-    used_public_site_temp_build = any(result["name"] == "public-site-temp-build" for result in results)
-    if used_public_site_temp_build and not args.keep_temp_build:
-        if clean_public_site_destination():
-            print(f"removed temp build: {PUBLIC_SITE_DESTINATION}")
-    elif used_public_site_temp_build:
-        print(f"kept temp build: {PUBLIC_SITE_DESTINATION}")
     failed = [result for result in results if result["exit_code"] != 0]
     print(f"summary: {run_dir.relative_to(REPO_ROOT) / 'summary.md'}")
     return 1 if failed else 0

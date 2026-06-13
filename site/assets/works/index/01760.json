@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-3f3b925943d2d445cb30d993f4b9488e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01760",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01760",
+    "title": "2006-12-27 - 14-03-40",
+    "year": 2006,
+    "year_display": "2006",
+    "series_ids": [
+      "133"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 22.5,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 2657
+  },
+  "sections": []
+}

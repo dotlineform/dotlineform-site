@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-691786cbfdca7af864e0a746fbb7275a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00423",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00423",
+    "title": "found form 08",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "067"
+    ],
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": []
+}

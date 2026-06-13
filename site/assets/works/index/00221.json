@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-4abc2378ffffb9a209786141ab5d22f9",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00221",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00221",
+    "title": "colouring book 5",
+    "year": 1996,
+    "year_display": "1996",
+    "series_ids": [
+      "028"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 1200,
+    "height_px": 1707
+  },
+  "sections": []
+}

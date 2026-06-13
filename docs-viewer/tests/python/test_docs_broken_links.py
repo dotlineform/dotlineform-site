@@ -62,7 +62,7 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
 def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
-    (repo_root / "public-site/config").mkdir(parents=True, exist_ok=True); (repo_root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_json(
         repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
         {
@@ -87,7 +87,7 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
 def make_public_repo(scope: str, content_html: str) -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
-    (repo_root / "public-site/config").mkdir(parents=True, exist_ok=True); (repo_root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     for known_scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
         docs = []
         if known_scope == scope:

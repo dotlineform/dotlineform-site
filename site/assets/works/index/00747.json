@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-f0fcab63cf34d5ab53f54cb364cd8a42",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00747",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00747",
+    "title": "a partial act of kindness [4.1]",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "013"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

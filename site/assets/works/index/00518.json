@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-b23a79448fe38bce54fc43390e548572",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00518",
+    "count": 3
+  },
+  "work": {
+    "work_id": "00518",
+    "title": "landscape 2.1",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "087"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 14173,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00518-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00518",
+          "detail_id": "001",
+          "detail_uid": "00518-001",
+          "title": "landscape 2.1 - detail 1",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00518",
+          "detail_id": "002",
+          "detail_uid": "00518-002",
+          "title": "landscape 2.1 - detail 2",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00518",
+          "detail_id": "003",
+          "detail_uid": "00518-003",
+          "title": "landscape 2.1 - detail 3",
+          "width_px": 2362,
+          "height_px": 2362
+        }
+      ]
+    }
+  ]
+}

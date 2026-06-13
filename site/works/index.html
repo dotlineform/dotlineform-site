@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Works | dotlineform</title>
+  <meta name="dlf-asset-version" content="static">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111111">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css?v=static">
+</head>
+<body class="works">
+  <header class="site-header">
+    <div class="container">
+      <div class="site-title">
+        <a href="/">dotlineform</a>
+      </div>
+      <div class="siteHeader__actions">
+        <nav class="site-nav" aria-label="Primary">
+          <a class="nav-item is-active" href="/series/" aria-current="page">works</a>
+          <a class="nav-item" href="/analysis/">analysis</a>
+          <a class="nav-item" href="/library/">library</a>
+        </nav>
+        <button class="siteThemeToggle" type="button" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode">
+          <svg class="siteThemeToggle__icon" data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="siteThemeToggle__icon" data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article
+      class="page work"
+      id="selectedWorkRoot"
+      data-baseurl=""
+      data-works-img-base="https://media.dotlineform.com/works/img/"
+      data-works-files-base="https://media.dotlineform.com/works/files/"
+      data-details-thumb-base="/assets/work_details/img/"
+      data-primary-render-widths="[800, 1200, 1600]"
+      data-primary-display-width="1600"
+      data-primary-full-width="1600"
+      data-primary-suffix="primary"
+      data-detail-thumb-sizes="[96]"
+      data-detail-thumb-suffix="thumb"
+      data-asset-format="webp"
+      data-loading-text="loading..."
+      data-unavailable-text="info not available"
+      hidden
+    >
+      <h1 class="visually-hidden" id="selectedWorkTitleHidden">loading...</h1>
+      <figure class="page__media">
+        <a class="page__mediaLink" id="selectedWorkMediaLink" target="_blank" rel="noopener" style="--work-ar: 4 / 3;">
+          <img class="page__mediaImg" id="selectedWorkImg" sizes="(max-width: 800px) 100vw, 72ch" alt="" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:auto;display:block;">
+        </a>
+      </figure>
+      <section class="page__meta page__media">
+        <h2 class="visually-hidden">work details</h2>
+        <div class="page__caption page__metaList">
+          <div class="page__row work__titleRow">
+            <span class="work__titleMain"><span id="selectedWorkTitleText">loading...</span></span>
+            <nav class="seriesNav seriesNav--title" id="seriesNav" aria-label="Series navigation" data-work-id="" data-series="" data-baseurl="" hidden>
+              <span class="navCounter" id="seriesNavCounter" hidden></span>
+              <a class="seriesNav__prev" id="seriesNavPrev" href="#">&larr;</a>
+              <a class="seriesNav__next" id="seriesNavNext" href="#">&rarr;</a>
+            </nav>
+          </div>
+          <div class="page__row" id="selectedWorkYearRow" hidden><span id="selectedWorkYearText"></span></div>
+          <div class="page__row" id="selectedWorkMediumRow" hidden><span id="selectedWorkMediumText"></span></div>
+          <div class="page__row" id="selectedWorkDimensionsRow" hidden><span id="selectedWorkDimensionsText"></span></div>
+          <div class="page__row" id="selectedWorkCatRow">cat. <span id="selectedWorkCatText"></span> <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="/series/"></a></span></div>
+          <div class="page__row" id="selectedWorkDownloadsRow" hidden><span id="selectedWorkDownloadsLabel"></span> <span id="selectedWorkDownloadsLinks"></span></div>
+          <div class="page__row" id="selectedWorkLinksRow" hidden><span id="selectedWorkLinksLabel"></span> <span id="selectedWorkLinksLinks"></span></div>
+        </div>
+      </section>
+      <section class="content work__prose" id="selectedWorkProseSection" hidden><div id="selectedWorkProseContent"></div></section>
+      <section class="workDetails" id="selectedWorkDetailsSection" hidden><h2 class="visually-hidden">Additional details</h2><div id="selectedWorkDetailsContent"></div></section>
+      <nav class="page__nav">
+        <a id="pageBackLink" class="page__back" href="/series/" data-baseurl="" data-series-label="series">&larr; works</a>
+      </nav>
+    </article>
+
+    <div class="index worksList" id="worksIndexRoot" hidden>
+      <h1 class="index__heading visually-hidden">works</h1>
+      <p class="worksList__count" id="worksListCount"></p>
+      <div class="worksList__head" role="group" aria-label="Sort works">
+        <button class="worksList__sortBtn" type="button" data-sort-key="cat">cat <span class="worksList__sortIcon" aria-hidden="true"></span></button>
+        <button class="worksList__sortBtn" type="button" data-sort-key="year">year <span class="worksList__sortIcon" aria-hidden="true"></span></button>
+        <button class="worksList__sortBtn" type="button" data-sort-key="title">title <span class="worksList__sortIcon" aria-hidden="true"></span></button>
+        <button class="worksList__sortBtn" type="button" data-sort-key="series">series <span class="worksList__sortIcon" aria-hidden="true"></span></button>
+      </div>
+      <ul class="worksList__list" id="worksList"></ul>
+      <nav class="page__nav" id="worksIndexBackNav" hidden>
+        <a class="page__back" id="worksIndexBackLink" href="/series/">&larr; series</a>
+      </nav>
+    </div>
+    <p id="worksEmpty" hidden>no works yet</p>
+
+    <script src="/assets/js/public-catalogue-runtime.js?v=static"></script>
+    <script src="/assets/js/work-page.js?v=static"></script>
+    <script src="/assets/js/work.js?v=static"></script>
+    <script src="/assets/js/works-index.js?v=static"></script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span class="muted">&copy; 2026 dotlineform &middot; <a href="/about/">about</a></span>
+    </div>
+  </footer>
+
+<script src="/assets/js/site-nav.js?v=static"></script>
+<script src="/assets/js/theme-toggle.js?v=static"></script>
+</body>
+</html>

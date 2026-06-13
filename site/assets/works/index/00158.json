@@ -1,0 +1,104 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-377ef33d3bc9bf890ca17fee35648af8",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00158",
+    "count": 9
+  },
+  "work": {
+    "work_id": "00158",
+    "title": "grid dissection",
+    "year": 1990,
+    "year_display": "1990",
+    "series_ids": [
+      "026"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy, booklet",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 4284,
+    "height_px": 5712
+  },
+  "sections": [
+    {
+      "section_id": "00158-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00158",
+          "detail_id": "001",
+          "detail_uid": "00158-001",
+          "title": "grid dissection - cover",
+          "width_px": 2138,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "002",
+          "detail_uid": "00158-002",
+          "title": "grid dissection - detail 1",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "003",
+          "detail_uid": "00158-003",
+          "title": "grid dissection - detail 2",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "004",
+          "detail_uid": "00158-004",
+          "title": "grid dissection - detail 3",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "005",
+          "detail_uid": "00158-005",
+          "title": "grid dissection - detail 4",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "006",
+          "detail_uid": "00158-006",
+          "title": "grid dissection - detail 5",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "007",
+          "detail_uid": "00158-007",
+          "title": "grid dissection - detail 6",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "008",
+          "detail_uid": "00158-008",
+          "title": "grid dissection - detail 7",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        {
+          "work_id": "00158",
+          "detail_id": "009",
+          "detail_uid": "00158-009",
+          "title": "grid dissection - detail 8",
+          "width_px": 4038,
+          "height_px": 5712
+        }
+      ]
+    }
+  ]
+}

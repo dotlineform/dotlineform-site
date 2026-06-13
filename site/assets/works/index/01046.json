@@ -1,0 +1,232 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-b926f5cd7122285013dc2a67e069872a",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01046",
+    "count": 25
+  },
+  "work": {
+    "work_id": "01046",
+    "title": "espresso",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "049"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 46.0,
+    "width_cm": 46.0,
+    "width_px": 5433,
+    "height_px": 5433
+  },
+  "sections": [
+    {
+      "section_id": "01046-1",
+      "section_title": "espressos",
+      "details": [
+        {
+          "work_id": "01046",
+          "detail_id": "001",
+          "detail_uid": "01046-001",
+          "title": "espresso 1",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "002",
+          "detail_uid": "01046-002",
+          "title": "espresso 2",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "003",
+          "detail_uid": "01046-003",
+          "title": "espresso 3",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "004",
+          "detail_uid": "01046-004",
+          "title": "espresso 4",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "005",
+          "detail_uid": "01046-005",
+          "title": "espresso 5",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "006",
+          "detail_uid": "01046-006",
+          "title": "espresso 6",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "007",
+          "detail_uid": "01046-007",
+          "title": "espresso 7",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "008",
+          "detail_uid": "01046-008",
+          "title": "espresso 8",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "009",
+          "detail_uid": "01046-009",
+          "title": "espresso 9",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "010",
+          "detail_uid": "01046-010",
+          "title": "espresso 10",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "011",
+          "detail_uid": "01046-011",
+          "title": "espresso 11",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "012",
+          "detail_uid": "01046-012",
+          "title": "espresso 12",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "013",
+          "detail_uid": "01046-013",
+          "title": "espresso 13",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "014",
+          "detail_uid": "01046-014",
+          "title": "espresso 14",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "015",
+          "detail_uid": "01046-015",
+          "title": "espresso 15",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "016",
+          "detail_uid": "01046-016",
+          "title": "espresso 16",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "017",
+          "detail_uid": "01046-017",
+          "title": "espresso 17",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "018",
+          "detail_uid": "01046-018",
+          "title": "espresso 18",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "019",
+          "detail_uid": "01046-019",
+          "title": "espresso 19",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "020",
+          "detail_uid": "01046-020",
+          "title": "espresso 20",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "021",
+          "detail_uid": "01046-021",
+          "title": "espresso 21",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "022",
+          "detail_uid": "01046-022",
+          "title": "espresso 22",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "023",
+          "detail_uid": "01046-023",
+          "title": "espresso 23",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "024",
+          "detail_uid": "01046-024",
+          "title": "espresso 24",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01046",
+          "detail_id": "025",
+          "detail_uid": "01046-025",
+          "title": "espresso 25",
+          "width_px": 3543,
+          "height_px": 3543
+        }
+      ]
+    }
+  ]
+}

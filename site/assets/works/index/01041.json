@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-7c39dd04f12fe03e23cf5eded1066e9e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01041",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01041",
+    "title": "egg print 3",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "047"
+    ],
+    "medium_type": "monoprint",
+    "medium_caption": "ink on paper",
+    "height_cm": 42.0,
+    "width_cm": 29.7,
+    "width_px": 3543,
+    "height_px": 5059
+  },
+  "sections": []
+}

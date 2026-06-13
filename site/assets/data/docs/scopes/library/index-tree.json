@@ -1,0 +1,81 @@
+{
+  "schema": "docs_index_tree_v1",
+  "viewer_options": {
+    "non_loadable_doc_ids": [],
+    "manage_only_tree_root_ids": [],
+    "show_updated_date": false
+  },
+  "docs": [
+    {
+      "doc_id": "abstract-thought",
+      "title": "Abstract Thought and Physical Processes",
+      "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json"
+    },
+    {
+      "doc_id": "bayesian-reasoning",
+      "title": "Bayesian Reasoning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json"
+    },
+    {
+      "doc_id": "beauty",
+      "title": "Beauty",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beauty.json"
+    },
+    {
+      "doc_id": "beauty-memory-meaning",
+      "title": "Beauty × Memory × Meaning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json"
+    },
+    {
+      "doc_id": "beyond-conscious-subconscious",
+      "title": "Beyond Conscious vs. Subconscious",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json"
+    },
+    {
+      "doc_id": "can-the-brain-comprehend-how-it-works",
+      "title": "Can the Brain Comprehend How It Works?",
+      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
+    },
+    {
+      "doc_id": "coincidence-inevitability",
+      "title": "Coincidence Inevitability",
+      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-inevitability.json"
+    },
+    {
+      "doc_id": "coincidence-salience",
+      "title": "Coincidence Salience Worksheet",
+      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json"
+    },
+    {
+      "doc_id": "defining-information-for-cross-boundary-comparisons",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json"
+    },
+    {
+      "doc_id": "dreaming-is-active",
+      "title": "Dreaming is Active",
+      "content_url": "/assets/data/docs/scopes/library/by-id/dreaming-is-active.json"
+    },
+    {
+      "doc_id": "closed-vs-open-universe",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json"
+    },
+    {
+      "doc_id": "evolutionary-psychology-overview",
+      "title": "Evolutionary Psychology — Overview",
+      "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
+    },
+    {
+      "doc_id": "3d-space-to-many-dimensions",
+      "title": "From 3D Space to Many Dimensions",
+      "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json"
+    },
+    {
+      "doc_id": "library",
+      "title": "Library",
+      "content_url": "/assets/data/docs/scopes/library/by-id/library.json"
+    }
+  ],
+  "generated_at": "2026-06-10T14:50:42Z"
+}

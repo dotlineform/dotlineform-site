@@ -240,8 +240,8 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
       "media_path_prefix": "docs/library",
       "output": "docs-viewer/generated/docs/library",
       "search_output": "docs-viewer/generated/search/library/index.json",
-      "publish_output": "assets/data/docs/scopes/library",
-      "publish_search_output": "assets/data/search/library/index.json",
+      "publish_output": "site/assets/data/docs/scopes/library",
+      "publish_search_output": "site/assets/data/search/library/index.json",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library"

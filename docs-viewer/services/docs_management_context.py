@@ -23,7 +23,7 @@ def utc_now() -> str:
 def find_repo_root(start: Path) -> Optional[Path]:
     current = start.resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / "public-site" / "config" / "public-site.json").exists():
+        if (candidate / "site-tools" / "config" / "site-tools.json").exists():
             return candidate
     return None
 
@@ -31,8 +31,8 @@ def find_repo_root(start: Path) -> Optional[Path]:
 def detect_repo_root(explicit_root: str) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
-        if not (repo_root / "public-site" / "config" / "public-site.json").exists():
-            raise SystemExit(f"--repo-root does not look like repo root (missing public-site/config/public-site.json): {repo_root}")
+        if not (repo_root / "site-tools" / "config" / "site-tools.json").exists():
+            raise SystemExit(f"--repo-root does not look like repo root (missing site-tools/config/site-tools.json): {repo_root}")
         return repo_root
 
     for start in [Path.cwd(), Path(__file__).resolve().parent]:

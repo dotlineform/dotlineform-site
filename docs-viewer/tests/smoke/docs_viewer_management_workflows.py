@@ -259,7 +259,7 @@ def refresh_browser_config_from_scope_config(target_root: Path) -> None:
 
 def create_fixture_repo(target_root: Path) -> None:
     copy_scripts_fixture(target_root)
-    (target_root / "public-site/config").mkdir(parents=True, exist_ok=True); (target_root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (target_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (target_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_docs_scope_config(target_root)
     write_browser_config(target_root)
     for scope, default_doc in {

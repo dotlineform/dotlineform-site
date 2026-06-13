@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-acc59f311d00dca3bb1307dee912bc2a",
+    "generated_at_utc": "2026-04-30T08:49:30Z",
+    "work_id": "00548",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00548",
+    "title": "tree source",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "136"
+    ],
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "height_cm": 24.0,
+    "width_cm": 44.0,
+    "width_px": 5197,
+    "height_px": 2835
+  },
+  "sections": []
+}

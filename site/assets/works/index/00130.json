@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-4b99bbd3132b4512efcd0c924313b036",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00130",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00130",
+    "title": "model 1",
+    "year": 1994,
+    "year_display": "1994",
+    "series_ids": [
+      "099"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2436,
+    "height_px": 3384
+  },
+  "sections": []
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>dotlineform</title>
+  <meta name="dlf-asset-version" content="static">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111111">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css?v=static">
+  <meta http-equiv="refresh" content="0; url=/series/">
+  <link rel="canonical" href="/series/">
+</head>
+<body class="series">
+  <header class="site-header">
+    <div class="container">
+      <div class="site-title">
+        <a href="/">dotlineform</a>
+      </div>
+      <div class="siteHeader__actions">
+        <nav class="site-nav" aria-label="Primary">
+          <a class="nav-item is-active" href="/series/" aria-current="page">works</a>
+          <a class="nav-item" href="/analysis/">analysis</a>
+          <a class="nav-item" href="/library/">library</a>
+        </nav>
+        <button class="siteThemeToggle" type="button" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode">
+          <svg class="siteThemeToggle__icon" data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="siteThemeToggle__icon" data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <p><a href="/series/">continue to works</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span class="muted">&copy; 2026 dotlineform &middot; <a href="/about/">about</a></span>
+    </div>
+  </footer>
+
+<script src="/assets/js/site-nav.js?v=static"></script>
+<script src="/assets/js/theme-toggle.js?v=static"></script>
+</body>
+</html>

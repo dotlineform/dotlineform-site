@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-fa03630de7963bbbd9be839083ffaafb",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00465",
+    "count": 3
+  },
+  "work": {
+    "work_id": "00465",
+    "title": "forest 1",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "062"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 14173,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00465-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00465",
+          "detail_id": "001",
+          "detail_uid": "00465-001",
+          "title": "forest 1 - detail 1",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        {
+          "work_id": "00465",
+          "detail_id": "002",
+          "detail_uid": "00465-002",
+          "title": "forest 1 - detail 2",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        {
+          "work_id": "00465",
+          "detail_id": "003",
+          "detail_uid": "00465-003",
+          "title": "forest 1 - detail 3",
+          "width_px": 4000,
+          "height_px": 4000
+        }
+      ]
+    }
+  ]
+}

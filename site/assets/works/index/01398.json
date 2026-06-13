@@ -1,0 +1,96 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-01f395e2bdb51ce180f4e88cabdc7392",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01398",
+    "count": 8
+  },
+  "work": {
+    "work_id": "01398",
+    "title": "kylie wax model 5.0",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "085"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": [
+    {
+      "section_id": "01398-1",
+      "section_title": "iterations",
+      "details": [
+        {
+          "work_id": "01398",
+          "detail_id": "001",
+          "detail_uid": "01398-001",
+          "title": "kylie wax model - iteration 5.0",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "002",
+          "detail_uid": "01398-002",
+          "title": "kylie wax model - iteration 5.1",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "003",
+          "detail_uid": "01398-003",
+          "title": "kylie wax model - iteration 5.2",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "004",
+          "detail_uid": "01398-004",
+          "title": "kylie wax model - iteration 5.3",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "005",
+          "detail_uid": "01398-005",
+          "title": "kylie wax model - iteration 5.4",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "006",
+          "detail_uid": "01398-006",
+          "title": "kylie wax model - iteration 5.5",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "007",
+          "detail_uid": "01398-007",
+          "title": "kylie wax model - iteration 5.6",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        {
+          "work_id": "01398",
+          "detail_id": "008",
+          "detail_uid": "01398-008",
+          "title": "kylie wax model - iteration 5.7",
+          "width_px": 4724,
+          "height_px": 4724
+        }
+      ]
+    }
+  ]
+}

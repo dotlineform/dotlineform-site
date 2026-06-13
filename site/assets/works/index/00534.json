@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-e4d5734fe3415a5e23582f157dbbfd58",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00534",
+    "count": 4
+  },
+  "work": {
+    "work_id": "00534",
+    "title": "2 bodies monoprint",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "004"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink and acrylic on paper",
+    "height_cm": 64.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 7559
+  },
+  "sections": [
+    {
+      "section_id": "00534-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00534",
+          "detail_id": "001",
+          "detail_uid": "00534-001",
+          "title": "body detail",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00534",
+          "detail_id": "002",
+          "detail_uid": "00534-002",
+          "title": "body detail",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00534",
+          "detail_id": "003",
+          "detail_uid": "00534-003",
+          "title": "body detail",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00534",
+          "detail_id": "004",
+          "detail_uid": "00534-004",
+          "title": "body detail",
+          "width_px": 4032,
+          "height_px": 2688
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "docs_recently_added_v1",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "analysis",
+      "title": "Analysis",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
+      "added_date": "2026-04-26"
+    }
+  ],
+  "generated_at": "2026-06-10T15:13:56Z"
+}

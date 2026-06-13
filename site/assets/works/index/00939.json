@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-7b4d921d729f2f146a0f42dfaa15d96b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00939",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00939",
+    "title": "dot theory (dots) version",
+    "year": 2009,
+    "year_display": "2009",
+    "series_ids": [
+      "041"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 50.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 5906
+  },
+  "sections": []
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-036ab2374ce130a93f72417be233e600",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00943",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00943",
+    "title": "dot theory (dots composite) grid",
+    "year": 2009,
+    "year_display": "2009",
+    "series_ids": [
+      "041"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "sections": []
+}

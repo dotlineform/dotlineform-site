@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-3bcadbe678cfdd5b8fa05774d6e05077",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01517",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01517",
+    "title": "petri 17",
+    "year": 2004,
+    "year_display": "2004",
+    "series_ids": [
+      "112"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

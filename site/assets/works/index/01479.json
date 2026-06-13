@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-d5561845310d67aa268f22f04f708785",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01479",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01479",
+    "title": "olive tree",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "108"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 115.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 13583
+  },
+  "sections": [
+    {
+      "section_id": "01479-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01479",
+          "detail_id": "001",
+          "detail_uid": "01479-001",
+          "title": "olive tree - detail 1",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        {
+          "work_id": "01479",
+          "detail_id": "002",
+          "detail_uid": "01479-002",
+          "title": "olive tree - detail 2",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        {
+          "work_id": "01479",
+          "detail_id": "003",
+          "detail_uid": "01479-003",
+          "title": "olive tree - detail 3",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        {
+          "work_id": "01479",
+          "detail_id": "004",
+          "detail_uid": "01479-004",
+          "title": "olive tree - detail 4",
+          "width_px": 4000,
+          "height_px": 4000
+        }
+      ]
+    }
+  ]
+}

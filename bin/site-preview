@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SITE_ENV_PATH="$ROOT_DIR/var/local/site.env"
+if [ -f "$SITE_ENV_PATH" ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "$SITE_ENV_PATH"
+  set +a
+fi
+
+if [ -z "${SITE_PYTHON:-}" ]; then
+  if [ -x "$HOME/miniconda3/bin/python3" ]; then
+    SITE_PYTHON="$HOME/miniconda3/bin/python3"
+  else
+    SITE_PYTHON="python3"
+  fi
+fi
+
+SITE_HOST="${SITE_HOST:-127.0.0.1}"
+SITE_PORT="${SITE_PORT:-4000}"
+SITE_ROOT="${SITE_ROOT:-site}"
+SITE_VALIDATE="${SITE_VALIDATE:-1}"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --host)
+      SITE_HOST="$2"
+      shift 2
+      ;;
+    --host=*)
+      SITE_HOST="${1#*=}"
+      shift
+      ;;
+    --port)
+      SITE_PORT="$2"
+      shift 2
+      ;;
+    --port=*)
+      SITE_PORT="${1#*=}"
+      shift
+      ;;
+    --site-root)
+      SITE_ROOT="$2"
+      shift 2
+      ;;
+    --site-root=*)
+      SITE_ROOT="${1#*=}"
+      shift
+      ;;
+    --no-validate)
+      SITE_VALIDATE=0
+      shift
+      ;;
+    *)
+      echo "Unknown site-preview argument: $1" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [ "$SITE_VALIDATE" = "1" ]; then
+  "$ROOT_DIR/bin/site-validate" --site-root "$SITE_ROOT"
+fi
+
+if [[ "$SITE_ROOT" = /* ]]; then
+  SITE_ROOT_DISPLAY="$SITE_ROOT"
+else
+  SITE_ROOT_DISPLAY="$ROOT_DIR/$SITE_ROOT"
+fi
+
+echo
+echo "Starting static site preview from $SITE_ROOT_DISPLAY"
+echo "Public site: http://$SITE_HOST:$SITE_PORT"
+echo
+
+exec "$SITE_PYTHON" -m http.server "$SITE_PORT" --bind "$SITE_HOST" --directory "$SITE_ROOT"

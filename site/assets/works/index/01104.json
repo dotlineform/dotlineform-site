@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-54728a230772aab76f8f52ae8690d657",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01104",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01104",
+    "title": "fog 34",
+    "year": 2015,
+    "year_display": "2015",
+    "series_ids": [
+      "055"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 50.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 5906
+  },
+  "sections": []
+}

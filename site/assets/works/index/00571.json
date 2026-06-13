@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-e7f0db8111e7c478186ce49ca8ad6098",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00571",
+    "count": 1
+  },
+  "work": {
+    "work_id": "00571",
+    "title": "forms scan 5",
+    "year": 2005,
+    "year_display": "2005",
+    "series_ids": [
+      "129"
+    ],
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": [
+    {
+      "section_id": "00571-1",
+      "section_title": "working",
+      "details": [
+        {
+          "work_id": "00571",
+          "detail_id": "001",
+          "detail_uid": "00571-001",
+          "title": "2012-01-06 - 12-30-44",
+          "width_px": 3264,
+          "height_px": 2448
+        }
+      ]
+    }
+  ]
+}

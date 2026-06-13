@@ -1,0 +1,67 @@
+{
+  "schema": "docs_recently_added_v1",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "coincidence-salience",
+      "title": "Coincidence Salience Worksheet",
+      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json",
+      "added_date": "2026-05-16 09:45"
+    },
+    {
+      "doc_id": "coincidence-inevitability",
+      "title": "Coincidence Inevitability",
+      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-inevitability.json",
+      "added_date": "2026-05-16 08:58"
+    },
+    {
+      "doc_id": "closed-vs-open-universe",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json",
+      "added_date": "2026-05-07 21:29"
+    },
+    {
+      "doc_id": "beyond-conscious-subconscious",
+      "title": "Beyond Conscious vs. Subconscious",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
+      "added_date": "2026-05-07 19:09"
+    },
+    {
+      "doc_id": "beauty",
+      "title": "Beauty",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beauty.json",
+      "added_date": "2026-05-07 17:24"
+    },
+    {
+      "doc_id": "beauty-memory-meaning",
+      "title": "Beauty × Memory × Meaning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json",
+      "added_date": "2026-05-07 17:01"
+    },
+    {
+      "doc_id": "bayesian-reasoning",
+      "title": "Bayesian Reasoning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json",
+      "added_date": "2026-05-07 16:55"
+    },
+    {
+      "doc_id": "abstract-thought",
+      "title": "Abstract Thought and Physical Processes",
+      "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json",
+      "added_date": "2026-05-07 16:43"
+    },
+    {
+      "doc_id": "3d-space-to-many-dimensions",
+      "title": "From 3D Space to Many Dimensions",
+      "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json",
+      "added_date": "2026-05-07 15:56"
+    },
+    {
+      "doc_id": "defining-information-for-cross-boundary-comparisons",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json",
+      "added_date": "2026-04-24"
+    }
+  ],
+  "generated_at": "2026-06-10T14:50:42Z"
+}

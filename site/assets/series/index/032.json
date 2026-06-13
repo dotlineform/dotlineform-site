@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-46f36f5fe22b3ef182e01e0e3c32153a",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "032",
+    "count": 6
+  },
+  "series": {
+    "series_id": "032",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "creases",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2016,
+    "year_display": "2016",
+    "project_folders": [
+      "creases"
+    ]
+  }
+}

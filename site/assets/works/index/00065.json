@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-478a9690bd3f31e4c552d17f9f5578d9",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00065",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00065",
+    "title": "fly (broken)",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_ids": [
+      "026"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 5376,
+    "height_px": 7280
+  },
+  "sections": []
+}

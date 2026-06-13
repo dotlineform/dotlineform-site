@@ -1,0 +1,80 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-9ddb52c51fbbd1b86052184f4493a6a1",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01051",
+    "count": 6
+  },
+  "work": {
+    "work_id": "01051",
+    "title": "fireworks particles version",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "051"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 76.0,
+    "width_cm": 76.0,
+    "width_px": 8976,
+    "height_px": 8976
+  },
+  "sections": [
+    {
+      "section_id": "01051-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01051",
+          "detail_id": "001",
+          "detail_uid": "01051-001",
+          "title": "fireworks particles version - detail 1",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01051",
+          "detail_id": "002",
+          "detail_uid": "01051-002",
+          "title": "fireworks particles version - detail 2",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01051",
+          "detail_id": "003",
+          "detail_uid": "01051-003",
+          "title": "fireworks particles version - detail 3",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01051",
+          "detail_id": "004",
+          "detail_uid": "01051-004",
+          "title": "fireworks particles version - detail 4",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01051",
+          "detail_id": "005",
+          "detail_uid": "01051-005",
+          "title": "fireworks particles version - detail 5",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "work_id": "01051",
+          "detail_id": "006",
+          "detail_uid": "01051-006",
+          "title": "fireworks particles version - detail 6",
+          "width_px": 3543,
+          "height_px": 3543
+        }
+      ]
+    }
+  ]
+}

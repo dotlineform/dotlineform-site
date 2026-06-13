@@ -442,11 +442,9 @@
     "scan_paths": [
       "site/assets/js/**/*.js",
       "site/assets/css/**/*.css",
-      "public-site/build/**/*.py"
+      "site-tools/**/*.py"
     ],
-    "ignore_paths": [
-      "public-site/build/validate_artifact.py"
-    ],
+    "ignore_paths": [],
     "forbidden_substrings": [
       "assets/studio/",
       "/assets/studio/",

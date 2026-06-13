@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-ca38a71d61205ba0d0245b4eca44cb91",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00753",
+    "count": 3
+  },
+  "work": {
+    "work_id": "00753",
+    "title": "assembly code 1",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "014"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 14173,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00753-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00753",
+          "detail_id": "001",
+          "detail_uid": "00753-001",
+          "title": "assembly code 1 (detail 1)",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00753",
+          "detail_id": "002",
+          "detail_uid": "00753-002",
+          "title": "assembly code 1 (detail 2)",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00753",
+          "detail_id": "003",
+          "detail_uid": "00753-003",
+          "title": "assembly code 1 (detail 3)",
+          "width_px": 2000,
+          "height_px": 2000
+        }
+      ]
+    }
+  ]
+}

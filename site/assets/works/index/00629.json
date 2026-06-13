@@ -1,0 +1,142 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-cec889510223bfa06eb6f66fb07fd690",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00629",
+    "count": 13
+  },
+  "work": {
+    "work_id": "00629",
+    "title": "quantum random number theory",
+    "year": 2009,
+    "year_display": "2009",
+    "series_ids": [
+      "118"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "width_px": 11811,
+    "height_px": 11811
+  },
+  "sections": [
+    {
+      "section_id": "00629-1",
+      "section_title": "versions",
+      "details": [
+        {
+          "work_id": "00629",
+          "detail_id": "001",
+          "detail_uid": "00629-001",
+          "title": "quantum random number theory (10,000) 1",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "002",
+          "detail_uid": "00629-002",
+          "title": "quantum random number theory (10,000) 2",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "003",
+          "detail_uid": "00629-003",
+          "title": "quantum random number theory (10,000) 3",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "004",
+          "detail_uid": "00629-004",
+          "title": "quantum random number theory (10,000) 4",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "005",
+          "detail_uid": "00629-005",
+          "title": "quantum random number theory (10,000) 5",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "006",
+          "detail_uid": "00629-006",
+          "title": "quantum random number theory (10,000) 6",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "007",
+          "detail_uid": "00629-007",
+          "title": "quantum random number theory (10,000) 7",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "008",
+          "detail_uid": "00629-008",
+          "title": "quantum random number theory (10,000) 8",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "009",
+          "detail_uid": "00629-009",
+          "title": "quantum random number theory (10,000) 9",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "010",
+          "detail_uid": "00629-010",
+          "title": "quantum random number theory (10,000) 10",
+          "width_px": 4800,
+          "height_px": 4800
+        }
+      ]
+    },
+    {
+      "section_id": "00629-2",
+      "section_title": "install",
+      "details": [
+        {
+          "work_id": "00629",
+          "detail_id": "011",
+          "detail_uid": "00629-011",
+          "title": "qrnt - Searching for God exhibition - install 1",
+          "width_px": 1600,
+          "height_px": 1200
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "012",
+          "detail_uid": "00629-012",
+          "title": "qrnt - Searching for God exhibition - install 2",
+          "width_px": 1600,
+          "height_px": 1200
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "013",
+          "detail_uid": "00629-013",
+          "title": "qrnt - Searching for God exhibition - install 3",
+          "width_px": 1296,
+          "height_px": 1304
+        }
+      ]
+    }
+  ]
+}

@@ -83,14 +83,14 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
 def resolve_repo_root(script_path: str | Path | None = None, repo_root: str | Path | None = None) -> Path:
     if repo_root is not None:
         resolved = Path(repo_root).expanduser().resolve()
-        if not (resolved / "public-site" / "config" / "public-site.json").exists():
-            raise ValueError(f"repo root is missing public-site/config/public-site.json: {resolved}")
+        if not (resolved / "site-tools" / "config" / "site-tools.json").exists():
+            raise ValueError(f"repo root is missing site-tools/config/site-tools.json: {resolved}")
         return resolved
 
     start = Path(script_path if script_path is not None else __file__).expanduser().resolve()
     candidates = [start] if start.is_dir() else [start.parent, *start.parents]
     for candidate in candidates:
-        if (candidate / "public-site" / "config" / "public-site.json").exists():
+        if (candidate / "site-tools" / "config" / "site-tools.json").exists():
             return candidate
     raise ValueError("could not resolve repo root for pipeline config")
 

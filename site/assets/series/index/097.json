@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-4a95926ec383644db813822d3530188e",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "097",
+    "count": 4
+  },
+  "series": {
+    "series_id": "097",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "memory loss vessels",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "memory loss vessels"
+    ]
+  }
+}

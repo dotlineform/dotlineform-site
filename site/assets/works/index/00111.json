@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-843a9452d56df9c0cdeabf17849c127a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00111",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00111",
+    "title": "response to standing nude",
+    "year": 1990,
+    "year_display": "1990",
+    "series_ids": [
+      "026"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 4961,
+    "height_px": 7016
+  },
+  "sections": []
+}

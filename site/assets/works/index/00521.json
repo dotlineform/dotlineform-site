@@ -1,0 +1,80 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-c9a329526bf6a93b9cb4e08a12d25c88",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00521",
+    "count": 6
+  },
+  "work": {
+    "work_id": "00521",
+    "title": "kylie structure 2",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "084"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "width_px": 8000,
+    "height_px": 8000
+  },
+  "sections": [
+    {
+      "section_id": "00521-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00521",
+          "detail_id": "007",
+          "detail_uid": "00521-007",
+          "title": "kylie structure 2.1",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00521",
+          "detail_id": "008",
+          "detail_uid": "00521-008",
+          "title": "kylie structure 2.2",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00521",
+          "detail_id": "009",
+          "detail_uid": "00521-009",
+          "title": "kylie structure 2.3",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00521",
+          "detail_id": "010",
+          "detail_uid": "00521-010",
+          "title": "kylie structure 2.4",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00521",
+          "detail_id": "011",
+          "detail_uid": "00521-011",
+          "title": "kylie structure 2.5",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "work_id": "00521",
+          "detail_id": "012",
+          "detail_uid": "00521-012",
+          "title": "kylie structure 2.6",
+          "width_px": 2000,
+          "height_px": 2000
+        }
+      ]
+    }
+  ]
+}

@@ -24,9 +24,9 @@ from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload,
 
 
 def write_repo_marker(repo_root: Path) -> None:
-    path = repo_root / "public-site/config/public-site.json"
+    path = repo_root / "site-tools/config/site-tools.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text('{"schema_version":"public_site_config_v1"}\n', encoding="utf-8")
+    path.write_text('{"schema_version":"site_tools_config_v1"}\n', encoding="utf-8")
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -246,12 +246,7 @@ def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
     assert "/studio/api/data-sharing" not in transport_source
 
 
-def test_public_artifact_audit_and_studio_server_exclude_data_sharing_config() -> None:
-    public_site_config = json.loads((REPO_ROOT / "public-site/config/public-site.json").read_text(encoding="utf-8"))
-    denied_prefixes = set(public_site_config["audit"]["denied_path_prefixes"])
-
-    assert "data-sharing/" in denied_prefixes
-    assert "admin-app/" in denied_prefixes
+def test_studio_server_excludes_data_sharing_config() -> None:
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
 

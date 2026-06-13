@@ -38,11 +38,11 @@ def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_public_site_config(root: Path, *, media_base: str = "https://media.example.test") -> None:
+def write_site_tools_config(root: Path, *, media_base: str = "https://media.example.test") -> None:
     write_json(
-        root / "public-site/config/public-site.json",
+        root / "site-tools/config/site-tools.json",
         {
-            "schema_version": "public_site_config_v1",
+            "schema_version": "site_tools_config_v1",
             "media": {
                 "base": media_base,
             },
@@ -216,7 +216,7 @@ ui_status: done
 
 
 def prepare_repo(root: Path) -> None:
-    write_public_site_config(root)
+    write_site_tools_config(root)
     write_scope_config(root)
     write_catalogue_records(root)
     write_text(root / "site/assets/docs/interactive/studio/chart.html", "<!doctype html><title>Chart</title>")
@@ -324,7 +324,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
 def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
-        write_public_site_config(root, media_base="")
+        write_site_tools_config(root, media_base="")
         write_public_scope_config(root)
         write_public_source_docs(root)
         config = load_docs_scope_configs(root)["library"]

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-d74088d035a1122fa16a91b5e99d29d5",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00538",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00538",
+    "title": "model 4",
+    "year": 1994,
+    "year_display": "1994",
+    "series_ids": [
+      "099"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "collage, ink",
+    "height_cm": 40.2,
+    "width_cm": 27.9,
+    "width_px": 2952,
+    "height_px": 4253
+  },
+  "sections": []
+}

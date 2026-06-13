@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-d10baebdea635f517486043526253bdf",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01500",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01500",
+    "title": "k particles grid",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "083"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 60.0,
+    "width_cm": 42.0,
+    "width_px": 4960,
+    "height_px": 7087
+  },
+  "sections": [
+    {
+      "section_id": "01500-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01500",
+          "detail_id": "001",
+          "detail_uid": "01500-001",
+          "title": "k particles grid - detail 1",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01500",
+          "detail_id": "002",
+          "detail_uid": "01500-002",
+          "title": "k particles grid - detail 2",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01500",
+          "detail_id": "003",
+          "detail_uid": "01500-003",
+          "title": "k particles grid - detail 3",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01500",
+          "detail_id": "004",
+          "detail_uid": "01500-004",
+          "title": "k particles grid - detail 4",
+          "width_px": 3000,
+          "height_px": 3000
+        }
+      ]
+    }
+  ]
+}

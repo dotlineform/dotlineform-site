@@ -105,8 +105,8 @@ def write_scope_config(root: Path) -> None:
                     "media_path_prefix": "docs/library",
                     "output": "docs-viewer/generated/docs/library",
                     "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "assets/data/docs/scopes/library",
-                    "publish_search_output": "assets/data/search/library/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/library",
+                    "publish_search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -152,7 +152,7 @@ def write_doc(
 def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_json(root / "data-sharing/config/library-export-configs.json", config or BASE_CONFIG)
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
@@ -441,8 +441,8 @@ def test_missing_source_metadata_returns_structured_export_error() -> None:
                         "media_path_prefix": "docs/library",
                             "output": "docs-viewer/generated/docs/library",
                             "search_output": "docs-viewer/generated/search/library/index.json",
-                            "publish_output": "assets/data/docs/scopes/library",
-                            "publish_search_output": "assets/data/search/library/index.json",
+                            "publish_output": "site/assets/data/docs/scopes/library",
+                            "publish_search_output": "site/assets/data/search/library/index.json",
                         "viewer_base_url": "/library/",
                         "include_scope_param": False,
                         "default_doc_id": "library",

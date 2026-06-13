@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-4f66b05351816191b3198a7a1f1ae2ab",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01365",
+    "count": 3
+  },
+  "work": {
+    "work_id": "01365",
+    "title": "heaven and earth (grey series)",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "076"
+    ],
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "height_cm": 20.4,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 2409
+  },
+  "sections": [
+    {
+      "section_id": "01365-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01365",
+          "detail_id": "001",
+          "detail_uid": "01365-001",
+          "title": "heaven and earth (grey 1)",
+          "width_px": 5906,
+          "height_px": 4429
+        },
+        {
+          "work_id": "01365",
+          "detail_id": "002",
+          "detail_uid": "01365-002",
+          "title": "heaven and earth (grey 2)",
+          "width_px": 5906,
+          "height_px": 4429
+        },
+        {
+          "work_id": "01365",
+          "detail_id": "003",
+          "detail_uid": "01365-003",
+          "title": "heaven and earth (grey 3)",
+          "width_px": 5906,
+          "height_px": 4429
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="dotlineform">
+  <circle cx="104" cy="256" r="20" fill="currentColor"/>
+  <rect x="203" y="128" width="20" height="256" rx="10" fill="currentColor"/>
+  <path d="M389 128c-36 0-70 22-85 57-22 51-26 95-31 149-4 45-7 87-21 130-10 32-39 54-72 54h-3v20h3c42 0 79-27 91-67 14-45 18-88 22-134 5-52 9-95 29-143 12-28 39-46 67-46 12 0 24 4 34 12l12-16c-13-10-28-16-46-16z" fill="currentColor"/>
+</svg>

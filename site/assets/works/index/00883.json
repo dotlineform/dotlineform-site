@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-23a61cc428590406ce8bfa5b3cdd6142",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00883",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00883",
+    "title": "doll forest (green)",
+    "year": 2007,
+    "year_display": "2007",
+    "series_ids": [
+      "037"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": []
+}

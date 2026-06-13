@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-c9d04628c3be97dc0b39203e6c3b0e96",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00227",
+    "count": 1
+  },
+  "work": {
+    "work_id": "00227",
+    "title": "untitled [227]",
+    "year": 1998,
+    "year_display": "c. 1998",
+    "series_ids": [
+      "027"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "laserjet print",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2480,
+    "height_px": 3508
+  },
+  "sections": [
+    {
+      "section_id": "00227-1",
+      "section_title": "reverse",
+      "details": [
+        {
+          "work_id": "00227",
+          "detail_id": "001",
+          "detail_uid": "00227-001",
+          "title": "untitled [227] reverse",
+          "width_px": 2480,
+          "height_px": 3508
+        }
+      ]
+    }
+  ]
+}

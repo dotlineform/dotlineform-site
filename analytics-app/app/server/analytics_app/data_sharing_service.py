@@ -9,7 +9,7 @@ from typing import Any
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "public-site" / "config" / "public-site.json").exists():
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
         _data_sharing_root = _candidate / "data-sharing"
         if str(_data_sharing_root) not in sys.path:
             sys.path.insert(0, str(_data_sharing_root))

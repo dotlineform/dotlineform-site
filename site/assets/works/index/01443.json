@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-2b338cc9789b05dc66388b82be02fc31",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01443",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01443",
+    "title": "memory loss vessels I",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "097"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": []
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-d68d869761b6322ce5578ee2ad6c479a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00780",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00780",
+    "title": "birds [7]",
+    "year": 2020,
+    "year_display": "2020",
+    "series_ids": [
+      "016"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 7087
+  },
+  "sections": []
+}

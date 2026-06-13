@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-475c03c1a498ec7500323db94ba6f466",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00265",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00265",
+    "title": "untitled [265]",
+    "year": 1998,
+    "year_display": "c. 1998",
+    "series_ids": [
+      "027"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "laserjet print",
+    "height_cm": 21.0,
+    "width_cm": 29.7,
+    "width_px": 3508,
+    "height_px": 2480
+  },
+  "sections": []
+}

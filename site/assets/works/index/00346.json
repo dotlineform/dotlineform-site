@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-0b91b9cd6e9a9a103dc0203c3c913c90",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00346",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00346",
+    "title": "for David Lynch",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "058"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "height_cm": 42.0,
+    "width_cm": 59.4,
+    "width_px": 6972,
+    "height_px": 4930
+  },
+  "sections": []
+}

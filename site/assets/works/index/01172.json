@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-4b72e64365c3401a92af9d4860a64c7f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01172",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01172",
+    "title": "folding structure - version 2",
+    "year": 2020,
+    "year_display": "2020",
+    "series_ids": [
+      "057"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

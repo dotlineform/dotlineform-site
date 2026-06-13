@@ -219,11 +219,11 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def load_public_site_config(repo_root: Path) -> dict[str, Any]:
-    path = repo_root / "public-site" / "config" / "public-site.json"
+def load_site_tools_config(repo_root: Path) -> dict[str, Any]:
+    path = repo_root / "site-tools" / "config" / "site-tools.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
-        raise ValueError(f"public-site config must be a JSON object: {path}")
+        raise ValueError(f"site-tools config must be a JSON object: {path}")
     return payload
 
 
@@ -264,7 +264,7 @@ class DocsDataBuilder:
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
-        self.site_config = load_public_site_config(self.repo_root)
+        self.site_config = load_site_tools_config(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
         self._catalogue_cache: dict[str, dict[str, dict[str, Any]]] = {}

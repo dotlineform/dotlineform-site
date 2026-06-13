@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-adfe133ec09ae0b69dd9129cb1e75030",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00809",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00809",
+    "title": "book of curves 7 and 8",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "022"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 7087
+  },
+  "sections": []
+}

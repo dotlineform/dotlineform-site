@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-aa1da259baf09a7e3edea3043de29085",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01048",
+    "count": 3
+  },
+  "work": {
+    "work_id": "01048",
+    "title": "field II",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "050"
+    ],
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "height_cm": 50.0,
+    "width_cm": 59.0,
+    "width_px": 6969,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "01048-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01048",
+          "detail_id": "001",
+          "detail_uid": "01048-001",
+          "title": "field II - detail 1",
+          "width_px": 2000,
+          "height_px": 1125
+        },
+        {
+          "work_id": "01048",
+          "detail_id": "002",
+          "detail_uid": "01048-002",
+          "title": "field II - detail 2",
+          "width_px": 2000,
+          "height_px": 1125
+        },
+        {
+          "work_id": "01048",
+          "detail_id": "003",
+          "detail_uid": "01048-003",
+          "title": "field II - detail 3",
+          "width_px": 2000,
+          "height_px": 1125
+        }
+      ]
+    }
+  ]
+}

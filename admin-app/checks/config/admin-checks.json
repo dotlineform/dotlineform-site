@@ -55,10 +55,9 @@
         "docs-viewer/config/ui-text/public.json",
         "docs-viewer/runtime/js/",
         "docs-viewer/static/css/docs-viewer.css",
-        "public-site/"
+        "site-tools/"
       ],
       "exclude": [
-        "_public_site/",
         "_site/"
       ]
     },
@@ -92,7 +91,7 @@
         "site/assets/works/",
         "data-sharing/",
         "docs-viewer/",
-        "public-site/",
+        "site-tools/",
         "studio/"
       ],
       "exclude": [
@@ -200,8 +199,8 @@
         "site/assets/js/",
         "docs-viewer/config/routes/docs-viewer-public-routes.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "public-site/build/",
-        "public-site/config/public-site.json"
+        "site-tools/",
+        "site-tools/config/site-tools.json"
       ]
     }
   },

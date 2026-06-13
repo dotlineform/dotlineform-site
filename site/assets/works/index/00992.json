@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-30a3d53a6759328d9a7becd51ccd4be1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00992",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00992",
+    "title": "dotlineform - monoprint 8",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "043"
+    ],
+    "medium_type": "painting",
+    "medium_caption": "paint on paper",
+    "height_cm": 25.0,
+    "width_cm": 25.0,
+    "width_px": 2953,
+    "height_px": 2953
+  },
+  "sections": []
+}

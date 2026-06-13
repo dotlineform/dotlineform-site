@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-89e3010bbddb0553edea16147ac34111",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01402",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01402",
+    "title": "lights 2",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "090"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

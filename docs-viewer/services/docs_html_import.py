@@ -1925,13 +1925,13 @@ def generate_file_media_import_preview(
 def detect_repo_root(explicit_root: str) -> Path:
     if explicit_root:
         root = Path(explicit_root).expanduser().resolve()
-        if not (root / "public-site" / "config" / "public-site.json").exists():
-            raise SystemExit(f"--repo-root does not look like repo root (missing public-site/config/public-site.json): {root}")
+        if not (root / "site-tools" / "config" / "site-tools.json").exists():
+            raise SystemExit(f"--repo-root does not look like repo root (missing site-tools/config/site-tools.json): {root}")
         return root
     for candidate in [Path.cwd(), Path(__file__).resolve().parent]:
         current = candidate.resolve()
         for parent in [current, *current.parents]:
-            if (parent / "public-site" / "config" / "public-site.json").exists():
+            if (parent / "site-tools" / "config" / "site-tools.json").exists():
                 return parent
     raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
 

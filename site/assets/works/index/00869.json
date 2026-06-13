@@ -1,0 +1,128 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-69df1db62442358f3ccd9888665668b4",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00869",
+    "count": 12
+  },
+  "work": {
+    "work_id": "00869",
+    "title": "curves",
+    "year": 2020,
+    "year_display": "2020",
+    "series_ids": [
+      "035"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00869-1",
+      "section_title": "versions",
+      "details": [
+        {
+          "work_id": "00869",
+          "detail_id": "001",
+          "detail_uid": "00869-001",
+          "title": "curve machine [1]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "002",
+          "detail_uid": "00869-002",
+          "title": "curve machine [2]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "003",
+          "detail_uid": "00869-003",
+          "title": "curve machine [3]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "004",
+          "detail_uid": "00869-004",
+          "title": "curve machine [4]",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "005",
+          "detail_uid": "00869-005",
+          "title": "curve machine [5]",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "006",
+          "detail_uid": "00869-006",
+          "title": "curve machine [6]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "007",
+          "detail_uid": "00869-007",
+          "title": "curve machine [7]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "008",
+          "detail_uid": "00869-008",
+          "title": "curve machine [8]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "009",
+          "detail_uid": "00869-009",
+          "title": "curve machine [9]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "010",
+          "detail_uid": "00869-010",
+          "title": "curve machine [10]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "011",
+          "detail_uid": "00869-011",
+          "title": "curve machine [11]",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00869",
+          "detail_id": "012",
+          "detail_uid": "00869-012",
+          "title": "curve machine [12]",
+          "width_px": 3024,
+          "height_px": 4032
+        }
+      ]
+    }
+  ]
+}

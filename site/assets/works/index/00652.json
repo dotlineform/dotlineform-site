@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-1932b5df7ed79f2a5748cf3754771a44",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00652",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00652",
+    "title": "a doll story - doll 12",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "006"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 24.0,
+    "width_cm": 24.0,
+    "width_px": 2835,
+    "height_px": 2835
+  },
+  "sections": []
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-1e19242263b5b58bcbeb423a9dcf273c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01431",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01431",
+    "title": "melancholy hope cell (2017-06-25 11-13-56)",
+    "year": 2017,
+    "year_display": "2017",
+    "series_ids": [
+      "095"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": []
+}

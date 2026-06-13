@@ -1,0 +1,75 @@
+{
+  "schema_version": "docs_viewer_route_config_registry_v1",
+  "routes": [
+    {
+      "schema_version": "docs_viewer_route_config_v1",
+      "route_id": "library",
+      "route_path": "/library/",
+      "route_type": "public",
+      "default_scope_id": "library",
+      "default_doc_id": "library",
+      "include_scope_param": false,
+      "allow_scope_query": false,
+      "viewer_base_url": "/library/",
+      "generated_base_url": "",
+      "access": {
+        "allow_management": false,
+        "allow_scope_query": false,
+        "management_base_url": "",
+        "management_mode_value": "manage"
+      },
+      "docs_paths": {
+        "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
+        "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
+        "search_index_url": "/assets/data/search/library/index.json"
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "ui_text": "/docs-viewer/config/ui-text/public.json"
+      },
+      "panels": {
+        "index": { "enabled": true, "default_state": "normal" },
+        "main": { "enabled": true, "default_view": "rendered-document" },
+        "info": { "enabled": true, "default_view": "metadata-info" }
+      },
+      "hosted_views": {
+        "records": []
+      }
+    },
+    {
+      "schema_version": "docs_viewer_route_config_v1",
+      "route_id": "analysis",
+      "route_path": "/analysis/",
+      "route_type": "public",
+      "default_scope_id": "analysis",
+      "default_doc_id": "analysis",
+      "include_scope_param": false,
+      "allow_scope_query": false,
+      "viewer_base_url": "/analysis/",
+      "generated_base_url": "",
+      "access": {
+        "allow_management": false,
+        "allow_scope_query": false,
+        "management_base_url": "",
+        "management_mode_value": "manage"
+      },
+      "docs_paths": {
+        "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
+        "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
+        "search_index_url": "/assets/data/search/analysis/index.json"
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
+        "ui_text": "/docs-viewer/config/ui-text/public.json"
+      },
+      "panels": {
+        "index": { "enabled": true, "default_state": "normal" },
+        "main": { "enabled": true, "default_view": "rendered-document" },
+        "info": { "enabled": true, "default_view": "metadata-info" }
+      },
+      "hosted_views": {
+        "records": []
+      }
+    }
+  ]
+}

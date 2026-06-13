@@ -1,0 +1,544 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-3547b035c03dc1effe1b13cf33ec835b",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00735",
+    "count": 64
+  },
+  "work": {
+    "work_id": "00735",
+    "title": "a theory of happiness is a theory of everything (64°)",
+    "year": 2010,
+    "year_display": "2010",
+    "series_ids": [
+      "010"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "sections": [
+    {
+      "section_id": "00735-1",
+      "section_title": "64 degrees",
+      "details": [
+        {
+          "work_id": "00735",
+          "detail_id": "001",
+          "detail_uid": "00735-001",
+          "title": "happiness 1°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "002",
+          "detail_uid": "00735-002",
+          "title": "happiness 2°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "003",
+          "detail_uid": "00735-003",
+          "title": "happiness 3°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "004",
+          "detail_uid": "00735-004",
+          "title": "happiness 4°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "005",
+          "detail_uid": "00735-005",
+          "title": "happiness 5°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "006",
+          "detail_uid": "00735-006",
+          "title": "happiness 6°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "007",
+          "detail_uid": "00735-007",
+          "title": "happiness 7°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "008",
+          "detail_uid": "00735-008",
+          "title": "happiness 8°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "009",
+          "detail_uid": "00735-009",
+          "title": "happiness 9°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "010",
+          "detail_uid": "00735-010",
+          "title": "happiness 10°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "011",
+          "detail_uid": "00735-011",
+          "title": "happiness 11°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "012",
+          "detail_uid": "00735-012",
+          "title": "happiness 12°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "013",
+          "detail_uid": "00735-013",
+          "title": "happiness 13°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "014",
+          "detail_uid": "00735-014",
+          "title": "happiness 14°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "015",
+          "detail_uid": "00735-015",
+          "title": "happiness 15°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "016",
+          "detail_uid": "00735-016",
+          "title": "happiness 16°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "017",
+          "detail_uid": "00735-017",
+          "title": "happiness 17°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "018",
+          "detail_uid": "00735-018",
+          "title": "happiness 18°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "019",
+          "detail_uid": "00735-019",
+          "title": "happiness 19°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "020",
+          "detail_uid": "00735-020",
+          "title": "happiness 20°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "021",
+          "detail_uid": "00735-021",
+          "title": "happiness 21°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "022",
+          "detail_uid": "00735-022",
+          "title": "happiness 22°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "023",
+          "detail_uid": "00735-023",
+          "title": "happiness 23°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "024",
+          "detail_uid": "00735-024",
+          "title": "happiness 24°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "025",
+          "detail_uid": "00735-025",
+          "title": "happiness 25°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "026",
+          "detail_uid": "00735-026",
+          "title": "happiness 26°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "027",
+          "detail_uid": "00735-027",
+          "title": "happiness 27°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "028",
+          "detail_uid": "00735-028",
+          "title": "happiness 28°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "029",
+          "detail_uid": "00735-029",
+          "title": "happiness 29°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "030",
+          "detail_uid": "00735-030",
+          "title": "happiness 30°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "031",
+          "detail_uid": "00735-031",
+          "title": "happiness 31°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "032",
+          "detail_uid": "00735-032",
+          "title": "happiness 32°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "033",
+          "detail_uid": "00735-033",
+          "title": "happiness 33°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "034",
+          "detail_uid": "00735-034",
+          "title": "happiness 34°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "035",
+          "detail_uid": "00735-035",
+          "title": "happiness 35°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "036",
+          "detail_uid": "00735-036",
+          "title": "happiness 36°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "037",
+          "detail_uid": "00735-037",
+          "title": "happiness 37°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "038",
+          "detail_uid": "00735-038",
+          "title": "happiness 38°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "039",
+          "detail_uid": "00735-039",
+          "title": "happiness 39°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "040",
+          "detail_uid": "00735-040",
+          "title": "happiness 40°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "041",
+          "detail_uid": "00735-041",
+          "title": "happiness 41°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "042",
+          "detail_uid": "00735-042",
+          "title": "happiness 42°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "043",
+          "detail_uid": "00735-043",
+          "title": "happiness 43°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "044",
+          "detail_uid": "00735-044",
+          "title": "happiness 44°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "045",
+          "detail_uid": "00735-045",
+          "title": "happiness 45°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "046",
+          "detail_uid": "00735-046",
+          "title": "happiness 46°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "047",
+          "detail_uid": "00735-047",
+          "title": "happiness 47°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "048",
+          "detail_uid": "00735-048",
+          "title": "happiness 48°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "049",
+          "detail_uid": "00735-049",
+          "title": "happiness 49°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "050",
+          "detail_uid": "00735-050",
+          "title": "happiness 50°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "051",
+          "detail_uid": "00735-051",
+          "title": "happiness 51°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "052",
+          "detail_uid": "00735-052",
+          "title": "happiness 52°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "053",
+          "detail_uid": "00735-053",
+          "title": "happiness 53°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "054",
+          "detail_uid": "00735-054",
+          "title": "happiness 54°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "055",
+          "detail_uid": "00735-055",
+          "title": "happiness 55°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "056",
+          "detail_uid": "00735-056",
+          "title": "happiness 56°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "057",
+          "detail_uid": "00735-057",
+          "title": "happiness 57°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "058",
+          "detail_uid": "00735-058",
+          "title": "happiness 58°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "059",
+          "detail_uid": "00735-059",
+          "title": "happiness 59°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "060",
+          "detail_uid": "00735-060",
+          "title": "happiness 60°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "061",
+          "detail_uid": "00735-061",
+          "title": "happiness 61°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "062",
+          "detail_uid": "00735-062",
+          "title": "happiness 62°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "063",
+          "detail_uid": "00735-063",
+          "title": "happiness 63°",
+          "width_px": 2362,
+          "height_px": 2362
+        },
+        {
+          "work_id": "00735",
+          "detail_id": "064",
+          "detail_uid": "00735-064",
+          "title": "happiness 64°",
+          "width_px": 2362,
+          "height_px": 2362
+        }
+      ]
+    }
+  ]
+}

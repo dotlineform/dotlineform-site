@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-25ce22eae9e358eb04899cb95ef4840f",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "133",
+    "count": 18
+  },
+  "series": {
+    "series_id": "133",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "thorns",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2006,
+    "year_display": "2006",
+    "project_folders": [
+      "thorns"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-0b6a718f9c6b43c2db6782eb92d53550",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00362",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00362",
+    "title": "13 particles",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "036"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink and pencil on paper",
+    "height_cm": 29.7,
+    "width_cm": 42.0,
+    "width_px": 4960,
+    "height_px": 3508
+  },
+  "sections": []
+}

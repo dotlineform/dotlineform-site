@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-a3ec1136e474b1f6f58f55d7fb7e1927",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00892",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00892",
+    "title": "doll hand",
+    "year": 1989,
+    "year_display": "c. 1989",
+    "series_ids": [
+      "037"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "c-type print",
+    "height_cm": 20.0,
+    "width_cm": 43.0,
+    "width_px": 5079,
+    "height_px": 2367
+  },
+  "sections": []
+}

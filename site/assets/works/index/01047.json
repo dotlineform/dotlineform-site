@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-befb291f0a7e3082ebcbfff6a8d075d8",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01047",
+    "count": 3
+  },
+  "work": {
+    "work_id": "01047",
+    "title": "field I",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "050"
+    ],
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "height_cm": 51.0,
+    "width_cm": 76.0,
+    "width_px": 8976,
+    "height_px": 6024
+  },
+  "sections": [
+    {
+      "section_id": "01047-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01047",
+          "detail_id": "001",
+          "detail_uid": "01047-001",
+          "title": "field I - detail 1",
+          "width_px": 2000,
+          "height_px": 1125
+        },
+        {
+          "work_id": "01047",
+          "detail_id": "002",
+          "detail_uid": "01047-002",
+          "title": "field I - detail 2",
+          "width_px": 2000,
+          "height_px": 1125
+        },
+        {
+          "work_id": "01047",
+          "detail_id": "003",
+          "detail_uid": "01047-003",
+          "title": "field I - detail 3",
+          "width_px": 2000,
+          "height_px": 1125
+        }
+      ]
+    }
+  ]
+}

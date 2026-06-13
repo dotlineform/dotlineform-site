@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "public-site" / "config" / "public-site.json").exists():
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
         if str(_candidate) not in sys.path:
             sys.path.insert(0, str(_candidate))
         break
@@ -32,7 +32,7 @@ from local_env import runtime_env
 def detect_repo_root(start: Path | None = None) -> Path:
     current = (start or Path.cwd()).resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / "public-site" / "config" / "public-site.json").exists():
+        if (candidate / "site-tools" / "config" / "site-tools.json").exists():
             return candidate
     raise ValueError("Could not detect repo root.")
 

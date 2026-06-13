@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-b7ca68f3746f01edf91a4d63a21ba8cc",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01122",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01122",
+    "title": "folding forms 8",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "056"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2480,
+    "height_px": 3507
+  },
+  "sections": []
+}

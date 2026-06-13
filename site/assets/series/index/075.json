@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-3dec701da51a62e8411d63608e98e802",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "075",
+    "count": 5
+  },
+  "series": {
+    "series_id": "075",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "harmony",
+    "sort_fields": "title,work_id",
+    "series_type": "primary",
+    "year": 2009,
+    "year_display": "2009",
+    "project_folders": [
+      "harmony"
+    ]
+  }
+}

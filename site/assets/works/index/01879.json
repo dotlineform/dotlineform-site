@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-04ec7febf692527f3d5473647c1d98f1",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01879",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01879",
+    "title": "untitled composite 5",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "138"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": [
+    {
+      "section_id": "01879-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01879",
+          "detail_id": "001",
+          "detail_uid": "01879-001",
+          "title": "untitled composite 5 - detail 1",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "002",
+          "detail_uid": "01879-002",
+          "title": "untitled composite 5 - detail 2",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "003",
+          "detail_uid": "01879-003",
+          "title": "untitled composite 5 - detail 3",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "004",
+          "detail_uid": "01879-004",
+          "title": "untitled composite 5 - detail 4",
+          "width_px": 3000,
+          "height_px": 3000
+        }
+      ]
+    }
+  ]
+}

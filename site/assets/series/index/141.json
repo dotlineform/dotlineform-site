@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-c5e3bc10e718b4f0fd4d9c6058847d92",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "141",
+    "count": 28
+  },
+  "series": {
+    "series_id": "141",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "water",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2005-13",
+    "project_folders": [
+      "water"
+    ]
+  }
+}

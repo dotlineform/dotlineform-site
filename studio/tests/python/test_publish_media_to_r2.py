@@ -50,12 +50,12 @@ class FakeR2Client:
 def make_repo(root: Path) -> Path:
     repo = root / "repo"
     repo.mkdir()
-    path = repo / "public-site/config/public-site.json"
+    path = repo / "site-tools/config/site-tools.json"
     path.parent.mkdir(parents=True)
     path.write_text(
         json.dumps(
             {
-                "schema_version": "public_site_config_v1",
+                "schema_version": "site_tools_config_v1",
                 "media": {
                     "image_works": "/works/img",
                     "image_work_details": "/work_details/img",

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-39343e4f33b3f114fbc79c417fc3b1c8",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00763",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00763",
+    "title": "base m",
+    "year": 2007,
+    "year_display": "2007",
+    "series_ids": [
+      "015"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

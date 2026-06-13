@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-0a3ca94731839663554c65ad27da6d37",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00557",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00557",
+    "title": "string theory 4",
+    "year": 2005,
+    "year_display": "2005",
+    "series_ids": [
+      "129"
+    ],
+    "medium_type": "paper collage",
+    "medium_caption": "paper collage",
+    "height_cm": 34.7,
+    "width_cm": 25.3,
+    "width_px": 2931,
+    "height_px": 4020
+  },
+  "sections": []
+}

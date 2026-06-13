@@ -77,7 +77,7 @@ def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> di
 def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-f2d7055145c59bb923abde85ec8c28fa",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00190",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00190",
+    "title": "cell 6",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_ids": [
+      "026"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2348,
+    "height_px": 3364
+  },
+  "sections": []
+}

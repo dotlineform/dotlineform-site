@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-f7cb03b56ca065ee19912bfad423cd63",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00843",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00843",
+    "title": "structure ii ~",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "033"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

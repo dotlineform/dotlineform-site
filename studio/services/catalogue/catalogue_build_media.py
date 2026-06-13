@@ -49,7 +49,7 @@ FfmpegRunner = Callable[[Path, int, Path], tuple[int, str]]
 def detect_repo_root(start: Path | None = None) -> Path:
     current = (start or Path.cwd()).resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / "public-site" / "config" / "public-site.json").exists():
+        if (candidate / "site-tools" / "config" / "site-tools.json").exists():
             return candidate
     raise ValueError("Could not detect repo root.")
 

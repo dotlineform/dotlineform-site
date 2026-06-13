@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-626ed63095e2e31a11602ca88e6ca2e1",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "101",
+    "count": 3
+  },
+  "series": {
+    "series_id": "101",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "molecules",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2013",
+    "project_folders": [
+      "molecules"
+    ]
+  }
+}

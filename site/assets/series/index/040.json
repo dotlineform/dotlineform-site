@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-eaf1e3a7ad8c17be605f1877393d10f1",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "040",
+    "count": 11
+  },
+  "series": {
+    "series_id": "040",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "dot",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2010,
+    "year_display": "2010, 2012",
+    "project_folders": [
+      "dot"
+    ]
+  }
+}

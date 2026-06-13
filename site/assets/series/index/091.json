@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-f8d930cb1a215f3e362d1396720c8707",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "091",
+    "count": 1
+  },
+  "series": {
+    "series_id": "091",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "lipseyes",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2003,
+    "year_display": "2003",
+    "project_folders": [
+      "lipseyes"
+    ]
+  }
+}

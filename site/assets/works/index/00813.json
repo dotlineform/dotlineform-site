@@ -1,0 +1,72 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-538c1f7bb6089dad4295b2b81a87fa9c",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00813",
+    "count": 5
+  },
+  "work": {
+    "work_id": "00813",
+    "title": "colours 1958-2001",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "029"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": [
+    {
+      "section_id": "00813-1",
+      "section_title": "versions",
+      "details": [
+        {
+          "work_id": "00813",
+          "detail_id": "001",
+          "detail_uid": "00813-001",
+          "title": "colours 1958-2001.1",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "002",
+          "detail_uid": "00813-002",
+          "title": "colours 1958-2001.2",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "003",
+          "detail_uid": "00813-003",
+          "title": "colours 1958-2001.3",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "004",
+          "detail_uid": "00813-004",
+          "title": "colours 1958-2001.4",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "005",
+          "detail_uid": "00813-005",
+          "title": "colours 1958-2001.5",
+          "width_px": 5906,
+          "height_px": 5906
+        }
+      ]
+    }
+  ]
+}

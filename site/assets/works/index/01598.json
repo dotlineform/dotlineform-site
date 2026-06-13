@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-c1cafdb3e1d251d5cf50fd0ce212c578",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01598",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01598",
+    "title": "reduce 3",
+    "year": 2005,
+    "year_display": "2005-07",
+    "series_ids": [
+      "120"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

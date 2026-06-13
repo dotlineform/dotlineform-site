@@ -26,7 +26,7 @@ def write_source(repo_root: Path, filename: str, text: str, scope: str = "studio
 def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
-    (repo_root / "public-site/config").mkdir(parents=True, exist_ok=True); (repo_root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_source(
         repo_root,
         "target.md",

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-e3a9f3f7dadce8eb37ecaa37443907d1",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "series_id": "046",
+    "count": 1
+  },
+  "series": {
+    "series_id": "046",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "title": "egg forms",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2024,
+    "year_display": "2024",
+    "project_folders": [
+      "egg forms"
+    ]
+  }
+}

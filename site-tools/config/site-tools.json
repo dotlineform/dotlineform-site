@@ -1,0 +1,98 @@
+{
+  "schema_version": "site_tools_config_v1",
+  "site": {
+    "title": "dotlineform",
+    "url": "https://www.dotlineform.com",
+    "baseurl": "",
+    "live_url": "https://www.dotlineform.com",
+    "timezone": "Europe/London"
+  },
+  "media": {
+    "base": "https://media.dotlineform.com",
+    "image_works": "/works/img",
+    "files_works": "/works/files",
+    "image_work_details": "/work_details/img",
+    "image_moments": "/moments/img"
+  },
+  "thumbs": {
+    "base": "",
+    "works": "/assets/works/img",
+    "work_details": "/assets/work_details/img",
+    "moments": "/assets/moments/img"
+  },
+  "home_media": {
+    "base": "https://media.dotlineform.com",
+    "prefix": "/home/img"
+  },
+  "docs_viewer": {
+    "route_config_url": "/docs-viewer/config/routes/docs-viewer-public-routes.json",
+    "entrypoint": "/docs-viewer/runtime/js/docs-viewer-public.js",
+    "stylesheet": "/docs-viewer/static/css/docs-viewer.css"
+  },
+  "validation": {
+    "site_root": "site",
+    "required_files": [
+      ".nojekyll",
+      "index.html",
+      "about/index.html",
+      "recent/index.html",
+      "series/index.html",
+      "works/index.html",
+      "work-details/index.html",
+      "moments/index.html",
+      "catalogue/search/index.html",
+      "library/index.html",
+      "analysis/index.html",
+      "CNAME",
+      "favicon.ico",
+      "favicon-16x16.png",
+      "favicon-32x32.png",
+      "apple-touch-icon.png",
+      "apple-touch-icon-precomposed.png",
+      "android-chrome-192x192.png",
+      "android-chrome-512x512.png",
+      "safari-pinned-tab.svg",
+      "site.webmanifest",
+      "assets/css/main.css",
+      "assets/js/public-catalogue-runtime.js",
+      "assets/js/series-index.js",
+      "assets/js/work-page.js",
+      "assets/js/search/search-policy.js",
+      "assets/data/series_index.json",
+      "assets/data/works_index.json",
+      "assets/data/search/catalogue/index.json",
+      "assets/series/index/105.json",
+      "assets/works/index/00008.json",
+      "assets/work_details/img/00001-001-thumb-96.webp",
+      "assets/moments/index/compiled.json",
+      "assets/docs/interactive/library/coincidence-salience-demo.html",
+      "assets/data/docs/scopes/library/index-tree.json",
+      "assets/data/docs/scopes/library/by-id/library.json",
+      "assets/data/docs/scopes/analysis/index-tree.json",
+      "assets/data/search/library/index.json",
+      "assets/data/search/analysis/index.json",
+      "docs-viewer/config/defaults/docs-viewer-public-config.json",
+      "docs-viewer/config/routes/docs-viewer-public-routes.json",
+      "docs-viewer/config/ui-text/public.json",
+      "docs-viewer/static/css/docs-viewer.css",
+      "docs-viewer/runtime/js/docs-viewer-public.js",
+      "docs-viewer/runtime/js/docs-viewer-app-boot.js",
+      "docs-viewer/runtime/js/docs-viewer-metadata-info-view.js",
+      "404.html"
+    ],
+    "required_directories": [
+      "assets/data/docs/scopes/analysis/by-id",
+      "assets/data/docs/scopes/library/by-id",
+      "assets/moments/img",
+      "assets/series/index",
+      "assets/work_details/img",
+      "assets/works/img",
+      "assets/works/index",
+      "docs-viewer/runtime/js"
+    ],
+    "docs_viewer_runtime": {
+      "root": "docs-viewer/runtime/js",
+      "expected_module_count": 44
+    }
+  }
+}

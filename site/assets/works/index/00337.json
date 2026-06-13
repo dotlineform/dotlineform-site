@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-22014a2a166152ae07009da195a38e9e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00337",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00337",
+    "title": "untitled",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "036"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "height_cm": 42.0,
+    "width_cm": 29.7,
+    "width_px": 5669,
+    "height_px": 7559
+  },
+  "sections": []
+}

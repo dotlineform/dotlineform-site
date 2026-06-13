@@ -19,7 +19,7 @@ from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "public-site" / "config" / "public-site.json").exists():
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
         if str(_candidate) not in sys.path:
             sys.path.insert(0, str(_candidate))
         break
@@ -423,11 +423,11 @@ def is_relative_to(path: Path, root: Path) -> bool:
 
 
 def load_media_prefixes(repo_root: Path) -> Dict[str, str]:
-    config_path = repo_root / "public-site" / "config" / "public-site.json"
+    config_path = repo_root / "site-tools" / "config" / "site-tools.json"
     payload = json.loads(config_path.read_text(encoding="utf-8"))
     media = payload.get("media") if isinstance(payload, dict) else None
     if not isinstance(media, dict):
-        raise SystemExit(f"Error: public-site media config missing in {config_path}")
+        raise SystemExit(f"Error: site-tools media config missing in {config_path}")
     defaults = {
         "media_image_works": "works/img",
         "media_image_work_details": "work_details/img",

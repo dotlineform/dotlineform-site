@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-1907ff5d207043efac57b936330deaea",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00878",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00878",
+    "title": "doll face 2",
+    "year": 1989,
+    "year_display": "c. 1989",
+    "series_ids": [
+      "037"
+    ],
+    "medium_type": "mixed media",
+    "medium_caption": "photocopy",
+    "height_cm": 40.0,
+    "width_cm": 28.0,
+    "width_px": 3320,
+    "height_px": 4591
+  },
+  "sections": []
+}

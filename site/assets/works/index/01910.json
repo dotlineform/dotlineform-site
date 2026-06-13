@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-daf3fef914bb46039f759fc764100255",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01910",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01910",
+    "title": "2005-08-20 - 19-02-53",
+    "year": 2005,
+    "year_display": "2005",
+    "series_ids": [
+      "141"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3545
+  },
+  "sections": []
+}

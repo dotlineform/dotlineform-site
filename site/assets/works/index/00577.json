@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-625a2c0c04570a5d72ae6c560cc57f2d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00577",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00577",
+    "title": "path form 5",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "129"
+    ],
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "height_cm": 20.0,
+    "width_cm": 20.0,
+    "width_px": 2362,
+    "height_px": 2362
+  },
+  "sections": []
+}

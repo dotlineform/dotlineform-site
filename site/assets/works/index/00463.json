@@ -1,0 +1,94 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-e8fe99553921f43ba6dd8b96e2038dfe",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00463",
+    "count": 7
+  },
+  "work": {
+    "work_id": "00463",
+    "title": "living surface hand form",
+    "year": 2004,
+    "year_display": "1989, 2004",
+    "series_ids": [
+      "092"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 68.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 8031
+  },
+  "sections": [
+    {
+      "section_id": "00463-1",
+      "section_title": "original painting",
+      "details": [
+        {
+          "work_id": "00463",
+          "detail_id": "001",
+          "detail_uid": "00463-001",
+          "title": "living surface hand form (original painting, 1989)",
+          "width_px": 2169,
+          "height_px": 2830
+        }
+      ]
+    },
+    {
+      "section_id": "00463-2",
+      "section_title": "versions",
+      "details": [
+        {
+          "work_id": "00463",
+          "detail_id": "002",
+          "detail_uid": "00463-002",
+          "title": "living surface (version 1)",
+          "width_px": 5315,
+          "height_px": 5315
+        },
+        {
+          "work_id": "00463",
+          "detail_id": "003",
+          "detail_uid": "00463-003",
+          "title": "living surface (version 2)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "work_id": "00463",
+          "detail_id": "004",
+          "detail_uid": "00463-004",
+          "title": "living surface (version 3)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "work_id": "00463",
+          "detail_id": "005",
+          "detail_uid": "00463-005",
+          "title": "living surface (version 3) detail",
+          "width_px": 1400,
+          "height_px": 1400
+        },
+        {
+          "work_id": "00463",
+          "detail_id": "006",
+          "detail_uid": "00463-006",
+          "title": "living surface (version 4)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "work_id": "00463",
+          "detail_id": "007",
+          "detail_uid": "00463-007",
+          "title": "living surface (version 4) detail",
+          "width_px": 1400,
+          "height_px": 1400
+        }
+      ]
+    }
+  ]
+}

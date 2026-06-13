@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-a82c910581514fd887a4bebb58bb74a1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00205",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00205",
+    "title": "book of curves 8",
+    "year": 1994,
+    "year_display": "1994",
+    "series_ids": [
+      "026"
+    ],
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2432,
+    "height_px": 3436
+  },
+  "sections": []
+}

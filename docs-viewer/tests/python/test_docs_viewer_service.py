@@ -14,14 +14,11 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICE_DIR = REPO_ROOT / "docs-viewer" / "services"
-PUBLIC_SITE_BUILD_DIR = REPO_ROOT / "public-site" / "build"
-for path in (DOCS_SERVICE_DIR, PUBLIC_SITE_BUILD_DIR):
+for path in (DOCS_SERVICE_DIR,):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
 import docs_viewer_service  # noqa: E402
-from public_site_builder.config import load_config  # noqa: E402
-from public_site_builder.docs_routes import render_docs_route  # noqa: E402
 
 
 STATIC_IMPORT_PATTERN = re.compile(
@@ -68,8 +65,8 @@ def test_load_service_config_reads_static_site_env() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         repo_root = Path(temp_dir)
         write_json(
-            repo_root / "public-site/config/public-site.json",
-            {"schema_version": "public_site_config_v1"},
+            repo_root / "site-tools/config/site-tools.json",
+            {"schema_version": "site_tools_config_v1"},
         )
         write_json(
             repo_root / "docs-viewer/config/defaults/docs-viewer-service.json",
@@ -119,17 +116,8 @@ def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -
     assert blocked == []
 
 
-def test_public_readonly_route_renderer_uses_public_entrypoint_contract() -> None:
-    config = load_config(REPO_ROOT / "public-site/config/public-site.json")
-    html = render_docs_route(
-        config,
-        title="Library",
-        section="library",
-        path="/library/",
-        route_id="library",
-        search_placeholder="Search library",
-        search_aria_label="Search library",
-    )
+def test_public_readonly_route_page_uses_public_entrypoint_contract() -> None:
+    html = (REPO_ROOT / "site/library/index.html").read_text(encoding="utf-8")
 
     assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in html
     assert 'data-allow-management="false"' in html

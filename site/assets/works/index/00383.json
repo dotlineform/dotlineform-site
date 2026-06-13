@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-f1dc20823b8ee7922c56e46c76c367ff",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "00383",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00383",
+    "title": "qrnt",
+    "year": 2009,
+    "year_display": "2009",
+    "series_ids": [
+      "118"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "inkjet print",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2480,
+    "height_px": 3508
+  },
+  "sections": []
+}

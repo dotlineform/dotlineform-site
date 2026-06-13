@@ -69,8 +69,8 @@ def write_docs_scope_config(root: Path) -> None:
                     "media_path_prefix": "docs/library",
                     "output": "docs-viewer/generated/docs/library",
                     "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "assets/data/docs/scopes/library",
-                    "publish_search_output": "assets/data/search/library/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/library",
+                    "publish_search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -187,7 +187,7 @@ def write_adapter_registry(root: Path) -> None:
 def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "public-site/config").mkdir(parents=True, exist_ok=True); (root / "public-site/config/public-site.json").write_text("{\"schema_version\":\"public_site_config_v1\"}\n", encoding="utf-8")
+    (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_docs_scope_config(root)
     write_adapter_registry(root)
     write_json(

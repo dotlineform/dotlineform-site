@@ -1,0 +1,48 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-e5ad54d72e853a5bb2aa407e28cd8474",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01045",
+    "count": 2
+  },
+  "work": {
+    "work_id": "01045",
+    "title": "entangled form'",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "048"
+    ],
+    "medium_type": "monoprint",
+    "medium_caption": "ink and paint on paper",
+    "height_cm": 60.0,
+    "width_cm": 42.0,
+    "width_px": 1787,
+    "height_px": 1787
+  },
+  "sections": [
+    {
+      "section_id": "01045-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01045",
+          "detail_id": "001",
+          "detail_uid": "01045-001",
+          "title": "entangled form' - spider",
+          "width_px": 3316,
+          "height_px": 1865
+        },
+        {
+          "work_id": "01045",
+          "detail_id": "002",
+          "detail_uid": "01045-002",
+          "title": "entangled form' - spider (detail)",
+          "width_px": 2000,
+          "height_px": 2000
+        }
+      ]
+    }
+  ]
+}

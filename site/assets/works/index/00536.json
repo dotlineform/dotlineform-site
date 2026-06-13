@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-8018780c35bed587374d14768a42cf50",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00536",
+    "count": 1
+  },
+  "work": {
+    "work_id": "00536",
+    "title": "model 2",
+    "year": 1994,
+    "year_display": "1994",
+    "series_ids": [
+      "099"
+    ],
+    "medium_type": "collage",
+    "medium_caption": "magazine collage, tracing paper",
+    "height_cm": 38.8,
+    "width_cm": 25.4,
+    "width_px": 3234,
+    "height_px": 4940
+  },
+  "sections": [
+    {
+      "section_id": "00536-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00536",
+          "detail_id": "001",
+          "detail_uid": "00536-001",
+          "title": "model 2 - 001",
+          "width_px": 3031,
+          "height_px": 4629
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from typing import Any, Callable, Dict, Optional
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "public-site" / "config" / "public-site.json").exists():
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
         _docs_services_root = _candidate / "docs-viewer" / "services"
         _data_sharing_root = _candidate / "data-sharing"
         for _path in (_docs_services_root, _data_sharing_root):

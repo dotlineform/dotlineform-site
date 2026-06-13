@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-32ca0d6990be6d0caa72bbce52873234",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "work_id": "01494",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01494",
+    "title": "particles 4",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "111"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": []
+}

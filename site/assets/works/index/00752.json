@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-1e04eff51841984b267a6bbda6988b86",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00752",
+    "count": 4
+  },
+  "work": {
+    "work_id": "00752",
+    "title": "all the little cracks again",
+    "year": 2016,
+    "year_display": "2016",
+    "series_ids": [
+      "012"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "00752-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00752",
+          "detail_id": "005",
+          "detail_uid": "00752-005",
+          "title": "all the little cracks again - detail 1",
+          "width_px": 3000,
+          "height_px": 3307
+        },
+        {
+          "work_id": "00752",
+          "detail_id": "006",
+          "detail_uid": "00752-006",
+          "title": "all the little cracks again - detail 2",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "00752",
+          "detail_id": "007",
+          "detail_uid": "00752-007",
+          "title": "all the little cracks again - detail 3",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        {
+          "work_id": "00752",
+          "detail_id": "008",
+          "detail_uid": "00752-008",
+          "title": "all the little cracks again - detail 4",
+          "width_px": 3000,
+          "height_px": 3000
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-1f77df36db49f50fb4f3caee3c05ec55",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "01001",
+    "count": 5
+  },
+  "work": {
+    "work_id": "01001",
+    "title": "dots (inside)",
+    "year": 2010,
+    "year_display": "2010",
+    "series_ids": [
+      "044"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "section_id": "01001-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "01001",
+          "detail_id": "001",
+          "detail_uid": "01001-001",
+          "title": "dots (inside) [detail 1]",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "002",
+          "detail_uid": "01001-002",
+          "title": "dots (inside) [detail 2]",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "003",
+          "detail_uid": "01001-003",
+          "title": "dots (inside) [detail 3]",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "004",
+          "detail_uid": "01001-004",
+          "title": "dots (inside) [detail 4]",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "005",
+          "detail_uid": "01001-005",
+          "title": "dots (inside) [detail 5]",
+          "width_px": 5906,
+          "height_px": 5906
+        }
+      ]
+    }
+  ]
+}

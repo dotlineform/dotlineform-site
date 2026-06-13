@@ -1,0 +1,56 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-7a69c8a3715e9272aea6b12e16eef16e",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
+    "work_id": "00526",
+    "count": 3
+  },
+  "work": {
+    "work_id": "00526",
+    "title": "body",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "004"
+    ],
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "height_cm": 64.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 7559
+  },
+  "sections": [
+    {
+      "section_id": "00526-1",
+      "section_title": "details",
+      "details": [
+        {
+          "work_id": "00526",
+          "detail_id": "001",
+          "detail_uid": "00526-001",
+          "title": "body detail",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        {
+          "work_id": "00526",
+          "detail_id": "002",
+          "detail_uid": "00526-002",
+          "title": "body detail",
+          "width_px": 3024,
+          "height_px": 4032
+        },
+        {
+          "work_id": "00526",
+          "detail_id": "003",
+          "detail_uid": "00526-003",
+          "title": "body detail",
+          "width_px": 4032,
+          "height_px": 3024
+        }
+      ]
+    }
+  ]
+}

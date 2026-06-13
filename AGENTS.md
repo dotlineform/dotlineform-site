@@ -42,11 +42,10 @@
 
 ## Public Static Site Toolchain
 
-- The public-site preview/build layer is the Python static builder in `public-site/build/`.
-- `public-site/config/public-site.json` owns public-site assembly config and is the repo-root marker for local Python tooling.
-- Use `bin/public-site-build --destination <path> --audit` for public artifact builds.
-- Use `bin/public-site-preview` for local public-site preview; it builds `_public_site/` and serves it with Python's HTTP server.
-- For isolated verification, build to a temporary destination such as `/tmp/dlf-public-site-build` rather than relying on checked-out generated output.
+- `site/` is the tracked static site root and the GitHub Pages upload root.
+- `site-tools/config/site-tools.json` owns static-site validation config and site-level media settings used by local Python tooling.
+- Use `bin/site-validate` to validate the deploy root.
+- Use `bin/site-preview` for local public-site preview; it serves `site/` directly with Python's HTTP server.
 - Local Studio is served by `bin/local-studio`, not by the public-site preview server.
 
 ## Tests
