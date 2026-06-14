@@ -9,11 +9,6 @@
   gap: 0.35rem;
 }
 
-.sharedFilePicker__label {
-  color: var(--muted, var(--studio-muted));
-  font-size: var(--font-caption, 0.9rem);
-}
-
 .sharedFilePicker__folderControl {
   display: block;
 }
@@ -56,10 +51,6 @@
   gap: 1.1rem;
 }
 
-.sharedFilePicker__labelSpacer {
-  min-height: 1.4em;
-}
-
 .sharedFilePicker__listbox {
   box-sizing: border-box;
   width: 100%;
@@ -67,6 +58,10 @@
   border: 1px solid var(--studio-line-input, #cfcfcf);
   border-radius: var(--studio-radius-sm, 0.35rem);
   padding: 0.35rem;
+  display: grid;
+  align-content: start;
+  gap: 0.15rem;
+  overflow: auto;
   background: var(--surface, var(--studio-surface, #fff));
   color: inherit;
   font: inherit;
@@ -74,10 +69,34 @@
   overscroll-behavior: contain;
 }
 
+.sharedFilePicker__listbox[aria-disabled="true"] {
+  opacity: 0.65;
+}
+
 .sharedFilePicker__listbox:focus {
   outline: none;
   border-color: var(--studio-focus, #5f8ffb);
   box-shadow: 0 0 0 2px var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+.sharedFilePicker__option {
+  box-sizing: border-box;
+  min-width: 0;
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  padding: 0.2rem 0.3rem;
+  overflow-wrap: anywhere;
+}
+
+.sharedFilePicker__option[aria-selected="true"] {
+  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+.sharedFilePicker__option--parent {
+  font-weight: 600;
+}
+
+.sharedFilePicker__option--subfolder {
+  padding-left: 1rem;
 }
 
 @media (max-width: 720px) {

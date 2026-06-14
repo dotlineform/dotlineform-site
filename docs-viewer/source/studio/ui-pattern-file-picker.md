@@ -36,8 +36,10 @@ The shared component owns:
 - folder search with prefix matching
 - Escape reset for the folder search popup
 - one-level subfolder listbox
+- parent-folder row at the top of the subfolder listbox, so selecting a subfolder is reversible without reselecting the folder
 - file listbox
 - mouse wheel selection inside listboxes without scrolling the page
+- custom ARIA listbox focus and keyboard behavior
 - Enter and double-click submit from the file list
 - missing-current-file status inside the picker
 - returning a structured selection only after submit
@@ -53,6 +55,12 @@ The consuming route owns:
 
 Do not mark a route dirty while the user types in the folder search.
 Typing is reversible picker state; only confirming a file selection should update durable route draft fields.
+
+The subfolder and file lists are custom listboxes, not native `<select size>` controls.
+This keeps focus trapping, Tab order, arrow keys, wheel selection, and Enter behavior under the shared component's control across browsers.
+
+The folder search input, subfolder listbox, and file listbox rely on accessible names rather than visible field labels by default.
+The modal title and the selected folder row provide the local context.
 
 ## API
 
@@ -111,6 +119,7 @@ $HOME/miniconda3/bin/python3 studio/tests/smoke/catalogue_project_media_picker_m
 The shared smoke covers:
 
 - existing folder, subfolder, and file preselection
+- parent-folder row selection after selecting a subfolder
 - prefix folder search
 - one-level subfolder and file loading
 - file listbox wheel selection

@@ -145,11 +145,58 @@ def assert_project_media_picker(page: Page) -> None:
     folder_input = page.locator('[data-role="file-picker-folder-input"]')
     file_list = page.locator('[data-role="file-picker-file-list"]')
     subfolder_list = page.locator('[data-role="file-picker-subfolder-list"]')
-    page.wait_for_selector('[data-role="file-picker-file-list"] option[value="cover.jpg"]')
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="cover.jpg"]')
+    page.wait_for_function(
+        "() => document.activeElement && document.activeElement.dataset.role === 'file-picker-file-list'"
+    )
     assert folder_input.input_value() == "natural"
-    assert file_list.input_value() == "cover.jpg"
-    assert subfolder_list.evaluate("node => node.selectedIndex") == -1
+    assert file_list.evaluate("node => node.dataset.selectedValue") == "cover.jpg"
+    assert subfolder_list.evaluate("node => node.dataset.selectedValue || ''") == ""
+    assert page.locator(".sharedFilePicker__label").count() == 0
+    open_focus_result = page.evaluate(
+        """() => ({
+            activeRole: document.activeElement.dataset.role,
+            popupHidden: document.querySelector('[data-role="file-picker-folder-popup"]').hidden
+        })"""
+    )
+    assert open_focus_result == {"activeRole": "file-picker-file-list", "popupHidden": True}
 
+    page.keyboard.press("Tab")
+    tab_from_file_result = page.evaluate(
+        """() => ({
+            activeRole: document.activeElement.dataset.role || '',
+            modalContainsFocus: document.querySelector('[data-role="studio-modal"]').contains(document.activeElement)
+        })"""
+    )
+    assert tab_from_file_result == {"activeRole": "modal-cancel", "modalContainsFocus": True}
+    file_list.focus()
+    for _ in range(4):
+        page.keyboard.press("Tab")
+    trap_result = page.evaluate(
+        """() => {
+            const modal = document.querySelector('[data-role="studio-modal"]');
+            return {
+                modalContainsFocus: modal.contains(document.activeElement),
+                activeRole: document.activeElement.dataset.role || ''
+            };
+        }"""
+    )
+    assert trap_result["modalContainsFocus"] is True
+
+    parent_folder_option = page.locator('[data-role="file-picker-subfolder-list"] [data-listbox-option-value=""]')
+    install_option = page.locator('[data-role="file-picker-subfolder-list"] [data-listbox-option-value="install"]')
+    assert parent_folder_option.text_content() == "natural"
+    assert install_option.text_content() == "⨽ install"
+    install_option.click()
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="view-01.jpg"]')
+    assert subfolder_list.evaluate("node => node.dataset.selectedValue") == "install"
+    assert file_list.evaluate("node => node.dataset.selectedValue") == "view-01.jpg"
+    parent_folder_option.click()
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="cover.jpg"]')
+    assert subfolder_list.evaluate("node => node.dataset.selectedValue || ''") == ""
+    assert file_list.evaluate("node => node.dataset.selectedValue") == "cover.jpg"
+
+    folder_input.focus()
     folder_input.fill("ner")
     page.wait_for_selector('[data-search-list-value="nerve"]')
     transient_result = page.evaluate(
@@ -166,6 +213,17 @@ def assert_project_media_picker(page: Page) -> None:
         "fieldValue": "ner",
         "primaryDisabled": True,
     }
+    folder_input.press("Tab")
+    tab_result = page.evaluate(
+        """() => ({
+            popupHidden: document.querySelector('[data-role="file-picker-folder-popup"]').hidden,
+            modalContainsFocus: document.querySelector('[data-role="studio-modal"]').contains(document.activeElement)
+        })"""
+    )
+    assert tab_result == {"popupHidden": True, "modalContainsFocus": True}
+    folder_input.focus()
+    folder_input.fill("ner")
+    page.wait_for_selector('[data-search-list-value="nerve"]')
     folder_input.press("Escape")
     reset_result = page.evaluate(
         """() => ({
@@ -180,15 +238,15 @@ def assert_project_media_picker(page: Page) -> None:
     page.wait_for_selector('[data-search-list-value="nerve"]')
     folder_input.press("ArrowDown")
     folder_input.press("Enter")
-    page.wait_for_selector('[data-role="file-picker-file-list"] option[value="nerve - copy.jpg"]')
-    assert file_list.input_value() == "nerve - copy.jpg"
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="nerve - copy.jpg"]')
+    assert file_list.evaluate("node => node.dataset.selectedValue") == "nerve - copy.jpg"
     wheel_result = page.evaluate(
         """() => {
             const fileList = document.querySelector('[data-role="file-picker-file-list"]');
             const event = new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true });
             const dispatchResult = fileList.dispatchEvent(event);
             return {
-                value: fileList.value,
+                value: fileList.dataset.selectedValue,
                 defaultPrevented: event.defaultPrevented,
                 dispatchResult
             };

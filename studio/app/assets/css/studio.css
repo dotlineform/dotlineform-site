@@ -1132,6 +1132,12 @@ span.tagStudio__input--readonlyDisplay {
   font-weight: 700;
 }
 
+.tagStudio__button:focus-visible {
+  outline: none;
+  border-color: var(--studio-focus);
+  box-shadow: 0 0 0 2px var(--studio-focus-ring);
+}
+
 .tagStudio__button:disabled {
   color: var(--muted, var(--studio-muted));
   cursor: not-allowed;
@@ -2309,6 +2315,13 @@ span.tagStudio__input--readonlyDisplay {
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+.tagStudioModal__actions .tagStudio__button:focus {
+  outline: 2px solid var(--studio-focus);
+  outline-offset: 2px;
+  border-color: var(--studio-focus);
+  box-shadow: 0 0 0 3px var(--studio-focus-ring);
 }
 
 .tagStudioError {

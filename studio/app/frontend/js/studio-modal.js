@@ -141,7 +141,9 @@ export function activateStudioModalFrame(host, options = {}) {
 
   const cleanup = (restore = true) => {
     closeActiveModal(host);
+    document.removeEventListener("keydown", onKeydownCapture, true);
     document.removeEventListener("keydown", onKeydown);
+    document.removeEventListener("focusin", onFocusIn);
     if (!restore) return;
     try {
       if (restoreFocus && typeof restoreFocus.focus === "function") {
@@ -191,26 +193,32 @@ export function activateStudioModalFrame(host, options = {}) {
 
   api.submit = submit;
 
+  function trapTab(event) {
+    if (event.key !== "Tab" || !modal) return;
+    const nodes = focusableNodes(modal);
+    if (!nodes.length) return;
+    event.preventDefault();
+    if (!modal.contains(document.activeElement)) {
+      nodes[0].focus();
+      return;
+    }
+    const currentIndex = nodes.indexOf(document.activeElement);
+    const fallbackIndex = event.shiftKey ? nodes.length : -1;
+    const index = currentIndex >= 0 ? currentIndex : fallbackIndex;
+    const nextIndex = event.shiftKey
+      ? (index - 1 + nodes.length) % nodes.length
+      : (index + 1) % nodes.length;
+    nodes[nextIndex].focus();
+  }
+
+  function onKeydownCapture(event) {
+    trapTab(event);
+  }
+
   function onKeydown(event) {
     if (event.key === "Escape") {
       event.preventDefault();
       api.cancel();
-      return;
-    }
-    if (event.key === "Tab" && modal) {
-      const nodes = focusableNodes(modal);
-      if (!nodes.length) return;
-      const first = nodes[0];
-      const last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-        return;
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
       return;
     }
     if (event.key === "Enter" && options.submitOnEnter !== false) {
@@ -222,7 +230,15 @@ export function activateStudioModalFrame(host, options = {}) {
     }
   }
 
+  function onFocusIn(event) {
+    if (!modal || !event.target || modal.contains(event.target)) return;
+    const nodes = focusableNodes(modal);
+    if (nodes.length) nodes[0].focus();
+  }
+
+  document.addEventListener("keydown", onKeydownCapture, true);
   document.addEventListener("keydown", onKeydown);
+  document.addEventListener("focusin", onFocusIn);
 
   cancelNodes.forEach((node) => {
     node.addEventListener("click", () => api.cancel());

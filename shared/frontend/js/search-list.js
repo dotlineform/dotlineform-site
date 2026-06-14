@@ -203,7 +203,9 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     controller.startValue = inputNode.value;
     controller.activeIndex = -1;
     inputNode.select();
-    refreshOptions(controller, options);
+    if (options.openOnFocus !== false) {
+      refreshOptions(controller, options);
+    }
   }
 
   function onMouseUp(event) {
@@ -224,6 +226,10 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
 
   function onKeyDown(event) {
     const matches = controller.matches || [];
+    if (event.key === "Tab") {
+      closeSearchList(controller, { reset: true }, options);
+      return;
+    }
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();

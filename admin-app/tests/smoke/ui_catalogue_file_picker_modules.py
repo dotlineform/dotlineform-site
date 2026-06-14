@@ -99,9 +99,14 @@ def assert_file_picker_contract(page: Page) -> None:
             await picker.ready;
             const initial = {
                 folder: document.querySelector('#picker [data-role="file-picker-folder-input"]').value,
-                subfolder: document.querySelector('#picker [data-role="file-picker-subfolder-list"]').value,
-                filename: document.querySelector('#picker [data-role="file-picker-file-list"]').value,
+                subfolder: document.querySelector('#picker [data-role="file-picker-subfolder-list"]').dataset.selectedValue,
+                filename: document.querySelector('#picker [data-role="file-picker-file-list"]').dataset.selectedValue,
                 primaryDisabled: primary.disabled,
+                subfolderOptions: Array.from(document.querySelectorAll('#picker [data-role="file-picker-subfolder-list"] [data-listbox-option-value]')).map((node) => ({
+                    value: node.dataset.listboxOptionValue,
+                    label: node.textContent,
+                    className: node.className
+                })),
                 submit: picker.submit()
             };
 
@@ -110,10 +115,16 @@ def assert_file_picker_contract(page: Page) -> None:
             const subfolderWheelDispatch = subfolderList.dispatchEvent(subfolderWheelEvent);
             await new Promise((resolve) => setTimeout(resolve, 0));
             const afterSubfolderWheel = {
-                subfolder: subfolderList.value,
-                filename: document.querySelector('#picker [data-role="file-picker-file-list"]').value,
+                subfolder: subfolderList.dataset.selectedValue,
+                filename: document.querySelector('#picker [data-role="file-picker-file-list"]').dataset.selectedValue,
                 defaultPrevented: subfolderWheelEvent.defaultPrevented,
                 dispatchResult: subfolderWheelDispatch
+            };
+            subfolderList.querySelector('[data-listbox-option-value=""]').click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const afterParentFolderClick = {
+                subfolder: subfolderList.dataset.selectedValue,
+                filename: document.querySelector('#picker [data-role="file-picker-file-list"]').dataset.selectedValue
             };
 
             const folderInput = document.querySelector('#picker [data-role="file-picker-folder-input"]');
@@ -130,13 +141,13 @@ def assert_file_picker_contract(page: Page) -> None:
             const fileList = document.querySelector('#picker [data-role="file-picker-file-list"]');
             const afterFolderCommit = {
                 folder: folderInput.value,
-                filename: fileList.value,
+                filename: fileList.dataset.selectedValue,
                 primaryDisabled: primary.disabled
             };
             fileList.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true }));
             fileList.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
             const afterWheel = {
-                filename: fileList.value,
+                filename: fileList.dataset.selectedValue,
                 submitCount,
                 submit: picker.submit()
             };
@@ -159,6 +170,7 @@ def assert_file_picker_contract(page: Page) -> None:
 
             return {
                 afterFolderCommit,
+                afterParentFolderClick,
                 afterSubfolderWheel,
                 afterWheel,
                 calls,
@@ -173,6 +185,23 @@ def assert_file_picker_contract(page: Page) -> None:
     assert result["initial"]["subfolder"] == "install"
     assert result["initial"]["filename"] == "view-01.jpg"
     assert result["initial"]["primaryDisabled"] is False
+    assert result["initial"]["subfolderOptions"] == [
+        {
+            "value": "",
+            "label": "natural",
+            "className": "sharedFilePicker__option sharedFilePicker__option--parent",
+        },
+        {
+            "value": "install",
+            "label": "⨽ install",
+            "className": "sharedFilePicker__option sharedFilePicker__option--subfolder",
+        },
+        {
+            "value": "proof",
+            "label": "⨽ proof",
+            "className": "sharedFilePicker__option sharedFilePicker__option--subfolder",
+        },
+    ]
     assert result["initial"]["submit"]["selection"] == {
         "scope": "",
         "folder": "natural",
@@ -184,6 +213,10 @@ def assert_file_picker_contract(page: Page) -> None:
         "filename": "proof.jpg",
         "defaultPrevented": True,
         "dispatchResult": False,
+    }
+    assert result["afterParentFolderClick"] == {
+        "subfolder": "",
+        "filename": "cover.jpg",
     }
     assert result["prefixMatches"] == ["nerve"]
     assert result["transientPrimaryDisabled"] is True
@@ -206,6 +239,7 @@ def assert_file_picker_contract(page: Page) -> None:
     assert result["missing"]["submit"]["ok"] is False
     assert ["files", "natural", ""] in result["calls"]
     assert ["files", "natural", "install"] in result["calls"]
+    assert ["files", "natural", "proof"] in result["calls"]
     assert ["files", "nerve", ""] in result["calls"]
 
 

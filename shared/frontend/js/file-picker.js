@@ -68,63 +68,162 @@ function renderBody(id, options = {}) {
   const fileLabel = pickerText(options, "file_picker_files_label", "files");
   return `
     <div class="sharedFilePicker" data-role="file-picker">
-      <label class="sharedFilePicker__folderField" for="${escapeHtml(id)}-folder">
-        <span class="sharedFilePicker__label">${escapeHtml(folderLabel)}</span>
+      <div class="sharedFilePicker__folderField">
         <span class="sharedSearchList__control sharedFilePicker__folderControl">
-          <input class="sharedFilePicker__folderInput" id="${escapeHtml(id)}-folder" data-role="file-picker-folder-input" type="text" autocomplete="off" spellcheck="false">
+          <input class="sharedFilePicker__folderInput" id="${escapeHtml(id)}-folder" data-role="file-picker-folder-input" type="text" autocomplete="off" spellcheck="false" aria-label="${escapeHtml(folderLabel)}">
           <span class="sharedFilePicker__folderPopup" data-role="file-picker-folder-popup" hidden></span>
         </span>
-      </label>
+      </div>
       <p class="sharedFilePicker__status" data-role="file-picker-status" hidden></p>
       <div class="sharedFilePicker__listboxes">
-        <label class="sharedFilePicker__listboxField" for="${escapeHtml(id)}-subfolders">
-          <span class="sharedFilePicker__label">${escapeHtml(subfolderLabel)}</span>
-          <select class="sharedFilePicker__listbox" id="${escapeHtml(id)}-subfolders" data-role="file-picker-subfolder-list" size="12" aria-label="${escapeHtml(subfolderLabel)}" disabled></select>
-        </label>
-        <label class="sharedFilePicker__listboxField" for="${escapeHtml(id)}-files">
-          <span class="sharedFilePicker__label sharedFilePicker__labelSpacer" aria-hidden="true"></span>
-          <select class="sharedFilePicker__listbox" id="${escapeHtml(id)}-files" data-role="file-picker-file-list" size="12" aria-label="${escapeHtml(fileLabel)}" disabled></select>
-        </label>
+        <div class="sharedFilePicker__listboxField">
+          <div class="sharedFilePicker__listbox" id="${escapeHtml(id)}-subfolders" data-role="file-picker-subfolder-list" role="listbox" tabindex="-1" aria-disabled="true" aria-label="${escapeHtml(subfolderLabel)}"></div>
+        </div>
+        <div class="sharedFilePicker__listboxField">
+          <div class="sharedFilePicker__listbox" id="${escapeHtml(id)}-files" data-role="file-picker-file-list" role="listbox" tabindex="-1" aria-disabled="true" aria-label="${escapeHtml(fileLabel)}"></div>
+        </div>
       </div>
     </div>
   `;
 }
 
-function renderSelectOptions(selectNode, values, selectedValue) {
-  const selected = normalizeText(selectedValue);
-  selectNode.innerHTML = values.map((value) => {
-    const selectedAttr = value === selected ? " selected" : "";
-    return `<option value="${escapeHtml(value)}"${selectedAttr}>${escapeHtml(value)}</option>`;
-  }).join("");
-  if (!selected || !values.includes(selected)) selectNode.selectedIndex = -1;
+function listboxOptionId(listboxNode, index) {
+  return `${listboxNode.id}-option-${index}`;
 }
 
-function selectedListboxValue(selectNode) {
-  return selectNode && selectNode.selectedIndex >= 0 ? normalizeText(selectNode.value) : "";
-}
-
-function moveListboxSelection(selectNode, direction) {
-  if (!selectNode || !selectNode.options.length) return false;
-  const currentIndex = selectNode.selectedIndex;
-  const nextIndex = currentIndex < 0
-    ? (direction > 0 ? 0 : selectNode.options.length - 1)
-    : Math.max(0, Math.min(selectNode.options.length - 1, currentIndex + direction));
-  if (nextIndex === currentIndex) return false;
-  selectNode.selectedIndex = nextIndex;
-  if (selectNode.options[nextIndex] && typeof selectNode.options[nextIndex].scrollIntoView === "function") {
-    selectNode.options[nextIndex].scrollIntoView({ block: "nearest" });
+function listboxItem(item) {
+  if (item && typeof item === "object") {
+    const value = normalizeText(item.value);
+    return {
+      className: normalizeText(item.className),
+      label: normalizeText(item.label) || value,
+      value
+    };
   }
-  selectNode.dispatchEvent(new Event("change", { bubbles: true }));
+  const value = normalizeText(item);
+  return { className: "", label: value, value };
+}
+
+function renderListboxOptions(listboxNode, options, selectedValue) {
+  if (!listboxNode) return;
+  const items = (Array.isArray(options) ? options : []).map(listboxItem);
+  const selected = normalizeText(selectedValue);
+  const selectedIndex = items.findIndex((item) => item.value === selected);
+  const activeIndex = selectedIndex >= 0 ? selectedIndex : -1;
+  listboxNode.filePickerValues = items.map((item) => item.value);
+  listboxNode.dataset.selectedValue = selectedIndex >= 0 ? selected : "";
+  listboxNode.dataset.activeIndex = String(activeIndex);
+  listboxNode.innerHTML = items.map((item, index) => {
+    const optionId = listboxOptionId(listboxNode, index);
+    const selectedAttr = index === selectedIndex ? "true" : "false";
+    const className = ["sharedFilePicker__option", item.className].filter(Boolean).join(" ");
+    return `<div class="${escapeHtml(className)}" id="${escapeHtml(optionId)}" data-listbox-option-index="${index}" data-listbox-option-value="${escapeHtml(item.value)}" role="option" aria-selected="${selectedAttr}">${escapeHtml(item.label)}</div>`;
+  }).join("");
+  if (activeIndex >= 0) {
+    listboxNode.setAttribute("aria-activedescendant", listboxOptionId(listboxNode, activeIndex));
+  } else {
+    listboxNode.removeAttribute("aria-activedescendant");
+  }
+}
+
+function selectedListboxValue(listboxNode) {
+  return normalizeText(listboxNode && listboxNode.dataset.selectedValue);
+}
+
+function setListboxSelection(listboxNode, index) {
+  const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
+  if (!listboxNode || !values.length || index < 0 || index >= values.length) return false;
+  const value = values[index];
+  listboxNode.dataset.selectedValue = value;
+  listboxNode.dataset.activeIndex = String(index);
+  listboxNode.setAttribute("aria-activedescendant", listboxOptionId(listboxNode, index));
+  listboxNode.querySelectorAll("[data-listbox-option-index]").forEach((optionNode) => {
+    optionNode.setAttribute("aria-selected", optionNode.getAttribute("data-listbox-option-index") === String(index) ? "true" : "false");
+  });
+  const selectedNode = listboxNode.querySelector(`[data-listbox-option-index="${index}"]`);
+  if (selectedNode && typeof selectedNode.scrollIntoView === "function") {
+    selectedNode.scrollIntoView({ block: "nearest" });
+  }
+  listboxNode.dispatchEvent(new Event("change", { bubbles: true }));
   return true;
 }
 
-function bindListboxWheel(selectNode) {
-  if (!selectNode) return;
-  selectNode.addEventListener("wheel", (event) => {
+function moveListboxSelection(listboxNode, direction) {
+  const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
+  if (!listboxNode || !values.length) return false;
+  const currentIndex = Number(listboxNode.dataset.activeIndex);
+  const nextIndex = currentIndex < 0
+    ? (direction > 0 ? 0 : values.length - 1)
+    : Math.max(0, Math.min(values.length - 1, currentIndex + direction));
+  if (nextIndex === currentIndex) return false;
+  return setListboxSelection(listboxNode, nextIndex);
+}
+
+function setListboxDisabled(listboxNode, disabled) {
+  if (!listboxNode) return;
+  listboxNode.setAttribute("aria-disabled", disabled ? "true" : "false");
+  listboxNode.tabIndex = disabled ? -1 : 0;
+}
+
+function subfolderListOptions(folder, subfolders) {
+  const parentFolder = normalizeText(folder);
+  const records = [
+    {
+      className: "sharedFilePicker__option--parent",
+      label: parentFolder || "folder",
+      value: ""
+    }
+  ];
+  (Array.isArray(subfolders) ? subfolders : []).forEach((subfolder) => {
+    records.push({
+      className: "sharedFilePicker__option--subfolder",
+      label: `⨽ ${subfolder}`,
+      value: subfolder
+    });
+  });
+  return records;
+}
+
+function bindListbox(listboxNode, options = {}) {
+  if (!listboxNode) return;
+  listboxNode.addEventListener("click", (event) => {
+    const optionNode = event.target && event.target.closest ? event.target.closest("[data-listbox-option-index]") : null;
+    if (!optionNode || !listboxNode.contains(optionNode)) return;
+    const index = Number(optionNode.getAttribute("data-listbox-option-index"));
+    if (Number.isInteger(index)) setListboxSelection(listboxNode, index);
+  });
+  listboxNode.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      moveListboxSelection(listboxNode, 1);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      moveListboxSelection(listboxNode, -1);
+      return;
+    }
+    if (event.key === "Home") {
+      event.preventDefault();
+      setListboxSelection(listboxNode, 0);
+      return;
+    }
+    if (event.key === "End") {
+      const values = Array.isArray(listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
+      event.preventDefault();
+      setListboxSelection(listboxNode, values.length - 1);
+      return;
+    }
+    if (event.key === "Enter" && typeof options.onEnter === "function") {
+      event.preventDefault();
+      options.onEnter();
+    }
+  });
+  listboxNode.addEventListener("wheel", (event) => {
     if (!event.deltaY) return;
     event.preventDefault();
     event.stopPropagation();
-    moveListboxSelection(selectNode, event.deltaY > 0 ? 1 : -1);
+    moveListboxSelection(listboxNode, event.deltaY > 0 ? 1 : -1);
   }, { passive: false });
 }
 
@@ -175,8 +274,8 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   function setListboxesDisabled(disabled) {
-    if (subfolderNode) subfolderNode.disabled = Boolean(disabled);
-    if (fileNode) fileNode.disabled = Boolean(disabled);
+    setListboxDisabled(subfolderNode, Boolean(disabled));
+    setListboxDisabled(fileNode, Boolean(disabled));
   }
 
   async function loadFolders() {
@@ -196,8 +295,8 @@ export function createFilePicker(rootNode, options = {}) {
     if (!folder || typeof options.loadFiles !== "function") {
       state.subfolders = [];
       state.files = [];
-      renderSelectOptions(subfolderNode, [], "");
-      renderSelectOptions(fileNode, [], "");
+      renderListboxOptions(subfolderNode, [], "");
+      renderListboxOptions(fileNode, [], "");
       setListboxesDisabled(true);
       setPrimaryDisabled(primaryNode, true);
       return;
@@ -230,15 +329,15 @@ export function createFilePicker(rootNode, options = {}) {
         setStatus("", "");
       }
 
-      renderSelectOptions(subfolderNode, state.subfolders, selected.subfolder);
-      renderSelectOptions(fileNode, state.files, selected.filename);
+      renderListboxOptions(subfolderNode, subfolderListOptions(folder, state.subfolders), selected.subfolder);
+      renderListboxOptions(fileNode, state.files, selected.filename);
       setListboxesDisabled(false);
       setPrimaryDisabled(primaryNode, !selected.filename);
     } catch (error) {
       state.files = [];
-      renderSelectOptions(fileNode, [], "");
-      if (fileNode) fileNode.disabled = true;
-      if (subfolderNode) subfolderNode.disabled = false;
+      renderListboxOptions(fileNode, [], "");
+      setListboxDisabled(fileNode, true);
+      setListboxDisabled(subfolderNode, false);
       setPrimaryDisabled(primaryNode, true);
       setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_files_failed", "Files could not be loaded."));
     }
@@ -258,6 +357,7 @@ export function createFilePicker(rootNode, options = {}) {
   const searchController = bindSearchList(folderInput, folderPopup, {
     id: `${id}-folder-popup`,
     maxOptions: 12,
+    openOnFocus: false,
     classNames: {
       option: "sharedFilePicker__folderOption"
     },
@@ -286,7 +386,7 @@ export function createFilePicker(rootNode, options = {}) {
         setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_files_failed", "Files could not be loaded."));
       });
     });
-    bindListboxWheel(subfolderNode);
+    bindListbox(subfolderNode);
   }
 
   if (fileNode) {
@@ -294,16 +394,15 @@ export function createFilePicker(rootNode, options = {}) {
       selected.filename = selectedListboxValue(fileNode);
       setPrimaryDisabled(primaryNode, !selected.filename);
     });
-    fileNode.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" || !selected.filename || typeof options.onSubmit !== "function") return;
-      event.preventDefault();
-      options.onSubmit();
-    });
     fileNode.addEventListener("dblclick", () => {
       selected.filename = selectedListboxValue(fileNode);
       if (selected.filename && typeof options.onSubmit === "function") options.onSubmit();
     });
-    bindListboxWheel(fileNode);
+    bindListbox(fileNode, {
+      onEnter() {
+        if (selected.filename && typeof options.onSubmit === "function") options.onSubmit();
+      }
+    });
   }
 
   async function initialize() {
@@ -337,7 +436,7 @@ export function createFilePicker(rootNode, options = {}) {
       } else {
         selected.subfolder = "";
         selected.filename = "";
-        renderSelectOptions(subfolderNode, state.subfolders, "");
+        renderListboxOptions(subfolderNode, subfolderListOptions(selected.folder, state.subfolders), "");
         setPrimaryDisabled(primaryNode, true);
         setStatus("warning", pickerText(options, "file_picker_file_not_found", "file not found"));
       }
@@ -379,6 +478,16 @@ export function createFilePicker(rootNode, options = {}) {
     submit,
     focus() {
       if (folderInput) folderInput.focus();
+    },
+    focusPreferred() {
+      if (selected.folder && selected.filename && fileNode && fileNode.getAttribute("aria-disabled") !== "true") {
+        fileNode.focus();
+        return;
+      }
+      if (folderInput) {
+        folderInput.focus();
+        if (typeof folderInput.select === "function") folderInput.select();
+      }
     },
     destroy() {
       if (searchController && typeof searchController.destroy === "function") searchController.destroy();

@@ -120,8 +120,7 @@ export async function openProjectMediaFileModal(state, options = {}) {
   });
 
   modalController = activateStudioModalFrame(host, {
-    focusSelector: '[data-role="file-picker-folder-input"]',
-    selectInitialFocus: true,
+    focusSelector: '[role="dialog"]',
     submitOnEnter: false,
     async onSubmit(api) {
       await pickerController.ready;
@@ -139,6 +138,9 @@ export async function openProjectMediaFileModal(state, options = {}) {
         }
       };
     }
+  });
+  pickerController.ready.then(() => {
+    if (host.querySelector('[data-role="studio-modal"]')) pickerController.focusPreferred();
   });
 
   const result = await modalController.promise;
