@@ -94,6 +94,7 @@ export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options
     body: confirmation.body,
     primaryLabel: lookupText(text, "entry_modal_delete_button", "Delete"),
     cancelLabel: lookupText(text, "entry_modal_cancel_button", "Cancel"),
+    defaultAction: "cancel",
     size: "compact"
   });
   if (!result || !result.confirmed) return { confirmed: false };

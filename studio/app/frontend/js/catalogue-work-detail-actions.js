@@ -759,6 +759,7 @@ export async function deleteCurrentDetail(state, context) {
       message: summary,
       primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
       cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+      defaultAction: "cancel",
       restoreFocus: state.deleteButton
     });
     if (!confirmed) {

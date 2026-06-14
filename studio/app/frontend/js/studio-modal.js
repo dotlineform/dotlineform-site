@@ -49,11 +49,22 @@ function renderSnippet(snippet) {
 function renderActions(options = {}) {
   const primaryLabel = String(options.primaryLabel || "OK");
   const cancelLabel = String(options.cancelLabel || "Cancel");
+  const cancelDefault = normalizeText(options.defaultAction).toLowerCase() === "cancel";
   const primaryAttrs = options.primaryDisabled ? " disabled" : "";
+  const cancelClass = [
+    "tagStudio__button",
+    "tagStudio__button--defaultWidth",
+    cancelDefault ? "tagStudio__button--defaultAction" : ""
+  ].filter(Boolean).join(" ");
+  const primaryClass = [
+    "tagStudio__button",
+    "tagStudio__button--defaultWidth",
+    cancelDefault ? "" : "tagStudio__button--defaultAction"
+  ].filter(Boolean).join(" ");
   return `
     <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth tagStudio__button--defaultAction" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
+      <button type="button" class="${escapeHtml(cancelClass)}" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
+      <button type="button" class="${escapeHtml(primaryClass)}" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
     </div>
   `;
 }
@@ -259,7 +270,14 @@ export function activateStudioModalFrame(host, options = {}) {
   }
 
   const focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : null;
-  const initialFocus = focusTarget || submitNodes[0] || cancelNodes[cancelNodes.length - 1] || dialog;
+  const cancelDefault = normalizeText(options.defaultAction).toLowerCase() === "cancel";
+  const defaultActionTarget = cancelDefault
+    ? cancelNodes[cancelNodes.length - 1]
+    : submitNodes[0];
+  const fallbackActionTarget = cancelDefault
+    ? submitNodes[0]
+    : cancelNodes[cancelNodes.length - 1];
+  const initialFocus = focusTarget || defaultActionTarget || fallbackActionTarget || dialog;
   if (initialFocus && typeof initialFocus.focus === "function") initialFocus.focus();
   if (options.selectInitialFocus && initialFocus && typeof initialFocus.select === "function") initialFocus.select();
   if (typeof options.onOpen === "function") options.onOpen(api);

@@ -406,11 +406,43 @@ def main() -> int:
             if not download_list_state["hasList"] or download_list_state["rowCount"] < 2:
                 raise AssertionError(f"download list did not render through shared record list: {download_list_state!r}")
             if download_list_state["hasLegacyEdit"] or download_list_state["hasLegacyDelete"]:
-                raise AssertionError(f"download list should be read-only in the first shared-list pass: {download_list_state!r}")
+                raise AssertionError(f"download list should not render legacy row action buttons: {download_list_state!r}")
             if download_list_state["selectedId"] != "download-0" or download_list_state["selectedRows"] != 1:
                 raise AssertionError(f"download list did not expose single-row selection: {download_list_state!r}")
             if "Original PDF" not in download_list_state["text"]:
                 raise AssertionError(f"download list lost existing row content: {download_list_state!r}")
+
+            edit_download_button = '#catalogueWorkFilesResults [data-record-list-action="edit"]'
+            delete_download_button = '#catalogueWorkFilesResults [data-record-list-action="delete"]'
+            action_state = page.locator("#catalogueWorkFilesResults").evaluate(
+                """node => ({
+                    editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
+                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled)
+                })"""
+            )
+            if action_state != {"editDisabled": False, "deleteDisabled": False}:
+                raise AssertionError(f"download shared actions did not enable after row selection: {action_state!r}")
+            page.locator(edit_download_button).click()
+            assert_modal_shell(page, "Edit download", ["cancel", "Save"], args.timeout_ms)
+            close_with_escape(page, edit_download_button, args.timeout_ms, expect_focus=False)
+
+            page.locator("#catalogueWorkFilesResults [data-record-list-row='true']").first.click()
+            page.locator(delete_download_button).click()
+            delete_download_modal = assert_modal_shell(page, "Delete download", ["cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            if "Original PDF" not in delete_download_modal["bodyText"]:
+                raise AssertionError(f"embedded delete text missing from modal: {delete_download_modal!r}")
+            page.wait_for_function(
+                "() => document.activeElement && document.activeElement.getAttribute('data-role') === 'modal-cancel'",
+                timeout=args.timeout_ms,
+            )
+            delete_download_modal = modal_shell_state(page)
+            if "tagStudio__button--defaultAction" not in delete_download_modal["actionClasses"][0]:
+                raise AssertionError(f"embedded delete cancel action is not the default: {delete_download_modal!r}")
+            if "tagStudio__button--defaultAction" in delete_download_modal["actionClasses"][1]:
+                raise AssertionError(f"embedded delete primary action should not be the default: {delete_download_modal!r}")
+            page.mouse.click(12, 12)
+            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
+            page.wait_for_timeout(50)
 
             page.locator(add_link_button).click()
             assert_modal_shell(page, "Add link", ["cancel", "Save"], args.timeout_ms)
@@ -459,6 +491,15 @@ def main() -> int:
             delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if f"Delete source record {WORK_ID}" not in delete_modal["bodyText"]:
                 raise AssertionError(f"delete preview text missing from modal: {delete_modal!r}")
+            page.wait_for_function(
+                "() => document.activeElement && document.activeElement.getAttribute('data-role') === 'modal-cancel'",
+                timeout=args.timeout_ms,
+            )
+            delete_modal = modal_shell_state(page)
+            if "tagStudio__button--defaultAction" not in delete_modal["actionClasses"][0]:
+                raise AssertionError(f"delete cancel action is not the default: {delete_modal!r}")
+            if "tagStudio__button--defaultAction" in delete_modal["actionClasses"][1]:
+                raise AssertionError(f"delete primary action should not be the default: {delete_modal!r}")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)
             if len(delete_apply_requests) != 1 or delete_apply_requests[0].get("kind") != "work":

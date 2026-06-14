@@ -6,6 +6,29 @@ last_updated: 2026-06-12
 ui_status: draft
 ---
 
+## run workflow manually:
+
+`gh run watch` will show both jobs and their outcomes. If deploy is gated off, you’ll see `Validate Pages artifact` pass and `Deploy Pages artifact` skipped.
+
+Useful commands:
+
+```bash
+gh workflow run "Public site" --ref main
+gh run list --workflow "Public site" --limit 5
+gh run watch <run-id>
+gh run view <run-id>
+```
+
+For more detail:
+
+```bash
+gh run view <run-id> --json status,conclusion,jobs
+```
+
+If deploy runs, the `deploy` job should show `success` and usually include the Pages URL. If the variable/gate blocks it, the job conclusion will be `skipped`.
+
+---
+
 Next is the actual cutover. The two live-setting changes are:
 ```
 gh variable set PUBLIC_SITE_PAGES_DEPLOY_ENABLED --body true

@@ -3,7 +3,8 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  createRecordList
+  createRecordList,
+  createRecordListActions
 } from "/shared/frontend/js/record-list.js";
 import {
   buildPublicWorkUrl
@@ -62,6 +63,12 @@ function setTextWithState(options, node, value, state = "") {
   node.textContent = value || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
+}
+
+function runMaybeAsync(result, label) {
+  if (result && typeof result.catch === "function") {
+    result.catch((error) => console.warn(label, error));
+  }
 }
 
 function normalizeDetailId(value) {
@@ -408,13 +415,16 @@ export function updateWorkFilesSection(state, options = {}) {
     return;
   }
   state.filesMetaNode.textContent = error || `${items.length} total`;
+  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
   state.filesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
       <div class="catalogueWorkDetails__rows" data-role="catalogue-work-downloads-list"></div>
+      <div class="catalogueWorkDetails__rowActions" data-role="catalogue-work-downloads-actions" aria-label="Download actions"></div>
     </section>
   `;
   const listRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-list"]');
-  createRecordList(listRoot, {
+  const actionsRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-actions"]');
+  const list = createRecordList(listRoot, {
     id: "catalogueWorkDownloads",
     records: items,
     selectionMode: "single",
@@ -432,6 +442,40 @@ export function updateWorkFilesSection(state, options = {}) {
       }
     ],
     getRecordId: (_record, index) => `download-${index}`
+  });
+  createRecordListActions(actionsRoot, {
+    id: "catalogueWorkDownloadsActions",
+    list,
+    actions: [
+      {
+        key: "edit",
+        label: text(state, options, "files_edit_button", "Edit"),
+        className: "tagStudio__button",
+        disabled: () => actionDisabled
+      },
+      {
+        key: "delete",
+        label: text(state, options, "files_delete_button", "Delete"),
+        className: "tagStudio__button",
+        tone: "danger",
+        disabled: () => actionDisabled
+      }
+    ],
+    onAction: ({ actionKey, selection }) => {
+      if (!selection) return;
+      if (actionKey === "edit" && typeof options.openEmbeddedEntryModal === "function") {
+        runMaybeAsync(
+          options.openEmbeddedEntryModal("download", selection.index),
+          "catalogue_work_sections: failed to edit download"
+        );
+      }
+      if (actionKey === "delete" && typeof options.deleteEmbeddedEntry === "function") {
+        runMaybeAsync(
+          options.deleteEmbeddedEntry("download", selection.index),
+          "catalogue_work_sections: failed to delete download"
+        );
+      }
+    }
   });
 }
 

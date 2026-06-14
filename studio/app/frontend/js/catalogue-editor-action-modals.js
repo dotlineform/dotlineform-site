@@ -14,6 +14,7 @@ export async function confirmCatalogueActionModal(state, options = {}) {
     body: modalBodyLines(options.message),
     primaryLabel: options.primaryLabel,
     cancelLabel: options.cancelLabel,
+    defaultAction: options.defaultAction,
     size: options.size || "compact",
     restoreFocus: options.restoreFocus
   });

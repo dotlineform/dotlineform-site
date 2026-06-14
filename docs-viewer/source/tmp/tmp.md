@@ -6,6 +6,112 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+
+___
+
+> do we no longer have flags like --only-workids for the python scripts? may have deprecated those.
+
+Not gone, but split/renamed.
+
+What I found:
+
+- No current `--only-workids`.
+- The internal generator still has:
+  - `--work-ids`
+  - `--work-ids-file`
+  - `--only work-json`
+  - `--only works-index-json`
+- But `generate_work_pages.py` is now guarded as an internal engine. If run directly, it tells you to use:
+  - `studio/services/catalogue/catalogue_json_build.py --work-id <work_id> [--write]`
+
+The newer public helper is singular:
+```bash
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00008 --write
+```
+
+For four unrelated work IDs, it looks like the supported path is currently four runs, not one plural run. The plural `--work-ids` still exists underneath, but behind the internal `--internal-json-source-run` path.
+
+So yes, the old plural workflow was effectively de-emphasized. We may want a small ergonomic wrapper later, e.g. `--work-ids 00008,00160,00161,00163`, because this exact repair is a good example of where one targeted multi-work rebuild is useful.
+
+-----
+
+
+- the old downloads list didn't have view action. it didn't have any links in the rows. there was no way of knowing what the file actually was without looking via the works page.
+- the add button asks for a typed-in filename and label. I assume this is the filename of the file that has been manually copied into a staging folder, i can't remember, it is so long since I did it and i can't find any documentation about it.
+- the existing nerve.pdf download for work 00008 is saved remotely and the public work page links to it: `https://media.dotlineform.com/works/files/nerve.pdf`
+- however, there is another problem, that link doesn't work. the actual media is at `https://media.dotlineform.com/works/files/00008-nerve.pdf`
+so, the file naming must have changed at some point, because I wouldn't have renamed the file without a reason. but the public page hasn't been updated with the new link. something has drifted.
+- The old delete button doesn't have permission to delete R2 objects, so probably it just clears the json field. because I _still_ haven't set up R2 api keys we can't implement proper file level delete yet.
+
+---
+
+> interesting. so this is not exactly what I expected, because I thought the component would take much more work away from the consumer, to the point where the consumer would just say 'here's what file to use for the data' as opposed to actually do the list population and search rules etc.
+
+Right. What we extracted is a **UI interaction primitive**, not a complete “search this dataset” product component.
+
+It takes away:
+
+- popup rendering lifecycle
+- focus behavior
+- select-all-on-focus
+- Escape reset
+- Tab close/reset
+- ArrowUp/ArrowDown behavior
+- Enter commit
+- active row scrolling
+- pointer vs keyboard selection state
+- ARIA wiring
+- commit/cancel callbacks
+
+It deliberately does **not** take away:
+
+- where data comes from
+- how records are shaped
+- what field is committed
+- matching rules
+- row layout/content
+- what committing means
+
+That split is why the same primitive can support:
+- folder prefix search in the file picker
+- work id/title search in the Work editor
+- later, maybe series/member search with different rules
+
+If we made it “give me a JSON file and I’ll search it,” it would become a higher-level component. That may be useful, but it should probably be a wrapper on top of `search-list`, for example:
+
+```js
+bindRecordSearch(input, popup, {
+  loadRecords,
+  fields: ["title"],
+  idField: "work_id",
+  mode: "contains",
+  renderRecord,
+  onSelect
+});
+```
+
+So the current component is the reusable engine. We can still build more opinionated components on top once two or three consumers prove the same data/search pattern is repeating.
+
+> I suppose eventually you would get to a point where the component has evolved into a full-blown plugin
+
+There’s a rough progression:
+
+1. **Primitive**
+   `search-list`: owns generic interaction behavior, knows nothing about works/folders/files.
+
+2. **Pattern Component**
+   `file-picker`: combines primitives into a reusable workflow, knows about folders/subfolders/files but not Studio project paths.
+
+3. **App Adapter**
+   `catalogue-project-media-picker`: maps the generic picker to Studio’s `project_folder/project_subfolder/project_filename` fields and Studio APIs.
+
+4. **Plugin / Package**
+   If the same thing needs to travel across apps or repos, it gets its own config, assets, tests, docs, versioning expectations, and integration contract.
+
+The important bit is not to jump straight to stage 4. A plugin too early usually freezes bad assumptions. What we’re doing now is better: extract stable behavior once it repeats, then only promote it when the boundaries are proven.
+
+---
+
 on studio pages, there is no visible difference between an editable field and a read-only one. I was going to see if hiding the border would be effective, and I found this css:
 
 .tagStudio__input--readonlyDisplay {

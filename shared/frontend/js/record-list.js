@@ -189,6 +189,21 @@ function clearSelection(controller, { emit = true } = {}) {
   if (emit) emitSelectionChange(controller);
 }
 
+function nodeContainsTarget(node, target) {
+  return Boolean(node && target && typeof node.contains === "function" && node.contains(target));
+}
+
+function isInsideListBoundary(controller, target) {
+  if (nodeContainsTarget(controller.rootNode, target)) return true;
+  return [...controller.focusBoundaryNodes].some((node) => nodeContainsTarget(node, target));
+}
+
+function maybeClearSelectionFromOutsideTarget(controller, target) {
+  if (!controller.options.clearSelectionOnBlur) return;
+  if (isInsideListBoundary(controller, target)) return;
+  clearSelection(controller);
+}
+
 function focusRelativeRow(controller, row, offset) {
   if (!row || !isSelectable(controller.options)) return;
   const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
@@ -265,7 +280,7 @@ function actionSelection(list) {
 }
 
 function actionDisabled(action, selection, records) {
-  if (typeof action.disabled === "function") return Boolean(action.disabled(selection, records));
+  if (typeof action.disabled === "function" && action.disabled(selection, records)) return true;
   if (action.requiresSelection === false) return false;
   return !selection;
 }
@@ -310,6 +325,7 @@ export function createRecordList(rootNode, options = {}) {
     rootNode,
     options: { ...options },
     selectedId: "",
+    focusBoundaryNodes: new Set(),
     selectionListeners: new Set(),
     selection() {
       return selectionFor(controller);
@@ -319,6 +335,11 @@ export function createRecordList(rootNode, options = {}) {
       controller.selectionListeners.add(listener);
       return () => controller.selectionListeners.delete(listener);
     },
+    addFocusBoundary(node) {
+      if (!node || typeof node.contains !== "function") return () => {};
+      controller.focusBoundaryNodes.add(node);
+      return () => controller.focusBoundaryNodes.delete(node);
+    },
     update(nextOptions = {}) {
       controller.options = { ...controller.options, ...nextOptions };
       renderRows(controller, controller.options);
@@ -326,13 +347,15 @@ export function createRecordList(rootNode, options = {}) {
     destroy() {
       rootNode.removeEventListener("click", onClick);
       rootNode.removeEventListener("keydown", onKeyDown);
-      rootNode.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("pointerdown", onDocumentPointerDown, true);
+      document.removeEventListener("focusin", onDocumentFocusIn, true);
       clearNode(rootNode);
       rootNode.classList.remove("sharedRecordList");
       delete rootNode.dataset.recordListId;
       delete rootNode.dataset.recordListSelectedId;
       rootNode.removeAttribute("role");
       rootNode.removeAttribute("aria-multiselectable");
+      controller.focusBoundaryNodes.clear();
       controller.selectionListeners.clear();
     }
   };
@@ -362,16 +385,18 @@ export function createRecordList(rootNode, options = {}) {
     }
   }
 
-  function onFocusOut(event) {
-    if (!controller.options.clearSelectionOnBlur) return;
-    const nextTarget = event.relatedTarget;
-    if (nextTarget && rootNode.contains(nextTarget)) return;
-    clearSelection(controller);
+  function onDocumentPointerDown(event) {
+    maybeClearSelectionFromOutsideTarget(controller, event.target);
+  }
+
+  function onDocumentFocusIn(event) {
+    maybeClearSelectionFromOutsideTarget(controller, event.target);
   }
 
   rootNode.addEventListener("click", onClick);
   rootNode.addEventListener("keydown", onKeyDown);
-  rootNode.addEventListener("focusout", onFocusOut);
+  document.addEventListener("pointerdown", onDocumentPointerDown, true);
+  document.addEventListener("focusin", onDocumentFocusIn, true);
   controller.update(options);
   return controller;
 }
@@ -382,6 +407,7 @@ export function createRecordListActions(rootNode, options = {}) {
   }
 
   let unsubscribeSelectionChange = null;
+  let unregisterFocusBoundary = null;
   const controller = {
     id: normalizeText(options.id) || `sharedRecordListActions-${++recordListId}`,
     rootNode,
@@ -396,6 +422,13 @@ export function createRecordListActions(rootNode, options = {}) {
       if (list && typeof list.subscribeSelectionChange === "function") {
         unsubscribeSelectionChange = list.subscribeSelectionChange(() => renderActions(controller));
       }
+      if (unregisterFocusBoundary) {
+        unregisterFocusBoundary();
+        unregisterFocusBoundary = null;
+      }
+      if (list && typeof list.addFocusBoundary === "function") {
+        unregisterFocusBoundary = list.addFocusBoundary(rootNode);
+      }
       renderActions(controller);
     },
     destroy() {
@@ -403,6 +436,10 @@ export function createRecordListActions(rootNode, options = {}) {
       if (unsubscribeSelectionChange) {
         unsubscribeSelectionChange();
         unsubscribeSelectionChange = null;
+      }
+      if (unregisterFocusBoundary) {
+        unregisterFocusBoundary();
+        unregisterFocusBoundary = null;
       }
       clearNode(rootNode);
       rootNode.classList.remove("sharedRecordListActions");
@@ -417,6 +454,7 @@ export function createRecordListActions(rootNode, options = {}) {
     const action = (Array.isArray(controller.options.actions) ? controller.options.actions : [])
       .find((candidate) => normalizeText(candidate && candidate.key) === actionKey);
     if (!action || typeof controller.options.onAction !== "function") return;
+    button.focus();
     const records = actionRecords(controller.options.list);
     controller.options.onAction({
       action,

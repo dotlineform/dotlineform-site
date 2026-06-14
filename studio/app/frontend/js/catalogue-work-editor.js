@@ -552,6 +552,8 @@ function workSectionOptions(state) {
     draftHasChanges,
     isCurrentWorkPublished: currentWorkIsPublished,
     onPreviewBuildImpact: () => previewCurrentBuildImpact(state, workActionOptions(state)),
+    openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
+    deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
   };
 }
