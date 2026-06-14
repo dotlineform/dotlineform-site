@@ -78,7 +78,12 @@ def assert_project_media_picker(page: Page) -> None:
             };
             state.root.appendChild(state.modalHost);
             const options = {
-                text: (_key, fallback) => fallback,
+                text: (key, fallback) => {
+                    if (key === 'entry_modal_cancel_button') return 'Cancel from ui-text';
+                    if (key === 'project_media_modal_title') return 'Title from ui-text';
+                    if (key === 'project_media_select_button') return 'Save from ui-text';
+                    return fallback;
+                },
                 onFieldInput: (fieldKey) => {
                     const node = state.fieldNodes.get(fieldKey);
                     if (node && 'value' in node) state.draft[fieldKey] = node.value.trim();
@@ -142,6 +147,8 @@ def assert_project_media_picker(page: Page) -> None:
     choose_button.click()
     page.wait_for_selector('[data-role="studio-modal"]')
     assert page.locator("#studioModalTitle").text_content() == "select file"
+    assert page.locator('button[data-role="modal-cancel"]').text_content() == "cancel"
+    assert page.locator('button[data-role="modal-primary"]').text_content() == "ok"
     folder_input = page.locator('[data-role="file-picker-folder-input"]')
     file_list = page.locator('[data-role="file-picker-file-list"]')
     subfolder_list = page.locator('[data-role="file-picker-subfolder-list"]')

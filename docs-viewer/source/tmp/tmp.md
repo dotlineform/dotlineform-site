@@ -6,7 +6,47 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+on studio pages, there is no visible difference between an editable field and a read-only one. I was going to see if hiding the border would be effective, and I found this css:
 
+.tagStudio__input--readonlyDisplay {
+  background: transparent;
+  border-color: transparent;
+  color: inherit;
+}
+
+span.tagStudio__input--readonlyDisplay.tagStudio__input--defaultValue,
+.tagStudio__input--readonlyDisplay.tagStudio__input--defaultValue {
+  color: var(--studio-default-value);
+}
+
+span.tagStudio__input--readonlyDisplay {
+  min-height: var(--studio-control-height);
+  display: inline-flex;
+  align-items: center;
+}
+
+~
+
+The simple solution is to keep the class structure and only change the readonly modifier:
+
+```css
+.tagStudio__input--readonlyDisplay {
+  border-color: transparent;
+  background: transparent;
+  color: inherit;
+}
+```
+
+That is safer than `border: 0` because it hides the border without changing layout, height, wrapping, or alignment. The element still uses `.tagStudio__input` for sizing and padding, but visually stops looking editable.
+
+What the existing CSS means:
+
+- `.tagStudio__input` gives every field the shared box shape.
+- `.tagStudio__input--readonlyDisplay` says “this is display-only”.
+- `span.tagStudio__input--readonlyDisplay` only handles inline `<span>` read-only values so they keep the same height and vertical alignment as inputs.
+- `--studio-default-value` is the muted color used for blank/default placeholder-like values. Keep it.
+
+I would not remove the `span` selector or default-value rules. I’d just add `border-color: transparent` to the readonly modifier, then check Work, Series, Detail, and Moment editor pages.
 
 ~
 

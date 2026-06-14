@@ -1,6 +1,16 @@
 import {
   bindSearchList
 } from "/shared/frontend/js/search-list.js";
+import {
+  createFilePickerConfig,
+  filePickerText
+} from "/shared/frontend/js/file-picker-config.js";
+
+export {
+  FILE_PICKER_DEFAULT_CONFIG,
+  createFilePickerConfig,
+  filePickerText
+} from "/shared/frontend/js/file-picker-config.js";
 
 let pickerId = 0;
 
@@ -15,16 +25,6 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function pickerText(options, key, fallback, tokens = null) {
-  if (options && typeof options.text === "function") {
-    return options.text(key, fallback, tokens);
-  }
-  if (!tokens) return fallback;
-  return Object.entries(tokens).reduce((text, [token, value]) => {
-    return text.replace(new RegExp(`\\{${token}\\}`, "g"), value == null ? "" : String(value));
-  }, fallback);
 }
 
 function optionValue(record, keys) {
@@ -62,10 +62,10 @@ function normalizeList(records, valueForRecord) {
   return values;
 }
 
-function renderBody(id, options = {}) {
-  const folderLabel = pickerText(options, "file_picker_folder_label", "folder");
-  const subfolderLabel = pickerText(options, "file_picker_subfolder_label", "subfolders");
-  const fileLabel = pickerText(options, "file_picker_files_label", "files");
+function renderBody(id, config) {
+  const folderLabel = filePickerText(config, "folderLabel");
+  const subfolderLabel = filePickerText(config, "subfolderLabel");
+  const fileLabel = filePickerText(config, "filesLabel");
   return `
     <div class="sharedFilePicker" data-role="file-picker">
       <div class="sharedFilePicker__folderField">
@@ -165,19 +165,21 @@ function setListboxDisabled(listboxNode, disabled) {
   listboxNode.tabIndex = disabled ? -1 : 0;
 }
 
-function subfolderListOptions(folder, subfolders) {
+function subfolderListOptions(folder, subfolders, config) {
   const parentFolder = normalizeText(folder);
+  const subfolderConfig = config && config.subfolders ? config.subfolders : {};
+  const prefix = normalizeText(subfolderConfig.prefix) || "⨽";
   const records = [
     {
       className: "sharedFilePicker__option--parent",
-      label: parentFolder || "folder",
+      label: parentFolder || normalizeText(subfolderConfig.parentFallbackLabel) || filePickerText(config, "folderLabel"),
       value: ""
     }
   ];
   (Array.isArray(subfolders) ? subfolders : []).forEach((subfolder) => {
     records.push({
       className: "sharedFilePicker__option--subfolder",
-      label: `⨽ ${subfolder}`,
+      label: `${prefix} ${subfolder}`,
       value: subfolder
     });
   });
@@ -242,7 +244,8 @@ export function createFilePicker(rootNode, options = {}) {
     throw new Error("createFilePicker requires a root node");
   }
   const id = normalizeText(options.id) || `sharedFilePicker-${++pickerId}`;
-  rootNode.innerHTML = renderBody(id, options);
+  const config = createFilePickerConfig(options.config);
+  rootNode.innerHTML = renderBody(id, config);
 
   const initial = options.initialSelection || {};
   const selected = {
@@ -324,12 +327,12 @@ export function createFilePicker(rootNode, options = {}) {
       }
 
       if (requestedFilename && !selected.filename) {
-        setStatus("warning", pickerText(options, "file_picker_file_not_found", "file not found"));
+        setStatus("warning", filePickerText(config, "fileNotFound"));
       } else if (!loadOptions.keepStatus) {
         setStatus("", "");
       }
 
-      renderListboxOptions(subfolderNode, subfolderListOptions(folder, state.subfolders), selected.subfolder);
+      renderListboxOptions(subfolderNode, subfolderListOptions(folder, state.subfolders, config), selected.subfolder);
       renderListboxOptions(fileNode, state.files, selected.filename);
       setListboxesDisabled(false);
       setPrimaryDisabled(primaryNode, !selected.filename);
@@ -339,7 +342,7 @@ export function createFilePicker(rootNode, options = {}) {
       setListboxDisabled(fileNode, true);
       setListboxDisabled(subfolderNode, false);
       setPrimaryDisabled(primaryNode, true);
-      setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_files_failed", "Files could not be loaded."));
+      setStatus("error", normalizeText(error && error.message) || filePickerText(config, "filesFailed"));
     }
   }
 
@@ -356,8 +359,8 @@ export function createFilePicker(rootNode, options = {}) {
 
   const searchController = bindSearchList(folderInput, folderPopup, {
     id: `${id}-folder-popup`,
-    maxOptions: 12,
-    openOnFocus: false,
+    maxOptions: config.search.maxFolderResults,
+    openOnFocus: config.search.openFolderSearchOnFocus,
     classNames: {
       option: "sharedFilePicker__folderOption"
     },
@@ -365,8 +368,8 @@ export function createFilePicker(rootNode, options = {}) {
     filterOptions: prefixMatches,
     getOptionValue: (folder) => folder,
     renderOption: (folder) => `<span class="sharedSearchList__optionText">${escapeHtml(folder)}</span>`,
-    renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(pickerText(options, "file_picker_no_folder_match", "No matching folders."))}</p>`,
-    renderError: (error) => `<p class="sharedSearchList__empty">${escapeHtml(normalizeText(error && error.message) || pickerText(options, "file_picker_folders_failed", "Folders could not be loaded."))}</p>`,
+    renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(filePickerText(config, "noFolderMatch"))}</p>`,
+    renderError: (error) => `<p class="sharedSearchList__empty">${escapeHtml(normalizeText(error && error.message) || filePickerText(config, "foldersFailed"))}</p>`,
     onTransientInput: ({ value }) => {
       setPrimaryDisabled(primaryNode, normalizeText(value) !== selected.folder || !selected.filename);
     },
@@ -374,7 +377,7 @@ export function createFilePicker(rootNode, options = {}) {
       setPrimaryDisabled(primaryNode, !selected.filename);
     },
     onCommit: (folder) => selectFolder(folder, { autoSelectFirst: true }).catch((error) => {
-      setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_files_failed", "Files could not be loaded."));
+      setStatus("error", normalizeText(error && error.message) || filePickerText(config, "filesFailed"));
     })
   });
 
@@ -383,7 +386,7 @@ export function createFilePicker(rootNode, options = {}) {
       selected.subfolder = selectedListboxValue(subfolderNode);
       selected.filename = "";
       loadFilesForSelection({ autoSelectFirst: true }).catch((error) => {
-        setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_files_failed", "Files could not be loaded."));
+        setStatus("error", normalizeText(error && error.message) || filePickerText(config, "filesFailed"));
       });
     });
     bindListbox(subfolderNode);
@@ -416,7 +419,7 @@ export function createFilePicker(rootNode, options = {}) {
       selected.subfolder = "";
       selected.filename = "";
       if (folderInput) folderInput.value = "";
-      setStatus("warning", pickerText(options, "file_picker_file_not_found", "file not found"));
+      setStatus("warning", filePickerText(config, "fileNotFound"));
       return;
     }
 
@@ -436,9 +439,9 @@ export function createFilePicker(rootNode, options = {}) {
       } else {
         selected.subfolder = "";
         selected.filename = "";
-        renderListboxOptions(subfolderNode, subfolderListOptions(selected.folder, state.subfolders), "");
+        renderListboxOptions(subfolderNode, subfolderListOptions(selected.folder, state.subfolders, config), "");
         setPrimaryDisabled(primaryNode, true);
-        setStatus("warning", pickerText(options, "file_picker_file_not_found", "file not found"));
+        setStatus("warning", filePickerText(config, "fileNotFound"));
       }
     }
   }
@@ -449,14 +452,14 @@ export function createFilePicker(rootNode, options = {}) {
       return {
         ok: false,
         statusKind: "error",
-        status: pickerText(options, "file_picker_folder_required", "Select a folder.")
+        status: filePickerText(config, "folderRequired")
       };
     }
     if (!selected.filename) {
       return {
         ok: false,
         statusKind: "error",
-        status: pickerText(options, "file_picker_file_required", "Select a file.")
+        status: filePickerText(config, "fileRequired")
       };
     }
     return {
@@ -470,7 +473,7 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   const ready = initialize().catch((error) => {
-    setStatus("error", normalizeText(error && error.message) || pickerText(options, "file_picker_folders_failed", "Folders could not be loaded."));
+    setStatus("error", normalizeText(error && error.message) || filePickerText(config, "foldersFailed"));
   });
 
   return {

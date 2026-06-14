@@ -6,18 +6,10 @@ import {
   normalizeText
 } from "./catalogue-work-fields.js";
 import {
-  createFilePicker
+  createFilePicker,
+  createFilePickerConfig,
+  filePickerText
 } from "/shared/frontend/js/file-picker.js";
-
-function pickerText(options, key, fallback, tokens = null) {
-  if (options && typeof options.text === "function") {
-    return options.text(key, fallback, tokens);
-  }
-  if (!tokens) return fallback;
-  return Object.entries(tokens).reduce((text, [token, value]) => {
-    return text.replace(new RegExp(`\\{${token}\\}`, "g"), value == null ? "" : String(value));
-  }, fallback);
-}
 
 function projectMediaState(state) {
   if (!state.projectMediaPicker) {
@@ -78,17 +70,18 @@ function renderPickerBody() {
 export async function openProjectMediaFileModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
+  const pickerConfig = createFilePickerConfig(options.filePickerConfig);
   host.innerHTML = renderStudioModalFrame({
     hidden: false,
     modalRole: "studio-modal",
     backdropRole: "modal-cancel",
-    title: pickerText(options, "project_media_modal_title", "select file"),
+    title: filePickerText(pickerConfig, "modalTitle"),
     size: "wide",
     bodyHtml: renderPickerBody(),
     statusHtml: '<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" hidden></p>',
     actions: [
-      { role: "modal-cancel", label: pickerText(options, "entry_modal_cancel_button", "cancel") },
-      { role: "modal-primary", label: pickerText(options, "project_media_select_button", "ok"), primary: true, disabled: true }
+      { role: "modal-cancel", label: filePickerText(pickerConfig, "cancelButton") },
+      { role: "modal-primary", label: filePickerText(pickerConfig, "confirmButton"), primary: true, disabled: true }
     ]
   });
 
@@ -99,14 +92,11 @@ export async function openProjectMediaFileModal(state, options = {}) {
     id: "catalogueProjectMediaFilePicker",
     scope: "projects",
     primaryNode,
+    config: pickerConfig,
     initialSelection: {
       folder: state.draft && state.draft.project_folder,
       subfolder: state.draft && state.draft.project_subfolder,
       filename: state.draft && state.draft.project_filename
-    },
-    text: (key, fallback, tokens) => {
-      const mappedKey = key.replace(/^file_picker_/, "project_media_");
-      return pickerText(options, mappedKey, fallback, tokens);
     },
     loadFolders: () => loadProjectFolders(state, options),
     loadFiles: (request) => options.loadProjectFiles({

@@ -988,6 +988,7 @@ textarea.tagStudio__input:disabled {
 
 .tagStudio__input--readonlyDisplay {
   background: transparent;
+  border-color: transparent;
   color: inherit;
 }
 

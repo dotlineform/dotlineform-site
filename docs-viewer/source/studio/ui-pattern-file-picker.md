@@ -14,6 +14,7 @@ The shared assets are:
 
 - behavior: `shared/frontend/js/file-picker.js`
 - baseline styling: `shared/frontend/css/file-picker.css`
+- component config: `shared/frontend/js/file-picker-config.js`
 - browser import path: `/shared/frontend/js/file-picker.js`
 - stylesheet path: `/shared/frontend/css/file-picker.css`
 
@@ -33,6 +34,7 @@ Studio currently maps `folder` to `project_folder`, but another caller may map t
 
 The shared component owns:
 
+- picker-specific defaults for labels, status text, search behavior, and subfolder display
 - folder search with prefix matching
 - Escape reset for the folder search popup
 - one-level subfolder listbox
@@ -47,7 +49,7 @@ The shared component owns:
 The consuming route owns:
 
 - modal shell or page placement
-- visible labels and UI text
+- optional picker config overrides
 - source-root meaning
 - folder and file loader callbacks
 - mapping returned `folder`, `subfolder`, and `filename` into route state
@@ -70,12 +72,24 @@ Supported options:
 
 - `id`: stable id prefix
 - `scope`: optional caller-owned root identifier
+- `config`: optional picker-specific config created with `createFilePickerConfig(overrides)`
 - `primaryNode`: optional submit button to enable or disable
 - `initialSelection`: optional `{ scope, folder, subfolder, filename }`
 - `loadFolders({ scope, query })`: returns folder records or strings
 - `loadFiles({ scope, folder, subfolder, query })`: returns `{ subfolders, files }`
-- `text(key, fallback, tokens)`: route-owned UI text lookup
 - `onSubmit()`: called when file-list Enter or double-click requests submit
+
+The picker module also exports:
+
+- `FILE_PICKER_DEFAULT_CONFIG`
+- `createFilePickerConfig(overrides)`
+- `filePickerText(config, key, tokens)`
+
+Config sections:
+
+- `text`: picker-specific strings such as `modalTitle`, `cancelButton`, `confirmButton`, `folderLabel`, status messages, and validation messages
+- `search`: folder-search settings such as `maxFolderResults` and `openFolderSearchOnFocus`
+- `subfolders`: parent row fallback label and subfolder prefix
 
 Returned controller methods:
 
@@ -92,6 +106,9 @@ File records may expose `filename`, `file`, or `value`.
 ## Current Consumers
 
 - `studio/app/frontend/js/catalogue-project-media-picker.js`: adapts the generic picker to Catalogue Work source-image fields
+
+The Studio adapter uses shared picker config for the file-picker modal title and action labels.
+It should not map picker text through Studio's broad `ui-text` keys such as `entry_modal_cancel_button`.
 
 The Work editor stores the confirmed selection as:
 
@@ -125,9 +142,11 @@ The shared smoke covers:
 - file listbox wheel selection
 - Enter submit from the file list
 - missing-current-file status
+- component-owned config text independent of Studio `ui-text`
 
 The Studio integration smoke covers:
 
+- picker modal title and action labels coming from shared picker config, not Studio `ui-text`
 - read-only page labels backed by hidden values
 - modal-owned folder search
 - no draft mutation while typing in the modal

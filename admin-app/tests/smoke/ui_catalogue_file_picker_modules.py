@@ -51,6 +51,8 @@ def assert_file_picker_contract(page: Page) -> None:
               <div id="picker"></div>
               <button id="missingPrimary" disabled>ok</button>
               <div id="missingPicker"></div>
+              <button id="configPrimary" disabled>ok</button>
+              <div id="configPicker"></div>
             `;
             const module = await import('/shared/frontend/js/file-picker.js');
             const calls = [];
@@ -168,12 +170,36 @@ def assert_file_picker_contract(page: Page) -> None:
                 submit: missingPicker.submit()
             };
 
+            const customConfig = module.createFilePickerConfig({
+                text: {
+                    confirmButton: 'choose',
+                    fileNotFound: 'missing file',
+                    folderLabel: 'source folder'
+                }
+            });
+            const configPrimary = document.getElementById('configPrimary');
+            const configPicker = module.createFilePicker(document.getElementById('configPicker'), {
+                id: 'filePickerConfigSmoke',
+                primaryNode: configPrimary,
+                config: customConfig,
+                initialSelection: { folder: 'missing', filename: 'gone.jpg' },
+                loadFolders: async () => ['natural'],
+                loadFiles: async () => ({ subfolders: [], files: [] })
+            });
+            await configPicker.ready;
+            const configResult = {
+                confirmText: module.filePickerText(customConfig, 'confirmButton'),
+                folderLabel: document.querySelector('#configPicker [data-role="file-picker-folder-input"]').getAttribute('aria-label'),
+                missingStatus: document.querySelector('#configPicker [data-role="file-picker-status"]').textContent
+            };
+
             return {
                 afterFolderCommit,
                 afterParentFolderClick,
                 afterSubfolderWheel,
                 afterWheel,
                 calls,
+                configResult,
                 initial,
                 missing,
                 prefixMatches,
@@ -237,6 +263,11 @@ def assert_file_picker_contract(page: Page) -> None:
     assert result["missing"]["status"] == "file not found"
     assert result["missing"]["primaryDisabled"] is True
     assert result["missing"]["submit"]["ok"] is False
+    assert result["configResult"] == {
+        "confirmText": "choose",
+        "folderLabel": "source folder",
+        "missingStatus": "missing file",
+    }
     assert ["files", "natural", ""] in result["calls"]
     assert ["files", "natural", "install"] in result["calls"]
     assert ["files", "natural", "proof"] in result["calls"]
