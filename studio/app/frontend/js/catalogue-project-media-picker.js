@@ -5,6 +5,9 @@ import {
 import {
   normalizeText
 } from "./catalogue-work-fields.js";
+import {
+  bindSearchList
+} from "/shared/frontend/js/search-list.js";
 
 function escapeHtml(value) {
   return String(value == null ? "" : value)
@@ -29,10 +32,7 @@ function projectMediaState(state) {
   if (!state.projectMediaPicker) {
     state.projectMediaPicker = {
       folders: [],
-      folderLoadPromise: null,
-      folderMatches: [],
-      folderActiveIndex: -1,
-      searchStartValue: ""
+      folderLoadPromise: null
     };
   }
   return state.projectMediaPicker;
@@ -63,75 +63,6 @@ function projectFolderMatches(folders, query) {
   return folders
     .filter((folder) => folder.toLowerCase().startsWith(q))
     .slice(0, 12);
-}
-
-function renderFolderMatches(state, options = {}) {
-  const picker = projectMediaState(state);
-  if (!picker.popupNode || !picker.inputNode) return;
-  const matches = projectFolderMatches(picker.folders || [], picker.inputNode.value);
-  picker.folderMatches = matches;
-  if (picker.folderActiveIndex >= matches.length) picker.folderActiveIndex = matches.length - 1;
-  if (!matches.length) {
-    picker.folderActiveIndex = -1;
-    picker.inputNode.removeAttribute("aria-activedescendant");
-    picker.popupNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(pickerText(options, "project_folder_no_match", "No matching project folders."))}</p>`;
-    picker.popupNode.hidden = false;
-    return;
-  }
-  picker.popupNode.innerHTML = matches.map((folder, index) => {
-    const active = index === picker.folderActiveIndex;
-    return `
-    <button type="button" id="catalogueProjectFolderOption-${index}" class="tagStudioSuggest__workButton catalogueProjectMediaPicker__folderOption" data-project-folder="${escapeHtml(folder)}" tabindex="-1" role="option" aria-selected="${active ? "true" : "false"}">
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(folder)}</span>
-    </button>
-  `;
-  }).join("");
-  if (picker.folderActiveIndex >= 0) {
-    picker.inputNode.setAttribute("aria-activedescendant", `catalogueProjectFolderOption-${picker.folderActiveIndex}`);
-  } else {
-    picker.inputNode.removeAttribute("aria-activedescendant");
-  }
-  picker.popupNode.hidden = false;
-  scrollActiveFolderOption(picker);
-}
-
-function setFolderActiveIndex(state, index, options = {}) {
-  const picker = projectMediaState(state);
-  const matches = picker.folderMatches || [];
-  if (!matches.length) {
-    picker.folderActiveIndex = -1;
-  } else {
-    picker.folderActiveIndex = Math.max(-1, Math.min(index, matches.length - 1));
-  }
-  renderFolderMatches(state, options);
-}
-
-function scrollActiveFolderOption(picker) {
-  if (!picker || !picker.popupNode || picker.folderActiveIndex < 0) return;
-  const activeOption = picker.popupNode.querySelector(`#catalogueProjectFolderOption-${picker.folderActiveIndex}`);
-  if (!activeOption) return;
-  const popupStyle = window.getComputedStyle(picker.popupNode);
-  const topPadding = parseFloat(popupStyle.paddingTop) || 0;
-  const bottomPadding = parseFloat(popupStyle.paddingBottom) || 0;
-  const popupRect = picker.popupNode.getBoundingClientRect();
-  const optionRect = activeOption.getBoundingClientRect();
-  const visibleTop = popupRect.top + topPadding;
-  const visibleBottom = popupRect.bottom - bottomPadding;
-  if (optionRect.bottom > visibleBottom) {
-    picker.popupNode.scrollTop += optionRect.bottom - visibleBottom;
-  } else if (optionRect.top < visibleTop) {
-    picker.popupNode.scrollTop -= visibleTop - optionRect.top;
-  }
-}
-
-function closeFolderPopup(state, { reset = false } = {}, options = {}) {
-  const picker = projectMediaState(state);
-  picker.folderActiveIndex = -1;
-  if (reset && picker.inputNode) {
-    picker.inputNode.value = picker.searchStartValue || "";
-  }
-  if (picker.inputNode) picker.inputNode.removeAttribute("aria-activedescendant");
-  if (picker.popupNode) picker.popupNode.hidden = true;
 }
 
 function setDraftField(state, fieldKey, value, options = {}) {
@@ -177,84 +108,21 @@ export function bindProjectFolderSearch(state, inputNode, popupNode, options = {
   picker.inputNode = inputNode;
   picker.popupNode = popupNode;
   if (!inputNode || !popupNode) return;
-  inputNode.setAttribute("aria-autocomplete", "list");
-  inputNode.setAttribute("aria-controls", "catalogueProjectFolderPopup");
-  popupNode.id = "catalogueProjectFolderPopup";
-  popupNode.setAttribute("role", "listbox");
-
-  async function refreshMatches() {
-    try {
-      await loadProjectFolders(state, options);
-      renderFolderMatches(state, options);
-    } catch (error) {
-      popupNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(normalizeText(error && error.message) || pickerText(options, "project_folder_load_failed", "Project folders could not be loaded."))}</p>`;
-      popupNode.hidden = false;
-    }
-  }
-
-  inputNode.addEventListener("focus", () => {
-    picker.searchStartValue = inputNode.value;
-    picker.folderActiveIndex = -1;
-    inputNode.select();
-    refreshMatches();
-  });
-  inputNode.addEventListener("mouseup", (event) => {
-    if (document.activeElement === inputNode && inputNode.selectionStart === 0 && inputNode.selectionEnd === inputNode.value.length) {
-      event.preventDefault();
-    }
-  });
-  inputNode.addEventListener("input", () => {
-    picker.folderActiveIndex = -1;
-    refreshMatches();
-  });
-  inputNode.addEventListener("keydown", (event) => {
-    const matches = picker.folderMatches || projectFolderMatches(picker.folders || [], inputNode.value);
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeFolderPopup(state, { reset: true }, options);
-      return;
-    }
-    if (event.key === "ArrowDown") {
-      if (!matches.length) return;
-      event.preventDefault();
-      popupNode.dataset.navigation = "keyboard";
-      setFolderActiveIndex(state, picker.folderActiveIndex < 0 ? 0 : picker.folderActiveIndex + 1, options);
-      return;
-    }
-    if (event.key === "ArrowUp") {
-      if (!matches.length) return;
-      event.preventDefault();
-      popupNode.dataset.navigation = "keyboard";
-      if (picker.folderActiveIndex <= 0) {
-        setFolderActiveIndex(state, -1, options);
-      } else {
-        setFolderActiveIndex(state, picker.folderActiveIndex - 1, options);
-      }
-      return;
-    }
-    if (event.key === "Enter") {
-      if (!matches.length) return;
-      event.preventDefault();
-      popupNode.dataset.navigation = "keyboard";
-      const index = picker.folderActiveIndex >= 0 ? picker.folderActiveIndex : 0;
-      chooseProjectFolder(state, matches[index], options).catch((error) => {
-        console.warn("catalogue_project_media_picker: failed to choose project folder", error);
-      });
-    }
-  });
-  popupNode.addEventListener("mousemove", () => {
-    popupNode.dataset.navigation = "pointer";
-  });
-  popupNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-project-folder]") : null;
-    if (!button) return;
-    chooseProjectFolder(state, button.getAttribute("data-project-folder"), options).catch((error) => {
+  picker.folderSearchController = bindSearchList(inputNode, popupNode, {
+    id: "catalogueProjectFolderPopup",
+    maxOptions: 12,
+    classNames: {
+      option: "catalogueProjectMediaPicker__folderOption"
+    },
+    loadOptions: () => loadProjectFolders(state, options),
+    filterOptions: projectFolderMatches,
+    getOptionValue: (folder) => folder,
+    renderOption: (folder) => `<span class="sharedSearchList__optionText catalogueProjectMediaPicker__folderText">${escapeHtml(folder)}</span>`,
+    renderNoResults: () => `<p class="sharedSearchList__empty tagStudioForm__meta">${escapeHtml(pickerText(options, "project_folder_no_match", "No matching project folders."))}</p>`,
+    renderError: (error) => `<p class="sharedSearchList__empty tagStudioForm__meta">${escapeHtml(normalizeText(error && error.message) || pickerText(options, "project_folder_load_failed", "Project folders could not be loaded."))}</p>`,
+    onCommit: (folder) => chooseProjectFolder(state, folder, options).catch((error) => {
       console.warn("catalogue_project_media_picker: failed to choose project folder", error);
-    });
-  });
-  document.addEventListener("click", (event) => {
-    if (event.target === inputNode || popupNode.contains(event.target)) return;
-    closeFolderPopup(state, {}, options);
+    })
   });
 }
 

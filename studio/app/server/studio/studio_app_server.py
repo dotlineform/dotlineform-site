@@ -45,6 +45,7 @@ STATIC_PREFIXES = (
     "/assets/site/",
     "/assets/work_details/",
     "/assets/works/",
+    "/shared/frontend/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",

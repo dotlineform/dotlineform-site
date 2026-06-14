@@ -29,6 +29,7 @@ def studio_app_bootstrap_view(version: str) -> str:
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>dotlineform Studio</title>
   {studio_theme_boot_script()}
+  <link rel="stylesheet" href="/shared/frontend/css/search-list.css?v={escaped_version}">
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">

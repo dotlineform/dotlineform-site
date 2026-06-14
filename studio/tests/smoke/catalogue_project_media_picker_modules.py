@@ -143,7 +143,7 @@ def assert_project_media_picker(page: Page) -> None:
     assert selection["selectionEnd"] == len("existing folder")
 
     folder_input.fill("a")
-    page.wait_for_selector('[data-project-folder="a folder 01"]')
+    page.wait_for_selector('[data-search-list-value="a folder 01"]')
     transient_result = page.evaluate(
         """() => ({
             draftProjectFolder: window.__projectMediaState.draft.project_folder,
@@ -151,15 +151,15 @@ def assert_project_media_picker(page: Page) -> None:
         })"""
     )
     assert transient_result == {"draftProjectFolder": "existing folder", "fieldValue": "a"}
-    page.locator('[data-project-folder="a folder 01"]').hover()
+    page.locator('[data-search-list-value="a folder 01"]').hover()
     assert page.evaluate("""() => document.getElementById('catalogueProjectFolderPopup').dataset.navigation""") == "pointer"
     folder_input.press("ArrowDown")
     folder_input.press("ArrowDown")
     highlight_result = page.evaluate(
         """() => {
             const popup = document.getElementById('catalogueProjectFolderPopup');
-            const first = document.querySelector('[data-project-folder="a folder 01"]');
-            const second = document.querySelector('[data-project-folder="a folder 02"]');
+            const first = document.querySelector('[data-search-list-value="a folder 01"]');
+            const second = document.querySelector('[data-search-list-value="a folder 02"]');
             return {
                 navigation: popup.dataset.navigation,
                 selectedCount: popup.querySelectorAll('[aria-selected="true"]').length,
@@ -192,15 +192,15 @@ def assert_project_media_picker(page: Page) -> None:
             };
         }"""
     )
-    assert scroll_result["active"] == "catalogueProjectFolderOption-9"
+    assert scroll_result["active"] == "catalogueProjectFolderPopup-option-9"
     assert scroll_result["scrollTop"] > 0
     assert scroll_result["activeBottom"] <= scroll_result["visibleBottom"], scroll_result
     assert scroll_result["selectedCount"] == 1
     folder_input.press("Escape")
 
     folder_input.fill("nat")
-    page.wait_for_selector('[data-project-folder="natural"]')
-    assert page.locator('[data-project-folder="international"]').count() == 0
+    page.wait_for_selector('[data-search-list-value="natural"]')
+    assert page.locator('[data-search-list-value="international"]').count() == 0
     folder_input.press("Escape")
     reset_result = page.evaluate(
         """() => ({
@@ -211,21 +211,21 @@ def assert_project_media_picker(page: Page) -> None:
     assert reset_result == {"value": "existing folder", "popupHidden": True}
 
     folder_input.fill("nat")
-    page.wait_for_selector('[data-project-folder="natural"]')
+    page.wait_for_selector('[data-search-list-value="natural"]')
     folder_input.press("ArrowDown")
     active_result = page.evaluate(
         """() => ({
             active: document.getElementById('catalogueWorkField-project_folder').getAttribute('aria-activedescendant'),
-            selected: document.querySelector('[data-project-folder="natural"]').getAttribute('aria-selected')
+            selected: document.querySelector('[data-search-list-value="natural"]').getAttribute('aria-selected')
         })"""
     )
-    assert active_result["active"] == "catalogueProjectFolderOption-0"
+    assert active_result["active"] == "catalogueProjectFolderPopup-option-0"
     assert active_result["selected"] == "true"
     folder_input.press("ArrowUp")
     field_result = page.evaluate(
         """() => ({
             active: document.getElementById('catalogueWorkField-project_folder').getAttribute('aria-activedescendant'),
-            selected: document.querySelector('[data-project-folder="natural"]').getAttribute('aria-selected')
+            selected: document.querySelector('[data-search-list-value="natural"]').getAttribute('aria-selected')
         })"""
     )
     assert field_result["active"] is None

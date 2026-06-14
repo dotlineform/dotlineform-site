@@ -1,0 +1,57 @@
+.sharedSearchList__control {
+  position: relative;
+}
+
+.sharedSearchList__popup {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.35rem;
+  width: min(30rem, 100%);
+  min-width: 18rem;
+  max-width: min(34rem, calc(100vw - 3rem));
+  max-height: 16rem;
+  overflow: auto;
+  border: 1px solid var(--line, var(--studio-line, #d2d2d2));
+  border-radius: var(--studio-radius-md, 0.5rem);
+  background: var(--surface, var(--studio-surface, #fff));
+  box-shadow: var(--studio-shadow-pop, 0 0.6rem 1.8rem rgba(0, 0, 0, 0.12));
+  padding: 0.5rem 0.5rem 0.7rem;
+  scroll-padding-block: 0.45rem 0.7rem;
+}
+
+.sharedSearchList__option {
+  box-sizing: border-box;
+  width: 100%;
+  border: 0;
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  cursor: pointer;
+}
+
+.sharedSearchList__popup[data-navigation="pointer"] .sharedSearchList__option:hover,
+.sharedSearchList__option[aria-selected="true"] {
+  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+.sharedSearchList__optionText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sharedSearchList__empty {
+  margin: 0;
+  padding: 0.35rem 0.45rem;
+  font-size: var(--font-caption, 0.9rem);
+  color: var(--muted, var(--studio-muted-body, #666));
+}

@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: 2026-06-10
+last_updated: 2026-06-14
 parent_id: ui
 viewable: true
 ---
@@ -40,6 +40,10 @@ Current demo pages:
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/reopenable-command-result/)
 - [Select Menu Pattern](/docs/?scope=studio&doc=ui-pattern-select-menu) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/select-menu/)
 - [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](http://127.0.0.1:8768/admin/ui-catalogue/demos/patterns/column-links/)
+
+Current shared production controls and patterns:
+
+- [Search List Pattern](/docs/?scope=studio&doc=ui-pattern-search-list)
 
 The demo links target the default Admin app port.
 If `ADMIN_APP_PORT` is changed from `8768`, adjust the port in the browser URL.

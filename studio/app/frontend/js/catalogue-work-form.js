@@ -278,7 +278,7 @@ function renderProjectFolderField(field, fieldsNode, state, options) {
   wrapper.appendChild(label);
 
   const control = document.createElement("div");
-  control.className = "catalogueProjectMediaPicker__folderControl";
+  control.className = "sharedSearchList__control catalogueProjectMediaPicker__folderControl";
 
   const input = document.createElement("input");
   input.className = "tagStudio__input";
@@ -291,7 +291,7 @@ function renderProjectFolderField(field, fieldsNode, state, options) {
   control.appendChild(input);
 
   const popupNode = document.createElement("div");
-  popupNode.className = "tagStudio__popupInner catalogueProjectMediaPicker__folderPopup";
+  popupNode.className = "catalogueProjectMediaPicker__folderPopup";
   popupNode.hidden = true;
   control.appendChild(popupNode);
   wrapper.appendChild(control);

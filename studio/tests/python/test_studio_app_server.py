@@ -17,7 +17,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
-from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
+from studio.app.server.studio.studio_app_server import STATIC_PREFIXES, StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
 from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
@@ -27,6 +27,13 @@ def write_repo_marker(repo_root: Path) -> None:
     path = repo_root / "site-tools/config/site-tools.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text('{"schema_version":"site_tools_config_v1"}\n', encoding="utf-8")
+
+
+def test_studio_bootstrap_exposes_shared_search_list_assets() -> None:
+    html = studio_app_bootstrap_view("test-version")
+
+    assert "/shared/frontend/" in STATIC_PREFIXES
+    assert '<link rel="stylesheet" href="/shared/frontend/css/search-list.css?v=test-version">' in html
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -214,6 +221,8 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
+    assert allowed("/shared/frontend/js/search-list.js") is True
+    assert allowed("/shared/frontend/css/search-list.css") is True
     assert allowed("/studio/data/generated/activity/index.json") is False
     assert allowed("/studio/data/generated/activity/work-storage-index.json") is True
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True

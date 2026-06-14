@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-06-13
+last_updated: 2026-06-14
 parent_id: architecture
 viewable: true
 ---
@@ -29,6 +29,7 @@ The repo is intentionally one repository:
 - UI Catalogue owns isolated UI demos and reference assets under Admin route ownership.
 - `site/` owns public route HTML, public route JavaScript/CSS, public media, and generated public runtime payloads.
 - `site-tools/` owns deploy-root validation and durable site-level settings used by local Python tooling.
+- `shared/` owns repo-system frontend assets intended for reuse by multiple local apps.
 - Generated public artifacts can be produced by Studio or Docs Viewer but remain in public paths when published pages need them.
 - Local working output, run logs, caches, and staging live under `var/` or other ignored output paths, not as source.
 
@@ -51,6 +52,18 @@ The current Studio-owned source homes are:
 
 Risk operations are Admin-owned.
 Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; checks report producers live under `admin-app/checks/reports/`; ignored local checks reports and snapshots should default to `var/admin/checks/`.
+
+## Shared Frontend
+
+Shared frontend assets are app-neutral production UI modules and styles for the same-repo local app system.
+
+| Path | Owner / role |
+| --- | --- |
+| `shared/frontend/js/` | Browser ES modules for reusable production UI behavior across Studio, Admin, Analytics, and Docs Viewer. |
+| `shared/frontend/css/` | Baseline production UI styles paired with shared frontend behavior modules. |
+
+Shared frontend code should not call app-specific APIs or depend on a specific route shell.
+Apps should expose `/shared/frontend/...` when they consume these assets and keep route-specific data loading, rendering adapters, and commit behavior in the owning app.
 
 ## Admin App
 
