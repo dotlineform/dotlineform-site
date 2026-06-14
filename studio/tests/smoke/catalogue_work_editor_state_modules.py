@@ -290,7 +290,7 @@ def assert_series_chip_public_links(page: Page) -> None:
             }};
         }}"""
     )
-    assert result["chipHref"] == "http://127.0.0.1:4000/series/?series=026"
+    assert result["chipHref"] == "http://127.0.0.1:4000/series/?series=026", result
     assert result["chipText"] == "collected 1989-1998 026"
 
 

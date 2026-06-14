@@ -139,7 +139,7 @@ function renderFileModalBody(projectFolder, options = {}) {
           <select class="catalogueProjectMediaPicker__listbox" id="catalogueProjectMediaSubfolders" data-role="project-media-subfolder-list" size="12" aria-label="${escapeHtml(pickerText(options, "project_media_subfolder_label", "subfolders"))}"></select>
         </label>
         <label class="catalogueProjectMediaPicker__listboxField" for="catalogueProjectMediaFiles">
-          <span class="tagStudioForm__label">${escapeHtml(pickerText(options, "project_media_files_label", "files in folder/subfolder"))}</span>
+          <span class="tagStudioForm__label catalogueProjectMediaPicker__listboxLabelSpacer" aria-hidden="true"></span>
           <select class="catalogueProjectMediaPicker__listbox" id="catalogueProjectMediaFiles" data-role="project-media-file-list" size="12" aria-label="${escapeHtml(pickerText(options, "project_media_files_label", "files in folder/subfolder"))}"></select>
         </label>
       </div>

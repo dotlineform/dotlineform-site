@@ -484,6 +484,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
   state.seriesPicker = { wrapper, pickerNode, chipsNode, searchWrap, searchInput, popupNode, bulkInput, hiddenInput };
   state.fieldNodes.set(field.key, hiddenInput);
   state.fieldStatusNodes.set(field.key, message);
+  renderSeriesPicker(state, options);
 }
 
 function renderReadonlyField(field, readonlyNode, state) {

@@ -3392,6 +3392,10 @@ button.tagStudioList__cellLink {
   gap: 0.35rem;
 }
 
+.catalogueProjectMediaPicker__listboxLabelSpacer {
+  min-height: 1.4em;
+}
+
 .catalogueProjectMediaPicker__listbox {
   box-sizing: border-box;
   width: 100%;
