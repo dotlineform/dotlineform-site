@@ -3,6 +3,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "file-picker",
+      "title": "emoji",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/file-picker.json",
+      "added_date": "2026-06-14"
+    },
+    {
       "doc_id": "json",
       "title": "json",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/json.json",
@@ -59,13 +65,7 @@
       "title": "emoji",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/emoji.json",
       "added_date": "2026-05-28"
-    },
-    {
-      "doc_id": "links",
-      "title": "links",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/links.json",
-      "added_date": "2026-05-28"
     }
   ],
-  "generated_at": "2026-06-13T00:06:54Z"
+  "generated_at": "2026-06-14T14:36:13Z"
 }

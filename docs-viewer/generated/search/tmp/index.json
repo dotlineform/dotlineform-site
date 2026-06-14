@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-2a6c20fa6483afc9d62eb69e4362d225",
-    "generated_at_utc": "2026-06-13T09:44:20Z",
-    "count": 15
+    "version": "blake2b-62ea74635ac8850320bc21b103ee9039",
+    "generated_at_utc": "2026-06-14T14:36:13Z",
+    "count": 16
   },
   "entries": [
     {
@@ -73,6 +73,25 @@
         "28"
       ],
       "search_text": "emoji 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "file-picker",
+      "kind": "doc",
+      "title": "emoji",
+      "href": "/docs/?scope=tmp&doc=file-picker",
+      "last_updated": "2026-06-14",
+      "display_meta": "2026-06-14",
+      "search_terms": [
+        "file-picker",
+        "file",
+        "picker",
+        "emoji",
+        "2026-06-14",
+        "2026",
+        "06",
+        "14"
+      ],
+      "search_text": "file-picker file picker emoji 2026-06-14 2026 06 14"
     },
     {
       "id": "github-notes",
