@@ -18,12 +18,16 @@ function defaultValueForOption(option) {
   return normalizeText(option);
 }
 
+// Default matching is only a convenience. Consumers with domain-specific
+// semantics, such as prefix-only folder lookup, should pass filterOptions.
 function defaultFilterOptions(options, query) {
   const q = normalizeText(query).toLowerCase();
   if (!q) return options.slice();
   return options.filter((option) => defaultValueForOption(option).toLowerCase().includes(q));
 }
 
+// Row markup belongs to the consumer. Use renderOption for one-column,
+// two-column, or richer rows instead of changing this shared fallback.
 function defaultRenderOption(option) {
   return `<span class="sharedSearchList__optionText">${escapeHtml(defaultValueForOption(option))}</span>`;
 }
@@ -145,6 +149,7 @@ async function commitOption(controller, option, options = {}) {
   if (option == null) return;
   const value = optionValue(options, option);
   controller.inputNode.value = value;
+  controller.startValue = value;
   controller.activeIndex = -1;
   controller.inputNode.removeAttribute("aria-activedescendant");
   controller.popupNode.hidden = true;
@@ -209,6 +214,8 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
 
   function onInput() {
     controller.activeIndex = -1;
+    // Typing is not a committed selection. Dirty state and durable form writes
+    // should usually happen in onCommit, not onTransientInput.
     if (typeof options.onTransientInput === "function") {
       options.onTransientInput({ value: inputNode.value });
     }

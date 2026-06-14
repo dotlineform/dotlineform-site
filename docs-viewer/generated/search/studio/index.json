@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8415e526ee5783d3c9f305f40507146c",
-    "generated_at_utc": "2026-06-14T12:01:46Z",
-    "count": 251
+    "version": "blake2b-f6bacd45bf03c0304597a5d48648c099",
+    "generated_at_utc": "2026-06-14T14:20:02Z",
+    "count": 252
   },
   "entries": [
     {
@@ -6105,6 +6105,31 @@
         "30"
       ],
       "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-30 2026 05 30"
+    },
+    {
+      "id": "ui-pattern-search-list",
+      "kind": "doc",
+      "title": "Search List Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-search-list",
+      "last_updated": "2026-06-14",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-06-14 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-search-list",
+        "ui",
+        "pattern",
+        "search",
+        "list",
+        "search list pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-06-14",
+        "2026",
+        "06",
+        "14"
+      ],
+      "search_text": "ui-pattern-search-list ui pattern search list search list pattern ui catalogue catalogue 2026-06-14 2026 06 14"
     },
     {
       "id": "ui-pattern-select-menu",
