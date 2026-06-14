@@ -27,6 +27,21 @@ function recordId(options, record, index) {
   return String(index);
 }
 
+function isSelectable(options = {}) {
+  return options.selectionMode === "single";
+}
+
+function initialSelectedId(options, records) {
+  const initial = options.initialSelection;
+  if (initial == null) return "";
+  if (Number.isInteger(initial) && initial >= 0 && initial < records.length) {
+    return recordId(options, records[initial], initial);
+  }
+  const initialId = normalizeText(initial);
+  const match = records.find((record, index) => recordId(options, record, index) === initialId);
+  return match ? initialId : "";
+}
+
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
@@ -101,6 +116,91 @@ function renderEmpty(rootNode, options) {
   rootNode.appendChild(empty);
 }
 
+function selectionFor(controller) {
+  const records = Array.isArray(controller.options.records) ? controller.options.records : [];
+  const selectedId = normalizeText(controller.selectedId);
+  if (!selectedId) return null;
+  const index = records.findIndex((record, recordIndex) => recordId(controller.options, record, recordIndex) === selectedId);
+  if (index < 0) return null;
+  return {
+    id: selectedId,
+    index,
+    record: records[index]
+  };
+}
+
+function selectedRowIndex(controller) {
+  const selection = selectionFor(controller);
+  return selection ? selection.index : -1;
+}
+
+function setRovingTabIndex(controller) {
+  const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
+  if (!isSelectable(controller.options)) {
+    rows.forEach((row) => row.removeAttribute("tabindex"));
+    return;
+  }
+  const selectedIndex = selectedRowIndex(controller);
+  const focusIndex = selectedIndex >= 0 ? selectedIndex : 0;
+  rows.forEach((row, index) => {
+    row.tabIndex = index === focusIndex ? 0 : -1;
+  });
+}
+
+function syncSelectionState(controller) {
+  const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
+  const selectedId = normalizeText(controller.selectedId);
+  let selectedStillExists = !selectedId;
+  rows.forEach((row) => {
+    const selected = Boolean(selectedId && row.dataset.recordListRecordId === selectedId);
+    if (selected) selectedStillExists = true;
+    row.classList.toggle("sharedRecordList__row--selected", selected);
+    row.setAttribute("aria-selected", selected ? "true" : "false");
+  });
+  if (!selectedStillExists) controller.selectedId = "";
+  controller.rootNode.dataset.recordListSelectedId = controller.selectedId || "";
+  setRovingTabIndex(controller);
+}
+
+function emitSelectionChange(controller) {
+  const records = Array.isArray(controller.options.records) ? controller.options.records : [];
+  const payload = {
+    selection: selectionFor(controller),
+    records
+  };
+  if (typeof controller.options.onSelectionChange === "function") {
+    controller.options.onSelectionChange(payload);
+  }
+  controller.selectionListeners.forEach((listener) => listener(payload));
+}
+
+function selectRow(controller, row, { focus = false, emit = true } = {}) {
+  if (!row || !isSelectable(controller.options)) return;
+  controller.selectedId = normalizeText(row.dataset.recordListRecordId);
+  syncSelectionState(controller);
+  if (focus) row.focus();
+  if (emit) emitSelectionChange(controller);
+}
+
+function clearSelection(controller, { emit = true } = {}) {
+  if (!controller.selectedId) return;
+  controller.selectedId = "";
+  syncSelectionState(controller);
+  if (emit) emitSelectionChange(controller);
+}
+
+function focusRelativeRow(controller, row, offset) {
+  if (!row || !isSelectable(controller.options)) return;
+  const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
+  const currentIndex = rows.indexOf(row);
+  if (currentIndex < 0) return;
+  const nextIndex = Math.max(0, Math.min(rows.length - 1, currentIndex + offset));
+  rows.forEach((candidate, index) => {
+    candidate.tabIndex = index === nextIndex ? 0 : -1;
+  });
+  rows[nextIndex].focus();
+}
+
 function renderRows(controller, options) {
   const rootNode = controller.rootNode;
   const records = Array.isArray(options.records) ? options.records : [];
@@ -108,9 +208,16 @@ function renderRows(controller, options) {
   clearNode(rootNode);
   rootNode.classList.add("sharedRecordList");
   rootNode.dataset.recordListId = controller.id;
-  rootNode.setAttribute("role", "table");
+  rootNode.setAttribute("role", isSelectable(options) ? "grid" : "table");
+  if (isSelectable(options)) rootNode.setAttribute("aria-multiselectable", "false");
+  else rootNode.removeAttribute("aria-multiselectable");
+  const selectedBackground = normalizeText(options.selectedBackground);
+  if (selectedBackground) rootNode.style.setProperty("--shared-record-list-selected-bg", selectedBackground);
+  else rootNode.style.removeProperty("--shared-record-list-selected-bg");
 
   if (!columns.length) {
+    controller.selectedId = "";
+    rootNode.dataset.recordListSelectedId = "";
     renderEmpty(rootNode, { ...options, emptyText: options.emptyText || "No columns." });
     return;
   }
@@ -118,9 +225,13 @@ function renderRows(controller, options) {
   renderHeader(rootNode, columns, options);
 
   if (!records.length) {
+    controller.selectedId = "";
+    rootNode.dataset.recordListSelectedId = "";
     renderEmpty(rootNode, options);
     return;
   }
+
+  if (!controller.selectedId) controller.selectedId = initialSelectedId(options, records);
 
   const rowsNode = document.createElement("div");
   rowsNode.className = "sharedRecordList__rows";
@@ -135,8 +246,57 @@ function renderRows(controller, options) {
     row.dataset.recordListRow = "true";
     row.dataset.recordListIndex = String(index);
     row.dataset.recordListRecordId = recordId(options, record, index);
+    if (isSelectable(options)) {
+      row.classList.add("sharedRecordList__row--selectable");
+      row.setAttribute("aria-selected", "false");
+    }
     columns.forEach((column) => appendCell(row, column, record, index, "cell"));
     rowsNode.appendChild(row);
+  });
+  syncSelectionState(controller);
+}
+
+function actionRecords(list) {
+  return list && list.options && Array.isArray(list.options.records) ? list.options.records : [];
+}
+
+function actionSelection(list) {
+  return list && typeof list.selection === "function" ? list.selection() : null;
+}
+
+function actionDisabled(action, selection, records) {
+  if (typeof action.disabled === "function") return Boolean(action.disabled(selection, records));
+  if (action.requiresSelection === false) return false;
+  return !selection;
+}
+
+function actionTitle(action, selection, records) {
+  if (typeof action.title === "function") return normalizeText(action.title(selection, records));
+  return normalizeText(action.title);
+}
+
+function renderActions(controller) {
+  const { rootNode, options } = controller;
+  const actions = Array.isArray(options.actions) ? options.actions : [];
+  const records = actionRecords(options.list);
+  const selection = actionSelection(options.list);
+  clearNode(rootNode);
+  rootNode.classList.add("sharedRecordListActions");
+  rootNode.dataset.recordListActionsId = controller.id;
+
+  actions.forEach((action) => {
+    const key = normalizeText(action && action.key);
+    if (!key) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = ["sharedRecordListActions__button", action.className].filter(Boolean).join(" ");
+    button.dataset.recordListAction = key;
+    button.disabled = actionDisabled(action, selection, records);
+    if (action.tone) button.dataset.tone = normalizeText(action.tone);
+    const title = actionTitle(action, selection, records);
+    if (title) button.title = title;
+    button.textContent = normalizeText(action.label || key);
+    rootNode.appendChild(button);
   });
 }
 
@@ -149,18 +309,124 @@ export function createRecordList(rootNode, options = {}) {
     id: normalizeText(options.id) || `sharedRecordList-${++recordListId}`,
     rootNode,
     options: { ...options },
+    selectedId: "",
+    selectionListeners: new Set(),
+    selection() {
+      return selectionFor(controller);
+    },
+    subscribeSelectionChange(listener) {
+      if (typeof listener !== "function") return () => {};
+      controller.selectionListeners.add(listener);
+      return () => controller.selectionListeners.delete(listener);
+    },
     update(nextOptions = {}) {
       controller.options = { ...controller.options, ...nextOptions };
       renderRows(controller, controller.options);
     },
     destroy() {
+      rootNode.removeEventListener("click", onClick);
+      rootNode.removeEventListener("keydown", onKeyDown);
+      rootNode.removeEventListener("focusout", onFocusOut);
       clearNode(rootNode);
       rootNode.classList.remove("sharedRecordList");
       delete rootNode.dataset.recordListId;
+      delete rootNode.dataset.recordListSelectedId;
       rootNode.removeAttribute("role");
+      rootNode.removeAttribute("aria-multiselectable");
+      controller.selectionListeners.clear();
     }
   };
 
+  function onClick(event) {
+    const row = event.target && event.target.closest ? event.target.closest("[data-record-list-row='true']") : null;
+    if (!row || !rootNode.contains(row)) return;
+    selectRow(controller, row, { focus: true });
+  }
+
+  function onKeyDown(event) {
+    const row = event.target && event.target.closest ? event.target.closest("[data-record-list-row='true']") : null;
+    if (!row || !rootNode.contains(row) || !isSelectable(controller.options)) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectRow(controller, row);
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      focusRelativeRow(controller, row, 1);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      focusRelativeRow(controller, row, -1);
+    }
+  }
+
+  function onFocusOut(event) {
+    if (!controller.options.clearSelectionOnBlur) return;
+    const nextTarget = event.relatedTarget;
+    if (nextTarget && rootNode.contains(nextTarget)) return;
+    clearSelection(controller);
+  }
+
+  rootNode.addEventListener("click", onClick);
+  rootNode.addEventListener("keydown", onKeyDown);
+  rootNode.addEventListener("focusout", onFocusOut);
+  controller.update(options);
+  return controller;
+}
+
+export function createRecordListActions(rootNode, options = {}) {
+  if (!rootNode) {
+    throw new Error("createRecordListActions requires a root node");
+  }
+
+  let unsubscribeSelectionChange = null;
+  const controller = {
+    id: normalizeText(options.id) || `sharedRecordListActions-${++recordListId}`,
+    rootNode,
+    options: { ...options },
+    update(nextOptions = {}) {
+      controller.options = { ...controller.options, ...nextOptions };
+      if (unsubscribeSelectionChange) {
+        unsubscribeSelectionChange();
+        unsubscribeSelectionChange = null;
+      }
+      const list = controller.options.list;
+      if (list && typeof list.subscribeSelectionChange === "function") {
+        unsubscribeSelectionChange = list.subscribeSelectionChange(() => renderActions(controller));
+      }
+      renderActions(controller);
+    },
+    destroy() {
+      rootNode.removeEventListener("click", onClick);
+      if (unsubscribeSelectionChange) {
+        unsubscribeSelectionChange();
+        unsubscribeSelectionChange = null;
+      }
+      clearNode(rootNode);
+      rootNode.classList.remove("sharedRecordListActions");
+      delete rootNode.dataset.recordListActionsId;
+    }
+  };
+
+  function onClick(event) {
+    const button = event.target && event.target.closest ? event.target.closest("[data-record-list-action]") : null;
+    if (!button || !rootNode.contains(button) || button.disabled) return;
+    const actionKey = normalizeText(button.dataset.recordListAction);
+    const action = (Array.isArray(controller.options.actions) ? controller.options.actions : [])
+      .find((candidate) => normalizeText(candidate && candidate.key) === actionKey);
+    if (!action || typeof controller.options.onAction !== "function") return;
+    const records = actionRecords(controller.options.list);
+    controller.options.onAction({
+      action,
+      actionKey,
+      selection: actionSelection(controller.options.list),
+      records
+    });
+  }
+
+  rootNode.addEventListener("click", onClick);
   controller.update(options);
   return controller;
 }

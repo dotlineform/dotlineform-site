@@ -417,6 +417,8 @@ export function updateWorkFilesSection(state, options = {}) {
   createRecordList(listRoot, {
     id: "catalogueWorkDownloads",
     records: items,
+    selectionMode: "single",
+    clearSelectionOnBlur: true,
     columns: [
       {
         key: "filename",

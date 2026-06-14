@@ -233,17 +233,27 @@ Action options should start small:
 - `key`
 - `label`
 - `tone`
+- `requiresSelection`: defaults to true; set false for actions such as `Add`
 - `disabled(selection, records)`
 - `title(selection, records)`
 
 Actions that require a selected row should be disabled until a row is selected.
 Do not use a "select a row" status message for the normal unselected state.
 
+The action layer should subscribe to the list selection state and refresh disabled buttons automatically.
+Action callbacks should include both the full action definition and the stable `actionKey` string:
+
+```js
+onAction({ action, actionKey, selection, records }) {}
+```
+
 Selection options should start small:
 
 - `selectionMode`: `single` in v1
 - `initialSelection`: optional selected index or record id
 - `getRecordId(record, index)`: optional stable id for preserving selection across updates
+- `clearSelectionOnBlur`: optional focus-like selection behavior for lists where selection is not persistent state
+- `selectedBackground`: optional selected-row background override; default selected state should use a border/outline without a fill
 
 Single selection should be row-click only in v1.
 Do not add visible radio controls unless a later workflow proves they are needed.

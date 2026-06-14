@@ -391,12 +391,15 @@ def main() -> int:
             if "smoke.pdf" not in page.locator("#catalogueWorkFilesResults").inner_text():
                 raise AssertionError("download modal did not return the new entry to the route")
 
+            page.locator("#catalogueWorkFilesResults [data-record-list-row='true']").first.click()
             download_list_state = page.locator("#catalogueWorkFilesResults").evaluate(
                 """node => ({
                     hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')),
                     rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
                     hasLegacyEdit: Boolean(node.querySelector('[data-download-edit]')),
                     hasLegacyDelete: Boolean(node.querySelector('[data-download-delete]')),
+                    selectedId: node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')?.dataset.recordListSelectedId || '',
+                    selectedRows: node.querySelectorAll('[data-record-list-row="true"][aria-selected="true"]').length,
                     text: node.textContent || ''
                 })"""
             )
@@ -404,6 +407,8 @@ def main() -> int:
                 raise AssertionError(f"download list did not render through shared record list: {download_list_state!r}")
             if download_list_state["hasLegacyEdit"] or download_list_state["hasLegacyDelete"]:
                 raise AssertionError(f"download list should be read-only in the first shared-list pass: {download_list_state!r}")
+            if download_list_state["selectedId"] != "download-0" or download_list_state["selectedRows"] != 1:
+                raise AssertionError(f"download list did not expose single-row selection: {download_list_state!r}")
             if "Original PDF" not in download_list_state["text"]:
                 raise AssertionError(f"download list lost existing row content: {download_list_state!r}")
 
