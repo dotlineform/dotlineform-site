@@ -32,7 +32,7 @@
     },
     {
       "doc_id": "file-picker",
-      "title": "emoji",
+      "title": "file picker component",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/file-picker.json",
       "ui_status": "draft"
     },
@@ -95,5 +95,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-14T14:36:13Z"
+  "generated_at": "2026-06-14T14:36:56Z"
 }

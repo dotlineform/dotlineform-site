@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-62ea74635ac8850320bc21b103ee9039",
-    "generated_at_utc": "2026-06-14T14:36:13Z",
+    "version": "blake2b-ed24ec3a24f15de170ca4e4f6ea941e5",
+    "generated_at_utc": "2026-06-14T14:36:56Z",
     "count": 16
   },
   "entries": [
@@ -77,7 +77,7 @@
     {
       "id": "file-picker",
       "kind": "doc",
-      "title": "emoji",
+      "title": "file picker component",
       "href": "/docs/?scope=tmp&doc=file-picker",
       "last_updated": "2026-06-14",
       "display_meta": "2026-06-14",
@@ -85,13 +85,14 @@
         "file-picker",
         "file",
         "picker",
-        "emoji",
+        "file picker component",
+        "component",
         "2026-06-14",
         "2026",
         "06",
         "14"
       ],
-      "search_text": "file-picker file picker emoji 2026-06-14 2026 06 14"
+      "search_text": "file-picker file picker file picker component component 2026-06-14 2026 06 14"
     },
     {
       "id": "github-notes",

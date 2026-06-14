@@ -4,7 +4,7 @@
   "docs": [
     {
       "doc_id": "file-picker",
-      "title": "emoji",
+      "title": "file picker component",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/file-picker.json",
       "added_date": "2026-06-14"
     },
@@ -67,5 +67,5 @@
       "added_date": "2026-05-28"
     }
   ],
-  "generated_at": "2026-06-14T14:36:13Z"
+  "generated_at": "2026-06-14T14:36:56Z"
 }

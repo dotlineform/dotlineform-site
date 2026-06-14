@@ -1,6 +1,6 @@
 ---
 doc_id: file-picker
-title: "emoji"
+title: "file picker component"
 added_date: 2026-06-14
 last_updated: 2026-06-14
 ui_status: draft
