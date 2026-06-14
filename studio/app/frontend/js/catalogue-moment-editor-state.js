@@ -2,6 +2,9 @@ import {
   collectRequiredElements,
   createCatalogueEditorRouteStateOptions
 } from "./catalogue-editor-route-boot.js";
+import {
+  createCatalogueEditorMessageRoleNode
+} from "./catalogue-editor-message-controller.js";
 
 export const MOMENT_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
   route: "catalogue-moment",
@@ -19,10 +22,7 @@ export function collectMomentEditorElements() {
     popupListNode: "catalogueMomentPopupList",
     openButton: "catalogueMomentOpen",
     newButton: "catalogueMomentNew",
-    contextNode: "catalogueMomentContext",
     statusNode: "catalogueMomentStatus",
-    warningNode: "catalogueMomentWarning",
-    resultNode: "catalogueMomentResult",
     saveButton: "catalogueMomentSave",
     publicationButton: "catalogueMomentPublication",
     deleteButton: "catalogueMomentDelete",
@@ -55,10 +55,10 @@ export function createMomentEditorState(elements) {
     popupListNode: elements.popupListNode,
     openButton: elements.openButton,
     newButton: elements.newButton,
-    contextNode: elements.contextNode,
+    contextNode: createCatalogueEditorMessageRoleNode("catalogueMomentContext", "context"),
     statusNode: elements.statusNode,
-    warningNode: elements.warningNode,
-    resultNode: elements.resultNode,
+    warningNode: createCatalogueEditorMessageRoleNode("catalogueMomentWarning", "warning"),
+    resultNode: createCatalogueEditorMessageRoleNode("catalogueMomentResult", "result"),
     saveButton: elements.saveButton,
     publicationButton: elements.publicationButton,
     deleteButton: elements.deleteButton,
@@ -71,8 +71,8 @@ export function createMomentEditorState(elements) {
     buildImpactNode: elements.buildImpactNode,
     importSourceNode: elements.importSourceNode,
     importStatusNode: elements.statusNode,
-    importWarningNode: elements.warningNode,
-    importResultNode: elements.resultNode,
+    importWarningNode: createCatalogueEditorMessageRoleNode("catalogueMomentImportWarning", "warning"),
+    importResultNode: createCatalogueEditorMessageRoleNode("catalogueMomentImportResult", "result"),
     importFileLabelNode: elements.importFileLabelNode,
     importFileNode: elements.importFileNode,
     importFileDescriptionNode: elements.importFileDescriptionNode,
@@ -82,6 +82,7 @@ export function createMomentEditorState(elements) {
     importApplyButton: elements.importApplyButton,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
+    messageController: null,
     readonlyNodes: new Map(),
     moments: new Map(),
     momentRows: [],

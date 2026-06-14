@@ -126,54 +126,76 @@ export function bindProjectFolderSearch(state, inputNode, popupNode, options = {
   });
 }
 
-function renderFileModalBody(options = {}) {
+function renderFileModalBody(projectFolder, options = {}) {
   return `
     <div class="catalogueProjectMediaPicker">
-      <label class="tagStudioForm__field catalogueProjectMediaPicker__filterField" for="catalogueProjectMediaFilter">
-        <span class="tagStudioForm__label">${escapeHtml(pickerText(options, "project_media_filter_label", "filter"))}</span>
-        <input class="tagStudio__input" id="catalogueProjectMediaFilter" data-role="project-media-filter" type="text" autocomplete="off" spellcheck="false">
-      </label>
-      <label class="tagStudioForm__field catalogueProjectMediaPicker__subfolderField" for="catalogueProjectMediaSubfolder">
-        <span class="tagStudioForm__label">${escapeHtml(pickerText(options, "project_media_subfolder_label", "subfolder"))}</span>
-        <select class="tagStudio__input" id="catalogueProjectMediaSubfolder" data-role="project-media-subfolder"></select>
-      </label>
-      <div class="catalogueProjectMediaPicker__files" data-role="project-media-files"></div>
+      <p class="catalogueProjectMediaPicker__projectFolder">
+        <span>${escapeHtml(pickerText(options, "project_media_project_folder_label", "project folder"))}</span>
+        <strong>${escapeHtml(projectFolder)}</strong>
+      </p>
+      <div class="catalogueProjectMediaPicker__listboxes">
+        <label class="catalogueProjectMediaPicker__listboxField" for="catalogueProjectMediaSubfolders">
+          <span class="tagStudioForm__label">${escapeHtml(pickerText(options, "project_media_subfolder_label", "subfolders"))}</span>
+          <select class="catalogueProjectMediaPicker__listbox" id="catalogueProjectMediaSubfolders" data-role="project-media-subfolder-list" size="12" aria-label="${escapeHtml(pickerText(options, "project_media_subfolder_label", "subfolders"))}"></select>
+        </label>
+        <label class="catalogueProjectMediaPicker__listboxField" for="catalogueProjectMediaFiles">
+          <span class="tagStudioForm__label">${escapeHtml(pickerText(options, "project_media_files_label", "files in folder/subfolder"))}</span>
+          <select class="catalogueProjectMediaPicker__listbox" id="catalogueProjectMediaFiles" data-role="project-media-file-list" size="12" aria-label="${escapeHtml(pickerText(options, "project_media_files_label", "files in folder/subfolder"))}"></select>
+        </label>
+      </div>
     </div>
   `;
 }
 
-function renderSubfolderOptions(selectNode, subfolders, selectedSubfolder, options = {}) {
+function renderSubfolderOptions(selectNode, subfolders, selectedSubfolder) {
   const selected = normalizeText(selectedSubfolder);
   const records = Array.isArray(subfolders) ? subfolders : [];
-  selectNode.innerHTML = [
-    `<option value="">${escapeHtml(pickerText(options, "project_media_no_subfolder", "project folder"))}</option>`,
-    ...records.map((record) => {
-      const value = normalizeText(record && record.project_subfolder);
-      const selectedAttr = value === selected ? " selected" : "";
-      return `<option value="${escapeHtml(value)}"${selectedAttr}>${escapeHtml(value)}</option>`;
-    })
-  ].join("");
-  selectNode.hidden = records.length === 0;
-  const field = selectNode.closest(".catalogueProjectMediaPicker__subfolderField");
-  if (field) field.hidden = records.length === 0;
+  selectNode.innerHTML = records.map((record) => {
+    const value = normalizeText(record && record.project_subfolder);
+    const selectedAttr = value === selected ? " selected" : "";
+    return `<option value="${escapeHtml(value)}"${selectedAttr}>${escapeHtml(value)}</option>`;
+  }).join("");
+  if (!selected) selectNode.selectedIndex = -1;
 }
 
-function renderFileRows(filesNode, files, selected, options = {}) {
+function renderFileOptions(selectNode, files, selected) {
   const records = Array.isArray(files) ? files : [];
   const selectedFile = normalizeText(selected);
-  if (!records.length) {
-    filesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(pickerText(options, "project_media_files_empty", "No image files found."))}</p>`;
-    return;
-  }
-  filesNode.innerHTML = records.map((record) => {
+  selectNode.innerHTML = records.map((record) => {
     const filename = normalizeText(record && record.filename);
-    const selectedAttr = filename === selectedFile ? " aria-pressed=\"true\"" : "";
-    return `
-      <button type="button" class="tagStudioSuggest__workButton catalogueProjectMediaPicker__fileOption" data-project-file="${escapeHtml(filename)}"${selectedAttr}>
-        <span class="tagStudioSuggest__workTitle">${escapeHtml(filename)}</span>
-      </button>
-    `;
+    const selectedAttr = filename === selectedFile ? " selected" : "";
+    return `<option value="${escapeHtml(filename)}"${selectedAttr}>${escapeHtml(filename)}</option>`;
   }).join("");
+  if (!records.length) selectNode.selectedIndex = -1;
+}
+
+function selectedListboxValue(selectNode) {
+  return selectNode && selectNode.selectedIndex >= 0 ? normalizeText(selectNode.value) : "";
+}
+
+function moveListboxSelection(selectNode, direction) {
+  if (!selectNode || !selectNode.options.length) return false;
+  const currentIndex = selectNode.selectedIndex;
+  const nextIndex = currentIndex < 0
+    ? (direction > 0 ? 0 : selectNode.options.length - 1)
+    : Math.max(0, Math.min(selectNode.options.length - 1, currentIndex + direction));
+  if (nextIndex === currentIndex) return false;
+  selectNode.selectedIndex = nextIndex;
+  if (selectNode.options[nextIndex] && typeof selectNode.options[nextIndex].scrollIntoView === "function") {
+    selectNode.options[nextIndex].scrollIntoView({ block: "nearest" });
+  }
+  selectNode.dispatchEvent(new Event("change", { bubbles: true }));
+  return true;
+}
+
+function bindListboxWheel(selectNode) {
+  if (!selectNode) return;
+  selectNode.addEventListener("wheel", (event) => {
+    if (!event.deltaY) return;
+    event.preventDefault();
+    event.stopPropagation();
+    moveListboxSelection(selectNode, event.deltaY > 0 ? 1 : -1);
+  }, { passive: false });
 }
 
 export async function openProjectMediaFileModal(state, options = {}) {
@@ -185,25 +207,23 @@ export async function openProjectMediaFileModal(state, options = {}) {
     hidden: false,
     modalRole: "studio-modal",
     backdropRole: "modal-cancel",
-    title: pickerText(options, "project_media_modal_title", "Choose image"),
-    meta: projectFolder,
+    title: pickerText(options, "project_media_modal_title", "select file"),
     size: "wide",
-    bodyHtml: renderFileModalBody(options),
+    bodyHtml: renderFileModalBody(projectFolder, options),
     statusHtml: '<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" hidden></p>',
     actions: [
-      { role: "modal-cancel", label: pickerText(options, "entry_modal_cancel_button", "Cancel") },
-      { role: "modal-primary", label: pickerText(options, "project_media_select_button", "Select"), primary: true, disabled: true }
+      { role: "modal-cancel", label: pickerText(options, "entry_modal_cancel_button", "cancel") },
+      { role: "modal-primary", label: pickerText(options, "project_media_select_button", "ok"), primary: true, disabled: true }
     ]
   });
 
   let selectedFilename = "";
-  let selectedSubfolder = normalizeText(options.projectSubfolder || state.draft && state.draft.project_subfolder);
-  const filterNode = host.querySelector('[data-role="project-media-filter"]');
-  const subfolderNode = host.querySelector('[data-role="project-media-subfolder"]');
-  const filesNode = host.querySelector('[data-role="project-media-files"]');
+  let selectedSubfolder = "";
+  const subfolderNode = host.querySelector('[data-role="project-media-subfolder-list"]');
+  const filesNode = host.querySelector('[data-role="project-media-file-list"]');
   const primaryNode = host.querySelector('[data-role="modal-primary"]');
   const controller = activateStudioModalFrame(host, {
-    focusSelector: '[data-role="project-media-filter"]',
+    focusSelector: '[data-role="project-media-subfolder-list"]',
     submitOnEnter: false,
     async onSubmit(api) {
       if (!selectedFilename) {
@@ -226,59 +246,50 @@ export async function openProjectMediaFileModal(state, options = {}) {
       const payload = await options.loadProjectFiles({
         projectFolder,
         projectSubfolder: selectedSubfolder,
-        query: filterNode ? filterNode.value : ""
+        query: ""
       });
       if (subfolderNode) {
-        renderSubfolderOptions(subfolderNode, payload.subfolders, selectedSubfolder, options);
+        renderSubfolderOptions(subfolderNode, payload.subfolders, selectedSubfolder);
       }
-      renderFileRows(filesNode, payload.files, selectedFilename, options);
-      if (!selectedSubfolder && Array.isArray(payload.files) && payload.files.length === 0 && Array.isArray(payload.subfolders) && payload.subfolders.length === 1 && !normalizeText(filterNode && filterNode.value)) {
-        selectedSubfolder = normalizeText(payload.subfolders[0] && payload.subfolders[0].project_subfolder);
-        await loadFiles();
-        return;
+      const fileRecords = Array.isArray(payload.files) ? payload.files : [];
+      const draftFilename = normalizeText(state.draft && state.draft.project_filename);
+      const fileNames = fileRecords.map((record) => normalizeText(record && record.filename)).filter(Boolean);
+      if (!fileNames.includes(selectedFilename)) {
+        selectedFilename = fileNames.includes(draftFilename) ? draftFilename : fileNames[0] || "";
       }
+      renderFileOptions(filesNode, fileRecords, selectedFilename);
       if (primaryNode) primaryNode.disabled = !selectedFilename;
     } catch (error) {
-      filesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(normalizeText(error && error.message) || pickerText(options, "project_media_files_failed", "Image files could not be loaded."))}</p>`;
+      if (filesNode) {
+        filesNode.innerHTML = "";
+        filesNode.setAttribute("aria-label", normalizeText(error && error.message) || pickerText(options, "project_media_files_failed", "Image files could not be loaded."));
+      }
     }
   }
 
-  if (filterNode) {
-    filterNode.addEventListener("input", () => {
-      selectedFilename = "";
-      loadFiles();
-    });
-    filterNode.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      const first = filesNode.querySelector("[data-project-file]");
-      if (!first) return;
-      event.preventDefault();
-      first.click();
-    });
-  }
   if (subfolderNode) {
     subfolderNode.addEventListener("change", () => {
-      selectedSubfolder = normalizeText(subfolderNode.value);
+      selectedSubfolder = selectedListboxValue(subfolderNode);
       selectedFilename = "";
       loadFiles();
     });
+    bindListboxWheel(subfolderNode);
   }
   if (filesNode) {
-    filesNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-project-file]") : null;
-      if (!button) return;
-      selectedFilename = normalizeText(button.getAttribute("data-project-file"));
-      renderFileRows(filesNode, Array.from(filesNode.querySelectorAll("[data-project-file]")).map((node) => ({
-        filename: node.getAttribute("data-project-file")
-      })), selectedFilename, options);
+    filesNode.addEventListener("change", () => {
+      selectedFilename = selectedListboxValue(filesNode);
       if (primaryNode) primaryNode.disabled = !selectedFilename;
     });
-    filesNode.addEventListener("dblclick", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-project-file]") : null;
-      if (!button) return;
-      selectedFilename = normalizeText(button.getAttribute("data-project-file"));
+    filesNode.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || !selectedFilename) return;
+      event.preventDefault();
       controller.submit();
     });
+    filesNode.addEventListener("dblclick", () => {
+      selectedFilename = selectedListboxValue(filesNode);
+      if (selectedFilename) controller.submit();
+    });
+    bindListboxWheel(filesNode);
   }
 
   await loadFiles();

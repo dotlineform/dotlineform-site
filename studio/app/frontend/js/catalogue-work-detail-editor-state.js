@@ -3,6 +3,9 @@ import {
   createCatalogueEditorRouteStateOptions
 } from "./catalogue-editor-route-boot.js";
 import {
+  createCatalogueEditorMessageRoleNode
+} from "./catalogue-editor-message-controller.js";
+import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
 
@@ -30,10 +33,7 @@ export function collectWorkDetailEditorElements() {
     saveButton: "catalogueWorkDetailSave",
     publicationButton: "catalogueWorkDetailPublication",
     deleteButton: "catalogueWorkDetailDelete",
-    contextNode: "catalogueWorkDetailContext",
     statusNode: "catalogueWorkDetailStatus",
-    warningNode: "catalogueWorkDetailWarning",
-    resultNode: "catalogueWorkDetailResult"
   });
 }
 
@@ -69,6 +69,7 @@ export function createWorkDetailEditorState(elements, options = {}) {
     fieldWrappers: new Map(),
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
+    messageController: null,
     readonlyNodes: new Map(),
     searchNode: elements.searchNode,
     popupNode: elements.popupNode,
@@ -77,10 +78,10 @@ export function createWorkDetailEditorState(elements, options = {}) {
     saveButton: elements.saveButton,
     publicationButton: elements.publicationButton,
     deleteButton: elements.deleteButton,
-    contextNode: elements.contextNode,
+    contextNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailContext", "context"),
     statusNode: elements.statusNode,
-    warningNode: elements.warningNode,
-    resultNode: elements.resultNode,
+    warningNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailWarning", "warning"),
+    resultNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailResult", "result"),
     previewNode: elements.previewNode,
     summaryNode: elements.summaryNode,
     readinessNode: elements.readinessNode,

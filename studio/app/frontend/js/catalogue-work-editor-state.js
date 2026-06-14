@@ -3,6 +3,9 @@ import {
   createCatalogueEditorRouteStateOptions
 } from "./catalogue-editor-route-boot.js";
 import {
+  createCatalogueEditorMessageRoleNode
+} from "./catalogue-editor-message-controller.js";
+import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
 import {
@@ -50,8 +53,6 @@ export function collectWorkEditorElements() {
     publicationButton: "catalogueWorkPublication",
     deleteButton: "catalogueWorkDelete",
     statusNode: "catalogueWorkStatus",
-    warningNode: "catalogueWorkWarning",
-    resultNode: "catalogueWorkResult",
     metaNode: "catalogueWorkMeta"
   });
 }
@@ -70,8 +71,6 @@ export function createWorkEditorState(elements, options = {}) {
     publicationButton,
     deleteButton,
     statusNode,
-    warningNode,
-    resultNode,
     previewNode,
     summaryNode,
     readinessNode,
@@ -127,6 +126,7 @@ export function createWorkEditorState(elements, options = {}) {
     activeModalController: null,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
+    messageController: null,
     readonlyNodes: new Map(),
     fieldsNode,
     readonlyNode,
@@ -139,8 +139,8 @@ export function createWorkEditorState(elements, options = {}) {
     publicationButton,
     deleteButton,
     statusNode,
-    warningNode,
-    resultNode,
+    warningNode: createCatalogueEditorMessageRoleNode("catalogueWorkWarning", "warning"),
+    resultNode: createCatalogueEditorMessageRoleNode("catalogueWorkResult", "result"),
     previewNode,
     summaryNode,
     readinessNode,

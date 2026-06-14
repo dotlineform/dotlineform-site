@@ -108,7 +108,7 @@ def assert_project_media_picker(page: Page) -> None:
                         return {
                             ok: true,
                             subfolders: [{ project_subfolder: 'install' }],
-                            files: []
+                            files: [{ filename: 'cover.jpg' }, { filename: 'direct-02.jpg' }]
                         };
                     }
                     return {
@@ -141,6 +141,9 @@ def assert_project_media_picker(page: Page) -> None:
     assert selection["value"] == "existing folder"
     assert selection["selectionStart"] == 0
     assert selection["selectionEnd"] == len("existing folder")
+    choose_button = page.locator('[data-project-media-choose="work"]')
+    assert choose_button.text_content() == "📂"
+    assert choose_button.get_attribute("aria-label") == "Choose image..."
 
     folder_input.fill("a")
     page.wait_for_selector('[data-search-list-value="a folder 01"]')
@@ -234,9 +237,39 @@ def assert_project_media_picker(page: Page) -> None:
     folder_input.press("ArrowDown")
     folder_input.press("Enter")
     page.wait_for_selector('[data-role="studio-modal"]')
-    page.wait_for_selector('[data-project-file="view-01.jpg"]')
-    page.locator('[data-project-file="view-01.jpg"]').click()
-    page.locator('[data-role="modal-primary"]').click()
+    assert page.locator("#studioModalTitle").text_content() == "select file"
+    assert page.locator(".catalogueProjectMediaPicker__projectFolder strong").text_content() == "natural"
+    file_list = page.locator('[data-role="project-media-file-list"]')
+    subfolder_list = page.locator('[data-role="project-media-subfolder-list"]')
+    page.wait_for_selector('[data-role="project-media-file-list"] option[value="cover.jpg"]')
+    assert file_list.input_value() == "cover.jpg"
+    assert subfolder_list.evaluate("node => node.selectedIndex") == -1
+    wheel_result = page.evaluate(
+        """() => {
+            const fileList = document.querySelector('[data-role="project-media-file-list"]');
+            const event = new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true });
+            const dispatchResult = fileList.dispatchEvent(event);
+            return {
+                value: fileList.value,
+                defaultPrevented: event.defaultPrevented,
+                dispatchResult
+            };
+        }"""
+    )
+    assert wheel_result == {"value": "direct-02.jpg", "defaultPrevented": True, "dispatchResult": False}
+    page.evaluate(
+        """() => {
+            const subfolderList = document.querySelector('[data-role="project-media-subfolder-list"]');
+            subfolderList.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true }));
+        }"""
+    )
+    page.wait_for_selector('[data-role="project-media-file-list"] option[value="view-01.jpg"]')
+    assert file_list.input_value() == "view-01.jpg"
+    subfolder_list.focus()
+    subfolder_list.press("Tab")
+    assert page.evaluate("() => document.activeElement.dataset.role") == "project-media-file-list"
+    file_list.press("Enter")
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached")
     result = page.evaluate(
         """() => {
             const state = window.__projectMediaState;

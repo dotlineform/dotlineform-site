@@ -17,11 +17,8 @@ export function renderCatalogueMomentShell() {
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentOpen">Open</button>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentNew">New</button>
+              <p class="tagStudio__status catalogueEditorMessage" id="catalogueMomentStatus" aria-live="polite"></p>
             </div>
-            <p class="tagStudio__contextHint" id="catalogueMomentContext"></p>
-            <p class="tagStudio__status" id="catalogueMomentStatus"></p>
-            <p class="tagStudio__saveWarning" id="catalogueMomentWarning"></p>
-            <p class="tagStudio__saveResult" id="catalogueMomentResult"></p>
           </section>
 
           <div class="tagStudio__grid catalogueWorkPage__grid">

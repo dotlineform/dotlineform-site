@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2f6e882c4d8bdb4d73f4dc3af17e2088",
-    "generated_at_utc": "2026-06-13T20:17:48Z",
+    "version": "blake2b-8415e526ee5783d3c9f305f40507146c",
+    "generated_at_utc": "2026-06-14T12:01:46Z",
     "count": 251
   },
   "entries": [
@@ -4942,10 +4942,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-14",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-13 • Studio",
+      "display_meta": "2026-06-14 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -4953,12 +4953,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-06-13",
+        "2026-06-14",
         "2026",
         "06",
-        "13"
+        "14"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-13 2026 06 13"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-14 2026 06 14"
     },
     {
       "id": "studio-works",

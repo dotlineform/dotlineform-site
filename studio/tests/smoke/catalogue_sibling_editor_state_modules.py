@@ -103,9 +103,13 @@ def assert_sibling_state_factories(page: Page) -> None:
                 momentRoute: momentModule.MOMENT_ROUTE_STATE.route,
                 momentImportKey: momentModule.MOMENT_ROUTE_STATE.importModeKey,
                 momentBusyKeys: momentModule.MOMENT_ROUTE_STATE.busyKeys.join(','),
-                momentImportAliases: momentState.importStatusNode === momentState.statusNode
-                    && momentState.importWarningNode === momentState.warningNode
-                    && momentState.importResultNode === momentState.resultNode,
+                momentImportStatusAlias: momentState.importStatusNode === momentState.statusNode,
+                momentMessageRoles: [
+                    momentState.warningNode.catalogueEditorMessageRole,
+                    momentState.resultNode.catalogueEditorMessageRole,
+                    momentState.importWarningNode.catalogueEditorMessageRole,
+                    momentState.importResultNode.catalogueEditorMessageRole
+                ].join(','),
                 momentRows: Array.isArray(momentState.momentRows)
             };
         }"""
@@ -120,7 +124,8 @@ def assert_sibling_state_factories(page: Page) -> None:
     assert result["momentRoute"] == "catalogue-moment"
     assert result["momentImportKey"] == "isImportMode"
     assert result["momentBusyKeys"] == "isSaving,isBuilding,isDeleting,importIsBusy"
-    assert result["momentImportAliases"] is True
+    assert result["momentImportStatusAlias"] is True
+    assert result["momentMessageRoles"] == "warning,result,warning,result"
     assert result["momentRows"] is True
 
 

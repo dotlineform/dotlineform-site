@@ -7,7 +7,7 @@ import {
   loadCatalogueEditorLookupMaps,
   markCatalogueEditorRouteReady,
   revealCatalogueEditorRoute,
-  setCatalogueEditorTextWithState as setTextWithState,
+  setCatalogueEditorTextWithState as setNodeTextWithState,
   syncCatalogueEditorRouteBusyState
 } from "./catalogue-editor-route-boot.js";
 import {
@@ -44,12 +44,10 @@ import {
 } from "./catalogue-moment-import.js";
 import {
   applyMomentRecordToInputs,
-  clearMomentFieldMessages,
   clearMomentReadonly,
   getMomentFieldNodeValue,
   renderMomentEditorFields,
-  renderMomentReadonlyFields,
-  updateMomentFieldMessages
+  renderMomentReadonlyFields
 } from "./catalogue-moment-form.js";
 import {
   renderMomentBuildImpact,
@@ -69,6 +67,11 @@ import {
 import {
   bindMomentEditorEvents
 } from "./catalogue-moment-editor-events.js";
+import {
+  clearCatalogueFieldStatusMessages,
+  createCatalogueEditorMessageController,
+  firstCatalogueValidationMessage
+} from "./catalogue-editor-message-controller.js";
 import {
   MOMENT_ROUTE_STATE,
   collectMomentEditorElements,
@@ -94,7 +97,7 @@ function t(state, key, fallback, tokens = null) {
 function buildImportContext(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     syncRouteBusyState: () => syncRouteBusyState(state),
     completeImport: ({ momentId, record }) => completeMomentImport(state, momentId, record)
   };
@@ -103,7 +106,7 @@ function buildImportContext(state) {
 function buildSelectionContext(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     openMoment: (momentId, options = {}) => openMoment(state, momentId, options),
     enterImportMode: (momentFile) => enterImportMode(state, momentFile),
     currentImportFile: () => currentImportMomentFile(state),
@@ -111,7 +114,7 @@ function buildSelectionContext(state) {
     setEmptyMode: () => {
       state.emptyNode.hidden = false;
       state.emptyNode.textContent = t(state, "missing_moment_param", "Search for a moment by id or title.");
-      setTextWithState(state.statusNode, t(state, "missing_moment_param", "Search for a moment by id or title."));
+      state.messageController.setRouteTextWithState(state.statusNode, t(state, "missing_moment_param", "Search for a moment by id or title."));
     }
   };
 }
@@ -119,7 +122,7 @@ function buildSelectionContext(state) {
 function buildActionContext(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     getFieldNodeValue,
     readDraft: () => readDraft(state),
     validateDraft: () => validateDraft(state),
@@ -158,7 +161,7 @@ function fillForm(state, record) {
 }
 
 function clearFieldMessages(state) {
-  clearMomentFieldMessages(state, { setTextWithState });
+  clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
 }
 
 function validateDraft(state) {
@@ -166,8 +169,8 @@ function validateDraft(state) {
   const errors = validateMomentDraft(draft, {
     t: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
-  updateMomentFieldMessages(state, errors, { setTextWithState });
-  return { valid: !errors.size, draft };
+  clearFieldMessages(state);
+  return { valid: !errors.size, draft, errors };
 }
 
 function renderReadiness(state) {
@@ -227,10 +230,10 @@ function enterImportMode(state, momentFile = "") {
   state.buildImpactNode.hidden = true;
   state.sideHeadingNode.textContent = t(state, "side_heading_import", "import preview");
   if (normalizeText(momentFile)) state.importFileNode.value = momentFile;
-  setTextWithState(state.contextNode, t(state, "import_context_hint", "Import a staged moment markdown file as draft source, then review and publish it from this editor."));
-  setTextWithState(state.statusNode, t(state, "import_mode_loaded", "Preview the staged moment file below."));
-  setTextWithState(state.warningNode, "");
-  setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "import_context_hint", "Import a staged moment markdown file as draft source, then review and publish it from this editor."));
+  state.messageController.setRouteTextWithState(state.statusNode, t(state, "import_mode_loaded", "Preview the staged moment file below."));
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  state.messageController.setRouteTextWithState(state.resultNode, "");
   writeRequestedImportFile(state.importFileNode.value);
   clearFieldMessages(state);
   clearImportPreview(state, buildImportContext(state));
@@ -279,11 +282,15 @@ function updateDirtyState(state) {
   const dirty = draftHasChanges(state);
   const validation = state.currentRecord ? validateDraft(state) : { valid: true, draft: null };
   if (!state.currentRecord) clearFieldMessages(state);
-  setTextWithState(state.warningNode, catalogueDirtyWarningText({
-    dirty,
-    mode: "single",
-    message: t(state, "dirty_warning", "Unsaved source changes.")
-  }), dirty ? "warning" : "");
+  state.messageController.render({
+    busy: state.isSaving || state.isBuilding || state.isDeleting || state.importIsBusy,
+    validationMessage: firstCatalogueValidationMessage(validation.errors),
+    dirtyMessage: catalogueDirtyWarningText({
+      dirty,
+      mode: "single",
+      message: t(state, "dirty_warning", "Unsaved source changes.")
+    })
+  });
   state.saveButton.disabled = !state.serverAvailable || state.isSaving || state.isDeleting || !state.currentRecord;
   state.deleteButton.disabled = catalogueDeleteDisabled({
     hasRecord: Boolean(state.currentRecord),
@@ -298,6 +305,7 @@ function updateDirtyState(state) {
 }
 
 function onFieldInput(state) {
+  state.messageController.clearActionMessages();
   if (state.isImportMode) {
     clearImportPreview(state, buildImportContext(state));
     updateDirtyState(state);
@@ -328,7 +336,7 @@ async function openMoment(state, momentId, options = {}) {
   const normalizedId = normalizeMomentId(momentId);
   const record = state.moments.get(normalizedId);
   if (!record) {
-    setTextWithState(state.statusNode, t(state, "unknown_moment_error", "Unknown moment id: {moment_id}.", { moment_id: normalizedId }), "error");
+    state.messageController.setActionTextWithState(state.statusNode, t(state, "unknown_moment_error", "Unknown moment id: {moment_id}.", { moment_id: normalizedId }), "error");
     return;
   }
   setEditModeChrome(state);
@@ -341,9 +349,9 @@ async function openMoment(state, momentId, options = {}) {
   state.buildPreview = null;
   state.needsBuild = false;
   fillForm(state, state.currentRecord);
-  setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for moment {moment_id}.", { moment_id: normalizedId }));
-  setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded moment {moment_id}.", { moment_id: normalizedId }), "success");
-  setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for moment {moment_id}.", { moment_id: normalizedId }));
+  state.messageController.setRouteTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded moment {moment_id}.", { moment_id: normalizedId }), "success");
+  state.messageController.setRouteTextWithState(state.resultNode, "");
   if (!options.skipUrl) {
     const url = new URL(window.location.href);
     url.searchParams.set("moment", normalizedId);
@@ -381,8 +389,8 @@ function bindEvents(state) {
     deleteCurrentMoment: () => deleteCurrentMoment(state, buildActionContext(state)),
     updateImportFile: (value) => {
       writeRequestedImportFile(value);
-      setTextWithState(state.importWarningNode, "");
-      setTextWithState(state.importResultNode, "");
+      state.messageController.setActionTextWithState(state.importWarningNode, "");
+      state.messageController.setActionTextWithState(state.importResultNode, "");
       clearImportPreview(state, buildImportContext(state));
     },
     previewMomentImport: () => previewMomentImport(state, buildImportContext(state)),
@@ -404,10 +412,6 @@ async function init() {
     popupListNode,
     openButton,
     newButton,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
     saveButton,
     publicationButton,
     deleteButton,
@@ -428,6 +432,10 @@ async function init() {
     importApplyButton
   } = elements;
   const state = createMomentEditorState(elements);
+  state.messageController = createCatalogueEditorMessageController({
+    statusNode: state.statusNode,
+    setTextWithState: setNodeTextWithState
+  });
   initializeCatalogueEditorRoute(root, "catalogue-moment");
 
   try {

@@ -35,10 +35,8 @@ export function renderCatalogueWorkShell(config) {
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkNew">New</button>
+              <p class="tagStudio__status catalogueEditorMessage catalogueWorkPage__message" id="catalogueWorkStatus" aria-live="polite"></p>
             </div>
-            <p class="tagStudio__status" id="catalogueWorkStatus"></p>
-            <p class="tagStudio__saveWarning" id="catalogueWorkWarning"></p>
-            <p class="tagStudio__saveResult" id="catalogueWorkResult"></p>
           </section>
 
           <div class="tagStudio__grid catalogueWorkPage__grid">

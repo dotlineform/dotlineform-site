@@ -3,6 +3,9 @@ import {
   createCatalogueEditorRouteStateOptions
 } from "./catalogue-editor-route-boot.js";
 import {
+  createCatalogueEditorMessageRoleNode
+} from "./catalogue-editor-message-controller.js";
+import {
   getSeriesTypeOptions
 } from "./catalogue-series-fields.js";
 
@@ -29,10 +32,7 @@ export function collectSeriesEditorElements() {
     saveButton: "catalogueSeriesSave",
     publicationButton: "catalogueSeriesPublication",
     deleteButton: "catalogueSeriesDelete",
-    contextNode: "catalogueSeriesContext",
     statusNode: "catalogueSeriesStatus",
-    warningNode: "catalogueSeriesWarning",
-    resultNode: "catalogueSeriesResult",
     metaNode: "catalogueSeriesMeta",
     membersHeadingNode: "catalogueSeriesMembersHeading",
     memberSearchRowNode: "catalogueSeriesMemberSearchRow",
@@ -72,6 +72,7 @@ export function createSeriesEditorState(elements, options = {}) {
     root: elements.root,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
+    messageController: null,
     readonlyNodes: new Map(),
     memberSeriesIdsByWorkId: new Map(),
     baselineMemberSeriesIdsByWorkId: new Map(),
@@ -83,10 +84,10 @@ export function createSeriesEditorState(elements, options = {}) {
     saveButton: elements.saveButton,
     publicationButton: elements.publicationButton,
     deleteButton: elements.deleteButton,
-    contextNode: elements.contextNode,
+    contextNode: createCatalogueEditorMessageRoleNode("catalogueSeriesContext", "context"),
     statusNode: elements.statusNode,
-    warningNode: elements.warningNode,
-    resultNode: elements.resultNode,
+    warningNode: createCatalogueEditorMessageRoleNode("catalogueSeriesWarning", "warning"),
+    resultNode: createCatalogueEditorMessageRoleNode("catalogueSeriesResult", "result"),
     summaryNode: elements.summaryNode,
     readinessNode: elements.readinessNode,
     runtimeStateNode: elements.runtimeStateNode,

@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: 2026-06-13
+last_updated: 2026-06-14
 parent_id: studio
 viewable: true
 ---
@@ -214,7 +214,10 @@ It lists direct folders under `DOTLINEFORM_PROJECTS_BASE_DIR/projects`.
 
 Selecting a project folder in single-work or new-work mode opens the image picker modal immediately.
 The modal calls `GET /studio/api/catalogue/project-media?mode=files&project_folder=<folder>&project_subfolder=<subfolder>`.
-It supports one optional direct subfolder, filters image filenames, and writes the derived fields together:
+It uses listbox controls for one optional direct subfolder and the image files in the current folder/subfolder.
+The modal defaults to no selected subfolder and lists files directly in `project_folder`.
+Selecting a subfolder reloads the file list for that subfolder.
+The file list selects an available file on open; pressing Enter with the file list focused or pressing the modal OK button commits the selected file and writes the derived fields together:
 
 - `project_folder`: selected direct project folder
 - `project_subfolder`: selected direct subfolder, or blank

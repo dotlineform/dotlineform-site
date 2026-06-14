@@ -28,11 +28,8 @@ export function renderCatalogueWorkDetailShell(config) {
                 </div>
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailOpen">Open</button>
+              <p class="tagStudio__status catalogueEditorMessage" id="catalogueWorkDetailStatus" aria-live="polite"></p>
             </div>
-            <p class="tagStudio__contextHint" id="catalogueWorkDetailContext"></p>
-            <p class="tagStudio__status" id="catalogueWorkDetailStatus"></p>
-            <p class="tagStudio__saveWarning" id="catalogueWorkDetailWarning"></p>
-            <p class="tagStudio__saveResult" id="catalogueWorkDetailResult"></p>
           </section>
 
           <div class="tagStudio__grid catalogueWorkPage__grid">

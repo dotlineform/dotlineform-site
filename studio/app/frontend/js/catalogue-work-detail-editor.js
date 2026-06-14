@@ -7,7 +7,7 @@ import {
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
-  setCatalogueEditorTextWithState as setTextWithState,
+  setCatalogueEditorTextWithState as setNodeTextWithState,
   showCatalogueEditorInitError,
   syncCatalogueEditorRouteBusyState
 } from "./catalogue-editor-route-boot.js";
@@ -45,8 +45,7 @@ import {
   renderWorkDetailReadonlyFields,
   setWorkDetailFieldNodeValue,
   setWorkDetailModeFieldAvailability,
-  setWorkDetailReadonlyValues,
-  updateWorkDetailFieldMessages
+  setWorkDetailReadonlyValues
 } from "./catalogue-work-detail-form.js";
 import {
   formatWorkDetailSelectionList,
@@ -63,6 +62,11 @@ import {
 import {
   bindWorkDetailEditorEvents
 } from "./catalogue-work-detail-editor-events.js";
+import {
+  clearCatalogueFieldStatusMessages,
+  createCatalogueEditorMessageController,
+  firstCatalogueValidationMessage
+} from "./catalogue-editor-message-controller.js";
 import {
   WORK_DETAIL_ROUTE_STATE,
   collectWorkDetailEditorElements,
@@ -174,6 +178,15 @@ function validateDraft(state) {
   return errors;
 }
 
+function firstBulkMixedMessage(state) {
+  if (state.mode !== "bulk") return "";
+  for (const field of FORM_FIELDS) {
+    if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
+    return t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
+  }
+  return "";
+}
+
 function setLoadedRecord(state, detailUid, record, options = {}) {
   state.mode = "single";
   state.currentDetailUid = detailUid;
@@ -192,10 +205,10 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   applyWorkDetailDraftToInputs(state);
   applyWorkDetailReadonly(state);
   syncUrl(detailUid);
-  setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for detail {detail_uid}.", { detail_uid: detailUid }));
-  setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: detailUid }));
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for detail {detail_uid}.", { detail_uid: detailUid }));
+  state.messageController.setRouteTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: detailUid }));
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
@@ -229,17 +242,17 @@ function setNewDetailMode(state, workId, options = {}) {
   setWorkDetailSelectionPopupVisibility(state, false);
   syncUrl("", { mode: "new", workId: normalizedWorkId });
   if (!normalizedWorkId) {
-    setTextWithState(state.contextNode, t(state, "new_context_parent_missing", "Open new detail mode from a parent work editor or provide a work id."));
+    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_parent_missing", "Open new detail mode from a parent work editor or provide a work id."), "error");
   } else if (!state.workSearchById.has(normalizedWorkId)) {
-    setTextWithState(state.contextNode, t(state, "new_context_parent_unknown", "Cannot create a detail because parent work {work_id} was not found.", { work_id: normalizedWorkId }), "error");
+    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_parent_unknown", "Cannot create a detail because parent work {work_id} was not found.", { work_id: normalizedWorkId }), "error");
   } else if (normalizeText(state.workSearchById.get(normalizedWorkId) && state.workSearchById.get(normalizedWorkId).status).toLowerCase() !== "published") {
-    setTextWithState(state.contextNode, t(state, "new_context_parent_unpublished", "Publish work {work_id} before adding work details.", { work_id: normalizedWorkId }), "error");
+    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_parent_unpublished", "Publish work {work_id} before adding work details.", { work_id: normalizedWorkId }), "error");
   } else {
-    setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft detail under work {work_id}.", { work_id: normalizedWorkId }));
+    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft detail under work {work_id}.", { work_id: normalizedWorkId }));
   }
-  setTextWithState(state.statusNode, "");
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.statusNode, "");
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
@@ -263,19 +276,19 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
   applyWorkDetailDraftToInputs(state);
   setWorkDetailReadonlyValues(state, "");
   syncUrl(detailUids.join(","));
-  setTextWithState(
+  state.messageController.setRouteTextWithState(
     state.contextNode,
     t(state, "bulk_context_loaded", "Bulk editing {count} detail records: {detail_ids}.", {
       count: String(detailUids.length),
       detail_ids: formatWorkDetailSelectionList(detailUids)
     })
   );
-  setTextWithState(
+  state.messageController.setRouteTextWithState(
     state.statusNode,
     t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(detailUids.length) })
   );
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
@@ -283,11 +296,11 @@ function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkDetailUids.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
-  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
+  clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
   setWorkDetailModeFieldAvailability(state);
   updateSummary(state);
   if (!hasRecord) {
-    setTextWithState(state.buildImpactNode, "");
+    setNodeTextWithState(state.buildImpactNode, "");
   } else if (state.mode === "bulk") {
     const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
       ? state.bulkBuildTargets
@@ -295,7 +308,7 @@ function updateEditorState(state) {
         const record = state.bulkRecords.get(detailUid);
         return normalizeWorkId(record && record.work_id);
       }).filter(Boolean)));
-    setTextWithState(
+    setNodeTextWithState(
       state.buildImpactNode,
       t(state, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
         count: String(previewTargets.length)
@@ -304,26 +317,21 @@ function updateEditorState(state) {
   }
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, catalogueDirtyWarningText({
-    dirty,
-    mode: state.mode,
-    message: t(state, "dirty_warning", "Unsaved source changes.")
-  }));
-  if (state.mode === "new" && !state.resultNode.textContent) {
-    const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
-    setTextWithState(
-      state.statusNode,
-      firstError || "",
-      firstError ? "error" : ""
-    );
-  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
-    setTextWithState(
-      state.statusNode,
-      state.mode === "bulk"
-        ? t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) })
-        : t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid })
-    );
+  if (state.mode === "bulk" && hasRecord) {
+    state.messageController.setDefaultMessage(t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }));
+  } else if (state.mode === "single" && hasRecord) {
+    state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }));
   }
+  state.messageController.render({
+    busy: state.isSaving || state.isBuilding || state.isDeleting,
+    validationMessage: firstCatalogueValidationMessage(errors),
+    mixedMessage: firstBulkMixedMessage(state),
+    dirtyMessage: catalogueDirtyWarningText({
+      dirty,
+      mode: state.mode,
+      message: t(state, "dirty_warning", "Unsaved source changes.")
+    })
+  });
 
   state.searchNode.disabled = state.mode === "new";
   state.openButton.disabled = state.mode === "new";
@@ -353,6 +361,7 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  state.messageController.clearActionMessages();
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
     setWorkDetailFieldNodeValue(node, "draft");
@@ -373,7 +382,7 @@ function t(state, key, fallback, tokens = null) {
 function buildWorkDetailSectionContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: setNodeTextWithState,
     draftHasChanges: () => draftHasChanges(state)
   };
 }
@@ -400,10 +409,10 @@ function buildWorkDetailFormContext(state) {
 function buildWorkDetailActionContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     draftHasChanges: () => draftHasChanges(state),
     validateDraft: () => validateDraft(state),
-    updateFieldMessages: (errors) => updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state)),
+    updateFieldMessages: () => clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState),
     updateEditorState: () => updateEditorState(state),
     syncRouteBusyState: () => syncRouteBusyState(state),
     renderCurrentPreview: () => renderCurrentPreview(state),
@@ -438,7 +447,7 @@ function buildWorkDetailSelectionContext(state) {
       setNewDetailMode(state, workId, options);
     },
     refreshBuildPreview: () => refreshBuildPreview(state),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     updateSummary: () => updateSummary(state),
     updateEditorState: () => updateEditorState(state)
   };
@@ -464,14 +473,14 @@ async function init() {
     openButton,
     saveButton,
     publicationButton,
-    deleteButton,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode
+    deleteButton
   } = elements;
 
   const state = createWorkDetailEditorState(elements);
+  state.messageController = createCatalogueEditorMessageController({
+    statusNode: state.statusNode,
+    setTextWithState: setNodeTextWithState
+  });
   initializeCatalogueEditorRoute(root, "catalogue-work-detail");
 
   const formContext = buildWorkDetailFormContext(state);

@@ -334,9 +334,11 @@ function renderProjectFilenameField(field, fieldsNode, state, options) {
 
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "tagStudio__button tagStudio__button--defaultWidth";
+  button.className = "catalogueProjectMediaPicker__chooseButton";
   button.dataset.projectMediaChoose = "work";
-  button.textContent = formText(options, "project_media_choose_button", "Choose image...");
+  button.textContent = "📂";
+  button.title = formText(options, "project_media_choose_button", "Choose image...");
+  button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
   control.appendChild(button);
   wrapper.appendChild(control);
 
@@ -518,7 +520,9 @@ export function applyWorkFormText(state, options = {}) {
     state.stagedProseButton.textContent = formText(options, "prose_import_button", "Import");
   }
   if (state.projectMediaChooseButton) {
-    state.projectMediaChooseButton.textContent = formText(options, "project_media_choose_button", "Choose image...");
+    state.projectMediaChooseButton.textContent = "📂";
+    state.projectMediaChooseButton.title = formText(options, "project_media_choose_button", "Choose image...");
+    state.projectMediaChooseButton.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
   }
 }
 
@@ -604,16 +608,12 @@ export function setModeFieldAvailability(state) {
 }
 
 export function updateFieldMessages(state, errors, options = {}) {
+  void errors;
+  void options;
   EDITABLE_FIELDS.forEach((field) => {
     const messageNode = state.fieldStatusNodes.get(field.key);
     if (!messageNode) return;
-    let message = errors.get(field.key) || "";
-    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
-      message = field.key === "series_ids"
-        ? formText(options, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
-        : formText(options, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
-    }
-    messageNode.textContent = message;
-    messageNode.hidden = !message;
+    messageNode.textContent = "";
+    messageNode.hidden = true;
   });
 }

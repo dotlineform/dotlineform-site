@@ -8,7 +8,7 @@ import {
   configureCatalogueEditorRouteRuntime,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
-  setCatalogueEditorTextWithState as setTextWithState,
+  setCatalogueEditorTextWithState as setNodeTextWithState,
   showCatalogueEditorInitError
 } from "./catalogue-editor-route-boot.js";
 import {
@@ -96,6 +96,10 @@ import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
 import {
+  createCatalogueEditorMessageController,
+  firstCatalogueValidationMessage
+} from "./catalogue-editor-message-controller.js";
+import {
   WORK_ROUTE_STATE,
   collectWorkEditorElements,
   createWorkEditorState,
@@ -141,6 +145,7 @@ async function openEmbeddedEntryModal(state, kind, index = null) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
   if (!result || !result.confirmed) return;
+  clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
 }
@@ -150,6 +155,7 @@ async function deleteEmbeddedEntry(state, kind, index) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
   if (!result || !result.confirmed) return;
+  clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
 }
@@ -340,6 +346,43 @@ function validateDraft(state) {
   return errors;
 }
 
+function clearActionMessages(state) {
+  state.messageController.clearActionMessages();
+}
+
+function firstBulkMixedMessage(state) {
+  if (state.mode !== "bulk") return "";
+  for (const field of EDITABLE_FIELDS) {
+    if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
+    return field.key === "series_ids"
+      ? t(state, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
+      : t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
+  }
+  return "";
+}
+
+function renderEditorMessage(state, snapshot = {}) {
+  const hasRecord = Object.prototype.hasOwnProperty.call(snapshot, "hasRecord")
+    ? snapshot.hasRecord
+    : state.mode === "new"
+      ? true
+      : state.mode === "bulk"
+        ? state.bulkWorkIds.length > 0
+        : Boolean(state.currentRecord);
+  const errors = snapshot.errors || state.validationErrors || new Map();
+  const dirty = Object.prototype.hasOwnProperty.call(snapshot, "dirty") ? snapshot.dirty : hasRecord && draftHasChanges(state);
+  state.messageController.render({
+    busy: state.isSaving || state.isBuilding || state.isPreviewingBuild || state.isDeleting,
+    validationMessage: firstCatalogueValidationMessage(errors),
+    mixedMessage: firstBulkMixedMessage(state),
+    dirtyMessage: catalogueDirtyWarningText({
+      dirty,
+      mode: state.mode,
+      message: t(state, "dirty_warning", "Unsaved source changes.")
+    })
+  });
+}
+
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
   const canPublish = state.mode === "single" && hasRecord && currentWorkIsDraft(state);
   const canUnpublish = state.mode === "single" && hasRecord && currentWorkIsPublished(state);
@@ -366,12 +409,12 @@ function updateEditorState(state) {
   updateStagedProseField(state, workFormOptions(state));
   updateSummary(state);
   if (!hasRecord) {
-    setTextWithState(state.buildImpactNode, "");
+    setNodeTextWithState(state.buildImpactNode, "");
   } else if (state.mode === "bulk") {
     const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
       ? state.bulkBuildTargets
       : bulkPublishedBuildTargets(state);
-    setTextWithState(
+    setNodeTextWithState(
       state.buildImpactNode,
       t(state, "bulk_build_preview", "Public update preview: {count} published work scope(s) will be updated.", {
         count: String(previewTargets.length)
@@ -380,21 +423,12 @@ function updateEditorState(state) {
   }
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, catalogueDirtyWarningText({
-    dirty,
-    mode: state.mode,
-    message: t(state, "dirty_warning", "Unsaved source changes.")
-  }));
-  if (state.mode === "new" && !state.resultNode.textContent) {
-    setTextWithState(state.statusNode, "");
-  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
-    setTextWithState(
-      state.statusNode,
-      state.mode === "bulk"
-        ? t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) })
-        : t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId })
-    );
+  if (state.mode === "bulk" && hasRecord) {
+    state.messageController.setDefaultMessage(t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) }));
+  } else if (state.mode === "single" && hasRecord) {
+    state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }));
   }
+  renderEditorMessage(state, { hasRecord, dirty, errors });
 
   state.saveButton.textContent = state.mode === "new"
     ? t(state, "create_button", "Create")
@@ -422,6 +456,7 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  clearActionMessages(state);
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
     setFieldNodeValue(node, "draft");
@@ -449,7 +484,10 @@ function workFormOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
-    onStateChange: () => updateEditorState(state),
+    onStateChange: () => {
+      clearActionMessages(state);
+      updateEditorState(state);
+    },
     draftHasChanges: () => draftHasChanges(state),
     loadProjectFolders: (query) => readProjectMediaFolders(query),
     loadProjectFiles: (request) => readProjectMediaFiles(request)
@@ -459,7 +497,7 @@ function workFormOptions(state) {
 function workRouteStateOptions(state, overrides = {}) {
   return createWorkRouteStateOptions(state, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setRouteTextWithState(node, text, tone),
     setOpenInputMode: () => setOpenInputMode(state),
     setPopupVisibility: (visible) => setWorkSelectionPopupVisibility(state, visible),
     applyDraftToInputs: () => applyDraftToInputs(state, workFormOptions(state)),
@@ -482,7 +520,7 @@ function workSelectionOptions(state) {
     refreshBuildPreview: () => refreshBuildPreview(state, workActionOptions(state)),
     updateEditorState: () => updateEditorState(state),
     saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
     setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state))
   };
@@ -491,7 +529,7 @@ function workSelectionOptions(state) {
 function workActionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     validateDraft: () => validateDraft(state),
     updateFieldMessages: (errors) => updateFieldMessages(state, errors, workFormOptions(state)),
     draftHasChanges: () => draftHasChanges(state),
@@ -514,7 +552,7 @@ function workSectionOptions(state) {
     draftHasChanges,
     isCurrentWorkPublished: currentWorkIsPublished,
     onPreviewBuildImpact: () => previewCurrentBuildImpact(state, workActionOptions(state)),
-    setTextWithState
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
   };
 }
 
@@ -589,6 +627,10 @@ async function init() {
 
   initializeWorkRouteState(elements.root);
   const state = createWorkEditorState(elements);
+  state.messageController = createCatalogueEditorMessageController({
+    statusNode: state.statusNode,
+    setTextWithState: setNodeTextWithState
+  });
   renderWorkEditorFields(state, elements, workFormOptions(state));
 
   try {

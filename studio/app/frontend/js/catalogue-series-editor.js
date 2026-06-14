@@ -7,7 +7,7 @@ import {
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
-  setCatalogueEditorTextWithState as setTextWithState,
+  setCatalogueEditorTextWithState as setNodeTextWithState,
   showCatalogueEditorInitError,
   syncCatalogueEditorRouteBusyState
 } from "./catalogue-editor-route-boot.js";
@@ -37,8 +37,7 @@ import {
   renderSeriesEditorFields,
   renderSeriesReadonlyFields,
   setSeriesFieldNodeValue,
-  setSeriesModeFieldAvailability,
-  updateSeriesFieldMessages
+  setSeriesModeFieldAvailability
 } from "./catalogue-series-form.js";
 import {
   addSeriesMember,
@@ -72,6 +71,11 @@ import {
   bindSeriesEditorEvents
 } from "./catalogue-series-editor-events.js";
 import {
+  clearCatalogueFieldStatusMessages,
+  createCatalogueEditorMessageController,
+  firstCatalogueValidationMessage
+} from "./catalogue-editor-message-controller.js";
+import {
   SERIES_ROUTE_STATE,
   collectSeriesEditorElements,
   createSeriesEditorState
@@ -98,7 +102,7 @@ function t(state, key, fallback, tokens = null) {
 function membershipOptions(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: setNodeTextWithState,
     setFieldNodeValue: setSeriesFieldNodeValue
   };
 }
@@ -172,32 +176,29 @@ function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
-  updateSeriesFieldMessages(state, errors);
+  clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
   setSeriesModeFieldAvailability(state);
   updateSeriesSummary(state, {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: setNodeTextWithState,
     draftHasChanges: () => draftHasChanges(state)
   });
   updateSeriesMemberList(state, membershipOptions(state));
-  if (!hasRecord) setTextWithState(state.buildImpactNode, "");
+  if (!hasRecord) setNodeTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, catalogueDirtyWarningText({
-    dirty,
-    mode: state.mode,
-    message: t(state, "dirty_warning", "Unsaved source changes.")
-  }));
-  if (state.mode === "new" && !state.resultNode.textContent) {
-    const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
-    setTextWithState(
-      state.statusNode,
-      firstError || "",
-      firstError ? "error" : ""
-    );
-  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }));
+  if (state.mode === "single" && hasRecord) {
+    state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }));
   }
+  state.messageController.render({
+    busy: state.isSaving || state.isBuilding || state.isDeleting,
+    validationMessage: firstCatalogueValidationMessage(errors),
+    dirtyMessage: catalogueDirtyWarningText({
+      dirty,
+      mode: state.mode,
+      message: t(state, "dirty_warning", "Unsaved source changes.")
+    })
+  });
 
   state.saveButton.textContent = state.mode === "new"
     ? t(state, "create_button", "Create")
@@ -228,6 +229,7 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  state.messageController.clearActionMessages();
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
     setSeriesFieldNodeValue(node, "draft");
@@ -259,12 +261,12 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
   state.pendingBuildExtraWorkIds = Array.isArray(options.pendingBuildExtraWorkIds) ? options.pendingBuildExtraWorkIds.slice() : [];
-  setTextWithState(state.membersStatusNode, "");
+  setNodeTextWithState(state.membersStatusNode, "");
   setOpenInputMode(state);
-  setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
-  setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: seriesId }));
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
+  state.messageController.setRouteTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: seriesId }));
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
@@ -297,11 +299,11 @@ function setNewSeriesMode(state, options = {}) {
   syncUrl("", "new");
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
-  setTextWithState(state.membersStatusNode, "");
-  setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft series source record."));
-  setTextWithState(state.statusNode, "");
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  setNodeTextWithState(state.membersStatusNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft series source record."));
+  state.messageController.setRouteTextWithState(state.statusNode, "");
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
@@ -329,20 +331,20 @@ function setEmptySearchMode(state, options = {}) {
   syncUrl("");
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
-  setTextWithState(state.membersStatusNode, "");
-  setTextWithState(state.contextNode, t(state, "missing_series_param", "Search for a series by title."));
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  setNodeTextWithState(state.membersStatusNode, "");
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "missing_series_param", "Search for a series by title."));
+  state.messageController.setRouteTextWithState(state.warningNode, "");
+  if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
 }
 
 function buildSeriesActionContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState,
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     draftHasChanges: () => draftHasChanges(state),
     validateDraft: () => validateDraft(state),
-    updateFieldMessages: (errors) => updateSeriesFieldMessages(state, errors),
+    updateFieldMessages: () => clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState),
     updateEditorState: () => updateEditorState(state),
     syncRouteBusyState: () => syncRouteBusyState(state),
     renderReadiness: () => renderSeriesReadiness(state, {
@@ -372,7 +374,7 @@ function buildSeriesSelectionContext(state) {
     saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
     setEmptySearchMode: (options = {}) => setEmptySearchMode(state, options),
     setNewSeriesMode: (options = {}) => setNewSeriesMode(state, options),
-    setTextWithState
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
   };
 }
 
@@ -400,10 +402,6 @@ async function init() {
     saveButton,
     publicationButton,
     deleteButton,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
     metaNode,
     membersHeadingNode,
     memberSearchRowNode,
@@ -417,6 +415,10 @@ async function init() {
   } = elements;
 
   const state = createSeriesEditorState(elements);
+  state.messageController = createCatalogueEditorMessageController({
+    statusNode: state.statusNode,
+    setTextWithState: setNodeTextWithState
+  });
   initializeCatalogueEditorRoute(root, "catalogue-series");
 
   renderSeriesEditorFields(fieldsNode, state, {
@@ -478,13 +480,22 @@ async function init() {
       deleteCurrentSeries: () => deleteCurrentSeries(state, buildSeriesActionContext(state)),
       updateMemberList: () => updateSeriesMemberList(state, membershipOptions(state)),
       addMember: () => {
-        if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
+        if (addSeriesMember(state, membershipOptions(state))) {
+          state.messageController.clearActionMessages();
+          updateEditorState(state);
+        }
       },
       makeMemberPrimary: (workId) => {
-        if (makeSeriesMemberPrimary(state, normalizeWorkId(workId))) updateEditorState(state);
+        if (makeSeriesMemberPrimary(state, normalizeWorkId(workId))) {
+          state.messageController.clearActionMessages();
+          updateEditorState(state);
+        }
       },
       removeMember: (workId) => {
-        if (removeSeriesMember(state, normalizeWorkId(workId), membershipOptions(state))) updateEditorState(state);
+        if (removeSeriesMember(state, normalizeWorkId(workId), membershipOptions(state))) {
+          state.messageController.clearActionMessages();
+          updateEditorState(state);
+        }
       }
     });
 

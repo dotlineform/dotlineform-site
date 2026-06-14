@@ -17,11 +17,8 @@ export function renderCatalogueSeriesShell() {
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesOpen">Open</button>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesNew">New</button>
+              <p class="tagStudio__status catalogueEditorMessage" id="catalogueSeriesStatus" aria-live="polite"></p>
             </div>
-            <p class="tagStudio__contextHint" id="catalogueSeriesContext"></p>
-            <p class="tagStudio__status" id="catalogueSeriesStatus"></p>
-            <p class="tagStudio__saveWarning" id="catalogueSeriesWarning"></p>
-            <p class="tagStudio__saveResult" id="catalogueSeriesResult"></p>
           </section>
 
           <div class="tagStudio__grid catalogueWorkPage__grid">
