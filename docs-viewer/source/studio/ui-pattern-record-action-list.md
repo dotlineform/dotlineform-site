@@ -11,8 +11,39 @@ viewable: true
 This is a working spec for a shared list component that renders compact records with columns and optional selection state.
 External actions and route-specific workflows should be layered on top of that base component.
 
-The first intended proving use case is the Catalogue Work editor downloads/links section.
-Those rows currently need a cleaner compact list surface, but replacing them with another route-local list would repeat the same maintenance problem.
+The first proving use case is the Catalogue Work editor downloads section.
+Links remain a likely next migration target, but downloads now carry the first production integration.
+
+## Current Position
+
+Implemented pieces:
+
+- `shared/frontend/js/record-list.js`
+- `shared/frontend/css/record-list.css`
+- `createRecordList(...)`
+- `createRecordListActions(...)`
+- Catalogue Work editor downloads list integration
+- focused smoke coverage for the shared component and Work editor download actions
+
+The current production use is intentionally narrow:
+
+- downloads render through the shared `RecordList`
+- rows have column headers
+- one row can be selected
+- selected-row state uses an outline by default, not a persistent fill
+- `Edit` and `Delete` live in an external `RecordListActions` toolbar
+- actions are disabled until a row is selected
+- action callbacks include `action`, `actionKey`, `selection`, and `records`
+- Edit opens the existing embedded download modal
+- Delete opens the existing embedded delete confirmation
+
+Selection clearing is boundary-based, not a delayed blur workaround.
+For lists that set `clearSelectionOnBlur`, the list clears selection when a pointer or focus event lands outside the list and any registered action boundary.
+`RecordListActions` registers its toolbar as a focus boundary, so clicking an action button does not clear the selected row before the callback reads it.
+
+Delete confirmations should make Cancel the default action.
+The Studio modal primitive now supports `defaultAction: "cancel"` for this purpose.
+For destructive confirmations, Cancel should receive initial focus and the visual default-action style; Delete should require an explicit click, tab, or keyboard move.
 
 ## Framing
 
@@ -77,15 +108,15 @@ The implementation should split into three layers:
 Downloads may only need the first two layers if existing Work editor functions can handle add/edit/delete/view behavior cleanly.
 A route adapter is still useful when workflow wiring starts to spread across the page.
 
-## First Scope
+## Implemented V1 Scope
 
-Build the smallest useful production component for embedded Work editor records.
+The first production component supports the smallest useful subset for embedded Work editor records.
 
-The first base component should support:
+The base component currently supports:
 
 - compact list shell
 - empty state
-- optional header row, enabled by default for downloads/links
+- optional header row, enabled by default unless disabled by the caller
 - fixed column definitions
 - route-provided records
 - text cells
@@ -94,13 +125,22 @@ The first base component should support:
 - full-value hover text for truncated cells
 - stable row re-render after records change
 - `onSelectionChange({ selection, records })` callback
+- `selection()` lookup method
+- `subscribeSelectionChange(...)`
+- `addFocusBoundary(...)` for adjacent controls that belong to the same interaction boundary
+- `clearSelectionOnBlur` for transient action selection
+- `selectedBackground` override, with transparent/no-fill selection as the default
 
-The optional action layer should support:
+The optional action layer currently supports:
 
 - external action definitions
 - disabled action state based on the current selection
 - action click and keyboard event delegation
-- `onAction({ action, selection, records })` callback
+- custom disabled logic through `disabled(selection, records)`
+- action title text through `title(selection, records)`
+- `onAction({ action, actionKey, selection, records })` callback
+- automatic refresh when list selection changes
+- action toolbar registration as a list focus boundary
 
 Do not include sorting, drag reorder, thumbnails, or async loading in the first version.
 Those should be added only when a real consumer needs them.
@@ -162,31 +202,33 @@ The adapter should own:
 - route status messages
 - server calls, if any
 
-For the Work editor downloads action wiring, this probably means:
+For the Work editor downloads action wiring, this currently means:
 
 - records: `state.draft.downloads`
 - visible headers: yes
-- columns: label/name, URL/path, maybe type
+- columns: filename and label
 - selection: one selected row
 - actions outside the list: `Edit`, `Delete`
-- `Edit`: opens the existing embedded-entry modal for the selected download in v1
-- `Delete`: opens a confirmation modal, then applies the existing delete flow for the selected download
+- `Edit`: opens the existing embedded-entry modal for the selected download
+- `Delete`: opens a confirmation modal with Cancel as the default action, then applies the existing delete flow for the selected download
 - after action: adapter re-renders the list with the updated draft records
 
-## Proposed API Shape
+## Current API Shape
 
-Draft base list API:
+Base list API:
 
 ```js
 const list = createRecordList(rootNode, {
   id: "catalogueWorkDownloads",
   emptyText: "No downloads.",
   selectionMode: "single",
+  clearSelectionOnBlur: true,
   columns: [
-    { key: "label", label: "label", truncate: true },
-    { key: "href", label: "url", type: "link", truncate: true }
+    { key: "filename", label: "filename", truncate: true },
+    { key: "label", label: "label", truncate: true }
   ],
   records,
+  getRecordId: (_record, index) => `download-${index}`,
   onSelectionChange({ selection, records }) {
     // Adapter may update adjacent state if needed.
   }
@@ -196,18 +238,16 @@ list.update({ records });
 list.destroy();
 ```
 
-Draft optional action layer API:
+Optional action layer API:
 
 ```js
 const actions = createRecordListActions(document.getElementById("catalogueWorkDownloadsActions"), {
   list,
   actions: [
-    { key: "view", label: "View", requiresSelection: true },
     { key: "edit", label: "Edit", requiresSelection: true },
-    { key: "delete", label: "Delete", tone: "danger", requiresSelection: true },
-    { key: "add", label: "Add", requiresSelection: false }
+    { key: "delete", label: "Delete", tone: "danger", requiresSelection: true }
   ],
-  onAction({ action, selection, records }) {
+  onAction({ action, actionKey, selection, records }) {
     // Adapter opens modal or applies delete for selected record(s).
   }
 });
@@ -216,7 +256,7 @@ actions.update();
 actions.destroy();
 ```
 
-Column options should start small:
+Column options currently include:
 
 - `key`: record key to read
 - `label`: accessible/header label
@@ -228,7 +268,7 @@ Column options should start small:
 Link cells should use safe external-link attributes by default.
 An adapter can opt out only when the link is known to be internal and should behave like normal in-app navigation.
 
-Action options should start small:
+Action options currently include:
 
 - `key`
 - `label`
@@ -247,7 +287,7 @@ Action callbacks should include both the full action definition and the stable `
 onAction({ action, actionKey, selection, records }) {}
 ```
 
-Selection options should start small:
+Selection options currently include:
 
 - `selectionMode`: `single` in v1
 - `initialSelection`: optional selected index or record id
@@ -263,17 +303,16 @@ It should be added when there is a real bulk action use case, such as multi-dele
 
 ## Downloads/Links Use Case
 
-Downloads and links are a good first implementation because they need:
+Downloads are the first implementation because they need:
 
 - compact rows
 - columns
-- one linked value
 - one selected row
 - edit/delete actions outside the list
 - re-render after action
 - clear empty state
 
-They do not need:
+The current downloads implementation does not need:
 
 - sorting
 - thumbnails
@@ -284,6 +323,9 @@ They do not need:
 
 That makes them a useful boundary test for the component.
 If the component cannot improve downloads without route-specific markup leaking everywhere, the component boundary is wrong.
+
+Links still fit the same pattern and should be considered the next Work editor migration candidate.
+When links move over, they should use the same base list/action layer unless a concrete workflow difference proves otherwise.
 
 ## Design Notes
 
@@ -389,7 +431,7 @@ No open questions for v1.
 
 ## Verification Target
 
-When implemented, focused coverage should prove:
+Current focused coverage should prove:
 
 - empty state renders
 - text and link columns render
@@ -398,7 +440,10 @@ When implemented, focused coverage should prove:
 - row selection updates selected state
 - external action buttons are generated by the action layer or controlled by list selection state
 - `Edit` and `Delete` callbacks include action key, selection, and selected record(s)
+- action toolbar focus/clicks do not clear selection before the action callback
+- selection clears when focus or pointer moves outside the list/action boundary where `clearSelectionOnBlur` is enabled
 - adapter re-renders the list after records change
+- delete confirmations make Cancel the default focus and visual action
 
 Potential v2 inline-edit coverage:
 
