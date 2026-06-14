@@ -34,6 +34,7 @@ def test_studio_bootstrap_exposes_shared_search_list_assets() -> None:
 
     assert "/shared/frontend/" in STATIC_PREFIXES
     assert '<link rel="stylesheet" href="/shared/frontend/css/search-list.css?v=test-version">' in html
+    assert '<link rel="stylesheet" href="/shared/frontend/css/record-list.css?v=test-version">' in html
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:

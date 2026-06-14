@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-afa0990cd70a95a0c494c257ffaa1071",
-    "generated_at_utc": "2026-06-14T14:50:16Z",
-    "count": 253
+    "version": "blake2b-dbacc9e755acda0ac2e04da44f2cf52c",
+    "generated_at_utc": "2026-06-14T19:05:48Z",
+    "count": 254
   },
   "entries": [
     {
@@ -6104,6 +6104,36 @@
         "10"
       ],
       "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-06-10 2026 06 10"
+    },
+    {
+      "id": "ui-pattern-record-action-list",
+      "kind": "doc",
+      "title": "Record List And Action Layer Working Spec",
+      "href": "/docs/?scope=studio&doc=ui-pattern-record-action-list",
+      "last_updated": "2026-06-14",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-06-14 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-record-action-list",
+        "ui",
+        "pattern",
+        "record",
+        "action",
+        "list",
+        "record list and action layer working spec",
+        "and",
+        "layer",
+        "working",
+        "spec",
+        "ui catalogue",
+        "catalogue",
+        "2026-06-14",
+        "2026",
+        "06",
+        "14"
+      ],
+      "search_text": "ui-pattern-record-action-list ui pattern record action list record list and action layer working spec and layer working spec ui catalogue catalogue 2026-06-14 2026 06 14"
     },
     {
       "id": "ui-pattern-reopenable-command-result",

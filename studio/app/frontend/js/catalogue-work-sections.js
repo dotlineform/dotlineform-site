@@ -3,6 +3,9 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
+  createRecordList
+} from "/shared/frontend/js/record-list.js";
+import {
   buildPublicWorkUrl
 } from "./catalogue-public-links.js";
 import {
@@ -407,12 +410,27 @@ export function updateWorkFilesSection(state, options = {}) {
   state.filesMetaNode.textContent = error || `${items.length} total`;
   state.filesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkEmbeddedItemRows("download", items, {
-        actionDisabled: state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk",
-        text: (key, fallback, tokens) => text(state, options, key, fallback, tokens)
-      })}</div>
+      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-downloads-list"></div>
     </section>
   `;
+  const listRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-list"]');
+  createRecordList(listRoot, {
+    id: "catalogueWorkDownloads",
+    records: items,
+    columns: [
+      {
+        key: "filename",
+        label: text(state, options, "files_filename_label", "filename"),
+        truncate: true
+      },
+      {
+        key: "label",
+        label: text(state, options, "files_label_label", "label"),
+        truncate: true
+      }
+    ],
+    getRecordId: (_record, index) => `download-${index}`
+  });
 }
 
 export function updateWorkLinksSection(state, options = {}) {

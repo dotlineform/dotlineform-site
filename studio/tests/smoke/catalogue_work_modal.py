@@ -354,7 +354,7 @@ def main() -> int:
 
             page.locator(add_download_button).click()
             try:
-                download_modal = assert_modal_shell(page, "Add download", ["Cancel", "Save"], args.timeout_ms)
+                download_modal = assert_modal_shell(page, "Add download", ["cancel", "Save"], args.timeout_ms)
             except PlaywrightTimeoutError as error:
                 button_state = page.locator(add_download_button).evaluate(
                     """button => ({
@@ -391,20 +391,24 @@ def main() -> int:
             if "smoke.pdf" not in page.locator("#catalogueWorkFilesResults").inner_text():
                 raise AssertionError("download modal did not return the new entry to the route")
 
-            edit_download_button = "[data-download-edit='0']"
-            page.locator(edit_download_button).click()
-            assert_modal_shell(page, "Edit download", ["Cancel", "Save"], args.timeout_ms)
-            close_with_escape(page, edit_download_button, args.timeout_ms)
-
-            delete_download_button = "[data-download-delete='0']"
-            page.locator(delete_download_button).click()
-            delete_download_modal = assert_modal_shell(page, "Delete download", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
-            if "Original PDF" not in delete_download_modal["bodyText"]:
-                raise AssertionError(f"embedded delete text missing from modal: {delete_download_modal!r}")
-            close_with_backdrop(page, delete_download_button, args.timeout_ms)
+            download_list_state = page.locator("#catalogueWorkFilesResults").evaluate(
+                """node => ({
+                    hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')),
+                    rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
+                    hasLegacyEdit: Boolean(node.querySelector('[data-download-edit]')),
+                    hasLegacyDelete: Boolean(node.querySelector('[data-download-delete]')),
+                    text: node.textContent || ''
+                })"""
+            )
+            if not download_list_state["hasList"] or download_list_state["rowCount"] < 2:
+                raise AssertionError(f"download list did not render through shared record list: {download_list_state!r}")
+            if download_list_state["hasLegacyEdit"] or download_list_state["hasLegacyDelete"]:
+                raise AssertionError(f"download list should be read-only in the first shared-list pass: {download_list_state!r}")
+            if "Original PDF" not in download_list_state["text"]:
+                raise AssertionError(f"download list lost existing row content: {download_list_state!r}")
 
             page.locator(add_link_button).click()
-            assert_modal_shell(page, "Add link", ["Cancel", "Save"], args.timeout_ms)
+            assert_modal_shell(page, "Add link", ["cancel", "Save"], args.timeout_ms)
             close_with_backdrop(page, add_link_button, args.timeout_ms)
 
             page.fill("#catalogueWorkField-title", "Smoke work updated")

@@ -6,6 +6,9 @@ import {
   normalizeText,
   normalizeWorkId
 } from "./catalogue-work-fields.js";
+import {
+  bindSearchList
+} from "/shared/frontend/js/search-list.js";
 
 const SEARCH_LIMIT = 20;
 
@@ -33,6 +36,32 @@ function buildSearchToken(value) {
   if (!normalized) return "";
   const digits = normalized.replace(/\D/g, "");
   return digits || normalized.toLowerCase();
+}
+
+function normalizeSearchText(value) {
+  return normalizeText(value).toLowerCase().replace(/\s+/g, " ");
+}
+
+function workSearchOptions(state) {
+  return Array.from(state.workSearchById.entries()).map(([workId, record]) => ({ workId, record }));
+}
+
+function numericSearchToken(value) {
+  const digits = normalizeText(value).replace(/\D/g, "");
+  return digits.replace(/^0+/, "") || (digits ? "0" : "");
+}
+
+function workIdPrefixMatches(workId, rawQuery) {
+  const query = numericSearchToken(rawQuery);
+  if (!query) return false;
+  const normalizedWorkId = normalizeText(workId).replace(/^0+/, "") || "0";
+  return normalizedWorkId.startsWith(query);
+}
+
+function titleMatches(record, rawQuery) {
+  const query = normalizeSearchText(rawQuery);
+  if (!query || !/[a-z]/i.test(query)) return false;
+  return normalizeSearchText(record && record.title).includes(query);
 }
 
 function getSourceWorkRecord(state, workId, fallbackRecord = null) {
@@ -84,19 +113,17 @@ export function isWorkBulkQuery(rawValue) {
 }
 
 export function setWorkSelectionPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
+  if (state.popupListNode) state.popupListNode.hidden = !visible;
+  else if (state.popupNode) state.popupNode.hidden = !visible;
 }
 
 export function getWorkSearchMatches(state, rawQuery) {
+  const normalizedQuery = normalizeText(rawQuery);
   const query = buildSearchToken(rawQuery);
   if (!query) return [];
   const matches = [];
   for (const [workId, record] of state.workSearchById.entries()) {
-    if (workId.includes(query)) {
-      matches.push({ workId, record });
-      continue;
-    }
-    if (normalizeWorkId(query) && workId === normalizeWorkId(query)) {
+    if (/[a-z]/i.test(normalizedQuery) ? titleMatches(record, normalizedQuery) : workIdPrefixMatches(workId, normalizedQuery)) {
       matches.push({ workId, record });
     }
   }
@@ -112,18 +139,18 @@ export function renderWorkSearchMatches(state, matches, message = "") {
   }
 
   if (!matches.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
+    state.popupListNode.innerHTML = `<p class="sharedSearchList__empty">${escapeHtml(message)}</p>`;
     setWorkSelectionPopupVisibility(state, true);
     return;
   }
 
   const rows = matches.map(({ workId, record }) => `
-    <button type="button" class="tagStudioSuggest__workButton" data-work-id="${escapeHtml(workId)}">
-      <span class="tagStudioSuggest__workId">${escapeHtml(workId)}</span>
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
+    <button type="button" class="sharedSearchList__option catalogueWorkSearch__option" data-work-id="${escapeHtml(workId)}">
+      <span class="catalogueWorkSearch__id">${escapeHtml(workId)}</span>
+      <span class="catalogueWorkSearch__title">${escapeHtml(normalizeText(record && record.title) || buildRecordSummary(record))}</span>
     </button>
   `);
-  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
+  state.popupListNode.innerHTML = rows.join("");
   setWorkSelectionPopupVisibility(state, true);
 }
 
@@ -228,18 +255,40 @@ export async function openWorkById(state, requestedWorkId, context) {
 }
 
 export function bindWorkSelectionControls(state, context) {
-  state.searchNode.addEventListener("input", () => {
-    const query = state.searchNode.value;
-    if (state.mode === "new") {
-      state.draft.work_id = normalizeWorkId(query);
-      setWorkSelectionPopupVisibility(state, false);
+  const searchController = bindSearchList(state.searchNode, state.popupListNode, {
+    id: "catalogueWorkSearchList",
+    maxOptions: SEARCH_LIMIT,
+    shouldOpen: ({ value }) => state.mode !== "new" && normalizeText(value) && !isWorkBulkQuery(value),
+    loadOptions: () => workSearchOptions(state),
+    filterOptions: (options, rawQuery) => {
+      const query = normalizeText(rawQuery);
+      if (!query || isWorkBulkQuery(query)) return [];
+      const hasLetters = /[a-z]/i.test(query);
+      const matches = options.filter(({ workId, record }) => (
+        hasLetters ? titleMatches(record, query) : workIdPrefixMatches(workId, query)
+      ));
+      return matches.sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
+    },
+    getOptionValue: (option) => option.workId,
+    renderOption: ({ workId, record }) => `
+      <span class="catalogueWorkSearch__id">${escapeHtml(workId)}</span>
+      <span class="catalogueWorkSearch__title">${escapeHtml(normalizeText(record && record.title) || buildRecordSummary(record))}</span>
+    `,
+    renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(text(context, "search_no_match", "No matching work records."))}</p>`,
+    classNames: {
+      option: "catalogueWorkSearch__option"
+    },
+    onTransientInput: ({ value }) => {
+      if (state.mode !== "new") return;
+      state.draft.work_id = normalizeWorkId(value);
       context.updateEditorState();
-      return;
-    }
-    renderWorkSearchSuggestions(state, context, query);
+    },
+    onCommit: (option) => openWorkById(state, option.workId, context)
   });
+  state.workSearchController = searchController;
 
   state.searchNode.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented) return;
     if (event.key !== "Enter") return;
     event.preventDefault();
     if (state.mode === "new") {
@@ -271,7 +320,7 @@ export function bindWorkSelectionControls(state, context) {
   });
 
   document.addEventListener("click", (event) => {
-    if (event.target === state.searchNode || state.popupNode.contains(event.target)) return;
+    if (event.target === state.searchNode || state.popupNode.contains(event.target) || state.popupListNode.contains(event.target)) return;
     setWorkSelectionPopupVisibility(state, false);
   });
 }

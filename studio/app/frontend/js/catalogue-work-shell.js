@@ -28,9 +28,9 @@ export function renderCatalogueWorkShell(config) {
             <div class="tagStudio__inputRow tagStudio__inputRow--editor">
               <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">
                 <label class="visually-hidden" for="catalogueWorkSearch">Find work by id</label>
-                <input type="text" class="tagStudio__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
-                <div class="tagStudio__popup" id="catalogueWorkPopup" hidden>
-                  <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkPopupList"></div>
+                <div class="sharedSearchList__control catalogueWorkPage__searchControl" id="catalogueWorkPopup">
+                  <input type="text" class="tagStudio__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
+                  <span id="catalogueWorkPopupList" hidden></span>
                 </div>
               </div>
               <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>

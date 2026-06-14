@@ -65,6 +65,7 @@ Supported options:
 - `renderOption(option, context)`: returns the row markup; use this for one-column, two-column, or route-specific rows
 - `renderNoResults()`: returns custom empty-state markup
 - `renderError(error)`: returns custom load-error markup
+- `shouldOpen({ value })`: returns false when the consumer should suppress the popup for the current state
 - `maxOptions`: caps visible results after filtering
 - `classNames.option`: adds a route-specific option class
 - `onTransientInput({ value })`: observes uncommitted typing
@@ -103,6 +104,7 @@ It has a different interaction shape: selected project folder context, optional 
 ## Current Consumers
 
 - `studio/app/frontend/js/catalogue-project-media-picker.js`: project-folder search on the Catalogue Work editor
+- `studio/app/frontend/js/catalogue-work-selection.js`: Work editor search by work-id prefix or title text
 
 ## Verification
 
@@ -116,8 +118,16 @@ The smoke test covers the shared contract rather than one route adapter:
 
 - selected text on focus
 - caller-owned prefix filtering
+- caller-owned popup suppression
 - default contains filtering
 - caller-owned two-column row rendering
 - Escape reset
 - ArrowDown, ArrowUp, Enter commit behavior
 - active-option scrolling inside a constrained popup
+
+The Catalogue Work editor route smoke also covers its route-specific matcher:
+
+- numeric-only queries match `work_id` prefixes while ignoring leading zeroes
+- queries containing letters search work titles, so `2 b` matches `00533 2 bodies monoprint`
+- committed search-list rows open the selected work
+- New mode suppresses the popup and treats the field as a draft `work_id` input

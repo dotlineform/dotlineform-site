@@ -58,6 +58,11 @@ function visibleOptions(controller, options) {
   return records.slice(0, limit);
 }
 
+function shouldOpen(controller, options = {}) {
+  if (typeof options.shouldOpen !== "function") return true;
+  return options.shouldOpen({ value: controller.inputNode.value });
+}
+
 function scrollActiveOption(controller) {
   if (!controller || !controller.popupNode || controller.activeIndex < 0) return;
   const activeOption = controller.popupNode.querySelector(`#${controller.optionId(controller.activeIndex)}`);
@@ -119,6 +124,10 @@ function setActiveIndex(controller, index, options = {}) {
 }
 
 async function refreshOptions(controller, options = {}) {
+  if (!shouldOpen(controller, options)) {
+    closeSearchList(controller, {}, options);
+    return;
+  }
   try {
     const loaded = typeof options.loadOptions === "function" ? await options.loadOptions(controller.inputNode.value) : [];
     controller.loadedOptions = Array.isArray(loaded) ? loaded : [];
@@ -203,7 +212,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     controller.startValue = inputNode.value;
     controller.activeIndex = -1;
     inputNode.select();
-    if (options.openOnFocus !== false) {
+    if (options.openOnFocus !== false && shouldOpen(controller, options)) {
       refreshOptions(controller, options);
     }
   }
@@ -220,6 +229,10 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     // should usually happen in onCommit, not onTransientInput.
     if (typeof options.onTransientInput === "function") {
       options.onTransientInput({ value: inputNode.value });
+    }
+    if (!shouldOpen(controller, options)) {
+      closeSearchList(controller, {}, options);
+      return;
     }
     refreshOptions(controller, options);
   }

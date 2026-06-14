@@ -1,0 +1,67 @@
+.sharedRecordList {
+  width: min(100%, var(--shared-record-list-width, 100%));
+  max-width: 100%;
+  display: grid;
+  gap: 0;
+  color: inherit;
+}
+
+.sharedRecordList__header,
+.sharedRecordList__row {
+  display: grid;
+  gap: var(--shared-record-list-column-gap, 0.75rem);
+  min-width: 0;
+}
+
+.sharedRecordList__header {
+  padding: 0 0 var(--shared-record-list-header-padding-y, 0.45rem);
+  border-bottom: 1px solid var(--shared-record-list-line, var(--line, #d2d2d2));
+  color: var(--shared-record-list-muted, var(--muted, #666));
+  font-size: var(--shared-record-list-small-font, 0.875rem);
+  line-height: 1.25;
+  text-transform: lowercase;
+}
+
+.sharedRecordList__rows {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.sharedRecordList__row {
+  padding: var(--shared-record-list-row-padding-y, 0.45rem) 0;
+  border-top: 1px solid var(--shared-record-list-row-line, var(--shared-record-list-line, var(--line, #d2d2d2)));
+  font-size: var(--shared-record-list-font, 0.875rem);
+  line-height: 1.25;
+  align-items: baseline;
+}
+
+.sharedRecordList__row:first-child {
+  border-top: 0;
+}
+
+.sharedRecordList__headerCell,
+.sharedRecordList__cell {
+  min-width: 0;
+}
+
+.sharedRecordList__cell--truncate,
+.sharedRecordList__link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sharedRecordList__link {
+  display: block;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.sharedRecordList__empty {
+  margin: 0;
+  color: var(--shared-record-list-muted, var(--muted, #666));
+  font-size: var(--shared-record-list-small-font, 0.875rem);
+  line-height: 1.35;
+}

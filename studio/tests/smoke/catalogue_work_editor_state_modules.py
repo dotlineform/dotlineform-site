@@ -54,9 +54,10 @@ WORK_EDITOR_DOM = """
       <button id="catalogueWorkNewLinkLink"></button>
       <div id="catalogueWorkLinksMeta"></div>
       <section><div id="catalogueWorkLinksResults"></div></section>
-      <input id="catalogueWorkSearch" />
-      <div id="catalogueWorkPopup"></div>
-      <div id="catalogueWorkPopupList"></div>
+      <div id="catalogueWorkPopup">
+        <input id="catalogueWorkSearch" />
+        <span id="catalogueWorkPopupList" hidden></span>
+      </div>
       <button id="catalogueWorkOpen"></button>
       <button id="catalogueWorkNew"></button>
       <button id="catalogueWorkSave"></button>
@@ -209,6 +210,95 @@ def assert_event_binder(page: Page) -> None:
         ["applyPublicationChange"],
         ["deleteCurrentWork"],
     ]
+
+
+def assert_work_search_list_selection(page: Page) -> None:
+    page.evaluate(
+        f"""async () => {{
+            document.body.innerHTML = `{WORK_EDITOR_DOM}`;
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const selectionModule = await import('/studio/app/frontend/js/catalogue-work-selection.js');
+            const elements = stateModule.collectWorkEditorElements();
+            const state = stateModule.createWorkEditorState(elements, {{
+                mediaConfigLoader: () => ({{}}),
+                modalHostFactory: () => ({{}})
+            }});
+            const records = new Map([
+                ['00001', {{ work_id: '00001', title: 'a poem divided into 4 parts', status: 'published' }}],
+                ['00010', {{ work_id: '00010', title: 'slaughter composite', status: 'published' }}],
+                ['00012', {{ work_id: '00012', title: 'loose bound book', status: 'published' }}],
+                ['00533', {{ work_id: '00533', title: '2 bodies monoprint', status: 'published' }}],
+                ['01002', {{ work_id: '01002', title: 'body space', status: 'published' }}]
+            ]);
+            state.workSearchById = records;
+            state.sourceWorkRecordsById = new Map(records);
+            window.__workSearchCalls = [];
+            const context = {{
+                loadWorkLookupRecord: async (workId) => {{
+                    window.__workSearchCalls.push(['load', workId]);
+                    return {{ work: records.get(workId) }};
+                }},
+                setLoadedWorkRecord: (workId, record) => {{
+                    window.__workSearchCalls.push(['loaded', workId, record.title]);
+                }},
+                setLoadedBulkWorks: () => window.__workSearchCalls.push(['bulk']),
+                refreshBuildPreview: async () => window.__workSearchCalls.push(['refresh']),
+                updateEditorState: () => window.__workSearchCalls.push(['update']),
+                text: (_key, fallback) => fallback
+            }};
+            selectionModule.bindWorkSelectionControls(state, context);
+            window.__workSelectionState = state;
+        }}"""
+    )
+    page.fill("#catalogueWorkSearch", "1")
+    page.wait_for_selector('#catalogueWorkSearchList [data-search-list-value="00001"]', state="attached")
+    numeric_result = page.evaluate(
+        """() => ({
+            values: Array.from(document.querySelectorAll('#catalogueWorkSearchList [data-search-list-value]')).map((node) => node.dataset.searchListValue),
+            labels: Array.from(document.querySelectorAll('#catalogueWorkSearchList .catalogueWorkSearch__title')).map((node) => node.textContent)
+        })"""
+    )
+    assert numeric_result["values"] == ["00001", "00010", "00012", "01002"]
+    assert numeric_result["labels"] == [
+        "a poem divided into 4 parts",
+        "slaughter composite",
+        "loose bound book",
+        "body space",
+    ]
+
+    page.fill("#catalogueWorkSearch", "2 b")
+    page.wait_for_selector('#catalogueWorkSearchList [data-search-list-value="00533"]', state="attached")
+    title_result = page.evaluate(
+        """() => ({
+            values: Array.from(document.querySelectorAll('#catalogueWorkSearchList [data-search-list-value]')).map((node) => node.dataset.searchListValue),
+            firstTitle: document.querySelector('#catalogueWorkSearchList .catalogueWorkSearch__title').textContent
+        })"""
+    )
+    assert title_result == {"values": ["00533"], "firstTitle": "2 bodies monoprint"}
+    page.press("#catalogueWorkSearch", "Enter")
+    page.wait_for_function("() => window.__workSearchCalls.some((call) => call[0] === 'loaded' && call[1] === '00533')")
+    assert page.evaluate("document.querySelector('#catalogueWorkSearch').value") == "00533"
+
+    page.evaluate(
+        """() => {
+            window.__workSelectionState.mode = 'new';
+            window.__workSelectionState.draft = {};
+            window.__workSearchCalls.length = 0;
+        }"""
+    )
+    page.fill("#catalogueWorkSearch", "123")
+    new_mode_result = page.evaluate(
+        """() => ({
+            draftWorkId: window.__workSelectionState.draft.work_id,
+            popupHidden: document.querySelector('#catalogueWorkSearchList').hidden,
+            calls: window.__workSearchCalls
+        })"""
+    )
+    assert new_mode_result == {
+        "draftWorkId": "00123",
+        "popupHidden": True,
+        "calls": [["update"]],
+    }
 
 
 def assert_route_state_status_target(page: Page) -> None:
@@ -400,6 +490,7 @@ def run(site_root: Path) -> None:
             page.goto(f"{base_url}/", wait_until="domcontentloaded")
             assert_state_factory(page)
             assert_event_binder(page)
+            assert_work_search_list_selection(page)
             assert_route_state_status_target(page)
             assert_series_chip_public_links(page)
             assert_media_refresh_button_uses_preview_actions(page)

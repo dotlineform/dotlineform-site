@@ -223,6 +223,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "shared" / "frontend" / "css" / "search-list.css",
         repo_root / "shared" / "frontend" / "js" / "file-picker.js",
         repo_root / "shared" / "frontend" / "css" / "file-picker.css",
+        repo_root / "shared" / "frontend" / "js" / "record-list.js",
+        repo_root / "shared" / "frontend" / "css" / "record-list.css",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",

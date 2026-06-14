@@ -51,6 +51,8 @@ def assert_shared_search_list_contract(page: Page) -> None:
               <div id="sharedSearchSmokePopup"></div>
               <input id="sharedSearchDefault">
               <div id="sharedSearchDefaultPopup"></div>
+              <input id="sharedSearchSuppressed">
+              <div id="sharedSearchSuppressedPopup"></div>
             `;
             const module = await import('/shared/frontend/js/search-list.js');
             const input = document.getElementById('sharedSearchSmoke');
@@ -128,6 +130,26 @@ def assert_shared_search_list_contract(page: Page) -> None:
             await defaultController.refresh();
             const defaultContainsMatches = Array.from(defaultPopup.querySelectorAll('[data-search-list-value]')).map((node) => node.dataset.searchListValue);
 
+            const suppressedInput = document.getElementById('sharedSearchSuppressed');
+            const suppressedPopup = document.getElementById('sharedSearchSuppressedPopup');
+            const suppressedTransients = [];
+            const suppressedController = module.bindSearchList(suppressedInput, suppressedPopup, {
+                id: 'sharedSearchSuppressedList',
+                openOnFocus: false,
+                shouldOpen: ({ value }) => value !== 'blocked',
+                loadOptions: async () => ['allowed'],
+                onTransientInput: ({ value }) => suppressedTransients.push(value)
+            });
+            suppressedInput.focus();
+            suppressedInput.value = 'blocked';
+            suppressedInput.dispatchEvent(new Event('input', { bubbles: true }));
+            await suppressedController.refresh();
+            const suppressedResult = {
+                hidden: suppressedPopup.hidden,
+                transients: suppressedTransients.slice(),
+                options: Array.from(suppressedPopup.querySelectorAll('[data-search-list-value]')).map((node) => node.dataset.searchListValue)
+            };
+
             return {
                 activeAfterUp,
                 cancels,
@@ -140,6 +162,7 @@ def assert_shared_search_list_contract(page: Page) -> None:
                 prefixMatches,
                 scrollResult,
                 selectedText,
+                suppressedResult,
                 transients
             };
         }"""
@@ -158,6 +181,11 @@ def assert_shared_search_list_contract(page: Page) -> None:
     assert result["inputValueAfterEscape"] == "near"
     assert result["popupHiddenAfterEscape"] is True
     assert result["defaultContainsMatches"] == ["natural", "international"]
+    assert result["suppressedResult"] == {
+        "hidden": True,
+        "transients": ["blocked"],
+        "options": [],
+    }, result["suppressedResult"]
 
 
 def run(site_root: Path) -> None:

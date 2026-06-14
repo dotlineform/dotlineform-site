@@ -1350,6 +1350,11 @@
               "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-panel.json"
             },
             {
+              "doc_id": "ui-pattern-record-action-list",
+              "title": "Record List And Action Layer Working Spec",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json"
+            },
+            {
               "doc_id": "ui-pattern-reopenable-command-result",
               "title": "Reopenable Command Result Pattern",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json"
@@ -1384,5 +1389,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-14T14:50:16Z"
+  "generated_at": "2026-06-14T19:05:48Z"
 }
