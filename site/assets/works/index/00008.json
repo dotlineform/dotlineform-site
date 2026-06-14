@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-c54e63c129ddbaac198bf87289cd236b",
+    "version": "blake2b-cd2efbfaebc32433b2afe00951972db3",
     "generated_at_utc": "2026-04-26T21:17:43Z",
     "work_id": "00008",
     "count": 0
@@ -23,7 +23,7 @@
     "height_px": 2263,
     "downloads": [
       {
-        "filename": "nerve.pdf",
+        "filename": "00008-nerve.pdf",
         "label": "nerve.pdf"
       }
     ]
