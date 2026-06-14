@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check Catalogue project media picker JavaScript modules."""
+"""Smoke-check Catalogue work editor integration with the shared file picker."""
 
 from __future__ import annotations
 
@@ -33,15 +33,18 @@ def assert_project_media_picker(page: Page) -> None:
         """async () => {
             document.body.innerHTML = `
               <style>
-                .catalogueProjectMediaPicker__folderPopup {
+                .sharedSearchList__popup {
                   display: grid;
                   gap: 4px;
-                  max-height: 54px;
+                  max-height: 64px;
                   overflow: auto;
+                  padding: 4px 4px 8px;
                 }
-                .catalogueProjectMediaPicker__folderOption {
+                .sharedSearchList__option {
+                  border: 0;
                   display: block;
                   min-height: 28px;
+                  width: 100%;
                 }
               </style>
               <main id="catalogueWorkRoot" class="tagStudioPage catalogueWorkPage">
@@ -54,7 +57,11 @@ def assert_project_media_picker(page: Page) -> None:
             const state = {
                 root: document.getElementById('catalogueWorkRoot'),
                 mode: 'single',
-                draft: {},
+                draft: {
+                    project_folder: 'natural',
+                    project_subfolder: '',
+                    project_filename: 'cover.jpg'
+                },
                 seriesById: new Map(),
                 fieldNodes: new Map(),
                 fieldStatusNodes: new Map(),
@@ -69,7 +76,6 @@ def assert_project_media_picker(page: Page) -> None:
                 serverAvailable: true,
                 modalHost: document.createElement('div')
             };
-            state.draft.project_folder = 'existing folder';
             state.root.appendChild(state.modalHost);
             const options = {
                 text: (_key, fallback) => fallback,
@@ -84,169 +90,101 @@ def assert_project_media_picker(page: Page) -> None:
                     return {
                         ok: true,
                         project_folders: [
-                            { project_folder: 'a folder 01' },
-                            { project_folder: 'a folder 02' },
-                            { project_folder: 'a folder 03' },
-                            { project_folder: 'a folder 04' },
-                            { project_folder: 'a folder 05' },
-                            { project_folder: 'a folder 06' },
-                            { project_folder: 'a folder 07' },
-                            { project_folder: 'a folder 08' },
-                            { project_folder: 'a folder 09' },
-                            { project_folder: 'a folder 10' },
-                            { project_folder: 'a folder 11' },
-                            { project_folder: 'a folder 12' },
-                            { project_folder: 'natural' },
                             { project_folder: 'international' },
+                            { project_folder: 'natural' },
                             { project_folder: 'nerve' }
                         ]
                     };
                 },
                 loadProjectFiles: async (request) => {
                     window.__projectMediaCalls.push(['files', request.projectFolder, request.projectSubfolder || '', request.query || '']);
-                    if (!request.projectSubfolder) {
+                    if (request.projectFolder === 'natural' && !request.projectSubfolder) {
                         return {
                             ok: true,
                             subfolders: [{ project_subfolder: 'install' }],
                             files: [{ filename: 'cover.jpg' }, { filename: 'direct-02.jpg' }]
                         };
                     }
-                    return {
-                        ok: true,
-                        subfolders: [{ project_subfolder: 'install' }],
-                        files: [{ filename: 'view-01.jpg' }]
-                    };
+                    if (request.projectFolder === 'natural' && request.projectSubfolder === 'install') {
+                        return {
+                            ok: true,
+                            subfolders: [{ project_subfolder: 'install' }],
+                            files: [{ filename: 'view-01.jpg' }]
+                        };
+                    }
+                    if (request.projectFolder === 'nerve') {
+                        return {
+                            ok: true,
+                            subfolders: [],
+                            files: [{ filename: 'nerve - copy.jpg' }, { filename: 'nerve.jpg' }]
+                        };
+                    }
+                    return { ok: true, subfolders: [], files: [] };
                 }
             };
             formModule.renderWorkEditorFields(state, {
                 fieldsNode: document.getElementById('catalogueWorkFields'),
                 readonlyNode: document.getElementById('catalogueWorkReadonly')
             }, options);
-            state.fieldNodes.get('project_folder').value = state.draft.project_folder;
+            formModule.applyDraftToInputs(state, options);
             window.__projectMediaState = state;
         }"""
     )
-    folder_input = page.locator("#catalogueWorkField-project_folder")
-    folder_input.click()
-    selection = page.evaluate(
-        """() => {
-            const input = document.getElementById('catalogueWorkField-project_folder');
-            return {
-                value: input.value,
-                selectionStart: input.selectionStart,
-                selectionEnd: input.selectionEnd
-            };
-        }"""
-    )
-    assert selection["value"] == "existing folder"
-    assert selection["selectionStart"] == 0
-    assert selection["selectionEnd"] == len("existing folder")
+
     choose_button = page.locator('[data-project-media-choose="work"]')
     assert choose_button.text_content() == "📂"
     assert choose_button.get_attribute("aria-label") == "Choose image..."
+    assert page.locator("#catalogueWorkField-project_folder").get_attribute("type") == "hidden"
+    assert page.locator('[data-project-media-display="project_folder"]').text_content() == "natural"
+    assert page.locator('[data-project-media-display="project_subfolder"]').text_content() == "—"
+    assert page.locator('[data-project-media-display="project_filename"]').text_content() == "cover.jpg"
 
-    folder_input.fill("a")
-    page.wait_for_selector('[data-search-list-value="a folder 01"]')
+    choose_button.click()
+    page.wait_for_selector('[data-role="studio-modal"]')
+    assert page.locator("#studioModalTitle").text_content() == "select file"
+    folder_input = page.locator('[data-role="file-picker-folder-input"]')
+    file_list = page.locator('[data-role="file-picker-file-list"]')
+    subfolder_list = page.locator('[data-role="file-picker-subfolder-list"]')
+    page.wait_for_selector('[data-role="file-picker-file-list"] option[value="cover.jpg"]')
+    assert folder_input.input_value() == "natural"
+    assert file_list.input_value() == "cover.jpg"
+    assert subfolder_list.evaluate("node => node.selectedIndex") == -1
+
+    folder_input.fill("ner")
+    page.wait_for_selector('[data-search-list-value="nerve"]')
     transient_result = page.evaluate(
         """() => ({
             draftProjectFolder: window.__projectMediaState.draft.project_folder,
-            fieldValue: document.getElementById('catalogueWorkField-project_folder').value
+            modalOpen: Boolean(document.querySelector('[data-role="studio-modal"]')),
+            fieldValue: document.querySelector('[data-role="file-picker-folder-input"]').value,
+            primaryDisabled: document.querySelector('[data-role="modal-primary"]').disabled
         })"""
     )
-    assert transient_result == {"draftProjectFolder": "existing folder", "fieldValue": "a"}
-    page.locator('[data-search-list-value="a folder 01"]').hover()
-    assert page.evaluate("""() => document.getElementById('catalogueProjectFolderPopup').dataset.navigation""") == "pointer"
-    folder_input.press("ArrowDown")
-    folder_input.press("ArrowDown")
-    highlight_result = page.evaluate(
-        """() => {
-            const popup = document.getElementById('catalogueProjectFolderPopup');
-            const first = document.querySelector('[data-search-list-value="a folder 01"]');
-            const second = document.querySelector('[data-search-list-value="a folder 02"]');
-            return {
-                navigation: popup.dataset.navigation,
-                selectedCount: popup.querySelectorAll('[aria-selected="true"]').length,
-                firstSelected: first.getAttribute('aria-selected'),
-                secondSelected: second.getAttribute('aria-selected')
-            };
-        }"""
-    )
-    assert highlight_result["navigation"] == "keyboard"
-    assert highlight_result["selectedCount"] == 1
-    assert highlight_result["firstSelected"] == "false"
-    assert highlight_result["secondSelected"] == "true"
-    for _ in range(8):
-        folder_input.press("ArrowDown")
-    scroll_result = page.evaluate(
-        """() => {
-            const input = document.getElementById('catalogueWorkField-project_folder');
-            const popup = document.getElementById('catalogueProjectFolderPopup');
-            const active = document.getElementById(input.getAttribute('aria-activedescendant'));
-            const popupStyle = window.getComputedStyle(popup);
-            const bottomPadding = parseFloat(popupStyle.paddingBottom) || 0;
-            const activeRect = active.getBoundingClientRect();
-            const popupRect = popup.getBoundingClientRect();
-            return {
-                active: input.getAttribute('aria-activedescendant'),
-                scrollTop: popup.scrollTop,
-                activeBottom: activeRect.bottom,
-                visibleBottom: popupRect.bottom - bottomPadding,
-                selectedCount: popup.querySelectorAll('[aria-selected="true"]').length
-            };
-        }"""
-    )
-    assert scroll_result["active"] == "catalogueProjectFolderPopup-option-9"
-    assert scroll_result["scrollTop"] > 0
-    assert scroll_result["activeBottom"] <= scroll_result["visibleBottom"], scroll_result
-    assert scroll_result["selectedCount"] == 1
-    folder_input.press("Escape")
-
-    folder_input.fill("nat")
-    page.wait_for_selector('[data-search-list-value="natural"]')
-    assert page.locator('[data-search-list-value="international"]').count() == 0
+    assert transient_result == {
+        "draftProjectFolder": "natural",
+        "modalOpen": True,
+        "fieldValue": "ner",
+        "primaryDisabled": True,
+    }
     folder_input.press("Escape")
     reset_result = page.evaluate(
         """() => ({
-            value: document.getElementById('catalogueWorkField-project_folder').value,
-            popupHidden: document.getElementById('catalogueProjectFolderPopup').hidden
+            modalOpen: Boolean(document.querySelector('[data-role="studio-modal"]')),
+            fieldValue: document.querySelector('[data-role="file-picker-folder-input"]').value,
+            popupHidden: document.querySelector('[data-role="file-picker-folder-popup"]').hidden
         })"""
     )
-    assert reset_result == {"value": "existing folder", "popupHidden": True}
+    assert reset_result == {"modalOpen": True, "fieldValue": "natural", "popupHidden": True}
 
-    folder_input.fill("nat")
-    page.wait_for_selector('[data-search-list-value="natural"]')
-    folder_input.press("ArrowDown")
-    active_result = page.evaluate(
-        """() => ({
-            active: document.getElementById('catalogueWorkField-project_folder').getAttribute('aria-activedescendant'),
-            selected: document.querySelector('[data-search-list-value="natural"]').getAttribute('aria-selected')
-        })"""
-    )
-    assert active_result["active"] == "catalogueProjectFolderPopup-option-0"
-    assert active_result["selected"] == "true"
-    folder_input.press("ArrowUp")
-    field_result = page.evaluate(
-        """() => ({
-            active: document.getElementById('catalogueWorkField-project_folder').getAttribute('aria-activedescendant'),
-            selected: document.querySelector('[data-search-list-value="natural"]').getAttribute('aria-selected')
-        })"""
-    )
-    assert field_result["active"] is None
-    assert field_result["selected"] == "false"
-
+    folder_input.fill("ner")
+    page.wait_for_selector('[data-search-list-value="nerve"]')
     folder_input.press("ArrowDown")
     folder_input.press("Enter")
-    page.wait_for_selector('[data-role="studio-modal"]')
-    assert page.locator("#studioModalTitle").text_content() == "select file"
-    assert page.locator(".catalogueProjectMediaPicker__projectFolder strong").text_content() == "natural"
-    file_list = page.locator('[data-role="project-media-file-list"]')
-    subfolder_list = page.locator('[data-role="project-media-subfolder-list"]')
-    page.wait_for_selector('[data-role="project-media-file-list"] option[value="cover.jpg"]')
-    assert file_list.input_value() == "cover.jpg"
-    assert subfolder_list.evaluate("node => node.selectedIndex") == -1
+    page.wait_for_selector('[data-role="file-picker-file-list"] option[value="nerve - copy.jpg"]')
+    assert file_list.input_value() == "nerve - copy.jpg"
     wheel_result = page.evaluate(
         """() => {
-            const fileList = document.querySelector('[data-role="project-media-file-list"]');
+            const fileList = document.querySelector('[data-role="file-picker-file-list"]');
             const event = new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true });
             const dispatchResult = fileList.dispatchEvent(event);
             return {
@@ -256,20 +194,10 @@ def assert_project_media_picker(page: Page) -> None:
             };
         }"""
     )
-    assert wheel_result == {"value": "direct-02.jpg", "defaultPrevented": True, "dispatchResult": False}
-    page.evaluate(
-        """() => {
-            const subfolderList = document.querySelector('[data-role="project-media-subfolder-list"]');
-            subfolderList.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true }));
-        }"""
-    )
-    page.wait_for_selector('[data-role="project-media-file-list"] option[value="view-01.jpg"]')
-    assert file_list.input_value() == "view-01.jpg"
-    subfolder_list.focus()
-    subfolder_list.press("Tab")
-    assert page.evaluate("() => document.activeElement.dataset.role") == "project-media-file-list"
+    assert wheel_result == {"value": "nerve.jpg", "defaultPrevented": True, "dispatchResult": False}
     file_list.press("Enter")
     page.wait_for_selector('[data-role="studio-modal"]', state="detached")
+
     result = page.evaluate(
         """() => {
             const state = window.__projectMediaState;
@@ -277,22 +205,28 @@ def assert_project_media_picker(page: Page) -> None:
                 projectFolder: state.draft.project_folder,
                 projectSubfolder: state.draft.project_subfolder,
                 projectFilename: state.draft.project_filename,
-                folderInput: document.getElementById('catalogueWorkField-project_folder').value,
-                subfolderInput: document.getElementById('catalogueWorkField-project_subfolder').value,
-                filenameInput: document.getElementById('catalogueWorkField-project_filename').value,
+                folderValue: document.getElementById('catalogueWorkField-project_folder').value,
+                subfolderValue: document.getElementById('catalogueWorkField-project_subfolder').value,
+                filenameValue: document.getElementById('catalogueWorkField-project_filename').value,
+                folderDisplay: document.querySelector('[data-project-media-display="project_folder"]').textContent,
+                subfolderDisplay: document.querySelector('[data-project-media-display="project_subfolder"]').textContent,
+                filenameDisplay: document.querySelector('[data-project-media-display="project_filename"]').textContent,
                 calls: window.__projectMediaCalls
             };
         }"""
     )
-    assert result["projectFolder"] == "natural"
-    assert result["projectSubfolder"] == "install"
-    assert result["projectFilename"] == "view-01.jpg"
-    assert result["folderInput"] == "natural"
-    assert result["subfolderInput"] == "install"
-    assert result["filenameInput"] == "view-01.jpg"
+    assert result["projectFolder"] == "nerve"
+    assert result["projectSubfolder"] == ""
+    assert result["projectFilename"] == "nerve.jpg"
+    assert result["folderValue"] == "nerve"
+    assert result["subfolderValue"] == ""
+    assert result["filenameValue"] == "nerve.jpg"
+    assert result["folderDisplay"] == "nerve"
+    assert result["subfolderDisplay"] == "—"
+    assert result["filenameDisplay"] == "nerve.jpg"
     assert ["folders", ""] in result["calls"]
     assert ["files", "natural", "", ""] in result["calls"]
-    assert ["files", "natural", "install", ""] in result["calls"]
+    assert ["files", "nerve", "", ""] in result["calls"]
 
 
 def run(site_root: Path) -> None:

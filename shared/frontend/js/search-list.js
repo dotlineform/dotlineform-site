@@ -226,12 +226,14 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     const matches = controller.matches || [];
     if (event.key === "Escape") {
       event.preventDefault();
+      event.stopPropagation();
       closeSearchList(controller, { reset: true }, options);
       return;
     }
     if (event.key === "ArrowDown") {
       if (!matches.length) return;
       event.preventDefault();
+      event.stopPropagation();
       popupNode.dataset.navigation = "keyboard";
       setActiveIndex(controller, controller.activeIndex < 0 ? 0 : controller.activeIndex + 1, options);
       return;
@@ -239,6 +241,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     if (event.key === "ArrowUp") {
       if (!matches.length) return;
       event.preventDefault();
+      event.stopPropagation();
       popupNode.dataset.navigation = "keyboard";
       setActiveIndex(controller, controller.activeIndex <= 0 ? -1 : controller.activeIndex - 1, options);
       return;
@@ -246,6 +249,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     if (event.key === "Enter") {
       if (!matches.length) return;
       event.preventDefault();
+      event.stopPropagation();
       popupNode.dataset.navigation = "keyboard";
       const index = controller.activeIndex >= 0 ? controller.activeIndex : 0;
       commitSelectedOption(controller, matches[index], options);

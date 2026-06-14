@@ -1,0 +1,87 @@
+.sharedFilePicker {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sharedFilePicker__folderField,
+.sharedFilePicker__listboxField {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sharedFilePicker__label {
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption, 0.9rem);
+}
+
+.sharedFilePicker__folderControl {
+  display: block;
+}
+
+.sharedFilePicker__folderInput {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--studio-line-input, #cfcfcf);
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  background: var(--surface, var(--studio-surface, #fff));
+  color: inherit;
+  font: inherit;
+  padding: 0.45rem 0.55rem;
+}
+
+.sharedFilePicker__folderInput:focus {
+  outline: none;
+  border-color: var(--studio-focus, #5f8ffb);
+  box-shadow: 0 0 0 2px var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+.sharedFilePicker__folderPopup {
+  width: min(30rem, 100%);
+}
+
+.sharedFilePicker__status {
+  margin: 0;
+  min-height: 1.2rem;
+  color: var(--studio-danger, #a33);
+  font-size: var(--font-caption, 0.9rem);
+}
+
+.sharedFilePicker__status[data-state="warning"] {
+  color: var(--studio-warning, #7a5a00);
+}
+
+.sharedFilePicker__listboxes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.sharedFilePicker__labelSpacer {
+  min-height: 1.4em;
+}
+
+.sharedFilePicker__listbox {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: min(24rem, 48vh);
+  border: 1px solid var(--studio-line-input, #cfcfcf);
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  padding: 0.35rem;
+  background: var(--surface, var(--studio-surface, #fff));
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.95rem);
+  overscroll-behavior: contain;
+}
+
+.sharedFilePicker__listbox:focus {
+  outline: none;
+  border-color: var(--studio-focus, #5f8ffb);
+  box-shadow: 0 0 0 2px var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+@media (max-width: 720px) {
+  .sharedFilePicker__listboxes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

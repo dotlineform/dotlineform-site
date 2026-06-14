@@ -15,7 +15,6 @@ import {
   seriesIdsToText
 } from "./catalogue-work-fields.js";
 import {
-  bindProjectFolderSearch,
   openProjectMediaPickerForCurrentDraft
 } from "./catalogue-project-media-picker.js";
 
@@ -194,11 +193,15 @@ function renderField(field, fieldsNode, state, options) {
     return;
   }
   if (field.key === "project_folder") {
-    renderProjectFolderField(field, fieldsNode, state, options);
+    renderProjectMediaDisplayField(field, fieldsNode, state, options);
+    return;
+  }
+  if (field.key === "project_subfolder") {
+    renderProjectMediaDisplayField(field, fieldsNode, state, options);
     return;
   }
   if (field.key === "project_filename") {
-    renderProjectFilenameField(field, fieldsNode, state, options);
+    renderProjectMediaDisplayField(field, fieldsNode, state, options);
     return;
   }
 
@@ -267,54 +270,9 @@ function renderField(field, fieldsNode, state, options) {
   state.fieldStatusNodes.set(field.key, message);
 }
 
-function renderProjectFolderField(field, fieldsNode, state, options) {
+function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__folderField";
-
-  const label = document.createElement("label");
-  label.className = "tagStudioForm__label";
-  label.htmlFor = `catalogueWorkField-${field.key}`;
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  const control = document.createElement("div");
-  control.className = "sharedSearchList__control catalogueProjectMediaPicker__folderControl";
-
-  const input = document.createElement("input");
-  input.className = "tagStudio__input";
-  input.id = `catalogueWorkField-${field.key}`;
-  input.dataset.field = field.key;
-  input.type = "text";
-  input.autocomplete = "off";
-  input.spellcheck = false;
-  input.placeholder = formText(options, "project_folder_picker_placeholder", "find project folder");
-  control.appendChild(input);
-
-  const popupNode = document.createElement("div");
-  popupNode.className = "catalogueProjectMediaPicker__folderPopup";
-  popupNode.hidden = true;
-  control.appendChild(popupNode);
-  wrapper.appendChild(control);
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  bindProjectFolderSearch(state, input, popupNode, {
-    ...options,
-    autoOpenFileModal: true
-  });
-
-  fieldsNode.appendChild(wrapper);
-  state.fieldNodes.set(field.key, input);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function renderProjectFilenameField(field, fieldsNode, state, options) {
-  const wrapper = document.createElement("label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__filenameField";
-  wrapper.htmlFor = `catalogueWorkField-${field.key}`;
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__displayField";
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
@@ -322,24 +280,39 @@ function renderProjectFilenameField(field, fieldsNode, state, options) {
   wrapper.appendChild(label);
 
   const control = document.createElement("div");
-  control.className = "catalogueProjectMediaPicker__filenameControl";
+  control.className = "catalogueProjectMediaPicker__displayControl";
+
+  const display = document.createElement("span");
+  display.className = "tagStudio__input tagStudio__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
+  display.id = `catalogueWorkFieldDisplay-${field.key}`;
+  display.dataset.projectMediaDisplay = field.key;
+  display.textContent = "—";
+  control.appendChild(display);
 
   const input = document.createElement("input");
-  input.className = "tagStudio__input";
   input.id = `catalogueWorkField-${field.key}`;
   input.dataset.field = field.key;
-  input.type = "text";
-  input.autocomplete = "off";
+  input.dataset.displayTarget = display.id;
+  input.type = "hidden";
   control.appendChild(input);
 
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "catalogueProjectMediaPicker__chooseButton";
-  button.dataset.projectMediaChoose = "work";
-  button.textContent = "📂";
-  button.title = formText(options, "project_media_choose_button", "Choose image...");
-  button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
-  control.appendChild(button);
+  if (field.key === "project_filename") {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "catalogueProjectMediaPicker__chooseButton";
+    button.dataset.projectMediaChoose = "work";
+    button.textContent = "📂";
+    button.title = formText(options, "project_media_choose_button", "Choose image...");
+    button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
+    button.addEventListener("click", () => {
+      openProjectMediaPickerForCurrentDraft(state, options).catch((error) => {
+        console.warn("catalogue_work_form: failed to open project image picker", error);
+      });
+    });
+    control.appendChild(button);
+    state.projectMediaChooseButton = button;
+  }
+
   wrapper.appendChild(control);
 
   const message = document.createElement("span");
@@ -347,18 +320,9 @@ function renderProjectFilenameField(field, fieldsNode, state, options) {
   message.dataset.fieldStatus = field.key;
   wrapper.appendChild(message);
 
-  input.addEventListener("input", () => notifyFieldInput(options, field.key));
-  input.addEventListener("change", () => notifyFieldInput(options, field.key));
-  button.addEventListener("click", () => {
-    openProjectMediaPickerForCurrentDraft(state, options).catch((error) => {
-      console.warn("catalogue_work_form: failed to open project image picker", error);
-    });
-  });
-
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
-  state.projectMediaChooseButton = button;
 }
 
 function renderStagedProseField(fieldsNode, state, options) {
@@ -540,6 +504,10 @@ export function setFieldNodeValue(node, value) {
   const text = normalizeText(value);
   if ("value" in node) {
     node.value = text;
+    if (node.dataset && node.dataset.displayTarget) {
+      const displayNode = node.ownerDocument.getElementById(node.dataset.displayTarget);
+      if (displayNode) displayNode.textContent = displayValue(text);
+    }
   } else {
     node.textContent = displayValue(text);
   }

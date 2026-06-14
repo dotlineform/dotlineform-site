@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f6bacd45bf03c0304597a5d48648c099",
-    "generated_at_utc": "2026-06-14T14:20:02Z",
-    "count": 252
+    "version": "blake2b-afa0990cd70a95a0c494c257ffaa1071",
+    "generated_at_utc": "2026-06-14T14:50:16Z",
+    "count": 253
   },
   "entries": [
     {
@@ -5817,21 +5817,21 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-06-10 • UI",
+      "display_meta": "2026-06-14 • UI",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
-        "2026-06-10",
+        "2026-06-14",
         "2026",
         "06",
-        "10"
+        "14"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-06-10 2026 06 10"
+      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-06-14 2026 06 14"
     },
     {
       "id": "ui-pattern-action-menu",
@@ -5930,6 +5930,31 @@
         "24"
       ],
       "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "ui-pattern-file-picker",
+      "kind": "doc",
+      "title": "File Picker Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-file-picker",
+      "last_updated": "2026-06-14",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-06-14 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-file-picker",
+        "ui",
+        "pattern",
+        "file",
+        "picker",
+        "file picker pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-06-14",
+        "2026",
+        "06",
+        "14"
+      ],
+      "search_text": "ui-pattern-file-picker ui pattern file picker file picker pattern ui catalogue catalogue 2026-06-14 2026 06 14"
     },
     {
       "id": "ui-primitive-input",

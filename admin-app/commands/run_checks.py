@@ -177,6 +177,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "analytics-app/tests/smoke/tag_registry_modal.py",
                 "analytics-app/tests/smoke/tag_registry_modules.py",
                 "analytics-app/tests/smoke/tag_route_shell_modules.py",
+                "admin-app/tests/smoke/ui_catalogue_file_picker_modules.py",
                 "admin-app/tests/smoke/ui_catalogue_search_list_modules.py",
                 "admin-app/tests/smoke/admin_ui_catalogue_modal_demo.py",
                 "admin-app/tests/smoke/admin_ui_catalogue_routes.py",
@@ -408,6 +409,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check the shared Search List component contract used by UI Catalogue patterns and app adapters.",
+        ),
+        CheckCommand(
+            "ui-catalogue-file-picker-modules-smoke",
+            (
+                sys.executable,
+                "admin-app/tests/smoke/ui_catalogue_file_picker_modules.py",
+                "--site-root",
+                str(SOURCE_MODULE_SITE_ROOT),
+            ),
+            "Smoke-check the shared File Picker component contract used by UI Catalogue patterns and app adapters.",
         ),
         CheckCommand(
             "ui-catalogue-modal-demo-smoke",

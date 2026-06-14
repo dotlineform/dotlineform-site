@@ -1315,6 +1315,11 @@
               "content_url": "/docs-viewer/generated/docs/studio/by-id/css-primitives.json"
             },
             {
+              "doc_id": "ui-pattern-file-picker",
+              "title": "File Picker Pattern",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json"
+            },
+            {
               "doc_id": "ui-primitive-input",
               "title": "Input Primitive",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-input.json"
@@ -1379,5 +1384,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-14T10:59:49Z"
+  "generated_at": "2026-06-14T14:50:16Z"
 }

@@ -44,6 +44,7 @@ Current demo pages:
 Current shared production controls and patterns:
 
 - [Search List Pattern](/docs/?scope=studio&doc=ui-pattern-search-list)
+- [File Picker Pattern](/docs/?scope=studio&doc=ui-pattern-file-picker)
 
 The demo links target the default Admin app port.
 If `ADMIN_APP_PORT` is changed from `8768`, adjust the port in the browser URL.

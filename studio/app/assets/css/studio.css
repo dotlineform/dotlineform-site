@@ -3277,8 +3277,7 @@ button.tagStudioList__cellLink {
 .catalogueWorkForm__field > .tagStudio__input,
 .catalogueWorkForm__field > .tagStudioForm__readonly,
 .catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
-.catalogueWorkForm__field > .catalogueProjectMediaPicker__folderControl,
-.catalogueWorkForm__field > .catalogueProjectMediaPicker__filenameControl,
+.catalogueWorkForm__field > .catalogueProjectMediaPicker__displayControl,
 .catalogueWorkForm__field > .catalogueWorkStagedProse__control,
 .catalogueWorkForm__field > .tagStudioForm__meta,
 .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
@@ -3333,12 +3332,16 @@ button.tagStudioList__cellLink {
   width: 100%;
 }
 
-.catalogueProjectMediaPicker__filenameControl {
+.catalogueProjectMediaPicker__displayControl {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.3rem;
   align-items: center;
+}
+
+.catalogueProjectMediaPicker__displayValue {
+  min-width: 0;
 }
 
 .catalogueProjectMediaPicker__chooseButton {
@@ -3359,67 +3362,6 @@ button.tagStudioList__cellLink {
 
 .catalogueProjectMediaPicker__chooseButton:disabled {
   opacity: 0.45;
-}
-
-.catalogueProjectMediaPicker__folderPopup {
-  width: min(30rem, 100%);
-}
-
-.catalogueProjectMediaPicker {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.catalogueProjectMediaPicker__projectFolder {
-  display: grid;
-  gap: 0.2rem;
-  margin: 0;
-  font-size: var(--font-small);
-}
-
-.catalogueProjectMediaPicker__projectFolder strong {
-  font-weight: 500;
-}
-
-.catalogueProjectMediaPicker__listboxes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.1rem;
-}
-
-.catalogueProjectMediaPicker__listboxField {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.catalogueProjectMediaPicker__listboxLabelSpacer {
-  min-height: 1.4em;
-}
-
-.catalogueProjectMediaPicker__listbox {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: min(24rem, 48vh);
-  border: 1px solid var(--studio-line-input);
-  border-radius: var(--studio-radius-sm);
-  padding: 0.35rem;
-  font: inherit;
-  font-size: var(--font-small);
-  color: inherit;
-  background: var(--surface, var(--studio-surface));
-  overscroll-behavior: contain;
-}
-
-.catalogueProjectMediaPicker__listbox:focus {
-  outline: none;
-  border-color: var(--studio-focus);
-  box-shadow: 0 0 0 2px var(--studio-focus-ring);
-}
-
-@media (max-width: 720px) {
-  .catalogueProjectMediaPicker__listboxes {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .catalogueWorkForm__fieldMeta {
@@ -4050,8 +3992,7 @@ button.tagStudioList__cellLink {
   .catalogueWorkForm__field > .tagStudioForm__label,
   .catalogueWorkForm__field > .tagStudio__input,
   .catalogueWorkForm__field > .tagStudioForm__readonly,
-  .catalogueWorkForm__field > .catalogueProjectMediaPicker__folderControl,
-  .catalogueWorkForm__field > .catalogueProjectMediaPicker__filenameControl,
+  .catalogueWorkForm__field > .catalogueProjectMediaPicker__displayControl,
   .catalogueWorkForm__field > .catalogueWorkStagedProse__control,
   .catalogueWorkForm__field > .tagStudioForm__meta,
   .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
