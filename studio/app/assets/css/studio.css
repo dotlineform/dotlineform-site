@@ -1129,6 +1129,14 @@ span.tagStudio__input--readonlyDisplay {
   min-inline-size: var(--button-default-width);
 }
 
+.tagStudio__button--icon {
+  inline-size: var(--studio-control-height);
+  min-inline-size: var(--studio-control-height);
+  padding-inline: 0;
+  font-size: var(--font-body);
+  line-height: 1;
+}
+
 .tagStudio__button--defaultAction {
   font-weight: 700;
 }
@@ -3626,6 +3634,10 @@ button.tagStudioList__cellLink {
 .catalogueWorkDetails__section {
   display: grid;
   gap: 0.45rem;
+}
+
+.catalogueWorkDetails__actionRow {
+  justify-content: flex-end;
 }
 
 .catalogueWorkDetails__rows {

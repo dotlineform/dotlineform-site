@@ -290,6 +290,11 @@ function actionTitle(action, selection, records) {
   return normalizeText(action.title);
 }
 
+function actionAriaLabel(action, selection, records) {
+  if (typeof action.ariaLabel === "function") return normalizeText(action.ariaLabel(selection, records));
+  return normalizeText(action.ariaLabel);
+}
+
 function renderActions(controller) {
   const { rootNode, options } = controller;
   const actions = Array.isArray(options.actions) ? options.actions : [];
@@ -310,6 +315,8 @@ function renderActions(controller) {
     if (action.tone) button.dataset.tone = normalizeText(action.tone);
     const title = actionTitle(action, selection, records);
     if (title) button.title = title;
+    const ariaLabel = actionAriaLabel(action, selection, records);
+    if (ariaLabel) button.setAttribute("aria-label", ariaLabel);
     button.textContent = normalizeText(action.label || key);
     rootNode.appendChild(button);
   });

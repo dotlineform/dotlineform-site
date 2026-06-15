@@ -70,6 +70,18 @@ function runMaybeAsync(result, label) {
   }
 }
 
+function clearRecordListActions(state, key, rootNode) {
+  const controller = state[key];
+  if (controller && typeof controller.destroy === "function") {
+    controller.destroy();
+  } else if (rootNode) {
+    rootNode.innerHTML = "";
+    rootNode.classList.remove("sharedRecordListActions");
+    delete rootNode.dataset.recordListActionsId;
+  }
+  state[key] = null;
+}
+
 function normalizeDetailId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (!digits) return "";
@@ -399,6 +411,7 @@ export function updateWorkDetailSections(state, options = {}) {
 
 export function updateWorkFilesSection(state, options = {}) {
   if (!state.filesResultsNode || !state.filesMetaNode) return;
+  clearRecordListActions(state, "filesActionsController", state.filesActionsNode);
   if (!state.currentWorkId) {
     state.filesMetaNode.textContent = "";
     state.filesResultsNode.innerHTML = "";
@@ -410,19 +423,17 @@ export function updateWorkFilesSection(state, options = {}) {
   else delete state.filesMetaNode.dataset.state;
   if (!items.length) {
     state.filesMetaNode.textContent = error;
-    state.filesResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "files_empty", "No work files for this work."))}</p>`;
+    state.filesResultsNode.innerHTML = "";
     return;
   }
-  state.filesMetaNode.textContent = error || `${items.length} total`;
+  state.filesMetaNode.textContent = error;
   const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
   state.filesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
       <div class="catalogueWorkDetails__rows" data-role="catalogue-work-downloads-list"></div>
-      <div class="catalogueWorkDetails__rowActions" data-role="catalogue-work-downloads-actions" aria-label="Download actions"></div>
     </section>
   `;
   const listRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-list"]');
-  const actionsRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-actions"]');
   const list = createRecordList(listRoot, {
     id: "catalogueWorkDownloads",
     records: items,
@@ -442,20 +453,24 @@ export function updateWorkFilesSection(state, options = {}) {
     ],
     getRecordId: (_record, index) => `download-${index}`
   });
-  createRecordListActions(actionsRoot, {
+  state.filesActionsController = createRecordListActions(state.filesActionsNode, {
     id: "catalogueWorkDownloadsActions",
     list,
     actions: [
       {
         key: "edit",
-        label: text(state, options, "files_edit_button", "Edit"),
-        className: "tagStudio__button",
+        label: "✏️",
+        title: text(state, options, "files_edit_button", "Edit"),
+        ariaLabel: text(state, options, "files_edit_button", "Edit"),
+        className: "tagStudio__button tagStudio__button--icon",
         disabled: () => actionDisabled
       },
       {
         key: "delete",
-        label: text(state, options, "files_delete_button", "Delete"),
-        className: "tagStudio__button",
+        label: "🗑️",
+        title: text(state, options, "files_delete_button", "Delete"),
+        ariaLabel: text(state, options, "files_delete_button", "Delete"),
+        className: "tagStudio__button tagStudio__button--icon",
         tone: "danger",
         disabled: () => actionDisabled
       }
@@ -480,6 +495,7 @@ export function updateWorkFilesSection(state, options = {}) {
 
 export function updateWorkLinksSection(state, options = {}) {
   if (!state.linksResultsNode || !state.linksMetaNode) return;
+  clearRecordListActions(state, "linksActionsController", state.linksActionsNode);
   if (!state.currentWorkId) {
     state.linksMetaNode.textContent = "";
     state.linksResultsNode.innerHTML = "";
@@ -491,19 +507,17 @@ export function updateWorkLinksSection(state, options = {}) {
   else delete state.linksMetaNode.dataset.state;
   if (!items.length) {
     state.linksMetaNode.textContent = error;
-    state.linksResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "links_empty", "No work links for this work."))}</p>`;
+    state.linksResultsNode.innerHTML = "";
     return;
   }
-  state.linksMetaNode.textContent = error || `${items.length} total`;
+  state.linksMetaNode.textContent = error;
   const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
   state.linksResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
       <div class="catalogueWorkDetails__rows" data-role="catalogue-work-links-list"></div>
-      <div class="catalogueWorkDetails__rowActions" data-role="catalogue-work-links-actions" aria-label="Link actions"></div>
     </section>
   `;
   const listRoot = state.linksResultsNode.querySelector('[data-role="catalogue-work-links-list"]');
-  const actionsRoot = state.linksResultsNode.querySelector('[data-role="catalogue-work-links-actions"]');
   const list = createRecordList(listRoot, {
     id: "catalogueWorkLinks",
     records: items,
@@ -524,20 +538,24 @@ export function updateWorkLinksSection(state, options = {}) {
     ],
     getRecordId: (_record, index) => `link-${index}`
   });
-  createRecordListActions(actionsRoot, {
+  state.linksActionsController = createRecordListActions(state.linksActionsNode, {
     id: "catalogueWorkLinksActions",
     list,
     actions: [
       {
         key: "edit",
-        label: text(state, options, "links_edit_button", "Edit"),
-        className: "tagStudio__button",
+        label: "✏️",
+        title: text(state, options, "links_edit_button", "Edit"),
+        ariaLabel: text(state, options, "links_edit_button", "Edit"),
+        className: "tagStudio__button tagStudio__button--icon",
         disabled: () => actionDisabled
       },
       {
         key: "delete",
-        label: text(state, options, "links_delete_button", "Delete"),
-        className: "tagStudio__button",
+        label: "🗑️",
+        title: text(state, options, "links_delete_button", "Delete"),
+        ariaLabel: text(state, options, "links_delete_button", "Delete"),
+        className: "tagStudio__button tagStudio__button--icon",
         tone: "danger",
         disabled: () => actionDisabled
       }

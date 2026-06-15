@@ -78,18 +78,18 @@ export function renderCatalogueWorkShell(config) {
           </section>
 
           <section class="tagStudio__panel catalogueWorkDetails">
-            <div class="tagStudio__headingRow">
-              <h2 class="tagStudio__heading" id="catalogueWorkFilesHeading">work files</h2>
-              <button type="button" class="tagStudio__button" id="catalogueWorkNewFileLink">Add file</button>
+            <div class="tagStudio__headingRow catalogueWorkDetails__actionRow">
+              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkFilesActions" aria-label="Download actions"></div>
+              <button type="button" class="tagStudio__button tagStudio__button--icon" id="catalogueWorkNewFileLink">📄</button>
             </div>
             <p class="tagStudioForm__meta" id="catalogueWorkFilesMeta"></p>
             <div class="catalogueWorkDetails__results" id="catalogueWorkFilesResults"></div>
           </section>
 
           <section class="tagStudio__panel catalogueWorkDetails">
-            <div class="tagStudio__headingRow">
-              <h2 class="tagStudio__heading" id="catalogueWorkLinksHeading">work links</h2>
-              <button type="button" class="tagStudio__button" id="catalogueWorkNewLinkLink">Add link</button>
+            <div class="tagStudio__headingRow catalogueWorkDetails__actionRow">
+              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkLinksActions" aria-label="Link actions"></div>
+              <button type="button" class="tagStudio__button tagStudio__button--icon" id="catalogueWorkNewLinkLink">📄</button>
             </div>
             <p class="tagStudioForm__meta" id="catalogueWorkLinksMeta"></p>
             <div class="catalogueWorkDetails__results" id="catalogueWorkLinksResults"></div>

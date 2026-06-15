@@ -330,9 +330,35 @@ def main() -> int:
 
             add_download_button = "#catalogueWorkNewFileLink"
             add_link_button = "#catalogueWorkNewLinkLink"
+            download_actions = "#catalogueWorkFilesActions"
+            link_actions = "#catalogueWorkLinksActions"
             publication_button = "#catalogueWorkPublication"
             delete_button = "#catalogueWorkDelete"
             prose_button = '[data-prose-import="work"]'
+
+            embedded_section_state = page.evaluate(
+                """() => ({
+                    filesHeading: Boolean(document.querySelector('#catalogueWorkFilesHeading')),
+                    linksHeading: Boolean(document.querySelector('#catalogueWorkLinksHeading')),
+                    filesMeta: document.querySelector('#catalogueWorkFilesMeta')?.textContent.trim() || '',
+                    linksMeta: document.querySelector('#catalogueWorkLinksMeta')?.textContent.trim() || '',
+                    addDownloadText: document.querySelector('#catalogueWorkNewFileLink')?.textContent.trim() || '',
+                    addDownloadLabel: document.querySelector('#catalogueWorkNewFileLink')?.getAttribute('aria-label') || '',
+                    addLinkText: document.querySelector('#catalogueWorkNewLinkLink')?.textContent.trim() || '',
+                    addLinkLabel: document.querySelector('#catalogueWorkNewLinkLink')?.getAttribute('aria-label') || ''
+                })"""
+            )
+            if embedded_section_state != {
+                "filesHeading": False,
+                "linksHeading": False,
+                "filesMeta": "",
+                "linksMeta": "",
+                "addDownloadText": "📄",
+                "addDownloadLabel": "Add file",
+                "addLinkText": "📄",
+                "addLinkLabel": "Add link",
+            }:
+                raise AssertionError(f"embedded list chrome did not match compact toolbar contract: {embedded_section_state!r}")
 
             page.locator(prose_button).focus()
             page.locator(prose_button).click()
@@ -354,7 +380,7 @@ def main() -> int:
 
             page.locator(add_download_button).click()
             try:
-                download_modal = assert_modal_shell(page, "Add download", ["cancel", "Save"], args.timeout_ms)
+                download_modal = assert_modal_shell(page, "Add download", ["Cancel", "Save"], args.timeout_ms)
             except PlaywrightTimeoutError as error:
                 button_state = page.locator(add_download_button).evaluate(
                     """button => ({
@@ -408,23 +434,34 @@ def main() -> int:
             if "Original PDF" not in download_list_state["text"]:
                 raise AssertionError(f"download list lost existing row content: {download_list_state!r}")
 
-            edit_download_button = '#catalogueWorkFilesResults [data-record-list-action="edit"]'
-            delete_download_button = '#catalogueWorkFilesResults [data-record-list-action="delete"]'
-            action_state = page.locator("#catalogueWorkFilesResults").evaluate(
+            edit_download_button = '#catalogueWorkFilesActions [data-record-list-action="edit"]'
+            delete_download_button = '#catalogueWorkFilesActions [data-record-list-action="delete"]'
+            action_state = page.locator(download_actions).evaluate(
                 """node => ({
                     editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
-                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled)
+                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled),
+                    editText: node.querySelector('[data-record-list-action="edit"]')?.textContent.trim() || '',
+                    deleteText: node.querySelector('[data-record-list-action="delete"]')?.textContent.trim() || '',
+                    editLabel: node.querySelector('[data-record-list-action="edit"]')?.getAttribute('aria-label') || '',
+                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || ''
                 })"""
             )
-            if action_state != {"editDisabled": False, "deleteDisabled": False}:
+            if action_state != {
+                "editDisabled": False,
+                "deleteDisabled": False,
+                "editText": "✏️",
+                "deleteText": "🗑️",
+                "editLabel": "Edit",
+                "deleteLabel": "Delete",
+            }:
                 raise AssertionError(f"download shared actions did not enable after row selection: {action_state!r}")
             page.locator(edit_download_button).click()
-            assert_modal_shell(page, "Edit download", ["cancel", "Save"], args.timeout_ms)
+            assert_modal_shell(page, "Edit download", ["Cancel", "Save"], args.timeout_ms)
             close_with_escape(page, edit_download_button, args.timeout_ms, expect_focus=False)
 
             page.locator("#catalogueWorkFilesResults [data-record-list-row='true']").first.click()
             page.locator(delete_download_button).click()
-            delete_download_modal = assert_modal_shell(page, "Delete download", ["cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            delete_download_modal = assert_modal_shell(page, "Delete download", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if "Original PDF" not in delete_download_modal["bodyText"]:
                 raise AssertionError(f"embedded delete text missing from modal: {delete_download_modal!r}")
             page.wait_for_function(
@@ -441,7 +478,7 @@ def main() -> int:
             page.wait_for_timeout(50)
 
             page.locator(add_link_button).click()
-            assert_modal_shell(page, "Add link", ["cancel", "Save"], args.timeout_ms)
+            assert_modal_shell(page, "Add link", ["Cancel", "Save"], args.timeout_ms)
             close_with_backdrop(page, add_link_button, args.timeout_ms)
 
             page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
@@ -474,23 +511,34 @@ def main() -> int:
             if link_list_state["linkHref"] != "https://example.com/original" or link_list_state["linkTarget"] != "_blank" or link_list_state["linkRel"] != "noopener noreferrer":
                 raise AssertionError(f"link list did not render safe external-link attributes: {link_list_state!r}")
 
-            edit_link_button = '#catalogueWorkLinksResults [data-record-list-action="edit"]'
-            delete_link_button = '#catalogueWorkLinksResults [data-record-list-action="delete"]'
-            link_action_state = page.locator("#catalogueWorkLinksResults").evaluate(
+            edit_link_button = '#catalogueWorkLinksActions [data-record-list-action="edit"]'
+            delete_link_button = '#catalogueWorkLinksActions [data-record-list-action="delete"]'
+            link_action_state = page.locator(link_actions).evaluate(
                 """node => ({
                     editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
-                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled)
+                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled),
+                    editText: node.querySelector('[data-record-list-action="edit"]')?.textContent.trim() || '',
+                    deleteText: node.querySelector('[data-record-list-action="delete"]')?.textContent.trim() || '',
+                    editLabel: node.querySelector('[data-record-list-action="edit"]')?.getAttribute('aria-label') || '',
+                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || ''
                 })"""
             )
-            if link_action_state != {"editDisabled": False, "deleteDisabled": False}:
+            if link_action_state != {
+                "editDisabled": False,
+                "deleteDisabled": False,
+                "editText": "✏️",
+                "deleteText": "🗑️",
+                "editLabel": "Edit",
+                "deleteLabel": "Delete",
+            }:
                 raise AssertionError(f"link shared actions did not enable after row selection: {link_action_state!r}")
             page.locator(edit_link_button).click()
-            assert_modal_shell(page, "Edit link", ["cancel", "Save"], args.timeout_ms)
+            assert_modal_shell(page, "Edit link", ["Cancel", "Save"], args.timeout_ms)
             close_with_escape(page, edit_link_button, args.timeout_ms, expect_focus=False)
 
             page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
             page.locator(delete_link_button).click()
-            delete_link_modal = assert_modal_shell(page, "Delete link", ["cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            delete_link_modal = assert_modal_shell(page, "Delete link", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if "Original link" not in delete_link_modal["bodyText"]:
                 raise AssertionError(f"link delete text missing from modal: {delete_link_modal!r}")
             page.wait_for_function(
