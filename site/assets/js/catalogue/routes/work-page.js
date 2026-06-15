@@ -16,6 +16,7 @@ import { fetchJson } from '../shared/fetch-json.js';
 import { normalizePositiveSizes, slug, text, toNumber, toPositiveInteger } from '../shared/text.js';
 import { thumbnailImageData } from '../shared/thumbnails.js';
 
+var DETAILS_PAGE_SIZE = 80;
 var root = document.getElementById('selectedWorkRoot');
 if (root) {
   var routeState = parseRouteState(window.location);
@@ -212,6 +213,20 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     link.href = catalogueIndexUrl(baseurl);
   }
 
+  function persistDetailsPage(sectionId, page) {
+    var path = String(window.location.pathname || '/');
+    var params = new URLSearchParams(window.location.search);
+    var normalizedPage = toPositiveInteger(page) || 1;
+    params.set('details_section', sectionId);
+    if (normalizedPage > 1) {
+      params.set('details_page', String(normalizedPage));
+    } else {
+      params.delete('details_page');
+    }
+    var query = params.toString();
+    window.history.replaceState({}, '', path + (query ? ('?' + query) : '') + '#details-' + encodeURIComponent(sectionId));
+  }
+
   function renderMedia(work) {
     var media = document.getElementById('selectedWorkMedia');
     if (!media) return;
@@ -244,26 +259,27 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     });
   }
 
-  function detailHref(uid, workTitle, sectionId) {
+  function detailHref(uid, workTitle, sectionId, detailsPage) {
+    var normalizedPage = toPositiveInteger(detailsPage) || 1;
     return workDetailUrl(uid, baseurl, {
       from_work: workId,
       from_work_title: workTitle,
       section: sectionId,
       details_section: sectionId,
-      details_page: routeState.detailsPage > 0 ? routeState.detailsPage : '',
+      details_page: normalizedPage > 1 ? normalizedPage : '',
       series: routeState.series,
-      series_page: routeState.seriesPage
+      series_page: routeState.seriesPage > 0 ? routeState.seriesPage : ''
     });
   }
 
-  function detailItem(detail, workTitle, sectionId) {
+  function detailItem(detail, workTitle, sectionId, detailsPage) {
     var uid = text(detail && detail.detail_uid);
     if (!uid) return null;
     var title = text(detail && detail.title) || uid;
     return {
       id: uid,
       title: title,
-      href: detailHref(uid, workTitle, sectionId),
+      href: detailHref(uid, workTitle, sectionId, detailsPage),
       thumbnail: thumbnailImageData({
         base: detailsThumbBase,
         id: uid,
@@ -273,6 +289,38 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
         format: assetFormat,
         alt: title
       })
+    };
+  }
+
+  function createDetailsPager(label) {
+    var pager = document.createElement('nav');
+    pager.className = 'catalogueGridList__pager';
+    pager.setAttribute('aria-label', 'details pagination for ' + label);
+    pager.hidden = true;
+
+    var status = document.createElement('span');
+    status.className = 'catalogueGridList__pagerStatus';
+    pager.appendChild(status);
+
+    var previous = document.createElement('button');
+    previous.className = 'catalogueGridList__pagerButton';
+    previous.type = 'button';
+    previous.setAttribute('aria-label', 'Previous details page');
+    previous.textContent = '\u2190';
+    pager.appendChild(previous);
+
+    var next = document.createElement('button');
+    next.className = 'catalogueGridList__pagerButton';
+    next.type = 'button';
+    next.setAttribute('aria-label', 'Next details page');
+    next.textContent = '\u2192';
+    pager.appendChild(next);
+
+    return {
+      root: pager,
+      status: status,
+      previous: previous,
+      next: next
     };
   }
 
@@ -289,7 +337,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       var sectionId = slug(sec && (sec.section_id || label)) || 'details';
       var details = sec && Array.isArray(sec.details) ? sec.details : [];
       var items = details.map(function (detail) {
-        return detailItem(detail, workTitle, sectionId);
+        return detailItem(detail, workTitle, sectionId, 1);
       }).filter(Boolean);
       if (!items.length) return;
 
@@ -305,15 +353,41 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       var grid = document.createElement('div');
       grid.className = 'catalogueGridList catalogueGridList--grid';
       grid.setAttribute('aria-label', 'details for ' + label);
-      createThumbnailGridList({
+      var pager = createDetailsPager(label);
+      var pageCount = Math.max(1, Math.ceil(items.length / DETAILS_PAGE_SIZE));
+      var initialPage = routeState.detailsSection === sectionId && routeState.detailsPage > 0 ? routeState.detailsPage : 1;
+      initialPage = Math.min(initialPage, pageCount);
+      var thumbnailGridList = null;
+      var renderDetailsPage = function (page) {
+        var normalizedPage = Math.min(toPositiveInteger(page) || 1, pageCount);
+        var pageItems = details.map(function (detail) {
+          return detailItem(detail, workTitle, sectionId, normalizedPage);
+        }).filter(Boolean);
+        return thumbnailGridList.render({
+          items: pageItems,
+          mode: 'grid',
+          page: normalizedPage
+        });
+      };
+      thumbnailGridList = createThumbnailGridList({
         gridElement: grid,
-        pageSize: Math.max(items.length, 1)
-      }).render({
-        items: items,
-        mode: 'grid',
-        page: 1
+        pagerElement: pager.root,
+        pagerStatusElement: pager.status,
+        previousButton: pager.previous,
+        nextButton: pager.next,
+        pageSize: DETAILS_PAGE_SIZE,
+        labels: {
+          previous: 'Previous details page',
+          next: 'Next details page'
+        },
+        onPageChange: function (page) {
+          persistDetailsPage(sectionId, page);
+          renderDetailsPage(page);
+        }
       });
+      renderDetailsPage(initialPage);
       group.appendChild(grid);
+      group.appendChild(pager.root);
       content.appendChild(group);
       hasDetails = true;
     });
