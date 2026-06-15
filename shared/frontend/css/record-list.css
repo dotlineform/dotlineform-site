@@ -100,6 +100,18 @@
   cursor: pointer;
 }
 
+.sharedRecordListActions__button[data-appearance="icon"] {
+  inline-size: var(--shared-record-list-icon-action-size, 2rem);
+  min-inline-size: var(--shared-record-list-icon-action-size, 2rem);
+  min-height: var(--shared-record-list-icon-action-size, 2rem);
+  padding: 0.2rem;
+  border: 0;
+  border-radius: var(--shared-record-list-icon-action-radius, 0.25rem);
+  background: transparent;
+  font-size: var(--shared-record-list-icon-action-font, 1.2rem);
+  line-height: 1;
+}
+
 .sharedRecordListActions__button:disabled {
   color: var(--shared-record-list-muted, var(--muted, #666));
   cursor: default;

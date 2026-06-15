@@ -148,6 +148,15 @@ async function openEmbeddedEntryModal(state, kind, index = null) {
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
+  if (!result.editing) {
+    const addActionSelector = result.entriesKey === "downloads"
+      ? '#catalogueWorkResourcesActions [data-record-list-action="new-download"]'
+      : '#catalogueWorkResourcesActions [data-record-list-action="new-link"]';
+    window.setTimeout(() => {
+      const addButton = document.querySelector(addActionSelector);
+      if (addButton && typeof addButton.focus === "function") addButton.focus();
+    }, 0);
+  }
 }
 
 async function deleteEmbeddedEntry(state, kind, index) {
@@ -580,12 +589,6 @@ function applyWorkEditorText(state, elements) {
   elements.detailsHeadingNode.textContent = t(state, "details_heading", "work details");
   elements.newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
   elements.detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
-  elements.newFileLinkNode.textContent = "📄";
-  elements.newFileLinkNode.title = t(state, "files_add_button", "Add file");
-  elements.newFileLinkNode.setAttribute("aria-label", t(state, "files_add_button", "Add file"));
-  elements.newLinkLinkNode.textContent = "📄";
-  elements.newLinkLinkNode.title = t(state, "links_add_button", "Add link");
-  elements.newLinkLinkNode.setAttribute("aria-label", t(state, "links_add_button", "Add link"));
   elements.openButton.textContent = t(state, "open_button", "Open");
   elements.newButton.textContent = t(state, "new_button", "New");
   elements.saveButton.textContent = t(state, "save_button", "Save");

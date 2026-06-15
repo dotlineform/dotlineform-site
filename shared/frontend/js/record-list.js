@@ -112,7 +112,7 @@ function renderEmpty(rootNode, options) {
   const empty = document.createElement("p");
   empty.className = "sharedRecordList__empty";
   empty.dataset.recordListEmpty = "true";
-  empty.textContent = normalizeText(options.emptyText) || "No records.";
+  empty.textContent = options.emptyText === "" ? "" : normalizeText(options.emptyText) || "No records.";
   rootNode.appendChild(empty);
 }
 
@@ -312,6 +312,7 @@ function renderActions(controller) {
     button.className = ["sharedRecordListActions__button", action.className].filter(Boolean).join(" ");
     button.dataset.recordListAction = key;
     button.disabled = actionDisabled(action, selection, records);
+    if (action.appearance) button.dataset.appearance = normalizeText(action.appearance);
     if (action.tone) button.dataset.tone = normalizeText(action.tone);
     const title = actionTitle(action, selection, records);
     if (title) button.title = title;

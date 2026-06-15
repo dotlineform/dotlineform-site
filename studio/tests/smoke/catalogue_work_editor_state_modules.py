@@ -46,14 +46,9 @@ WORK_EDITOR_DOM = """
       <input id="catalogueWorkDetailSearch" />
       <div id="catalogueWorkDetailsMeta"></div>
       <section><div id="catalogueWorkDetailsResults"></div></section>
-      <h2 id="catalogueWorkFilesHeading"></h2>
-      <button id="catalogueWorkNewFileLink"></button>
-      <div id="catalogueWorkFilesMeta"></div>
-      <section><div id="catalogueWorkFilesResults"></div></section>
-      <h2 id="catalogueWorkLinksHeading"></h2>
-      <button id="catalogueWorkNewLinkLink"></button>
-      <div id="catalogueWorkLinksMeta"></div>
-      <section><div id="catalogueWorkLinksResults"></div></section>
+      <div id="catalogueWorkResourcesActions"></div>
+      <div id="catalogueWorkResourcesMeta"></div>
+      <section><div id="catalogueWorkResourcesResults"></div></section>
       <div id="catalogueWorkPopup">
         <input id="catalogueWorkSearch" />
         <span id="catalogueWorkPopupList" hidden></span>
@@ -109,8 +104,7 @@ def assert_state_factory(page: Page) -> None:
                 mediaConfig: state.mediaConfig,
                 modalHost: state.modalHost,
                 detailsPanelTag: state.detailsPanelNode && state.detailsPanelNode.tagName,
-                filesPanelTag: state.filesPanelNode && state.filesPanelNode.tagName,
-                linksPanelTag: state.linksPanelNode && state.linksPanelNode.tagName,
+                resourcesPanelTag: state.resourcesPanelNode && state.resourcesPanelNode.tagName,
                 contextNodeInState: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
                 routeOptionText: routeOptions.text('key', 'fallback'),
                 routeOptionCustom: routeOptions.customOption,
@@ -131,8 +125,7 @@ def assert_state_factory(page: Page) -> None:
     assert result["mediaConfig"] == {"rootId": "catalogueWorkRoot", "source": "stub-media"}
     assert result["modalHost"] == {"rootId": "catalogueWorkRoot", "source": "stub-modal"}
     assert result["detailsPanelTag"] == "SECTION"
-    assert result["filesPanelTag"] == "SECTION"
-    assert result["linksPanelTag"] == "SECTION"
+    assert result["resourcesPanelTag"] == "SECTION"
     assert result["contextNodeInState"] is False
     assert result["routeOptionText"] == "key:fallback"
     assert result["routeOptionCustom"] == "custom"
@@ -173,8 +166,6 @@ def assert_event_binder(page: Page) -> None:
         }}"""
     )
     page.fill("#catalogueWorkDetailSearch", "001")
-    page.click("#catalogueWorkNewFileLink")
-    page.click("#catalogueWorkNewLinkLink")
     page.click("#catalogueWorkNew")
     page.click('[data-media-refresh="work"]')
     page.click('[data-prose-import="work"]')
@@ -185,8 +176,6 @@ def assert_event_binder(page: Page) -> None:
     assert calls == [
         ["bindSelectionControls"],
         ["updateDetailSections"],
-        ["openEmbeddedEntryModal", "download", None],
-        ["openEmbeddedEntryModal", "link", None],
         ["setNewWorkMode"],
         ["refreshWorkMedia"],
         ["importWorkProse"],

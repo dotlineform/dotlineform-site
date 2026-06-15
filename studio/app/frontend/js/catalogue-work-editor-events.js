@@ -17,13 +17,6 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
     invoke(callbacks.updateDetailSections);
   });
 
-  state.newFileLinkNode.addEventListener("click", () => {
-    runAsync(callbacks.openEmbeddedEntryModal, "catalogue_work_editor: failed to open download modal", "download");
-  });
-  state.newLinkLinkNode.addEventListener("click", () => {
-    runAsync(callbacks.openEmbeddedEntryModal, "catalogue_work_editor: failed to open link modal", "link");
-  });
-
   state.newButton.addEventListener("click", () => {
     invoke(callbacks.setNewWorkMode);
   });

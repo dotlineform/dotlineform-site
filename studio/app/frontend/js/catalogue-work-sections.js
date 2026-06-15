@@ -409,52 +409,92 @@ export function updateWorkDetailSections(state, options = {}) {
   bindPreviewImages(state.detailsResultsNode);
 }
 
-export function updateWorkFilesSection(state, options = {}) {
-  if (!state.filesResultsNode || !state.filesMetaNode) return;
-  clearRecordListActions(state, "filesActionsController", state.filesActionsNode);
+function buildWorkDownloadHref(state, filename, options = {}) {
+  if (!normalizeText(filename)) return "";
+  if (!isCurrentWorkPublished(state, options)) return "";
+  const runtime = state.config && state.config.app && state.config.app.runtime;
+  const mediaConfig = runtime && runtime.media && typeof runtime.media === "object" ? runtime.media : {};
+  const media = mediaConfig.media && typeof mediaConfig.media === "object" ? mediaConfig.media : mediaConfig;
+  const base = normalizeText(media.base).replace(/\/+$/, "");
+  const worksFiles = normalizeText(media.works_files || (media.paths && media.paths.works_files)).replace(/^\/?/, "/").replace(/\/+$/, "");
+  if (!base || !worksFiles) return "";
+  return `${base}${worksFiles}/${encodeURIComponent(normalizeText(filename))}`;
+}
+
+function buildWorkResourceRows(state, options = {}) {
+  const downloads = getWorkEmbeddedItems(state.draft, "download").map((item, index) => ({
+    kind: "download",
+    index,
+    type: text(state, options, "resources_download_type", "file"),
+    label: item.label || "",
+    target: item.filename || "",
+    targetHref: buildWorkDownloadHref(state, item.filename, options)
+  }));
+  const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
+    kind: "link",
+    index,
+    type: text(state, options, "resources_link_type", "link"),
+    label: item.label || "",
+    target: item.url || "",
+    targetHref: item.url || ""
+  }));
+  return downloads.concat(links);
+}
+
+export function updateWorkResourcesSection(state, options = {}) {
+  if (!state.resourcesResultsNode || !state.resourcesMetaNode) return;
+  clearRecordListActions(state, "resourcesActionsController", state.resourcesActionsNode);
   if (!state.currentWorkId) {
-    state.filesMetaNode.textContent = "";
-    state.filesResultsNode.innerHTML = "";
+    state.resourcesMetaNode.textContent = "";
+    state.resourcesResultsNode.innerHTML = "";
     return;
   }
-  const items = state.currentRecord ? getWorkEmbeddedItems(state.draft, "download") : [];
-  const error = state.validationErrors.get("downloads") || "";
-  if (error) state.filesMetaNode.dataset.state = "error";
-  else delete state.filesMetaNode.dataset.state;
-  if (!items.length) {
-    state.filesMetaNode.textContent = error;
-    state.filesResultsNode.innerHTML = "";
-    return;
-  }
-  state.filesMetaNode.textContent = error;
+  const items = state.currentRecord ? buildWorkResourceRows(state, options) : [];
+  const errors = [
+    state.validationErrors.get("downloads") || "",
+    state.validationErrors.get("links") || ""
+  ].filter(Boolean);
+  const error = errors.join(" ");
+  if (error) state.resourcesMetaNode.dataset.state = "error";
+  else delete state.resourcesMetaNode.dataset.state;
+  state.resourcesMetaNode.textContent = error;
   const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
-  state.filesResultsNode.innerHTML = `
+  const addDisabled = !state.currentRecord || actionDisabled;
+  state.resourcesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-downloads-list"></div>
+      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-resources-list"></div>
     </section>
   `;
-  const listRoot = state.filesResultsNode.querySelector('[data-role="catalogue-work-downloads-list"]');
+  const listRoot = state.resourcesResultsNode.querySelector('[data-role="catalogue-work-resources-list"]');
   const list = createRecordList(listRoot, {
-    id: "catalogueWorkDownloads",
+    id: "catalogueWorkResources",
     records: items,
+    emptyText: "",
     selectionMode: "single",
     clearSelectionOnBlur: true,
     columns: [
       {
-        key: "filename",
-        label: text(state, options, "files_filename_label", "filename"),
+        key: "type",
+        label: text(state, options, "resources_type_label", "type"),
         truncate: true
       },
       {
         key: "label",
-        label: text(state, options, "files_label_label", "label"),
+        label: text(state, options, "resources_label_label", "label"),
+        truncate: true
+      },
+      {
+        key: "target",
+        label: text(state, options, "resources_target_label", "file / URL"),
+        type: "link",
+        hrefKey: "targetHref",
         truncate: true
       }
     ],
-    getRecordId: (_record, index) => `download-${index}`
+    getRecordId: (record) => `${record.kind}-${record.index}`
   });
-  state.filesActionsController = createRecordListActions(state.filesActionsNode, {
-    id: "catalogueWorkDownloadsActions",
+  state.resourcesActionsController = createRecordListActions(state.resourcesActionsNode, {
+    id: "catalogueWorkResourcesActions",
     list,
     actions: [
       {
@@ -462,7 +502,7 @@ export function updateWorkFilesSection(state, options = {}) {
         label: "✏️",
         title: text(state, options, "files_edit_button", "Edit"),
         ariaLabel: text(state, options, "files_edit_button", "Edit"),
-        className: "tagStudio__button tagStudio__button--icon",
+        appearance: "icon",
         disabled: () => actionDisabled
       },
       {
@@ -470,108 +510,58 @@ export function updateWorkFilesSection(state, options = {}) {
         label: "🗑️",
         title: text(state, options, "files_delete_button", "Delete"),
         ariaLabel: text(state, options, "files_delete_button", "Delete"),
-        className: "tagStudio__button tagStudio__button--icon",
+        appearance: "icon",
         tone: "danger",
         disabled: () => actionDisabled
+      },
+      {
+        key: "new-download",
+        label: "📄",
+        title: text(state, options, "files_add_button", "Add file"),
+        ariaLabel: text(state, options, "files_add_button", "Add file"),
+        appearance: "icon",
+        requiresSelection: false,
+        disabled: () => addDisabled
+      },
+      {
+        key: "new-link",
+        label: "🔗",
+        title: text(state, options, "links_add_button", "Add link"),
+        ariaLabel: text(state, options, "links_add_button", "Add link"),
+        appearance: "icon",
+        requiresSelection: false,
+        disabled: () => addDisabled
       }
     ],
     onAction: ({ actionKey, selection }) => {
+      if (actionKey === "new-download" && typeof options.openEmbeddedEntryModal === "function") {
+        runMaybeAsync(
+          options.openEmbeddedEntryModal("download"),
+          "catalogue_work_sections: failed to add download"
+        );
+        return;
+      }
+      if (actionKey === "new-link" && typeof options.openEmbeddedEntryModal === "function") {
+        runMaybeAsync(
+          options.openEmbeddedEntryModal("link"),
+          "catalogue_work_sections: failed to add link"
+        );
+        return;
+      }
       if (!selection) return;
+      const selected = selection.record || {};
+      const selectedKind = selected.kind === "link" ? "link" : "download";
+      const selectedIndex = Number.isInteger(selected.index) ? selected.index : 0;
       if (actionKey === "edit" && typeof options.openEmbeddedEntryModal === "function") {
         runMaybeAsync(
-          options.openEmbeddedEntryModal("download", selection.index),
-          "catalogue_work_sections: failed to edit download"
+          options.openEmbeddedEntryModal(selectedKind, selectedIndex),
+          "catalogue_work_sections: failed to edit resource"
         );
       }
       if (actionKey === "delete" && typeof options.deleteEmbeddedEntry === "function") {
         runMaybeAsync(
-          options.deleteEmbeddedEntry("download", selection.index),
-          "catalogue_work_sections: failed to delete download"
-        );
-      }
-    }
-  });
-}
-
-export function updateWorkLinksSection(state, options = {}) {
-  if (!state.linksResultsNode || !state.linksMetaNode) return;
-  clearRecordListActions(state, "linksActionsController", state.linksActionsNode);
-  if (!state.currentWorkId) {
-    state.linksMetaNode.textContent = "";
-    state.linksResultsNode.innerHTML = "";
-    return;
-  }
-  const items = state.currentRecord ? getWorkEmbeddedItems(state.draft, "link") : [];
-  const error = state.validationErrors.get("links") || "";
-  if (error) state.linksMetaNode.dataset.state = "error";
-  else delete state.linksMetaNode.dataset.state;
-  if (!items.length) {
-    state.linksMetaNode.textContent = error;
-    state.linksResultsNode.innerHTML = "";
-    return;
-  }
-  state.linksMetaNode.textContent = error;
-  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
-  state.linksResultsNode.innerHTML = `
-    <section class="catalogueWorkDetails__section">
-      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-links-list"></div>
-    </section>
-  `;
-  const listRoot = state.linksResultsNode.querySelector('[data-role="catalogue-work-links-list"]');
-  const list = createRecordList(listRoot, {
-    id: "catalogueWorkLinks",
-    records: items,
-    selectionMode: "single",
-    clearSelectionOnBlur: true,
-    columns: [
-      {
-        key: "label",
-        label: text(state, options, "links_label_label", "label"),
-        truncate: true
-      },
-      {
-        key: "url",
-        label: text(state, options, "links_url_label", "URL"),
-        type: "link",
-        truncate: true
-      }
-    ],
-    getRecordId: (_record, index) => `link-${index}`
-  });
-  state.linksActionsController = createRecordListActions(state.linksActionsNode, {
-    id: "catalogueWorkLinksActions",
-    list,
-    actions: [
-      {
-        key: "edit",
-        label: "✏️",
-        title: text(state, options, "links_edit_button", "Edit"),
-        ariaLabel: text(state, options, "links_edit_button", "Edit"),
-        className: "tagStudio__button tagStudio__button--icon",
-        disabled: () => actionDisabled
-      },
-      {
-        key: "delete",
-        label: "🗑️",
-        title: text(state, options, "links_delete_button", "Delete"),
-        ariaLabel: text(state, options, "links_delete_button", "Delete"),
-        className: "tagStudio__button tagStudio__button--icon",
-        tone: "danger",
-        disabled: () => actionDisabled
-      }
-    ],
-    onAction: ({ actionKey, selection }) => {
-      if (!selection) return;
-      if (actionKey === "edit" && typeof options.openEmbeddedEntryModal === "function") {
-        runMaybeAsync(
-          options.openEmbeddedEntryModal("link", selection.index),
-          "catalogue_work_sections: failed to edit link"
-        );
-      }
-      if (actionKey === "delete" && typeof options.deleteEmbeddedEntry === "function") {
-        runMaybeAsync(
-          options.deleteEmbeddedEntry("link", selection.index),
-          "catalogue_work_sections: failed to delete link"
+          options.deleteEmbeddedEntry(selectedKind, selectedIndex),
+          "catalogue_work_sections: failed to delete resource"
         );
       }
     }
@@ -597,18 +587,10 @@ export function updateWorkSummary(state, options = {}) {
       state.newDetailLinkNode.removeAttribute("href");
       state.newDetailLinkNode.setAttribute("aria-disabled", "true");
     }
-    if (state.newFileLinkNode) {
-      state.newFileLinkNode.disabled = true;
-    }
-    if (state.newLinkLinkNode) {
-      state.newLinkLinkNode.disabled = true;
-    }
     if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
-    if (state.filesPanelNode) state.filesPanelNode.hidden = false;
-    if (state.linksPanelNode) state.linksPanelNode.hidden = false;
+    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
     updateWorkDetailSections(state, options);
-    updateWorkFilesSection(state, options);
-    updateWorkLinksSection(state, options);
+    updateWorkResourcesSection(state, options);
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);
     return;
@@ -644,15 +626,8 @@ export function updateWorkSummary(state, options = {}) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
       state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor");
     }
-    if (state.newFileLinkNode) {
-      state.newFileLinkNode.disabled = true;
-    }
-    if (state.newLinkLinkNode) {
-      state.newLinkLinkNode.disabled = true;
-    }
     if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
-    if (state.filesPanelNode) state.filesPanelNode.hidden = true;
-    if (state.linksPanelNode) state.linksPanelNode.hidden = true;
+    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);
     return;
@@ -682,18 +657,10 @@ export function updateWorkSummary(state, options = {}) {
       state.newDetailLinkNode.removeAttribute("href");
     }
   }
-  if (state.newFileLinkNode) {
-    state.newFileLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;
-  }
-  if (state.newLinkLinkNode) {
-    state.newLinkLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;
-  }
   if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
-  if (state.filesPanelNode) state.filesPanelNode.hidden = false;
-  if (state.linksPanelNode) state.linksPanelNode.hidden = false;
+  if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
   updateWorkDetailSections(state, options);
-  updateWorkFilesSection(state, options);
-  updateWorkLinksSection(state, options);
+  updateWorkResourcesSection(state, options);
   renderWorkCurrentPreview(state, options);
   renderWorkReadiness(state, options);
 }

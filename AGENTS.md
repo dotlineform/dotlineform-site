@@ -34,7 +34,10 @@
 ## Verification
 
 - Define proportional targeted verification for implementation changes, including Codex-run checks and any manual checks that remain.
-- Browser smoke tests are needed for non-trivial operational site or frontend changes, not for routine docs-only edits.
+- Browser smoke tests are only needed for non-trivial operational site or frontend changes, not for routine docs-only edits.
+- Default verification for UI component styling/layout: node --check, git diff --check, focused DOM/module smoke if available, optional in-app Browser snapshot.
+- Full browser smoke only when: navigation, modal lifecycle, save/delete/publication, server calls, route boot, or keyboard/focus behavior is the actual change.
+- No new or broadened browser smoke assertions unless the user asked for test coverage or the acceptance contract changed materially.
 - For non-trivial UI changes, verify desktop behavior where practical. Only verify mobile behavior where public pages on the site (dotlineform.com) will be affected.
 - After changing scripts, run a syntax check with the configured interpreter.
 - For commands that clearly bind loopback ports or launch browser smokes, run them with elevated localhost permissions immediately in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.

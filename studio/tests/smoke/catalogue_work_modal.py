@@ -139,8 +139,9 @@ def focused_token(page, selector: str) -> str:
     return page.evaluate(
         """selector => {
             const active = document.activeElement;
+            const isPlainIdSelector = /^#[A-Za-z0-9_-]+$/.test(selector);
             if (!active) return "";
-            if (selector.startsWith("#")) return active.id || "";
+            if (isPlainIdSelector) return active.id || "";
             return active.matches(selector) ? selector : "";
         }""",
         selector,
@@ -148,7 +149,37 @@ def focused_token(page, selector: str) -> str:
 
 
 def assert_focus_returned(page, opener_selector: str) -> None:
-    expected = opener_selector.lstrip("#") if opener_selector.startswith("#") else opener_selector
+    expected = opener_selector.lstrip("#") if opener_selector.startswith("#") and " " not in opener_selector else opener_selector
+    try:
+        page.wait_for_function(
+            """selector => {
+                const active = document.activeElement;
+                const isPlainIdSelector = /^#[A-Za-z0-9_-]+$/.test(selector);
+                if (!active) return false;
+                if (isPlainIdSelector) return active.id === selector.slice(1);
+                return active.matches(selector);
+            }""",
+            arg=opener_selector,
+            timeout=1000,
+        )
+    except PlaywrightTimeoutError as error:
+        focus_state = page.evaluate(
+            """selector => {
+                const active = document.activeElement;
+                const opener = document.querySelector(selector);
+                return {
+                    activeTag: active ? active.tagName : "",
+                    activeId: active ? active.id || "" : "",
+                    activeText: active ? active.textContent.trim() : "",
+                    activeAction: active ? active.getAttribute("data-record-list-action") || "" : "",
+                    openerExists: Boolean(opener),
+                    openerDisabled: opener ? Boolean(opener.disabled) : null,
+                    openerText: opener ? opener.textContent.trim() : ""
+                };
+            }""",
+            opener_selector,
+        )
+        raise AssertionError(f"modal did not return focus to opener: {focus_state!r}") from error
     focused = focused_token(page, opener_selector)
     if focused != expected:
         raise AssertionError(f"modal did not return focus to opener: {focused!r}")
@@ -328,10 +359,10 @@ def main() -> int:
             attrs = wait_for_studio_route_ready(page, args.timeout_ms)
             assert_ready_contract(attrs)
 
-            add_download_button = "#catalogueWorkNewFileLink"
-            add_link_button = "#catalogueWorkNewLinkLink"
-            download_actions = "#catalogueWorkFilesActions"
-            link_actions = "#catalogueWorkLinksActions"
+            resource_actions = "#catalogueWorkResourcesActions"
+            resources_results = "#catalogueWorkResourcesResults"
+            add_download_button = f'{resource_actions} [data-record-list-action="new-download"]'
+            add_link_button = f'{resource_actions} [data-record-list-action="new-link"]'
             publication_button = "#catalogueWorkPublication"
             delete_button = "#catalogueWorkDelete"
             prose_button = '[data-prose-import="work"]'
@@ -340,23 +371,23 @@ def main() -> int:
                 """() => ({
                     filesHeading: Boolean(document.querySelector('#catalogueWorkFilesHeading')),
                     linksHeading: Boolean(document.querySelector('#catalogueWorkLinksHeading')),
-                    filesMeta: document.querySelector('#catalogueWorkFilesMeta')?.textContent.trim() || '',
-                    linksMeta: document.querySelector('#catalogueWorkLinksMeta')?.textContent.trim() || '',
-                    addDownloadText: document.querySelector('#catalogueWorkNewFileLink')?.textContent.trim() || '',
-                    addDownloadLabel: document.querySelector('#catalogueWorkNewFileLink')?.getAttribute('aria-label') || '',
-                    addLinkText: document.querySelector('#catalogueWorkNewLinkLink')?.textContent.trim() || '',
-                    addLinkLabel: document.querySelector('#catalogueWorkNewLinkLink')?.getAttribute('aria-label') || ''
+                    resourcesMeta: document.querySelector('#catalogueWorkResourcesMeta')?.textContent.trim() || '',
+                    addDownloadText: document.querySelector('#catalogueWorkResourcesActions [data-record-list-action="new-download"]')?.textContent.trim() || '',
+                    addDownloadLabel: document.querySelector('#catalogueWorkResourcesActions [data-record-list-action="new-download"]')?.getAttribute('aria-label') || '',
+                    addLinkText: document.querySelector('#catalogueWorkResourcesActions [data-record-list-action="new-link"]')?.textContent.trim() || '',
+                    addLinkLabel: document.querySelector('#catalogueWorkResourcesActions [data-record-list-action="new-link"]')?.getAttribute('aria-label') || '',
+                    actionAppearance: Array.from(document.querySelectorAll('#catalogueWorkResourcesActions [data-record-list-action]')).map((button) => button.dataset.appearance).join(',')
                 })"""
             )
             if embedded_section_state != {
                 "filesHeading": False,
                 "linksHeading": False,
-                "filesMeta": "",
-                "linksMeta": "",
+                "resourcesMeta": "",
                 "addDownloadText": "📄",
                 "addDownloadLabel": "Add file",
-                "addLinkText": "📄",
+                "addLinkText": "🔗",
                 "addLinkLabel": "Add link",
+                "actionAppearance": "icon,icon,icon,icon",
             }:
                 raise AssertionError(f"embedded list chrome did not match compact toolbar contract: {embedded_section_state!r}")
 
@@ -388,7 +419,7 @@ def main() -> int:
                         hidden: Boolean(button.hidden),
                         text: button.textContent.trim(),
                         activeId: document.activeElement ? document.activeElement.id || "" : "",
-                        filesText: document.querySelector("#catalogueWorkFilesResults")?.textContent || ""
+                        resourcesText: document.querySelector("#catalogueWorkResourcesResults")?.textContent || ""
                     })"""
                 )
                 raise AssertionError({
@@ -414,36 +445,40 @@ def main() -> int:
             page.keyboard.press("Enter")
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
             assert_focus_returned(page, add_download_button)
-            if "smoke.pdf" not in page.locator("#catalogueWorkFilesResults").inner_text():
+            if "smoke.pdf" not in page.locator(resources_results).inner_text():
                 raise AssertionError("download modal did not return the new entry to the route")
 
-            page.locator("#catalogueWorkFilesResults [data-record-list-row='true']").first.click()
-            download_list_state = page.locator("#catalogueWorkFilesResults").evaluate(
+            page.locator(f"{resources_results} [data-record-list-record-id='download-0']").click()
+            download_list_state = page.locator(resources_results).evaluate(
                 """node => ({
-                    hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')),
+                    hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkResources"]')),
                     rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
-                    selectedId: node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')?.dataset.recordListSelectedId || '',
+                    selectedId: node.querySelector('[data-record-list-id="catalogueWorkResources"]')?.dataset.recordListSelectedId || '',
                     selectedRows: node.querySelectorAll('[data-record-list-row="true"][aria-selected="true"]').length,
                     text: node.textContent || ''
                 })"""
             )
-            if not download_list_state["hasList"] or download_list_state["rowCount"] < 2:
-                raise AssertionError(f"download list did not render through shared record list: {download_list_state!r}")
+            if not download_list_state["hasList"] or download_list_state["rowCount"] < 3:
+                raise AssertionError(f"resource list did not render through shared record list: {download_list_state!r}")
             if download_list_state["selectedId"] != "download-0" or download_list_state["selectedRows"] != 1:
-                raise AssertionError(f"download list did not expose single-row selection: {download_list_state!r}")
+                raise AssertionError(f"resource list did not expose download row selection: {download_list_state!r}")
             if "Original PDF" not in download_list_state["text"]:
-                raise AssertionError(f"download list lost existing row content: {download_list_state!r}")
+                raise AssertionError(f"resource list lost existing download row content: {download_list_state!r}")
 
-            edit_download_button = '#catalogueWorkFilesActions [data-record-list-action="edit"]'
-            delete_download_button = '#catalogueWorkFilesActions [data-record-list-action="delete"]'
-            action_state = page.locator(download_actions).evaluate(
+            edit_download_button = '#catalogueWorkResourcesActions [data-record-list-action="edit"]'
+            delete_download_button = '#catalogueWorkResourcesActions [data-record-list-action="delete"]'
+            action_state = page.locator(resource_actions).evaluate(
                 """node => ({
                     editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
                     deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled),
                     editText: node.querySelector('[data-record-list-action="edit"]')?.textContent.trim() || '',
                     deleteText: node.querySelector('[data-record-list-action="delete"]')?.textContent.trim() || '',
+                    addFileText: node.querySelector('[data-record-list-action="new-download"]')?.textContent.trim() || '',
+                    addLinkText: node.querySelector('[data-record-list-action="new-link"]')?.textContent.trim() || '',
                     editLabel: node.querySelector('[data-record-list-action="edit"]')?.getAttribute('aria-label') || '',
-                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || ''
+                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || '',
+                    addFileLabel: node.querySelector('[data-record-list-action="new-download"]')?.getAttribute('aria-label') || '',
+                    addLinkLabel: node.querySelector('[data-record-list-action="new-link"]')?.getAttribute('aria-label') || ''
                 })"""
             )
             if action_state != {
@@ -451,15 +486,19 @@ def main() -> int:
                 "deleteDisabled": False,
                 "editText": "✏️",
                 "deleteText": "🗑️",
+                "addFileText": "📄",
+                "addLinkText": "🔗",
                 "editLabel": "Edit",
                 "deleteLabel": "Delete",
+                "addFileLabel": "Add file",
+                "addLinkLabel": "Add link",
             }:
                 raise AssertionError(f"download shared actions did not enable after row selection: {action_state!r}")
             page.locator(edit_download_button).click()
             assert_modal_shell(page, "Edit download", ["Cancel", "Save"], args.timeout_ms)
             close_with_escape(page, edit_download_button, args.timeout_ms, expect_focus=False)
 
-            page.locator("#catalogueWorkFilesResults [data-record-list-row='true']").first.click()
+            page.locator(f"{resources_results} [data-record-list-record-id='download-0']").click()
             page.locator(delete_download_button).click()
             delete_download_modal = assert_modal_shell(page, "Delete download", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if "Original PDF" not in delete_download_modal["bodyText"]:
@@ -481,16 +520,16 @@ def main() -> int:
             assert_modal_shell(page, "Add link", ["Cancel", "Save"], args.timeout_ms)
             close_with_backdrop(page, add_link_button, args.timeout_ms)
 
-            page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
-            link_list_state = page.locator("#catalogueWorkLinksResults").evaluate(
+            page.locator(f"{resources_results} [data-record-list-record-id='link-0']").click()
+            link_list_state = page.locator(resources_results).evaluate(
                 """node => {
                     const labelCell = node.querySelector('[data-record-list-cell="label"]');
-                    const urlCell = node.querySelector('[data-record-list-cell="url"]');
-                    const link = urlCell ? urlCell.querySelector('a') : null;
+                    const targetCell = node.querySelector('[data-record-list-row="true"][data-record-list-record-id="link-0"] [data-record-list-cell="target"]');
+                    const link = targetCell ? targetCell.querySelector('a') : null;
                     return {
-                        hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkLinks"]')),
+                        hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkResources"]')),
                         rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
-                        selectedId: node.querySelector('[data-record-list-id="catalogueWorkLinks"]')?.dataset.recordListSelectedId || '',
+                        selectedId: node.querySelector('[data-record-list-id="catalogueWorkResources"]')?.dataset.recordListSelectedId || '',
                         selectedRows: node.querySelectorAll('[data-record-list-row="true"][aria-selected="true"]').length,
                         labelHasLink: Boolean(labelCell && labelCell.querySelector('a')),
                         linkHref: link ? link.href : '',
@@ -501,26 +540,30 @@ def main() -> int:
                 }"""
             )
             if not link_list_state["hasList"] or link_list_state["rowCount"] < 1:
-                raise AssertionError(f"link list did not render through shared record list: {link_list_state!r}")
+                raise AssertionError(f"resource list did not render through shared record list: {link_list_state!r}")
             if link_list_state["selectedId"] != "link-0" or link_list_state["selectedRows"] != 1:
-                raise AssertionError(f"link list did not expose single-row selection: {link_list_state!r}")
+                raise AssertionError(f"resource list did not expose link row selection: {link_list_state!r}")
             if "Original link" not in link_list_state["text"] or "https://example.com/original" not in link_list_state["text"]:
-                raise AssertionError(f"link list lost existing row content: {link_list_state!r}")
+                raise AssertionError(f"resource list lost existing link row content: {link_list_state!r}")
             if link_list_state["labelHasLink"]:
                 raise AssertionError(f"link list should keep label cells as plain text: {link_list_state!r}")
             if link_list_state["linkHref"] != "https://example.com/original" or link_list_state["linkTarget"] != "_blank" or link_list_state["linkRel"] != "noopener noreferrer":
                 raise AssertionError(f"link list did not render safe external-link attributes: {link_list_state!r}")
 
-            edit_link_button = '#catalogueWorkLinksActions [data-record-list-action="edit"]'
-            delete_link_button = '#catalogueWorkLinksActions [data-record-list-action="delete"]'
-            link_action_state = page.locator(link_actions).evaluate(
+            edit_link_button = '#catalogueWorkResourcesActions [data-record-list-action="edit"]'
+            delete_link_button = '#catalogueWorkResourcesActions [data-record-list-action="delete"]'
+            link_action_state = page.locator(resource_actions).evaluate(
                 """node => ({
                     editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
                     deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled),
                     editText: node.querySelector('[data-record-list-action="edit"]')?.textContent.trim() || '',
                     deleteText: node.querySelector('[data-record-list-action="delete"]')?.textContent.trim() || '',
+                    addFileText: node.querySelector('[data-record-list-action="new-download"]')?.textContent.trim() || '',
+                    addLinkText: node.querySelector('[data-record-list-action="new-link"]')?.textContent.trim() || '',
                     editLabel: node.querySelector('[data-record-list-action="edit"]')?.getAttribute('aria-label') || '',
-                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || ''
+                    deleteLabel: node.querySelector('[data-record-list-action="delete"]')?.getAttribute('aria-label') || '',
+                    addFileLabel: node.querySelector('[data-record-list-action="new-download"]')?.getAttribute('aria-label') || '',
+                    addLinkLabel: node.querySelector('[data-record-list-action="new-link"]')?.getAttribute('aria-label') || ''
                 })"""
             )
             if link_action_state != {
@@ -528,15 +571,19 @@ def main() -> int:
                 "deleteDisabled": False,
                 "editText": "✏️",
                 "deleteText": "🗑️",
+                "addFileText": "📄",
+                "addLinkText": "🔗",
                 "editLabel": "Edit",
                 "deleteLabel": "Delete",
+                "addFileLabel": "Add file",
+                "addLinkLabel": "Add link",
             }:
                 raise AssertionError(f"link shared actions did not enable after row selection: {link_action_state!r}")
             page.locator(edit_link_button).click()
             assert_modal_shell(page, "Edit link", ["Cancel", "Save"], args.timeout_ms)
             close_with_escape(page, edit_link_button, args.timeout_ms, expect_focus=False)
 
-            page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
+            page.locator(f"{resources_results} [data-record-list-record-id='link-0']").click()
             page.locator(delete_link_button).click()
             delete_link_modal = assert_modal_shell(page, "Delete link", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if "Original link" not in delete_link_modal["bodyText"]:

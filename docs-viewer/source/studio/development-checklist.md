@@ -117,6 +117,23 @@ When sweeping for stale references:
 - scan active code, config, runtime assets, scripts, tests, and current owning docs relevant to the change
 - scan active request or task docs when closing or updating that request
 
+Browser smokes:
+
+1. **Do not default to full browser smokes for small UI/component amendments.**
+   For changes like button placement, labels, CSS class ownership, or toolbar composition, use syntax checks plus a narrow DOM/component check.
+
+2. **Do not expand end-to-end smokes while implementing the feature unless the feature explicitly changes that workflow contract.**
+   Do not turn a UI adjustment into a modal workflow test update. That is the wrong cost profile.
+
+3. **Separate visual verification from workflow verification.**
+   A quick in-app Browser DOM snapshot or screenshot answers “does a control render correctly?” Full Playwright workflows answer a different question and should not be pulled in automatically.
+
+4. **If a smoke test fails outside the changed contract, stop and report it instead of repairing the smoke opportunistically.**
+   Fixing stale or brittle smoke infrastructure during unrelated UI work hides the cost and expands scope.
+
+5. **Prefer component-level coverage for shared components.**
+   For example, with `RecordListActions`, the useful check is: given actions with `appearance: "icon"`, it renders borderless icon buttons with `aria-label`, selection-disabled behavior, and emits action payloads. That should not require loading the full Studio Work editor route.
+
 For defensive tests during refactors:
 
 - use temporary tests to catch accidental compatibility shims, proxy paths, or retired write surfaces during migration

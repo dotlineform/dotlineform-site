@@ -2,7 +2,7 @@
 doc_id: ui-pattern-record-action-list
 title: Record List And Action Layer Working Spec
 added_date: 2026-06-14
-last_updated: 2026-06-14
+last_updated: 2026-06-15
 parent_id: ui
 viewable: true
 ---
@@ -11,8 +11,8 @@ viewable: true
 This is a working spec for a shared list component that renders compact records with columns and optional selection state.
 External actions and route-specific workflows should be layered on top of that base component.
 
-The first proving use cases are the Catalogue Work editor downloads and links sections.
-Both now use the shared record list with a route-owned action layer.
+The first proving use case is the Catalogue Work editor resources section.
+It presents source `downloads` and `links` as one editor-facing list while keeping those canonical fields separate for source data and public rendering.
 
 ## Current Position
 
@@ -22,21 +22,22 @@ Implemented pieces:
 - `shared/frontend/css/record-list.css`
 - `createRecordList(...)`
 - `createRecordListActions(...)`
-- Catalogue Work editor downloads list integration
-- Catalogue Work editor links list integration
+- Catalogue Work editor resources list integration
 - focused smoke coverage for the shared component and Work editor embedded-record actions
 
 The current production use is intentionally narrow:
 
-- downloads and links render through the shared `RecordList`
+- downloads and links render together through one shared `RecordList`
 - rows have column headers
 - one row can be selected
 - selected-row state uses an outline by default, not a persistent fill
-- `Edit` and `Delete` live in an external `RecordListActions` toolbar
-- actions are disabled until a row is selected
+- `Edit`, `Delete`, `Add file`, and `Add link` live in an external `RecordListActions` toolbar
+- row actions are disabled until a row is selected; `Add` is available without selection when the route permits it
+- icon-only action buttons are styled by the shared action layer, not by route-specific button classes
 - action callbacks include `action`, `actionKey`, `selection`, and `records`
 - Edit opens the existing embedded entry modal
 - Delete opens the existing embedded delete confirmation
+- Add file and Add link open the existing embedded entry modal without an index
 - link URLs render as safe external-link cells, while link labels remain plain text
 
 Selection clearing is boundary-based, not a delayed blur workaround.
@@ -58,6 +59,12 @@ It is also not a full route workflow.
 The list can own which row is selected.
 A generic action layer can own whether action buttons are currently available.
 The adapter should own what those actions mean: opening a modal, applying a delete, updating draft state, and reporting status.
+
+Add/new controls that create another record in the same list belong to the list/action unit.
+The shared action layer should render those controls alongside row-scoped actions; the route adapter should only decide which modal or mutation the action triggers.
+
+The Work editor resource adapter maps canonical records into a single row shape with `kind`, `index`, `type`, `label`, `target`, and optional `targetHref`.
+Downloads render before links; the persisted source fields stay as `downloads` and `links`.
 
 Do not repeat `Edit` and `Delete` buttons on every row for the downloads/links use case.
 The v1 direction is selectable rows plus an action area outside the list.
@@ -84,7 +91,7 @@ Record List is a different component:
 
 The action layer is optional:
 
-- actions normally live outside the repeated rows
+- actions normally live outside the repeated rows, including list-level add/new controls
 - action buttons can be disabled from selection state
 - action events return structured payloads to the adapter
 - compact row-owned controls are allowed when the control itself carries row data
@@ -94,7 +101,7 @@ The action layer is optional:
 The implementation should split into three layers:
 
 - `RecordList`: base shared component for records, columns, headers, truncation, links, empty state, selection, keyboard behavior, and test hooks
-- `RecordListActions`: optional generic action layer for external buttons such as `View`, `Edit`, and `Delete`
+- `RecordListActions`: optional generic action layer for external buttons such as `View`, `Edit`, `Delete`, and `Add`
 - route adapter: workflow glue for route data, modals, confirmations, draft state, server calls, and status messages
 
 Downloads may only need the first two layers if existing Work editor functions can handle add/edit/delete/view behavior cleanly.
@@ -130,6 +137,8 @@ The optional action layer currently supports:
 - action click and keyboard event delegation
 - custom disabled logic through `disabled(selection, records)`
 - action title text through `title(selection, records)`
+- action accessible-name text through `ariaLabel(selection, records)`
+- action appearance variants such as icon-only buttons
 - `onAction({ action, actionKey, selection, records })` callback
 - automatic refresh when list selection changes
 - action toolbar registration as a list focus boundary
@@ -176,6 +185,7 @@ The optional action layer should own:
 - action click and keyboard event delegation from the action area
 - action payload shape
 - action refresh when records or selection change
+- action button styling for component-owned appearances such as icon-only controls
 
 ## Adapter Responsibilities
 
@@ -183,7 +193,7 @@ The adapter should own:
 
 - mapping route records into list rows
 - choosing columns
-- choosing action labels
+- choosing action labels, icons, and accessible names
 - deciding whether an action is enabled
 - choosing whether the first version uses click-to-select rows or a visible radio/selection marker
 - choosing whether a later adapter uses a compact row-object control instead of external actions
@@ -194,15 +204,16 @@ The adapter should own:
 - route status messages
 - server calls, if any
 
-For the Work editor downloads and links action wiring, this currently means:
+For the Work editor resources action wiring, this currently means:
 
-- records: `state.draft.downloads` or `state.draft.links`
+- records: `state.draft.downloads` and `state.draft.links`, mapped into one resources row set
 - visible headers: yes
-- columns: filename and label for downloads; plain label and linked URL for links
+- columns: type, label, and linked file/URL target
 - selection: one selected row
-- actions outside the list: `Edit`, `Delete`
+- actions outside the list: `Edit`, `Delete`, `Add file`, `Add link`
 - `Edit`: opens the existing embedded-entry modal for the selected record
 - `Delete`: opens a confirmation modal with Cancel as the default action, then applies the existing delete flow for the selected record
+- `Add file` and `Add link`: open the existing embedded-entry modal without a selected record
 - after action: adapter re-renders the list with the updated draft records
 
 ## Current API Shape
@@ -211,16 +222,17 @@ Base list API:
 
 ```js
 const list = createRecordList(rootNode, {
-  id: "catalogueWorkDownloads",
-  emptyText: "No downloads.",
+  id: "catalogueWorkResources",
+  emptyText: "No resources.",
   selectionMode: "single",
   clearSelectionOnBlur: true,
   columns: [
-    { key: "filename", label: "filename", truncate: true },
-    { key: "label", label: "label", truncate: true }
+    { key: "type", label: "type", truncate: true },
+    { key: "label", label: "label", truncate: true },
+    { key: "target", label: "file / URL", type: "link", hrefKey: "targetHref", truncate: true }
   ],
   records,
-  getRecordId: (_record, index) => `download-${index}`,
+  getRecordId: (record) => `${record.kind}-${record.index}`,
   onSelectionChange({ selection, records }) {
     // Adapter may update adjacent state if needed.
   }
@@ -233,11 +245,13 @@ list.destroy();
 Optional action layer API:
 
 ```js
-const actions = createRecordListActions(document.getElementById("catalogueWorkDownloadsActions"), {
+const actions = createRecordListActions(document.getElementById("catalogueWorkResourcesActions"), {
   list,
   actions: [
-    { key: "edit", label: "Edit", requiresSelection: true },
-    { key: "delete", label: "Delete", tone: "danger", requiresSelection: true }
+    { key: "edit", label: "✏️", ariaLabel: "Edit", appearance: "icon", requiresSelection: true },
+    { key: "delete", label: "🗑️", ariaLabel: "Delete", appearance: "icon", tone: "danger", requiresSelection: true },
+    { key: "new-download", label: "📄", ariaLabel: "Add file", appearance: "icon", requiresSelection: false },
+    { key: "new-link", label: "🔗", ariaLabel: "Add link", appearance: "icon", requiresSelection: false }
   ],
   onAction({ action, actionKey, selection, records }) {
     // Adapter opens modal or applies delete for selected record(s).
@@ -264,6 +278,8 @@ Action options currently include:
 
 - `key`
 - `label`
+- `ariaLabel`
+- `appearance`: optional component-owned visual variant such as `icon`
 - `tone`
 - `requiresSelection`: defaults to true; set false for actions such as `Add`
 - `disabled(selection, records)`
@@ -300,7 +316,7 @@ Downloads are the first implementation because they need:
 - compact rows
 - columns
 - one selected row
-- edit/delete actions outside the list
+- add/edit/delete actions outside the list
 - re-render after action
 - clear empty state
 
@@ -316,8 +332,8 @@ The current downloads implementation does not need:
 That makes them a useful boundary test for the component.
 If the component cannot improve downloads without route-specific markup leaking everywhere, the component boundary is wrong.
 
-Links now use the same base list/action layer.
-Their adapter keeps the label as plain text and renders the URL column as the safe external link.
+Links now use the same resource list/action layer.
+The adapter keeps the label as plain text and renders the file/URL target column as the safe external link where a target href is available.
 
 ## Design Notes
 
@@ -333,7 +349,8 @@ Long URLs, filenames, and labels should truncate cleanly inside their column.
 Full values should remain inspectable through hover text.
 
 Action buttons should be predictable and consistently placed outside the repeated rows.
-For downloads/links, the action layer should render or control an action area adjacent to the list, and those actions should operate on the current selection.
+For downloads/links, the action layer should render or control an action area adjacent to the list.
+Row-scoped actions should operate on the current selection, while add/new actions should operate on the list itself.
 This avoids repeated `Edit` and `Delete` controls on every row.
 
 Repeated controls are acceptable when they are also meaningful row content.
@@ -430,8 +447,9 @@ Current focused coverage should prove:
 - long cell values truncate without layout expansion
 - full cell values are available through hover/title text
 - row selection updates selected state
-- external action buttons are generated by the action layer or controlled by list selection state
+- external action buttons are generated by the action layer and controlled by list selection state
 - `Edit` and `Delete` callbacks include action key, selection, and selected record(s)
+- `Add` callbacks do not require selection and still include action key and records
 - action toolbar focus/clicks do not clear selection before the action callback
 - selection clears when focus or pointer moves outside the list/action boundary where `clearSelectionOnBlur` is enabled
 - adapter re-renders the list after records change

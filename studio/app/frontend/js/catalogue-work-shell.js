@@ -79,20 +79,10 @@ export function renderCatalogueWorkShell(config) {
 
           <section class="tagStudio__panel catalogueWorkDetails">
             <div class="tagStudio__headingRow catalogueWorkDetails__actionRow">
-              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkFilesActions" aria-label="Download actions"></div>
-              <button type="button" class="tagStudio__button tagStudio__button--icon" id="catalogueWorkNewFileLink">📄</button>
+              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
             </div>
-            <p class="tagStudioForm__meta" id="catalogueWorkFilesMeta"></p>
-            <div class="catalogueWorkDetails__results" id="catalogueWorkFilesResults"></div>
-          </section>
-
-          <section class="tagStudio__panel catalogueWorkDetails">
-            <div class="tagStudio__headingRow catalogueWorkDetails__actionRow">
-              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkLinksActions" aria-label="Link actions"></div>
-              <button type="button" class="tagStudio__button tagStudio__button--icon" id="catalogueWorkNewLinkLink">📄</button>
-            </div>
-            <p class="tagStudioForm__meta" id="catalogueWorkLinksMeta"></p>
-            <div class="catalogueWorkDetails__results" id="catalogueWorkLinksResults"></div>
+            <p class="tagStudioForm__meta" id="catalogueWorkResourcesMeta"></p>
+            <div class="catalogueWorkDetails__results" id="catalogueWorkResourcesResults"></div>
           </section>
         </div>
         <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor...</p>

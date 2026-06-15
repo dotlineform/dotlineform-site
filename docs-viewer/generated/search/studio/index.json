@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1c11044a154a3d0482b65025c5f9c064",
-    "generated_at_utc": "2026-06-15T13:28:35Z",
+    "version": "blake2b-38937de9e89eab18fd7c49e8b59d7ba8",
+    "generated_at_utc": "2026-06-15T16:06:56Z",
     "count": 236
   },
   "entries": [
@@ -5819,10 +5819,10 @@
       "kind": "doc",
       "title": "Record List And Action Layer Working Spec",
       "href": "/docs/?scope=studio&doc=ui-pattern-record-action-list",
-      "last_updated": "2026-06-14",
+      "last_updated": "2026-06-15",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-06-14 • UI",
+      "display_meta": "2026-06-15 • UI",
       "search_terms": [
         "ui-pattern-record-action-list",
         "ui",
@@ -5835,12 +5835,12 @@
         "layer",
         "working",
         "spec",
-        "2026-06-14",
+        "2026-06-15",
         "2026",
         "06",
-        "14"
+        "15"
       ],
-      "search_text": "ui-pattern-record-action-list ui pattern record action list record list and action layer working spec and layer working spec 2026-06-14 2026 06 14"
+      "search_text": "ui-pattern-record-action-list ui pattern record action list record list and action layer working spec and layer working spec 2026-06-15 2026 06 15"
     }
   ]
 }
