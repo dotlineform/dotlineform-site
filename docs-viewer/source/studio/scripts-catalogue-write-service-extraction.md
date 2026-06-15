@@ -35,7 +35,7 @@ The callable catalogue service is split by maintenance ownership:
 | `studio/services/catalogue/catalogue_delete_service.py` | delete preview/apply routes |
 | `studio/services/catalogue/catalogue_moment_service.py` | moment preview/save routes |
 | `studio/services/catalogue/catalogue_publication_service.py` | publication preview/apply routes |
-| `studio/services/catalogue/catalogue_prose_import_service.py` | prose import apply and moment import apply routes |
+| `studio/services/catalogue/catalogue_prose_import_service.py` | moment prose import apply and moment import apply routes |
 
 The practical rule for the rest of this migration is ownership by workflow/data item, not ownership by the old standalone server.
 If a route family has distinct lifecycle rules, tests, and maintenance questions, it should get its own focused module or an existing focused module should be extended.
@@ -73,8 +73,8 @@ The first low-risk service group now runs through `studio/services/catalogue/cat
 | `POST /studio/api/catalogue/build-preview` | `handle_catalogue_post()` | Builds the scoped preview through existing build-scope, field-plan, and media-plan helpers. |
 | `POST /studio/api/catalogue/build-apply` | `handle_catalogue_post()` | Runs the scoped build helper directly and returns the same success/error status shape. |
 | `POST /studio/api/catalogue/moment/preview` | `handle_catalogue_post()` | Calls moment metadata/source preview helpers directly. |
-| `POST /studio/api/catalogue/prose/import-preview` | `handle_catalogue_post()` | Calls `catalogue_prose_import.build_prose_import_preview()` directly. |
-| `POST /studio/api/catalogue/prose/import-apply` | `handle_catalogue_post()` | Calls `catalogue_prose_import.apply_prose_import()` directly. |
+| `POST /studio/api/catalogue/prose/import-preview` | `handle_catalogue_post()` | Calls `catalogue_prose_import.build_prose_import_preview()` for staged moment prose. |
+| `POST /studio/api/catalogue/prose/import-apply` | `handle_catalogue_post()` | Calls `catalogue_prose_import.apply_prose_import()` for staged moment prose. |
 | `POST /studio/api/catalogue/moment/import-preview` | `handle_catalogue_post()` | Calls `catalogue_prose_import.build_moment_import_preview()` directly. |
 | `POST /studio/api/catalogue/moment/import-apply` | `handle_catalogue_post()` | Calls `catalogue_prose_import.apply_moment_import()` directly and writes Studio Activity rows without constructing a fake HTTP handler. |
 
@@ -157,8 +157,8 @@ Series create/save behavior now runs through `studio/services/catalogue/catalogu
 | `_handle_build_apply` | 16 lines | scoped build | `run_scoped_build_scope` through helper | Moved for Local Studio to `catalogue_build_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_moment_preview` | 21 lines | moment preview | moment source/metadata helpers, media plan | Moved for Local Studio to `catalogue_moment_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_moment_save` | 149 lines | moment save | moment metadata mutation, invalidation, build/activity helpers | Moved for Local Studio to `catalogue_moment_service.py`; standalone wrapper still has its old handler method. |
-| `_handle_prose_import_preview` | 4 lines | prose import | `catalogue_prose_import` | Moved for Local Studio through dispatcher direct call to `catalogue_prose_import`; standalone wrapper still has its old handler method. |
-| `_handle_prose_import_apply` | 50 lines | prose import | `catalogue_prose_import`, activity | Moved for Local Studio to `catalogue_prose_import_service.py`; standalone wrapper still has its old handler method. |
+| `_handle_prose_import_preview` | 4 lines | moment prose import | `catalogue_prose_import` | Moved for Local Studio through dispatcher direct call to `catalogue_prose_import`; standalone wrapper still has its old handler method. |
+| `_handle_prose_import_apply` | 50 lines | moment prose import | `catalogue_prose_import`, activity | Moved for Local Studio to `catalogue_prose_import_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_moment_import_preview` | 3 lines | moment import | `catalogue_prose_import` | Moved for Local Studio through dispatcher direct call to `catalogue_prose_import`; standalone wrapper still has its old handler method. |
 | `_handle_moment_import_apply` | 59 lines | moment import | `catalogue_prose_import`, activity | Moved for Local Studio to `catalogue_prose_import_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_project_state_report` | 73 lines | project state | `project_state_report`, activity | Already replaced for Local Studio by `project_state_report_payload()`. |
@@ -167,7 +167,7 @@ Series create/save behavior now runs through `studio/services/catalogue/catalogu
 ## Extraction Close-Out
 
 1. Keep `studio/services/catalogue/catalogue_write_service.py` small: route mapping, status selection, response shaping, and calls into focused workflow modules.
-2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
+2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, moment prose import preview/apply, and moment import preview/apply.
 3. Treat work and work-detail create/save as the established mutation extraction pattern.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Treat moment save, publication preview/apply, and delete apply as extracted for Local Studio.

@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: Catalogue Series Editor
 added_date: 2026-04-22
-last_updated: 2026-05-22
+last_updated: 2026-06-15
 parent_id: studio
 viewable: true
 ---
@@ -38,21 +38,19 @@ The first implementation covers:
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
 - preview the scoped public update impact for the current series
-- show staged series prose readiness for `var/docs/catalogue/import-staging/series/<series_id>.md`
-- run a narrow `Import staged prose` action when the staged series prose Markdown file is ready
 - save metadata, with published-series saves updating the public catalogue internally
 - publish draft series through a dedicated `Publish` command
 - unpublish public series through a dedicated `Unpublish` command
 - delete one series source record and remove its membership from affected works
 
-Series prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_catalogue/series/<series_id>.md`; the generator reads that ID-derived source file for public prose.
+Series prose is no longer edited or imported through the series metadata editor. Existing permanent Markdown under `studio/data/canonical/catalogue-markdown/series/<series_id>.md` remains a generator input until a separate prose management workflow replaces it.
 
 ## Runtime Ownership
 
 The Series Editor route is split into route orchestration, action workflows, field rules, and membership behavior:
 
 - `site/assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, validation orchestration, field rendering, and membership UI coordination.
-- `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete/prose-import sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
+- `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
 - `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, popup result rendering, search-input behavior, Open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
 - `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
 - `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
@@ -72,7 +70,7 @@ The page root `#catalogueSeriesRoot` implements the shared Studio ready-state co
 
 - `data-studio-ready="false"` during initial route setup
 - `data-studio-ready="true"` after the initial empty, new, or focused-series render completes
-- `data-studio-busy="true"` while save, create, publish, unpublish, staged-prose import, build, or delete commands are running
+- `data-studio-busy="true"` while save, create, publish, unpublish, build, or delete commands are running
 - `data-studio-mode="empty|single|new"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
@@ -101,7 +99,7 @@ In new mode:
 - `series_type` defaults to `primary`
 - `title`, `series_type`, `year`, and `year_display` are required
 - `status` is visible and fixed to `draft`
-- `published_date`, `primary_work_id`, member editing, staged prose import, publication, and delete actions remain disabled until the source record exists
+- `published_date`, `primary_work_id`, member editing, publication, and delete actions remain disabled until the source record exists
 - `Create` writes through `POST /studio/api/catalogue/series/create`
 - successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
 
@@ -142,9 +140,8 @@ Current save/publication flow:
 5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
 6. the local app adapter validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
 7. the page reloads its focused series lookup payload
-8. `POST /studio/api/catalogue/build-preview` reports scoped public-update impact for published series plus affected published works and carries staged series prose readiness
+8. `POST /studio/api/catalogue/build-preview` reports scoped public-update impact for published series plus affected published works
 9. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`; series publish writes `series.json` and any attached draft-work status changes in one atomic transaction
-10. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_catalogue/series/<series_id>.md` after overwrite confirmation when needed
 
 Delete flow:
 

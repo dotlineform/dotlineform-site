@@ -1086,8 +1086,6 @@ def build_work_readiness(records: Any, work_id: str, *, env: Dict[str, str] | No
         raise ValueError(f"work_id not found: {work_id}")
 
     media_path, media_missing_reason, _, _ = resolve_work_media_source(records, work_id, env=env)
-    prose_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "works" / f"{work_id}.md"
-
     items = [
         build_media_readiness_item(
             repo_root=repo_root,
@@ -1100,22 +1098,6 @@ def build_work_readiness(records: Any, work_id: str, *, env: Dict[str, str] | No
             projects_base_dir=projects_base_dir,
             availability_error=availability_error,
         ),
-        build_readiness_item(
-            key="work_prose",
-            title="work prose",
-            path=prose_path,
-            projects_base_dir=repo_root,
-            ready_summary=f"Staged prose is ready at {display_source_path(prose_path, repo_root)}.",
-            missing_file_summary=f"No staged prose file exists at {display_source_path(prose_path, repo_root)}.",
-            next_step_ready="Use Import staged prose to write the permanent source file.",
-            next_step_missing_file="Add staged Markdown at the expected ID-based path before importing prose.",
-            action={
-                "kind": "prose-import",
-                "target_kind": "work",
-                "work_id": work_id,
-                "label": "Import staged prose",
-            },
-        ),
     ]
     return {"items": items}
 
@@ -1126,27 +1108,7 @@ def build_series_readiness(records: Any, series_id: str, *, env: Dict[str, str] 
     if not isinstance(series_record, dict):
         raise ValueError(f"series_id not found: {series_id}")
 
-    prose_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "series" / f"{series_id}.md"
-
-    items = [
-        build_readiness_item(
-            key="series_prose",
-            title="series prose",
-            path=prose_path,
-            projects_base_dir=repo_root,
-            ready_summary=f"Staged prose is ready at {display_source_path(prose_path, repo_root)}.",
-            missing_file_summary=f"No staged prose file exists at {display_source_path(prose_path, repo_root)}.",
-            next_step_ready="Use Import staged prose to write the permanent source file.",
-            next_step_missing_file="Add staged Markdown at the expected ID-based path before importing prose.",
-            action={
-                "kind": "prose-import",
-                "target_kind": "series",
-                "series_id": series_id,
-                "label": "Import staged prose",
-            },
-        ),
-    ]
-    return {"items": items}
+    return {"items": []}
 
 
 def build_detail_readiness(records: Any, detail_uid: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:

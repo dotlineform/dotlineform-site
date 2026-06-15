@@ -138,7 +138,7 @@ def assert_sibling_event_binders(page: Page) -> None:
               <button id="seriesNew"></button><button id="seriesSave"></button><button id="seriesPub"></button>
               <button id="seriesDelete"></button><input id="seriesMemberSearch" />
               <input id="seriesMemberAdd" /><button id="seriesMemberAddButton"></button>
-              <div id="seriesReady"><button data-prose-import>prose</button></div>
+              <div id="seriesReady"></div>
               <div id="seriesMembers"><button data-member-primary="001"></button><button data-member-remove="002"></button></div>
               <button id="momentNew"></button><button id="momentSave"></button><button id="momentPub"></button>
               <button id="momentDelete"></button><input id="momentImportFile" />
@@ -174,7 +174,6 @@ def assert_sibling_event_binders(page: Page) -> None:
                 membersResultsNode: document.getElementById('seriesMembers')
             }, {
                 bindSelectionControls: () => push('series.bind'),
-                importSeriesProse: () => push('series.prose'),
                 setNewSeriesMode: () => push('series.new'),
                 saveCurrentSeries: () => push('series.save'),
                 applyPublicationChange: () => push('series.pub'),
@@ -212,7 +211,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         "#detailSave",
         "#detailPub",
         "#detailDelete",
-        "#seriesReady [data-prose-import]",
         "#seriesNew",
         "#seriesSave",
         "#seriesPub",
@@ -246,7 +244,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         ["detail.save"],
         ["detail.pub"],
         ["detail.delete"],
-        ["series.prose"],
         ["series.new"],
         ["series.save"],
         ["series.pub"],

@@ -16,11 +16,6 @@ function closestTarget(event, selector) {
 
 export function bindSeriesEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
-  state.readinessNode.addEventListener("click", (event) => {
-    const button = closestTarget(event, "[data-prose-import]");
-    if (!button) return;
-    runAsync(callbacks.importSeriesProse, "catalogue_series_editor: unexpected prose import failure");
-  });
   state.newButton.addEventListener("click", () => invoke(callbacks.setNewSeriesMode));
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentSeries, "catalogue_series_editor: unexpected save failure");

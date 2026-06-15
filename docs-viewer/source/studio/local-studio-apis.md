@@ -60,7 +60,7 @@ Current Catalogue endpoints:
 - `POST /studio/api/catalogue/moment/preview`
 - `POST /studio/api/catalogue/moment/save`
 
-The local app adapter routes editor save, bulk save, build, publication, delete, prose import, and moment import flows through focused catalogue service modules.
+The local app adapter routes editor save, bulk save, build, publication, delete, moment prose import, and moment import flows through focused catalogue service modules.
 `bin/local-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
 
 Current local generated Studio feeds surfaced through this API:

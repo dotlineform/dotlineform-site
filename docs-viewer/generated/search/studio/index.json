@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-494d594e5af15927e16a43a5ec739f29",
-    "generated_at_utc": "2026-06-15T18:01:17Z",
+    "version": "blake2b-29739d5b2ff0379553bcd197645e4184",
+    "generated_at_utc": "2026-06-15T21:06:08Z",
     "count": 236
   },
   "entries": [
@@ -4844,10 +4844,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-15",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "display_meta": "2026-06-15 • Studio",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -4855,12 +4855,12 @@
         "editor",
         "catalogue series editor",
         "studio",
-        "2026-05-22",
+        "2026-06-15",
         "2026",
-        "05",
-        "22"
+        "06",
+        "15"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-05-22 2026 05 22"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-06-15 2026 06 15"
     },
     {
       "id": "data-models-catalogue-source",
@@ -4942,10 +4942,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-06-14",
+      "last_updated": "2026-06-15",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-14 • Studio",
+      "display_meta": "2026-06-15 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -4953,12 +4953,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-06-14",
+        "2026-06-15",
         "2026",
         "06",
-        "14"
+        "15"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-14 2026 06 14"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-15 2026 06 15"
     },
     {
       "id": "studio-works",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Catalogue staged prose and draft moment import helpers."""
+"""Catalogue moment staged prose and draft moment import helpers."""
 
 from __future__ import annotations
 
@@ -9,9 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-from catalogue.catalogue_build_scopes import preview_moment_source
-from catalogue.catalogue_source import records_from_json_source, slug_id
 from catalogue import catalogue_transactions as transactions
+from catalogue.catalogue_build_scopes import preview_moment_source
 from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
@@ -20,7 +19,6 @@ from catalogue.moment_sources import (
     normalize_moment_filename,
     normalize_moment_metadata_record,
 )
-from catalogue.series_ids import normalize_series_id
 
 
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
@@ -90,14 +88,12 @@ def extract_moment_import_request(body: Mapping[str, Any]) -> MomentImportReques
 
 def normalize_prose_import_target(body: Mapping[str, Any]) -> tuple[str, str, str]:
     target_kind = str(body.get("target_kind") or body.get("kind") or "").strip().lower()
-    if target_kind not in {"work", "series", "moment"}:
-        raise ValueError("target_kind must be work, series, or moment")
+    if target_kind != "moment":
+        raise ValueError("target_kind must be moment")
     raw_id = body.get("target_id")
     if raw_id is None:
-        raw_id = body.get("work_id") if target_kind == "work" else body.get("series_id") if target_kind == "series" else body.get("moment_id")
-    target_id = slug_id(raw_id) if target_kind == "work" else normalize_series_id(raw_id) if target_kind == "series" else normalize_moment_id_value(raw_id)
-    collection = "works" if target_kind == "work" else "series" if target_kind == "series" else "moments"
-    return target_kind, target_id, collection
+        raw_id = body.get("moment_id")
+    return target_kind, normalize_moment_id_value(raw_id), "moments"
 
 
 def resolve_prose_import_target(repo_root: Path, body: Mapping[str, Any]) -> ProseImportTarget:
@@ -117,15 +113,11 @@ def ensure_direct_child(path: Path, allowed_parent: Path) -> None:
 
 
 def validate_prose_import_target_exists(source_dir: Path, target_kind: str, target_id: str) -> None:
-    records = records_from_json_source(source_dir)
-    if target_kind == "work" and target_id not in records.works:
-        raise ValueError(f"work_id not found: {target_id}")
-    if target_kind == "series" and target_id not in records.series:
-        raise ValueError(f"series_id not found: {target_id}")
-    if target_kind == "moment":
-        moments = load_moment_metadata_records(source_dir)
-        if target_id not in moments:
-            raise ValueError(f"moment_id not found: {target_id}")
+    if target_kind != "moment":
+        raise ValueError("target_kind must be moment")
+    moments = load_moment_metadata_records(source_dir)
+    if target_id not in moments:
+        raise ValueError(f"moment_id not found: {target_id}")
 
 
 def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list[str]]:

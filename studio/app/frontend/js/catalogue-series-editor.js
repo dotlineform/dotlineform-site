@@ -53,7 +53,6 @@ import {
   currentSeriesIsDraft,
   currentSeriesIsPublished,
   deleteCurrentSeries,
-  importSeriesProse,
   refreshBuildPreview as refreshSeriesActionBuildPreview,
   saveCurrentSeries
 } from "./catalogue-series-actions.js";
@@ -473,7 +472,6 @@ async function init() {
     ]);
     bindSeriesEditorEvents(state, {
       bindSelectionControls: () => bindSeriesSelectionControls(state, buildSeriesSelectionContext(state)),
-      importSeriesProse: () => importSeriesProse(state, buildSeriesActionContext(state)),
       setNewSeriesMode: () => setNewSeriesMode(state),
       saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
       applyPublicationChange: () => applyPublicationChange(state, buildSeriesActionContext(state)),

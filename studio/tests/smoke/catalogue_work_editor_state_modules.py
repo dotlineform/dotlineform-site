@@ -40,6 +40,15 @@ WORK_EDITOR_DOM = """
       <div id="catalogueWorkReadiness"></div>
       <div id="catalogueWorkRuntimeState"></div>
       <div id="catalogueWorkBuildImpact"></div>
+      <section id="catalogueWorkDetailBrowserPanel">
+        <h2 id="catalogueWorkDetailBrowserHeading"></h2>
+        <div id="catalogueWorkDetailBrowserMeta"></div>
+        <h3 id="catalogueWorkDetailBrowserSectionsHeading"></h3>
+        <div id="catalogueWorkDetailBrowserSections"></div>
+        <h3 id="catalogueWorkDetailBrowserImagesHeading"></h3>
+        <div id="catalogueWorkDetailBrowserImagesMeta"></div>
+        <div id="catalogueWorkDetailBrowserImages"></div>
+      </section>
       <h2 id="catalogueWorkDetailsHeading"></h2>
       <a id="catalogueWorkNewDetailLink"></a>
       <div id="catalogueWorkDetailsSearchRow"></div>
@@ -106,6 +115,8 @@ def assert_state_factory(page: Page) -> None:
                 mediaConfig: state.mediaConfig,
                 modalHost: state.modalHost,
                 detailsPanelTag: state.detailsPanelNode && state.detailsPanelNode.tagName,
+                detailBrowserPanelTag: state.detailBrowserPanelNode && state.detailBrowserPanelNode.tagName,
+                detailBrowserSelectedSectionId: state.detailBrowserSelectedSectionId,
                 resourcesPanelTag: state.resourcesPanelNode && state.resourcesPanelNode.tagName,
                 contextNodeInState: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
                 routeOptionText: routeOptions.text('key', 'fallback'),
@@ -127,6 +138,8 @@ def assert_state_factory(page: Page) -> None:
     assert result["mediaConfig"] == {"rootId": "catalogueWorkRoot", "source": "stub-media"}
     assert result["modalHost"] == {"rootId": "catalogueWorkRoot", "source": "stub-modal"}
     assert result["detailsPanelTag"] == "SECTION"
+    assert result["detailBrowserPanelTag"] == "SECTION"
+    assert result["detailBrowserSelectedSectionId"] == ""
     assert result["resourcesPanelTag"] == "DIV"
     assert result["contextNodeInState"] is False
     assert result["routeOptionText"] == "key:fallback"
@@ -145,9 +158,6 @@ def assert_event_binder(page: Page) -> None:
                 mediaConfigLoader: () => ({{}}),
                 modalHostFactory: () => ({{}})
             }});
-            state.fieldsNode.innerHTML = `
-              <button data-prose-import="work">prose</button>
-            `;
             state.previewNode.innerHTML = `
               <button data-media-refresh="work">media</button>
             `;
@@ -158,9 +168,9 @@ def assert_event_binder(page: Page) -> None:
                 updateDetailSections: () => push('updateDetailSections'),
                 openEmbeddedEntryModal: (kind, index = null) => push('openEmbeddedEntryModal', kind, index),
                 deleteEmbeddedEntry: (kind, index) => push('deleteEmbeddedEntry', kind, index),
+                clearMediaRefreshStatus: () => push('clearMediaRefreshStatus'),
                 setNewWorkMode: () => push('setNewWorkMode'),
                 refreshWorkMedia: () => push('refreshWorkMedia'),
-                importWorkProse: () => push('importWorkProse'),
                 saveCurrentWork: () => push('saveCurrentWork'),
                 applyPublicationChange: () => push('applyPublicationChange'),
                 deleteCurrentWork: () => push('deleteCurrentWork')
@@ -170,7 +180,6 @@ def assert_event_binder(page: Page) -> None:
     page.fill("#catalogueWorkDetailSearch", "001")
     page.click("#catalogueWorkNew")
     page.click('[data-media-refresh="work"]')
-    page.click('[data-prose-import="work"]')
     page.click("#catalogueWorkSave")
     page.click("#catalogueWorkPublication")
     page.click("#catalogueWorkDelete")
@@ -178,11 +187,14 @@ def assert_event_binder(page: Page) -> None:
     assert calls == [
         ["bindSelectionControls"],
         ["updateDetailSections"],
+        ["clearMediaRefreshStatus"],
         ["setNewWorkMode"],
         ["refreshWorkMedia"],
-        ["importWorkProse"],
+        ["clearMediaRefreshStatus"],
         ["saveCurrentWork"],
+        ["clearMediaRefreshStatus"],
         ["applyPublicationChange"],
+        ["clearMediaRefreshStatus"],
         ["deleteCurrentWork"],
     ]
 
@@ -427,14 +439,6 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
                             summary: 'Source media is ready and local thumbnails are current in assets/works/img/00008-thumb-96.webp.',
                             source_path: 'projects/nerve/nerve.jpg',
                             next_step: 'Local thumbnails are current for this record.'
-                        }},
-                        {{
-                            key: 'work_prose',
-                            title: 'prose',
-                            status: 'ready',
-                            exists: true,
-                            summary: 'Staged prose is ready.',
-                            source_path: 'var/docs/catalogue/import-staging/works/00008.md'
                         }}
                     ]
                 }}
@@ -447,15 +451,11 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             sectionsModule.renderWorkCurrentPreview(state, options);
             sectionsModule.renderWorkReadiness(state, options);
             const refreshButton = state.previewNode.querySelector('[data-media-refresh="work"]');
-            const proseButton = state.fieldsNode.querySelector('[data-prose-import="work"]');
             const previewImage = state.previewNode.querySelector('[data-preview-image]');
             return {{
                 captionText: state.previewNode.querySelector('.catalogueRecordPreview__caption').textContent.replace(/\\s+/g, ' ').trim(),
                 previewActionsText: state.previewNode.querySelector('.catalogueRecordPreview__actions').textContent.replace(/\\s+/g, ' ').trim(),
                 previewImageSrc: previewImage ? previewImage.getAttribute('src') : '',
-                stagedProseLabel: state.fieldsNode.querySelector('.catalogueWorkStagedProse .tagStudioForm__label').textContent,
-                stagedProseValue: state.fieldsNode.querySelector('[data-staged-prose-value="work"]').textContent,
-                proseDisabled: proseButton ? proseButton.disabled : null,
                 refreshDisabled: refreshButton ? refreshButton.disabled : null,
                 readonlyFieldCount: state.readonlyNode.querySelectorAll('[data-readonly-field]').length,
                 readinessText: state.readinessNode.textContent.replace(/\\s+/g, ' ').trim()
@@ -465,15 +465,11 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
     assert result["captionText"] == "nerve · July 1990 - January 1995 2000 x 3000 px"
     assert result["previewActionsText"] == "Refresh media"
     assert result["previewImageSrc"] == "/var/catalogue/media/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
-    assert result["stagedProseLabel"] == "staged prose"
-    assert result["stagedProseValue"] == "00008.md"
-    assert result["proseDisabled"] is False
     assert result["refreshDisabled"] is False
     assert result["readonlyFieldCount"] == 0
     assert "Source media is ready" not in result["readinessText"]
     assert "projects/nerve/nerve.jpg" not in result["readinessText"]
     assert "Local thumbnails are current" not in result["readinessText"]
-    assert "Staged prose is ready." not in result["readinessText"]
 
 
 def run(site_root: Path) -> None:

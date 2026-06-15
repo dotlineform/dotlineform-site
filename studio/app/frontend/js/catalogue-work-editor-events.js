@@ -13,17 +13,18 @@ function runAsync(callback, label, ...args) {
 export function bindWorkEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
 
+  state.root.addEventListener("click", (event) => {
+    const refreshButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;
+    if (refreshButton) return;
+    invoke(callbacks.clearMediaRefreshStatus);
+  }, { capture: true });
+
   state.detailSearchNode.addEventListener("input", () => {
     invoke(callbacks.updateDetailSections);
   });
 
   state.newButton.addEventListener("click", () => {
     invoke(callbacks.setNewWorkMode);
-  });
-  state.fieldsNode.addEventListener("click", (event) => {
-    const proseButton = event.target && event.target.closest ? event.target.closest('[data-prose-import="work"]') : null;
-    if (!proseButton) return;
-    runAsync(callbacks.importWorkProse, "catalogue_work_editor: unexpected prose import failure");
   });
   state.previewNode.addEventListener("click", (event) => {
     const mediaButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;

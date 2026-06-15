@@ -55,65 +55,6 @@ def write_source_baseline(root: Path) -> Path:
     return source_dir
 
 
-def test_prose_import_preview_reports_overwrite_and_hashes() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        source_dir = write_source_baseline(root)
-        write_text(root / "var/docs/catalogue/import-staging/works/00008.md", "new prose\n")
-        write_text(root / "studio/data/canonical/catalogue-markdown/works/00008.md", "old prose\n")
-
-        preview = prose_import.build_prose_import_preview(root, source_dir, {"target_kind": "work", "work_id": "8"})
-
-        assert preview["valid"] is True
-        assert preview["target_id"] == "00008"
-        assert preview["staging_path"] == "var/docs/catalogue/import-staging/works/00008.md"
-        assert preview["target_path"] == "studio/data/canonical/catalogue-markdown/works/00008.md"
-        assert preview["overwrite_required"] is True
-        assert preview["changed"] is True
-        assert preview["content_sha256"]
-        assert preview["target_sha256"]
-
-
-def test_prose_import_apply_enforces_allowlisted_target_root() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        source_dir = write_source_baseline(root)
-        write_text(root / "var/docs/catalogue/import-staging/series/067.md", "series prose\n")
-
-        try:
-            prose_import.apply_prose_import(
-                root,
-                source_dir,
-                {"target_kind": "series", "series_id": "67"},
-                allowed_write_roots=set(),
-                dry_run=False,
-            )
-        except ValueError as exc:
-            assert "prose source root is not allowlisted" in str(exc)
-        else:
-            raise AssertionError("expected allowlist rejection")
-
-
-def test_prose_import_apply_writes_changed_source_without_backup() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        source_dir = write_source_baseline(root)
-        write_text(root / "var/docs/catalogue/import-staging/series/067.md", "series prose\n")
-
-        result = prose_import.apply_prose_import(
-            root,
-            source_dir,
-            {"target_kind": "series", "series_id": "67"},
-            allowed_write_roots={(root / "studio/data/canonical/catalogue-markdown/series").resolve()},
-            dry_run=False,
-        )
-
-        assert result.changed is True
-        assert result.target.target_id == "067"
-        assert (root / "studio/data/canonical/catalogue-markdown/series/067.md").read_text(encoding="utf-8") == "series prose\n"
-        assert not (root / "var/studio/catalogue/backups").exists()
-
-
 def test_moment_import_apply_writes_body_and_metadata() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -147,8 +88,5 @@ def test_moment_import_apply_writes_body_and_metadata() -> None:
 
 
 if __name__ == "__main__":
-    test_prose_import_preview_reports_overwrite_and_hashes()
-    test_prose_import_apply_enforces_allowlisted_target_root()
-    test_prose_import_apply_writes_changed_source_without_backup()
     test_moment_import_apply_writes_body_and_metadata()
     print("catalogue prose import tests passed")

@@ -3533,6 +3533,43 @@ button.tagStudioList__cellLink {
   justify-content: space-between;
 }
 
+.catalogueWorkDetailBrowser {
+  margin-top: 1rem;
+}
+
+.catalogueWorkDetailBrowser__layout {
+  display: grid;
+  grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.catalogueWorkDetailBrowser__pane {
+  min-width: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.catalogueWorkDetailBrowser__pane .tagStudioForm__key {
+  margin-top: 0;
+}
+
+.catalogueWorkDetailBrowser__sectionList .sharedRecordList__row {
+  padding-inline: 0.25rem;
+  border-radius: var(--studio-radius-sm);
+}
+
+.catalogueWorkDetailBrowser__imageList {
+  min-width: 0;
+  --shared-record-list-image-bg: var(--studio-surface-subtle);
+  --shared-record-list-image-line: var(--studio-line);
+}
+
+.catalogueWorkDetailBrowser__imageList .sharedRecordList__row {
+  min-height: 3.4rem;
+  align-items: center;
+}
+
 .catalogueWorkBuildPreview__reasons {
   white-space: pre-wrap;
   overflow: visible;
@@ -3835,6 +3872,10 @@ button.tagStudioList__cellLink {
   .catalogueWorkDetails__row {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.2rem;
+  }
+
+  .catalogueWorkDetailBrowser__layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .catalogueWorkDetails__actions {

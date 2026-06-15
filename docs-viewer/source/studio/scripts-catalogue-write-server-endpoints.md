@@ -249,25 +249,7 @@ Successful responses include:
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
-`POST /catalogue/prose/import-preview` expects either:
-
-```json
-{
-  "target_kind": "work",
-  "work_id": "00008"
-}
-```
-
-or:
-
-```json
-{
-  "target_kind": "series",
-  "series_id": "067"
-}
-```
-
-or:
+`POST /catalogue/prose/import-preview` expects:
 
 ```json
 {
@@ -278,11 +260,9 @@ or:
 
 Request behavior:
 
-- `target_kind` must be `work`, `series`, or `moment`
-- work ids normalize to five digits, series ids normalize to three digits, and moment ids normalize through slug-safe moment filename rules
-- the target work, series, or moment must exist in the canonical catalogue source JSON
-- work prose is staged at `var/docs/catalogue/import-staging/works/<work_id>.md`
-- series prose is staged at `var/docs/catalogue/import-staging/series/<series_id>.md`
+- `target_kind` must be `moment`
+- moment ids normalize through slug-safe moment filename rules
+- the target moment must exist in the canonical catalogue source JSON
 - moment prose is staged at `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 - the preview validates UTF-8 Markdown
 - the preview reports whether the permanent target already exists and whether overwrite confirmation is required
@@ -298,9 +278,7 @@ Request behavior:
 Apply behavior:
 
 - re-runs the same preview validation before writing
-- writes work prose to `_docs_catalogue/works/<work_id>.md`
-- writes series prose to `_docs_catalogue/series/<series_id>.md`
 - writes moment prose to `_docs_catalogue/moments/<moment_id>.md`
 - refuses to overwrite different existing permanent prose content unless `confirm_overwrite` is true
-- intentionally does not create backup files for this prose import flow
+- intentionally does not create backup files for this moment prose import flow
 - logs a local catalogue event when a non-dry-run import writes changed prose

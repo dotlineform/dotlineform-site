@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: 2026-06-14
+last_updated: 2026-06-15
 parent_id: studio
 viewable: true
 ---
@@ -23,7 +23,7 @@ viewable: true
 | helper | `catalogue-work-fields.js` | work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers. |
 | helper | `catalogue-work-form.js` | editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering. |
 | helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail. |
-| helper | `catalogue-work-actions.js` | save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
+| helper | `catalogue-work-actions.js` | save, create, build-preview, build, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
 | helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
 | helper | `catalogue-project-media-picker.js` | project-folder search, source-image file modal rendering, subfolder/file selection state, and derived project media field application. |
 
@@ -71,11 +71,11 @@ The first implementation covers:
 - validate basic field format before save
 - save metadata, with published-work saves updating the public catalogue internally
 - preview the scoped public update impact for the current work
-- show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
+- show work media readiness
 - refresh local work image derivatives from the displayed source image path without changing source metadata
-- run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
 - publish draft works through a dedicated `Publish` command
 - unpublish public works through a dedicated `Unpublish` command
+- show a parallel detail browser that lists available detail sections and a selectable shared-list view of the first 10 images in the selected section
 - when the public update path runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `site/assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and public-update failure state after save
@@ -85,8 +85,10 @@ It does not yet:
 
 - edit work details inline on the work page
 - edit series records directly
+- manage work prose; prose management is intentionally outside the metadata editor pending a separate process
 - upload primary images to remote media storage
 - paginate detail/member lists
+- search inside the selected detail-browser section
 
 ## New Mode
 
@@ -194,15 +196,14 @@ Current save/publication flow:
 5. `POST /studio/api/catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
 6. the local app adapter validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `provenance` do not disappear after save
-8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record and carries work media readiness plus staged work prose readiness
+8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record and carries work media readiness
 9. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 
 changed image from object-fit: cover to contained natural sizing, with a 70vh / 42rem max-height for very tall images.
 
-10. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `studio/data/canonical/catalogue-markdown/works/<work_id>.md` after overwrite confirmation when needed
-11. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
-12. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
-13. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
+10. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
+11. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
+12. generator lookup still reads existing `studio/data/canonical/catalogue-markdown/works/<work_id>.md` files for public work prose, but the metadata editor no longer imports or stages work prose
 
 ## Project Media Picker
 
@@ -328,7 +329,7 @@ The retired standalone work-file and work-link editors no longer own canonical w
 - `downloads`
 - `links`
 
-Work prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `studio/data/canonical/catalogue-markdown/works/<work_id>.md`; the generator reads that ID-derived source file for public prose.
+Work prose is no longer edited or imported through the work metadata editor. Existing permanent Markdown under `studio/data/canonical/catalogue-markdown/works/<work_id>.md` remains a generator input until a separate prose management workflow replaces it.
 
 ## Related References
 

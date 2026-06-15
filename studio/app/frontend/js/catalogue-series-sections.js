@@ -40,13 +40,6 @@ function setTextWithState(options, node, value, state = "") {
   else delete node.dataset.state;
 }
 
-function draftHasChanges(state, options) {
-  if (options && typeof options.draftHasChanges === "function") {
-    return Boolean(options.draftHasChanges(state));
-  }
-  return false;
-}
-
 export function buildSeriesRecordSummary(record) {
   const title = normalizeText(record && record.title);
   return title || "—";
@@ -63,18 +56,9 @@ export function renderSeriesReadiness(state, options = {}) {
     return;
   }
 
-  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state, options);
   state.readinessNode.innerHTML = items.map((item) => {
     const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
     const tone = catalogueReadinessTone(summaryItem.status);
-    const proseAction = summaryItem.key === "series_prose";
-    const proseActionDisabled = actionDisabled || (proseAction && summaryItem.status !== "ready");
-    const disabledNote = proseAction && actionDisabled
-      ? (draftHasChanges(state, options)
-        ? text(state, options, "readiness_save_first", "Save source changes before importing prose.")
-        : text(state, options, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
-      : "";
-    const proseActionLabel = text(state, options, "prose_import_button", "Import staged prose");
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
@@ -82,8 +66,6 @@ export function renderSeriesReadiness(state, options = {}) {
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
           ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
           ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="series" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(proseActionLabel)}</button></div>` : ""}
-          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
     `;

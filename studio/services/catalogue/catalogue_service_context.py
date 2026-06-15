@@ -9,7 +9,6 @@ from typing import Any, Mapping
 from catalogue import catalogue_activity as activity
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
 from catalogue import catalogue_lookup_refresh as lookup_refresh
-from catalogue import catalogue_prose_import as prose_import
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
 from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME, normalize_moment_filename
 from script_logging import append_script_log
@@ -56,8 +55,6 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
             if kind != "meta"
         } | {(source_dir / MOMENT_METADATA_FILENAME).resolve()},
         allowed_write_roots={
-            (resolved_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
-            (resolved_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
             (resolved_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
         dry_run=dry_run,

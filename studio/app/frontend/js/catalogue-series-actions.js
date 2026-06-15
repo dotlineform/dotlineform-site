@@ -2,12 +2,10 @@ import { buildStudioRouteUrl } from "./studio-config.js";
 import {
   applyCatalogueBuild,
   applyCatalogueDelete,
-  applyCatalogueProseImport,
   applyCataloguePublication,
   createCatalogueSeries,
   previewCatalogueBuild,
   previewCatalogueDelete,
-  previewCatalogueProseImport,
   previewCataloguePublication,
   saveCatalogueSeries
 } from "./catalogue-editor-service-client.js";
@@ -196,29 +194,6 @@ function projectSeriesPublicationPresentation(state, context, action, response) 
   });
 }
 
-function projectSeriesProseImportPresentation(state, context, importResponse) {
-  const completedAt = normalizeText(importResponse && importResponse.imported_at_utc) || utcTimestamp();
-  return projectCatalogueActionPresentation({
-    resultKey: "success",
-    statusKey: "success",
-    resultLabels: {
-      success: {
-        text: t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-          completed_at: completedAt,
-          target_path: normalizeText(importResponse && importResponse.target_path)
-        }),
-        tone: "success"
-      }
-    },
-    statusLabels: {
-      success: {
-        text: t(state, context, "prose_import_status_success", "Prose import completed."),
-        tone: "success"
-      }
-    }
-  });
-}
-
 export async function refreshBuildPreview(state, context) {
   if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
     state.buildPreview = null;
@@ -246,83 +221,6 @@ export async function refreshBuildPreview(state, context) {
       "error"
     );
     context.renderReadiness();
-  }
-}
-
-export async function importSeriesProse(state, context) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  if (context.draftHasChanges()) {
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_save_first", "Save source changes before importing prose."), "error");
-    return;
-  }
-
-  let restoreProseImportFocus = false;
-  state.isBuilding = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "prose_import_preview_running", "Previewing staged prose…"));
-  setTextWithState(context, state.resultNode, "");
-  try {
-    const preview = await previewCatalogueProseImport({
-      target_kind: "series",
-      series_id: state.currentSeriesId
-    });
-    if (!preview.valid) {
-      const errors = Array.isArray(preview.errors) ? preview.errors.join(" ") : "";
-      throw new Error(errors || t(state, context, "prose_import_preview_invalid", "Staged prose is not ready to import."));
-    }
-    let confirmOverwrite = false;
-    if (preview.overwrite_required) {
-      state.isBuilding = false;
-      context.updateEditorState();
-      const message = t(
-        state,
-        context,
-        "prose_import_confirm_overwrite",
-        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
-        {
-          target_path: normalizeText(preview.target_path),
-          staging_path: normalizeText(preview.staging_path)
-        }
-      );
-      confirmOverwrite = await confirmCatalogueActionModal(state, {
-        title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
-        message,
-        primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
-        restoreFocus: state.readinessNode && state.readinessNode.querySelector("[data-prose-import]")
-      });
-      if (!confirmOverwrite) {
-        setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
-        restoreProseImportFocus = true;
-        return;
-      }
-      state.isBuilding = true;
-      context.updateEditorState();
-    }
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_running", "Importing staged prose…"));
-    const importResponse = await applyCatalogueProseImport({
-      target_kind: "series",
-      series_id: state.currentSeriesId,
-      confirm_overwrite: confirmOverwrite
-    });
-    await refreshBuildPreview(state, context);
-    applyActionPresentation(context, state, projectSeriesProseImportPresentation(state, context, importResponse));
-  } catch (error) {
-    setTextWithState(
-      context,
-      state.statusNode,
-      `${t(state, context, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
-    context.updateEditorState();
-    if (restoreProseImportFocus && state.readinessNode) {
-      const proseImportButton = state.readinessNode.querySelector("[data-prose-import]");
-      if (proseImportButton && typeof proseImportButton.focus === "function") {
-        proseImportButton.focus({ preventScroll: true });
-      }
-    }
   }
 }
 

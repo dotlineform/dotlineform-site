@@ -2,12 +2,10 @@ import { buildStudioRouteUrl } from "./studio-config.js";
 import {
   applyCatalogueBuild,
   applyCatalogueDelete,
-  applyCatalogueProseImport,
   applyCataloguePublication,
   createCatalogueWork,
   previewCatalogueBuild,
   previewCatalogueDelete,
-  previewCatalogueProseImport,
   previewCataloguePublication,
   saveCatalogueBulkRecords,
   saveCatalogueWork
@@ -373,29 +371,6 @@ function projectWorkPublicationPresentation(state, context, action, response) {
   });
 }
 
-function projectWorkProseImportPresentation(state, context, importResponse) {
-  const completedAt = normalizeText(importResponse && importResponse.imported_at_utc) || utcTimestamp();
-  return projectCatalogueActionPresentation({
-    resultKey: "success",
-    statusKey: "success",
-    resultLabels: {
-      success: {
-        text: t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-          completed_at: completedAt,
-          target_path: normalizeText(importResponse && importResponse.target_path)
-        }),
-        tone: "success"
-      }
-    },
-    statusLabels: {
-      success: {
-        text: t(state, context, "prose_import_status_success", "Prose import completed."),
-        tone: "success"
-      }
-    }
-  });
-}
-
 export async function saveCurrentWork(state, context) {
   if (state.mode === "new") {
     await createCurrentWork(state, context);
@@ -553,7 +528,6 @@ export async function refreshBuildPreview(state, context) {
         : ""
     );
     state.buildPreview = null;
-    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -561,7 +535,6 @@ export async function refreshBuildPreview(state, context) {
   if (!state.currentWorkId || !state.serverAvailable) {
     setTextWithState(context, state.buildImpactNode, "");
     state.buildPreview = null;
-    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -569,7 +542,6 @@ export async function refreshBuildPreview(state, context) {
   if (!currentWorkIsPublished(state)) {
     setTextWithState(context, state.buildImpactNode, t(state, context, "build_preview_unpublished", "Site update unavailable while the work is not published."));
     state.buildPreview = null;
-    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
     return;
@@ -586,7 +558,6 @@ export async function refreshBuildPreview(state, context) {
     const response = await previewCatalogueBuild(request);
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(context, state.buildImpactNode, "");
-    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
   } catch (error) {
@@ -597,79 +568,8 @@ export async function refreshBuildPreview(state, context) {
       `${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
-    if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
-  }
-}
-
-export async function importWorkProse(state, context) {
-  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
-  if (context.draftHasChanges()) {
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_save_first", "Save source changes before importing prose."), "error");
-    return;
-  }
-
-  state.isBuilding = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "prose_import_preview_running", "Previewing staged prose…"));
-  setTextWithState(context, state.resultNode, "");
-  try {
-    const preview = await previewCatalogueProseImport({
-      target_kind: "work",
-      work_id: state.currentWorkId
-    });
-    if (!preview.valid) {
-      const errors = Array.isArray(preview.errors) ? preview.errors.join(" ") : "";
-      throw new Error(errors || t(state, context, "prose_import_preview_invalid", "Staged prose is not ready to import."));
-    }
-    let confirmOverwrite = false;
-    if (preview.overwrite_required) {
-      const message = t(
-        state,
-        context,
-        "prose_import_confirm_overwrite",
-        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
-        {
-          target_path: normalizeText(preview.target_path),
-          staging_path: normalizeText(preview.staging_path)
-        }
-      );
-      state.isBuilding = false;
-      context.updateEditorState();
-      const proseRestoreFocus = state.fieldsNode && state.fieldsNode.querySelector('[data-prose-import="work"]');
-      confirmOverwrite = await confirmCatalogueActionModal(state, {
-        title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
-        message,
-        primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
-        restoreFocus: proseRestoreFocus
-      });
-      if (!confirmOverwrite) {
-        setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
-        return;
-      }
-      state.isBuilding = true;
-      context.updateEditorState();
-    }
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_running", "Importing staged prose…"));
-    const importResponse = await applyCatalogueProseImport({
-      target_kind: "work",
-      work_id: state.currentWorkId,
-      confirm_overwrite: confirmOverwrite
-    });
-    await refreshBuildPreview(state, context);
-    applyActionPresentation(context, state, projectWorkProseImportPresentation(state, context, importResponse));
-  } catch (error) {
-    setTextWithState(
-      context,
-      state.statusNode,
-      `${t(state, context, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
-    context.updateEditorState();
   }
 }
 
@@ -859,6 +759,7 @@ function workMediaSourceFromDraft(state) {
 
 export async function refreshWorkMedia(state, context) {
   if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
+  state.clearMediaRefreshStatusOnNextClick = false;
   state.isBuilding = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_running", "Refreshing media…"));
@@ -878,12 +779,15 @@ export async function refreshWorkMedia(state, context) {
       mediaSource: () => mediaSource
     });
     if (blockedCount > 0) {
+      state.clearMediaRefreshStatusOnNextClick = false;
       setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_blocked", "Media refresh blocked."), "error");
       setTextWithState(context, state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
       return;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
+    state.clearMediaRefreshStatusOnNextClick = true;
   } catch (error) {
+    state.clearMediaRefreshStatusOnNextClick = false;
     setTextWithState(
       context,
       state.statusNode,

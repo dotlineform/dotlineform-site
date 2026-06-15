@@ -78,6 +78,7 @@ const list = createRecordList(rootNode, {
   id: "catalogueWorkResources",
   records,
   columns: [
+    { key: "thumbnail", label: "thumbnail", width: "48px", type: "image", srcKey: "thumbSrc", srcsetKey: "thumbSrcset", sizesKey: "thumbSizes", widthKey: "thumbWidth", heightKey: "thumbHeight", altKey: "thumbAlt", fallbackTextKey: "thumbFallback", truncate: false },
     { key: "type", label: "type", width: "2rem", truncate: false },
     { key: "label", label: "label", width: "minmax(4.5rem, 0.7fr)", truncate: true },
     { key: "target", label: "file / URL", width: "minmax(9rem, 1.3fr)", type: "link", hrefKey: "targetHref", truncate: true }
@@ -101,13 +102,20 @@ Column options:
 - `key`: record property to read
 - `label`: header/accessibility label
 - `width`: optional CSS grid track value; defaults to `minmax(0, 1fr)`
-- `type`: omitted/`text`, or `link`
+- `type`: omitted/`text`, `link`, or `image`
 - `hrefKey`: optional record property for link hrefs
+- `srcKey`: optional record property for image `src`
+- `srcsetKey`: optional record property for image `srcset`
+- `sizesKey`: optional record property for image `sizes`
+- `altKey`: optional record property for image alt text
+- `widthKey` / `heightKey`: optional record properties for image display dimensions
+- `fallbackTextKey`: optional record property for image placeholder text when the image is missing or loading
 - `truncate`: defaults to truncating text with hover title
 - `className`: optional adapter-owned cell class
 
 Link cells reject unsafe `javascript:` and `data:` hrefs.
 Link cells use `target="_blank"` and `rel="noopener noreferrer"` unless `external: false` is supplied on the column.
+Image cells reject unsafe `javascript:` and `data:` `src` and `srcset` URLs, use lazy loading by default, and expose loading, ready, and missing states for shared CSS.
 
 Selection options:
 
@@ -242,6 +250,9 @@ Current shared classes:
 - `sharedRecordList__header`
 - `sharedRecordList__row`
 - `sharedRecordList__cell`
+- `sharedRecordList__imageFrame`
+- `sharedRecordList__image`
+- `sharedRecordList__imagePlaceholder`
 - `sharedRecordList__link`
 - `sharedRecordList__empty`
 - `sharedRecordListActions`
@@ -262,6 +273,7 @@ Focused checks should cover:
 - empty state rendering
 - text cell rendering
 - link cell rendering and unsafe URL rejection
+- image cell rendering and unsafe `src` / `srcset` rejection
 - per-column width rendering
 - optional header rendering and hidden-header mode
 - truncation without layout expansion

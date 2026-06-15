@@ -207,17 +207,7 @@ def build_preview_payload() -> dict[str, object]:
             "work_ids": [WORK_ID],
             "series_ids": [SERIES_ID],
             "rebuild_search": True,
-            "readiness": {
-                "items": [
-                    {
-                        "key": "work_prose",
-                        "status": "ready",
-                        "title": "work prose",
-                        "summary": "Staged prose is ready to import.",
-                        "source_path": "var/studio/catalogue/prose/work-00001.md",
-                    }
-                ]
-            },
+            "readiness": {"items": []},
         },
         "field_plan": {
             "rule_ids": ["work_metadata"],
@@ -260,7 +250,6 @@ def main() -> int:
         "status": "published",
     }
     build_preview_requests: list[dict[str, object]] = []
-    prose_apply_requests: list[dict[str, object]] = []
     publication_apply_requests: list[dict[str, object]] = []
     delete_apply_requests: list[dict[str, object]] = []
 
@@ -291,23 +280,6 @@ def main() -> int:
         if request.method == "POST" and path == "/catalogue/build-preview":
             build_preview_requests.append(request_json(route))
             fulfil_json(route, build_preview_payload())
-            return
-        if request.method == "POST" and path == "/catalogue/prose/import-preview":
-            fulfil_json(route, {
-                "ok": True,
-                "valid": True,
-                "overwrite_required": True,
-                "target_path": "_works/00001.md",
-                "staging_path": "var/studio/catalogue/prose/work-00001.md",
-            })
-            return
-        if request.method == "POST" and path == "/catalogue/prose/import-apply":
-            prose_apply_requests.append(request_json(route))
-            fulfil_json(route, {
-                "ok": True,
-                "target_path": "_works/00001.md",
-                "imported_at_utc": "2026-05-15T12:00:00Z",
-            })
             return
         if request.method == "POST" and path == "/catalogue/publication-preview":
             fulfil_json(route, {
@@ -365,7 +337,6 @@ def main() -> int:
             add_link_button = f'{resource_actions} [data-record-list-action="new-link"]'
             publication_button = "#catalogueWorkPublication"
             delete_button = "#catalogueWorkDelete"
-            prose_button = '[data-prose-import="work"]'
 
             embedded_section_state = page.evaluate(
                 """() => ({
@@ -390,24 +361,6 @@ def main() -> int:
                 "actionAppearance": "icon,icon,icon,icon",
             }:
                 raise AssertionError(f"embedded list chrome did not match compact toolbar contract: {embedded_section_state!r}")
-
-            page.locator(prose_button).focus()
-            page.locator(prose_button).click()
-            prose_modal = assert_modal_shell(page, "Confirm prose overwrite", ["Cancel", "Overwrite"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
-            if "_works/00001.md" not in prose_modal["bodyText"]:
-                raise AssertionError(f"prose overwrite text missing from modal: {prose_modal!r}")
-            close_with_escape(page, prose_button, args.timeout_ms, expect_focus=False)
-            if prose_apply_requests:
-                raise AssertionError(f"prose apply ran after Escape close: {prose_apply_requests!r}")
-
-            page.locator(prose_button).focus()
-            page.locator(prose_button).click()
-            assert_modal_shell(page, "Confirm prose overwrite", ["Cancel", "Overwrite"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
-            page.locator('[data-role="modal-primary"]').click()
-            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
-            page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
-            if len(prose_apply_requests) != 1 or prose_apply_requests[0].get("target_kind") != "work":
-                raise AssertionError(f"prose apply should remain route-owned: {prose_apply_requests!r}")
 
             page.locator(add_download_button).click()
             try:
@@ -641,7 +594,6 @@ def main() -> int:
             print(json.dumps({
                 "route": attrs,
                 "build_preview_requests": len(build_preview_requests),
-                "prose_apply_requests": len(prose_apply_requests),
                 "publication_apply_requests": len(publication_apply_requests),
                 "delete_apply_requests": len(delete_apply_requests),
             }, sort_keys=True))

@@ -323,7 +323,7 @@ export function renderWorkReadiness(state, options = {}) {
     return;
   }
   const items = catalogueReadinessItems(state.buildPreview)
-    .filter((item) => !["work_media", "work_prose"].includes(normalizeText(item && item.key)));
+    .filter((item) => normalizeText(item && item.key) !== "work_media");
   if (!items.length) {
     state.readinessNode.innerHTML = "";
     return;

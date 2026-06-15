@@ -16,9 +16,34 @@ function safeUrl(value) {
   return href;
 }
 
+function safeSrcset(value) {
+  return normalizeText(value)
+    .split(",")
+    .map((entry) => {
+      const parts = entry.trim().split(/\s+/);
+      const url = safeUrl(parts[0]);
+      if (!url) return "";
+      return [url, ...parts.slice(1)].join(" ");
+    })
+    .filter(Boolean)
+    .join(", ");
+}
+
+function positiveInteger(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number <= 0) return "";
+  return String(Math.floor(number));
+}
+
 function columnValue(column, record, index) {
   if (typeof column.value === "function") return column.value(record, { index, column });
   return record && column.key ? record[column.key] : "";
+}
+
+function columnRecordValue(column, record, index, optionKey) {
+  const option = column && column[optionKey];
+  if (typeof option === "function") return option(record, { index, column });
+  return record && option ? record[option] : "";
 }
 
 function recordId(options, record, index) {
@@ -50,6 +75,54 @@ function setText(node, value) {
   node.textContent = valueText(value);
 }
 
+function appendImageCellContent(cell, column, record, index, rawValue) {
+  cell.classList.add("sharedRecordList__cell--image");
+  const frame = document.createElement("span");
+  frame.className = "sharedRecordList__imageFrame";
+  const src = safeUrl(column.srcKey ? columnRecordValue(column, record, index, "srcKey") : rawValue);
+  const srcset = safeSrcset(columnRecordValue(column, record, index, "srcsetKey"));
+  const sizes = normalizeText(columnRecordValue(column, record, index, "sizesKey") || column.sizes);
+  const width = positiveInteger(columnRecordValue(column, record, index, "widthKey") || column.widthPx || column.imageWidth);
+  const height = positiveInteger(columnRecordValue(column, record, index, "heightKey") || column.heightPx || column.imageHeight);
+  const alt = normalizeText(columnRecordValue(column, record, index, "altKey") || column.alt);
+  const fallbackText = normalizeText(columnRecordValue(column, record, index, "fallbackTextKey") || column.fallbackText);
+  frame.dataset.recordListImageState = src ? "loading" : "missing";
+  if (width) frame.style.setProperty("--shared-record-list-image-width", `${width}px`);
+  if (height) frame.style.setProperty("--shared-record-list-image-height", `${height}px`);
+
+  if (src) {
+    const image = document.createElement("img");
+    image.className = "sharedRecordList__image";
+    image.src = src;
+    if (srcset) image.srcset = srcset;
+    if (sizes) image.sizes = sizes;
+    if (width) image.width = Number(width);
+    if (height) image.height = Number(height);
+    image.alt = alt;
+    image.loading = normalizeText(column.loading) || "lazy";
+    image.decoding = normalizeText(column.decoding) || "async";
+    const setReady = () => {
+      frame.dataset.recordListImageState = "ready";
+    };
+    const setMissing = () => {
+      frame.dataset.recordListImageState = "missing";
+    };
+    image.addEventListener("load", setReady, { once: true });
+    image.addEventListener("error", setMissing, { once: true });
+    if (image.complete) {
+      if (image.naturalWidth > 0) setReady();
+      else setMissing();
+    }
+    frame.appendChild(image);
+  }
+
+  const placeholder = document.createElement("span");
+  placeholder.className = "sharedRecordList__imagePlaceholder";
+  placeholder.textContent = fallbackText;
+  frame.appendChild(placeholder);
+  cell.appendChild(frame);
+}
+
 function appendCell(rowNode, column, record, index, role) {
   const cell = document.createElement("div");
   cell.className = ["sharedRecordList__cell", column.className].filter(Boolean).join(" ");
@@ -58,6 +131,12 @@ function appendCell(rowNode, column, record, index, role) {
 
   const rawValue = columnValue(column, record, index);
   const text = valueText(rawValue);
+  if (column.type === "image") {
+    appendImageCellContent(cell, column, record, index, rawValue);
+    rowNode.appendChild(cell);
+    return;
+  }
+
   if (column.truncate !== false) {
     cell.classList.add("sharedRecordList__cell--truncate");
     cell.title = text;
