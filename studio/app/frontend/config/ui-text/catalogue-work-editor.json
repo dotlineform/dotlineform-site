@@ -165,7 +165,7 @@
   "links_invalid_url": "Each link needs a URL.",
   "links_invalid_label": "Each link needs a label.",
   "entry_modal_save_button": "Save",
-  "entry_modal_cancel_button": "cancel",
+  "entry_modal_cancel_button": "Cancel",
   "entry_modal_delete_button": "Delete",
   "summary_rebuild_needed": "public update failed in this session"
 }
