@@ -57,16 +57,6 @@ The list can own which row is selected.
 A generic action layer can own whether action buttons are currently available.
 The adapter should own what those actions mean: opening a modal, applying a delete, updating draft state, and reporting status.
 
-The "in-page modal" framing is useful only in a limited sense:
-
-- the list owns an embedded selection surface
-- an action toolbar outside the rows acts on the selected row or selected rows
-- action results return through a structured callback
-
-Avoid framing it as an actual modal.
-There should be no focus trap, backdrop, or independent dialog lifecycle inside the list.
-If an action needs a real modal, the adapter opens the route modal in response to the list action.
-
 Do not repeat `Edit` and `Delete` buttons on every row for the downloads/links use case.
 The v1 direction is selectable rows plus an action area outside the list.
 
