@@ -15,10 +15,6 @@ Create a repeatable CSS audit that:
 - detects likely drift and maintainability risks
 - produces actionable recommendations with confidence levels
 
-Related contract:
-
-- [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
-
 ## Scope
 
 Static and heuristic checks only (no browser required).

@@ -65,15 +65,12 @@ def copy_scripts_fixture(target_root: Path) -> None:
     shutil.copytree(REPO_ROOT / "docs-viewer" / "shell", target_root / "docs-viewer" / "shell")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "config" / "ui-text", target_root / "docs-viewer" / "config" / "ui-text")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "config" / "routes", target_root / "docs-viewer" / "config" / "routes")
+    shutil.copytree(REPO_ROOT / "docs-viewer" / "config" / "reports", target_root / "docs-viewer" / "config" / "reports")
     (target_root / "docs-viewer" / "config" / "defaults").mkdir(parents=True, exist_ok=True)
     shutil.copy2(
         REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
         target_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
     )
-    reports_path = REPO_ROOT / "site" / "assets" / "data" / "docs" / "reports.json"
-    if reports_path.exists():
-        (target_root / "assets" / "data" / "docs").mkdir(parents=True, exist_ok=True)
-        shutil.copy2(reports_path, target_root / "assets" / "data" / "docs" / "reports.json")
 
 
 def write_docs_scope_config(target_root: Path) -> None:

@@ -122,8 +122,6 @@ Event wiring:
 
 ## UI Contract
 
-This page follows the Analytics UI class boundary documented in [UI Framework Primitives](/docs/?scope=studio&doc=studio-ui-framework-primitives):
-
 - classes define presentation
 - `data-role` defines JS selectors
 

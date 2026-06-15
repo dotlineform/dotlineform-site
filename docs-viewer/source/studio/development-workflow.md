@@ -31,7 +31,6 @@ Use the smallest owning area that explains the change:
 
 - Site architecture or route/runtime behavior: [Architecture](/docs/?scope=studio&doc=architecture)
 - Studio route behavior: [Studio](/docs/?scope=studio&doc=studio)
-- UI primitives, modal patterns, or layout behavior: [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - Docs Viewer frontend-app architecture work: [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)

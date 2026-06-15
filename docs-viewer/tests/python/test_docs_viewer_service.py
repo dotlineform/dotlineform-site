@@ -344,6 +344,15 @@ def test_public_route_config_excludes_report_registry() -> None:
                 assert "report_registry" not in route["config_urls"]
 
 
+def test_manage_route_config_uses_source_report_registry() -> None:
+    payload = json.loads(
+        (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8")
+    )
+    manage_route = next(route for route in payload["routes"] if route["route_id"] == "docs-manage")
+
+    assert manage_route["config_urls"]["report_registry"] == "/docs-viewer/config/reports/reports.json"
+
+
 def test_basic_docs_viewer_css_excludes_manage_selectors() -> None:
     source = (REPO_ROOT / "docs-viewer/static/css/docs-viewer.css").read_text(encoding="utf-8")
     blocked_fragments = [
@@ -573,6 +582,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-public.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
+    assert allowed("/docs-viewer/config/reports/reports.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index-tree.json") is True
     assert allowed("/assets/docs/library/img/example.png") is True
     assert allowed("/studio/app/assets/css/studio.css") is False

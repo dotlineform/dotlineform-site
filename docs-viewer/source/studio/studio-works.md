@@ -178,8 +178,6 @@ Focused smoke coverage:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [UI Framework](/docs/?scope=studio&doc=ui-framework):
-
 - classes define presentation
 - `data-role` defines JS selectors
 - `data-state` defines active sort state

@@ -26,7 +26,7 @@
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
         "ui_text": "/docs-viewer/config/ui-text/manage.json",
-        "report_registry": "/assets/data/docs/reports.json"
+        "report_registry": "/docs-viewer/config/reports/reports.json"
       },
       "panels": {
         "index": { "enabled": true, "default_state": "normal" },

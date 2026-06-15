@@ -38,11 +38,7 @@ Studio landing and operational routes expose the shared route-ready contract:
   end-to-end lifecycle guidance for human and Codex implementation work.
 - **[Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)**
   checked-in dependency sources, critical versus workflow-specific packages, and local/cloud dependency expectations.
-- **[UI Audits](/docs/?scope=studio&doc=ui-audits)**
-  saved page-level UI conformance reviews and follow-up audit records.
-
 - **[UI](/docs/?scope=studio&doc=ui)** for UI framework and maintenance
-- **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for UI patterns, naming rules, and modal behavior
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that hosts Studio documentation
 - **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract, helper modules, route inventory, and audit coverage
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell architecture, route registry, shared browser modules, and Docs Viewer integration
