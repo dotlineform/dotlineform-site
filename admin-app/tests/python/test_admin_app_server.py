@@ -39,7 +39,6 @@ def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
     assert payload["app"]["routes"]["admin_activity"]["script"] == "/admin/app/frontend/js/admin-activity.js"
     assert payload["app"]["routes"]["admin_testing"]["path"] == "/admin/testing/"
     assert payload["app"]["routes"]["admin_testing"]["script"] == "/admin/app/frontend/js/admin-testing.js"
-    assert payload["app"]["routes"]["admin_ui_catalogue"]["path"] == "/admin/ui-catalogue/"
     assert any(view["id"] == "admin_home" and view["path"] == "/admin/" for view in runtime["views"])
     assert runtime["data_paths"]["ui_text"]["admin_home"] == "/admin/app/frontend/config/ui-text/admin-home.json"
     assert runtime["data_paths"]["ui_text"]["admin_checks"] == "/admin/app/frontend/config/ui-text/admin-checks.json"
@@ -85,7 +84,6 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
 
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/analytics/app/assets/css/analytics.css") is False
-    assert allowed("/ui-catalogue/app/assets/css/ui-catalogue-demo.css") is False
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
 
 
@@ -97,7 +95,6 @@ def test_admin_home_renders_visible_navigation() -> None:
     assert 'href="/admin/checks/"' in html
     assert 'href="/admin/activity/"' in html
     assert 'href="/admin/testing/"' in html
-    assert 'href="/admin/ui-catalogue/"' in html
     assert 'class="studioHomeLinks__pill"' in html
     assert "Admin home links" in html
     assert "data-admin-theme-toggle" in html

@@ -9,13 +9,6 @@
         {"route_id": "admin_activity", "label": "activity"},
         {"route_id": "admin_testing", "label": "testing"}
       ]
-    },
-    {
-      "id": "reference",
-      "label": "reference",
-      "links": [
-        {"route_id": "admin_ui_catalogue", "label": "UI Catalogue"}
-      ]
     }
   ]
 }

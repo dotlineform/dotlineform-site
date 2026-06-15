@@ -114,7 +114,7 @@ These matter only for workflows that actually generate or transform media.
 
 ## Local App Runtime Boundaries
 
-The local apps use the existing Python runtime and checked-in source; the Analytics and UI Catalogue split did not add new package dependencies.
+The local apps use the existing Python runtime and checked-in source; the Analytics split did not add new package dependencies.
 
 Current local app boundaries:
 
@@ -122,12 +122,12 @@ Current local app boundaries:
 | --- | --- | --- | --- |
 | Public site preview | `bin/site-preview` | `http://127.0.0.1:4000/` | Python runtime plus checked-in `site/` files and `site-tools/` validation. |
 | Local Studio | `bin/local-studio` | `http://127.0.0.1:8765/studio/` | Python runtime plus repo source for Studio catalogue, docs watcher, and startup maintenance tasks. |
-| Local Admin | `bin/local-admin` | `http://127.0.0.1:8768/admin/` | Python runtime plus Admin source for operational pages and Admin-hosted UI Catalogue routes. |
+| Local Admin | `bin/local-admin` | `http://127.0.0.1:8768/admin/` | Python runtime plus Admin source for operational pages. |
 | Local Analytics | `bin/local-analytics` | `http://127.0.0.1:8766/analytics/` | Python runtime plus Analytics app source, Analytics tag helpers, and Data Sharing workflow/adapters. |
 | Docs Viewer | `docs-viewer/bin/docs-viewer` | `http://127.0.0.1:8776/docs/` | Python runtime plus Docs Viewer services, generated-read helpers, docs management, import/export, and conversion helpers. |
 
 `bin/local-all` supervises these sibling services when a local session needs the full stack.
-The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, Analytics does not proxy retired Studio paths, and UI Catalogue routes do not depend on Studio route config.
+The services remain separate ownership boundaries; public preview does not publish through Studio, Studio does not host Analytics or Docs Viewer, and Analytics does not proxy retired Studio paths.
 Docs Viewer docs/search generation, catalogue search generation, catalogue prose rendering, and public-site preview/validation are Python-backed local tooling paths.
 
 ## Codespaces And Codex Cloud Expectations

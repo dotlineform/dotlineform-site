@@ -139,7 +139,7 @@ Route-specific Studio roots:
 Static Studio roots:
 
 - `/studio/` with `#studioHomeRoot`
-The legacy UI catalogue reference routes have been retired. Isolated UI Catalogue demo routes now use `data-ui-catalogue-demo-ready` instead of the production `data-studio-ready` contract.
+The legacy UI catalogue reference routes have been retired and do not expose the production `data-studio-ready` contract.
 
 Analytics app route roots:
 

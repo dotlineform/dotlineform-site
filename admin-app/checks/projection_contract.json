@@ -365,25 +365,6 @@
       "owner_doc": "local-studio-app"
     },
     {
-      "id": "ui_catalogue_demo_assets",
-      "classification": "admin_app_asset",
-      "repo_paths": [
-        "admin-app/ui-catalogue/**"
-      ],
-      "public_output": {
-        "policy": "forbidden",
-        "paths": [
-          "admin-app",
-          "studio/ui-catalogue",
-          "assets/ui-catalogue",
-          "assets/docs/ui-catalogue",
-          "_ui_catalogue_notes",
-          "_includes/ui_catalogue_notes"
-        ]
-      },
-      "owner_doc": "ui-catalogue"
-    },
-    {
       "id": "local_working_output",
       "classification": "local_working_output",
       "repo_paths": [

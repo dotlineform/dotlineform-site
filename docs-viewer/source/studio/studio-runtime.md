@@ -77,9 +77,7 @@ Their body markup lives in route-local `*-shell.js` modules, and their existing 
 Operational Studio route shells are hosted by the local app.
 Active local shells include `/studio/`, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
 The maintained mounted-route inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
-Docs Viewer, Analytics/Data Sharing, and UI Catalogue are sibling local apps with their own route shells.
-
-UI Catalogue demo routes are standalone reference surfaces under `/admin/ui-catalogue/demos/` and are not Studio route shells.
+Docs Viewer and Analytics/Data Sharing are sibling local apps with their own route shells.
 
 ## Shared Runtime Modules
 

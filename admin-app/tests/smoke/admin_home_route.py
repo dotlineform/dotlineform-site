@@ -50,7 +50,6 @@ def main() -> int:
             'href="/admin/checks/"',
             'href="/admin/activity/"',
             'href="/admin/testing/"',
-            'href="/admin/ui-catalogue/"',
             'class="studioHomeLinks__pill"',
             "data-admin-theme-toggle",
             "/admin/app/assets/css/admin.css",

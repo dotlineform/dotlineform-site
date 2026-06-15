@@ -80,7 +80,7 @@ Public build configuration is part of the projection contract:
 - `site-tools/config/site-tools.json` is the public static validation and site-level settings config
 - public Docs Viewer config exposes only public read-only scopes
 - `bin/local-studio` serves Studio routes, local runtime config, and Studio-owned APIs
-- `bin/local-admin` serves Admin routes, local Admin runtime config, Admin-owned APIs, and Admin-hosted UI Catalogue routes
+- `bin/local-admin` serves Admin routes, local Admin runtime config, and Admin-owned APIs
 - `docs-viewer/bin/docs-viewer` serves Docs Viewer manage mode, generated reads, Docs management APIs, and document Data Sharing endpoints
 - `bin/site-preview` and `bin/site-validate` run public static preview and validation paths
 
@@ -101,8 +101,6 @@ The public static build should include:
 - public read-only Analysis route at `/analysis/`
 - generated Library docs payloads and search under `site/assets/data/docs/scopes/library/` and `site/assets/data/search/library/`
 - generated Analysis docs payloads and search under `site/assets/data/docs/scopes/analysis/` and `site/assets/data/search/analysis/`
-
-Palette inspection belongs to the Admin-hosted UI Catalogue at `/admin/ui-catalogue/palette/`, not to the public site deploy surface.
 
 The public static build should not include:
 

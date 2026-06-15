@@ -24,7 +24,6 @@ ADMIN_SERVED_ROUTE_PATHS: dict[str, str] = {
     "admin_checks": "/admin/checks/",
     "admin_activity": "/admin/activity/",
     "admin_testing": "/admin/testing/",
-    "admin_ui_catalogue": "/admin/ui-catalogue/",
 }
 
 ADMIN_SERVICE_ENDPOINTS: dict[str, object] = {
@@ -187,10 +186,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-theme.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
-        repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-demo.css",
-        repo_root / "admin-app" / "ui-catalogue" / "assets" / "css" / "ui-catalogue-shell.css",
-        repo_root / "admin-app" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-demo.js",
-        repo_root / "admin-app" / "ui-catalogue" / "assets" / "js" / "ui-catalogue-shell.js",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"

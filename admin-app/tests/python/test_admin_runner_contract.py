@@ -80,7 +80,7 @@ def test_admin_runner_executes_representative_app_local_pytest(tmp_path) -> None
     log_path = log_dir / "admin-pytest.log"
     command = runner.CheckCommand(
         "representative-admin-pytest",
-        runner.pytest_argv("admin-app/tests/python/test_admin_ui_catalogue.py"),
+        runner.pytest_argv("admin-app/tests/python/test_admin_app_server.py"),
         "Run one Admin app-local pytest target.",
     )
 
@@ -88,7 +88,7 @@ def test_admin_runner_executes_representative_app_local_pytest(tmp_path) -> None
         result = runner.run_command(command, log_path)
 
         assert result["exit_code"] == 0
-        assert "admin-app/tests/python/test_admin_ui_catalogue.py" in log_path.read_text(encoding="utf-8")
+        assert "admin-app/tests/python/test_admin_app_server.py" in log_path.read_text(encoding="utf-8")
     finally:
         if log_dir.exists():
             shutil.rmtree(log_dir)

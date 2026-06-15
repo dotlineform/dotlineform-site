@@ -35,7 +35,7 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 - starts the standalone Local Analytics app for tag and Data Sharing routes/APIs.
 
 `bin/local-admin`
-- starts the Local Admin app for cross-repo operations and Admin-hosted UI Catalogue routes.
+- starts the Local Admin app for cross-repo operations.
 
 `docs-viewer/bin/docs-viewer`
 - starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
@@ -49,7 +49,7 @@ The docs live rebuild watcher is not the Docs Viewer web service; it only watche
 - orchestration runner
 
 Run `bin/local-studio` for Studio and run `bin/site-preview` in a separate terminal when Studio links need a live public-site preview host.
-Run `bin/local-admin` when working only on Admin or UI Catalogue routes.
+Run `bin/local-admin` when working only on Admin routes.
 Run `bin/local-analytics` when working only on Analytics or Data Sharing.
 Run `bin/local-all` when a local session needs the sibling services supervised together.
 
@@ -254,7 +254,6 @@ $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/admin_app_server.py 
 - default URL: `http://127.0.0.1:8768/admin/`
 - owns Admin pages under `/admin/...`
 - owns Admin APIs under `/admin/api/...`
-- owns UI Catalogue demo pages and assets under `/admin/ui-catalogue/...`
 - uses `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, and `ADMIN_APP_ACCESS_LOG`
 - stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
 - intentionally does not provide compatibility aliases for old `/studio/audits/...`, `/studio/risk/...`, `/studio/activity/...`, `/studio/ui-catalogue/...`, or `/ui-catalogue/...` paths
@@ -288,8 +287,8 @@ There is no standalone catalogue write-server fallback in `bin/local-studio`.
 
 ### Admin Operations
 
-The Admin app owns the active browser-facing audit, risk, activity, testing, and UI Catalogue pages and APIs under `/admin/...`.
-There is no standalone audit or UI Catalogue HTTP service fallback in `bin/local-studio`.
+The Admin app owns the active browser-facing audit, risk, activity, and testing pages and APIs under `/admin/...`.
+There is no standalone audit HTTP service fallback in `bin/local-studio`.
 For direct automation, call:
 
 ```bash

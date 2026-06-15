@@ -28,7 +28,6 @@ Use this as the first-pass decision table.
 | Docs Viewer public or management behavior | `--profile docs`; add `--profile docs-viewer-smoke` for browser/runtime changes |
 | catalogue source, build, or publication behavior | `--profile catalogue`, focused `studio/tests/python/...`, or a narrow catalogue build preview |
 | Admin app checks, reports, risk, or operations pages | focused `admin-app/tests/python/...`; add `--profile admin-smoke` for route behavior |
-| UI Catalogue behavior | `--profile ui-catalogue-smoke` |
 | Analytics tags or data sharing | focused `analytics-app/tests/python/...`; add `--profile analytics-smoke` for route/API smoke behavior |
 | public site or Studio-owned browser behavior | `--profile studio-smoke` or a focused script under `studio/tests/smoke/` |
 | shared server, config, runner, or ownership boundary | `--profile quick`, then add owner-specific focused checks |
@@ -47,7 +46,6 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile catalogu
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-smoke
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile ui-catalogue-smoke
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile analytics-smoke
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
 ```
@@ -61,10 +59,9 @@ Profile roles:
 | `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
 | `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only and standalone manage-service smoke checks. |
 | `admin-smoke` | local Admin home and operations route smoke checks. |
-| `ui-catalogue-smoke` | Admin-hosted UI Catalogue tests, routes, and modal demo smoke checks. |
 | `analytics-smoke` | local Analytics tag API, tag route, modal, ready-state, and Data Sharing smoke checks. |
 | `studio-smoke` | `site/` validation plus public-site and Studio-owned catalogue smoke checks. |
-| `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke`, `analytics-smoke`, or `ui-catalogue-smoke`. |
+| `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke` or `analytics-smoke`. |
 
 Smoke profiles that need public-site files validate and read the checked-in `site/` root.
 
@@ -80,12 +77,11 @@ Docs Viewer:
 - Typical profiles: `docs`, `docs-viewer-smoke`
 - Use `docs-viewer-smoke`, or at least `public_docs_viewer_readonly.py` against `site/`, when a change touches the public runtime, route shell, public config, payload-loading contract, or management-only module boundary.
 
-Admin app and UI Catalogue:
+Admin app:
 
 - Python checks: `admin-app/tests/python/`
 - Browser smoke checks: `admin-app/tests/smoke/`
-- Typical profiles: `quick`, `admin-smoke`, `ui-catalogue-smoke`
-- UI Catalogue is Admin-hosted; do not put its smoke coverage in Studio-owned profiles.
+- Typical profiles: `quick`, `admin-smoke`
 
 Analytics app:
 
@@ -99,7 +95,7 @@ Studio and public site:
 - Python checks: `studio/tests/python/`
 - Browser smoke checks: `studio/tests/smoke/`
 - Typical profiles: `quick`, `catalogue`, `studio-smoke`
-- Studio-owned smokes cover public-site behavior and retained catalogue/public-route behavior. They should not absorb Docs Viewer, Admin, UI Catalogue, or Analytics smoke responsibilities.
+- Studio-owned smokes cover public-site behavior and retained catalogue/public-route behavior. They should not absorb Docs Viewer, Admin, or Analytics smoke responsibilities.
 
 Cross-app checks:
 

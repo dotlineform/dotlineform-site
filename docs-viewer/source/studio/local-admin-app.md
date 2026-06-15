@@ -29,14 +29,12 @@ The Admin app server owns:
 - `/admin/checks/`
 - `/admin/activity/`
 - `/admin/testing/`
-- `/admin/ui-catalogue/...`
 - `/admin/runtime-config.json`
 - `/admin/api/audits/...`
 - `/admin/api/checks/...`
 - `/admin/api/activity/...`
 - `/admin/api/testing/...`
 - Admin static assets under `/admin/app/...`
-- UI Catalogue demo assets under `/admin/ui-catalogue/...`
 
 ## Source Layout
 
@@ -44,14 +42,13 @@ Current Admin-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `admin-app/app/server/admin_app/` | Admin app server, Admin route views, runtime config projection, API dispatch, static serving, audit allowlist, and UI Catalogue route views. |
+| `admin-app/app/server/admin_app/` | Admin app server, Admin route views, runtime config projection, API dispatch, static serving, and audit allowlist. |
 | `admin-app/app/frontend/` | Admin browser modules, route modules, route state helpers, transport helpers, route registry, and UI text config. |
 | `admin-app/app/assets/css/admin.css` | Admin shell, navigation, route layout, and Admin-owned page styling. |
 | `admin-app/checks/` | Repo-scope checks, report producers, source-boundary audits, public-surface audits, runtime audits, CSS/JS inventories, and projection contract checks. |
 | `admin-app/commands/run_checks.py` | Top-level optional check runner and profile registry. |
-| `admin-app/tests/python/` | Admin server, runner, audit/check contract, UI Catalogue, activity contract, and repo-scope deterministic tests. |
-| `admin-app/tests/smoke/` | Admin route and Admin-hosted UI Catalogue browser smoke scripts. |
-| `admin-app/ui-catalogue/` | UI Catalogue demo source, scoped demo CSS/JS, palette/reference source, demo assets, and reference asset folders. |
+| `admin-app/tests/python/` | Admin server, runner, audit/check contract, activity contract, and repo-scope deterministic tests. |
+| `admin-app/tests/smoke/` | Admin route browser smoke scripts. |
 | `var/admin/activity/` | Ignored local unified activity feed and journal. |
 | `var/admin/checks/` | Ignored local Admin checks report runs and review artifacts. |
 | `var/admin/test-runs/` | Ignored local check profile summaries and command logs. |
@@ -87,19 +84,6 @@ The allowlisted audit runner lives at `admin-app/app/server/admin_app/audit_runn
 Admin Checks report producers live under `admin-app/checks/reports/`.
 The check runner writes summaries under `var/admin/test-runs/`.
 
-## UI Catalogue
-
-UI Catalogue is Admin-hosted because it is a cross-app design and verification aid.
-The route family is `/admin/ui-catalogue/...`.
-Demo CSS and JavaScript stay UI Catalogue-scoped under `admin-app/ui-catalogue/` and are not merged into `admin.css`.
-UI Catalogue pages reuse the shared Admin top nav and theme toggle; the UI Catalogue shell stylesheet owns only the catalogue page content frame.
-
-Do not recreate:
-
-- `/studio/ui-catalogue/...`
-- `/ui-catalogue/...`
-- the standalone `ui-catalogue-app` server
-
 ## Current Checks
 
 Current focused Admin checks:
@@ -109,5 +93,4 @@ Current focused Admin checks:
 - runner/profile contract: `admin-app/tests/python/test_admin_runner_contract.py`
 - checks route/API: `admin-app/tests/python/test_admin_checks_api.py`
 - activity contract wrapper: `admin-app/tests/python/test_activity_contract.py`
-- UI Catalogue: `admin-app/tests/python/test_admin_ui_catalogue.py`
-- route smokes: `admin-app/tests/smoke/admin_home_route.py`, `admin-app/tests/smoke/admin_operations_routes.py`, `admin-app/tests/smoke/admin_ui_catalogue_routes.py`, and `admin-app/tests/smoke/admin_ui_catalogue_modal_demo.py`
+- route smokes: `admin-app/tests/smoke/admin_home_route.py` and `admin-app/tests/smoke/admin_operations_routes.py`

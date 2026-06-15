@@ -81,7 +81,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
-    assert not any(str(view["id"]).startswith("ui_catalogue") for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
@@ -235,10 +234,6 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/studio/data/generated/project-state/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
-    assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
-    assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
-    assert allowed("/ui-catalogue/app/assets/js/ui-catalogue-demo.js") is False
-    assert allowed("/admin/ui-catalogue/assets/js/ui-catalogue-demo.js") is False
     assert allowed("/assets/studio/css/studio.css") is False
     assert allowed("/assets/studio/img/panel-backgrounds/aqua.jpg") is False
     assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
@@ -269,9 +264,6 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     for shell in html_shells:
         assert "/studio/app/assets/css/studio.css?v=test-version" in shell
         assert "/assets/css/main.css" not in shell
-        assert "/studio/ui-catalogue/" not in shell
-        assert "/ui-catalogue/app/" not in shell
-        assert "/admin/ui-catalogue/assets/" not in shell
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:

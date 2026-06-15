@@ -14,7 +14,7 @@ This document is the maintained source-tree ownership contract after the Studio 
 
 Studio is the same-repo catalogue authoring and maintenance system for the site.
 It lives under `studio/`.
-Admin, Analytics, Docs Viewer, and Admin-hosted UI Catalogue are separate local app boundaries in the same repository.
+Admin, Analytics, and Docs Viewer are separate local app boundaries in the same repository.
 
 The public static site root is the publishing surface.
 Its canonical files live under `site/`; validation and durable site-level settings live under `site-tools/`.
@@ -23,10 +23,9 @@ Publishable runtime files, public assets, and generated public output remain out
 The repo is intentionally one repository:
 
 - Studio owns catalogue source, catalogue authoring workflows, Studio catalogue routes, Studio catalogue services, app UI, and catalogue/public-site tests.
-- Admin owns cross-repo operational review, audit/risk/activity/testing routes, repo-scope checks, check profiles, local check summaries, and Admin-hosted UI Catalogue routes.
+- Admin owns cross-repo operational review, audit/risk/activity/testing routes, repo-scope checks, check profiles, and local check summaries.
 - Analytics owns tag maintenance, Data Sharing route/API workflows, semantic-reference maintenance, and future analysis/visualisation workflows.
 - Docs Viewer owns docs viewing, docs source management, Docs Viewer payloads, docs conversion helpers, and the `/docs/` manage-mode service.
-- UI Catalogue owns isolated UI demos and reference assets under Admin route ownership.
 - `site/` owns public route HTML, public route JavaScript/CSS, public media, and generated public runtime payloads.
 - `site-tools/` owns deploy-root validation and durable site-level settings used by local Python tooling.
 - `shared/` owns repo-system frontend assets intended for reuse by multiple local apps.
@@ -73,13 +72,12 @@ Current Admin-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/checks/activity/testing API dispatch, audit allowlist, and UI Catalogue static/view serving. |
+| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/checks/activity/testing API dispatch, and audit allowlist. |
 | `admin-app/app/frontend/` | Admin browser modules, route modules, shell helpers, route state helpers, transport helpers, route registry, and Admin UI text config. |
 | `admin-app/app/assets/` | Admin-only CSS and static assets used by Local Admin routes. |
 | `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, activity-contract, report producer, and other repo-scope verification checks. |
 | `admin-app/commands/` | Developer and Codex command implementations such as `run_checks.py` and command-owned profile registries. |
-| `admin-app/tests/` | Admin server tests, runner tests, audit/check contract tests, Admin-hosted UI Catalogue tests, and Admin route smokes. |
-| `admin-app/ui-catalogue/` | UI Catalogue demo source, palette reference data, scoped CSS, JavaScript helpers, and reference assets served by the Admin app. |
+| `admin-app/tests/` | Admin server tests, runner tests, audit/check contract tests, and Admin route smokes. |
 | `var/admin/activity/` | Ignored local unified activity feed and journal. |
 | `var/admin/checks/` | Ignored local Admin checks report runs, snapshots, and review artifacts. |
 | `var/admin/test-runs/` | Ignored local check profile summaries and command logs. |
@@ -106,17 +104,6 @@ Current Analytics-owned source homes:
 
 Analytics routes and APIs live under `/analytics/...` and `/analytics/api/...`.
 Do not add aliases, proxies, dual-read paths, or static-serving shims for retired `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, or `/studio/api/data-sharing/...` paths.
-
-## UI Catalogue
-
-UI Catalogue is an isolated local demo system, not a Local Studio route family.
-
-| Path | Owner / role |
-| --- | --- |
-| `admin-app/ui-catalogue/` | UI Catalogue demo source, palette reference data, scoped CSS, JavaScript helpers, and reference assets served by the Admin app. |
-
-The active route namespaces are `/admin/ui-catalogue/demos/...` for isolated demos and `/admin/ui-catalogue/palette/` for palette reference data.
-Retired Studio-hosted UI Catalogue routes should not be recreated.
 
 ## Docs Viewer
 

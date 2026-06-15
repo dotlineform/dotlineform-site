@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dbacc9e755acda0ac2e04da44f2cf52c",
-    "generated_at_utc": "2026-06-14T19:05:48Z",
+    "version": "blake2b-fad8c4f251e5e8e6c5aad420516b9249",
+    "generated_at_utc": "2026-06-15T13:10:22Z",
     "count": 254
   },
   "entries": [
@@ -896,10 +896,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-14",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-13 • Architecture",
+      "display_meta": "2026-06-14 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -907,12 +907,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-06-13",
+        "2026-06-14",
         "2026",
         "06",
-        "13"
+        "14"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-13 2026 06 13"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-14 2026 06 14"
     },
     {
       "id": "change-requests",

@@ -53,10 +53,8 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
   Runs Admin home and Admin operational route smoke checks.
 - `analytics-smoke`
   Runs Local Analytics route/API/module/modal/ready-state smoke checks for tag workflows and Analytics-owned Data Sharing prepare/review behavior.
-- `ui-catalogue-smoke`
-  Runs UI Catalogue Python checks plus route and modal-demo smoke checks for the Admin app.
 - `full`
-  Runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`. It does not run `docs-viewer-smoke`, `analytics-smoke`, or `ui-catalogue-smoke`; run those profiles explicitly when those browser/runtime surfaces are in scope.
+  Runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`. It does not run `docs-viewer-smoke` or `analytics-smoke`; run those profiles explicitly when those browser/runtime surfaces are in scope.
 
 ## Outputs
 

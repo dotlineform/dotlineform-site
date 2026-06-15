@@ -111,7 +111,6 @@
       "label": "Runtime JavaScript",
       "include": [
         "admin-app/app/frontend/js/",
-        "admin-app/ui-catalogue/assets/js/",
         "analytics-app/app/frontend/js/",
         "site/assets/js/",
         "site/docs-viewer/runtime/js/",
@@ -123,7 +122,6 @@
       "label": "Runtime assets",
       "include": [
         "admin-app/app/assets/",
-        "admin-app/ui-catalogue/assets/css/",
         "analytics-app/app/assets/",
         "site/assets/docs/",
         "site/assets/css/",
@@ -186,8 +184,7 @@
       "include": [
         "admin-app/app/assets/",
         "admin-app/app/frontend/",
-        "admin-app/app/server/admin_app/admin_*",
-        "admin-app/ui-catalogue/"
+        "admin-app/app/server/admin_app/admin_*"
       ]
     },
     "public-route": {
@@ -367,20 +364,6 @@
       "include": [
         "admin-app/app/frontend/js/admin-testing.js",
         "admin-app/app/server/admin_app/admin_testing_api.py"
-      ],
-      "shared": [
-        "admin-app/app/server/admin_app/admin_app_server.py"
-      ],
-      "areas": []
-    },
-    "/admin/ui-catalogue/": {
-      "label": "Admin UI Catalogue",
-      "path": "/admin/ui-catalogue/",
-      "status": "inventory-only",
-      "include": [
-        "admin-app/ui-catalogue/",
-        "admin-app/app/server/admin_app/ui_catalogue_config.py",
-        "admin-app/app/server/admin_app/ui_catalogue_views.py"
       ],
       "shared": [
         "admin-app/app/server/admin_app/admin_app_server.py"

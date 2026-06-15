@@ -21,19 +21,19 @@ The local development stack is split into sibling services:
 
 - `bin/site-preview` for the public static-site preview
 - `bin/local-studio` for Local Studio catalogue workflows and the docs live rebuild watcher
-- `bin/local-admin` for Admin operations and Admin-hosted UI Catalogue demos
+- `bin/local-admin` for Admin operations
 - `bin/local-analytics` for Analytics tag and Data Sharing routes/APIs
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode and docs management APIs
 - `bin/local-all` when one terminal should supervise the sibling services together
 
 These services should stay separate.
-Do not make public preview part of Studio startup semantics, do not reintroduce Analytics or Data Sharing routes under `/studio/`, and do not serve UI Catalogue demos through Local Studio.
+Do not make public preview part of Studio startup semantics, and do not reintroduce Analytics or Data Sharing routes under `/studio/`.
 
 ## Child References
 
 - [Toolchain](/docs/?scope=studio&doc=local-setup-toolchain) covers current versions, fresh macOS install, version checks, and switching Python versions.
 - [Environment](/docs/?scope=studio&doc=local-setup-environment) covers `var/local/site.env`, process environment fallback, repo-specific operating notes, and common commands.
 - [Public Site Preview](/docs/?scope=studio&doc=local-setup-public-site-preview) covers the public static preview and validation commands and wrapper defaults.
-- [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers Admin route/API ownership, output paths, and UI Catalogue hosting.
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers Admin route/API ownership and output paths.
 - [Recovery](/docs/?scope=studio&doc=local-setup-recovery) covers recovery after macOS, Xcode, or Command Line Tools updates.
 - [GitHub And Codex Notes](/docs/?scope=studio&doc=local-setup-github-codex) covers local-vs-GitHub setup boundaries and Codex guidance.

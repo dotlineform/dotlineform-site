@@ -147,7 +147,6 @@ studio
       "label": "Runtime JavaScript",
       "include": [
         "admin-app/app/frontend/js/",
-        "admin-app/ui-catalogue/assets/js/",
         "analytics-app/app/frontend/js/",
         "assets/js/",
         "docs-viewer/runtime/js/",

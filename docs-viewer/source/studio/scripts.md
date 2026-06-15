@@ -25,7 +25,7 @@ For test strategy and profile selection, see [Testing](/docs/?scope=studio&doc=t
 ## Local Runtime
 
 - [Local Runners](/docs/?scope=studio&doc=scripts-local-studio) covers `bin/local-studio`, `bin/local-admin`, `bin/local-all`, sibling services, ports, and local service lifecycle.
-- [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers the active Admin app boundary for audits, risk, activity, testing, and Admin-hosted UI Catalogue routes.
+- [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers the active Admin app boundary for audits, risk, activity, and testing.
 - [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments) covers shared local/cloud runtime expectations, environment variables, and R2-backed media workflows.
 
 ## Checks And Audits

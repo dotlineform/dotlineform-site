@@ -37,13 +37,6 @@
         "path": "/admin/testing/",
         "script": "/admin/app/frontend/js/admin-testing.js",
         "nav": true
-      },
-      "admin_ui_catalogue": {
-        "label": "UI Catalogue",
-        "title": "UI Catalogue",
-        "path": "/admin/ui-catalogue/",
-        "script": "",
-        "nav": false
       }
     }
   },

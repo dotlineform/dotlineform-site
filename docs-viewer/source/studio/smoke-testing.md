@@ -10,7 +10,7 @@ viewable: true
 
 This page records practical harness rules for lightweight Codex-run browser smoke tests.
 
-Treat this guidance as app-neutral: Docs Viewer, Admin, Analytics, UI Catalogue, Studio, and public-site smokes should follow the same readiness and interaction standards while staying under their owning app directories.
+Treat this guidance as app-neutral: Docs Viewer, Admin, Analytics, Studio, and public-site smokes should follow the same readiness and interaction standards while staying under their owning app directories.
 
 Use this page for browser-test mechanics. Use [Testing](/docs/?scope=studio&doc=testing) to choose which profile or focused command to run.
 
@@ -38,7 +38,6 @@ Keep each smoke with the app that owns the route or browser module.
 | --- | --- | --- |
 | Docs Viewer | `docs-viewer/tests/smoke/` | `docs-viewer-smoke` or focused script |
 | Admin app | `admin-app/tests/smoke/` | `admin-smoke` |
-| UI Catalogue | `admin-app/tests/smoke/` | `ui-catalogue-smoke` |
 | Analytics app | `analytics-app/tests/smoke/` | `analytics-smoke` |
 | Studio and public site | `studio/tests/smoke/` | `studio-smoke` or focused script |
 
@@ -146,7 +145,7 @@ Run the ready-state audit after changing Studio route shells, route scripts, or 
 $HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
 ```
 
-The `quick` profile includes this audit. The audit is still Studio-specific because it validates the current Studio route templates; it does not prove Admin, Analytics, Docs Viewer, or UI Catalogue route readiness.
+The `quick` profile includes this audit. The audit is still Studio-specific because it validates the current Studio route templates; it does not prove Admin, Analytics, or Docs Viewer route readiness.
 
 ## Manual Check Pairing
 
