@@ -396,8 +396,6 @@ def main() -> int:
                 """node => ({
                     hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')),
                     rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
-                    hasLegacyEdit: Boolean(node.querySelector('[data-download-edit]')),
-                    hasLegacyDelete: Boolean(node.querySelector('[data-download-delete]')),
                     selectedId: node.querySelector('[data-record-list-id="catalogueWorkDownloads"]')?.dataset.recordListSelectedId || '',
                     selectedRows: node.querySelectorAll('[data-record-list-row="true"][aria-selected="true"]').length,
                     text: node.textContent || ''
@@ -405,8 +403,6 @@ def main() -> int:
             )
             if not download_list_state["hasList"] or download_list_state["rowCount"] < 2:
                 raise AssertionError(f"download list did not render through shared record list: {download_list_state!r}")
-            if download_list_state["hasLegacyEdit"] or download_list_state["hasLegacyDelete"]:
-                raise AssertionError(f"download list should not render legacy row action buttons: {download_list_state!r}")
             if download_list_state["selectedId"] != "download-0" or download_list_state["selectedRows"] != 1:
                 raise AssertionError(f"download list did not expose single-row selection: {download_list_state!r}")
             if "Original PDF" not in download_list_state["text"]:
@@ -447,6 +443,68 @@ def main() -> int:
             page.locator(add_link_button).click()
             assert_modal_shell(page, "Add link", ["cancel", "Save"], args.timeout_ms)
             close_with_backdrop(page, add_link_button, args.timeout_ms)
+
+            page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
+            link_list_state = page.locator("#catalogueWorkLinksResults").evaluate(
+                """node => {
+                    const labelCell = node.querySelector('[data-record-list-cell="label"]');
+                    const urlCell = node.querySelector('[data-record-list-cell="url"]');
+                    const link = urlCell ? urlCell.querySelector('a') : null;
+                    return {
+                        hasList: Boolean(node.querySelector('[data-record-list-id="catalogueWorkLinks"]')),
+                        rowCount: node.querySelectorAll('[data-record-list-row="true"]').length,
+                        selectedId: node.querySelector('[data-record-list-id="catalogueWorkLinks"]')?.dataset.recordListSelectedId || '',
+                        selectedRows: node.querySelectorAll('[data-record-list-row="true"][aria-selected="true"]').length,
+                        labelHasLink: Boolean(labelCell && labelCell.querySelector('a')),
+                        linkHref: link ? link.href : '',
+                        linkTarget: link ? link.target : '',
+                        linkRel: link ? link.rel : '',
+                        text: node.textContent || ''
+                    };
+                }"""
+            )
+            if not link_list_state["hasList"] or link_list_state["rowCount"] < 1:
+                raise AssertionError(f"link list did not render through shared record list: {link_list_state!r}")
+            if link_list_state["selectedId"] != "link-0" or link_list_state["selectedRows"] != 1:
+                raise AssertionError(f"link list did not expose single-row selection: {link_list_state!r}")
+            if "Original link" not in link_list_state["text"] or "https://example.com/original" not in link_list_state["text"]:
+                raise AssertionError(f"link list lost existing row content: {link_list_state!r}")
+            if link_list_state["labelHasLink"]:
+                raise AssertionError(f"link list should keep label cells as plain text: {link_list_state!r}")
+            if link_list_state["linkHref"] != "https://example.com/original" or link_list_state["linkTarget"] != "_blank" or link_list_state["linkRel"] != "noopener noreferrer":
+                raise AssertionError(f"link list did not render safe external-link attributes: {link_list_state!r}")
+
+            edit_link_button = '#catalogueWorkLinksResults [data-record-list-action="edit"]'
+            delete_link_button = '#catalogueWorkLinksResults [data-record-list-action="delete"]'
+            link_action_state = page.locator("#catalogueWorkLinksResults").evaluate(
+                """node => ({
+                    editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
+                    deleteDisabled: Boolean(node.querySelector('[data-record-list-action="delete"]')?.disabled)
+                })"""
+            )
+            if link_action_state != {"editDisabled": False, "deleteDisabled": False}:
+                raise AssertionError(f"link shared actions did not enable after row selection: {link_action_state!r}")
+            page.locator(edit_link_button).click()
+            assert_modal_shell(page, "Edit link", ["cancel", "Save"], args.timeout_ms)
+            close_with_escape(page, edit_link_button, args.timeout_ms, expect_focus=False)
+
+            page.locator("#catalogueWorkLinksResults [data-record-list-row='true']").first.click()
+            page.locator(delete_link_button).click()
+            delete_link_modal = assert_modal_shell(page, "Delete link", ["cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            if "Original link" not in delete_link_modal["bodyText"]:
+                raise AssertionError(f"link delete text missing from modal: {delete_link_modal!r}")
+            page.wait_for_function(
+                "() => document.activeElement && document.activeElement.getAttribute('data-role') === 'modal-cancel'",
+                timeout=args.timeout_ms,
+            )
+            delete_link_modal = modal_shell_state(page)
+            if "tagStudio__button--defaultAction" not in delete_link_modal["actionClasses"][0]:
+                raise AssertionError(f"link delete cancel action is not the default: {delete_link_modal!r}")
+            if "tagStudio__button--defaultAction" in delete_link_modal["actionClasses"][1]:
+                raise AssertionError(f"link delete primary action should not be the default: {delete_link_modal!r}")
+            page.mouse.click(12, 12)
+            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
+            page.wait_for_timeout(50)
 
             page.fill("#catalogueWorkField-title", "Smoke work updated")
             preview_button = '[data-action="preview-build-impact"]'

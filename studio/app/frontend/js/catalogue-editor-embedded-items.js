@@ -13,15 +13,9 @@ const EMBEDDED_ITEM_DEFINITIONS = Object.freeze({
     titleId: "catalogueWorkDownloadModalTitle",
     statusId: "catalogueWorkDownloadModalStatus",
     modalRole: "download-modal",
-    editAttribute: "data-download-edit",
-    deleteAttribute: "data-download-delete",
     firstFieldId: "catalogueWorkDownloadFilename",
     secondFieldId: "catalogueWorkDownloadLabel",
     firstFieldType: "text",
-    editButtonKey: "files_edit_button",
-    editButtonFallback: "Edit",
-    deleteButtonKey: "files_delete_button",
-    deleteButtonFallback: "Delete",
     addTitleKey: "files_add_modal_title",
     addTitleFallback: "Add download",
     editTitleKey: "files_edit_modal_title",
@@ -47,15 +41,9 @@ const EMBEDDED_ITEM_DEFINITIONS = Object.freeze({
     titleId: "catalogueWorkLinkModalTitle",
     statusId: "catalogueWorkLinkModalStatus",
     modalRole: "link-modal",
-    editAttribute: "data-link-edit",
-    deleteAttribute: "data-link-delete",
     firstFieldId: "catalogueWorkLinkUrl",
     secondFieldId: "catalogueWorkLinkLabel",
     firstFieldType: "url",
-    editButtonKey: "links_edit_button",
-    editButtonFallback: "Edit",
-    deleteButtonKey: "links_delete_button",
-    deleteButtonFallback: "Delete",
     addTitleKey: "links_add_modal_title",
     addTitleFallback: "Add link",
     editTitleKey: "links_edit_modal_title",
@@ -82,19 +70,6 @@ function definitionForKind(kind) {
   return EMBEDDED_ITEM_DEFINITIONS[normalizeText(kind)] || null;
 }
 
-function displayValue(value) {
-  return normalizeText(value) || "—";
-}
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
 function interpolateText(template, tokens = null) {
   let text = normalizeText(template);
   if (!tokens || typeof tokens !== "object") return text;
@@ -112,31 +87,6 @@ export function getWorkEmbeddedItems(draft, kind) {
   const definition = definitionForKind(kind);
   if (!definition) return [];
   return cloneEmbeddedEntries(draft && draft[definition.entriesKey], definition.fields);
-}
-
-export function renderWorkEmbeddedItemRows(kind, items, options = {}) {
-  const definition = definitionForKind(kind);
-  if (!definition) return "";
-  const text = options.text;
-  const actionDisabled = Boolean(options.actionDisabled);
-  return (Array.isArray(items) ? items : []).map((item, index) => {
-    const firstValue = definition.entriesKey === "downloads"
-      ? displayValue(item && item.filename)
-      : displayValue(item && item.label);
-    const secondValue = definition.entriesKey === "downloads"
-      ? displayValue(item && item.label)
-      : displayValue(item && item.url);
-    return `
-      <div class="tagStudioList__row tagStudioList__row--start catalogueWorkDetails__row catalogueWorkDetails__row--metadata">
-        <span class="tagStudioList__cell catalogueWorkDetails__link">${escapeHtml(firstValue)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__title">${escapeHtml(secondValue)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__rowActions">
-          <button type="button" class="tagStudio__button" ${definition.editAttribute}="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(lookupText(text, definition.editButtonKey, definition.editButtonFallback))}</button>
-          <button type="button" class="tagStudio__button" ${definition.deleteAttribute}="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(lookupText(text, definition.deleteButtonKey, definition.deleteButtonFallback))}</button>
-        </span>
-      </div>
-    `;
-  }).join("");
 }
 
 export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {

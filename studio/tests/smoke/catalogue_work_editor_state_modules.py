@@ -153,14 +153,6 @@ def assert_event_binder(page: Page) -> None:
             state.fieldsNode.innerHTML = `
               <button data-prose-import="work">prose</button>
             `;
-            state.filesResultsNode.innerHTML = `
-              <button data-download-edit="2">edit download</button>
-              <button data-download-delete="3">delete download</button>
-            `;
-            state.linksResultsNode.innerHTML = `
-              <button data-link-edit="4">edit link</button>
-              <button data-link-delete="5">delete link</button>
-            `;
             state.previewNode.innerHTML = `
               <button data-media-refresh="work">media</button>
             `;
@@ -183,10 +175,6 @@ def assert_event_binder(page: Page) -> None:
     page.fill("#catalogueWorkDetailSearch", "001")
     page.click("#catalogueWorkNewFileLink")
     page.click("#catalogueWorkNewLinkLink")
-    page.click("[data-download-edit]")
-    page.click("[data-download-delete]")
-    page.click("[data-link-edit]")
-    page.click("[data-link-delete]")
     page.click("#catalogueWorkNew")
     page.click('[data-media-refresh="work"]')
     page.click('[data-prose-import="work"]')
@@ -199,10 +187,6 @@ def assert_event_binder(page: Page) -> None:
         ["updateDetailSections"],
         ["openEmbeddedEntryModal", "download", None],
         ["openEmbeddedEntryModal", "link", None],
-        ["openEmbeddedEntryModal", "download", 2],
-        ["deleteEmbeddedEntry", "download", 3],
-        ["openEmbeddedEntryModal", "link", 4],
-        ["deleteEmbeddedEntry", "link", 5],
         ["setNewWorkMode"],
         ["refreshWorkMedia"],
         ["importWorkProse"],

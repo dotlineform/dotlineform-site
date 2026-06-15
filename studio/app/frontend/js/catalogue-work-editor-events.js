@@ -10,10 +10,6 @@ function runAsync(callback, label, ...args) {
   }
 }
 
-function closestTarget(event, selector) {
-  return event.target && event.target.closest ? event.target.closest(selector) : null;
-}
-
 export function bindWorkEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
 
@@ -28,60 +24,16 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
     runAsync(callbacks.openEmbeddedEntryModal, "catalogue_work_editor: failed to open link modal", "link");
   });
 
-  state.filesResultsNode.addEventListener("click", (event) => {
-    const editButton = closestTarget(event, "[data-download-edit]");
-    if (editButton) {
-      runAsync(
-        callbacks.openEmbeddedEntryModal,
-        "catalogue_work_editor: failed to edit download",
-        "download",
-        Number(editButton.getAttribute("data-download-edit"))
-      );
-      return;
-    }
-    const deleteButtonNode = closestTarget(event, "[data-download-delete]");
-    if (deleteButtonNode) {
-      runAsync(
-        callbacks.deleteEmbeddedEntry,
-        "catalogue_work_editor: failed to delete download",
-        "download",
-        Number(deleteButtonNode.getAttribute("data-download-delete"))
-      );
-    }
-  });
-
-  state.linksResultsNode.addEventListener("click", (event) => {
-    const editButton = closestTarget(event, "[data-link-edit]");
-    if (editButton) {
-      runAsync(
-        callbacks.openEmbeddedEntryModal,
-        "catalogue_work_editor: failed to edit link",
-        "link",
-        Number(editButton.getAttribute("data-link-edit"))
-      );
-      return;
-    }
-    const deleteButtonNode = closestTarget(event, "[data-link-delete]");
-    if (deleteButtonNode) {
-      runAsync(
-        callbacks.deleteEmbeddedEntry,
-        "catalogue_work_editor: failed to delete link",
-        "link",
-        Number(deleteButtonNode.getAttribute("data-link-delete"))
-      );
-    }
-  });
-
   state.newButton.addEventListener("click", () => {
     invoke(callbacks.setNewWorkMode);
   });
   state.fieldsNode.addEventListener("click", (event) => {
-    const proseButton = closestTarget(event, '[data-prose-import="work"]');
+    const proseButton = event.target && event.target.closest ? event.target.closest('[data-prose-import="work"]') : null;
     if (!proseButton) return;
     runAsync(callbacks.importWorkProse, "catalogue_work_editor: unexpected prose import failure");
   });
   state.previewNode.addEventListener("click", (event) => {
-    const mediaButton = closestTarget(event, '[data-media-refresh="work"]');
+    const mediaButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;
     if (!mediaButton) return;
     runAsync(callbacks.refreshWorkMedia, "catalogue_work_editor: unexpected media refresh failure");
   });

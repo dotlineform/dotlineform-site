@@ -11,8 +11,8 @@ viewable: true
 This is a working spec for a shared list component that renders compact records with columns and optional selection state.
 External actions and route-specific workflows should be layered on top of that base component.
 
-The first proving use case is the Catalogue Work editor downloads section.
-Links remain a likely next migration target, but downloads now carry the first production integration.
+The first proving use cases are the Catalogue Work editor downloads and links sections.
+Both now use the shared record list with a route-owned action layer.
 
 ## Current Position
 
@@ -23,19 +23,21 @@ Implemented pieces:
 - `createRecordList(...)`
 - `createRecordListActions(...)`
 - Catalogue Work editor downloads list integration
-- focused smoke coverage for the shared component and Work editor download actions
+- Catalogue Work editor links list integration
+- focused smoke coverage for the shared component and Work editor embedded-record actions
 
 The current production use is intentionally narrow:
 
-- downloads render through the shared `RecordList`
+- downloads and links render through the shared `RecordList`
 - rows have column headers
 - one row can be selected
 - selected-row state uses an outline by default, not a persistent fill
 - `Edit` and `Delete` live in an external `RecordListActions` toolbar
 - actions are disabled until a row is selected
 - action callbacks include `action`, `actionKey`, `selection`, and `records`
-- Edit opens the existing embedded download modal
+- Edit opens the existing embedded entry modal
 - Delete opens the existing embedded delete confirmation
+- link URLs render as safe external-link cells, while link labels remain plain text
 
 Selection clearing is boundary-based, not a delayed blur workaround.
 For lists that set `clearSelectionOnBlur`, the list clears selection when a pointer or focus event lands outside the list and any registered action boundary.
@@ -192,15 +194,15 @@ The adapter should own:
 - route status messages
 - server calls, if any
 
-For the Work editor downloads action wiring, this currently means:
+For the Work editor downloads and links action wiring, this currently means:
 
-- records: `state.draft.downloads`
+- records: `state.draft.downloads` or `state.draft.links`
 - visible headers: yes
-- columns: filename and label
+- columns: filename and label for downloads; plain label and linked URL for links
 - selection: one selected row
 - actions outside the list: `Edit`, `Delete`
-- `Edit`: opens the existing embedded-entry modal for the selected download
-- `Delete`: opens a confirmation modal with Cancel as the default action, then applies the existing delete flow for the selected download
+- `Edit`: opens the existing embedded-entry modal for the selected record
+- `Delete`: opens a confirmation modal with Cancel as the default action, then applies the existing delete flow for the selected record
 - after action: adapter re-renders the list with the updated draft records
 
 ## Current API Shape
@@ -314,8 +316,8 @@ The current downloads implementation does not need:
 That makes them a useful boundary test for the component.
 If the component cannot improve downloads without route-specific markup leaking everywhere, the component boundary is wrong.
 
-Links still fit the same pattern and should be considered the next Work editor migration candidate.
-When links move over, they should use the same base list/action layer unless a concrete workflow difference proves otherwise.
+Links now use the same base list/action layer.
+Their adapter keeps the label as plain text and renders the URL column as the safe external link.
 
 ## Design Notes
 

@@ -20,8 +20,7 @@ import {
   displayValue
 } from "./catalogue-editor-records.js";
 import {
-  getWorkEmbeddedItems,
-  renderWorkEmbeddedItemRows
+  getWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
 import {
   bindPreviewImages,
@@ -496,14 +495,69 @@ export function updateWorkLinksSection(state, options = {}) {
     return;
   }
   state.linksMetaNode.textContent = error || `${items.length} total`;
+  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
   state.linksResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkEmbeddedItemRows("link", items, {
-        actionDisabled: state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk",
-        text: (key, fallback, tokens) => text(state, options, key, fallback, tokens)
-      })}</div>
+      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-links-list"></div>
+      <div class="catalogueWorkDetails__rowActions" data-role="catalogue-work-links-actions" aria-label="Link actions"></div>
     </section>
   `;
+  const listRoot = state.linksResultsNode.querySelector('[data-role="catalogue-work-links-list"]');
+  const actionsRoot = state.linksResultsNode.querySelector('[data-role="catalogue-work-links-actions"]');
+  const list = createRecordList(listRoot, {
+    id: "catalogueWorkLinks",
+    records: items,
+    selectionMode: "single",
+    clearSelectionOnBlur: true,
+    columns: [
+      {
+        key: "label",
+        label: text(state, options, "links_label_label", "label"),
+        truncate: true
+      },
+      {
+        key: "url",
+        label: text(state, options, "links_url_label", "URL"),
+        type: "link",
+        truncate: true
+      }
+    ],
+    getRecordId: (_record, index) => `link-${index}`
+  });
+  createRecordListActions(actionsRoot, {
+    id: "catalogueWorkLinksActions",
+    list,
+    actions: [
+      {
+        key: "edit",
+        label: text(state, options, "links_edit_button", "Edit"),
+        className: "tagStudio__button",
+        disabled: () => actionDisabled
+      },
+      {
+        key: "delete",
+        label: text(state, options, "links_delete_button", "Delete"),
+        className: "tagStudio__button",
+        tone: "danger",
+        disabled: () => actionDisabled
+      }
+    ],
+    onAction: ({ actionKey, selection }) => {
+      if (!selection) return;
+      if (actionKey === "edit" && typeof options.openEmbeddedEntryModal === "function") {
+        runMaybeAsync(
+          options.openEmbeddedEntryModal("link", selection.index),
+          "catalogue_work_sections: failed to edit link"
+        );
+      }
+      if (actionKey === "delete" && typeof options.deleteEmbeddedEntry === "function") {
+        runMaybeAsync(
+          options.deleteEmbeddedEntry("link", selection.index),
+          "catalogue_work_sections: failed to delete link"
+        );
+      }
+    }
+  });
 }
 
 export function updateWorkSummary(state, options = {}) {
