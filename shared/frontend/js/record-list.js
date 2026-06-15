@@ -210,10 +210,7 @@ function focusRelativeRow(controller, row, offset) {
   const currentIndex = rows.indexOf(row);
   if (currentIndex < 0) return;
   const nextIndex = Math.max(0, Math.min(rows.length - 1, currentIndex + offset));
-  rows.forEach((candidate, index) => {
-    candidate.tabIndex = index === nextIndex ? 0 : -1;
-  });
-  rows[nextIndex].focus();
+  selectRow(controller, rows[nextIndex], { focus: true });
 }
 
 function renderRows(controller, options) {
