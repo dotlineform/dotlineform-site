@@ -425,7 +425,7 @@ function buildWorkResourceRows(state, options = {}) {
   const downloads = getWorkEmbeddedItems(state.draft, "download").map((item, index) => ({
     kind: "download",
     index,
-    type: text(state, options, "resources_download_type", "file"),
+    type: "📄",
     label: item.label || "",
     target: item.filename || "",
     targetHref: buildWorkDownloadHref(state, item.filename, options)
@@ -433,7 +433,7 @@ function buildWorkResourceRows(state, options = {}) {
   const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
     kind: "link",
     index,
-    type: text(state, options, "resources_link_type", "link"),
+    type: "🔗",
     label: item.label || "",
     target: item.url || "",
     targetHref: item.url || ""
@@ -472,20 +472,24 @@ export function updateWorkResourcesSection(state, options = {}) {
     emptyText: "",
     selectionMode: "single",
     clearSelectionOnBlur: true,
+    showHeader: false,
     columns: [
       {
         key: "type",
-        label: text(state, options, "resources_type_label", "type"),
-        truncate: true
+        label: "type",
+        width: "2rem",
+        truncate: false
       },
       {
         key: "label",
-        label: text(state, options, "resources_label_label", "label"),
+        label: "label",
+        width: "minmax(4.5rem, 0.7fr)",
         truncate: true
       },
       {
         key: "target",
-        label: text(state, options, "resources_target_label", "file / URL"),
+        label: "file / URL",
+        width: "minmax(9rem, 1.3fr)",
         type: "link",
         hrefKey: "targetHref",
         truncate: true
@@ -493,27 +497,30 @@ export function updateWorkResourcesSection(state, options = {}) {
     ],
     getRecordId: (record) => `${record.kind}-${record.index}`
   });
+  const rowActions = items.length ? [
+    {
+      key: "edit",
+      label: "✏️",
+      title: text(state, options, "files_edit_button", "Edit"),
+      ariaLabel: text(state, options, "files_edit_button", "Edit"),
+      appearance: "icon",
+      disabled: () => actionDisabled
+    },
+    {
+      key: "delete",
+      label: "🗑️",
+      title: text(state, options, "files_delete_button", "Delete"),
+      ariaLabel: text(state, options, "files_delete_button", "Delete"),
+      appearance: "icon",
+      tone: "danger",
+      disabled: () => actionDisabled
+    }
+  ] : [];
   state.resourcesActionsController = createRecordListActions(state.resourcesActionsNode, {
     id: "catalogueWorkResourcesActions",
     list,
     actions: [
-      {
-        key: "edit",
-        label: "✏️",
-        title: text(state, options, "files_edit_button", "Edit"),
-        ariaLabel: text(state, options, "files_edit_button", "Edit"),
-        appearance: "icon",
-        disabled: () => actionDisabled
-      },
-      {
-        key: "delete",
-        label: "🗑️",
-        title: text(state, options, "files_delete_button", "Delete"),
-        ariaLabel: text(state, options, "files_delete_button", "Delete"),
-        appearance: "icon",
-        tone: "danger",
-        disabled: () => actionDisabled
-      },
+      ...rowActions,
       {
         key: "new-download",
         label: "📄",

@@ -3521,6 +3521,18 @@ button.tagStudioList__cellLink {
   gap: 0.45rem;
 }
 
+.catalogueWorkResources {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0.9rem;
+  min-width: 0;
+}
+
+.catalogueWorkResources__actionRow {
+  margin-bottom: 0.15rem;
+  justify-content: space-between;
+}
+
 .catalogueWorkBuildPreview__reasons {
   white-space: pre-wrap;
   overflow: visible;
@@ -3626,10 +3638,6 @@ button.tagStudioList__cellLink {
 .catalogueWorkDetails__section {
   display: grid;
   gap: 0.45rem;
-}
-
-.catalogueWorkDetails__actionRow {
-  justify-content: flex-end;
 }
 
 .catalogueWorkDetails__rows {

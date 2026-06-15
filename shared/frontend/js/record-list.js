@@ -87,8 +87,8 @@ function appendCell(rowNode, column, record, index, role) {
 }
 
 function columnTemplate(columns) {
-  const count = Math.max(1, columns.length);
-  return `repeat(${count}, minmax(0, 1fr))`;
+  if (!columns.length) return "minmax(0, 1fr)";
+  return columns.map((column) => normalizeText(column.width) || "minmax(0, 1fr)").join(" ");
 }
 
 function renderHeader(rootNode, columns, options) {

@@ -46,9 +46,11 @@ WORK_EDITOR_DOM = """
       <input id="catalogueWorkDetailSearch" />
       <div id="catalogueWorkDetailsMeta"></div>
       <section><div id="catalogueWorkDetailsResults"></div></section>
-      <div id="catalogueWorkResourcesActions"></div>
-      <div id="catalogueWorkResourcesMeta"></div>
-      <section><div id="catalogueWorkResourcesResults"></div></section>
+      <div id="catalogueWorkResourcesPanel">
+        <div id="catalogueWorkResourcesActions"></div>
+        <div id="catalogueWorkResourcesMeta"></div>
+        <div id="catalogueWorkResourcesResults"></div>
+      </div>
       <div id="catalogueWorkPopup">
         <input id="catalogueWorkSearch" />
         <span id="catalogueWorkPopupList" hidden></span>
@@ -125,7 +127,7 @@ def assert_state_factory(page: Page) -> None:
     assert result["mediaConfig"] == {"rootId": "catalogueWorkRoot", "source": "stub-media"}
     assert result["modalHost"] == {"rootId": "catalogueWorkRoot", "source": "stub-modal"}
     assert result["detailsPanelTag"] == "SECTION"
-    assert result["resourcesPanelTag"] == "SECTION"
+    assert result["resourcesPanelTag"] == "DIV"
     assert result["contextNodeInState"] is False
     assert result["routeOptionText"] == "key:fallback"
     assert result["routeOptionCustom"] == "custom"

@@ -54,6 +54,14 @@ export function renderCatalogueWorkShell(config) {
 
             <aside class="tagStudio__panel catalogueWorkSummary">
               <div id="catalogueWorkPreview"></div>
+              <div class="catalogueWorkResources" id="catalogueWorkResourcesPanel">
+                <div class="tagStudio__headingRow catalogueWorkResources__actionRow">
+                  <span class="tagStudioForm__label">links</span>
+                  <div class="catalogueWorkDetails__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
+                </div>
+                <p class="tagStudioForm__meta" id="catalogueWorkResourcesMeta"></p>
+                <div class="catalogueWorkDetails__results" id="catalogueWorkResourcesResults"></div>
+              </div>
               <div class="tagStudioForm__fields" id="catalogueWorkReadonly"></div>
               <p class="tagStudioForm__impact" id="catalogueWorkRuntimeState"></p>
               <p class="tagStudioForm__impact" id="catalogueWorkBuildImpact"></p>
@@ -77,13 +85,6 @@ export function renderCatalogueWorkShell(config) {
             <div class="catalogueWorkDetails__results" id="catalogueWorkDetailsResults"></div>
           </section>
 
-          <section class="tagStudio__panel catalogueWorkDetails">
-            <div class="tagStudio__headingRow catalogueWorkDetails__actionRow">
-              <div class="catalogueWorkDetails__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
-            </div>
-            <p class="tagStudioForm__meta" id="catalogueWorkResourcesMeta"></p>
-            <div class="catalogueWorkDetails__results" id="catalogueWorkResourcesResults"></div>
-          </section>
         </div>
         <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor...</p>
         <p class="tagStudio__empty" id="catalogueWorkEmpty" hidden></p>`;

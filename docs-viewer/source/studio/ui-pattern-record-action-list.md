@@ -28,10 +28,12 @@ Implemented pieces:
 The current production use is intentionally narrow:
 
 - downloads and links render together through one shared `RecordList`
-- rows have column headers
+- the Work editor resources list sits inside the right summary panel, below the preview/media actions, without its own panel border
+- rows may have column headers, but the Work editor resources list hides them for a compact icon/label/target layout
 - one row can be selected
 - selected-row state uses an outline by default, not a persistent fill
 - `Edit`, `Delete`, `Add file`, and `Add link` live in an external `RecordListActions` toolbar
+- row-scoped actions are omitted when the list has no rows; list-level add actions remain visible when the route permits them
 - row actions are disabled until a row is selected; `Add` is available without selection when the route permits it
 - icon-only action buttons are styled by the shared action layer, not by route-specific button classes
 - action callbacks include `action`, `actionKey`, `selection`, and `records`
@@ -64,6 +66,7 @@ Add/new controls that create another record in the same list belong to the list/
 The shared action layer should render those controls alongside row-scoped actions; the route adapter should only decide which modal or mutation the action triggers.
 
 The Work editor resource adapter maps canonical records into a single row shape with `kind`, `index`, `type`, `label`, `target`, and optional `targetHref`.
+`type` is a compact visual icon: `📄` for downloads and `🔗` for links.
 Downloads render before links; the persisted source fields stay as `downloads` and `links`.
 
 Do not repeat `Edit` and `Delete` buttons on every row for the downloads/links use case.
@@ -117,6 +120,7 @@ The base component currently supports:
 - empty state
 - optional header row, enabled by default unless disabled by the caller
 - fixed column definitions
+- per-column grid widths
 - route-provided records
 - text cells
 - link cells
@@ -207,10 +211,11 @@ The adapter should own:
 For the Work editor resources action wiring, this currently means:
 
 - records: `state.draft.downloads` and `state.draft.links`, mapped into one resources row set
-- visible headers: yes
-- columns: type, label, and linked file/URL target
+- visible headers: no
+- columns: icon-only type, label, and linked file/URL target
 - selection: one selected row
 - actions outside the list: `Edit`, `Delete`, `Add file`, `Add link`
+- empty-list actions: only `Add file` and `Add link`
 - `Edit`: opens the existing embedded-entry modal for the selected record
 - `Delete`: opens a confirmation modal with Cancel as the default action, then applies the existing delete flow for the selected record
 - `Add file` and `Add link`: open the existing embedded-entry modal without a selected record
@@ -224,10 +229,11 @@ Base list API:
 const list = createRecordList(rootNode, {
   id: "catalogueWorkResources",
   emptyText: "No resources.",
+  showHeader: false,
   selectionMode: "single",
   clearSelectionOnBlur: true,
   columns: [
-    { key: "type", label: "type", truncate: true },
+    { key: "type", label: "type", width: "2rem", truncate: false },
     { key: "label", label: "label", truncate: true },
     { key: "target", label: "file / URL", type: "link", hrefKey: "targetHref", truncate: true }
   ],

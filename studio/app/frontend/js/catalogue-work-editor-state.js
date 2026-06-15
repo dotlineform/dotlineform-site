@@ -36,6 +36,7 @@ export function collectWorkEditorElements() {
     detailSearchNode: "catalogueWorkDetailSearch",
     detailsMetaNode: "catalogueWorkDetailsMeta",
     detailsResultsNode: "catalogueWorkDetailsResults",
+    resourcesPanelNode: "catalogueWorkResourcesPanel",
     resourcesActionsNode: "catalogueWorkResourcesActions",
     resourcesMetaNode: "catalogueWorkResourcesMeta",
     resourcesResultsNode: "catalogueWorkResourcesResults",
@@ -75,6 +76,7 @@ export function createWorkEditorState(elements, options = {}) {
     detailSearchNode,
     detailsMetaNode,
     detailsResultsNode,
+    resourcesPanelNode,
     newDetailLinkNode,
     resourcesMetaNode,
     resourcesResultsNode,
@@ -144,9 +146,9 @@ export function createWorkEditorState(elements, options = {}) {
     detailsPanelNode: detailsResultsNode.closest("section"),
     newDetailLinkNode,
     resourcesActionsNode: elements.resourcesActionsNode,
+    resourcesPanelNode,
     resourcesMetaNode,
     resourcesResultsNode,
-    resourcesPanelNode: resourcesResultsNode.closest("section"),
     metaNode
   };
 }
