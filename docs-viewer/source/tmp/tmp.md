@@ -6,6 +6,32 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+we are on the works editor page `/studio/catalogue-work/`, whe have converted the downloads and links lists to use the shared lists component ([Record List And Action Layer Working Spec](/docs/?scope=studio&doc=ui-pattern-record-action-list))
+
+
+new work detail:
+this needs to be a button `http://127.0.0.1:8765/studio/catalogue-work-detail/?work=00782&mode=new`
+
+
+
+can we add the ability to load thumbnails to the record list component? [Record List And Action Layer Implementation Note](/docs/?scope=studio&doc=ui-pattern-record-action-list)
+for example, as used curently on `/studio/catalogue-work/?work=00782`
+
+great, but hold fire. I'm thinking of bigger structural changes too.
+
+the current design creates separate lists for each detail section. this UI could be simplified: have one list that lists the detail sections, and a another list that lists the images in the selected section. this probably won't need any component level changes.
+
+the other thing to consider is that some sections contain many images, but don't use pagination, they just cap to displaying the first 10. instead, there is a search input which allows entering a number or alpha and it will match that to any detail id or title. the matching results are displayed in _another_ list that appears, and this one doesn't seem to have any cap on it at all!
+
+so again, this probably isn't a component change because it's at adaptor level, but the search should use the single 'selected-section' list already present.
+
+so I think probably we need to implement this as a new section, above the existing 'work details' section, and when it is fully working, then we retire the existing section. so we don't reuse old code, we create a adaptor module that effectively operates in parallel with the existing implementation. then we can compare both during development, and retire the old section cleanly.
+
+
+
+great. ok let's bring the thumbnail into the list.
+
+the other key thing is that the list rows will need to be selectable (like they are in the links list). this is because the detail id currently links to the detail editor page, but a future step will be to be trigger that through a toolbar edit button (again, as used on the links adaptor). then, the detail id will link to the published site page.
 
 ___
 

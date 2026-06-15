@@ -71,23 +71,15 @@ export function renderCatalogueWorkShell(config) {
             </aside>
           </div>
 
-          <section class="tagStudio__panel catalogueWorkDetailBrowser" id="catalogueWorkDetailBrowserPanel">
-            <div class="tagStudio__headingRow">
-              <h2 class="tagStudio__heading" id="catalogueWorkDetailBrowserHeading">detail browser</h2>
+          <section class="tagStudio__panel catalogueWorkDetailBrowser" id="catalogueWorkDetailBrowserPanel" aria-label="Browse details">
+            <div class="tagStudio__headingRow catalogueWorkDetailBrowser__actionRow">
+              <div class="catalogueWorkDetails__rowActions catalogueWorkDetailBrowser__actions" id="catalogueWorkDetailBrowserActions" aria-label="Detail actions"></div>
             </div>
-            <p class="tagStudioForm__meta" id="catalogueWorkDetailBrowserMeta"></p>
             <div class="catalogueWorkDetailBrowser__layout">
-              <section class="catalogueWorkDetailBrowser__pane" aria-labelledby="catalogueWorkDetailBrowserSectionsHeading">
-                <div class="tagStudio__headingRow">
-                  <h3 class="tagStudioForm__key" id="catalogueWorkDetailBrowserSectionsHeading">sections</h3>
-                </div>
+              <section class="catalogueWorkDetailBrowser__pane" aria-label="Detail sections">
                 <div class="catalogueWorkDetailBrowser__sectionList" id="catalogueWorkDetailBrowserSections"></div>
               </section>
-              <section class="catalogueWorkDetailBrowser__pane" aria-labelledby="catalogueWorkDetailBrowserImagesHeading">
-                <div class="tagStudio__headingRow">
-                  <h3 class="tagStudioForm__key" id="catalogueWorkDetailBrowserImagesHeading">images</h3>
-                  <span class="tagStudioForm__meta" id="catalogueWorkDetailBrowserImagesMeta"></span>
-                </div>
+              <section class="catalogueWorkDetailBrowser__pane" aria-label="Details in selected section">
                 <div class="catalogueWorkDetailBrowser__imageList" id="catalogueWorkDetailBrowserImages"></div>
               </section>
             </div>

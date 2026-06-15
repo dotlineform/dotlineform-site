@@ -29,23 +29,38 @@
 }
 
 .sharedRecordList__row {
+  position: relative;
   padding: var(--shared-record-list-row-padding-y, 0.45rem) 0;
-  border-top: 1px solid var(--shared-record-list-row-line, var(--shared-record-list-line, var(--line, #d2d2d2)));
   font-size: var(--shared-record-list-font, 0.875rem);
   line-height: 1.25;
   align-items: baseline;
 }
 
-.sharedRecordList__row:first-child {
-  border-top: 0;
+.sharedRecordList__row::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  border-top: 1px solid var(--shared-record-list-row-line, var(--shared-record-list-line, var(--line, #d2d2d2)));
+  pointer-events: none;
+}
+
+.sharedRecordList__row:first-child::before {
+  display: none;
 }
 
 .sharedRecordList__row--selectable {
   cursor: pointer;
+  border-radius: var(--shared-record-list-row-radius, 6px);
+}
+
+.sharedRecordList__row--selectable:focus,
+.sharedRecordList__row--selectable:focus-visible {
+  outline: none;
 }
 
 .sharedRecordList__row--selected {
-  background: var(--shared-record-list-selected-bg, transparent);
+  background: var(--shared-record-list-selected-bg, var(--studio-surface-subtle, var(--panel-2, #f6f6f6)));
 }
 
 .sharedRecordList__headerCell,

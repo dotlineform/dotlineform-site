@@ -41,12 +41,8 @@ WORK_EDITOR_DOM = """
       <div id="catalogueWorkRuntimeState"></div>
       <div id="catalogueWorkBuildImpact"></div>
       <section id="catalogueWorkDetailBrowserPanel">
-        <h2 id="catalogueWorkDetailBrowserHeading"></h2>
-        <div id="catalogueWorkDetailBrowserMeta"></div>
-        <h3 id="catalogueWorkDetailBrowserSectionsHeading"></h3>
+        <div id="catalogueWorkDetailBrowserActions"></div>
         <div id="catalogueWorkDetailBrowserSections"></div>
-        <h3 id="catalogueWorkDetailBrowserImagesHeading"></h3>
-        <div id="catalogueWorkDetailBrowserImagesMeta"></div>
         <div id="catalogueWorkDetailBrowserImages"></div>
       </section>
       <h2 id="catalogueWorkDetailsHeading"></h2>

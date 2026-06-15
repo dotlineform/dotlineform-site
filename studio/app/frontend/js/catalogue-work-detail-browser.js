@@ -3,7 +3,8 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  createRecordList
+  createRecordList,
+  createRecordListActions
 } from "/shared/frontend/js/record-list.js";
 import {
   displayValue
@@ -51,6 +52,15 @@ function clearImageList(state) {
   state.detailBrowserImagesController = null;
 }
 
+function clearActions(state) {
+  if (state.detailBrowserActionsController && typeof state.detailBrowserActionsController.destroy === "function") {
+    state.detailBrowserActionsController.destroy();
+  } else if (state.detailBrowserActionsNode) {
+    state.detailBrowserActionsNode.innerHTML = "";
+  }
+  state.detailBrowserActionsController = null;
+}
+
 function detailSectionId(section, index) {
   return normalizeText(section && (section.section_id || section.section_title)) || `section-${index + 1}`;
 }
@@ -94,6 +104,18 @@ function buildDetailEditorHref(state, detailUid) {
   });
 }
 
+function buildNewDetailHref(state) {
+  return buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
+    work: state.currentWorkId,
+    mode: "new"
+  });
+}
+
+function navigateToHref(href) {
+  if (!href || typeof window === "undefined") return;
+  window.location.href = href;
+}
+
 function detailRows(state, options, details) {
   return details.map((detail) => {
     const detailUid = normalizeText(detail && detail.detail_uid);
@@ -113,15 +135,61 @@ function detailRows(state, options, details) {
   });
 }
 
+function renderDetailActions(state, options, { list = null, hasDetails = false } = {}) {
+  if (!state.detailBrowserActionsNode) return;
+  clearActions(state);
+  if (!state.currentWorkId) return;
+  const actions = [
+    ...(hasDetails ? [
+      {
+        key: "edit",
+        label: "✏️",
+        title: text(state, options, "detail_browser_edit_button", "Edit"),
+        ariaLabel: text(state, options, "detail_browser_edit_button", "Edit"),
+        appearance: "icon"
+      },
+      {
+        key: "delete",
+        label: "🗑️",
+        title: text(state, options, "detail_browser_delete_button", "Delete"),
+        ariaLabel: text(state, options, "detail_browser_delete_button", "Delete"),
+        appearance: "icon",
+        tone: "danger"
+      }
+    ] : []),
+    {
+      key: "new",
+      label: "📄",
+      title: text(state, options, "detail_browser_new_button", "New"),
+      ariaLabel: text(state, options, "detail_browser_new_button", "New"),
+      appearance: "icon",
+      requiresSelection: false
+    }
+  ];
+  state.detailBrowserActionsController = createRecordListActions(state.detailBrowserActionsNode, {
+    id: "catalogueWorkDetailBrowserActionsList",
+    list,
+    actions,
+    onAction: ({ actionKey, selection }) => {
+      if (actionKey === "new") {
+        navigateToHref(buildNewDetailHref(state));
+        return;
+      }
+      const detailUid = selection && selection.record ? selection.record.detailUid : "";
+      if (!detailUid) return;
+      navigateToHref(buildDetailEditorHref(state, detailUid));
+    }
+  });
+}
+
 function selectedDetailId(records, selectedId) {
   return records.some((record) => record.detailUid === selectedId) ? selectedId : "";
 }
 
 function renderSelectedImages(state, options, row) {
-  if (!state.detailBrowserImagesNode || !state.detailBrowserImagesMetaNode) return;
+  if (!state.detailBrowserImagesNode) return;
   clearImageList(state);
   if (!row) {
-    state.detailBrowserImagesMetaNode.textContent = "";
     state.detailBrowserImagesNode.innerHTML = "";
     state.detailBrowserSelectedDetailUid = "";
     return;
@@ -129,15 +197,6 @@ function renderSelectedImages(state, options, row) {
   const details = Array.isArray(row.section && row.section.details) ? row.section.details : [];
   const visible = details.slice(0, DETAIL_BROWSER_LIMIT);
   const records = detailRows(state, options, visible);
-  const more = Math.max(0, details.length - visible.length);
-  state.detailBrowserImagesMetaNode.textContent = more > 0
-    ? text(state, options, "detail_browser_more_count", "showing {visible} of {total}", {
-      visible: String(visible.length),
-      total: String(details.length)
-    })
-    : text(state, options, "detail_browser_section_count", "{count} image(s)", {
-      count: String(details.length)
-    });
   if (!records.length) {
     state.detailBrowserSelectedDetailUid = "";
     state.detailBrowserImagesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "detail_browser_section_empty", "No images in the selected section."))}</p>`;
@@ -182,7 +241,6 @@ function renderSelectedImages(state, options, row) {
     emptyText: "",
     selectionMode: "single",
     initialSelection: state.detailBrowserSelectedDetailUid,
-    selectedBackground: "var(--studio-surface-subtle)",
     getRecordId: (record) => record.detailUid,
     onSelectionChange: ({ selection }) => {
       state.detailBrowserSelectedDetailUid = selection && selection.record ? selection.record.detailUid : "";
@@ -193,10 +251,9 @@ function renderSelectedImages(state, options, row) {
 function resetDetailBrowser(state) {
   clearSectionList(state);
   clearImageList(state);
+  clearActions(state);
   state.detailBrowserSelectedSectionId = "";
   state.detailBrowserSelectedDetailUid = "";
-  if (state.detailBrowserMetaNode) state.detailBrowserMetaNode.textContent = "";
-  if (state.detailBrowserImagesMetaNode) state.detailBrowserImagesMetaNode.textContent = "";
   if (state.detailBrowserImagesNode) state.detailBrowserImagesNode.innerHTML = "";
 }
 
@@ -210,26 +267,18 @@ export function updateWorkDetailBrowser(state, options = {}) {
   }
 
   const rows = sectionRows(state);
+  const hasDetails = rows.some((row) => row.count > 0);
   if (!rows.length) {
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
-    if (state.detailBrowserMetaNode) {
-      state.detailBrowserMetaNode.textContent = text(state, options, "detail_browser_empty", "No work details for this work.");
-    }
-    state.detailBrowserSectionsNode.innerHTML = "";
+    state.detailBrowserSectionsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "detail_browser_empty", "No work details for this work."))}</p>`;
     renderSelectedImages(state, options, null);
+    renderDetailActions(state, options, { hasDetails: false });
     return;
   }
 
   const selected = selectedSection(rows, state.detailBrowserSelectedSectionId);
   state.detailBrowserSelectedSectionId = selected ? selected.id : "";
-  if (state.detailBrowserMetaNode) {
-    const total = rows.reduce((sum, row) => sum + row.count, 0);
-    state.detailBrowserMetaNode.textContent = text(state, options, "detail_browser_meta", "{sections} section(s), {images} image(s)", {
-      sections: String(rows.length),
-      images: String(total)
-    });
-  }
 
   state.detailBrowserSectionsController = createRecordList(state.detailBrowserSectionsNode, {
     id: "catalogueWorkDetailBrowserSections",
@@ -252,15 +301,22 @@ export function updateWorkDetailBrowser(state, options = {}) {
     emptyText: "",
     selectionMode: "single",
     initialSelection: state.detailBrowserSelectedSectionId,
-    selectedBackground: "var(--studio-surface-subtle)",
     getRecordId: (record) => record.id,
     onSelectionChange: ({ selection }) => {
       const nextRow = selection && selection.record ? selection.record : selectedSection(rows, "");
       state.detailBrowserSelectedSectionId = nextRow ? nextRow.id : "";
       renderSelectedImages(state, options, nextRow);
+      renderDetailActions(state, options, {
+        list: state.detailBrowserImagesController,
+        hasDetails
+      });
     }
   });
 
   const listSelection = state.detailBrowserSectionsController.selection();
   renderSelectedImages(state, options, listSelection && listSelection.record ? listSelection.record : selected);
+  renderDetailActions(state, options, {
+    list: state.detailBrowserImagesController,
+    hasDetails
+  });
 }

@@ -3537,6 +3537,11 @@ button.tagStudioList__cellLink {
   margin-top: 1rem;
 }
 
+.catalogueWorkDetailBrowser__actionRow {
+  justify-content: flex-end;
+  margin-bottom: 0.45rem;
+}
+
 .catalogueWorkDetailBrowser__layout {
   display: grid;
   grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr);
@@ -3550,13 +3555,8 @@ button.tagStudioList__cellLink {
   gap: 0.45rem;
 }
 
-.catalogueWorkDetailBrowser__pane .tagStudioForm__key {
-  margin-top: 0;
-}
-
 .catalogueWorkDetailBrowser__sectionList .sharedRecordList__row {
   padding-inline: 0.25rem;
-  border-radius: var(--studio-radius-sm);
 }
 
 .catalogueWorkDetailBrowser__imageList {

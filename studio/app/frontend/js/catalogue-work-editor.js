@@ -564,9 +564,6 @@ function updateSummary(state) {
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
   applyWorkFormText(state, workFormOptions(state));
-  elements.detailBrowserHeadingNode.textContent = t(state, "detail_browser_heading", "detail browser");
-  elements.detailBrowserSectionsHeadingNode.textContent = t(state, "detail_browser_sections_heading", "sections");
-  elements.detailBrowserImagesHeadingNode.textContent = t(state, "detail_browser_images_heading", "images");
   elements.detailsHeadingNode.textContent = t(state, "details_heading", "work details");
   elements.newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
   elements.detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
