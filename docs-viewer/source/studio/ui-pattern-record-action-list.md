@@ -3,7 +3,7 @@ doc_id: ui-pattern-record-action-list
 title: Record List And Action Layer Working Spec
 added_date: 2026-06-14
 last_updated: 2026-06-14
-parent_id: ui-catalogue
+parent_id: ui
 viewable: true
 ---
 # Record List And Action Layer Working Spec

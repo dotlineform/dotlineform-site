@@ -1285,109 +1285,17 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-css-token-audit.json"
         },
         {
-          "doc_id": "ui-audits",
-          "title": "UI Audits",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-audits.json"
+          "doc_id": "ui-pattern-file-picker",
+          "title": "File Picker Pattern",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json"
         },
         {
-          "doc_id": "ui-catalogue",
-          "title": "UI Catalogue",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
-          "children": [
-            {
-              "doc_id": "ui-pattern-action-menu",
-              "title": "Action Menu Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-action-menu.json"
-            },
-            {
-              "doc_id": "ui-primitive-button",
-              "title": "Button Primitive",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-button.json"
-            },
-            {
-              "doc_id": "ui-pattern-column-links",
-              "title": "Column Links Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-column-links.json"
-            },
-            {
-              "doc_id": "css-primitives",
-              "title": "CSS Primitives",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/css-primitives.json"
-            },
-            {
-              "doc_id": "ui-pattern-file-picker",
-              "title": "File Picker Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json"
-            },
-            {
-              "doc_id": "ui-primitive-input",
-              "title": "Input Primitive",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-input.json"
-            },
-            {
-              "doc_id": "ui-primitive-list",
-              "title": "List Primitive",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-list.json"
-            },
-            {
-              "doc_id": "studio-ui-framework-modal-contract",
-              "title": "Modal Contract",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-modal-contract.json"
-            },
-            {
-              "doc_id": "studio-ui-framework-modal-implementation",
-              "title": "Modal Implementation",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-modal-implementation.json"
-            },
-            {
-              "doc_id": "ui-primitive-modal-shell",
-              "title": "Modal Shell Primitive",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-modal-shell.json"
-            },
-            {
-              "doc_id": "ui-primitive-panel",
-              "title": "Panel Primitive",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-panel.json"
-            },
-            {
-              "doc_id": "ui-pattern-record-action-list",
-              "title": "Record List And Action Layer Working Spec",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json"
-            },
-            {
-              "doc_id": "ui-pattern-reopenable-command-result",
-              "title": "Reopenable Command Result Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-reopenable-command-result.json"
-            },
-            {
-              "doc_id": "ui-pattern-search-list",
-              "title": "Search List Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-search-list.json"
-            },
-            {
-              "doc_id": "ui-pattern-select-menu",
-              "title": "Select Menu Pattern",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-select-menu.json"
-            },
-            {
-              "doc_id": "studio-ui-framework-primitives",
-              "title": "UI Framework Primitives",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-framework-primitives.json"
-            }
-          ]
-        },
-        {
-          "doc_id": "studio-ui-conformance",
-          "title": "UI Conformance Spec",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ui-conformance.json"
-        },
-        {
-          "doc_id": "ui-framework",
-          "title": "UI Framework",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-framework.json"
+          "doc_id": "ui-pattern-record-action-list",
+          "title": "Record List And Action Layer Working Spec",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json"
         }
       ]
     }
   ],
-  "generated_at": "2026-06-14T19:05:48Z"
+  "generated_at": "2026-06-15T13:28:35Z"
 }

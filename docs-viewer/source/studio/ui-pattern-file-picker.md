@@ -3,7 +3,7 @@ doc_id: ui-pattern-file-picker
 title: File Picker Pattern
 added_date: 2026-06-14
 last_updated: 2026-06-14
-parent_id: ui-catalogue
+parent_id: ui
 viewable: true
 ---
 # File Picker Pattern

@@ -7,24 +7,16 @@
       "title": "File Picker Pattern",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json",
       "added_date": "2026-06-14",
-      "parent_id": "ui-catalogue",
-      "parent_title": "UI Catalogue"
+      "parent_id": "ui",
+      "parent_title": "UI"
     },
     {
       "doc_id": "ui-pattern-record-action-list",
       "title": "Record List And Action Layer Working Spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json",
       "added_date": "2026-06-14",
-      "parent_id": "ui-catalogue",
-      "parent_title": "UI Catalogue"
-    },
-    {
-      "doc_id": "ui-pattern-search-list",
-      "title": "Search List Pattern",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-search-list.json",
-      "added_date": "2026-06-14",
-      "parent_id": "ui-catalogue",
-      "parent_title": "UI Catalogue"
+      "parent_id": "ui",
+      "parent_title": "UI"
     },
     {
       "doc_id": "site-request-canonical-static-site-root-tasks",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
+    },
+    {
+      "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
+      "title": "Public Catalogue Runtime Moments Route Slice",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request"
     }
   ],
-  "generated_at": "2026-06-14T19:05:48Z"
+  "generated_at": "2026-06-15T13:23:57Z"
 }
