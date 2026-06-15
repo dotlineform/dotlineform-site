@@ -1291,11 +1291,11 @@
         },
         {
           "doc_id": "ui-pattern-record-action-list",
-          "title": "Record List And Action Layer Working Spec",
+          "title": "Record List And Action Layer Implementation Note",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json"
         }
       ]
     }
   ],
-  "generated_at": "2026-06-15T13:28:35Z"
+  "generated_at": "2026-06-15T18:01:17Z"
 }

@@ -96,7 +96,7 @@ function clearBuildState(state) {
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
   route: "catalogue-work",
   bulkIdsKey: "bulkWorkIds",
-  busyKeys: ["isSaving", "isBuilding", "isPreviewingBuild", "isDeleting"]
+  busyKeys: ["isSaving", "isBuilding", "isDeleting"]
 });
 
 export function initializeWorkRouteState(root) {

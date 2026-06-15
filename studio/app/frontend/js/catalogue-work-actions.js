@@ -193,15 +193,6 @@ export function bulkPublishedBuildTargets(state) {
     .map((workId) => ({ work_id: workId, extra_series_ids: [] }));
 }
 
-function previewExtraSeriesIdsForDraft(state) {
-  const previousSeriesIds = parseSeriesIds(state.baselineDraft && state.baselineDraft.series_ids);
-  const nextSeriesIds = parseSeriesIds(state.draft && state.draft.series_ids);
-  return dedupeSeriesIds([
-    ...state.pendingBuildExtraSeriesIds,
-    ...previousSeriesIds
-  ]).filter((seriesId) => !nextSeriesIds.includes(seriesId));
-}
-
 function applySingleSaveBuildOutcome(state, response) {
   const isPublished = currentWorkIsPublished(state);
   const outcome = resolveCatalogueSaveBuildOutcome({
@@ -584,10 +575,15 @@ export async function refreshBuildPreview(state, context) {
     return;
   }
   try {
-    const response = await previewCatalogueBuild({
+    const request = {
       work_id: state.currentWorkId,
       extra_series_ids: state.pendingBuildExtraSeriesIds
-    });
+    };
+    if (context && typeof context.mediaSource === "function") {
+      request.media_source = context.mediaSource();
+      request.media_only = true;
+    }
+    const response = await previewCatalogueBuild(request);
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(context, state.buildImpactNode, "");
     if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
@@ -604,57 +600,6 @@ export async function refreshBuildPreview(state, context) {
     if (typeof context.updateStagedProseField === "function") context.updateStagedProseField();
     context.renderCurrentPreview();
     context.renderReadiness();
-  }
-}
-
-export async function previewCurrentBuildImpact(state, context) {
-  if (!state.currentRecord || !state.currentWorkId || state.mode !== "single") return;
-  if (!state.serverAvailable) {
-    setTextWithState(context, state.statusNode, t(state, context, "build_preview_server_unavailable", "Public update preview unavailable."), "error");
-    return;
-  }
-  if (!currentWorkIsPublished(state)) {
-    setTextWithState(context, state.statusNode, t(state, context, "build_preview_unpublished", "Public update unavailable while the work is not published."), "warn");
-    return;
-  }
-  if (state.validationErrors.size > 0) {
-    setTextWithState(context, state.statusNode, t(state, context, "save_status_validation_error", "Fix validation errors before saving."), "error");
-    return;
-  }
-  const changedFields = context.changedWorkFieldNames();
-  if (!changedFields.length) {
-    setTextWithState(context, state.statusNode, t(state, context, "build_preview_no_changes", "No unsaved changes to preview."));
-    return;
-  }
-
-  state.isPreviewingBuild = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "build_preview_status_running", "Preparing public update preview..."));
-  let openedPreviewModal = false;
-  try {
-    const response = await previewCatalogueBuild({
-      work_id: state.currentWorkId,
-      record_family: "work",
-      changed_fields: changedFields,
-      extra_series_ids: previewExtraSeriesIdsForDraft(state)
-    });
-    setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }));
-    state.isPreviewingBuild = false;
-    context.updateEditorState();
-    context.openBuildPreviewModal(response, changedFields);
-    openedPreviewModal = true;
-  } catch (error) {
-    setTextWithState(
-      context,
-      state.statusNode,
-      `${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    if (!openedPreviewModal) {
-      state.isPreviewingBuild = false;
-      context.updateEditorState();
-    }
   }
 }
 
@@ -904,20 +849,34 @@ function countMediaItems(media, group) {
   return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
 }
 
+function workMediaSourceFromDraft(state) {
+  return {
+    project_folder: normalizeText(state.draft && state.draft.project_folder),
+    project_subfolder: normalizeText(state.draft && state.draft.project_subfolder),
+    project_filename: normalizeText(state.draft && state.draft.project_filename)
+  };
+}
+
 export async function refreshWorkMedia(state, context) {
-  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable || context.draftHasChanges()) return;
+  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
   state.isBuilding = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_running", "Refreshing media…"));
   setTextWithState(context, state.resultNode, "");
+  const mediaSource = workMediaSourceFromDraft(state);
   try {
     const response = await applyCatalogueBuild({
       work_id: state.currentWorkId,
       media_only: true,
-      force: true
+      force: true,
+      media_source: mediaSource
     });
     const blockedCount = countMediaItems(response && response.media, "blocked");
-    await refreshBuildPreview(state, context);
+    state.mediaPreviewVersion = String(Date.now());
+    await refreshBuildPreview(state, {
+      ...context,
+      mediaSource: () => mediaSource
+    });
     if (blockedCount > 0) {
       setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_blocked", "Media refresh blocked."), "error");
       setTextWithState(context, state.resultNode, normalizeText(response && response.media && response.media.summary), "error");

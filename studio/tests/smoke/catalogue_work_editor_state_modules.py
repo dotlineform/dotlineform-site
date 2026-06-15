@@ -117,7 +117,7 @@ def assert_state_factory(page: Page) -> None:
     assert result["collected"] is True
     assert result["routeName"] == "catalogue-work"
     assert result["bulkKey"] == "bulkWorkIds"
-    assert result["busyKeys"] == "isSaving,isBuilding,isPreviewingBuild,isDeleting"
+    assert result["busyKeys"] == "isSaving,isBuilding,isDeleting"
     assert result["mode"] == "single"
     assert result["currentWorkId"] == ""
     assert result["bulkWorkIds"] == 0
@@ -390,8 +390,14 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             }};
             state.currentWorkId = '00008';
             state.serverAvailable = true;
-            state.draft = {{ ...state.currentRecord }};
+            state.draft = {{
+                ...state.currentRecord,
+                project_folder: 'nerve',
+                project_subfolder: '',
+                project_filename: 'replacement.jpg'
+            }};
             state.baselineDraft = {{ ...state.draft }};
+            state.mediaPreviewVersion = 'media-refresh-token';
             state.mediaConfig = {{
                 worksPrimaryBase: '/assets/works/img/',
                 primaryDisplayWidth: 800,
@@ -424,16 +430,18 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             }};
             const options = {{
                 text: (_key, fallback) => fallback,
-                draftHasChanges: () => false
+                draftHasChanges: () => true
             }};
             formModule.renderWorkEditorFields(state, elements, options);
             sectionsModule.renderWorkCurrentPreview(state, options);
             sectionsModule.renderWorkReadiness(state, options);
             const refreshButton = state.previewNode.querySelector('[data-media-refresh="work"]');
             const proseButton = state.fieldsNode.querySelector('[data-prose-import="work"]');
+            const previewImage = state.previewNode.querySelector('[data-preview-image]');
             return {{
                 captionText: state.previewNode.querySelector('.catalogueRecordPreview__caption').textContent.replace(/\\s+/g, ' ').trim(),
                 previewActionsText: state.previewNode.querySelector('.catalogueRecordPreview__actions').textContent.replace(/\\s+/g, ' ').trim(),
+                previewImageSrc: previewImage ? previewImage.getAttribute('src') : '',
                 stagedProseLabel: state.fieldsNode.querySelector('.catalogueWorkStagedProse .tagStudioForm__label').textContent,
                 stagedProseValue: state.fieldsNode.querySelector('[data-staged-prose-value="work"]').textContent,
                 proseDisabled: proseButton ? proseButton.disabled : null,
@@ -444,7 +452,8 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
         }}"""
     )
     assert result["captionText"] == "nerve · July 1990 - January 1995 2263 x 1600 px"
-    assert result["previewActionsText"] == "Preview update Refresh media"
+    assert result["previewActionsText"] == "Refresh media"
+    assert result["previewImageSrc"] == "/assets/works/img/00008-primary-800.webp?v=media-refresh-token"
     assert result["stagedProseLabel"] == "staged prose"
     assert result["stagedProseValue"] == "00008.md"
     assert result["proseDisabled"] is False

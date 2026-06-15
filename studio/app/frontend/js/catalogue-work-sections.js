@@ -114,18 +114,25 @@ function isCurrentWorkPublished(state, options) {
   return normalizeText(state.currentRecord && state.currentRecord.status).toLowerCase() === "published";
 }
 
-function draftHasChanges(state, options) {
-  if (options && typeof options.draftHasChanges === "function") {
-    return Boolean(options.draftHasChanges(state));
-  }
-  return false;
+function draftHasConfiguredMediaSource(state) {
+  return Boolean(normalizeText(state.draft && state.draft.project_folder) && normalizeText(state.draft && state.draft.project_filename));
 }
 
-function changedWorkFieldNames(state, options) {
-  if (options && typeof options.changedWorkFieldNames === "function") {
-    return options.changedWorkFieldNames(state);
-  }
-  return [];
+function cacheBustUrl(url, version) {
+  const text = normalizeText(url);
+  const token = normalizeText(version);
+  if (!text || !token) return text;
+  return `${text}${text.includes("?") ? "&" : "?"}v=${encodeURIComponent(token)}`;
+}
+
+function cacheBustSrcset(srcset, version) {
+  const token = normalizeText(version);
+  if (!srcset || !token) return srcset || "";
+  return String(srcset).split(",").map((entry) => {
+    const parts = entry.trim().split(/\s+/);
+    if (!parts[0]) return "";
+    return [cacheBustUrl(parts[0], token), ...parts.slice(1)].join(" ");
+  }).filter(Boolean).join(", ");
 }
 
 export function buildWorkRecordSummary(record) {
@@ -246,6 +253,8 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const record = state.currentRecord;
   const mediaItem = catalogueReadinessItem(state.buildPreview, "work_media");
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id);
+  const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
+  const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
   const fallback = cataloguePreviewFallback(mediaItem, {
     missingGeneratedText: text(state, options, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
     missingSourceText: text(state, options, "preview_source_missing", "Source media missing."),
@@ -261,30 +270,18 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const previewHref = isPublished ? publicHref : normalizeText(preview.fullSrc);
   const previewTarget = isPublished ? "" : "_blank";
   const previewRel = isPublished ? "" : "noopener";
-  const changedFields = changedWorkFieldNames(state, options);
   const mediaSummaryItem = mediaItem ? catalogueReadinessItemSummary(mediaItem, { fallbackSummary: "—" }) : null;
   const mediaRefreshDisabled = (
     !state.serverAvailable ||
     state.isSaving ||
     state.isBuilding ||
     state.isDeleting ||
-    draftHasChanges(state, options) ||
     !mediaSummaryItem ||
-    !mediaSummaryItem.exists
-  );
-  const previewDisabled = (
-    !state.serverAvailable ||
-    state.isSaving ||
-    state.isBuilding ||
-    state.isDeleting ||
-    state.isPreviewingBuild ||
-    state.validationErrors.size > 0 ||
-    !isPublished ||
-    !changedFields.length
+    (!mediaSummaryItem.exists && !draftHasConfiguredMediaSource(state))
   );
   const frameHtml = `
     <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
-      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
+      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(previewSrc)}" srcset="${escapeHtml(previewSrcset)}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
       <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
     </div>
   `;
@@ -296,19 +293,10 @@ export function renderWorkCurrentPreview(state, options = {}) {
         ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
       </figcaption>
       <div class="catalogueRecordPreview__actions">
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-action="preview-build-impact"${previewDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "build_preview_button", "Preview update"))}</button>
         ${mediaSummaryItem ? `<button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
       </div>
     </figure>
   `;
-  const previewButton = state.previewNode.querySelector('[data-action="preview-build-impact"]');
-  if (previewButton && typeof options.onPreviewBuildImpact === "function") {
-    previewButton.addEventListener("click", () => {
-      Promise.resolve(options.onPreviewBuildImpact(state)).catch((error) => {
-        console.warn("catalogue_work_editor: unexpected build preview failure", error);
-      });
-    });
-  }
   bindPreviewImages(state.previewNode);
 }
 

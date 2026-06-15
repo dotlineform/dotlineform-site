@@ -160,6 +160,35 @@ def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> 
     assert scope["generate_only"] == scopes.DEFAULT_ARTIFACTS
 
 
+def test_work_scope_can_carry_transient_media_source() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
+        write_source_fixture(source_dir)
+        seen_filenames: list[str] = []
+
+        def readiness_item_from_records(records, work_id, **_kwargs):
+            seen_filenames.append(records.works[work_id]["project_filename"])
+            return readiness_item(f"work:{work_id}")
+
+        scope = scopes.build_scope_for_work(
+            source_dir,
+            "00001",
+            work_media_source={
+                "project_folder": "2026/beta",
+                "project_subfolder": "install",
+                "project_filename": "replacement.jpg",
+            },
+            work_readiness_builder=readiness_item_from_records,
+        )
+        saved_payload = json.loads((source_dir / "works.json").read_text(encoding="utf-8"))
+
+    assert seen_filenames == ["replacement.jpg"]
+    assert scope["work_media_sources"]["00001"]["project_folder"] == "2026/beta"
+    assert scope["work_media_sources"]["00001"]["project_subfolder"] == "install"
+    assert scope["work_media_sources"]["00001"]["project_filename"] == "replacement.jpg"
+    assert saved_payload["works"]["00001"]["project_filename"] == "alpha.jpg"
+
+
 def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         source_dir = Path(tmp) / "studio/data/canonical/catalogue"
@@ -283,6 +312,7 @@ def test_moment_import_metadata_merges_existing_record_and_overrides() -> None:
 
 def main() -> None:
     test_work_scope_includes_extra_series_detail_readiness_and_stable_keys()
+    test_work_scope_can_carry_transient_media_source()
     test_series_scope_includes_extra_work_ids_and_stable_keys()
     test_invalid_series_scope_reports_build_preconditions()
     test_moment_scope_uses_preview_metadata_and_readiness_dependencies()

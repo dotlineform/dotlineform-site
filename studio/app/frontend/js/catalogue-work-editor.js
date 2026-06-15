@@ -14,7 +14,6 @@ import {
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
-  catalogueDraftChangedFieldNames,
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
@@ -25,7 +24,6 @@ import {
 } from "./catalogue-editor-embedded-items.js";
 import {
   confirmWorkEmbeddedDeleteModal,
-  openWorkBuildPreviewModal,
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
@@ -67,7 +65,6 @@ import {
   deleteCurrentWork,
   importWorkProse,
   parseBulkSeriesOperation,
-  previewCurrentBuildImpact,
   refreshBuildPreview,
   refreshWorkMedia,
   saveCurrentWork
@@ -108,26 +105,6 @@ import {
 
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
 
-function changedWorkFieldNames(state) {
-  if (state.mode !== "single" || !state.baselineDraft) return [];
-  return catalogueDraftChangedFieldNames({
-    fields: EDITABLE_FIELDS,
-    draft: state.draft,
-    baselineDraft: state.baselineDraft,
-    canonicalizeScalar,
-    extraComparisons: [
-      {
-        key: "downloads",
-        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.downloads, baselineDraft.downloads, DOWNLOAD_FIELDS)
-      },
-      {
-        key: "links",
-        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.links, baselineDraft.links, LINK_FIELDS)
-      }
-    ]
-  });
-}
-
 function setOpenInputMode(state) {
   state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
   state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find work by id"));
@@ -167,12 +144,6 @@ async function deleteEmbeddedEntry(state, kind, index) {
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
-}
-
-function openBuildPreviewModal(state, response, changedFields) {
-  openWorkBuildPreviewModal(state, response, changedFields, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
 }
 
 function draftHasChanges(state) {
@@ -381,7 +352,7 @@ function renderEditorMessage(state, snapshot = {}) {
   const errors = snapshot.errors || state.validationErrors || new Map();
   const dirty = Object.prototype.hasOwnProperty.call(snapshot, "dirty") ? snapshot.dirty : hasRecord && draftHasChanges(state);
   state.messageController.render({
-    busy: state.isSaving || state.isBuilding || state.isPreviewingBuild || state.isDeleting,
+    busy: state.isSaving || state.isBuilding || state.isDeleting,
     validationMessage: firstCatalogueValidationMessage(errors),
     mixedMessage: firstBulkMixedMessage(state),
     dirtyMessage: catalogueDirtyWarningText({
@@ -542,14 +513,12 @@ function workActionOptions(state) {
     validateDraft: () => validateDraft(state),
     updateFieldMessages: (errors) => updateFieldMessages(state, errors, workFormOptions(state)),
     draftHasChanges: () => draftHasChanges(state),
-    changedWorkFieldNames: () => changedWorkFieldNames(state),
     updateEditorState: () => updateEditorState(state),
     updateStagedProseField: () => updateStagedProseField(state, workFormOptions(state)),
     loadWorkLookupRecord: (workId) => loadWorkLookupRecord(state, workId),
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
-    openBuildPreviewModal: (response, changedFields) => openBuildPreviewModal(state, response, changedFields),
     openWorkById: (workId) => openWorkById(state, workId, workSelectionOptions(state))
   };
 }
@@ -557,10 +526,8 @@ function workActionOptions(state) {
 function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    changedWorkFieldNames,
     draftHasChanges,
     isCurrentWorkPublished: currentWorkIsPublished,
-    onPreviewBuildImpact: () => previewCurrentBuildImpact(state, workActionOptions(state)),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
     deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)

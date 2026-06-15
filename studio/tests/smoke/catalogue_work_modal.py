@@ -601,26 +601,6 @@ def main() -> int:
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
             page.wait_for_timeout(50)
 
-            page.fill("#catalogueWorkField-title", "Smoke work updated")
-            preview_button = '[data-action="preview-build-impact"]'
-            page.locator(preview_button).focus()
-            page.locator(preview_button).click()
-            build_modal = assert_modal_shell(page, "Public update preview", ["Close"], args.timeout_ms, size_class="tagStudioModal__dialog--wide")
-            page.wait_for_function(
-                "() => document.activeElement && document.activeElement.getAttribute('data-role') === 'modal-cancel'",
-                timeout=args.timeout_ms,
-            )
-            build_modal = modal_shell_state(page)
-            if "Changed fields: title, downloads." not in build_modal["bodyText"]:
-                raise AssertionError(f"build preview changed-field text missing: {build_modal!r}")
-            close_with_escape(page, preview_button, args.timeout_ms)
-            field_preview_requests = [
-                item for item in build_preview_requests
-                if item.get("record_family") == "work" and item.get("changed_fields")
-            ]
-            if not field_preview_requests or field_preview_requests[-1].get("changed_fields") != ["title", "downloads"]:
-                raise AssertionError(f"field-aware build preview request not route-owned: {build_preview_requests!r}")
-
             page.locator(publication_button).click()
             unpublish_modal = assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if f"Unpublish work {WORK_ID}" not in unpublish_modal["bodyText"]:

@@ -15,7 +15,7 @@ import {
 export const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
   route: "catalogue-work",
   bulkIdsKey: "bulkWorkIds",
-  busyKeys: ["isSaving", "isBuilding", "isPreviewingBuild", "isDeleting"]
+  busyKeys: ["isSaving", "isBuilding", "isDeleting"]
 });
 
 export function collectWorkEditorElements() {
@@ -110,9 +110,9 @@ export function createWorkEditorState(elements, options = {}) {
     rebuildPending: false,
     pendingBuildExtraSeriesIds: [],
     buildPreview: null,
+    mediaPreviewVersion: "",
     isSaving: false,
     isBuilding: false,
-    isPreviewingBuild: false,
     isDeleting: false,
     serverAvailable: false,
     modalHost: modalHostFactory({ root }),

@@ -6,7 +6,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Callable, Dict, Sequence
+from typing import Any, Callable, Dict, Mapping, Sequence
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
 from catalogue import catalogue_public_paths as public_paths
@@ -100,9 +100,10 @@ def resolve_work_media_source(
     work_id: str,
     *,
     env: Dict[str, str] | None = None,
+    record_override: Mapping[str, Any] | None = None,
 ) -> tuple[Path | None, str, Path | None, str]:
     projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
-    work_record = records.works.get(work_id)
+    work_record = dict(record_override) if record_override is not None else records.works.get(work_id)
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
 
@@ -473,13 +474,21 @@ def build_local_media_plan(
         records = records_from_json_source(source_dir) if source_dir is not None else None
         if records is None:
             return {"tasks": [], "counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
+        work_media_sources = scope.get("work_media_sources") if isinstance(scope.get("work_media_sources"), dict) else {}
         for work_id in scope.get("work_ids", []):
-            source_path, missing_reason, projects_base_dir, availability_error = resolve_work_media_source(records, str(work_id), env=env)
+            normalized_work_id = str(work_id)
+            record_override = work_media_sources.get(normalized_work_id) if isinstance(work_media_sources.get(normalized_work_id), dict) else None
+            source_path, missing_reason, projects_base_dir, availability_error = resolve_work_media_source(
+                records,
+                normalized_work_id,
+                env=env,
+                record_override=record_override,
+            )
             tasks.append(
                 build_local_media_task(
                     repo_root=repo_root,
                     kind="work",
-                    item_id=str(work_id),
+                    item_id=normalized_work_id,
                     source_path=source_path,
                     availability_error=availability_error,
                     blocked_reason=missing_reason,

@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, Sequence
+from typing import Any, Callable, Dict, Iterable, Mapping, Sequence
 
 from catalogue import catalogue_build_media as build_media
 from catalogue import catalogue_public_paths as public_paths
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
+from catalogue.catalogue_source import CatalogueSourceRecords, DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
@@ -137,12 +137,23 @@ def validate_buildable_series_scope(records: Any, series_ids: Sequence[str]) -> 
         raise ValueError("series build precondition failed: " + "; ".join(errors[:20]))
 
 
+def records_with_work_media_source(records: CatalogueSourceRecords, work_id: str, media_record: Mapping[str, Any]) -> CatalogueSourceRecords:
+    works = dict(records.works)
+    works[work_id] = dict(media_record)
+    return CatalogueSourceRecords(
+        works=works,
+        work_details=records.work_details,
+        series=records.series,
+    )
+
+
 def build_scope_for_work(
     source_dir: Path,
     work_id: str,
     extra_series_ids: Sequence[Any] | None = None,
     *,
     detail_uid: str = "",
+    work_media_source: Mapping[str, Any] | None = None,
     env: Dict[str, str] | None = None,
     work_readiness_builder: ReadinessBuilder | None = None,
     detail_readiness_builder: ReadinessBuilder | None = None,
@@ -176,12 +187,20 @@ def build_scope_for_work(
         "refresh_published": True,
         "summary": summarize_scope([normalized_work_id], series_ids),
     }
+    readiness_records = records
+    if work_media_source is not None:
+        media_record = dict(work_record)
+        for field in ("project_folder", "project_subfolder", "project_filename"):
+            if field in work_media_source:
+                media_record[field] = work_media_source.get(field)
+        scope["work_media_sources"] = {normalized_work_id: media_record}
+        readiness_records = records_with_work_media_source(records, normalized_work_id, media_record)
     work_readiness = work_readiness_builder or _default_work_readiness_builder()
-    readiness = work_readiness(records, normalized_work_id, env=env)
+    readiness = work_readiness(readiness_records, normalized_work_id, env=env)
     if detail_uid:
         normalized_detail_uid = str(detail_uid or "").strip()
         detail_readiness = detail_readiness_builder or _default_detail_readiness_builder()
-        readiness["items"].extend(detail_readiness(records, normalized_detail_uid, env=env).get("items", []))
+        readiness["items"].extend(detail_readiness(readiness_records, normalized_detail_uid, env=env).get("items", []))
         scope["detail_uid"] = normalized_detail_uid
     scope["readiness"] = readiness
     return scope

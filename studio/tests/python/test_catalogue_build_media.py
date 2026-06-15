@@ -128,6 +128,16 @@ def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
             "00002",
             env=projects_env(projects_base),
         )
+        override_path, override_reason, _, _ = media.resolve_work_media_source(
+            records,
+            "00001",
+            env=projects_env(projects_base),
+            record_override={
+                "project_folder": "2026/beta",
+                "project_subfolder": "install",
+                "project_filename": "replacement.jpg",
+            },
+        )
 
     works_root = source_works_root_subdir(media.PIPELINE_CONFIG)
     assert work_path == (projects_base / works_root / "2026/alpha/alpha.jpg").resolve()
@@ -138,6 +148,8 @@ def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
     assert detail_reason == ""
     assert missing_path is None
     assert missing_reason == "missing_project_folder"
+    assert override_path == (projects_base / works_root / "2026/beta/install/replacement.jpg").resolve()
+    assert override_reason == ""
 
 
 def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states() -> None:
@@ -182,6 +194,39 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
     assert forced_plan["tasks"][0]["pending_staged_source"] is True
     assert unavailable_plan["counts"] == {"pending": 0, "current": 0, "blocked": 0, "unavailable": 2}
     assert unavailable_plan["tasks"][0]["status"] == "unavailable"
+
+
+def test_local_media_plan_uses_transient_work_media_source() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        repo_root = root / "repo"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
+        projects_base = root / "projects"
+        replacement_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/beta/install/replacement.jpg"
+        replacement_image.parent.mkdir(parents=True, exist_ok=True)
+        replacement_image.write_bytes(b"replacement")
+        write_source_fixture(source_dir)
+
+        plan = media.build_local_media_plan(
+            repo_root,
+            scope={
+                "source_dir": str(source_dir),
+                "work_ids": ["00001"],
+                "work_media_sources": {
+                    "00001": {
+                        "project_folder": "2026/beta",
+                        "project_subfolder": "install",
+                        "project_filename": "replacement.jpg",
+                    }
+                },
+            },
+            env=projects_env(projects_base),
+            force=True,
+        )
+
+    assert plan["counts"] == {"pending": 1, "current": 0, "blocked": 0, "unavailable": 0}
+    assert plan["tasks"][0]["source_path"] == "projects/2026/beta/install/replacement.jpg"
+    assert plan["tasks"][0]["source_abs_path"] == str(replacement_image.resolve())
 
 
 def test_media_readiness_distinguishes_pending_and_missing_metadata() -> None:
@@ -350,6 +395,7 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
 if __name__ == "__main__":
     test_resolves_work_detail_sources_and_missing_metadata_reasons()
     test_local_media_plan_reports_pending_current_blocked_and_unavailable_states()
+    test_local_media_plan_uses_transient_work_media_source()
     test_media_readiness_distinguishes_pending_and_missing_metadata()
     test_execute_local_media_plan_dry_run_suppresses_writes()
     test_thumbnail_only_plan_skips_missing_sources_without_failing()

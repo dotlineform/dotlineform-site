@@ -30,10 +30,10 @@ viewable: true
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
 It does not call write services directly.
 
-The section renderer receives route-owned callbacks for text lookup, dirty-state checks, changed-field detection, publication-state checks, and build-preview activation.
+The section renderer receives route-owned callbacks for text lookup, publication-state checks, embedded file/link actions, and route message writing.
 It does not call write services directly.
 
-The action workflow module receives route-owned callbacks for text lookup, status writing, validation, route-state transitions, current-preview rendering, build-preview modal opening, and create-mode record opening.
+The action workflow module receives route-owned callbacks for text lookup, status writing, validation, route-state transitions, preview/readiness rendering, and create-mode record opening.
 It keeps local-service transport in `catalogue-editor-service-client.js` and does not import route globals.
 
 The selection module receives route-owned callbacks for text lookup, focused lookup reads, route-state transitions, build-preview refresh, and create-mode save/open behavior.
@@ -71,7 +71,6 @@ The first implementation covers:
 - validate basic field format before save
 - save metadata, with published-work saves updating the public catalogue internally
 - preview the scoped public update impact for the current work
-- preview the field-aware public update impact for unsaved single-work changes from the current-record rail
 - show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
@@ -195,17 +194,15 @@ Current save/publication flow:
 5. `POST /studio/api/catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
 6. the local app adapter validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `provenance` do not disappear after save
-8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record
-9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /studio/api/catalogue/build-preview` and shows the field-aware result in a modal without saving
-10. the same preview now also carries work media readiness and staged work prose readiness
-11. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
+8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record and carries work media readiness plus staged work prose readiness
+9. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 
 changed image from object-fit: cover to contained natural sizing, with a 70vh / 42rem max-height for very tall images.
 
-12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `studio/data/canonical/catalogue-markdown/works/<work_id>.md` after overwrite confirmation when needed
-13. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
-14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
-15. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
+10. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `studio/data/canonical/catalogue-markdown/works/<work_id>.md` after overwrite confirmation when needed
+11. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
+12. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
+13. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
 
 ## Project Media Picker
 
@@ -229,8 +226,9 @@ Bulk mode keeps manual media fields available but disables the image picker butt
 
 ## Refresh media
 
-The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
-this is useful if only the image changed and the metadata doesn't need re-saving.
+The work media readiness panel exposes `Refresh media` when the saved or draft media-source fields resolve a source image. That action calls the same build endpoint with `media_only: true`, `force: true`, and a transient `media_source` object containing `project_folder`, `project_subfolder`, and `project_filename` from the current draft.
+
+The server overlays those three fields onto the saved work record only for media planning. It does not write `works.json`, rebuild public page/json/search outputs, or change the preview link target. It refreshes local thumbnails and staged primary variants, then the editor rerenders the preview image with a cache-bust token so the regenerated local asset is visible in the panel.
 
 ## Route Ready State
 

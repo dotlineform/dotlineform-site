@@ -1,7 +1,4 @@
 import {
-  formatCatalogueBuildPreviewModalHtml
-} from "./catalogue-editor-modal-formatters.js";
-import {
   buildWorkEmbeddedDeleteConfirmation,
   buildWorkEmbeddedEntry,
   buildWorkEmbeddedModalDescriptor,
@@ -10,7 +7,6 @@ import {
 import {
   activateStudioModalFrame,
   openConfirmModal,
-  openNoticeModal,
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
@@ -106,25 +102,6 @@ export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options
     entries: nextEntries,
     index
   };
-}
-
-export function openWorkBuildPreviewModal(state, response, changedFields, options = {}) {
-  if (!state || !state.root) return;
-  const text = options.text;
-  closeCatalogueWorkModal(state);
-  openNoticeModal({
-    root: state.root,
-    title: lookupText(text, "build_preview_modal_title", "Public update preview"),
-    titleId: "catalogueWorkBuildPreviewModalTitle",
-    size: "wide",
-    bodyHtml: formatCatalogueBuildPreviewModalHtml(response, changedFields, {
-      text,
-      defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-      reasonsClass: "catalogueWorkBuildPreview__reasons"
-    }),
-    closeLabel: lookupText(text, "build_preview_modal_close", "Close"),
-    restoreFocus: state.previewNode && state.previewNode.querySelector('[data-action="preview-build-impact"]')
-  });
 }
 
 export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {

@@ -17,11 +17,14 @@ from catalogue.catalogue_service_context import CatalogueWriteContext, normalize
 from catalogue.series_ids import normalize_series_id
 from local_env import runtime_env
 
+WORK_MEDIA_SOURCE_FIELDS = frozenset({"project_folder", "project_subfolder", "project_filename"})
+
 
 def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
     work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
     detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
     media_only = bool(body.get("media_only"))
+    work_media_source = extract_work_media_source(body, work_id=work_id, media_only=media_only)
     changed_fields = extract_changed_field_names(body)
     record_family = str(body.get("record_family") or body.get("family") or "").strip()
     if work_id:
@@ -30,6 +33,7 @@ def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any
             work_id,
             extra_series_ids=extra_series_ids,
             detail_uid=detail_uid,
+            work_media_source=work_media_source,
         )
     elif series_id:
         scope = build_scope_for_series(context.source_dir, series_id, extra_work_ids=extra_work_ids)
@@ -66,6 +70,7 @@ def build_apply_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
     detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
     media_only = bool(body.get("media_only"))
+    work_media_source = extract_work_media_source(body, work_id=work_id, media_only=media_only)
     return run_build_operation(
         context,
         work_id=work_id,
@@ -76,6 +81,7 @@ def build_apply_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         detail_uid=detail_uid,
         force=force,
         media_only=media_only,
+        work_media_source=work_media_source,
     )
 
 
@@ -91,6 +97,7 @@ def run_build_operation(
     force: bool,
     media_only: bool = False,
     build_plan: Mapping[str, Any] | None = None,
+    work_media_source: Mapping[str, Any] | None = None,
 ) -> tuple[bool, dict[str, Any]]:
     if work_id:
         scope = build_scope_for_work(
@@ -98,6 +105,7 @@ def run_build_operation(
             work_id,
             extra_series_ids=extra_series_ids,
             detail_uid=detail_uid,
+            work_media_source=work_media_source,
         )
     elif series_id:
         scope = build_scope_for_series(context.source_dir, series_id, extra_work_ids=extra_work_ids)
@@ -242,3 +250,17 @@ def extract_changed_field_names(body: Mapping[str, Any]) -> list[str]:
             seen.add(field)
             out.append(field)
     return out
+
+
+def extract_work_media_source(body: Mapping[str, Any], *, work_id: str, media_only: bool) -> dict[str, Any] | None:
+    raw = body.get("media_source")
+    if raw is None:
+        return None
+    if not work_id or not media_only:
+        raise ValueError("media_source is only supported for work media-only builds")
+    if not isinstance(raw, dict):
+        raise ValueError("media_source must be an object")
+    unknown = sorted(str(key) for key in raw.keys() if str(key) not in WORK_MEDIA_SOURCE_FIELDS)
+    if unknown:
+        raise ValueError(f"media_source contains unsupported fields: {', '.join(unknown)}")
+    return {field: str(raw.get(field) or "").strip() for field in sorted(WORK_MEDIA_SOURCE_FIELDS)}
