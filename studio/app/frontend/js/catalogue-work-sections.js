@@ -148,6 +148,20 @@ function buildWorkImageDimensionSummary(record) {
   return height && width ? `${height} x ${width} px` : "";
 }
 
+function stagedWorkMediaDimensions(state, workId) {
+  if (!normalizeText(state && state.mediaPreviewVersion)) return "";
+  const tasks = state && state.buildPreview && state.buildPreview.local_media && Array.isArray(state.buildPreview.local_media.tasks)
+    ? state.buildPreview.local_media.tasks
+    : [];
+  const task = tasks.find((item) => (
+    normalizeText(item && item.kind) === "work" &&
+    normalizeText(item && item.id) === normalizeText(workId)
+  ));
+  const height = normalizeText(task && task.source_height_px);
+  const width = normalizeText(task && task.source_width_px);
+  return height && width ? `${height} x ${width} px` : "";
+}
+
 export function formatWorkSelectionList(ids) {
   const items = Array.isArray(ids) ? ids.slice(0, BULK_PREVIEW_LIMIT) : [];
   const suffix = Array.isArray(ids) && ids.length > items.length ? `, +${ids.length - items.length}` : "";
@@ -252,7 +266,9 @@ export function renderWorkCurrentPreview(state, options = {}) {
   }
   const record = state.currentRecord;
   const mediaItem = catalogueReadinessItem(state.buildPreview, "work_media");
-  const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id);
+  const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
+    staged: Boolean(normalizeText(state.mediaPreviewVersion))
+  });
   const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
   const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
   const fallback = cataloguePreviewFallback(mediaItem, {
@@ -262,7 +278,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
     notConfiguredText: text(state, options, "preview_not_configured", "Preview not configured.")
   });
   const caption = buildWorkRecordSummary(record);
-  const dimensionCaption = buildWorkImageDimensionSummary(record);
+  const dimensionCaption = stagedWorkMediaDimensions(state, record.work_id) || buildWorkImageDimensionSummary(record);
   const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
   const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
   const publicHref = buildPublicWorkUrl(state.config, record.work_id);

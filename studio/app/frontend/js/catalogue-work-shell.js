@@ -6,6 +6,7 @@ import {
 export function renderCatalogueWorkShell(config) {
   const mediaAttrs = renderMediaAttrs(readCatalogueEditorMediaAttrs(config), [
     "worksPrimaryBase",
+    "stagedWorksPrimaryBase",
     "thumbWorksBase",
     "thumbWorkDetailsBase",
     "primaryDisplayWidth",

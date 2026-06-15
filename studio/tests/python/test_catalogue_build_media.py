@@ -104,6 +104,15 @@ def touch_outputs(paths: list[Path], *, newer_than: Path) -> None:
         os.utime(path, (newer_time, newer_time))
 
 
+def test_parse_sips_pixel_dims() -> None:
+    output = """
+/tmp/source.jpg
+  pixelWidth: 1600
+  pixelHeight: 2263
+"""
+    assert media.parse_sips_pixel_dims(output) == (1600, 2263)
+
+
 def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -393,6 +402,7 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
 
 
 if __name__ == "__main__":
+    test_parse_sips_pixel_dims()
     test_resolves_work_detail_sources_and_missing_metadata_reasons()
     test_local_media_plan_reports_pending_current_blocked_and_unavailable_states()
     test_local_media_plan_uses_transient_work_media_source()

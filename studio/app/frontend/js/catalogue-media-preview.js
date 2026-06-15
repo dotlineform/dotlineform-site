@@ -31,6 +31,7 @@ export function loadCatalogueMediaConfig(root) {
   const thumbSizes = parseSizes(dataset.thumbSizes, [96, 192]);
   return {
     worksPrimaryBase: normalizeText(dataset.worksPrimaryBase),
+    stagedWorksPrimaryBase: normalizeText(dataset.stagedWorksPrimaryBase),
     worksThumbBase: normalizeText(dataset.thumbWorksBase),
     workDetailsThumbBase: normalizeText(dataset.thumbWorkDetailsBase),
     primaryDisplayWidth: Number(dataset.primaryDisplayWidth || 800) || 800,
@@ -42,14 +43,17 @@ export function loadCatalogueMediaConfig(root) {
   };
 }
 
-export function buildWorkPrimaryPreview(config, workId) {
+export function buildWorkPrimaryPreview(config, workId, options = {}) {
   const stem = normalizeText(workId);
   const width = Number(config && config.primaryDisplayWidth) || 800;
   const fullWidth = Number(config && config.primaryFullWidth) || width;
   const suffix = normalizeText(config && config.primarySuffix) || "primary";
   const format = normalizeText(config && config.assetFormat) || "webp";
-  const src = joinAssetPath(config && config.worksPrimaryBase, stem, suffix, width, format);
-  const fullSrc = joinAssetPath(config && config.worksPrimaryBase, stem, suffix, fullWidth, format);
+  const base = options.staged
+    ? normalizeText(config && config.stagedWorksPrimaryBase) || normalizeText(config && config.worksPrimaryBase)
+    : normalizeText(config && config.worksPrimaryBase);
+  const src = joinAssetPath(base, stem, suffix, width, format);
+  const fullSrc = joinAssetPath(base, stem, suffix, fullWidth, format);
   return {
     src,
     fullSrc,

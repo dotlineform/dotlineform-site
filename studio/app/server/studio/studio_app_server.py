@@ -52,6 +52,7 @@ STATIC_PREFIXES = (
     "/studio/data/canonical/catalogue/",
     "/studio/data/config/catalogue/",
     "/studio/data/generated/catalogue-lookup/",
+    "/var/catalogue/media/",
 )
 STATIC_FILES = {
     "/favicon.ico",

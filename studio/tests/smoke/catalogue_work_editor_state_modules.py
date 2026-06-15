@@ -400,12 +400,23 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             state.mediaPreviewVersion = 'media-refresh-token';
             state.mediaConfig = {{
                 worksPrimaryBase: '/assets/works/img/',
+                stagedWorksPrimaryBase: '/var/catalogue/media/works/srcset_images/primary/',
                 primaryDisplayWidth: 800,
                 primaryFullWidth: 1600,
                 primarySuffix: 'primary',
                 assetFormat: 'webp'
             }};
             state.buildPreview = {{
+                local_media: {{
+                    tasks: [
+                        {{
+                            kind: 'work',
+                            id: '00008',
+                            source_width_px: 3000,
+                            source_height_px: 2000
+                        }}
+                    ]
+                }},
                 readiness: {{
                     items: [
                         {{
@@ -451,9 +462,9 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             }};
         }}"""
     )
-    assert result["captionText"] == "nerve · July 1990 - January 1995 2263 x 1600 px"
+    assert result["captionText"] == "nerve · July 1990 - January 1995 2000 x 3000 px"
     assert result["previewActionsText"] == "Refresh media"
-    assert result["previewImageSrc"] == "/assets/works/img/00008-primary-800.webp?v=media-refresh-token"
+    assert result["previewImageSrc"] == "/var/catalogue/media/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
     assert result["stagedProseLabel"] == "staged prose"
     assert result["stagedProseValue"] == "00008.md"
     assert result["proseDisabled"] is False

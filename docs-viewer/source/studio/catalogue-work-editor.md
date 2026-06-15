@@ -228,7 +228,9 @@ Bulk mode keeps manual media fields available but disables the image picker butt
 
 The work media readiness panel exposes `Refresh media` when the saved or draft media-source fields resolve a source image. That action calls the same build endpoint with `media_only: true`, `force: true`, and a transient `media_source` object containing `project_folder`, `project_subfolder`, and `project_filename` from the current draft.
 
-The server overlays those three fields onto the saved work record only for media planning. It does not write `works.json`, rebuild public page/json/search outputs, or change the preview link target. It refreshes local thumbnails and staged primary variants, then the editor rerenders the preview image with a cache-bust token so the regenerated local asset is visible in the panel.
+The server overlays those three fields onto the saved work record only for media planning. It does not write `works.json`, rebuild public page/json/search outputs, or change the preview link target.
+
+After the refresh, the editor image element prefers the staged local primary derivative under `var/catalogue/media/works/srcset_images/primary/` and adds a cache-bust token so the regenerated asset is visible in the panel before the record is saved or the primary variants are copied to R2. While that staged preview is active, the caption uses source-image dimensions reported by the media plan when available. Opening the preview still goes to the published work page. Loading or saving the record clears the staged-preview token, so the panel returns to the normal published media URL (`https://media.dotlineform.com/works/img/...`) and saved `width_px`/`height_px` once the JSON source metadata has been committed.
 
 ## Route Ready State
 

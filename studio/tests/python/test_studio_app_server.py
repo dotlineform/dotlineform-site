@@ -231,6 +231,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/data-sharing/config/library-export-configs.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
+    assert allowed("/var/catalogue/media/works/srcset_images/primary/00008-primary-1600.webp") is True
     assert allowed("/studio/data/generated/project-state/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False

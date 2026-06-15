@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -86,6 +87,33 @@ def display_source_path(path: Path | None, projects_base_dir: Path | None = None
 def normalize_filename(value: Any) -> str:
     text = str(value or "").strip()
     return Path(text).name if text else ""
+
+
+def parse_sips_pixel_dims(output: str) -> tuple[int | None, int | None]:
+    width = None
+    height = None
+    for line in output.splitlines():
+        width_match = re.search(r"pixelWidth:\s*([0-9]+)", line)
+        if width_match:
+            width = int(width_match.group(1))
+        height_match = re.search(r"pixelHeight:\s*([0-9]+)", line)
+        if height_match:
+            height = int(height_match.group(1))
+    return width, height
+
+
+def read_image_dims_px(path: Path | None) -> tuple[int | None, int | None]:
+    if path is None or not path.exists() or shutil.which("sips") is None:
+        return None, None
+    proc = subprocess.run(
+        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None, None
+    return parse_sips_pixel_dims(proc.stdout)
 
 
 def repo_relative_path(path: Path, repo_root: Path) -> str:
@@ -374,6 +402,7 @@ def build_local_media_task(
     force_refresh = bool(force and source_path is not None and source_path.exists())
     if force_refresh and state == "current":
         state = "pending"
+    source_width_px, source_height_px = read_image_dims_px(source_path)
     task: Dict[str, Any] = {
         "kind": kind,
         "id": item_id,
@@ -387,6 +416,9 @@ def build_local_media_task(
         "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
         "status": state,
     }
+    if source_width_px is not None and source_height_px is not None:
+        task["source_width_px"] = source_width_px
+        task["source_height_px"] = source_height_px
     if availability_error:
         task["status"] = "unavailable"
         task["reason"] = availability_error

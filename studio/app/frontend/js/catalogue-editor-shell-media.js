@@ -32,6 +32,7 @@ export function readCatalogueEditorMediaAttrs(config) {
 
   return {
     worksPrimaryBase: joinBasePath(mediaConfig.base, mediaConfig.works_images || "/works/img"),
+    stagedWorksPrimaryBase: "/var/catalogue/media/works/srcset_images/primary/",
     thumbWorksBase: joinBasePath(thumbsConfig.base, thumbsConfig.works || "/assets/works/img"),
     thumbWorkDetailsBase: joinBasePath(thumbsConfig.base, thumbsConfig.work_details || "/assets/work_details/img"),
     primaryDisplayWidth: displayWidth,

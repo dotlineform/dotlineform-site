@@ -91,6 +91,7 @@ function clearBuildState(state) {
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
+  state.mediaPreviewVersion = "";
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -129,6 +130,7 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   state.currentRecord = record;
   state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
+  state.mediaPreviewVersion = "";
   resetBulkState(state);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
